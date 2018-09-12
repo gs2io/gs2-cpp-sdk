@@ -1,0 +1,34 @@
+// mqv.cpp - originally written and placed in the public domain by Wei Dai
+//           HMQV provided by Jeffrey Walton, Ray Clayton and Uri Blumenthal.
+//           FHMQV provided by Uri Blumenthal.
+
+#include "pch.h"
+#include "config.h"
+#include "mqv.h"
+#include "hmqv.h"
+#include "fhmqv.h"
+
+NAMESPACE_BEGIN(gs2)
+NAMESPACE_BEGIN(detail)
+NAMESPACE_BEGIN(CryptoPP)
+
+#if defined(GS2_CRYPTOPP_DEBUG) && !defined(GS2_CRYPTOPP_DOXYGEN_PROCESSING)
+void TestInstantiations_MQV()
+{
+	MQV mqv;
+}
+
+void TestInstantiations_HMQV()
+{
+    HMQV hmqv;
+}
+
+void TestInstantiations_FHMQV()
+{
+    FHMQV fhmqv;
+}
+#endif
+
+NAMESPACE_END
+NAMESPACE_END
+NAMESPACE_END
