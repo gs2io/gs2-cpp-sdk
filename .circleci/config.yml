@@ -1,0 +1,33 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/gs2-cpp-sdk
+    docker:
+      - image: gs2io/gs2-cpp-sdk_build
+        auth:
+         username: $DOCKERHUB_USERNAME
+         password: $DOCKERHUB_PASSWORD
+        environment:
+          CIRCLE_ARTIFACTS: /tmp/test-results
+    steps:
+      - checkout
+      -
+        run:
+          name: テストをチェックアウト
+          command: |
+            cd ..
+            git clone -b ${CIRCLE_BRANCH} git@github.com:gs2io/gs2-cpp-test.git || git clone -b develop git@github.com:gs2io/gs2-cpp-test.git
+      -
+        run:
+          name: ビルド
+          command: |
+            mkdir ../gs2-cpp-test/build
+            cd ../gs2-cpp-test/build
+            cmake -Dgs2-cpp-sdk_SOURCE_DIR=${HOME}/gs2-cpp-sdk -Dcocos2d-x_SOURCE_DIR=${HOME}/cocos2d-x -Dcocos2d-x_LIBRARY_DIR=${HOME}/cocos2d-x/cmake-build/lib ..
+            make
+      -
+        run:
+          name: テストを実行
+          command: |
+            cd ../gs2-cpp-test/build
+            ../.circleci/sdk_test.sh
