@@ -28,4 +28,11 @@ download_project(
 )
 
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    if(ANDROID)
+    else()
+        set(LINUX True)
+    endif()
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+
 add_subdirectory(src/gs2/core)

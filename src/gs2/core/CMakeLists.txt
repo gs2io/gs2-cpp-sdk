@@ -97,6 +97,12 @@ set(${PROJECT_NAME}_FILES
         ${EXTERNAL_FILES}
         )
 
+
+if(LINUX)
+    set(CMAKE_C_FLAGS "-DLINUX")
+    set(CMAKE_CXX_FLAGS "-DLINUX")
+endif(LINUX)
+
 add_library(${PROJECT_NAME} STATIC
         ${${PROJECT_NAME}_SOURCE_FILES}
         ${EXTERNAL_SOURCE_FILES}
