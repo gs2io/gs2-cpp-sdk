@@ -29,9 +29,9 @@ download_project(
 
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    if(ANDROID)
+    if(GS2_ANDROID)
     else()
-        set(LINUX True)
+        set(GS2_LINUX True)
     endif()
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
