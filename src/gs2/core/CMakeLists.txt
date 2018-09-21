@@ -119,18 +119,6 @@ add_dependencies(${PROJECT_NAME}
         copy_external_files
         )
 
-
-#add_custom_target(${PROJECT_NAME}_zip
-#        COMMAND zip -p ../${PROJECT_NAME}.zip ${${PROJECT_NAME}_FILES}
-##        COMMAND ${CMAKE_COMMAND} -E tar cvf ${PROJECT_NAME}.zip --format=zip -- ${${PROJECT_NAME}_FILES}
-#        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
-#        DEPENDS ${${PROJECT_NAME}_FILES}
-#)
-#
-## add_custom_target/add_custom_command は add_executable/add_library で追加したターゲットの依存に入らないと実行されない
-#add_dependencies(${PROJECT_NAME}
-#        ${PROJECT_NAME}_zip)
-
 set(gs2-cpp-sdk_FILES
         ${gs2-cpp-sdk_FILES}
         ${${PROJECT_NAME}_FILES}
