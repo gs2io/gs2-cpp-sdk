@@ -21,11 +21,10 @@ include_directories(../../)
 include_directories(${cocos2d_SOURCE_DIR}/cocos)
 
 # external/cryptopp/crc-simd.cpp のビルド対応
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGS2_CRYPTOPP_DISABLE_SSE4 -DGS2_CRYPTOPP_MANUALLY_INSTANTIATE_TEMPLATES")
+add_definitions(-DGS2_CRYPTOPP_DISABLE_SSE4 -DGS2_CRYPTOPP_MANUALLY_INSTANTIATE_TEMPLATES)
 
 if(GS2_LINUX)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLINUX")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX")
+    add_definitions(-DLINUX)
 endif(GS2_LINUX)
 
 
