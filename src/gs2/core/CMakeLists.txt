@@ -18,7 +18,7 @@ project(gs2-cpp-sdk-core)
 set(CMAKE_CXX_STANDARD 11)
 
 include_directories(../../)
-include_directories(${cocos2d_SOURCE_DIR}/cocos)
+include_directories(${cocos2d-x_SOURCE_DIR}/cocos)
 
 # external/cryptopp/crc-simd.cpp のビルド対応
 add_definitions(-DGS2_CRYPTOPP_DISABLE_SSE4 -DGS2_CRYPTOPP_MANUALLY_INSTANTIATE_TEMPLATES)
