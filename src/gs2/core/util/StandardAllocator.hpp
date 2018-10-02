@@ -87,6 +87,18 @@ public:
     */
 };
 
+template<class T>
+bool operator==(const StandardAllocator<T>& lhs, const StandardAllocator<T>& lhr)
+{
+    return true;
+}
+
+template<class T>
+bool operator!=(const StandardAllocator<T>& lhs, const StandardAllocator<T>& lhr)
+{
+    return !(lhs == lhr);
+}
+
 }
 
 GS2_END_OF_NAMESPACE
