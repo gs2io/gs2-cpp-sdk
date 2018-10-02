@@ -75,6 +75,8 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         model/IGs2Credential.cpp
         model/OnetimeTokenGs2Credential.cpp
         model/Region.cpp
+        model/StampSheet.hpp
+        model/StampTask.hpp
         util/Base64.cpp
         util/DefaultAllocator.cpp
         util/SignUtil.cpp
