@@ -36,7 +36,7 @@ std::size_t encodeUrl(char* dst, const char* src, std::size_t dstSize)
     std::size_t srcSize = std::strlen(src);
     std::size_t writeLen = 0;
 
-    for(int i=0; i<srcSize||writeLen>=dstSize; i++){
+    for(int i=0; i<srcSize&&writeLen<dstSize; i++){
         char ch = src[i];
         if (ch == ' ') {
             dst[writeLen++] = '+';
