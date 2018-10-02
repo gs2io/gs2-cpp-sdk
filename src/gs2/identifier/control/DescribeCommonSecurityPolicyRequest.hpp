@@ -33,7 +33,7 @@ namespace gs2 { namespace identifier
 class DescribeCommonSecurityPolicyRequest : public Gs2BasicRequest, public Gs2Identifier
 {
 public:
-    constexpr static const Char* const FUNCTION = "DescribeCommonSecurityPolicy";
+    constexpr static const Char* const FUNCTION = "DescribeSecurityPolicy";
 
 private:
     class Data : public Gs2Object
