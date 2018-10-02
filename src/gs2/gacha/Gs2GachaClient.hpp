@@ -553,7 +553,7 @@ public:
             url.append("/gachaPool/").append(detail::StringUtil::toStr(buffer, request.getGachaPoolName())).append("/master/gacha");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -751,7 +751,7 @@ public:
             url.append("/gachaPool");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -1133,7 +1133,7 @@ public:
             url.append("/gachaPool/").append(detail::StringUtil::toStr(buffer, request.getGachaPoolName())).append("/master/prizeTable/").append(detail::StringUtil::toStr(buffer, request.getPrizeTableName())).append("/rarity/").append(detail::StringUtil::toStr(buffer, request.getRarityName())).append("/prize");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -1280,7 +1280,7 @@ public:
             url.append("/gachaPool/").append(detail::StringUtil::toStr(buffer, request.getGachaPoolName())).append("/master/prizeTable");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -1398,7 +1398,7 @@ public:
             url.append("/gachaPool/").append(detail::StringUtil::toStr(buffer, request.getGachaPoolName())).append("/master/prizeTable/").append(detail::StringUtil::toStr(buffer, request.getPrizeTableName())).append("/rarity");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
