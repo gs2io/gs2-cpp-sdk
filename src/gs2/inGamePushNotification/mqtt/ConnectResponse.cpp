@@ -14,15 +14,19 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INGAMEPUSHNOTIFICATION_HPP_
-#define GS2_INGAMEPUSHNOTIFICATION_HPP_
+#include "ConnectResponse.hpp"
+#include "MessageBufferProxy.hpp"
 
-#include <gs2/core/common.hpp>
-#include "control/controller.hpp"
-#include "model/model.hpp"
-#include "Gs2InGamePushNotificationClient.hpp"
-#include "Gs2InGamePushNotificationConst.hpp"
+GS2_IN_GAME_PUSH_NOTIFICATION_START_OF_NAMESPACE
+namespace detail2 {
 
-#include "mqtt/mqtt.hpp"
+ConnectResponse::ConnectResponse(void *message, UInt32 size) {
+    MessageBufferProxy proxy(message, size);
+    proxy.readU8();     // message type | message info
+    proxy.readMbi();    // message length
+    proxy.readU8();     // connect acknowledge flags
+    m_ReturnCode = proxy.readU8();
+}
 
-#endif //GS2_INGAMEPUSHNOTIFICATION_HPP_
+}
+GS2_IN_GAME_PUSH_NOTIFICATION_END_OF_NAMESPACE

@@ -14,15 +14,28 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INGAMEPUSHNOTIFICATION_HPP_
-#define GS2_INGAMEPUSHNOTIFICATION_HPP_
+#ifndef GS2_INGAMEPUSHNOTIFICATION_MQTT_CONNECTRESPONSE_HPP_
+#define GS2_INGAMEPUSHNOTIFICATION_MQTT_CONNECTRESPONSE_HPP_
 
-#include <gs2/core/common.hpp>
-#include "control/controller.hpp"
-#include "model/model.hpp"
-#include "Gs2InGamePushNotificationClient.hpp"
-#include "Gs2InGamePushNotificationConst.hpp"
+#include "../common.hpp"
+#include <gs2/core/Gs2Object.hpp>
 
-#include "mqtt/mqtt.hpp"
+GS2_IN_GAME_PUSH_NOTIFICATION_START_OF_NAMESPACE
+namespace detail2 {
 
-#endif //GS2_INGAMEPUSHNOTIFICATION_HPP_
+class ConnectResponse : public Gs2Object {
+private:
+    UInt8 m_ReturnCode;
+
+public:
+    ConnectResponse(void *message, UInt32 size);
+
+    UInt8 getReturnCode() const {
+        return m_ReturnCode;
+    }
+};
+
+}
+GS2_IN_GAME_PUSH_NOTIFICATION_END_OF_NAMESPACE
+
+#endif //GS2_INGAMEPUSHNOTIFICATION_MQTT_CONNECTRESPONSE_HPP_

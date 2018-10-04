@@ -14,15 +14,25 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INGAMEPUSHNOTIFICATION_HPP_
-#define GS2_INGAMEPUSHNOTIFICATION_HPP_
+#ifndef GS2_INGAMEPUSHNOTIFICATION_MQTT_PINGREQUEST_HPP_
+#define GS2_INGAMEPUSHNOTIFICATION_MQTT_PINGREQUEST_HPP_
 
-#include <gs2/core/common.hpp>
-#include "control/controller.hpp"
-#include "model/model.hpp"
-#include "Gs2InGamePushNotificationClient.hpp"
-#include "Gs2InGamePushNotificationConst.hpp"
+#include "AbstractRequest.hpp"
 
-#include "mqtt/mqtt.hpp"
+GS2_IN_GAME_PUSH_NOTIFICATION_START_OF_NAMESPACE
+namespace detail2 {
 
-#endif //GS2_INGAMEPUSHNOTIFICATION_HPP_
+class PingRequest : public AbstractRequest {
+private:
+    virtual UInt32 getRemainingMessageLength() const;
+
+public:
+    PingRequest();
+
+    virtual void dump(MessageBufferProxy &messageBufferProxy) const;
+};
+
+}
+GS2_IN_GAME_PUSH_NOTIFICATION_END_OF_NAMESPACE
+
+#endif //GS2_INGAMEPUSHNOTIFICATION_MQTT_PINGREQUEST_HPP_

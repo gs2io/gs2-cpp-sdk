@@ -14,15 +14,17 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INGAMEPUSHNOTIFICATION_HPP_
-#define GS2_INGAMEPUSHNOTIFICATION_HPP_
+#ifndef GS2_INGAMEPUSHNOTIFICATION_MQTT_HPP_
+#define GS2_INGAMEPUSHNOTIFICATION_MQTT_HPP_
 
-#include <gs2/core/common.hpp>
-#include "control/controller.hpp"
-#include "model/model.hpp"
-#include "Gs2InGamePushNotificationClient.hpp"
-#include "Gs2InGamePushNotificationConst.hpp"
+#include "AbstractRequest.hpp"
+#include "ConnectRequest.hpp"
+#include "ConnectResponse.hpp"
+#include "EventHandler.hpp"
+#include "MessageBufferProxy.hpp"
+#include "MqttClient.hpp"
+#include "PingRequest.hpp"
+#include "PublishResponse.hpp"
+#include "SubscribeRequest.hpp"
 
-#include "mqtt/mqtt.hpp"
-
-#endif //GS2_INGAMEPUSHNOTIFICATION_HPP_
+#endif //GS2_INGAMEPUSHNOTIFICATION_MQTT_HPP_
