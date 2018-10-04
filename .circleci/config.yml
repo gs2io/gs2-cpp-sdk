@@ -26,19 +26,19 @@ jobs:
             cmake -Dgs2-cpp-sdk_SOURCE_DIR=${HOME}/gs2-cpp-sdk -Dcocos2d-x_SOURCE_DIR=${HOME}/cocos2d-x -Dcocos2d-x_LIBRARY_DIR=${HOME}/cocos2d-x/cmake-build/lib ..
       -
         run:
-          name: 直近の成功ビルドからの差分を取得
+          name: ターゲットを決定
           command: |
             cd ../gs2-cpp-test/build
-            ../.circleci/sdk_diff.sh > sdk_diff
+            ../.circleci/targets.sh ../.circleci/filter_gs2-cpp-sdk.sh > targets
       -
         run:
           name: ビルド
           command: |
             cd ../gs2-cpp-test/build
-            ../.circleci/sdk_build.sh < sdk_diff
+            ../.circleci/build.sh < targets
       -
         run:
           name: テストを実行
           command: |
             cd ../gs2-cpp-test/build
-            ../.circleci/sdk_test.sh < sdk_diff
+            ../.circleci/test.sh < targets
