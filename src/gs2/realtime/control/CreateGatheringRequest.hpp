@@ -43,8 +43,8 @@ private:
         optional<StringHolder> gatheringPoolName;
         /** ギャザリング名 */
         optional<StringHolder> name;
-        /** カンマ区切りのギャザリングへの参加を許可するユーザIDリスト */
-        optional<StringHolder> userIds;
+        /** ギャザリングへの参加を許可するユーザIDリスト */
+        optional<List<StringHolder>> userIds;
 
         Data()
         {}
@@ -215,31 +215,31 @@ public:
     }
 
     /**
-     * カンマ区切りのギャザリングへの参加を許可するユーザIDリストを取得
+     * ギャザリングへの参加を許可するユーザIDリストを取得
      *
-     * @return カンマ区切りのギャザリングへの参加を許可するユーザIDリスト
+     * @return ギャザリングへの参加を許可するユーザIDリスト
      */
-    const optional<StringHolder>& getUserIds() const
+    const optional<List<StringHolder>>& getUserIds() const
     {
         return ensureData().userIds;
     }
 
     /**
-     * カンマ区切りのギャザリングへの参加を許可するユーザIDリストを設定
+     * ギャザリングへの参加を許可するユーザIDリストを設定
      *
-     * @param userIds カンマ区切りのギャザリングへの参加を許可するユーザIDリスト
+     * @param userIds ギャザリングへの参加を許可するユーザIDリスト
      */
-    void setUserIds(const Char* userIds)
+    void setUserIds(const List<StringHolder>& userIds)
     {
         ensureData().userIds.emplace(userIds);
     }
 
     /**
-     * カンマ区切りのギャザリングへの参加を許可するユーザIDリストを設定
+     * ギャザリングへの参加を許可するユーザIDリストを設定
      *
-     * @param userIds カンマ区切りのギャザリングへの参加を許可するユーザIDリスト
+     * @param userIds ギャザリングへの参加を許可するユーザIDリスト
      */
-    CreateGatheringRequest& withUserIds(const Char* userIds)
+    CreateGatheringRequest& withUserIds(const List<StringHolder>& userIds)
     {
         ensureData().userIds.emplace(userIds);
         return *this;
