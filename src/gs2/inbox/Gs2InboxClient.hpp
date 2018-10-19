@@ -337,7 +337,7 @@ public:
             url.append("/inbox");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -538,7 +538,7 @@ public:
             url.append("/inbox/").append(detail::StringUtil::toStr(buffer, request.getInboxName())).append("/message/multiple");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getMessageIds()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageIds()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("messageIds={value}").replace("{value}", encodeBuffer) + "&";
@@ -571,7 +571,7 @@ public:
             url.append("/inbox/").append(detail::StringUtil::toStr(buffer, request.getInboxName())).append("/message");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -679,7 +679,13 @@ public:
         if (request.getMessageIds())
         {
             writer.writePropertyName("messageIds");
-            writer.write(*request.getMessageIds());
+            writer.writeArrayStart();
+            auto& list = *request.getMessageIds();
+            for (Int32 i = 0; i < list.getCount(); ++i)
+            {
+                writer.write(list[i]);
+            }
+            writer.writeArrayEnd();
         }
         writer.writeObjectEnd();
         auto body = writer.toString();

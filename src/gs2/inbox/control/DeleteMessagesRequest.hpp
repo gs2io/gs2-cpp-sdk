@@ -42,7 +42,7 @@ private:
         /** 受信ボックスの名前を指定します。 */
         optional<StringHolder> inboxName;
         /** 削除するメッセージのメッセージIDのリストを指定します。 */
-        optional<StringHolder> messageIds;
+        optional<List<StringHolder>> messageIds;
 
         Data()
         {}
@@ -184,7 +184,7 @@ public:
      *
      * @return 削除するメッセージのメッセージIDのリストを指定します。
      */
-    const optional<StringHolder>& getMessageIds() const
+    const optional<List<StringHolder>>& getMessageIds() const
     {
         return ensureData().messageIds;
     }
@@ -194,7 +194,7 @@ public:
      *
      * @param messageIds 削除するメッセージのメッセージIDのリストを指定します。
      */
-    void setMessageIds(const Char* messageIds)
+    void setMessageIds(const List<StringHolder>& messageIds)
     {
         ensureData().messageIds.emplace(messageIds);
     }
@@ -204,7 +204,7 @@ public:
      *
      * @param messageIds 削除するメッセージのメッセージIDのリストを指定します。
      */
-    DeleteMessagesRequest& withMessageIds(const Char* messageIds)
+    DeleteMessagesRequest& withMessageIds(const List<StringHolder>& messageIds)
     {
         ensureData().messageIds.emplace(messageIds);
         return *this;

@@ -38,8 +38,8 @@ private:
     public:
         /** 受信ボックスの名前を指定します。 */
         optional<StringHolder> inboxName;
-        /** カンマ区切りの開封するメッセージのメッセージIDリスト */
-        optional<StringHolder> messageIds;
+        /** 開封するメッセージのメッセージIDリスト */
+        optional<List<StringHolder>> messageIds;
 
         Data()
         {}
@@ -167,31 +167,31 @@ public:
     }
 
     /**
-     * カンマ区切りの開封するメッセージのメッセージIDリストを取得
+     * 開封するメッセージのメッセージIDリストを取得
      *
-     * @return カンマ区切りの開封するメッセージのメッセージIDリスト
+     * @return 開封するメッセージのメッセージIDリスト
      */
-    const optional<StringHolder>& getMessageIds() const
+    const optional<List<StringHolder>>& getMessageIds() const
     {
         return ensureData().messageIds;
     }
 
     /**
-     * カンマ区切りの開封するメッセージのメッセージIDリストを設定
+     * 開封するメッセージのメッセージIDリストを設定
      *
-     * @param messageIds カンマ区切りの開封するメッセージのメッセージIDリスト
+     * @param messageIds 開封するメッセージのメッセージIDリスト
      */
-    void setMessageIds(const Char* messageIds)
+    void setMessageIds(const List<StringHolder>& messageIds)
     {
         ensureData().messageIds.emplace(messageIds);
     }
 
     /**
-     * カンマ区切りの開封するメッセージのメッセージIDリストを設定
+     * 開封するメッセージのメッセージIDリストを設定
      *
-     * @param messageIds カンマ区切りの開封するメッセージのメッセージIDリスト
+     * @param messageIds 開封するメッセージのメッセージIDリスト
      */
-    ReadMessagesRequest& withMessageIds(const Char* messageIds)
+    ReadMessagesRequest& withMessageIds(const List<StringHolder>& messageIds)
     {
         ensureData().messageIds.emplace(messageIds);
         return *this;
