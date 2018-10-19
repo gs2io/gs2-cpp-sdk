@@ -23,6 +23,9 @@
 
 GS2_START_OF_NAMESPACE
 
+template <class T> class List;
+class StringHolder;
+
 namespace detail {
 
 typedef std::basic_string<Char, std::char_traits<Char>, StandardAllocator<Char>> BasicString;
@@ -67,6 +70,8 @@ public:
             : BasicString(number ? "true" : "false")
     {
     }
+
+    explicit StringVariable(const List<StringHolder>& list);
 
     StringVariable& replace(const Char pattern[], const Char replacement[]);
     StringVariable& replace(const StringVariable& pattern, const Char replacement[]);

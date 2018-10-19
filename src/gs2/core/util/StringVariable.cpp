@@ -15,11 +15,27 @@
  */
 
 #include "StringVariable.hpp"
+#include "List.hpp"
+#include "StringHolder.hpp"
 #include <cstring>
 
 GS2_START_OF_NAMESPACE
 
 namespace detail {
+
+StringVariable::StringVariable(const List<StringHolder>& list)
+{
+    auto count = list.getCount();
+    if (count > 0)
+    {
+        append(list[0].getCString());
+
+        for (int i = 1; i < count; ++i)
+        {
+            append(",").append(list[i].getCString());
+        }
+    }
+}
 
 StringVariable& StringVariable::replace(const Char pattern[], const Char replacement[])
 {
