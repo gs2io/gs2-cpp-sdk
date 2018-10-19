@@ -43,8 +43,8 @@ private:
         optional<StringHolder> lobbyName;
         /** ルームID（指定しない場合は自動的に採番されます） */
         optional<StringHolder> roomId;
-        /** ルームへのアクセスを許可するユーザIDリストをカンマ区切りで指定 */
-        optional<StringHolder> allowUserIds;
+        /** ルームへのアクセスを許可するユーザIDリストを指定 */
+        optional<List<StringHolder>> allowUserIds;
         /** ルームにアクセスする際にパスワードを要求する場合は文字列を指定 */
         optional<StringHolder> password;
 
@@ -219,31 +219,31 @@ public:
     }
 
     /**
-     * ルームへのアクセスを許可するユーザIDリストをカンマ区切りで指定を取得
+     * ルームへのアクセスを許可するユーザIDリストを指定を取得
      *
-     * @return ルームへのアクセスを許可するユーザIDリストをカンマ区切りで指定
+     * @return ルームへのアクセスを許可するユーザIDリストを指定
      */
-    const optional<StringHolder>& getAllowUserIds() const
+    const optional<List<StringHolder>>& getAllowUserIds() const
     {
         return ensureData().allowUserIds;
     }
 
     /**
-     * ルームへのアクセスを許可するユーザIDリストをカンマ区切りで指定を設定
+     * ルームへのアクセスを許可するユーザIDリストを指定を設定
      *
-     * @param allowUserIds ルームへのアクセスを許可するユーザIDリストをカンマ区切りで指定
+     * @param allowUserIds ルームへのアクセスを許可するユーザIDリストを指定
      */
-    void setAllowUserIds(const Char* allowUserIds)
+    void setAllowUserIds(const List<StringHolder>& allowUserIds)
     {
         ensureData().allowUserIds.emplace(allowUserIds);
     }
 
     /**
-     * ルームへのアクセスを許可するユーザIDリストをカンマ区切りで指定を設定
+     * ルームへのアクセスを許可するユーザIDリストを指定を設定
      *
-     * @param allowUserIds ルームへのアクセスを許可するユーザIDリストをカンマ区切りで指定
+     * @param allowUserIds ルームへのアクセスを許可するユーザIDリストを指定
      */
-    CreateRoomRequest& withAllowUserIds(const Char* allowUserIds)
+    CreateRoomRequest& withAllowUserIds(const List<StringHolder>& allowUserIds)
     {
         ensureData().allowUserIds.emplace(allowUserIds);
         return *this;

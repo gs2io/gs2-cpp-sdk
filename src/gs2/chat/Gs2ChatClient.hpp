@@ -543,7 +543,7 @@ public:
             url.append("/lobby");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -763,7 +763,7 @@ public:
             url.append("/lobby/").append(detail::StringUtil::toStr(buffer, request.getLobbyName())).append("/log/estimate");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getUserId()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("userId={value}").replace("{value}", encodeBuffer) + "&";
@@ -823,7 +823,7 @@ public:
             url.append("/lobby/").append(detail::StringUtil::toStr(buffer, request.getLobbyName())).append("/room/").append(detail::StringUtil::toStr(buffer, request.getRoomId())).append("/log/estimate");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getUserId()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("userId={value}").replace("{value}", encodeBuffer) + "&";
@@ -894,7 +894,7 @@ public:
             url.append("/lobby/").append(detail::StringUtil::toStr(buffer, request.getLobbyName())).append("/log");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getUserId()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("userId={value}").replace("{value}", encodeBuffer) + "&";
@@ -968,7 +968,7 @@ public:
             url.append("/lobby/").append(detail::StringUtil::toStr(buffer, request.getLobbyName())).append("/room/").append(detail::StringUtil::toStr(buffer, request.getRoomId())).append("/log");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getUserId()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("userId={value}").replace("{value}", encodeBuffer) + "&";
@@ -1027,7 +1027,7 @@ public:
             url.append("/lobby/").append(detail::StringUtil::toStr(buffer, request.getLobbyName())).append("/room/").append(detail::StringUtil::toStr(buffer, request.getRoomId())).append("/message");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPassword()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPassword()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("password={value}").replace("{value}", encodeBuffer) + "&";
@@ -1066,7 +1066,7 @@ public:
             url.append("/lobby/").append(detail::StringUtil::toStr(buffer, request.getLobbyName())).append("/room/").append(detail::StringUtil::toStr(buffer, request.getRoomId())).append("/message/force");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getStartAt()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStartAt()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("startAt={value}").replace("{value}", encodeBuffer) + "&";
@@ -1215,7 +1215,13 @@ public:
         if (request.getAllowUserIds())
         {
             writer.writePropertyName("allowUserIds");
-            writer.write(*request.getAllowUserIds());
+            writer.writeArrayStart();
+            auto& list = *request.getAllowUserIds();
+            for (Int32 i = 0; i < list.getCount(); ++i)
+            {
+                writer.write(list[i]);
+            }
+            writer.writeArrayEnd();
         }
         if (request.getPassword())
         {
@@ -1271,7 +1277,7 @@ public:
             url.append("/lobby/").append(detail::StringUtil::toStr(buffer, request.getLobbyName())).append("/room");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -1466,7 +1472,7 @@ public:
             url.append("/lobby/").append(detail::StringUtil::toStr(buffer, request.getLobbyName())).append("/user/subscribe");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -1501,7 +1507,7 @@ public:
             url.append("/lobby/").append(detail::StringUtil::toStr(buffer, request.getLobbyName())).append("/room/").append(detail::StringUtil::toStr(buffer, request.getRoomId())).append("/subscribe");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -1536,7 +1542,7 @@ public:
             url.append("/lobby/").append(detail::StringUtil::toStr(buffer, request.getLobbyName())).append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("/subscribe");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
