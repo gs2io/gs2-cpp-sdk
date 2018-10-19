@@ -43,8 +43,8 @@ private:
         optional<StringHolder> resourcePoolName;
         /** ユーザID */
         optional<StringHolder> userId;
-        /** リソースIDリスト(カンマ区切り) */
-        optional<StringHolder> statusIds;
+        /** ステータスIDリスト */
+        optional<List<StringHolder>> statusIds;
         /** データの取得を開始する位置を指定するトークン */
         optional<StringHolder> pageToken;
         /** データの取得件数 */
@@ -223,31 +223,31 @@ public:
     }
 
     /**
-     * リソースIDリスト(カンマ区切り)を取得
+     * ステータスIDリストを取得
      *
-     * @return リソースIDリスト(カンマ区切り)
+     * @return ステータスIDリスト
      */
-    const optional<StringHolder>& getStatusIds() const
+    const optional<List<StringHolder>>& getStatusIds() const
     {
         return ensureData().statusIds;
     }
 
     /**
-     * リソースIDリスト(カンマ区切り)を設定
+     * ステータスIDリストを設定
      *
-     * @param statusIds リソースIDリスト(カンマ区切り)
+     * @param statusIds ステータスIDリスト
      */
-    void setStatusIds(const Char* statusIds)
+    void setStatusIds(const List<StringHolder>& statusIds)
     {
         ensureData().statusIds.emplace(statusIds);
     }
 
     /**
-     * リソースIDリスト(カンマ区切り)を設定
+     * ステータスIDリストを設定
      *
-     * @param statusIds リソースIDリスト(カンマ区切り)
+     * @param statusIds ステータスIDリスト
      */
-    DescribeStatusByUserIdRequest& withStatusIds(const Char* statusIds)
+    DescribeStatusByUserIdRequest& withStatusIds(const List<StringHolder>& statusIds)
     {
         ensureData().statusIds.emplace(statusIds);
         return *this;

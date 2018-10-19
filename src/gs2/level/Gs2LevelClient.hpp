@@ -478,7 +478,7 @@ public:
             url.append("/resourcePool/").append(detail::StringUtil::toStr(buffer, request.getResourcePoolName())).append("/master/levelTable");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -591,7 +591,7 @@ public:
             url.append("/resourcePool/").append(detail::StringUtil::toStr(buffer, request.getResourcePoolName())).append("/master/levelTable/").append(detail::StringUtil::toStr(buffer, request.getLevelTableName())).append("/threshold");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -771,7 +771,7 @@ public:
             url.append("/resourcePool");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -1005,7 +1005,7 @@ public:
             url.append("/resourcePool/").append(detail::StringUtil::toStr(buffer, request.getResourcePoolName())).append("/master/resourceType");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -1233,7 +1233,7 @@ public:
             url.append("/resourcePool/").append(detail::StringUtil::toStr(buffer, request.getResourcePoolName())).append("/user/my/status");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getStatusIds()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStatusIds()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("statusIds={value}").replace("{value}", encodeBuffer) + "&";
@@ -1278,7 +1278,7 @@ public:
             url.append("/resourcePool/").append(detail::StringUtil::toStr(buffer, request.getResourcePoolName())).append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("/status");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getStatusIds()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStatusIds()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("statusIds={value}").replace("{value}", encodeBuffer) + "&";
