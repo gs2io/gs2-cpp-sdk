@@ -43,8 +43,8 @@ private:
         optional<StringHolder> scheduleName;
         /** ユーザIDを指定します。 */
         optional<StringHolder> userId;
-        /** 取得するイベント名をカンマ区切りのリストで指定する */
-        optional<StringHolder> eventNames;
+        /** 取得するイベント名のリスト */
+        optional<List<StringHolder>> eventNames;
 
         Data()
         {}
@@ -215,31 +215,31 @@ public:
     }
 
     /**
-     * 取得するイベント名をカンマ区切りのリストで指定するを取得
+     * 取得するイベント名のリストを取得
      *
-     * @return 取得するイベント名をカンマ区切りのリストで指定する
+     * @return 取得するイベント名のリスト
      */
-    const optional<StringHolder>& getEventNames() const
+    const optional<List<StringHolder>>& getEventNames() const
     {
         return ensureData().eventNames;
     }
 
     /**
-     * 取得するイベント名をカンマ区切りのリストで指定するを設定
+     * 取得するイベント名のリストを設定
      *
-     * @param eventNames 取得するイベント名をカンマ区切りのリストで指定する
+     * @param eventNames 取得するイベント名のリスト
      */
-    void setEventNames(const Char* eventNames)
+    void setEventNames(const List<StringHolder>& eventNames)
     {
         ensureData().eventNames.emplace(eventNames);
     }
 
     /**
-     * 取得するイベント名をカンマ区切りのリストで指定するを設定
+     * 取得するイベント名のリストを設定
      *
-     * @param eventNames 取得するイベント名をカンマ区切りのリストで指定する
+     * @param eventNames 取得するイベント名のリスト
      */
-    DescribeEventByUserIdRequest& withEventNames(const Char* eventNames)
+    DescribeEventByUserIdRequest& withEventNames(const List<StringHolder>& eventNames)
     {
         ensureData().eventNames.emplace(eventNames);
         return *this;

@@ -399,7 +399,7 @@ public:
             url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/master/event");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -515,7 +515,7 @@ public:
             url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/event");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getEventNames()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getEventNames()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("eventNames={value}").replace("{value}", encodeBuffer) + "&";
@@ -546,7 +546,7 @@ public:
             url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/event/user/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getEventNames()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getEventNames()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("eventNames={value}").replace("{value}", encodeBuffer) + "&";
@@ -704,7 +704,7 @@ public:
             url.append("/schedule");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -839,7 +839,7 @@ public:
             url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/trigger");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
@@ -874,7 +874,7 @@ public:
             url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("/trigger");
         }
         detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
             queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
