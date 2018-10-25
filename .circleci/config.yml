@@ -8,7 +8,7 @@ jobs:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
         environment:
-          CIRCLE_ARTIFACTS: /tmp/test-results
+          PACKAGE_OUTPUT_DIR: /tmp/packages
     steps:
       - checkout
       -
@@ -42,3 +42,13 @@ jobs:
           command: |
             cd ../gs2-cpp-test/build
             ../.circleci/test.sh < targets
+      -
+        run:
+          name: ライブラリパッケージの作成
+          command: |
+            mkdir -p $PACKAGE_OUTPUT_DIR
+            cd src/
+            zip -r $PACKAGE_OUTPUT_DIR/gs2-cpp-sdk_v0.0.1.zip gs2
+      -
+        store_artifacts:
+          path: $PACKAGE_OUTPUT_DIR
