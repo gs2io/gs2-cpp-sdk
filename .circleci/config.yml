@@ -51,4 +51,4 @@ jobs:
             zip -r $PACKAGE_OUTPUT_DIR/gs2-cpp-sdk_v0.0.1.zip gs2
       -
         store_artifacts:
-          path: $PACKAGE_OUTPUT_DIR
+          path: /tmp/packages
