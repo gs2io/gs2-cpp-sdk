@@ -26,6 +26,7 @@
 #include <gs2/core/util/StringVariable.hpp>
 #include <base/CCDirector.h>
 #include <base/CCScheduler.h>
+#include <platform/CCFileUtils.h>
 
 GS2_IN_GAME_PUSH_NOTIFICATION_START_OF_NAMESPACE
 
@@ -163,6 +164,27 @@ void MqttClient::send(const detail2::AbstractRequest &request)
     Gs2Object::getAllocator().free(buffer);
 }
 
+void MqttClient::writeRootCaCallback(bool isSuccessful)
+{
+    if (!isSuccessful)
+    {
+        onError.invoke(Error::UNKNOWN);
+        return;
+    }
+
+    CCLOG("Root CA: %s", rootCertificateFilePath);
+    CCLOG("Endpoint: %s", *host.getEndpoint());
+    std::vector<std::string> protocols;
+    protocols.push_back("mqtt");
+    auto isInitialized = m_WebSocket.init(m_Delegate, m_WebSocketHost.getEndpoint()->getCString(), &protocols, m_RootCertificateFilePath);
+
+    if (!isInitialized)
+    {
+        onError.invoke(Error::UNKNOWN);
+        return;
+    }
+}
+
 void MqttClient::connectAsync(const WebSocketHost& webSocketHost, const char userId[], const char rootCertificateFilePath[])
 {
     auto webSocketHostCopy = webSocketHost;
@@ -173,12 +195,20 @@ void MqttClient::connectAsync(WebSocketHost&& webSocketHost, const char userId[]
 {
     m_WebSocketHost = std::move(webSocketHost);
     m_UserId = userId;
+    m_RootCertificateFilePath = rootCertificateFilePath == nullptr ?
+        std::move(cocos2d::FileUtils::getInstance()->getWritablePath() + "root-ca") :
+        rootCertificateFilePath;
 
-    CCLOG("Root CA: %s", rootCertificateFilePath);
-    CCLOG("Endpoint: %s", *host.getEndpoint());
-    std::vector<std::string> protocols;
-    protocols.push_back("mqtt");
-    m_WebSocket.init(m_Delegate, m_WebSocketHost.getEndpoint()->getCString(), &protocols, rootCertificateFilePath);
+    cocos2d::Data data;
+    auto& rootCertificate = *m_WebSocketHost.getRootCertificate();
+    data.copy(reinterpret_cast<const unsigned char*>(rootCertificate.getCString()), rootCertificate.getSize() - 1);
+    cocos2d::FileUtils::getInstance()->writeDataToFile(
+        std::move(data),
+        m_RootCertificateFilePath,
+        [this](bool isSuccessful) {
+            this->writeRootCaCallback(isSuccessful);
+        }
+    );
 }
 
 void MqttClient::disconnectAsync()

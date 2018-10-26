@@ -63,16 +63,19 @@ private:
 
     WebSocketHost m_WebSocketHost;
     StringHolder m_UserId;
+    std::string m_RootCertificateFilePath;
 
     void send(const detail2::AbstractRequest& request);
+
+    void writeRootCaCallback(bool isSuccessful);
 
 public:
     MqttClient();
 
     ~MqttClient();
 
-    void connectAsync(const WebSocketHost& webSocketHost, const char userId[], const char rootCertificateFilePath[]);
-    void connectAsync(WebSocketHost&& webSocketHost, const char userId[], const char rootCertificateFilePath[]);
+    void connectAsync(const WebSocketHost& webSocketHost, const char userId[], const char rootCertificateFilePath[] = nullptr);
+    void connectAsync(WebSocketHost&& webSocketHost, const char userId[], const char rootCertificateFilePath[] = nullptr);
 
     void disconnectAsync();
 };
