@@ -38,7 +38,7 @@ const char KeepAliveFunctionIdentifier[] = "gs2::mqtt::MqttClient::sendKeepAlive
 
 void MqttClient::Delegate::onOpen(cocos2d::network::WebSocket* pWebSocket)
 {
-    CCLOG("Delegate onOpen");
+    // CCLOG("Delegate onOpen");
 
     detail2::ConnectRequest connectRequest;
     connectRequest
@@ -49,7 +49,7 @@ void MqttClient::Delegate::onOpen(cocos2d::network::WebSocket* pWebSocket)
 
 void MqttClient::Delegate::onMessage(cocos2d::network::WebSocket* pWebSocket, const cocos2d::network::WebSocket::Data& data)
 {
-    CCLOG("Delegate onMessage (%i)", data.len);
+    // CCLOG("Delegate onMessage (%i)", data.len);
 
 //    if (e.IsPing)
 //    {
@@ -67,18 +67,18 @@ void MqttClient::Delegate::onMessage(cocos2d::network::WebSocket* pWebSocket, co
     }
 
     auto messageType = static_cast<detail2::MessageType>((byte0 >> 4) & 0x0f);
-    CCLOG("MQTT Response: %i", messageType);
+    // CCLOG("MQTT Response: %i", messageType);
 
     switch (messageType)
     {
         case detail2::MessageType::CONNACK:
             {
-                CCLOG("MQTT Response: CONNACK");
+                // CCLOG("MQTT Response: CONNACK");
                 detail2::ConnectResponse connectResponse(data.bytes, data.len);
                 if (connectResponse.getReturnCode() != 0)
                 {
                     // TODO: m_MqttClient.onError.invoke();
-                    CCLOG("  Return Code: %i", connectResponse.getReturnCode());
+                    // CCLOG("  Return Code: %i", connectResponse.getReturnCode());
                 }
                 else
                 {
@@ -87,24 +87,24 @@ void MqttClient::Delegate::onMessage(cocos2d::network::WebSocket* pWebSocket, co
                     topic.append("/users/");
                     topic.append(m_MqttClient.m_UserId);
                     const char* topics[1] = {topic.c_str()};    // TODO: OK?
-                    CCLOG("topic: %s", topics[0]);
+                    // CCLOG("topic: %s", topics[0]);
                     detail2::SubscribeRequest subscribeRequest;
                     subscribeRequest.withTopics(topics, GS2_COUNT_OF(topics));
                     m_MqttClient.send(subscribeRequest);
-                    CCLOG("SubscribeRequest sent.");
+                    // CCLOG("SubscribeRequest sent.");
                 }
             }
             break;
 
         case detail2::MessageType::SUBACK:
-            CCLOG("MQTT Response: SUBACK");
+            // CCLOG("MQTT Response: SUBACK");
             cocos2d::Director::getInstance()->getScheduler()->resumeTarget(&m_MqttClient);
             m_MqttClient.onConnect.invoke();
             break;
 
         case detail2::MessageType::PUBLISH:
             {
-                CCLOG("MQTT Response: PUBLISH");
+                // CCLOG("MQTT Response: PUBLISH");
                 detail2::PublishResponse publishResponse(data.bytes, data.len);
                 // '\0' 終端を追加してからコールバックに渡す
                 auto payloadSize = publishResponse.getPayloadSize();
@@ -122,7 +122,7 @@ void MqttClient::Delegate::onMessage(cocos2d::network::WebSocket* pWebSocket, co
 
 void MqttClient::Delegate::onClose(cocos2d::network::WebSocket* pWebSocket)
 {
-    CCLOG("Delegate onClose");
+    // CCLOG("Delegate onClose");
 
     cocos2d::Director::getInstance()->getScheduler()->pauseTarget(&m_MqttClient);
     m_MqttClient.onClose.invoke();
@@ -130,7 +130,7 @@ void MqttClient::Delegate::onClose(cocos2d::network::WebSocket* pWebSocket)
 
 void MqttClient::Delegate::onError(cocos2d::network::WebSocket* pWebSocket, const cocos2d::network::WebSocket::ErrorCode& errorCode)
 {
-    CCLOG("Delegate onError: %i", errorCode);
+    // CCLOG("Delegate onError: %i", errorCode);
 
     m_MqttClient.onError.invoke(errorCode);
 }
@@ -143,7 +143,7 @@ MqttClient::MqttClient() :
         [this](float time) {
             detail2::PingRequest pingRequest;
             this->send(pingRequest);
-            CCLOG("PingRequest sent.");
+            // CCLOG("PingRequest sent.");
         },
         this, static_cast<float>(KeepAliveIntervalInSeconds), true, KeepAliveFunctionIdentifier
     );
@@ -172,8 +172,8 @@ void MqttClient::writeRootCaCallback(bool isSuccessful)
         return;
     }
 
-    CCLOG("Root CA: %s", rootCertificateFilePath);
-    CCLOG("Endpoint: %s", *host.getEndpoint());
+    // CCLOG("Root CA: %s", rootCertificateFilePath);
+    // CCLOG("Endpoint: %s", *host.getEndpoint());
     std::vector<std::string> protocols;
     protocols.push_back("mqtt");
     auto isInitialized = m_WebSocket.init(m_Delegate, m_WebSocketHost.getEndpoint()->getCString(), &protocols, m_RootCertificateFilePath);
