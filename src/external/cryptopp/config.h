@@ -6,6 +6,16 @@
 #ifndef GS2_CRYPTOPP_CONFIG_H
 #define GS2_CRYPTOPP_CONFIG_H
 
+// ***************** Additional Settings by GS2 ********************
+// プロジェクトのビルド設定に応じて書き換えてください。
+
+#define GS2_CRYPTOPP_DISABLE_SSE4 1
+#if defined(__ANDROID__)
+#   define GS2_CRYPTOPP_DISABLE_ASM 1
+#   define GS2_CRYPTOPP_ARM_NEON_AVAILABLE 0
+#endif
+#define GS2_CRYPTOPP_MANUALLY_INSTANTIATE_TEMPLATES 1
+
 // ***************** Important Settings ********************
 
 // define this if running on a big-endian CPU

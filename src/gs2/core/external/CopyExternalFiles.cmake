@@ -108,15 +108,18 @@ set(cryptopp_SOURCE_FILE_ENTRIES
         cryptopp/algparam.cpp
         cryptopp/asn.cpp
         cryptopp/cpu.cpp
+        cryptopp/crc-simd.cpp
         cryptopp/cryptlib.cpp
         cryptopp/filters.cpp
         cryptopp/fips140.cpp
+        cryptopp/gcm-simd.cpp
         cryptopp/hmac.cpp
         cryptopp/integer.cpp
         cryptopp/iterhash.cpp
         cryptopp/misc.cpp
         cryptopp/mqueue.cpp
         cryptopp/nbtheory.cpp
+        cryptopp/neon-simd.cpp
         cryptopp/osrng.cpp
         cryptopp/pubkey.cpp
         cryptopp/queue.cpp
@@ -125,6 +128,7 @@ set(cryptopp_SOURCE_FILE_ENTRIES
         cryptopp/rijndael.cpp
         cryptopp/rng.cpp
         cryptopp/sha.cpp
+        cryptopp/sha-simd.cpp
         cryptopp/sse-simd.cpp
         )
 
