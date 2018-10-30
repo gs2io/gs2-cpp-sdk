@@ -35,9 +35,36 @@ class MqttClient : public Gs2Object
 public:
     typedef cocos2d::network::WebSocket::ErrorCode Error;
 
+    /**
+     * セッションが確立したときに呼ばれるコールバックへのエンドポイントです。<br>
+     * <br>
+     * += 演算子に、ラムダ式を含む std::function<void()> 型のオブジェクトを渡すことでコールバックを追加できます。
+     * <br>
+     */
     RootEventHandler<ConnectEventHandler> onConnect;
+
+    /**
+     * メッセージを受信したときに呼ばれるコールバックへのエンドポイントです。<br>
+     * <br>
+     * += 演算子に、ラムダ式を含む std::function<void(const char[])> 型のオブジェクトを渡すことでコールバックを追加できます。
+     * <br>
+     */
     RootEventHandler<ReceiveEventHandler, const char[]> onReceive;
+
+    /**
+     * セッションが切断されたときに呼ばれるコールバックへのエンドポイントです。<br>
+     * <br>
+     * += 演算子に、ラムダ式を含む std::function<void()> 型のオブジェクトを渡すことでコールバックを追加できます。
+     * <br>
+     */
     RootEventHandler<CloseEventHandler> onClose;
+
+    /**
+     * エラーが発生したときに呼ばれるコールバックへのエンドポイントです。<br>
+     * <br>
+     * += 演算子に、ラムダ式を含む std::function<void(Error)> 型のオブジェクトを渡すことでコールバックを追加できます。
+     * <br>
+     */
     RootEventHandler<EventHandler<ErrorEventHandlerTraits, Error>, Error> onError;
 
 private:
@@ -74,9 +101,37 @@ public:
 
     ~MqttClient();
 
+    /**
+     * 接続を開始します<br>
+     * <br>
+     * Cocos2d-x の制約により、内部でルート CA 証明書をファイルへ書き出します。
+     * rootCertificateFilePath を指定しなかった場合、このファイルは cocos2d::FileUtils::getWritablePath() が返すディレクトリに
+     * "root-ca" という名前で保存されます。
+     * <br>
+     *
+     * @param webSocketHost コールバック関数
+     * @param userId リクエストパラメータ
+     * @param rootCertificateFilePath リクエストパラメータ
+     */
     void connectAsync(const WebSocketHost& webSocketHost, const char userId[], const char rootCertificateFilePath[] = nullptr);
+
+    /**
+     * 接続を開始します<br>
+     * <br>
+     * Cocos2d-x の制約により、内部でルート CA 証明書をファイルへ書き出します。
+     * rootCertificateFilePath を指定しなかった場合、このファイルは cocos2d::FileUtils::getWritablePath() が返すディレクトリに
+     * "root-ca" という名前で保存されます。
+     * <br>
+     *
+     * @param webSocketHost コールバック関数
+     * @param userId リクエストパラメータ
+     * @param rootCertificateFilePath リクエストパラメータ
+     */
     void connectAsync(WebSocketHost&& webSocketHost, const char userId[], const char rootCertificateFilePath[] = nullptr);
 
+    /**
+     * 切断を開始します<br>
+     */
     void disconnectAsync();
 };
 
