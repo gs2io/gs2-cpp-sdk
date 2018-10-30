@@ -101,7 +101,11 @@ void AbstractGs2ClientBase::callbackHandler(cocos2d::network::HttpClient* pClien
     Gs2ClientException gs2ClientException;
     Gs2ClientException* pGs2ClientException = nullptr;
 
-    if (!pResponse->isSucceed())
+    // [NOTE] iOS では応答が 200 以外でも isSucceed() が true になる模様 (@Cocos2d-x v3.16)
+    if (pResponse->isSucceed() && responseCode == 200)
+    {
+    }
+    else
     {
         Gs2ClientException::Type type;
         switch(responseCode) {
