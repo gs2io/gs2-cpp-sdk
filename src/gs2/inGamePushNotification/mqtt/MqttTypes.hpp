@@ -14,15 +14,33 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INGAMEPUSHNOTIFICATION_HPP_
-#define GS2_INGAMEPUSHNOTIFICATION_HPP_
+#ifndef GS2_INGAMEPUSHNOTIFICATION_MQTT_MQTTTYPES_HPP_
+#define GS2_INGAMEPUSHNOTIFICATION_MQTT_MQTTTYPES_HPP_
 
-#include <gs2/core/common.hpp>
-#include "control/controller.hpp"
-#include "model/model.hpp"
-#include "Gs2InGamePushNotificationClient.hpp"
-#include "Gs2InGamePushNotificationConst.hpp"
+#include "../common.hpp"
 
-#include "mqtt/mqtt.hpp"
+GS2_IN_GAME_PUSH_NOTIFICATION_START_OF_NAMESPACE
+namespace detail2 {
 
-#endif //GS2_INGAMEPUSHNOTIFICATION_HPP_
+enum class MessageType
+{
+    CONNECT = 1,
+    CONNACK = 2,
+    PUBLISH = 3,
+    PUBACK = 4,
+    PUBREC = 5,
+    PUBREL = 6,
+    PUBCOMP = 7,
+    SUBSCRIBE = 8,
+    SUBACK = 9,
+    UNSUBSCRIBE = 10,
+    UNSUBACK = 11,
+    PINGREQ = 12,
+    PINGRESP = 13,
+    DISCONNECT = 14
+};
+
+}
+GS2_IN_GAME_PUSH_NOTIFICATION_END_OF_NAMESPACE
+
+#endif //GS2_INGAMEPUSHNOTIFICATION_MQTT_MQTTTYPES_HPP_

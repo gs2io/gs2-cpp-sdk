@@ -1,6 +1,6 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
- * Reserved.
+ * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All
+ * Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,15 +14,10 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INGAMEPUSHNOTIFICATION_HPP_
-#define GS2_INGAMEPUSHNOTIFICATION_HPP_
+#ifndef GS2_INGAMEPUSHNOTIFICATION_MACROS_HPP_
+#define GS2_INGAMEPUSHNOTIFICATION_MACROS_HPP_
 
-#include <gs2/core/common.hpp>
-#include "control/controller.hpp"
-#include "model/model.hpp"
-#include "Gs2InGamePushNotificationClient.hpp"
-#include "Gs2InGamePushNotificationConst.hpp"
+#define GS2_IN_GAME_PUSH_NOTIFICATION_START_OF_NAMESPACE  namespace gs2 { namespace inGamePushNotification {
+#define GS2_IN_GAME_PUSH_NOTIFICATION_END_OF_NAMESPACE    } }
 
-#include "mqtt/mqtt.hpp"
-
-#endif //GS2_INGAMEPUSHNOTIFICATION_HPP_
+#endif //GS2_INGAMEPUSHNOTIFICATION_MACROS_HPP_

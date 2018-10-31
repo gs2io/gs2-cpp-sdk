@@ -14,15 +14,29 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INGAMEPUSHNOTIFICATION_HPP_
-#define GS2_INGAMEPUSHNOTIFICATION_HPP_
+#include "PingRequest.hpp"
+#include "MessageBufferProxy.hpp"
+#include "MqttTypes.hpp"
 
-#include <gs2/core/common.hpp>
-#include "control/controller.hpp"
-#include "model/model.hpp"
-#include "Gs2InGamePushNotificationClient.hpp"
-#include "Gs2InGamePushNotificationConst.hpp"
+GS2_IN_GAME_PUSH_NOTIFICATION_START_OF_NAMESPACE
+namespace detail2 {
 
-#include "mqtt/mqtt.hpp"
+namespace {
+const char MqttProtocolIdentifier[] = {'M', 'Q', 'I', 's', 'd', 'p'};
+}
 
-#endif //GS2_INGAMEPUSHNOTIFICATION_HPP_
+PingRequest::PingRequest()
+{
+}
+
+UInt32 PingRequest::getRemainingMessageLength() const {
+    return 0;
+}
+
+void PingRequest::dump(MessageBufferProxy &messageBufferProxy) const {
+    messageBufferProxy.writeU8(static_cast<UInt8>(MessageType::PINGREQ) << 4);
+    messageBufferProxy.writeMbi(getRemainingMessageLength());
+}
+
+}
+GS2_IN_GAME_PUSH_NOTIFICATION_END_OF_NAMESPACE
