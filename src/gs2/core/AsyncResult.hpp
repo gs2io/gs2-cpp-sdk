@@ -144,12 +144,12 @@ public:
         return *this;
     }
 
-    const optional<T> getResult() const
+    const optional<T>& getResult() const
     {
         return ensureData().result;
     }
 
-    const optional<Gs2ClientException> getError() const
+    const optional<Gs2ClientException>& getError() const
     {
         return ensureData().error;
     }
@@ -268,7 +268,7 @@ public:
         return *this;
     }
 
-    const optional<Gs2ClientException> getError() const
+    const optional<Gs2ClientException>& getError() const
     {
         return ensureData().error;
     }
