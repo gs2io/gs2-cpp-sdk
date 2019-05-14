@@ -114,6 +114,21 @@ public:
         m_List.emplace_back(std::move(element));
         return *this;
     }
+
+    List& operator+=(const List& list)
+    {
+        m_List.insert(m_List.end(), list.m_List.begin(), list.m_List.end());
+        return *this;
+    }
+
+    List& operator+=(List&& list)
+    {
+        for (auto itr = list.m_List.begin(); itr != list.m_List.end(); ++itr)
+        {
+            m_List.insert(m_List.end(), std::move(*itr));
+        }
+        return *this;
+    }
 };
 
 template<> class List<StringHolder> : public Gs2Object {
@@ -210,6 +225,21 @@ public:
     List& operator+=(const Char element[])
     {
         m_List.emplace_back(element);
+        return *this;
+    }
+
+    List& operator+=(const List& list)
+    {
+        m_List.insert(m_List.end(), list.m_List.begin(), list.m_List.end());
+        return *this;
+    }
+
+    List& operator+=(List&& list)
+    {
+        for (auto itr = list.m_List.begin(); itr != list.m_List.end(); ++itr)
+        {
+            m_List.insert(m_List.end(), std::move(*itr));
+        }
         return *this;
     }
 
