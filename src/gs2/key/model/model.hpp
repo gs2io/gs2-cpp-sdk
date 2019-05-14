@@ -17,6 +17,8 @@
 #ifndef GS2_KEY_MODEL_MODEL_HPP_
 #define GS2_KEY_MODEL_MODEL_HPP_
 
+#include <gs2/core/common.hpp>
 #include "Key.hpp"
+#include "FullKey.hpp"
 
 #endif //GS2_KEY_MODEL_MODEL_HPP_

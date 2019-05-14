@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,10 +25,10 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace money {
+namespace gs2 { namespace  {
 
 /**
- * ウォレット
+ * ウォレットの概要
  *
  * @author Game Server Services, Inc.
  *
@@ -39,24 +39,32 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザID */
+        /** ウォレットの概要 のGRN */
+        optional<StringHolder> summaryId;
+        /** ユーザーID */
         optional<StringHolder> userId;
-        /** スロット番号 */
+        /** None */
+        
         optional<Int32> slot;
         /** 有償課金通貨所持量 */
+        
         optional<Int32> paid;
         /** 無償課金通貨所持量 */
+        
         optional<Int32> free;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
-        /** 最終更新日時(エポック秒) */
-        optional<Int32> updateAt;
+        /** 作成日時 */
+        
+        optional<Int64> createAt;
+        /** 最終更新日時 */
+        
+        optional<Int64> updateAt;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            summaryId(data.summaryId),
             userId(data.userId),
             slot(data.slot),
             paid(data.paid),
@@ -67,6 +75,7 @@ private:
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
+            summaryId(std::move(data.summaryId)),
             userId(std::move(data.userId)),
             slot(std::move(data.slot)),
             paid(std::move(data.paid)),
@@ -83,7 +92,13 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "userId") == 0) {
+            if (std::strcmp(name, "summaryId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->summaryId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "userId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
@@ -108,20 +123,20 @@ private:
                 }
             }
             else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->createAt = jsonValue.GetInt64();
                 }
             }
             else if (std::strcmp(name, "updateAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt();
+                    this->updateAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -199,12 +214,30 @@ public:
     {
         return this;
     }
-
+    /**
+     * ウォレットの概要 のGRNを取得
+     *
+     * @return ウォレットの概要 のGRN
+     */
+    const optional<StringHolder>& getSummaryId() const
+    {
+        return ensureData().summaryId;
+    }
 
     /**
-     * ユーザIDを取得
+     * ウォレットの概要 のGRNを設定
      *
-     * @return ユーザID
+     * @param summaryId ウォレットの概要 のGRN
+     */
+    void setSummaryId(const Char* summaryId)
+    {
+        ensureData().summaryId.emplace(summaryId);
+    }
+
+    /**
+     * ユーザーIDを取得
+     *
+     * @return ユーザーID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -212,9 +245,9 @@ public:
     }
 
     /**
-     * ユーザIDを設定
+     * ユーザーIDを設定
      *
-     * @param userId ユーザID
+     * @param userId ユーザーID
      */
     void setUserId(const Char* userId)
     {
@@ -222,9 +255,9 @@ public:
     }
 
     /**
-     * スロット番号を取得
+     * Noneを取得
      *
-     * @return スロット番号
+     * @return None
      */
     const optional<Int32>& getSlot() const
     {
@@ -232,9 +265,9 @@ public:
     }
 
     /**
-     * スロット番号を設定
+     * Noneを設定
      *
-     * @param slot スロット番号
+     * @param slot None
      */
     void setSlot(Int32 slot)
     {
@@ -282,41 +315,41 @@ public:
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * 作成日時を取得
      *
-     * @return 作成日時(エポック秒)
+     * @return 作成日時
      */
-    const optional<Int32>& getCreateAt() const
+    const optional<Int64>& getCreateAt() const
     {
         return ensureData().createAt;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param createAt 作成日時(エポック秒)
+     * @param createAt 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
     }
 
     /**
-     * 最終更新日時(エポック秒)を取得
+     * 最終更新日時を取得
      *
-     * @return 最終更新日時(エポック秒)
+     * @return 最終更新日時
      */
-    const optional<Int32>& getUpdateAt() const
+    const optional<Int64>& getUpdateAt() const
     {
         return ensureData().updateAt;
     }
 
     /**
-     * 最終更新日時(エポック秒)を設定
+     * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時(エポック秒)
+     * @param updateAt 最終更新日時
      */
-    void setUpdateAt(Int32 updateAt)
+    void setUpdateAt(Int64 updateAt)
     {
         ensureData().updateAt.emplace(updateAt);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,10 +25,10 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace account {
+namespace gs2 { namespace  {
 
 /**
- * アカウント情報
+ * アカウント
  *
  * @author Game Server Services, Inc.
  *
@@ -39,18 +39,22 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザID */
+        /** アカウント のGRN */
+        optional<StringHolder> accountId;
+        /** アカウントID */
         optional<StringHolder> userId;
         /** パスワード */
         optional<StringHolder> password;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
+        /** 作成日時 */
+        
+        optional<Int64> createAt;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            accountId(data.accountId),
             userId(data.userId),
             password(data.password),
             createAt(data.createAt)
@@ -58,6 +62,7 @@ private:
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
+            accountId(std::move(data.accountId)),
             userId(std::move(data.userId)),
             password(std::move(data.password)),
             createAt(std::move(data.createAt))
@@ -71,7 +76,13 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "userId") == 0) {
+            if (std::strcmp(name, "accountId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->accountId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "userId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
@@ -84,14 +95,14 @@ private:
                 }
             }
             else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->createAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -169,12 +180,30 @@ public:
     {
         return this;
     }
-
+    /**
+     * アカウント のGRNを取得
+     *
+     * @return アカウント のGRN
+     */
+    const optional<StringHolder>& getAccountId() const
+    {
+        return ensureData().accountId;
+    }
 
     /**
-     * ユーザIDを取得
+     * アカウント のGRNを設定
      *
-     * @return ユーザID
+     * @param accountId アカウント のGRN
+     */
+    void setAccountId(const Char* accountId)
+    {
+        ensureData().accountId.emplace(accountId);
+    }
+
+    /**
+     * アカウントIDを取得
+     *
+     * @return アカウントID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -182,9 +211,9 @@ public:
     }
 
     /**
-     * ユーザIDを設定
+     * アカウントIDを設定
      *
-     * @param userId ユーザID
+     * @param userId アカウントID
      */
     void setUserId(const Char* userId)
     {
@@ -212,21 +241,21 @@ public:
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * 作成日時を取得
      *
-     * @return 作成日時(エポック秒)
+     * @return 作成日時
      */
-    const optional<Int32>& getCreateAt() const
+    const optional<Int64>& getCreateAt() const
     {
         return ensureData().createAt;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param createAt 作成日時(エポック秒)
+     * @param createAt 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
     }

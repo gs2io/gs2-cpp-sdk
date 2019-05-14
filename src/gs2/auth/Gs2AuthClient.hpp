@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -23,17 +23,24 @@
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
+#include "request/LoginRequest.hpp"
+#include "request/LoginBySignatureRequest.hpp"
+#include "result/LoginResult.hpp"
+#include "result/LoginBySignatureResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace auth {
 
-typedef AsyncResult<CreateOnceOnetimeTokenResult> AsyncCreateOnceOnetimeTokenResult;
-typedef AsyncResult<CreateTimeOnetimeTokenResult> AsyncCreateTimeOnetimeTokenResult;
 typedef AsyncResult<LoginResult> AsyncLoginResult;
-typedef AsyncResult<LoginWithSignResult> AsyncLoginWithSignResult;
+typedef AsyncResult<LoginBySignatureResult> AsyncLoginBySignatureResult;
 
+/**
+ * GS2 Auth API クライアント
+ *
+ * @author Game Server Services, Inc.
+ *
+ */
 class Gs2AuthClient : public AbstractGs2ClientBase
 {
 private:
@@ -46,7 +53,7 @@ private:
 
 private:
 
-    void write(detail::json::JsonWriter& writer, const AccountToken& obj)
+    void write(detail::json::JsonWriter& writer, const AccessToken& obj)
     {
         writer.writeObjectStart();
         if (obj.getOwnerId())
@@ -54,20 +61,20 @@ private:
             writer.writePropertyName("ownerId");
             writer.write(*obj.getOwnerId());
         }
-        if (obj.getGameName())
+        if (obj.getToken())
         {
-            writer.writePropertyName("gameName");
-            writer.write(*obj.getGameName());
+            writer.writePropertyName("token");
+            writer.write(*obj.getToken());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
             writer.write(*obj.getUserId());
         }
-        if (obj.getTimestamp())
+        if (obj.getExpire())
         {
-            writer.writePropertyName("timestamp");
-            writer.write(*obj.getTimestamp());
+            writer.writePropertyName("expire");
+            writer.write(*obj.getExpire());
         }
         writer.writeObjectEnd();
     }
@@ -107,90 +114,11 @@ public:
     {
     }
 
-
-    /**
-     * 実行回数制限付きワンタイムトークンを発行します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void createOnceOnetimeToken(std::function<void(AsyncCreateOnceOnetimeTokenResult&)> callback, CreateOnceOnetimeTokenRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<CreateOnceOnetimeTokenResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/onetime/once/token");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getScriptName())
-        {
-            writer.writePropertyName("scriptName");
-            writer.write(*request.getScriptName());
-        }
-        if (request.getGrant())
-        {
-            writer.writePropertyName("grant");
-            writer.write(*request.getGrant());
-        }
-        if (request.getArgs())
-        {
-            writer.writePropertyName("args");
-            writer.write(*request.getArgs());
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 1回のみ実行を許可するワンタイムトークンを発行します<br>
-     * このトークンはスタミナの回復処理など、有効期間内だからといって何度も実行されたくない処理を1度だけ許可したい場合に発行します。<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void createTimeOnetimeToken(std::function<void(AsyncCreateTimeOnetimeTokenResult&)> callback, CreateTimeOnetimeTokenRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<CreateTimeOnetimeTokenResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/onetime/time/token");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getScriptName())
-        {
-            writer.writePropertyName("scriptName");
-            writer.write(*request.getScriptName());
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * ログイン処理を実行します<br>
-     * <br>
-     *
+	/**
+	 * 指定したユーザIDでGS2にログインし、アクセストークンを取得します<br>
+	 *   本APIは信頼出来るゲームサーバーから呼び出されることを想定しています。<br>
+	 *   ユーザIDの値の検証処理が存在しないため、クライアントから呼び出すのは不適切です。<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -199,18 +127,10 @@ public:
         auto& httpRequest = *new detail::HttpRequest<LoginResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/login");
-        }
+        url.append("/auth-handler?handler=gs2_auth%2Fhandler%2FAccessTokenFunctionHandler.login");
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
-        if (request.getServiceId())
-        {
-            writer.writePropertyName("serviceId");
-            writer.write(*request.getServiceId());
-        }
         if (request.getUserId())
         {
             writer.writePropertyName("userId");
@@ -220,61 +140,67 @@ public:
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * GS2-Accountの認証署名付きログイン処理を実行します<br>
-     * <br>
-     *
+	/**
+	 * 指定したユーザIDでGS2にログインし、アクセストークンを取得します<br>
+	 *   ユーザIDの署名検証を実施することで、本APIはクライアントから呼び出しても安全です。<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void loginWithSign(std::function<void(AsyncLoginWithSignResult&)> callback, LoginWithSignRequest& request)
+    void loginBySignature(std::function<void(AsyncLoginBySignatureResult&)> callback, LoginBySignatureRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<LoginWithSignResult>;
+        auto& httpRequest = *new detail::HttpRequest<LoginBySignatureResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/login/signed");
-        }
+        url.append("/auth-handler?handler=gs2_auth%2Fhandler%2FAccessTokenFunctionHandler.loginBySignature");
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
-        if (request.getServiceId())
-        {
-            writer.writePropertyName("serviceId");
-            writer.write(*request.getServiceId());
-        }
         if (request.getUserId())
         {
             writer.writePropertyName("userId");
             writer.write(*request.getUserId());
         }
-        if (request.getKeyName())
+        if (request.getKeyId())
         {
-            writer.writePropertyName("keyName");
-            writer.write(*request.getKeyName());
+            writer.writePropertyName("keyId");
+            writer.write(*request.getKeyId());
         }
-        if (request.getSign())
+        if (request.getBody())
         {
-            writer.writePropertyName("sign");
-            writer.write(*request.getSign());
+            writer.writePropertyName("body");
+            writer.write(*request.getBody());
+        }
+        if (request.getSignature())
+        {
+            writer.writePropertyName("signature");
+            writer.write(*request.getSignature());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
-
 };
 
 } }

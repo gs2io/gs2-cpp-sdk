@@ -17,11 +17,12 @@
 #ifndef GS2_MONEY_MODEL_MODEL_HPP_
 #define GS2_MONEY_MODEL_MODEL_HPP_
 
+#include <gs2/core/common.hpp>
 #include "Money.hpp"
-#include "Item.hpp"
-#include "PlatformedItem.hpp"
+#include "User.hpp"
 #include "Summary.hpp"
 #include "Wallet.hpp"
 #include "Receipt.hpp"
+#include "ResponseCache.hpp"
 
 #endif //GS2_MONEY_MODEL_MODEL_HPP_

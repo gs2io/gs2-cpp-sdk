@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace stamina {
+namespace gs2 { namespace  {
 
 /**
  * スタミナ
@@ -39,32 +39,58 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザID */
+        /** スタミナ のGRN */
+        optional<StringHolder> staminaId;
+        /** スタミナの種類名 */
+        optional<StringHolder> staminaModelName;
+        /** ユーザーID */
         optional<StringHolder> userId;
-        /** スタミナ値 */
+        /** 最終更新時におけるスタミナ値 */
+        
         optional<Int32> value;
-        /** 最大値を超えて保持しているスタミナ値 */
-        optional<Int32> overflow;
-        /** 最終更新日時(エポック秒) */
-        optional<Int32> lastUpdateAt;
+        /** スタミナの最大値 */
+        
+        optional<Int32> maxValue;
+        /** スタミナの最大値を超えて格納されているスタミナ値 */
+        
+        optional<Int32> overflowValue;
+        /** 作成日時 */
+        
+        optional<Int64> lastRecoveredAt;
+        /** 作成日時 */
+        
+        optional<Int64> createdAt;
+        /** 最終更新日時 */
+        
+        optional<Int64> updatedAt;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            staminaId(data.staminaId),
+            staminaModelName(data.staminaModelName),
             userId(data.userId),
             value(data.value),
-            overflow(data.overflow),
-            lastUpdateAt(data.lastUpdateAt)
+            maxValue(data.maxValue),
+            overflowValue(data.overflowValue),
+            lastRecoveredAt(data.lastRecoveredAt),
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
+            staminaId(std::move(data.staminaId)),
+            staminaModelName(std::move(data.staminaModelName)),
             userId(std::move(data.userId)),
             value(std::move(data.value)),
-            overflow(std::move(data.overflow)),
-            lastUpdateAt(std::move(data.lastUpdateAt))
+            maxValue(std::move(data.maxValue)),
+            overflowValue(std::move(data.overflowValue)),
+            lastRecoveredAt(std::move(data.lastRecoveredAt)),
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -75,7 +101,19 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "userId") == 0) {
+            if (std::strcmp(name, "staminaId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->staminaId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "staminaModelName") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->staminaModelName.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "userId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
@@ -87,21 +125,39 @@ private:
                     this->value = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "overflow") == 0) {
+            else if (std::strcmp(name, "maxValue") == 0) {
                 if (jsonValue.IsInt())
                 {
-                    this->overflow = jsonValue.GetInt();
+                    this->maxValue = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "lastUpdateAt") == 0) {
+            else if (std::strcmp(name, "overflowValue") == 0) {
                 if (jsonValue.IsInt())
                 {
-                    this->lastUpdateAt = jsonValue.GetInt();
+                    this->overflowValue = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name, "lastRecoveredAt") == 0) {
+                if (jsonValue.IsInt64())
+                {
+                    this->lastRecoveredAt = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name, "createdAt") == 0) {
+                if (jsonValue.IsInt64())
+                {
+                    this->createdAt = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name, "updatedAt") == 0) {
+                if (jsonValue.IsInt64())
+                {
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -179,12 +235,50 @@ public:
     {
         return this;
     }
-
+    /**
+     * スタミナ のGRNを取得
+     *
+     * @return スタミナ のGRN
+     */
+    const optional<StringHolder>& getStaminaId() const
+    {
+        return ensureData().staminaId;
+    }
 
     /**
-     * ユーザIDを取得
+     * スタミナ のGRNを設定
      *
-     * @return ユーザID
+     * @param staminaId スタミナ のGRN
+     */
+    void setStaminaId(const Char* staminaId)
+    {
+        ensureData().staminaId.emplace(staminaId);
+    }
+
+    /**
+     * スタミナの種類名を取得
+     *
+     * @return スタミナの種類名
+     */
+    const optional<StringHolder>& getStaminaModelName() const
+    {
+        return ensureData().staminaModelName;
+    }
+
+    /**
+     * スタミナの種類名を設定
+     *
+     * @param staminaModelName スタミナの種類名
+     */
+    void setStaminaModelName(const Char* staminaModelName)
+    {
+        ensureData().staminaModelName.emplace(staminaModelName);
+    }
+
+    /**
+     * ユーザーIDを取得
+     *
+     * @return ユーザーID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -192,9 +286,9 @@ public:
     }
 
     /**
-     * ユーザIDを設定
+     * ユーザーIDを設定
      *
-     * @param userId ユーザID
+     * @param userId ユーザーID
      */
     void setUserId(const Char* userId)
     {
@@ -202,9 +296,9 @@ public:
     }
 
     /**
-     * スタミナ値を取得
+     * 最終更新時におけるスタミナ値を取得
      *
-     * @return スタミナ値
+     * @return 最終更新時におけるスタミナ値
      */
     const optional<Int32>& getValue() const
     {
@@ -212,9 +306,9 @@ public:
     }
 
     /**
-     * スタミナ値を設定
+     * 最終更新時におけるスタミナ値を設定
      *
-     * @param value スタミナ値
+     * @param value 最終更新時におけるスタミナ値
      */
     void setValue(Int32 value)
     {
@@ -222,43 +316,103 @@ public:
     }
 
     /**
-     * 最大値を超えて保持しているスタミナ値を取得
+     * スタミナの最大値を取得
      *
-     * @return 最大値を超えて保持しているスタミナ値
+     * @return スタミナの最大値
      */
-    const optional<Int32>& getOverflow() const
+    const optional<Int32>& getMaxValue() const
     {
-        return ensureData().overflow;
+        return ensureData().maxValue;
     }
 
     /**
-     * 最大値を超えて保持しているスタミナ値を設定
+     * スタミナの最大値を設定
      *
-     * @param overflow 最大値を超えて保持しているスタミナ値
+     * @param maxValue スタミナの最大値
      */
-    void setOverflow(Int32 overflow)
+    void setMaxValue(Int32 maxValue)
     {
-        ensureData().overflow.emplace(overflow);
+        ensureData().maxValue.emplace(maxValue);
     }
 
     /**
-     * 最終更新日時(エポック秒)を取得
+     * スタミナの最大値を超えて格納されているスタミナ値を取得
      *
-     * @return 最終更新日時(エポック秒)
+     * @return スタミナの最大値を超えて格納されているスタミナ値
      */
-    const optional<Int32>& getLastUpdateAt() const
+    const optional<Int32>& getOverflowValue() const
     {
-        return ensureData().lastUpdateAt;
+        return ensureData().overflowValue;
     }
 
     /**
-     * 最終更新日時(エポック秒)を設定
+     * スタミナの最大値を超えて格納されているスタミナ値を設定
      *
-     * @param lastUpdateAt 最終更新日時(エポック秒)
+     * @param overflowValue スタミナの最大値を超えて格納されているスタミナ値
      */
-    void setLastUpdateAt(Int32 lastUpdateAt)
+    void setOverflowValue(Int32 overflowValue)
     {
-        ensureData().lastUpdateAt.emplace(lastUpdateAt);
+        ensureData().overflowValue.emplace(overflowValue);
+    }
+
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getLastRecoveredAt() const
+    {
+        return ensureData().lastRecoveredAt;
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param lastRecoveredAt 作成日時
+     */
+    void setLastRecoveredAt(Int64 lastRecoveredAt)
+    {
+        ensureData().lastRecoveredAt.emplace(lastRecoveredAt);
+    }
+
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getCreatedAt() const
+    {
+        return ensureData().createdAt;
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    void setCreatedAt(Int64 createdAt)
+    {
+        ensureData().createdAt.emplace(createdAt);
+    }
+
+    /**
+     * 最終更新日時を取得
+     *
+     * @return 最終更新日時
+     */
+    const optional<Int64>& getUpdatedAt() const
+    {
+        return ensureData().updatedAt;
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    void setUpdatedAt(Int64 updatedAt)
+    {
+        ensureData().updatedAt.emplace(updatedAt);
     }
 
 

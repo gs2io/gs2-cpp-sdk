@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -23,30 +23,81 @@
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
+#include "request/DescribeGamesRequest.hpp"
+#include "request/CreateGameRequest.hpp"
+#include "request/GetGameStatusRequest.hpp"
+#include "request/GetGameRequest.hpp"
+#include "request/UpdateGameRequest.hpp"
+#include "request/DeleteGameRequest.hpp"
+#include "request/DescribeAccountsRequest.hpp"
+#include "request/CreateAccountRequest.hpp"
+#include "request/GetAccountRequest.hpp"
+#include "request/DeleteAccountRequest.hpp"
+#include "request/AuthenticationRequest.hpp"
+#include "request/DescribeTakeOversRequest.hpp"
+#include "request/CreateTakeOverRequest.hpp"
+#include "request/CreateTakeOverByUserIdRequest.hpp"
+#include "request/GetTakeOverRequest.hpp"
+#include "request/GetTakeOverByUserIdRequest.hpp"
+#include "request/UpdateTakeOverRequest.hpp"
+#include "request/UpdateTakeOverByUserIdRequest.hpp"
+#include "request/DeleteTakeOverRequest.hpp"
+#include "request/DeleteTakeOverByUserIdentifierRequest.hpp"
+#include "request/DoTakeOverRequest.hpp"
+#include "result/DescribeGamesResult.hpp"
+#include "result/CreateGameResult.hpp"
+#include "result/GetGameStatusResult.hpp"
+#include "result/GetGameResult.hpp"
+#include "result/UpdateGameResult.hpp"
+#include "result/DeleteGameResult.hpp"
+#include "result/DescribeAccountsResult.hpp"
+#include "result/CreateAccountResult.hpp"
+#include "result/GetAccountResult.hpp"
+#include "result/DeleteAccountResult.hpp"
+#include "result/AuthenticationResult.hpp"
+#include "result/DescribeTakeOversResult.hpp"
+#include "result/CreateTakeOverResult.hpp"
+#include "result/CreateTakeOverByUserIdResult.hpp"
+#include "result/GetTakeOverResult.hpp"
+#include "result/GetTakeOverByUserIdResult.hpp"
+#include "result/UpdateTakeOverResult.hpp"
+#include "result/UpdateTakeOverByUserIdResult.hpp"
+#include "result/DeleteTakeOverResult.hpp"
+#include "result/DeleteTakeOverByUserIdentifierResult.hpp"
+#include "result/DoTakeOverResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace account {
 
-typedef AsyncResult<AuthenticationResult> AsyncAuthenticationResult;
-typedef AsyncResult<CreateAccountResult> AsyncCreateAccountResult;
-typedef AsyncResult<void> AsyncDeleteAccountResult;
-typedef AsyncResult<DescribeAccountResult> AsyncDescribeAccountResult;
+typedef AsyncResult<DescribeGamesResult> AsyncDescribeGamesResult;
 typedef AsyncResult<CreateGameResult> AsyncCreateGameResult;
-typedef AsyncResult<void> AsyncDeleteGameResult;
-typedef AsyncResult<DescribeGameResult> AsyncDescribeGameResult;
-typedef AsyncResult<DescribeServiceClassResult> AsyncDescribeServiceClassResult;
-typedef AsyncResult<GetGameResult> AsyncGetGameResult;
 typedef AsyncResult<GetGameStatusResult> AsyncGetGameStatusResult;
+typedef AsyncResult<GetGameResult> AsyncGetGameResult;
 typedef AsyncResult<UpdateGameResult> AsyncUpdateGameResult;
+typedef AsyncResult<void> AsyncDeleteGameResult;
+typedef AsyncResult<DescribeAccountsResult> AsyncDescribeAccountsResult;
+typedef AsyncResult<CreateAccountResult> AsyncCreateAccountResult;
+typedef AsyncResult<GetAccountResult> AsyncGetAccountResult;
+typedef AsyncResult<void> AsyncDeleteAccountResult;
+typedef AsyncResult<AuthenticationResult> AsyncAuthenticationResult;
+typedef AsyncResult<DescribeTakeOversResult> AsyncDescribeTakeOversResult;
 typedef AsyncResult<CreateTakeOverResult> AsyncCreateTakeOverResult;
-typedef AsyncResult<void> AsyncDeleteTakeOverResult;
-typedef AsyncResult<DescribeTakeOverResult> AsyncDescribeTakeOverResult;
-typedef AsyncResult<DoTakeOverResult> AsyncDoTakeOverResult;
+typedef AsyncResult<CreateTakeOverByUserIdResult> AsyncCreateTakeOverByUserIdResult;
 typedef AsyncResult<GetTakeOverResult> AsyncGetTakeOverResult;
+typedef AsyncResult<GetTakeOverByUserIdResult> AsyncGetTakeOverByUserIdResult;
 typedef AsyncResult<UpdateTakeOverResult> AsyncUpdateTakeOverResult;
+typedef AsyncResult<UpdateTakeOverByUserIdResult> AsyncUpdateTakeOverByUserIdResult;
+typedef AsyncResult<void> AsyncDeleteTakeOverResult;
+typedef AsyncResult<void> AsyncDeleteTakeOverByUserIdentifierResult;
+typedef AsyncResult<DoTakeOverResult> AsyncDoTakeOverResult;
 
+/**
+ * GS2 Account API クライアント
+ *
+ * @author Game Server Services, Inc.
+ *
+ */
 class Gs2AccountClient : public AbstractGs2ClientBase
 {
 private:
@@ -82,55 +133,70 @@ private:
             writer.writePropertyName("description");
             writer.write(*obj.getDescription());
         }
-        if (obj.getServiceClass())
-        {
-            writer.writePropertyName("serviceClass");
-            writer.write(*obj.getServiceClass());
-        }
         if (obj.getChangePasswordIfTakeOver())
         {
             writer.writePropertyName("changePasswordIfTakeOver");
             writer.write(*obj.getChangePasswordIfTakeOver());
         }
-        if (obj.getCreateAccountTriggerScript())
+        if (obj.getCreateAccountTriggerScriptId())
         {
-            writer.writePropertyName("createAccountTriggerScript");
-            writer.write(*obj.getCreateAccountTriggerScript());
+            writer.writePropertyName("createAccountTriggerScriptId");
+            writer.write(*obj.getCreateAccountTriggerScriptId());
         }
-        if (obj.getCreateAccountDoneTriggerScript())
+        if (obj.getCreateAccountDoneTriggerScriptId())
         {
-            writer.writePropertyName("createAccountDoneTriggerScript");
-            writer.write(*obj.getCreateAccountDoneTriggerScript());
+            writer.writePropertyName("createAccountDoneTriggerScriptId");
+            writer.write(*obj.getCreateAccountDoneTriggerScriptId());
         }
-        if (obj.getAuthenticationTriggerScript())
+        if (obj.getCreateAccountDoneTriggerQueueId())
         {
-            writer.writePropertyName("authenticationTriggerScript");
-            writer.write(*obj.getAuthenticationTriggerScript());
+            writer.writePropertyName("createAccountDoneTriggerQueueId");
+            writer.write(*obj.getCreateAccountDoneTriggerQueueId());
         }
-        if (obj.getAuthenticationDoneTriggerScript())
+        if (obj.getAuthenticationTriggerScriptId())
         {
-            writer.writePropertyName("authenticationDoneTriggerScript");
-            writer.write(*obj.getAuthenticationDoneTriggerScript());
+            writer.writePropertyName("authenticationTriggerScriptId");
+            writer.write(*obj.getAuthenticationTriggerScriptId());
         }
-        if (obj.getCreateTakeOverTriggerScript())
+        if (obj.getAuthenticationDoneTriggerScriptId())
         {
-            writer.writePropertyName("createTakeOverTriggerScript");
-            writer.write(*obj.getCreateTakeOverTriggerScript());
+            writer.writePropertyName("authenticationDoneTriggerScriptId");
+            writer.write(*obj.getAuthenticationDoneTriggerScriptId());
         }
-        if (obj.getCreateTakeOverDoneTriggerScript())
+        if (obj.getAuthenticationDoneTriggerQueueId())
         {
-            writer.writePropertyName("createTakeOverDoneTriggerScript");
-            writer.write(*obj.getCreateTakeOverDoneTriggerScript());
+            writer.writePropertyName("authenticationDoneTriggerQueueId");
+            writer.write(*obj.getAuthenticationDoneTriggerQueueId());
         }
-        if (obj.getDoTakeOverTriggerScript())
+        if (obj.getCreateTakeOverTriggerScriptId())
         {
-            writer.writePropertyName("doTakeOverTriggerScript");
-            writer.write(*obj.getDoTakeOverTriggerScript());
+            writer.writePropertyName("createTakeOverTriggerScriptId");
+            writer.write(*obj.getCreateTakeOverTriggerScriptId());
         }
-        if (obj.getDoTakeOverDoneTriggerScript())
+        if (obj.getCreateTakeOverDoneTriggerScriptId())
         {
-            writer.writePropertyName("doTakeOverDoneTriggerScript");
-            writer.write(*obj.getDoTakeOverDoneTriggerScript());
+            writer.writePropertyName("createTakeOverDoneTriggerScriptId");
+            writer.write(*obj.getCreateTakeOverDoneTriggerScriptId());
+        }
+        if (obj.getCreateTakeOverDoneTriggerQueueId())
+        {
+            writer.writePropertyName("createTakeOverDoneTriggerQueueId");
+            writer.write(*obj.getCreateTakeOverDoneTriggerQueueId());
+        }
+        if (obj.getDoTakeOverTriggerScriptId())
+        {
+            writer.writePropertyName("doTakeOverTriggerScriptId");
+            writer.write(*obj.getDoTakeOverTriggerScriptId());
+        }
+        if (obj.getDoTakeOverDoneTriggerScriptId())
+        {
+            writer.writePropertyName("doTakeOverDoneTriggerScriptId");
+            writer.write(*obj.getDoTakeOverDoneTriggerScriptId());
+        }
+        if (obj.getDoTakeOverDoneTriggerQueueId())
+        {
+            writer.writePropertyName("doTakeOverDoneTriggerQueueId");
+            writer.write(*obj.getDoTakeOverDoneTriggerQueueId());
         }
         if (obj.getCreateAt())
         {
@@ -148,6 +214,11 @@ private:
     void write(detail::json::JsonWriter& writer, const Account& obj)
     {
         writer.writeObjectStart();
+        if (obj.getAccountId())
+        {
+            writer.writePropertyName("accountId");
+            writer.write(*obj.getAccountId());
+        }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
@@ -169,6 +240,11 @@ private:
     void write(detail::json::JsonWriter& writer, const TakeOver& obj)
     {
         writer.writeObjectStart();
+        if (obj.getTakeOverId())
+        {
+            writer.writePropertyName("takeOverId");
+            writer.write(*obj.getTakeOverId());
+        }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
@@ -188,6 +264,73 @@ private:
         {
             writer.writePropertyName("createAt");
             writer.write(*obj.getCreateAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const FullTakeOver& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getTakeOverId())
+        {
+            writer.writePropertyName("takeOverId");
+            writer.write(*obj.getTakeOverId());
+        }
+        if (obj.getUserId())
+        {
+            writer.writePropertyName("userId");
+            writer.write(*obj.getUserId());
+        }
+        if (obj.getType())
+        {
+            writer.writePropertyName("type");
+            writer.write(*obj.getType());
+        }
+        if (obj.getUserIdentifier())
+        {
+            writer.writePropertyName("userIdentifier");
+            writer.write(*obj.getUserIdentifier());
+        }
+        if (obj.getCreateAt())
+        {
+            writer.writePropertyName("createAt");
+            writer.write(*obj.getCreateAt());
+        }
+        if (obj.getPassword())
+        {
+            writer.writePropertyName("password");
+            writer.write(*obj.getPassword());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const ResponseCache& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getRegion())
+        {
+            writer.writePropertyName("region");
+            writer.write(*obj.getRegion());
+        }
+        if (obj.getOwnerId())
+        {
+            writer.writePropertyName("ownerId");
+            writer.write(*obj.getOwnerId());
+        }
+        if (obj.getResponseCacheId())
+        {
+            writer.writePropertyName("responseCacheId");
+            writer.write(*obj.getResponseCacheId());
+        }
+        if (obj.getRequestHash())
+        {
+            writer.writePropertyName("requestHash");
+            writer.write(*obj.getRequestHash());
+        }
+        if (obj.getResult())
+        {
+            writer.writePropertyName("result");
+            writer.write(*obj.getResult());
         }
         writer.writeObjectEnd();
     }
@@ -227,32 +370,463 @@ public:
     {
     }
 
+	/**
+	 * ゲームの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeGames(std::function<void(AsyncDescribeGamesResult&)> callback, DescribeGamesRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeGamesResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FGameFunctionHandler.describeGames");
+        Char encodeBuffer[2048];
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
 
-    /**
-     * 認証処理を行います<br>
-     * <br>
-     * - 消費クオータ: 3<br>
-     * <br>
-     *
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ゲームを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createGame(std::function<void(AsyncCreateGameResult&)> callback, CreateGameRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<CreateGameResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FGameFunctionHandler.createGame");
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*request.getName());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        if (request.getChangePasswordIfTakeOver())
+        {
+            writer.writePropertyName("changePasswordIfTakeOver");
+            writer.write(*request.getChangePasswordIfTakeOver());
+        }
+        if (request.getCreateAccountTriggerScriptId())
+        {
+            writer.writePropertyName("createAccountTriggerScriptId");
+            writer.write(*request.getCreateAccountTriggerScriptId());
+        }
+        if (request.getCreateAccountDoneTriggerScriptId())
+        {
+            writer.writePropertyName("createAccountDoneTriggerScriptId");
+            writer.write(*request.getCreateAccountDoneTriggerScriptId());
+        }
+        if (request.getCreateAccountDoneTriggerQueueId())
+        {
+            writer.writePropertyName("createAccountDoneTriggerQueueId");
+            writer.write(*request.getCreateAccountDoneTriggerQueueId());
+        }
+        if (request.getAuthenticationTriggerScriptId())
+        {
+            writer.writePropertyName("authenticationTriggerScriptId");
+            writer.write(*request.getAuthenticationTriggerScriptId());
+        }
+        if (request.getAuthenticationDoneTriggerScriptId())
+        {
+            writer.writePropertyName("authenticationDoneTriggerScriptId");
+            writer.write(*request.getAuthenticationDoneTriggerScriptId());
+        }
+        if (request.getAuthenticationDoneTriggerQueueId())
+        {
+            writer.writePropertyName("authenticationDoneTriggerQueueId");
+            writer.write(*request.getAuthenticationDoneTriggerQueueId());
+        }
+        if (request.getCreateTakeOverTriggerScriptId())
+        {
+            writer.writePropertyName("createTakeOverTriggerScriptId");
+            writer.write(*request.getCreateTakeOverTriggerScriptId());
+        }
+        if (request.getCreateTakeOverDoneTriggerScriptId())
+        {
+            writer.writePropertyName("createTakeOverDoneTriggerScriptId");
+            writer.write(*request.getCreateTakeOverDoneTriggerScriptId());
+        }
+        if (request.getCreateTakeOverDoneTriggerQueueId())
+        {
+            writer.writePropertyName("createTakeOverDoneTriggerQueueId");
+            writer.write(*request.getCreateTakeOverDoneTriggerQueueId());
+        }
+        if (request.getDoTakeOverTriggerScriptId())
+        {
+            writer.writePropertyName("doTakeOverTriggerScriptId");
+            writer.write(*request.getDoTakeOverTriggerScriptId());
+        }
+        if (request.getDoTakeOverDoneTriggerScriptId())
+        {
+            writer.writePropertyName("doTakeOverDoneTriggerScriptId");
+            writer.write(*request.getDoTakeOverDoneTriggerScriptId());
+        }
+        if (request.getDoTakeOverDoneTriggerQueueId())
+        {
+            writer.writePropertyName("doTakeOverDoneTriggerQueueId");
+            writer.write(*request.getDoTakeOverDoneTriggerQueueId());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ゲームを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getGameStatus(std::function<void(AsyncGetGameStatusResult&)> callback, GetGameStatusRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetGameStatusResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FGameFunctionHandler.getGameStatus");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ゲームを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getGame(std::function<void(AsyncGetGameResult&)> callback, GetGameRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetGameResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FGameFunctionHandler.getGame");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ゲームを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateGame(std::function<void(AsyncUpdateGameResult&)> callback, UpdateGameRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<UpdateGameResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FGameFunctionHandler.updateGame");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        if (request.getChangePasswordIfTakeOver())
+        {
+            writer.writePropertyName("changePasswordIfTakeOver");
+            writer.write(*request.getChangePasswordIfTakeOver());
+        }
+        if (request.getCreateAccountTriggerScriptId())
+        {
+            writer.writePropertyName("createAccountTriggerScriptId");
+            writer.write(*request.getCreateAccountTriggerScriptId());
+        }
+        if (request.getCreateAccountDoneTriggerScriptId())
+        {
+            writer.writePropertyName("createAccountDoneTriggerScriptId");
+            writer.write(*request.getCreateAccountDoneTriggerScriptId());
+        }
+        if (request.getCreateAccountDoneTriggerQueueId())
+        {
+            writer.writePropertyName("createAccountDoneTriggerQueueId");
+            writer.write(*request.getCreateAccountDoneTriggerQueueId());
+        }
+        if (request.getAuthenticationTriggerScriptId())
+        {
+            writer.writePropertyName("authenticationTriggerScriptId");
+            writer.write(*request.getAuthenticationTriggerScriptId());
+        }
+        if (request.getAuthenticationDoneTriggerScriptId())
+        {
+            writer.writePropertyName("authenticationDoneTriggerScriptId");
+            writer.write(*request.getAuthenticationDoneTriggerScriptId());
+        }
+        if (request.getAuthenticationDoneTriggerQueueId())
+        {
+            writer.writePropertyName("authenticationDoneTriggerQueueId");
+            writer.write(*request.getAuthenticationDoneTriggerQueueId());
+        }
+        if (request.getCreateTakeOverTriggerScriptId())
+        {
+            writer.writePropertyName("createTakeOverTriggerScriptId");
+            writer.write(*request.getCreateTakeOverTriggerScriptId());
+        }
+        if (request.getCreateTakeOverDoneTriggerScriptId())
+        {
+            writer.writePropertyName("createTakeOverDoneTriggerScriptId");
+            writer.write(*request.getCreateTakeOverDoneTriggerScriptId());
+        }
+        if (request.getCreateTakeOverDoneTriggerQueueId())
+        {
+            writer.writePropertyName("createTakeOverDoneTriggerQueueId");
+            writer.write(*request.getCreateTakeOverDoneTriggerQueueId());
+        }
+        if (request.getDoTakeOverTriggerScriptId())
+        {
+            writer.writePropertyName("doTakeOverTriggerScriptId");
+            writer.write(*request.getDoTakeOverTriggerScriptId());
+        }
+        if (request.getDoTakeOverDoneTriggerScriptId())
+        {
+            writer.writePropertyName("doTakeOverDoneTriggerScriptId");
+            writer.write(*request.getDoTakeOverDoneTriggerScriptId());
+        }
+        if (request.getDoTakeOverDoneTriggerQueueId())
+        {
+            writer.writePropertyName("doTakeOverDoneTriggerQueueId");
+            writer.write(*request.getDoTakeOverDoneTriggerQueueId());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ゲームを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteGame(std::function<void(AsyncDeleteGameResult&)> callback, DeleteGameRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<void>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FGameFunctionHandler.deleteGame");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * アカウントの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeAccounts(std::function<void(AsyncDescribeAccountsResult&)> callback, DescribeAccountsRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeAccountsResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FAccountFunctionHandler.describeAccounts");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * アカウントを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createAccount(std::function<void(AsyncCreateAccountResult&)> callback, CreateAccountRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<CreateAccountResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FAccountFunctionHandler.createAccount");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * アカウントを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getAccount(std::function<void(AsyncGetAccountResult&)> callback, GetAccountRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetAccountResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FAccountFunctionHandler.getAccount");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * アカウントを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteAccount(std::function<void(AsyncDeleteAccountResult&)> callback, DeleteAccountRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<void>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FAccountFunctionHandler.deleteAccount");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * アカウントを認証<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
     void authentication(std::function<void(AsyncAuthenticationResult&)> callback, AuthenticationRequest& request)
     {
         auto& httpRequest = *new detail::HttpRequest<AuthenticationResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game/").append(detail::StringUtil::toStr(buffer, request.getGameName())).append("/account/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("");
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FAccountFunctionHandler.authentication");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
-        if (request.getKeyName())
+        if (request.getKeyId())
         {
-            writer.writePropertyName("keyName");
-            writer.write(*request.getKeyName());
+            writer.writePropertyName("keyId");
+            writer.write(*request.getKeyId());
         }
         if (request.getPassword())
         {
@@ -263,406 +837,56 @@ public:
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * アカウントを登録します<br>
-     * <br>
-     * - 消費クオータ: 10<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void createAccount(std::function<void(AsyncCreateAccountResult&)> callback, CreateAccountRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<CreateAccountResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        if (request.getDuplicationAvoider())
         {
-            char buffer[128];
-            url.append("/game/").append(detail::StringUtil::toStr(buffer, request.getGameName())).append("/account");
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * アカウントを削除します<br>
-     * <br>
-     * - 消費クオータ: 10<br>
-     * <br>
-     *
+	/**
+	 * 引き継ぎ設定の一覧を取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteAccount(std::function<void(AsyncDeleteAccountResult&)> callback, DeleteAccountRequest& request)
+    void describeTakeOvers(std::function<void(AsyncDescribeTakeOversResult&)> callback, DescribeTakeOversRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game/").append(detail::StringUtil::toStr(buffer, request.getGameName())).append("/account/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * アカウントを取得します<br>
-     * <br>
-     * - 消費クオータ: 50件あたり5<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeAccount(std::function<void(AsyncDescribeAccountResult&)> callback, DescribeAccountRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeAccountResult>;
+        auto& httpRequest = *new detail::HttpRequest<DescribeTakeOversResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game/").append(detail::StringUtil::toStr(buffer, request.getGameName())).append("/account");
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.describeTakeOvers");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
         }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
         }
         if (request.getLimit()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * ゲームを新規作成します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void createGame(std::function<void(AsyncCreateGameResult&)> callback, CreateGameRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<CreateGameResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getName())
-        {
-            writer.writePropertyName("name");
-            writer.write(*request.getName());
-        }
-        if (request.getServiceClass())
-        {
-            writer.writePropertyName("serviceClass");
-            writer.write(*request.getServiceClass());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.write(*request.getDescription());
-        }
-        if (request.getChangePasswordIfTakeOver())
-        {
-            writer.writePropertyName("changePasswordIfTakeOver");
-            writer.write(*request.getChangePasswordIfTakeOver());
-        }
-        if (request.getCreateAccountTriggerScript())
-        {
-            writer.writePropertyName("createAccountTriggerScript");
-            writer.write(*request.getCreateAccountTriggerScript());
-        }
-        if (request.getCreateAccountDoneTriggerScript())
-        {
-            writer.writePropertyName("createAccountDoneTriggerScript");
-            writer.write(*request.getCreateAccountDoneTriggerScript());
-        }
-        if (request.getAuthenticationTriggerScript())
-        {
-            writer.writePropertyName("authenticationTriggerScript");
-            writer.write(*request.getAuthenticationTriggerScript());
-        }
-        if (request.getAuthenticationDoneTriggerScript())
-        {
-            writer.writePropertyName("authenticationDoneTriggerScript");
-            writer.write(*request.getAuthenticationDoneTriggerScript());
-        }
-        if (request.getCreateTakeOverTriggerScript())
-        {
-            writer.writePropertyName("createTakeOverTriggerScript");
-            writer.write(*request.getCreateTakeOverTriggerScript());
-        }
-        if (request.getCreateTakeOverDoneTriggerScript())
-        {
-            writer.writePropertyName("createTakeOverDoneTriggerScript");
-            writer.write(*request.getCreateTakeOverDoneTriggerScript());
-        }
-        if (request.getDoTakeOverTriggerScript())
-        {
-            writer.writePropertyName("doTakeOverTriggerScript");
-            writer.write(*request.getDoTakeOverTriggerScript());
-        }
-        if (request.getDoTakeOverDoneTriggerScript())
-        {
-            writer.writePropertyName("doTakeOverDoneTriggerScript");
-            writer.write(*request.getDoTakeOverDoneTriggerScript());
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * ゲームを削除します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteGame(std::function<void(AsyncDeleteGameResult&)> callback, DeleteGameRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game/").append(detail::StringUtil::toStr(buffer, request.getGameName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * ゲームの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeGame(std::function<void(AsyncDescribeGameResult&)> callback, DescribeGameRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeGameResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
-        if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * サービスクラスの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeServiceClass(std::function<void(AsyncDescribeServiceClassResult&)> callback, DescribeServiceClassRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeServiceClassResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game/serviceClass");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * ゲームを取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getGame(std::function<void(AsyncGetGameResult&)> callback, GetGameRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<GetGameResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game/").append(detail::StringUtil::toStr(buffer, request.getGameName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * ゲームのステータスを取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getGameStatus(std::function<void(AsyncGetGameStatusResult&)> callback, GetGameStatusRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<GetGameStatusResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game/").append(detail::StringUtil::toStr(buffer, request.getGameName())).append("/status");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * ゲームを更新します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateGame(std::function<void(AsyncUpdateGameResult&)> callback, UpdateGameRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<UpdateGameResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game/").append(detail::StringUtil::toStr(buffer, request.getGameName())).append("");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getServiceClass())
-        {
-            writer.writePropertyName("serviceClass");
-            writer.write(*request.getServiceClass());
-        }
-        if (request.getChangePasswordIfTakeOver())
-        {
-            writer.writePropertyName("changePasswordIfTakeOver");
-            writer.write(*request.getChangePasswordIfTakeOver());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.write(*request.getDescription());
-        }
-        if (request.getCreateAccountTriggerScript())
-        {
-            writer.writePropertyName("createAccountTriggerScript");
-            writer.write(*request.getCreateAccountTriggerScript());
-        }
-        if (request.getCreateAccountDoneTriggerScript())
-        {
-            writer.writePropertyName("createAccountDoneTriggerScript");
-            writer.write(*request.getCreateAccountDoneTriggerScript());
-        }
-        if (request.getAuthenticationTriggerScript())
-        {
-            writer.writePropertyName("authenticationTriggerScript");
-            writer.write(*request.getAuthenticationTriggerScript());
-        }
-        if (request.getAuthenticationDoneTriggerScript())
-        {
-            writer.writePropertyName("authenticationDoneTriggerScript");
-            writer.write(*request.getAuthenticationDoneTriggerScript());
-        }
-        if (request.getCreateTakeOverTriggerScript())
-        {
-            writer.writePropertyName("createTakeOverTriggerScript");
-            writer.write(*request.getCreateTakeOverTriggerScript());
-        }
-        if (request.getCreateTakeOverDoneTriggerScript())
-        {
-            writer.writePropertyName("createTakeOverDoneTriggerScript");
-            writer.write(*request.getCreateTakeOverDoneTriggerScript());
-        }
-        if (request.getDoTakeOverTriggerScript())
-        {
-            writer.writePropertyName("doTakeOverTriggerScript");
-            writer.write(*request.getDoTakeOverTriggerScript());
-        }
-        if (request.getDoTakeOverDoneTriggerScript())
-        {
-            writer.writePropertyName("doTakeOverDoneTriggerScript");
-            writer.write(*request.getDoTakeOverDoneTriggerScript());
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 引き継ぎ情報を登録します<br>
-     * <br>
-     * - 消費クオータ: 10<br>
-     * <br>
-     *
+	/**
+	 * 引き継ぎ設定を新規作成<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -671,9 +895,11 @@ public:
         auto& httpRequest = *new detail::HttpRequest<CreateTakeOverResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game/").append(detail::StringUtil::toStr(buffer, request.getGameName())).append("/takeover");
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.createTakeOver");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -697,94 +923,46 @@ public:
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 引き継ぎ情報を削除します<br>
-     * <br>
-     * - 消費クオータ: 10<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteTakeOver(std::function<void(AsyncDeleteTakeOverResult&)> callback, DeleteTakeOverRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        if (request.getDuplicationAvoider())
         {
-            char buffer[128];
-            url.append("/game/").append(detail::StringUtil::toStr(buffer, request.getGameName())).append("/takeover/").append(detail::StringUtil::toStr(buffer, request.getType())).append("/").append(detail::StringUtil::toStr(buffer, request.getUserIdentifier())).append("");
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * 引き継ぎ情報を取得します<br>
-     * <br>
-     * - 消費クオータ: 50件あたり5<br>
-     * <br>
-     *
+	/**
+	 * ユーザーIDを指定して引き継ぎ設定を新規作成<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeTakeOver(std::function<void(AsyncDescribeTakeOverResult&)> callback, DescribeTakeOverRequest& request)
+    void createTakeOverByUserId(std::function<void(AsyncCreateTakeOverByUserIdResult&)> callback, CreateTakeOverByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeTakeOverResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game/").append(detail::StringUtil::toStr(buffer, request.getGameName())).append("/takeover");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
-        if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 引き継ぎを実行します<br>
-     * <br>
-     * - 消費クオータ: 10<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void doTakeOver(std::function<void(AsyncDoTakeOverResult&)> callback, DoTakeOverRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DoTakeOverResult>;
+        auto& httpRequest = *new detail::HttpRequest<CreateTakeOverByUserIdResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game/").append(detail::StringUtil::toStr(buffer, request.getGameName())).append("/takeover/").append(detail::StringUtil::toStr(buffer, request.getType())).append("");
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.createTakeOverByUserId");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
+        if (request.getType())
+        {
+            writer.writePropertyName("type");
+            writer.write(*request.getType());
+        }
         if (request.getUserIdentifier())
         {
             writer.writePropertyName("userIdentifier");
@@ -799,18 +977,20 @@ public:
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * 引き継ぎ情報を取得します<br>
-     * <br>
-     * - 消費クオータ: 5<br>
-     * <br>
-     *
+	/**
+	 * 引き継ぎ設定を取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -819,22 +999,74 @@ public:
         auto& httpRequest = *new detail::HttpRequest<GetTakeOverResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game/").append(detail::StringUtil::toStr(buffer, request.getGameName())).append("/takeover/").append(detail::StringUtil::toStr(buffer, request.getType())).append("/").append(detail::StringUtil::toStr(buffer, request.getUserIdentifier())).append("");
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.getTakeOver");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
         }
+        if (request.getType()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getType()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("type={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserIdentifier()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserIdentifier()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userIdentifier={value}").replace("{value}", encodeBuffer);
+        }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * 引き継ぎ情報を更新します<br>
-     * <br>
-     * - 消費クオータ: 10<br>
-     * <br>
-     *
+	/**
+	 * ユーザーIDを指定して引き継ぎ設定を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getTakeOverByUserId(std::function<void(AsyncGetTakeOverByUserIdResult&)> callback, GetTakeOverByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetTakeOverByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.getTakeOverByUserId");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getType()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getType()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("type={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserIdentifier()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserIdentifier()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userIdentifier={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 引き継ぎ設定を更新<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -843,9 +1075,19 @@ public:
         auto& httpRequest = *new detail::HttpRequest<UpdateTakeOverResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/game/").append(detail::StringUtil::toStr(buffer, request.getGameName())).append("/takeover/").append(detail::StringUtil::toStr(buffer, request.getType())).append("/").append(detail::StringUtil::toStr(buffer, request.getUserIdentifier())).append("");
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.updateTakeOver");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getType()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getType()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("type={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserIdentifier()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserIdentifier()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userIdentifier={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -864,12 +1106,190 @@ public:
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 引き継ぎ設定を更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateTakeOverByUserId(std::function<void(AsyncUpdateTakeOverByUserIdResult&)> callback, UpdateTakeOverByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<UpdateTakeOverByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.updateTakeOverByUserId");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getType()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getType()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("type={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserIdentifier()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserIdentifier()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userIdentifier={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getOldPassword())
+        {
+            writer.writePropertyName("oldPassword");
+            writer.write(*request.getOldPassword());
+        }
+        if (request.getPassword())
+        {
+            writer.writePropertyName("password");
+            writer.write(*request.getPassword());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 引き継ぎ設定を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteTakeOver(std::function<void(AsyncDeleteTakeOverResult&)> callback, DeleteTakeOverRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<void>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.deleteTakeOver");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getType()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getType()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("type={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserIdentifier()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserIdentifier()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userIdentifier={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 引き継ぎ設定を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteTakeOverByUserIdentifier(std::function<void(AsyncDeleteTakeOverByUserIdentifierResult&)> callback, DeleteTakeOverByUserIdentifierRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<void>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.deleteTakeOverByUserIdentifier");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getType()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getType()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("type={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserIdentifier()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserIdentifier()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userIdentifier={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 引き継ぎ設定を更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void doTakeOver(std::function<void(AsyncDoTakeOverResult&)> callback, DoTakeOverRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DoTakeOverResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.doTakeOver");
+        Char encodeBuffer[2048];
+        if (request.getGameName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGameName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getType()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getType()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("type={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getUserIdentifier())
+        {
+            writer.writePropertyName("userIdentifier");
+            writer.write(*request.getUserIdentifier());
+        }
+        if (request.getPassword())
+        {
+            writer.writePropertyName("password");
+            writer.write(*request.getPassword());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
-
 };
 
 } }

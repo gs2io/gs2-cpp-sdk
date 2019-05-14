@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -23,30 +23,81 @@
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
+#include "request/DescribeUsersRequest.hpp"
+#include "request/CreateUserRequest.hpp"
+#include "request/UpdateUserRequest.hpp"
+#include "request/GetUserStatusRequest.hpp"
+#include "request/GetUserRequest.hpp"
+#include "request/DeleteUserRequest.hpp"
+#include "request/DescribeSecurityPoliciesRequest.hpp"
+#include "request/DescribeCommonSecurityPoliciesRequest.hpp"
+#include "request/CreateSecurityPolicyRequest.hpp"
+#include "request/UpdateSecurityPolicyRequest.hpp"
+#include "request/GetSecurityPolicyStatusRequest.hpp"
+#include "request/GetSecurityPolicyRequest.hpp"
+#include "request/DeleteSecurityPolicyRequest.hpp"
+#include "request/DescribeIdentifiersRequest.hpp"
+#include "request/CreateIdentifierRequest.hpp"
+#include "request/GetIdentifierRequest.hpp"
+#include "request/DeleteIdentifierRequest.hpp"
+#include "request/GetHasSecurityPolicyRequest.hpp"
+#include "request/AttachSecurityPolicyRequest.hpp"
+#include "request/DetachSecurityPolicyRequest.hpp"
+#include "request/LoginRequest.hpp"
+#include "result/DescribeUsersResult.hpp"
+#include "result/CreateUserResult.hpp"
+#include "result/UpdateUserResult.hpp"
+#include "result/GetUserStatusResult.hpp"
+#include "result/GetUserResult.hpp"
+#include "result/DeleteUserResult.hpp"
+#include "result/DescribeSecurityPoliciesResult.hpp"
+#include "result/DescribeCommonSecurityPoliciesResult.hpp"
+#include "result/CreateSecurityPolicyResult.hpp"
+#include "result/UpdateSecurityPolicyResult.hpp"
+#include "result/GetSecurityPolicyStatusResult.hpp"
+#include "result/GetSecurityPolicyResult.hpp"
+#include "result/DeleteSecurityPolicyResult.hpp"
+#include "result/DescribeIdentifiersResult.hpp"
+#include "result/CreateIdentifierResult.hpp"
+#include "result/GetIdentifierResult.hpp"
+#include "result/DeleteIdentifierResult.hpp"
+#include "result/GetHasSecurityPolicyResult.hpp"
+#include "result/AttachSecurityPolicyResult.hpp"
+#include "result/DetachSecurityPolicyResult.hpp"
+#include "result/LoginResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace identifier {
 
-typedef AsyncResult<CreateIdentifierResult> AsyncCreateIdentifierResult;
-typedef AsyncResult<void> AsyncDeleteIdentifierResult;
-typedef AsyncResult<DescribeIdentifierResult> AsyncDescribeIdentifierResult;
-typedef AsyncResult<GetIdentifierResult> AsyncGetIdentifierResult;
-typedef AsyncResult<CreateSecurityPolicyResult> AsyncCreateSecurityPolicyResult;
-typedef AsyncResult<void> AsyncDeleteSecurityPolicyResult;
-typedef AsyncResult<DescribeCommonSecurityPolicyResult> AsyncDescribeCommonSecurityPolicyResult;
-typedef AsyncResult<DescribeSecurityPolicyResult> AsyncDescribeSecurityPolicyResult;
-typedef AsyncResult<GetSecurityPolicyResult> AsyncGetSecurityPolicyResult;
-typedef AsyncResult<UpdateSecurityPolicyResult> AsyncUpdateSecurityPolicyResult;
-typedef AsyncResult<void> AsyncAttachSecurityPolicyResult;
+typedef AsyncResult<DescribeUsersResult> AsyncDescribeUsersResult;
 typedef AsyncResult<CreateUserResult> AsyncCreateUserResult;
-typedef AsyncResult<void> AsyncDeleteUserResult;
-typedef AsyncResult<DescribeUserResult> AsyncDescribeUserResult;
-typedef AsyncResult<void> AsyncDetachSecurityPolicyResult;
-typedef AsyncResult<GetHasSecurityPolicyResult> AsyncGetHasSecurityPolicyResult;
+typedef AsyncResult<UpdateUserResult> AsyncUpdateUserResult;
+typedef AsyncResult<GetUserStatusResult> AsyncGetUserStatusResult;
 typedef AsyncResult<GetUserResult> AsyncGetUserResult;
+typedef AsyncResult<void> AsyncDeleteUserResult;
+typedef AsyncResult<DescribeSecurityPoliciesResult> AsyncDescribeSecurityPoliciesResult;
+typedef AsyncResult<DescribeCommonSecurityPoliciesResult> AsyncDescribeCommonSecurityPoliciesResult;
+typedef AsyncResult<CreateSecurityPolicyResult> AsyncCreateSecurityPolicyResult;
+typedef AsyncResult<UpdateSecurityPolicyResult> AsyncUpdateSecurityPolicyResult;
+typedef AsyncResult<GetSecurityPolicyStatusResult> AsyncGetSecurityPolicyStatusResult;
+typedef AsyncResult<GetSecurityPolicyResult> AsyncGetSecurityPolicyResult;
+typedef AsyncResult<void> AsyncDeleteSecurityPolicyResult;
+typedef AsyncResult<DescribeIdentifiersResult> AsyncDescribeIdentifiersResult;
+typedef AsyncResult<CreateIdentifierResult> AsyncCreateIdentifierResult;
+typedef AsyncResult<GetIdentifierResult> AsyncGetIdentifierResult;
+typedef AsyncResult<void> AsyncDeleteIdentifierResult;
+typedef AsyncResult<GetHasSecurityPolicyResult> AsyncGetHasSecurityPolicyResult;
+typedef AsyncResult<AttachSecurityPolicyResult> AsyncAttachSecurityPolicyResult;
+typedef AsyncResult<DetachSecurityPolicyResult> AsyncDetachSecurityPolicyResult;
+typedef AsyncResult<LoginResult> AsyncLoginResult;
 
+/**
+ * GS2 Identifier API クライアント
+ *
+ * @author Game Server Services, Inc.
+ *
+ */
 class Gs2IdentifierClient : public AbstractGs2ClientBase
 {
 private:
@@ -77,10 +128,20 @@ private:
             writer.writePropertyName("name");
             writer.write(*obj.getName());
         }
+        if (obj.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*obj.getDescription());
+        }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
             writer.write(*obj.getCreateAt());
+        }
+        if (obj.getUpdateAt())
+        {
+            writer.writePropertyName("updateAt");
+            writer.write(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -103,6 +164,11 @@ private:
             writer.writePropertyName("name");
             writer.write(*obj.getName());
         }
+        if (obj.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*obj.getDescription());
+        }
         if (obj.getPolicy())
         {
             writer.writePropertyName("policy");
@@ -124,25 +190,20 @@ private:
     void write(detail::json::JsonWriter& writer, const Identifier& obj)
     {
         writer.writeObjectStart();
-        if (obj.getIdentifierId())
-        {
-            writer.writePropertyName("identifierId");
-            writer.write(*obj.getIdentifierId());
-        }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
             writer.write(*obj.getOwnerId());
         }
-        if (obj.getUserId())
-        {
-            writer.writePropertyName("userId");
-            writer.write(*obj.getUserId());
-        }
         if (obj.getClientId())
         {
             writer.writePropertyName("clientId");
             writer.write(*obj.getClientId());
+        }
+        if (obj.getUserName())
+        {
+            writer.writePropertyName("userName");
+            writer.write(*obj.getUserName());
         }
         if (obj.getCreateAt())
         {
@@ -155,35 +216,68 @@ private:
     void write(detail::json::JsonWriter& writer, const FullIdentifier& obj)
     {
         writer.writeObjectStart();
-        if (obj.getIdentifierId())
-        {
-            writer.writePropertyName("identifierId");
-            writer.write(*obj.getIdentifierId());
-        }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
             writer.write(*obj.getOwnerId());
-        }
-        if (obj.getUserId())
-        {
-            writer.writePropertyName("userId");
-            writer.write(*obj.getUserId());
         }
         if (obj.getClientId())
         {
             writer.writePropertyName("clientId");
             writer.write(*obj.getClientId());
         }
-        if (obj.getClientSecret())
+        if (obj.getUserName())
         {
-            writer.writePropertyName("clientSecret");
-            writer.write(*obj.getClientSecret());
+            writer.writePropertyName("userName");
+            writer.write(*obj.getUserName());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
             writer.write(*obj.getCreateAt());
+        }
+        if (obj.getClientSecret())
+        {
+            writer.writePropertyName("clientSecret");
+            writer.write(*obj.getClientSecret());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const AttachSecurityPolicy& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getUserId())
+        {
+            writer.writePropertyName("userId");
+            writer.write(*obj.getUserId());
+        }
+        if (obj.getSecurityPolicyIds())
+        {
+            writer.writePropertyName("securityPolicyIds");
+            writer.writeArrayStart();
+            auto& list = *obj.getSecurityPolicyIds();
+            for (Int32 i = 0; i < list.getCount(); ++i)
+            {
+                writer.write(list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        if (obj.getAttachAt())
+        {
+            writer.writePropertyName("attachAt");
+            writer.write(*obj.getAttachAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const ProjectToken& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getToken())
+        {
+            writer.writePropertyName("token");
+            writer.write(*obj.getToken());
         }
         writer.writeObjectEnd();
     }
@@ -223,131 +317,46 @@ public:
     {
     }
 
-
-    /**
-     * GSIを新規作成します<br>
-     * <br>
-     *
+	/**
+	 * ユーザーの一覧を取得します<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createIdentifier(std::function<void(AsyncCreateIdentifierResult&)> callback, CreateIdentifierRequest& request)
+    void describeUsers(std::function<void(AsyncDescribeUsersResult&)> callback, DescribeUsersRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreateIdentifierResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserName())).append("/identifier");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * GSIを削除します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteIdentifier(std::function<void(AsyncDeleteIdentifierResult&)> callback, DeleteIdentifierRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserName())).append("/identifier/").append(detail::StringUtil::toStr(buffer, request.getIdentifierId())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * GSIの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeIdentifier(std::function<void(AsyncDescribeIdentifierResult&)> callback, DescribeIdentifierRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeIdentifierResult>;
+        auto& httpRequest = *new detail::HttpRequest<DescribeUsersResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserName())).append("/identifier");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FUserFunctionHandler.describeUsers");
+        Char encodeBuffer[2048];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
         }
         if (request.getLimit()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * GSIを取得します。<br>
-     * <br>
-     *
+	/**
+	 * ユーザーを新規作成します<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getIdentifier(std::function<void(AsyncGetIdentifierResult&)> callback, GetIdentifierRequest& request)
+    void createUser(std::function<void(AsyncCreateUserResult&)> callback, CreateUserRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetIdentifierResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserName())).append("/identifier/").append(detail::StringUtil::toStr(buffer, request.getIdentifierId())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * セキュリティポリシーを新規作成します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void createSecurityPolicy(std::function<void(AsyncCreateSecurityPolicyResult&)> callback, CreateSecurityPolicyRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<CreateSecurityPolicyResult>;
+        auto& httpRequest = *new detail::HttpRequest<CreateUserResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/securityPolicy");
-        }
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FUserFunctionHandler.createUser");
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
@@ -356,6 +365,211 @@ public:
             writer.writePropertyName("name");
             writer.write(*request.getName());
         }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ユーザーを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateUser(std::function<void(AsyncUpdateUserResult&)> callback, UpdateUserRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<UpdateUserResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FUserFunctionHandler.updateUser");
+        Char encodeBuffer[2048];
+        if (request.getUserName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ユーザーを取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getUserStatus(std::function<void(AsyncGetUserStatusResult&)> callback, GetUserStatusRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetUserStatusResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FUserFunctionHandler.getUserStatus");
+        Char encodeBuffer[2048];
+        if (request.getUserName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ユーザーを取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getUser(std::function<void(AsyncGetUserResult&)> callback, GetUserRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetUserResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FUserFunctionHandler.getUser");
+        Char encodeBuffer[2048];
+        if (request.getUserName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ユーザーを削除します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteUser(std::function<void(AsyncDeleteUserResult&)> callback, DeleteUserRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<void>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FUserFunctionHandler.deleteUser");
+        Char encodeBuffer[2048];
+        if (request.getUserName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * セキュリティポリシーの一覧を取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeSecurityPolicies(std::function<void(AsyncDescribeSecurityPoliciesResult&)> callback, DescribeSecurityPoliciesRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeSecurityPoliciesResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FSecurityPolicyFunctionHandler.describeSecurityPolicies");
+        Char encodeBuffer[2048];
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * オーナーIDを指定してセキュリティポリシーの一覧を取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeCommonSecurityPolicies(std::function<void(AsyncDescribeCommonSecurityPoliciesResult&)> callback, DescribeCommonSecurityPoliciesRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeCommonSecurityPoliciesResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FSecurityPolicyFunctionHandler.describeCommonSecurityPolicies");
+        Char encodeBuffer[2048];
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * セキュリティポリシーを新規作成します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createSecurityPolicy(std::function<void(AsyncCreateSecurityPolicyResult&)> callback, CreateSecurityPolicyRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<CreateSecurityPolicyResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FSecurityPolicyFunctionHandler.createSecurityPolicy");
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*request.getName());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
         if (request.getPolicy())
         {
             writer.writePropertyName("policy");
@@ -365,130 +579,16 @@ public:
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * セキュリティポリシーを削除します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteSecurityPolicy(std::function<void(AsyncDeleteSecurityPolicyResult&)> callback, DeleteSecurityPolicyRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/securityPolicy/").append(detail::StringUtil::toStr(buffer, request.getSecurityPolicyName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 共用セキュリティポリシーの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeCommonSecurityPolicy(std::function<void(AsyncDescribeCommonSecurityPolicyResult&)> callback, DescribeCommonSecurityPolicyRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeCommonSecurityPolicyResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/securityPolicy/common");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
-        if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * セキュリティポリシーの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeSecurityPolicy(std::function<void(AsyncDescribeSecurityPolicyResult&)> callback, DescribeSecurityPolicyRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeSecurityPolicyResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/securityPolicy");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
-        if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * セキュリティポリシーを取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getSecurityPolicy(std::function<void(AsyncGetSecurityPolicyResult&)> callback, GetSecurityPolicyRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<GetSecurityPolicyResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/securityPolicy/").append(detail::StringUtil::toStr(buffer, request.getSecurityPolicyName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * セキュリティポリシーを更新します<br>
-     * <br>
-     *
+	/**
+	 * セキュリティポリシーを更新します<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -497,13 +597,20 @@ public:
         auto& httpRequest = *new detail::HttpRequest<UpdateSecurityPolicyResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/securityPolicy/").append(detail::StringUtil::toStr(buffer, request.getSecurityPolicyName())).append("");
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FSecurityPolicyFunctionHandler.updateSecurityPolicy");
+        Char encodeBuffer[2048];
+        if (request.getSecurityPolicyName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSecurityPolicyName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("securityPolicyName={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
         if (request.getPolicy())
         {
             writer.writePropertyName("policy");
@@ -513,27 +620,244 @@ public:
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * ユーザにセキュリティポリシーを割り当てます<br>
-     * <br>
-     *
+	/**
+	 * セキュリティポリシーを取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getSecurityPolicyStatus(std::function<void(AsyncGetSecurityPolicyStatusResult&)> callback, GetSecurityPolicyStatusRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetSecurityPolicyStatusResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FSecurityPolicyFunctionHandler.getSecurityPolicyStatus");
+        Char encodeBuffer[2048];
+        if (request.getSecurityPolicyName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSecurityPolicyName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("securityPolicyName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * セキュリティポリシーを取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getSecurityPolicy(std::function<void(AsyncGetSecurityPolicyResult&)> callback, GetSecurityPolicyRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetSecurityPolicyResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FSecurityPolicyFunctionHandler.getSecurityPolicy");
+        Char encodeBuffer[2048];
+        if (request.getSecurityPolicyName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSecurityPolicyName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("securityPolicyName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * セキュリティポリシーを削除します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteSecurityPolicy(std::function<void(AsyncDeleteSecurityPolicyResult&)> callback, DeleteSecurityPolicyRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<void>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FSecurityPolicyFunctionHandler.deleteSecurityPolicy");
+        Char encodeBuffer[2048];
+        if (request.getSecurityPolicyName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSecurityPolicyName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("securityPolicyName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * GSIの一覧を取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeIdentifiers(std::function<void(AsyncDescribeIdentifiersResult&)> callback, DescribeIdentifiersRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeIdentifiersResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FIdentifierFunctionHandler.describeIdentifiers");
+        Char encodeBuffer[2048];
+        if (request.getUserName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * GSIを新規作成します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createIdentifier(std::function<void(AsyncCreateIdentifierResult&)> callback, CreateIdentifierRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<CreateIdentifierResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FIdentifierFunctionHandler.createIdentifier");
+        Char encodeBuffer[2048];
+        if (request.getUserName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * GSIを取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getIdentifier(std::function<void(AsyncGetIdentifierResult&)> callback, GetIdentifierRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetIdentifierResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FIdentifierFunctionHandler.getIdentifier");
+        Char encodeBuffer[2048];
+        if (request.getUserName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getClientId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getClientId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("clientId={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * GSIを削除します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteIdentifier(std::function<void(AsyncDeleteIdentifierResult&)> callback, DeleteIdentifierRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<void>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FIdentifierFunctionHandler.deleteIdentifier");
+        Char encodeBuffer[2048];
+        if (request.getUserName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getClientId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getClientId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("clientId={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 割り当てられたセキュリティポリシーの一覧を取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getHasSecurityPolicy(std::function<void(AsyncGetHasSecurityPolicyResult&)> callback, GetHasSecurityPolicyRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetHasSecurityPolicyResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FAttachSecurityPolicyFunctionHandler.getHasSecurityPolicy");
+        Char encodeBuffer[2048];
+        if (request.getUserName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 割り当てられたセキュリティポリシーを新しくユーザーに割り当てます<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
     void attachSecurityPolicy(std::function<void(AsyncAttachSecurityPolicyResult&)> callback, AttachSecurityPolicyRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& httpRequest = *new detail::HttpRequest<AttachSecurityPolicyResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserName())).append("/securityPolicy");
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FAttachSecurityPolicyFunctionHandler.attachSecurityPolicy");
+        Char encodeBuffer[2048];
+        if (request.getUserName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -547,169 +871,76 @@ public:
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * ユーザを新規作成します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void createUser(std::function<void(AsyncCreateUserResult&)> callback, CreateUserRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<CreateUserResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/user");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getName())
-        {
-            writer.writePropertyName("name");
-            writer.write(*request.getName());
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * ユーザを削除します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteUser(std::function<void(AsyncDeleteUserResult&)> callback, DeleteUserRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * ユーザの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeUser(std::function<void(AsyncDescribeUserResult&)> callback, DescribeUserRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeUserResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/user");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
-        if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * ユーザに割り当てられたセキュリティポリシーを解除します<br>
-     * <br>
-     *
+	/**
+	 * 割り当てられたセキュリティポリシーをユーザーから外します<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
     void detachSecurityPolicy(std::function<void(AsyncDetachSecurityPolicyResult&)> callback, DetachSecurityPolicyRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
+        auto& httpRequest = *new detail::HttpRequest<DetachSecurityPolicyResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserName())).append("/securityPolicy/").append(detail::StringUtil::toStr(buffer, request.getSecurityPolicyId())).append("");
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FAttachSecurityPolicyFunctionHandler.detachSecurityPolicy");
+        Char encodeBuffer[2048];
+        if (request.getUserName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
         }
+        if (request.getSecurityPolicyId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSecurityPolicyId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("securityPolicyId={value}").replace("{value}", encodeBuffer);
+        }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * ユーザが保持しているセキュリティポリシー一覧を取得します<br>
-     * <br>
-     *
+	/**
+	 * プロジェクトトークン を取得します<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getHasSecurityPolicy(std::function<void(AsyncGetHasSecurityPolicyResult&)> callback, GetHasSecurityPolicyRequest& request)
+    void login(std::function<void(AsyncLoginResult&)> callback, LoginRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetHasSecurityPolicyResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& httpRequest = *new detail::HttpRequest<LoginResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FProjectTokenFunctionHandler.login");
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getClientId())
         {
-            char buffer[128];
-            url.append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserName())).append("/securityPolicy");
+            writer.writePropertyName("clientId");
+            writer.write(*request.getClientId());
         }
+        if (request.getClientSecret())
+        {
+            writer.writePropertyName("clientSecret");
+            writer.write(*request.getClientSecret());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
-
-    /**
-     * ユーザを取得します。<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getUser(std::function<void(AsyncGetUserResult&)> callback, GetUserRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<GetUserResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
 };
 
 } }

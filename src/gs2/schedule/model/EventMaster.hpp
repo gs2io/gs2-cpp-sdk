@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,10 +25,10 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace schedule {
+namespace gs2 { namespace  {
 
 /**
- * イベントマスター
+ * イベント
  *
  * @author Game Server Services, Inc.
  *
@@ -39,54 +39,63 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** イベントマスターGRN */
-        optional<StringHolder> eventMasterId;
-        /** イベントマスター名 */
+        /** イベント のGRN */
+        optional<StringHolder> eventId;
+        /** ディストリビューターの種類名 */
         optional<StringHolder> name;
-        /** メタデータ */
-        optional<StringHolder> meta;
-        /** 期間 */
-        optional<StringHolder> type;
-        /** 絶対時間を選択した場合の開始日時 */
-        optional<Int32> absoluteBegin;
-        /** 絶対時間を選択した場合の終了日時 */
-        optional<Int32> absoluteEnd;
-        /** 相対時間を選択した場合の開始トリガー名 */
+        /** イベントの説明 */
+        optional<StringHolder> description;
+        /** ディストリビューターの種類のメタデータ */
+        optional<StringHolder> metadata;
+        /** イベント期間の種類 */
+        optional<StringHolder> scheduleType;
+        /** イベントの開始日時 */
+        
+        optional<Int64> absoluteBegin;
+        /** イベントの終了日時 */
+        
+        optional<Int64> absoluteEnd;
+        /** イベントの開始トリガー */
         optional<StringHolder> relativeTriggerName;
-        /** 相対時間を選択した場合のトリガーを引いてからのイベント期間(分) */
-        optional<Int32> relativeSpan;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
-        /** 最終更新日時(エポック秒) */
-        optional<Int32> updateAt;
+        /** イベントの開催期間(秒) */
+        
+        optional<Int32> relativeDuration;
+        /** 作成日時 */
+        
+        optional<Int64> createAt;
+        /** 最終更新日時 */
+        
+        optional<Int64> updateAt;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            eventMasterId(data.eventMasterId),
+            eventId(data.eventId),
             name(data.name),
-            meta(data.meta),
-            type(data.type),
+            description(data.description),
+            metadata(data.metadata),
+            scheduleType(data.scheduleType),
             absoluteBegin(data.absoluteBegin),
             absoluteEnd(data.absoluteEnd),
             relativeTriggerName(data.relativeTriggerName),
-            relativeSpan(data.relativeSpan),
+            relativeDuration(data.relativeDuration),
             createAt(data.createAt),
             updateAt(data.updateAt)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            eventMasterId(std::move(data.eventMasterId)),
+            eventId(std::move(data.eventId)),
             name(std::move(data.name)),
-            meta(std::move(data.meta)),
-            type(std::move(data.type)),
+            description(std::move(data.description)),
+            metadata(std::move(data.metadata)),
+            scheduleType(std::move(data.scheduleType)),
             absoluteBegin(std::move(data.absoluteBegin)),
             absoluteEnd(std::move(data.absoluteEnd)),
             relativeTriggerName(std::move(data.relativeTriggerName)),
-            relativeSpan(std::move(data.relativeSpan)),
+            relativeDuration(std::move(data.relativeDuration)),
             createAt(std::move(data.createAt)),
             updateAt(std::move(data.updateAt))
         {}
@@ -99,10 +108,10 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "eventMasterId") == 0) {
+            if (std::strcmp(name, "eventId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->eventMasterId.emplace(jsonValue.GetString());
+                    this->eventId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "name") == 0) {
@@ -111,28 +120,34 @@ private:
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "meta") == 0) {
+            else if (std::strcmp(name, "description") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->meta.emplace(jsonValue.GetString());
+                    this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "type") == 0) {
+            else if (std::strcmp(name, "metadata") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->type.emplace(jsonValue.GetString());
+                    this->metadata.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "scheduleType") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->scheduleType.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "absoluteBegin") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->absoluteBegin = jsonValue.GetInt();
+                    this->absoluteBegin = jsonValue.GetInt64();
                 }
             }
             else if (std::strcmp(name, "absoluteEnd") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->absoluteEnd = jsonValue.GetInt();
+                    this->absoluteEnd = jsonValue.GetInt64();
                 }
             }
             else if (std::strcmp(name, "relativeTriggerName") == 0) {
@@ -141,27 +156,27 @@ private:
                     this->relativeTriggerName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "relativeSpan") == 0) {
+            else if (std::strcmp(name, "relativeDuration") == 0) {
                 if (jsonValue.IsInt())
                 {
-                    this->relativeSpan = jsonValue.GetInt();
+                    this->relativeDuration = jsonValue.GetInt();
                 }
             }
             else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->createAt = jsonValue.GetInt64();
                 }
             }
             else if (std::strcmp(name, "updateAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt();
+                    this->updateAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -239,32 +254,30 @@ public:
     {
         return this;
     }
-
-
     /**
-     * イベントマスターGRNを取得
+     * イベント のGRNを取得
      *
-     * @return イベントマスターGRN
+     * @return イベント のGRN
      */
-    const optional<StringHolder>& getEventMasterId() const
+    const optional<StringHolder>& getEventId() const
     {
-        return ensureData().eventMasterId;
+        return ensureData().eventId;
     }
 
     /**
-     * イベントマスターGRNを設定
+     * イベント のGRNを設定
      *
-     * @param eventMasterId イベントマスターGRN
+     * @param eventId イベント のGRN
      */
-    void setEventMasterId(const Char* eventMasterId)
+    void setEventId(const Char* eventId)
     {
-        ensureData().eventMasterId.emplace(eventMasterId);
+        ensureData().eventId.emplace(eventId);
     }
 
     /**
-     * イベントマスター名を取得
+     * ディストリビューターの種類名を取得
      *
-     * @return イベントマスター名
+     * @return ディストリビューターの種類名
      */
     const optional<StringHolder>& getName() const
     {
@@ -272,9 +285,9 @@ public:
     }
 
     /**
-     * イベントマスター名を設定
+     * ディストリビューターの種類名を設定
      *
-     * @param name イベントマスター名
+     * @param name ディストリビューターの種類名
      */
     void setName(const Char* name)
     {
@@ -282,89 +295,109 @@ public:
     }
 
     /**
-     * メタデータを取得
+     * イベントの説明を取得
      *
-     * @return メタデータ
+     * @return イベントの説明
      */
-    const optional<StringHolder>& getMeta() const
+    const optional<StringHolder>& getDescription() const
     {
-        return ensureData().meta;
+        return ensureData().description;
     }
 
     /**
-     * メタデータを設定
+     * イベントの説明を設定
      *
-     * @param meta メタデータ
+     * @param description イベントの説明
      */
-    void setMeta(const Char* meta)
+    void setDescription(const Char* description)
     {
-        ensureData().meta.emplace(meta);
+        ensureData().description.emplace(description);
     }
 
     /**
-     * 期間を取得
+     * ディストリビューターの種類のメタデータを取得
      *
-     * @return 期間
+     * @return ディストリビューターの種類のメタデータ
      */
-    const optional<StringHolder>& getType() const
+    const optional<StringHolder>& getMetadata() const
     {
-        return ensureData().type;
+        return ensureData().metadata;
     }
 
     /**
-     * 期間を設定
+     * ディストリビューターの種類のメタデータを設定
      *
-     * @param type 期間
+     * @param metadata ディストリビューターの種類のメタデータ
      */
-    void setType(const Char* type)
+    void setMetadata(const Char* metadata)
     {
-        ensureData().type.emplace(type);
+        ensureData().metadata.emplace(metadata);
     }
 
     /**
-     * 絶対時間を選択した場合の開始日時を取得
+     * イベント期間の種類を取得
      *
-     * @return 絶対時間を選択した場合の開始日時
+     * @return イベント期間の種類
      */
-    const optional<Int32>& getAbsoluteBegin() const
+    const optional<StringHolder>& getScheduleType() const
+    {
+        return ensureData().scheduleType;
+    }
+
+    /**
+     * イベント期間の種類を設定
+     *
+     * @param scheduleType イベント期間の種類
+     */
+    void setScheduleType(const Char* scheduleType)
+    {
+        ensureData().scheduleType.emplace(scheduleType);
+    }
+
+    /**
+     * イベントの開始日時を取得
+     *
+     * @return イベントの開始日時
+     */
+    const optional<Int64>& getAbsoluteBegin() const
     {
         return ensureData().absoluteBegin;
     }
 
     /**
-     * 絶対時間を選択した場合の開始日時を設定
+     * イベントの開始日時を設定
      *
-     * @param absoluteBegin 絶対時間を選択した場合の開始日時
+     * @param absoluteBegin イベントの開始日時
      */
-    void setAbsoluteBegin(Int32 absoluteBegin)
+    void setAbsoluteBegin(Int64 absoluteBegin)
     {
         ensureData().absoluteBegin.emplace(absoluteBegin);
     }
 
     /**
-     * 絶対時間を選択した場合の終了日時を取得
+     * イベントの終了日時を取得
      *
-     * @return 絶対時間を選択した場合の終了日時
+     * @return イベントの終了日時
      */
-    const optional<Int32>& getAbsoluteEnd() const
+    const optional<Int64>& getAbsoluteEnd() const
     {
         return ensureData().absoluteEnd;
     }
 
     /**
-     * 絶対時間を選択した場合の終了日時を設定
+     * イベントの終了日時を設定
      *
-     * @param absoluteEnd 絶対時間を選択した場合の終了日時
+     * @param absoluteEnd イベントの終了日時
      */
-    void setAbsoluteEnd(Int32 absoluteEnd)
+    void setAbsoluteEnd(Int64 absoluteEnd)
     {
         ensureData().absoluteEnd.emplace(absoluteEnd);
     }
 
     /**
-     * 相対時間を選択した場合の開始トリガー名を取得
+     * イベントの開始トリガーを取得
      *
-     * @return 相対時間を選択した場合の開始トリガー名
+     * @return イベントの開始トリガー
      */
     const optional<StringHolder>& getRelativeTriggerName() const
     {
@@ -372,9 +405,9 @@ public:
     }
 
     /**
-     * 相対時間を選択した場合の開始トリガー名を設定
+     * イベントの開始トリガーを設定
      *
-     * @param relativeTriggerName 相対時間を選択した場合の開始トリガー名
+     * @param relativeTriggerName イベントの開始トリガー
      */
     void setRelativeTriggerName(const Char* relativeTriggerName)
     {
@@ -382,61 +415,61 @@ public:
     }
 
     /**
-     * 相対時間を選択した場合のトリガーを引いてからのイベント期間(分)を取得
+     * イベントの開催期間(秒)を取得
      *
-     * @return 相対時間を選択した場合のトリガーを引いてからのイベント期間(分)
+     * @return イベントの開催期間(秒)
      */
-    const optional<Int32>& getRelativeSpan() const
+    const optional<Int32>& getRelativeDuration() const
     {
-        return ensureData().relativeSpan;
+        return ensureData().relativeDuration;
     }
 
     /**
-     * 相対時間を選択した場合のトリガーを引いてからのイベント期間(分)を設定
+     * イベントの開催期間(秒)を設定
      *
-     * @param relativeSpan 相対時間を選択した場合のトリガーを引いてからのイベント期間(分)
+     * @param relativeDuration イベントの開催期間(秒)
      */
-    void setRelativeSpan(Int32 relativeSpan)
+    void setRelativeDuration(Int32 relativeDuration)
     {
-        ensureData().relativeSpan.emplace(relativeSpan);
+        ensureData().relativeDuration.emplace(relativeDuration);
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * 作成日時を取得
      *
-     * @return 作成日時(エポック秒)
+     * @return 作成日時
      */
-    const optional<Int32>& getCreateAt() const
+    const optional<Int64>& getCreateAt() const
     {
         return ensureData().createAt;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param createAt 作成日時(エポック秒)
+     * @param createAt 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
     }
 
     /**
-     * 最終更新日時(エポック秒)を取得
+     * 最終更新日時を取得
      *
-     * @return 最終更新日時(エポック秒)
+     * @return 最終更新日時
      */
-    const optional<Int32>& getUpdateAt() const
+    const optional<Int64>& getUpdateAt() const
     {
         return ensureData().updateAt;
     }
 
     /**
-     * 最終更新日時(エポック秒)を設定
+     * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時(エポック秒)
+     * @param updateAt 最終更新日時
      */
-    void setUpdateAt(Int32 updateAt)
+    void setUpdateAt(Int64 updateAt)
     {
         ensureData().updateAt.emplace(updateAt);
     }

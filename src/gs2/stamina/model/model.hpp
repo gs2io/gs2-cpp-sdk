@@ -17,7 +17,14 @@
 #ifndef GS2_STAMINA_MODEL_MODEL_HPP_
 #define GS2_STAMINA_MODEL_MODEL_HPP_
 
-#include "StaminaPool.hpp"
+#include <gs2/core/common.hpp>
+#include "Group.hpp"
+#include "StaminaModelMaster.hpp"
+#include "MaxStaminaTableMaster.hpp"
+#include "CurrentStaminaMaster.hpp"
+#include "StaminaModel.hpp"
+#include "MaxStaminaTable.hpp"
 #include "Stamina.hpp"
+#include "ResponseCache.hpp"
 
 #endif //GS2_STAMINA_MODEL_MODEL_HPP_

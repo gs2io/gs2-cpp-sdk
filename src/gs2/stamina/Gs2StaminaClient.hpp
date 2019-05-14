@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -23,25 +23,126 @@
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
+#include "request/DescribeGroupsRequest.hpp"
+#include "request/CreateGroupRequest.hpp"
+#include "request/GetGroupStatusRequest.hpp"
+#include "request/GetGroupRequest.hpp"
+#include "request/UpdateGroupRequest.hpp"
+#include "request/DeleteGroupRequest.hpp"
+#include "request/DescribeStaminaModelMastersRequest.hpp"
+#include "request/CreateStaminaModelMasterRequest.hpp"
+#include "request/GetStaminaModelMasterRequest.hpp"
+#include "request/UpdateStaminaModelMasterRequest.hpp"
+#include "request/DeleteStaminaModelMasterRequest.hpp"
+#include "request/DescribeMaxStaminaTableMastersRequest.hpp"
+#include "request/CreateMaxStaminaTableMasterRequest.hpp"
+#include "request/GetMaxStaminaTableMasterRequest.hpp"
+#include "request/UpdateMaxStaminaTableMasterRequest.hpp"
+#include "request/DeleteMaxStaminaTableMasterRequest.hpp"
+#include "request/ExportMasterRequest.hpp"
+#include "request/GetCurrentStaminaMasterRequest.hpp"
+#include "request/UpdateCurrentStaminaMasterRequest.hpp"
+#include "request/DescribeStaminaModelsRequest.hpp"
+#include "request/GetStaminaModelRequest.hpp"
+#include "request/DescribeStaminasRequest.hpp"
+#include "request/DescribeStaminasByUserIdRequest.hpp"
+#include "request/GetStaminaRequest.hpp"
+#include "request/GetStaminaByUserIdRequest.hpp"
+#include "request/ConsumeStaminaRequest.hpp"
+#include "request/ConsumeStaminaByUserIdRequest.hpp"
+#include "request/RecoverStaminaByUserIdRequest.hpp"
+#include "request/RaiseMaxValueByUserIdRequest.hpp"
+#include "request/SetMaxValueByUserIdRequest.hpp"
+#include "request/SetMaxValueByStatusRequest.hpp"
+#include "request/DeleteStaminaByUserIdRequest.hpp"
+#include "request/RecoverStaminaByStampSheetRequest.hpp"
+#include "request/RaiseMaxValueByStampSheetRequest.hpp"
+#include "request/SetMaxValueByStampSheetRequest.hpp"
+#include "request/ConsumeStaminaByStampTaskRequest.hpp"
+#include "result/DescribeGroupsResult.hpp"
+#include "result/CreateGroupResult.hpp"
+#include "result/GetGroupStatusResult.hpp"
+#include "result/GetGroupResult.hpp"
+#include "result/UpdateGroupResult.hpp"
+#include "result/DeleteGroupResult.hpp"
+#include "result/DescribeStaminaModelMastersResult.hpp"
+#include "result/CreateStaminaModelMasterResult.hpp"
+#include "result/GetStaminaModelMasterResult.hpp"
+#include "result/UpdateStaminaModelMasterResult.hpp"
+#include "result/DeleteStaminaModelMasterResult.hpp"
+#include "result/DescribeMaxStaminaTableMastersResult.hpp"
+#include "result/CreateMaxStaminaTableMasterResult.hpp"
+#include "result/GetMaxStaminaTableMasterResult.hpp"
+#include "result/UpdateMaxStaminaTableMasterResult.hpp"
+#include "result/DeleteMaxStaminaTableMasterResult.hpp"
+#include "result/ExportMasterResult.hpp"
+#include "result/GetCurrentStaminaMasterResult.hpp"
+#include "result/UpdateCurrentStaminaMasterResult.hpp"
+#include "result/DescribeStaminaModelsResult.hpp"
+#include "result/GetStaminaModelResult.hpp"
+#include "result/DescribeStaminasResult.hpp"
+#include "result/DescribeStaminasByUserIdResult.hpp"
+#include "result/GetStaminaResult.hpp"
+#include "result/GetStaminaByUserIdResult.hpp"
+#include "result/ConsumeStaminaResult.hpp"
+#include "result/ConsumeStaminaByUserIdResult.hpp"
+#include "result/RecoverStaminaByUserIdResult.hpp"
+#include "result/RaiseMaxValueByUserIdResult.hpp"
+#include "result/SetMaxValueByUserIdResult.hpp"
+#include "result/SetMaxValueByStatusResult.hpp"
+#include "result/DeleteStaminaByUserIdResult.hpp"
+#include "result/RecoverStaminaByStampSheetResult.hpp"
+#include "result/RaiseMaxValueByStampSheetResult.hpp"
+#include "result/SetMaxValueByStampSheetResult.hpp"
+#include "result/ConsumeStaminaByStampTaskResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace stamina {
 
-typedef AsyncResult<CreateStaminaPoolResult> AsyncCreateStaminaPoolResult;
-typedef AsyncResult<void> AsyncDeleteStaminaPoolResult;
-typedef AsyncResult<DescribeServiceClassResult> AsyncDescribeServiceClassResult;
-typedef AsyncResult<DescribeStaminaPoolResult> AsyncDescribeStaminaPoolResult;
-typedef AsyncResult<GetStaminaPoolResult> AsyncGetStaminaPoolResult;
-typedef AsyncResult<GetStaminaPoolStatusResult> AsyncGetStaminaPoolStatusResult;
-typedef AsyncResult<UpdateStaminaPoolResult> AsyncUpdateStaminaPoolResult;
-typedef AsyncResult<ChangeStaminaResult> AsyncChangeStaminaResult;
-typedef AsyncResult<ChangeStaminaByStampSheetResult> AsyncChangeStaminaByStampSheetResult;
-typedef AsyncResult<ConsumeStaminaResult> AsyncConsumeStaminaResult;
-typedef AsyncResult<ConsumeStaminaByStampTaskResult> AsyncConsumeStaminaByStampTaskResult;
+typedef AsyncResult<DescribeGroupsResult> AsyncDescribeGroupsResult;
+typedef AsyncResult<CreateGroupResult> AsyncCreateGroupResult;
+typedef AsyncResult<GetGroupStatusResult> AsyncGetGroupStatusResult;
+typedef AsyncResult<GetGroupResult> AsyncGetGroupResult;
+typedef AsyncResult<UpdateGroupResult> AsyncUpdateGroupResult;
+typedef AsyncResult<DeleteGroupResult> AsyncDeleteGroupResult;
+typedef AsyncResult<DescribeStaminaModelMastersResult> AsyncDescribeStaminaModelMastersResult;
+typedef AsyncResult<CreateStaminaModelMasterResult> AsyncCreateStaminaModelMasterResult;
+typedef AsyncResult<GetStaminaModelMasterResult> AsyncGetStaminaModelMasterResult;
+typedef AsyncResult<UpdateStaminaModelMasterResult> AsyncUpdateStaminaModelMasterResult;
+typedef AsyncResult<DeleteStaminaModelMasterResult> AsyncDeleteStaminaModelMasterResult;
+typedef AsyncResult<DescribeMaxStaminaTableMastersResult> AsyncDescribeMaxStaminaTableMastersResult;
+typedef AsyncResult<CreateMaxStaminaTableMasterResult> AsyncCreateMaxStaminaTableMasterResult;
+typedef AsyncResult<GetMaxStaminaTableMasterResult> AsyncGetMaxStaminaTableMasterResult;
+typedef AsyncResult<UpdateMaxStaminaTableMasterResult> AsyncUpdateMaxStaminaTableMasterResult;
+typedef AsyncResult<DeleteMaxStaminaTableMasterResult> AsyncDeleteMaxStaminaTableMasterResult;
+typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
+typedef AsyncResult<GetCurrentStaminaMasterResult> AsyncGetCurrentStaminaMasterResult;
+typedef AsyncResult<UpdateCurrentStaminaMasterResult> AsyncUpdateCurrentStaminaMasterResult;
+typedef AsyncResult<DescribeStaminaModelsResult> AsyncDescribeStaminaModelsResult;
+typedef AsyncResult<GetStaminaModelResult> AsyncGetStaminaModelResult;
+typedef AsyncResult<DescribeStaminasResult> AsyncDescribeStaminasResult;
+typedef AsyncResult<DescribeStaminasByUserIdResult> AsyncDescribeStaminasByUserIdResult;
 typedef AsyncResult<GetStaminaResult> AsyncGetStaminaResult;
+typedef AsyncResult<GetStaminaByUserIdResult> AsyncGetStaminaByUserIdResult;
+typedef AsyncResult<ConsumeStaminaResult> AsyncConsumeStaminaResult;
+typedef AsyncResult<ConsumeStaminaByUserIdResult> AsyncConsumeStaminaByUserIdResult;
+typedef AsyncResult<RecoverStaminaByUserIdResult> AsyncRecoverStaminaByUserIdResult;
+typedef AsyncResult<RaiseMaxValueByUserIdResult> AsyncRaiseMaxValueByUserIdResult;
+typedef AsyncResult<SetMaxValueByUserIdResult> AsyncSetMaxValueByUserIdResult;
+typedef AsyncResult<SetMaxValueByStatusResult> AsyncSetMaxValueByStatusResult;
+typedef AsyncResult<void> AsyncDeleteStaminaByUserIdResult;
+typedef AsyncResult<RecoverStaminaByStampSheetResult> AsyncRecoverStaminaByStampSheetResult;
+typedef AsyncResult<RaiseMaxValueByStampSheetResult> AsyncRaiseMaxValueByStampSheetResult;
+typedef AsyncResult<SetMaxValueByStampSheetResult> AsyncSetMaxValueByStampSheetResult;
+typedef AsyncResult<ConsumeStaminaByStampTaskResult> AsyncConsumeStaminaByStampTaskResult;
 
+/**
+ * GS2 Stamina API クライアント
+ *
+ * @author Game Server Services, Inc.
+ *
+ */
 class Gs2StaminaClient : public AbstractGs2ClientBase
 {
 private:
@@ -54,13 +155,13 @@ private:
 
 private:
 
-    void write(detail::json::JsonWriter& writer, const StaminaPool& obj)
+    void write(detail::json::JsonWriter& writer, const Group& obj)
     {
         writer.writeObjectStart();
-        if (obj.getStaminaPoolId())
+        if (obj.getGroupId())
         {
-            writer.writePropertyName("staminaPoolId");
-            writer.write(*obj.getStaminaPoolId());
+            writer.writePropertyName("groupId");
+            writer.write(*obj.getGroupId());
         }
         if (obj.getOwnerId())
         {
@@ -77,40 +178,15 @@ private:
             writer.writePropertyName("description");
             writer.write(*obj.getDescription());
         }
-        if (obj.getServiceClass())
+        if (obj.getOverflowTriggerScriptId())
         {
-            writer.writePropertyName("serviceClass");
-            writer.write(*obj.getServiceClass());
+            writer.writePropertyName("overflowTriggerScriptId");
+            writer.write(*obj.getOverflowTriggerScriptId());
         }
-        if (obj.getIncreaseInterval())
+        if (obj.getOverflowTriggerQueueId())
         {
-            writer.writePropertyName("increaseInterval");
-            writer.write(*obj.getIncreaseInterval());
-        }
-        if (obj.getConsumeStaminaTriggerScript())
-        {
-            writer.writePropertyName("consumeStaminaTriggerScript");
-            writer.write(*obj.getConsumeStaminaTriggerScript());
-        }
-        if (obj.getConsumeStaminaDoneTriggerScript())
-        {
-            writer.writePropertyName("consumeStaminaDoneTriggerScript");
-            writer.write(*obj.getConsumeStaminaDoneTriggerScript());
-        }
-        if (obj.getAddStaminaTriggerScript())
-        {
-            writer.writePropertyName("addStaminaTriggerScript");
-            writer.write(*obj.getAddStaminaTriggerScript());
-        }
-        if (obj.getAddStaminaDoneTriggerScript())
-        {
-            writer.writePropertyName("addStaminaDoneTriggerScript");
-            writer.write(*obj.getAddStaminaDoneTriggerScript());
-        }
-        if (obj.getGetMaxStaminaTriggerScript())
-        {
-            writer.writePropertyName("getMaxStaminaTriggerScript");
-            writer.write(*obj.getGetMaxStaminaTriggerScript());
+            writer.writePropertyName("overflowTriggerQueueId");
+            writer.write(*obj.getOverflowTriggerQueueId());
         }
         if (obj.getCreateAt())
         {
@@ -125,9 +201,236 @@ private:
         writer.writeObjectEnd();
     }
 
+    void write(detail::json::JsonWriter& writer, const StaminaModelMaster& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getStaminaModelId())
+        {
+            writer.writePropertyName("staminaModelId");
+            writer.write(*obj.getStaminaModelId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.write(*obj.getMetadata());
+        }
+        if (obj.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*obj.getDescription());
+        }
+        if (obj.getRecoverIntervalMinutes())
+        {
+            writer.writePropertyName("recoverIntervalMinutes");
+            writer.write(*obj.getRecoverIntervalMinutes());
+        }
+        if (obj.getRecoverValue())
+        {
+            writer.writePropertyName("recoverValue");
+            writer.write(*obj.getRecoverValue());
+        }
+        if (obj.getInitialCapacity())
+        {
+            writer.writePropertyName("initialCapacity");
+            writer.write(*obj.getInitialCapacity());
+        }
+        if (obj.getIsOverflow())
+        {
+            writer.writePropertyName("isOverflow");
+            writer.write(*obj.getIsOverflow());
+        }
+        if (obj.getMaxCapacity())
+        {
+            writer.writePropertyName("maxCapacity");
+            writer.write(*obj.getMaxCapacity());
+        }
+        if (obj.getIsCollaborateGs2Experience())
+        {
+            writer.writePropertyName("isCollaborateGs2Experience");
+            writer.write(*obj.getIsCollaborateGs2Experience());
+        }
+        if (obj.getMaxStaminaTableId())
+        {
+            writer.writePropertyName("maxStaminaTableId");
+            writer.write(*obj.getMaxStaminaTableId());
+        }
+        if (obj.getCreateAt())
+        {
+            writer.writePropertyName("createAt");
+            writer.write(*obj.getCreateAt());
+        }
+        if (obj.getUpdateAt())
+        {
+            writer.writePropertyName("updateAt");
+            writer.write(*obj.getUpdateAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const MaxStaminaTableMaster& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getMaxStaminaTableId())
+        {
+            writer.writePropertyName("maxStaminaTableId");
+            writer.write(*obj.getMaxStaminaTableId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.write(*obj.getMetadata());
+        }
+        if (obj.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*obj.getDescription());
+        }
+        if (obj.getExperienceModelId())
+        {
+            writer.writePropertyName("experienceModelId");
+            writer.write(*obj.getExperienceModelId());
+        }
+        if (obj.getValues())
+        {
+            writer.writePropertyName("values");
+            writer.writeArrayStart();
+            auto& list = *obj.getValues();
+            for (Int32 i = 0; i < list.getCount(); ++i)
+            {
+                writer.write(list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const CurrentStaminaMaster& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGroupName())
+        {
+            writer.writePropertyName("groupName");
+            writer.write(*obj.getGroupName());
+        }
+        if (obj.getSettings())
+        {
+            writer.writePropertyName("settings");
+            writer.write(*obj.getSettings());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const StaminaModel& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getStaminaModelId())
+        {
+            writer.writePropertyName("staminaModelId");
+            writer.write(*obj.getStaminaModelId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.write(*obj.getMetadata());
+        }
+        if (obj.getRecoverIntervalMinutes())
+        {
+            writer.writePropertyName("recoverIntervalMinutes");
+            writer.write(*obj.getRecoverIntervalMinutes());
+        }
+        if (obj.getRecoverValue())
+        {
+            writer.writePropertyName("recoverValue");
+            writer.write(*obj.getRecoverValue());
+        }
+        if (obj.getInitialCapacity())
+        {
+            writer.writePropertyName("initialCapacity");
+            writer.write(*obj.getInitialCapacity());
+        }
+        if (obj.getIsOverflow())
+        {
+            writer.writePropertyName("isOverflow");
+            writer.write(*obj.getIsOverflow());
+        }
+        if (obj.getMaxCapacity())
+        {
+            writer.writePropertyName("maxCapacity");
+            writer.write(*obj.getMaxCapacity());
+        }
+        if (obj.getMaxStaminaTable())
+        {
+            writer.writePropertyName("maxStaminaTable");
+            write(writer, *obj.getMaxStaminaTable());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const MaxStaminaTable& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getMaxStaminaTableId())
+        {
+            writer.writePropertyName("maxStaminaTableId");
+            writer.write(*obj.getMaxStaminaTableId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.write(*obj.getMetadata());
+        }
+        if (obj.getExperienceModelId())
+        {
+            writer.writePropertyName("experienceModelId");
+            writer.write(*obj.getExperienceModelId());
+        }
+        if (obj.getValues())
+        {
+            writer.writePropertyName("values");
+            writer.writeArrayStart();
+            auto& list = *obj.getValues();
+            for (Int32 i = 0; i < list.getCount(); ++i)
+            {
+                writer.write(list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        writer.writeObjectEnd();
+    }
+
     void write(detail::json::JsonWriter& writer, const Stamina& obj)
     {
         writer.writeObjectStart();
+        if (obj.getStaminaId())
+        {
+            writer.writePropertyName("staminaId");
+            writer.write(*obj.getStaminaId());
+        }
+        if (obj.getStaminaModelName())
+        {
+            writer.writePropertyName("staminaModelName");
+            writer.write(*obj.getStaminaModelName());
+        }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
@@ -138,15 +441,61 @@ private:
             writer.writePropertyName("value");
             writer.write(*obj.getValue());
         }
-        if (obj.getOverflow())
+        if (obj.getMaxValue())
         {
-            writer.writePropertyName("overflow");
-            writer.write(*obj.getOverflow());
+            writer.writePropertyName("maxValue");
+            writer.write(*obj.getMaxValue());
         }
-        if (obj.getLastUpdateAt())
+        if (obj.getOverflowValue())
         {
-            writer.writePropertyName("lastUpdateAt");
-            writer.write(*obj.getLastUpdateAt());
+            writer.writePropertyName("overflowValue");
+            writer.write(*obj.getOverflowValue());
+        }
+        if (obj.getLastRecoveredAt())
+        {
+            writer.writePropertyName("lastRecoveredAt");
+            writer.write(*obj.getLastRecoveredAt());
+        }
+        if (obj.getCreatedAt())
+        {
+            writer.writePropertyName("createdAt");
+            writer.write(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            writer.writePropertyName("updatedAt");
+            writer.write(*obj.getUpdatedAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const ResponseCache& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getRegion())
+        {
+            writer.writePropertyName("region");
+            writer.write(*obj.getRegion());
+        }
+        if (obj.getOwnerId())
+        {
+            writer.writePropertyName("ownerId");
+            writer.write(*obj.getOwnerId());
+        }
+        if (obj.getResponseCacheId())
+        {
+            writer.writePropertyName("responseCacheId");
+            writer.write(*obj.getResponseCacheId());
+        }
+        if (obj.getRequestHash())
+        {
+            writer.writePropertyName("requestHash");
+            writer.write(*obj.getRequestHash());
+        }
+        if (obj.getResult())
+        {
+            writer.writePropertyName("result");
+            writer.write(*obj.getResult());
         }
         writer.writeObjectEnd();
     }
@@ -186,22 +535,246 @@ public:
     {
     }
 
-
-    /**
-     * スタミナプールを新規作成します<br>
-     * <br>
-     *
+	/**
+	 * スタミナの種類の一覧を取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createStaminaPool(std::function<void(AsyncCreateStaminaPoolResult&)> callback, CreateStaminaPoolRequest& request)
+    void describeGroups(std::function<void(AsyncDescribeGroupsResult&)> callback, DescribeGroupsRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreateStaminaPoolResult>;
+        auto& httpRequest = *new detail::HttpRequest<DescribeGroupsResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FGroupFunctionHandler.describeGroups");
+        Char encodeBuffer[2048];
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナの種類を新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createGroup(std::function<void(AsyncCreateGroupResult&)> callback, CreateGroupRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<CreateGroupResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FGroupFunctionHandler.createGroup");
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getName())
         {
-            char buffer[128];
-            url.append("/staminaPool");
+            writer.writePropertyName("name");
+            writer.write(*request.getName());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        if (request.getOverflowTriggerScriptId())
+        {
+            writer.writePropertyName("overflowTriggerScriptId");
+            writer.write(*request.getOverflowTriggerScriptId());
+        }
+        if (request.getOverflowTriggerQueueId())
+        {
+            writer.writePropertyName("overflowTriggerQueueId");
+            writer.write(*request.getOverflowTriggerQueueId());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナの種類を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getGroupStatus(std::function<void(AsyncGetGroupStatusResult&)> callback, GetGroupStatusRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetGroupStatusResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FGroupFunctionHandler.getGroupStatus");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナの種類を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getGroup(std::function<void(AsyncGetGroupResult&)> callback, GetGroupRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetGroupResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FGroupFunctionHandler.getGroup");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナの種類を更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateGroup(std::function<void(AsyncUpdateGroupResult&)> callback, UpdateGroupRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<UpdateGroupResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FGroupFunctionHandler.updateGroup");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        if (request.getOverflowTriggerScriptId())
+        {
+            writer.writePropertyName("overflowTriggerScriptId");
+            writer.write(*request.getOverflowTriggerScriptId());
+        }
+        if (request.getOverflowTriggerQueueId())
+        {
+            writer.writePropertyName("overflowTriggerQueueId");
+            writer.write(*request.getOverflowTriggerQueueId());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナの種類を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteGroup(std::function<void(AsyncDeleteGroupResult&)> callback, DeleteGroupRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DeleteGroupResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FGroupFunctionHandler.deleteGroup");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナモデルマスターの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeStaminaModelMasters(std::function<void(AsyncDescribeStaminaModelMastersResult&)> callback, DescribeStaminaModelMastersRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeStaminaModelMastersResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaModelMasterFunctionHandler.describeStaminaModelMasters");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナモデルマスターを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createStaminaModelMaster(std::function<void(AsyncCreateStaminaModelMasterResult&)> callback, CreateStaminaModelMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<CreateStaminaModelMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaModelMasterFunctionHandler.createStaminaModelMaster");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -211,440 +784,624 @@ public:
             writer.writePropertyName("name");
             writer.write(*request.getName());
         }
-        if (request.getServiceClass())
-        {
-            writer.writePropertyName("serviceClass");
-            writer.write(*request.getServiceClass());
-        }
-        if (request.getIncreaseInterval())
-        {
-            writer.writePropertyName("increaseInterval");
-            writer.write(*request.getIncreaseInterval());
-        }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
             writer.write(*request.getDescription());
         }
-        if (request.getConsumeStaminaTriggerScript())
+        if (request.getMetadata())
         {
-            writer.writePropertyName("consumeStaminaTriggerScript");
-            writer.write(*request.getConsumeStaminaTriggerScript());
+            writer.writePropertyName("metadata");
+            writer.write(*request.getMetadata());
         }
-        if (request.getConsumeStaminaDoneTriggerScript())
+        if (request.getRecoverIntervalMinutes())
         {
-            writer.writePropertyName("consumeStaminaDoneTriggerScript");
-            writer.write(*request.getConsumeStaminaDoneTriggerScript());
+            writer.writePropertyName("recoverIntervalMinutes");
+            writer.write(*request.getRecoverIntervalMinutes());
         }
-        if (request.getAddStaminaTriggerScript())
+        if (request.getRecoverValue())
         {
-            writer.writePropertyName("addStaminaTriggerScript");
-            writer.write(*request.getAddStaminaTriggerScript());
+            writer.writePropertyName("recoverValue");
+            writer.write(*request.getRecoverValue());
         }
-        if (request.getAddStaminaDoneTriggerScript())
+        if (request.getInitialCapacity())
         {
-            writer.writePropertyName("addStaminaDoneTriggerScript");
-            writer.write(*request.getAddStaminaDoneTriggerScript());
+            writer.writePropertyName("initialCapacity");
+            writer.write(*request.getInitialCapacity());
         }
-        if (request.getGetMaxStaminaTriggerScript())
+        if (request.getIsOverflow())
         {
-            writer.writePropertyName("getMaxStaminaTriggerScript");
-            writer.write(*request.getGetMaxStaminaTriggerScript());
+            writer.writePropertyName("isOverflow");
+            writer.write(*request.getIsOverflow());
+        }
+        if (request.getMaxCapacity())
+        {
+            writer.writePropertyName("maxCapacity");
+            writer.write(*request.getMaxCapacity());
+        }
+        if (request.getIsCollaborateGs2Experience())
+        {
+            writer.writePropertyName("isCollaborateGs2Experience");
+            writer.write(*request.getIsCollaborateGs2Experience());
+        }
+        if (request.getMaxStaminaTableId())
+        {
+            writer.writePropertyName("maxStaminaTableId");
+            writer.write(*request.getMaxStaminaTableId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * スタミナプールを削除します<br>
-     * <br>
-     *
+	/**
+	 * スタミナモデルマスターを取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteStaminaPool(std::function<void(AsyncDeleteStaminaPoolResult&)> callback, DeleteStaminaPoolRequest& request)
+    void getStaminaModelMaster(std::function<void(AsyncGetStaminaModelMasterResult&)> callback, GetStaminaModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
+        auto& httpRequest = *new detail::HttpRequest<GetStaminaModelMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaModelMasterFunctionHandler.getStaminaModelMaster");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getStaminaModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナモデルマスターを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateStaminaModelMaster(std::function<void(AsyncUpdateStaminaModelMasterResult&)> callback, UpdateStaminaModelMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<UpdateStaminaModelMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaModelMasterFunctionHandler.updateStaminaModelMaster");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getStaminaModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        if (request.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.write(*request.getMetadata());
+        }
+        if (request.getRecoverIntervalMinutes())
+        {
+            writer.writePropertyName("recoverIntervalMinutes");
+            writer.write(*request.getRecoverIntervalMinutes());
+        }
+        if (request.getRecoverValue())
+        {
+            writer.writePropertyName("recoverValue");
+            writer.write(*request.getRecoverValue());
+        }
+        if (request.getInitialCapacity())
+        {
+            writer.writePropertyName("initialCapacity");
+            writer.write(*request.getInitialCapacity());
+        }
+        if (request.getIsOverflow())
+        {
+            writer.writePropertyName("isOverflow");
+            writer.write(*request.getIsOverflow());
+        }
+        if (request.getMaxCapacity())
+        {
+            writer.writePropertyName("maxCapacity");
+            writer.write(*request.getMaxCapacity());
+        }
+        if (request.getIsCollaborateGs2Experience())
+        {
+            writer.writePropertyName("isCollaborateGs2Experience");
+            writer.write(*request.getIsCollaborateGs2Experience());
+        }
+        if (request.getMaxStaminaTableId())
+        {
+            writer.writePropertyName("maxStaminaTableId");
+            writer.write(*request.getMaxStaminaTableId());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナモデルマスターを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteStaminaModelMaster(std::function<void(AsyncDeleteStaminaModelMasterResult&)> callback, DeleteStaminaModelMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DeleteStaminaModelMasterResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/staminaPool/").append(detail::StringUtil::toStr(buffer, request.getStaminaPoolName())).append("");
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaModelMasterFunctionHandler.deleteStaminaModelMaster");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
         }
+        if (request.getStaminaModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+        }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * サービスクラスの一覧を取得します<br>
-     * <br>
-     *
+	/**
+	 * スタミナ最大値テーブルの一覧を取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeServiceClass(std::function<void(AsyncDescribeServiceClassResult&)> callback, DescribeServiceClassRequest& request)
+    void describeMaxStaminaTableMasters(std::function<void(AsyncDescribeMaxStaminaTableMastersResult&)> callback, DescribeMaxStaminaTableMastersRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeServiceClassResult>;
+        auto& httpRequest = *new detail::HttpRequest<DescribeMaxStaminaTableMastersResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/staminaPool/serviceClass");
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FMaxStaminaTableMasterFunctionHandler.describeMaxStaminaTableMasters");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
         }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * スタミナプールの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeStaminaPool(std::function<void(AsyncDescribeStaminaPoolResult&)> callback, DescribeStaminaPoolRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeStaminaPoolResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/staminaPool");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
         }
         if (request.getLimit()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * スタミナプールを取得します<br>
-     * <br>
-     *
+	/**
+	 * スタミナ最大値テーブルを新規作成<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStaminaPool(std::function<void(AsyncGetStaminaPoolResult&)> callback, GetStaminaPoolRequest& request)
+    void createMaxStaminaTableMaster(std::function<void(AsyncCreateMaxStaminaTableMasterResult&)> callback, CreateMaxStaminaTableMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetStaminaPoolResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& httpRequest = *new detail::HttpRequest<CreateMaxStaminaTableMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/staminaPool/").append(detail::StringUtil::toStr(buffer, request.getStaminaPoolName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * スタミナプールの状態を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getStaminaPoolStatus(std::function<void(AsyncGetStaminaPoolStatusResult&)> callback, GetStaminaPoolStatusRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<GetStaminaPoolStatusResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/staminaPool/").append(detail::StringUtil::toStr(buffer, request.getStaminaPoolName())).append("/status");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * スタミナプールを更新します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateStaminaPool(std::function<void(AsyncUpdateStaminaPoolResult&)> callback, UpdateStaminaPoolRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<UpdateStaminaPoolResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/staminaPool/").append(detail::StringUtil::toStr(buffer, request.getStaminaPoolName())).append("");
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FMaxStaminaTableMasterFunctionHandler.createMaxStaminaTableMaster");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
-        if (request.getServiceClass())
+        if (request.getName())
         {
-            writer.writePropertyName("serviceClass");
-            writer.write(*request.getServiceClass());
-        }
-        if (request.getIncreaseInterval())
-        {
-            writer.writePropertyName("increaseInterval");
-            writer.write(*request.getIncreaseInterval());
+            writer.writePropertyName("name");
+            writer.write(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
             writer.write(*request.getDescription());
         }
-        if (request.getConsumeStaminaTriggerScript())
+        if (request.getMetadata())
         {
-            writer.writePropertyName("consumeStaminaTriggerScript");
-            writer.write(*request.getConsumeStaminaTriggerScript());
+            writer.writePropertyName("metadata");
+            writer.write(*request.getMetadata());
         }
-        if (request.getConsumeStaminaDoneTriggerScript())
+        if (request.getExperienceModelId())
         {
-            writer.writePropertyName("consumeStaminaDoneTriggerScript");
-            writer.write(*request.getConsumeStaminaDoneTriggerScript());
+            writer.writePropertyName("experienceModelId");
+            writer.write(*request.getExperienceModelId());
         }
-        if (request.getAddStaminaTriggerScript())
+        if (request.getValues())
         {
-            writer.writePropertyName("addStaminaTriggerScript");
-            writer.write(*request.getAddStaminaTriggerScript());
-        }
-        if (request.getAddStaminaDoneTriggerScript())
-        {
-            writer.writePropertyName("addStaminaDoneTriggerScript");
-            writer.write(*request.getAddStaminaDoneTriggerScript());
-        }
-        if (request.getGetMaxStaminaTriggerScript())
-        {
-            writer.writePropertyName("getMaxStaminaTriggerScript");
-            writer.write(*request.getGetMaxStaminaTriggerScript());
+            writer.writePropertyName("values");
+            writer.writeArrayStart();
+            auto& list = *request.getValues();
+            for (Int32 i = 0; i < list.getCount(); ++i)
+            {
+                writer.write(list[i]);
+            }
+            writer.writeArrayEnd();
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * スタミナを増減します<br>
-     * <br>
-     * - 消費クオータ: 5<br>
-     * <br>
-     *
+	/**
+	 * スタミナ最大値テーブルを取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void changeStamina(std::function<void(AsyncChangeStaminaResult&)> callback, ChangeStaminaRequest& request)
+    void getMaxStaminaTableMaster(std::function<void(AsyncGetMaxStaminaTableMasterResult&)> callback, GetMaxStaminaTableMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<ChangeStaminaResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& httpRequest = *new detail::HttpRequest<GetMaxStaminaTableMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/staminaPool/").append(detail::StringUtil::toStr(buffer, request.getStaminaPoolName())).append("/stamina");
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FMaxStaminaTableMasterFunctionHandler.getMaxStaminaTableMaster");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getMaxStaminaTableName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMaxStaminaTableName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("maxStaminaTableName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナ最大値テーブルを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateMaxStaminaTableMaster(std::function<void(AsyncUpdateMaxStaminaTableMasterResult&)> callback, UpdateMaxStaminaTableMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<UpdateMaxStaminaTableMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FMaxStaminaTableMasterFunctionHandler.updateMaxStaminaTableMaster");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getMaxStaminaTableName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMaxStaminaTableName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("maxStaminaTableName={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
-        if (request.getVariation())
+        if (request.getDescription())
         {
-            writer.writePropertyName("variation");
-            writer.write(*request.getVariation());
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
         }
-        if (request.getMaxValue())
+        if (request.getMetadata())
         {
-            writer.writePropertyName("maxValue");
-            writer.write(*request.getMaxValue());
+            writer.writePropertyName("metadata");
+            writer.write(*request.getMetadata());
         }
-        if (request.getOverflow())
+        if (request.getExperienceModelId())
         {
-            writer.writePropertyName("overflow");
-            writer.write(*request.getOverflow());
+            writer.writePropertyName("experienceModelId");
+            writer.write(*request.getExperienceModelId());
+        }
+        if (request.getValues())
+        {
+            writer.writePropertyName("values");
+            writer.writeArrayStart();
+            auto& list = *request.getValues();
+            for (Int32 i = 0; i < list.getCount(); ++i)
+            {
+                writer.write(list[i]);
+            }
+            writer.writeArrayEnd();
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * スタンプシートを使用してスタミナを増減します<br>
-     * <br>
-     * - 消費クオータ: 5<br>
-     * <br>
-     *
+	/**
+	 * スタミナ最大値テーブルを削除<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void changeStaminaByStampSheet(std::function<void(AsyncChangeStaminaByStampSheetResult&)> callback, ChangeStaminaByStampSheetRequest& request)
+    void deleteMaxStaminaTableMaster(std::function<void(AsyncDeleteMaxStaminaTableMasterResult&)> callback, DeleteMaxStaminaTableMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<ChangeStaminaByStampSheetResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& httpRequest = *new detail::HttpRequest<DeleteMaxStaminaTableMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/stamina");
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FMaxStaminaTableMasterFunctionHandler.deleteMaxStaminaTableMaster");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getMaxStaminaTableName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMaxStaminaTableName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("maxStaminaTableName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナマスターJSONのマスターデータをエクスポートします<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<ExportMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FCurrentStaminaMasterFunctionHandler.exportMaster");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 現在有効なスタミナマスターJSONを取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getCurrentStaminaMaster(std::function<void(AsyncGetCurrentStaminaMasterResult&)> callback, GetCurrentStaminaMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetCurrentStaminaMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FCurrentStaminaMasterFunctionHandler.getCurrentStaminaMaster");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 現在有効なスタミナマスターJSONを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentStaminaMaster(std::function<void(AsyncUpdateCurrentStaminaMasterResult&)> callback, UpdateCurrentStaminaMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<UpdateCurrentStaminaMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FCurrentStaminaMasterFunctionHandler.updateCurrentStaminaMaster");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
-        if (request.getSheet())
+        if (request.getSettings())
         {
-            writer.writePropertyName("sheet");
-            writer.write(*request.getSheet());
-        }
-        if (request.getKeyName())
-        {
-            writer.writePropertyName("keyName");
-            writer.write(*request.getKeyName());
-        }
-        if (request.getMaxValue())
-        {
-            writer.writePropertyName("maxValue");
-            writer.write(*request.getMaxValue());
+            writer.writePropertyName("settings");
+            writer.write(*request.getSettings());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * スタミナを消費します。<br>
-     * このエンドポイントは回復に使用できません。<br>
-     * ポリシーで消費と回復を分けて管理したい場合に使用してください。<br>
-     * <br>
-     * - 消費クオータ: 5<br>
-     * <br>
-     *
+	/**
+	 * スタミナモデルマスターの一覧を取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void consumeStamina(std::function<void(AsyncConsumeStaminaResult&)> callback, ConsumeStaminaRequest& request)
+    void describeStaminaModels(std::function<void(AsyncDescribeStaminaModelsResult&)> callback, DescribeStaminaModelsRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<ConsumeStaminaResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& httpRequest = *new detail::HttpRequest<DescribeStaminaModelsResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/staminaPool/").append(detail::StringUtil::toStr(buffer, request.getStaminaPoolName())).append("/stamina/consume");
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaModelFunctionHandler.describeStaminaModels");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
         }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getVariation())
-        {
-            writer.writePropertyName("variation");
-            writer.write(*request.getVariation());
-        }
-        if (request.getMaxValue())
-        {
-            writer.writePropertyName("maxValue");
-            writer.write(*request.getMaxValue());
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * スタンプタスクを使用してスタミナを消費します。<br>
-     * <br>
-     * - 消費クオータ: 5<br>
-     * <br>
-     *
+	/**
+	 * スタミナモデルマスターを取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void consumeStaminaByStampTask(std::function<void(AsyncConsumeStaminaByStampTaskResult&)> callback, ConsumeStaminaByStampTaskRequest& request)
+    void getStaminaModel(std::function<void(AsyncGetStaminaModelResult&)> callback, GetStaminaModelRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<ConsumeStaminaByStampTaskResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& httpRequest = *new detail::HttpRequest<GetStaminaModelResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/stamina/consume");
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaModelFunctionHandler.getStaminaModel");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
         }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getTask())
-        {
-            writer.writePropertyName("task");
-            writer.write(*request.getTask());
+        if (request.getStaminaModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
         }
-        if (request.getKeyName())
-        {
-            writer.writePropertyName("keyName");
-            writer.write(*request.getKeyName());
-        }
-        if (request.getTransactionId())
-        {
-            writer.writePropertyName("transactionId");
-            writer.write(*request.getTransactionId());
-        }
-        if (request.getMaxValue())
-        {
-            writer.writePropertyName("maxValue");
-            writer.write(*request.getMaxValue());
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * 現在のスタミナ値を取得します<br>
-     * <br>
-     * - 消費クオータ: 3<br>
-     * <br>
-     *
+	/**
+	 * スタミナの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeStaminas(std::function<void(AsyncDescribeStaminasResult&)> callback, DescribeStaminasRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeStaminasResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.describeStaminas");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeStaminasByUserId(std::function<void(AsyncDescribeStaminasByUserIdResult&)> callback, DescribeStaminasByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeStaminasByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.describeStaminasByUserId");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナを取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -653,25 +1410,548 @@ public:
         auto& httpRequest = *new detail::HttpRequest<GetStaminaResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/staminaPool/").append(detail::StringUtil::toStr(buffer, request.getStaminaPoolName())).append("/stamina");
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.getStamina");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
         }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
-        if (request.getMaxValue()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMaxValue()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("maxValue={value}").replace("{value}", encodeBuffer) + "&";
+        if (request.getStaminaModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
         }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
+	/**
+	 * スタミナを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getStaminaByUserId(std::function<void(AsyncGetStaminaByUserIdResult&)> callback, GetStaminaByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetStaminaByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.getStaminaByUserId");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getStaminaModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナを消費<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void consumeStamina(std::function<void(AsyncConsumeStaminaResult&)> callback, ConsumeStaminaRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<ConsumeStaminaResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.consumeStamina");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getStaminaModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getConsumeValue())
+        {
+            writer.writePropertyName("consumeValue");
+            writer.write(*request.getConsumeValue());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void consumeStaminaByUserId(std::function<void(AsyncConsumeStaminaByUserIdResult&)> callback, ConsumeStaminaByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<ConsumeStaminaByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.consumeStaminaByUserId");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getStaminaModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getConsumeValue())
+        {
+            writer.writePropertyName("consumeValue");
+            writer.write(*request.getConsumeValue());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナを回復<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void recoverStaminaByUserId(std::function<void(AsyncRecoverStaminaByUserIdResult&)> callback, RecoverStaminaByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<RecoverStaminaByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.recoverStaminaByUserId");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getStaminaModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getRecoverValue())
+        {
+            writer.writePropertyName("recoverValue");
+            writer.write(*request.getRecoverValue());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナの最大値を加算<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void raiseMaxValueByUserId(std::function<void(AsyncRaiseMaxValueByUserIdResult&)> callback, RaiseMaxValueByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<RaiseMaxValueByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.raiseMaxValueByUserId");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getStaminaModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getRaiseValue())
+        {
+            writer.writePropertyName("raiseValue");
+            writer.write(*request.getRaiseValue());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナの最大値を更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void setMaxValueByUserId(std::function<void(AsyncSetMaxValueByUserIdResult&)> callback, SetMaxValueByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<SetMaxValueByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.setMaxValueByUserId");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getStaminaModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getMaxValue())
+        {
+            writer.writePropertyName("maxValue");
+            writer.write(*request.getMaxValue());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナの最大値をGS2-Experienceのステータスを使用して更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void setMaxValueByStatus(std::function<void(AsyncSetMaxValueByStatusResult&)> callback, SetMaxValueByStatusRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<SetMaxValueByStatusResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.setMaxValueByStatus");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getStaminaModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.write(*request.getKeyId());
+        }
+        if (request.getSignedStatusBody())
+        {
+            writer.writePropertyName("signedStatusBody");
+            writer.write(*request.getSignedStatusBody());
+        }
+        if (request.getSignedStatusSignature())
+        {
+            writer.writePropertyName("signedStatusSignature");
+            writer.write(*request.getSignedStatusSignature());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタミナを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteStaminaByUserId(std::function<void(AsyncDeleteStaminaByUserIdResult&)> callback, DeleteStaminaByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<void>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.deleteStaminaByUserId");
+        Char encodeBuffer[2048];
+        if (request.getGroupName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getStaminaModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタンプシートを使用してスタミナを回復<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void recoverStaminaByStampSheet(std::function<void(AsyncRecoverStaminaByStampSheetResult&)> callback, RecoverStaminaByStampSheetRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<RecoverStaminaByStampSheetResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.recoverStaminaByStampSheet");
+        Char encodeBuffer[2048];
+        if (request.getStampSheet()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStampSheet()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("stampSheet={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.write(*request.getKeyId());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタンプシートでスタミナの最大値を加算<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void raiseMaxValueByStampSheet(std::function<void(AsyncRaiseMaxValueByStampSheetResult&)> callback, RaiseMaxValueByStampSheetRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<RaiseMaxValueByStampSheetResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.raiseMaxValueByStampSheet");
+        Char encodeBuffer[2048];
+        if (request.getStampSheet()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStampSheet()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("stampSheet={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.write(*request.getKeyId());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタンプシートでスタミナの最大値を更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void setMaxValueByStampSheet(std::function<void(AsyncSetMaxValueByStampSheetResult&)> callback, SetMaxValueByStampSheetRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<SetMaxValueByStampSheetResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.setMaxValueByStampSheet");
+        Char encodeBuffer[2048];
+        if (request.getStampSheet()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStampSheet()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("stampSheet={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.write(*request.getKeyId());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スタンプタスクを使用してスタミナを消費<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void consumeStaminaByStampTask(std::function<void(AsyncConsumeStaminaByStampTaskResult&)> callback, ConsumeStaminaByStampTaskRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<ConsumeStaminaByStampTaskResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.consumeStaminaByStampTask");
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getStampTask())
+        {
+            writer.writePropertyName("stampTask");
+            writer.write(*request.getStampTask());
+        }
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.write(*request.getKeyId());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
 };
 
 } }

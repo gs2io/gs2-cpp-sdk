@@ -17,6 +17,7 @@
 #ifndef GS2_AUTH_MODEL_MODEL_HPP_
 #define GS2_AUTH_MODEL_MODEL_HPP_
 
-#include "AccountToken.hpp"
+#include <gs2/core/common.hpp>
+#include "AccessToken.hpp"
 
 #endif //GS2_AUTH_MODEL_MODEL_HPP_

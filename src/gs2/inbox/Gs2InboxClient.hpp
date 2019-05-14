@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -23,27 +23,72 @@
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
+#include "request/DescribeInboxesRequest.hpp"
+#include "request/CreateInboxRequest.hpp"
+#include "request/GetInboxStatusRequest.hpp"
+#include "request/GetInboxRequest.hpp"
+#include "request/UpdateInboxRequest.hpp"
+#include "request/DeleteInboxRequest.hpp"
+#include "request/DescribeMessagesRequest.hpp"
+#include "request/DescribeMessagesByUserIdRequest.hpp"
+#include "request/SendMessageByUserIdRequest.hpp"
+#include "request/SendMessagesByUserIdRequest.hpp"
+#include "request/GetMessageRequest.hpp"
+#include "request/GetMessageByUserIdRequest.hpp"
+#include "request/GetMessagesRequest.hpp"
+#include "request/GetMessagesByUserIdRequest.hpp"
+#include "request/ReadMessageRequest.hpp"
+#include "request/ReadMessageByUserIdRequest.hpp"
+#include "request/DeleteMessageRequest.hpp"
+#include "request/DeleteMessageByUserIdRequest.hpp"
+#include "result/DescribeInboxesResult.hpp"
+#include "result/CreateInboxResult.hpp"
+#include "result/GetInboxStatusResult.hpp"
+#include "result/GetInboxResult.hpp"
+#include "result/UpdateInboxResult.hpp"
+#include "result/DeleteInboxResult.hpp"
+#include "result/DescribeMessagesResult.hpp"
+#include "result/DescribeMessagesByUserIdResult.hpp"
+#include "result/SendMessageByUserIdResult.hpp"
+#include "result/SendMessagesByUserIdResult.hpp"
+#include "result/GetMessageResult.hpp"
+#include "result/GetMessageByUserIdResult.hpp"
+#include "result/GetMessagesResult.hpp"
+#include "result/GetMessagesByUserIdResult.hpp"
+#include "result/ReadMessageResult.hpp"
+#include "result/ReadMessageByUserIdResult.hpp"
+#include "result/DeleteMessageResult.hpp"
+#include "result/DeleteMessageByUserIdResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace inbox {
 
+typedef AsyncResult<DescribeInboxesResult> AsyncDescribeInboxesResult;
 typedef AsyncResult<CreateInboxResult> AsyncCreateInboxResult;
-typedef AsyncResult<void> AsyncDeleteInboxResult;
-typedef AsyncResult<DescribeInboxResult> AsyncDescribeInboxResult;
-typedef AsyncResult<DescribeServiceClassResult> AsyncDescribeServiceClassResult;
-typedef AsyncResult<GetInboxResult> AsyncGetInboxResult;
 typedef AsyncResult<GetInboxStatusResult> AsyncGetInboxStatusResult;
+typedef AsyncResult<GetInboxResult> AsyncGetInboxResult;
 typedef AsyncResult<UpdateInboxResult> AsyncUpdateInboxResult;
-typedef AsyncResult<void> AsyncDeleteMessageResult;
-typedef AsyncResult<void> AsyncDeleteMessagesResult;
-typedef AsyncResult<DescribeMessageResult> AsyncDescribeMessageResult;
+typedef AsyncResult<void> AsyncDeleteInboxResult;
+typedef AsyncResult<DescribeMessagesResult> AsyncDescribeMessagesResult;
+typedef AsyncResult<DescribeMessagesByUserIdResult> AsyncDescribeMessagesByUserIdResult;
+typedef AsyncResult<SendMessageByUserIdResult> AsyncSendMessageByUserIdResult;
+typedef AsyncResult<SendMessagesByUserIdResult> AsyncSendMessagesByUserIdResult;
 typedef AsyncResult<GetMessageResult> AsyncGetMessageResult;
+typedef AsyncResult<GetMessageByUserIdResult> AsyncGetMessageByUserIdResult;
+typedef AsyncResult<GetMessagesResult> AsyncGetMessagesResult;
+typedef AsyncResult<GetMessagesByUserIdResult> AsyncGetMessagesByUserIdResult;
 typedef AsyncResult<ReadMessageResult> AsyncReadMessageResult;
-typedef AsyncResult<ReadMessagesResult> AsyncReadMessagesResult;
-typedef AsyncResult<SendMessageResult> AsyncSendMessageResult;
+typedef AsyncResult<ReadMessageByUserIdResult> AsyncReadMessageByUserIdResult;
+typedef AsyncResult<void> AsyncDeleteMessageResult;
+typedef AsyncResult<void> AsyncDeleteMessageByUserIdResult;
 
+/**
+ * GS2 Inbox API クライアント
+ *
+ * @author Game Server Services, Inc.
+ *
+ */
 class Gs2InboxClient : public AbstractGs2ClientBase
 {
 private:
@@ -79,50 +124,55 @@ private:
             writer.writePropertyName("description");
             writer.write(*obj.getDescription());
         }
-        if (obj.getServiceClass())
+        if (obj.getIsAutomaticDeletingEnabled())
         {
-            writer.writePropertyName("serviceClass");
-            writer.write(*obj.getServiceClass());
+            writer.writePropertyName("isAutomaticDeletingEnabled");
+            writer.write(*obj.getIsAutomaticDeletingEnabled());
         }
-        if (obj.getAutoDelete())
+        if (obj.getReceiveMessageTriggerScriptId())
         {
-            writer.writePropertyName("autoDelete");
-            writer.write(*obj.getAutoDelete());
+            writer.writePropertyName("receiveMessageTriggerScriptId");
+            writer.write(*obj.getReceiveMessageTriggerScriptId());
         }
-        if (obj.getCooperationUrl())
+        if (obj.getReceiveMessageDoneTriggerScriptId())
         {
-            writer.writePropertyName("cooperationUrl");
-            writer.write(*obj.getCooperationUrl());
+            writer.writePropertyName("receiveMessageDoneTriggerScriptId");
+            writer.write(*obj.getReceiveMessageDoneTriggerScriptId());
         }
-        if (obj.getReceiveMessageTriggerScript())
+        if (obj.getReceiveMessageDoneTriggerQueueId())
         {
-            writer.writePropertyName("receiveMessageTriggerScript");
-            writer.write(*obj.getReceiveMessageTriggerScript());
+            writer.writePropertyName("receiveMessageDoneTriggerQueueId");
+            writer.write(*obj.getReceiveMessageDoneTriggerQueueId());
         }
-        if (obj.getReceiveMessageDoneTriggerScript())
+        if (obj.getReadMessageTriggerScriptId())
         {
-            writer.writePropertyName("receiveMessageDoneTriggerScript");
-            writer.write(*obj.getReceiveMessageDoneTriggerScript());
+            writer.writePropertyName("readMessageTriggerScriptId");
+            writer.write(*obj.getReadMessageTriggerScriptId());
         }
-        if (obj.getReadMessageTriggerScript())
+        if (obj.getReadMessageDoneTriggerScriptId())
         {
-            writer.writePropertyName("readMessageTriggerScript");
-            writer.write(*obj.getReadMessageTriggerScript());
+            writer.writePropertyName("readMessageDoneTriggerScriptId");
+            writer.write(*obj.getReadMessageDoneTriggerScriptId());
         }
-        if (obj.getReadMessageDoneTriggerScript())
+        if (obj.getReadMessageDoneTriggerQueueId())
         {
-            writer.writePropertyName("readMessageDoneTriggerScript");
-            writer.write(*obj.getReadMessageDoneTriggerScript());
+            writer.writePropertyName("readMessageDoneTriggerQueueId");
+            writer.write(*obj.getReadMessageDoneTriggerQueueId());
         }
-        if (obj.getDeleteMessageTriggerScript())
+        if (obj.getDeleteMessageTriggerScriptId())
         {
-            writer.writePropertyName("deleteMessageTriggerScript");
-            writer.write(*obj.getDeleteMessageTriggerScript());
+            writer.writePropertyName("deleteMessageTriggerScriptId");
+            writer.write(*obj.getDeleteMessageTriggerScriptId());
         }
-        if (obj.getDeleteMessageDoneTriggerScript())
+        if (obj.getDeleteMessageDoneTriggerScriptId())
         {
-            writer.writePropertyName("deleteMessageDoneTriggerScript");
-            writer.write(*obj.getDeleteMessageDoneTriggerScript());
+            writer.writePropertyName("deleteMessageDoneTriggerScriptId");
+            writer.write(*obj.getDeleteMessageDoneTriggerScriptId());
+        }
+        if (obj.getDeleteMessageDoneTriggerQueueId())
+        {
+            writer.writePropertyName("deleteMessageDoneTriggerQueueId");
+            writer.write(*obj.getDeleteMessageDoneTriggerQueueId());
         }
         if (obj.getCreateAt())
         {
@@ -137,6 +187,17 @@ private:
         writer.writeObjectEnd();
     }
 
+    void write(detail::json::JsonWriter& writer, const User& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getUserId())
+        {
+            writer.writePropertyName("userId");
+            writer.write(*obj.getUserId());
+        }
+        writer.writeObjectEnd();
+    }
+
     void write(detail::json::JsonWriter& writer, const Message& obj)
     {
         writer.writeObjectStart();
@@ -145,35 +206,134 @@ private:
             writer.writePropertyName("messageId");
             writer.write(*obj.getMessageId());
         }
-        if (obj.getInboxId())
+        if (obj.getName())
         {
-            writer.writePropertyName("inboxId");
-            writer.write(*obj.getInboxId());
+            writer.writePropertyName("name");
+            writer.write(*obj.getName());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
             writer.write(*obj.getUserId());
         }
-        if (obj.getMessage())
+        if (obj.getMetadata())
         {
-            writer.writePropertyName("message");
-            writer.write(*obj.getMessage());
+            writer.writePropertyName("metadata");
+            writer.write(*obj.getMetadata());
         }
-        if (obj.getCooperation())
+        if (obj.getIsRead())
         {
-            writer.writePropertyName("cooperation");
-            writer.write(*obj.getCooperation());
+            writer.writePropertyName("isRead");
+            writer.write(*obj.getIsRead());
         }
-        if (obj.getRead())
+        if (obj.getReadMessageTriggerScriptId())
         {
-            writer.writePropertyName("read");
-            writer.write(*obj.getRead());
+            writer.writePropertyName("readMessageTriggerScriptId");
+            writer.write(*obj.getReadMessageTriggerScriptId());
         }
-        if (obj.getDate())
+        if (obj.getReadMessageTriggerScriptArgs())
         {
-            writer.writePropertyName("date");
-            writer.write(*obj.getDate());
+            writer.writePropertyName("readMessageTriggerScriptArgs");
+            writer.write(*obj.getReadMessageTriggerScriptArgs());
+        }
+        if (obj.getReceivedAt())
+        {
+            writer.writePropertyName("receivedAt");
+            writer.write(*obj.getReceivedAt());
+        }
+        if (obj.getReadAt())
+        {
+            writer.writePropertyName("readAt");
+            writer.write(*obj.getReadAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const ResponseCache& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getRegion())
+        {
+            writer.writePropertyName("region");
+            writer.write(*obj.getRegion());
+        }
+        if (obj.getOwnerId())
+        {
+            writer.writePropertyName("ownerId");
+            writer.write(*obj.getOwnerId());
+        }
+        if (obj.getResponseCacheId())
+        {
+            writer.writePropertyName("responseCacheId");
+            writer.write(*obj.getResponseCacheId());
+        }
+        if (obj.getRequestHash())
+        {
+            writer.writePropertyName("requestHash");
+            writer.write(*obj.getRequestHash());
+        }
+        if (obj.getResult())
+        {
+            writer.writePropertyName("result");
+            writer.write(*obj.getResult());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const Body& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getUserId())
+        {
+            writer.writePropertyName("userId");
+            writer.write(*obj.getUserId());
+        }
+        if (obj.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.write(*obj.getMetadata());
+        }
+        if (obj.getReadMessageTriggerScriptId())
+        {
+            writer.writePropertyName("readMessageTriggerScriptId");
+            writer.write(*obj.getReadMessageTriggerScriptId());
+        }
+        if (obj.getReadMessageTriggerScriptArgs())
+        {
+            writer.writePropertyName("readMessageTriggerScriptArgs");
+            writer.write(*obj.getReadMessageTriggerScriptArgs());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const NotSendMessage& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getBody())
+        {
+            writer.writePropertyName("body");
+            write(writer, *obj.getBody());
+        }
+        if (obj.getReason())
+        {
+            writer.writePropertyName("reason");
+            writer.write(*obj.getReason());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const NotGetMessage& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getMessageName())
+        {
+            writer.writePropertyName("messageName");
+            writer.write(*obj.getMessageName());
+        }
+        if (obj.getReason())
+        {
+            writer.writePropertyName("reason");
+            writer.write(*obj.getReason());
         }
         writer.writeObjectEnd();
     }
@@ -213,11 +373,37 @@ public:
     {
     }
 
+	/**
+	 * プレゼントボックスの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeInboxes(std::function<void(AsyncDescribeInboxesResult&)> callback, DescribeInboxesRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeInboxesResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.describeInboxes");
+        Char encodeBuffer[2048];
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
 
-    /**
-     * 受信ボックスを新規作成します<br>
-     * <br>
-     *
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * プレゼントボックスを新規作成<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -226,10 +412,7 @@ public:
         auto& httpRequest = *new detail::HttpRequest<CreateInboxResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/inbox");
-        }
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.createInbox");
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
@@ -238,171 +421,75 @@ public:
             writer.writePropertyName("name");
             writer.write(*request.getName());
         }
-        if (request.getServiceClass())
-        {
-            writer.writePropertyName("serviceClass");
-            writer.write(*request.getServiceClass());
-        }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
             writer.write(*request.getDescription());
         }
-        if (request.getAutoDelete())
+        if (request.getIsAutomaticDeletingEnabled())
         {
-            writer.writePropertyName("autoDelete");
-            writer.write(*request.getAutoDelete());
+            writer.writePropertyName("isAutomaticDeletingEnabled");
+            writer.write(*request.getIsAutomaticDeletingEnabled());
         }
-        if (request.getCooperationUrl())
+        if (request.getReceiveMessageTriggerScriptId())
         {
-            writer.writePropertyName("cooperationUrl");
-            writer.write(*request.getCooperationUrl());
+            writer.writePropertyName("receiveMessageTriggerScriptId");
+            writer.write(*request.getReceiveMessageTriggerScriptId());
         }
-        if (request.getReceiveMessageTriggerScript())
+        if (request.getReceiveMessageDoneTriggerScriptId())
         {
-            writer.writePropertyName("receiveMessageTriggerScript");
-            writer.write(*request.getReceiveMessageTriggerScript());
+            writer.writePropertyName("receiveMessageDoneTriggerScriptId");
+            writer.write(*request.getReceiveMessageDoneTriggerScriptId());
         }
-        if (request.getReceiveMessageDoneTriggerScript())
+        if (request.getReceiveMessageDoneTriggerQueueId())
         {
-            writer.writePropertyName("receiveMessageDoneTriggerScript");
-            writer.write(*request.getReceiveMessageDoneTriggerScript());
+            writer.writePropertyName("receiveMessageDoneTriggerQueueId");
+            writer.write(*request.getReceiveMessageDoneTriggerQueueId());
         }
-        if (request.getReadMessageTriggerScript())
+        if (request.getReadMessageTriggerScriptId())
         {
-            writer.writePropertyName("readMessageTriggerScript");
-            writer.write(*request.getReadMessageTriggerScript());
+            writer.writePropertyName("readMessageTriggerScriptId");
+            writer.write(*request.getReadMessageTriggerScriptId());
         }
-        if (request.getReadMessageDoneTriggerScript())
+        if (request.getReadMessageDoneTriggerScriptId())
         {
-            writer.writePropertyName("readMessageDoneTriggerScript");
-            writer.write(*request.getReadMessageDoneTriggerScript());
+            writer.writePropertyName("readMessageDoneTriggerScriptId");
+            writer.write(*request.getReadMessageDoneTriggerScriptId());
         }
-        if (request.getDeleteMessageTriggerScript())
+        if (request.getReadMessageDoneTriggerQueueId())
         {
-            writer.writePropertyName("deleteMessageTriggerScript");
-            writer.write(*request.getDeleteMessageTriggerScript());
+            writer.writePropertyName("readMessageDoneTriggerQueueId");
+            writer.write(*request.getReadMessageDoneTriggerQueueId());
         }
-        if (request.getDeleteMessageDoneTriggerScript())
+        if (request.getDeleteMessageTriggerScriptId())
         {
-            writer.writePropertyName("deleteMessageDoneTriggerScript");
-            writer.write(*request.getDeleteMessageDoneTriggerScript());
+            writer.writePropertyName("deleteMessageTriggerScriptId");
+            writer.write(*request.getDeleteMessageTriggerScriptId());
+        }
+        if (request.getDeleteMessageDoneTriggerScriptId())
+        {
+            writer.writePropertyName("deleteMessageDoneTriggerScriptId");
+            writer.write(*request.getDeleteMessageDoneTriggerScriptId());
+        }
+        if (request.getDeleteMessageDoneTriggerQueueId())
+        {
+            writer.writePropertyName("deleteMessageDoneTriggerQueueId");
+            writer.write(*request.getDeleteMessageDoneTriggerQueueId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * 受信ボックスを削除します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteInbox(std::function<void(AsyncDeleteInboxResult&)> callback, DeleteInboxRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/inbox/").append(detail::StringUtil::toStr(buffer, request.getInboxName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 受信ボックスの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeInbox(std::function<void(AsyncDescribeInboxResult&)> callback, DescribeInboxRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeInboxResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/inbox");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[2048];
-        if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * サービスクラスの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeServiceClass(std::function<void(AsyncDescribeServiceClassResult&)> callback, DescribeServiceClassRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeServiceClassResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/inbox/serviceClass");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 受信ボックスを取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getInbox(std::function<void(AsyncGetInboxResult&)> callback, GetInboxRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<GetInboxResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/inbox/").append(detail::StringUtil::toStr(buffer, request.getInboxName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 受信ボックスの状態を取得します<br>
-     * <br>
-     *
+	/**
+	 * プレゼントボックスを取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -411,20 +498,46 @@ public:
         auto& httpRequest = *new detail::HttpRequest<GetInboxStatusResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/inbox/").append(detail::StringUtil::toStr(buffer, request.getInboxName())).append("/status");
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.getInboxStatus");
+        Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
         }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * 受信ボックスを更新します<br>
-     * <br>
-     *
+	/**
+	 * プレゼントボックスを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getInbox(std::function<void(AsyncGetInboxResult&)> callback, GetInboxRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetInboxResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.getInbox");
+        Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * プレゼントボックスを更新<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -433,9 +546,11 @@ public:
         auto& httpRequest = *new detail::HttpRequest<UpdateInboxResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/inbox/").append(detail::StringUtil::toStr(buffer, request.getInboxName())).append("");
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.updateInbox");
+        Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -445,275 +560,183 @@ public:
             writer.writePropertyName("description");
             writer.write(*request.getDescription());
         }
-        if (request.getServiceClass())
+        if (request.getIsAutomaticDeletingEnabled())
         {
-            writer.writePropertyName("serviceClass");
-            writer.write(*request.getServiceClass());
+            writer.writePropertyName("isAutomaticDeletingEnabled");
+            writer.write(*request.getIsAutomaticDeletingEnabled());
         }
-        if (request.getCooperationUrl())
+        if (request.getReceiveMessageTriggerScriptId())
         {
-            writer.writePropertyName("cooperationUrl");
-            writer.write(*request.getCooperationUrl());
+            writer.writePropertyName("receiveMessageTriggerScriptId");
+            writer.write(*request.getReceiveMessageTriggerScriptId());
         }
-        if (request.getReceiveMessageTriggerScript())
+        if (request.getReceiveMessageDoneTriggerScriptId())
         {
-            writer.writePropertyName("receiveMessageTriggerScript");
-            writer.write(*request.getReceiveMessageTriggerScript());
+            writer.writePropertyName("receiveMessageDoneTriggerScriptId");
+            writer.write(*request.getReceiveMessageDoneTriggerScriptId());
         }
-        if (request.getReceiveMessageDoneTriggerScript())
+        if (request.getReceiveMessageDoneTriggerQueueId())
         {
-            writer.writePropertyName("receiveMessageDoneTriggerScript");
-            writer.write(*request.getReceiveMessageDoneTriggerScript());
+            writer.writePropertyName("receiveMessageDoneTriggerQueueId");
+            writer.write(*request.getReceiveMessageDoneTriggerQueueId());
         }
-        if (request.getReadMessageTriggerScript())
+        if (request.getReadMessageTriggerScriptId())
         {
-            writer.writePropertyName("readMessageTriggerScript");
-            writer.write(*request.getReadMessageTriggerScript());
+            writer.writePropertyName("readMessageTriggerScriptId");
+            writer.write(*request.getReadMessageTriggerScriptId());
         }
-        if (request.getReadMessageDoneTriggerScript())
+        if (request.getReadMessageDoneTriggerScriptId())
         {
-            writer.writePropertyName("readMessageDoneTriggerScript");
-            writer.write(*request.getReadMessageDoneTriggerScript());
+            writer.writePropertyName("readMessageDoneTriggerScriptId");
+            writer.write(*request.getReadMessageDoneTriggerScriptId());
         }
-        if (request.getDeleteMessageTriggerScript())
+        if (request.getReadMessageDoneTriggerQueueId())
         {
-            writer.writePropertyName("deleteMessageTriggerScript");
-            writer.write(*request.getDeleteMessageTriggerScript());
+            writer.writePropertyName("readMessageDoneTriggerQueueId");
+            writer.write(*request.getReadMessageDoneTriggerQueueId());
         }
-        if (request.getDeleteMessageDoneTriggerScript())
+        if (request.getDeleteMessageTriggerScriptId())
         {
-            writer.writePropertyName("deleteMessageDoneTriggerScript");
-            writer.write(*request.getDeleteMessageDoneTriggerScript());
+            writer.writePropertyName("deleteMessageTriggerScriptId");
+            writer.write(*request.getDeleteMessageTriggerScriptId());
+        }
+        if (request.getDeleteMessageDoneTriggerScriptId())
+        {
+            writer.writePropertyName("deleteMessageDoneTriggerScriptId");
+            writer.write(*request.getDeleteMessageDoneTriggerScriptId());
+        }
+        if (request.getDeleteMessageDoneTriggerQueueId())
+        {
+            writer.writePropertyName("deleteMessageDoneTriggerQueueId");
+            writer.write(*request.getDeleteMessageDoneTriggerQueueId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * メッセージを削除します<br>
-     * <br>
-     * - 消費クオータ: 10<br>
-     * <br>
-     *
+	/**
+	 * プレゼントボックスを削除<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteMessage(std::function<void(AsyncDeleteMessageResult&)> callback, DeleteMessageRequest& request)
+    void deleteInbox(std::function<void(AsyncDeleteInboxResult&)> callback, DeleteInboxRequest& request)
     {
         auto& httpRequest = *new detail::HttpRequest<void>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/inbox/").append(detail::StringUtil::toStr(buffer, request.getInboxName())).append("/message/").append(detail::StringUtil::toStr(buffer, request.getMessageId())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 複数のメッセージをまとめて削除します<br>
-     * <br>
-     * - 消費クオータ: 削除するメッセージの数 * 10<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteMessages(std::function<void(AsyncDeleteMessagesResult&)> callback, DeleteMessagesRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/inbox/").append(detail::StringUtil::toStr(buffer, request.getInboxName())).append("/message/multiple");
-        }
-        detail::StringVariable queryString("");
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.deleteInbox");
         Char encodeBuffer[2048];
-        if (request.getMessageIds()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageIds()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("messageIds={value}").replace("{value}", encodeBuffer) + "&";
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
         }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * 受信メッセージの一覧を取得します<br>
-     * <br>
-     * - 消費クオータ: 50件あたり5<br>
-     * <br>
-     *
+	/**
+	 * メッセージの一覧を取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeMessage(std::function<void(AsyncDescribeMessageResult&)> callback, DescribeMessageRequest& request)
+    void describeMessages(std::function<void(AsyncDescribeMessagesResult&)> callback, DescribeMessagesRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeMessageResult>;
+        auto& httpRequest = *new detail::HttpRequest<DescribeMessagesResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/inbox/").append(detail::StringUtil::toStr(buffer, request.getInboxName())).append("/message");
-        }
-        detail::StringVariable queryString("");
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.describeMessages");
         Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+        }
         if (request.getPageToken()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
         }
         if (request.getLimit()) {
             gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * メッセージを取得します<br>
-     * <br>
-     * - 消費クオータ: 5<br>
-     * <br>
-     *
+	/**
+	 * メッセージの一覧を取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getMessage(std::function<void(AsyncGetMessageResult&)> callback, GetMessageRequest& request)
+    void describeMessagesByUserId(std::function<void(AsyncDescribeMessagesByUserIdResult&)> callback, DescribeMessagesByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetMessageResult>;
+        auto& httpRequest = *new detail::HttpRequest<DescribeMessagesByUserIdResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/inbox/").append(detail::StringUtil::toStr(buffer, request.getInboxName())).append("/message/").append(detail::StringUtil::toStr(buffer, request.getMessageId())).append("");
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.describeMessagesByUserId");
+        Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
         }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * メッセージを開封します<br>
-     * <br>
-     * - 消費クオータ: 10<br>
-     * <br>
-     *
+	/**
+	 * メッセージを新規作成<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void readMessage(std::function<void(AsyncReadMessageResult&)> callback, ReadMessageRequest& request)
+    void sendMessageByUserId(std::function<void(AsyncSendMessageByUserIdResult&)> callback, SendMessageByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<ReadMessageResult>;
+        auto& httpRequest = *new detail::HttpRequest<SendMessageByUserIdResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/inbox/").append(detail::StringUtil::toStr(buffer, request.getInboxName())).append("/message/").append(detail::StringUtil::toStr(buffer, request.getMessageId())).append("");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 複数のメッセージをまとめて開封します<br>
-     * <br>
-     * 連携用URLと複数メッセージの開封処理を同時に利用する場合は、200レスポンスを応答すると、GS2側では指定されたすべてのメッセージを開封したことにします。<br>
-     * <br>
-     * 200 以外のステータスコードを応答する場合はレスポンスボディにJSON形式で、<br>
-     * "success" というパラメータに開封に成功したメッセージIDのリストを返す必要があります。<br>
-     * success に指定されたメッセージIDのみ開封成功処理を行い、BadGateway(502)応答を返します。<br>
-     * <br>
-     * BadGateway(502) のレスポンスボディには、コールバックで返された値がそのまま含まれます。<br>
-     * 例えば、メッセージにアイテムを添付されていたが、一部アイテムが所有できる上限を超えていたため開封できなかった。という場合<br>
-     * success にはアイテムを付与できたメッセージIDのみを応答し、reason など任意のパラメータでアイテムの所持上限を迎えたため<br>
-     * メッセージID hoge のメッセージは開封に失敗した。というようなレスポンスを返すことでクライアントにも開封に失敗した理由を伝えることができます。<br>
-     * <br>
-     * - 消費クオータ: 開封するメッセージの数 * 10<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void readMessages(std::function<void(AsyncReadMessagesResult&)> callback, ReadMessagesRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<ReadMessagesResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/inbox/").append(detail::StringUtil::toStr(buffer, request.getInboxName())).append("/message/multiple");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getMessageIds())
-        {
-            writer.writePropertyName("messageIds");
-            writer.writeArrayStart();
-            auto& list = *request.getMessageIds();
-            for (Int32 i = 0; i < list.getCount(); ++i)
-            {
-                writer.write(list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * メッセージを送信します<br>
-     * <br>
-     * - 消費クオータ: 10<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void sendMessage(std::function<void(AsyncSendMessageResult&)> callback, SendMessageRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<SendMessageResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/inbox/").append(detail::StringUtil::toStr(buffer, request.getInboxName())).append("/message");
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.sendMessageByUserId");
+        Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -723,26 +746,363 @@ public:
             writer.writePropertyName("userId");
             writer.write(*request.getUserId());
         }
-        if (request.getMessage())
+        if (request.getMetadata())
         {
-            writer.writePropertyName("message");
-            writer.write(*request.getMessage());
+            writer.writePropertyName("metadata");
+            writer.write(*request.getMetadata());
         }
-        if (request.getCooperation())
+        if (request.getReadMessageTriggerScriptId())
         {
-            writer.writePropertyName("cooperation");
-            writer.write(*request.getCooperation());
+            writer.writePropertyName("readMessageTriggerScriptId");
+            writer.write(*request.getReadMessageTriggerScriptId());
+        }
+        if (request.getReadMessageTriggerScriptArgs())
+        {
+            writer.writePropertyName("readMessageTriggerScriptArgs");
+            writer.write(*request.getReadMessageTriggerScriptArgs());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * メッセージを複数まとめて新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void sendMessagesByUserId(std::function<void(AsyncSendMessagesByUserIdResult&)> callback, SendMessagesByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<SendMessagesByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.sendMessagesByUserId");
+        Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getBodies())
+        {
+            writer.writePropertyName("bodies");
+            writer.writeArrayStart();
+            auto& list = *request.getBodies();
+            for (Int32 i = 0; i < list.getCount(); ++i)
+            {
+                write(writer, list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
+	/**
+	 * メッセージを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getMessage(std::function<void(AsyncGetMessageResult&)> callback, GetMessageRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetMessageResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.getMessage");
+        Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getMessageName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * メッセージを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getMessageByUserId(std::function<void(AsyncGetMessageByUserIdResult&)> callback, GetMessageByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetMessageByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.getMessageByUserId");
+        Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getMessageName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * メッセージを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getMessages(std::function<void(AsyncGetMessagesResult&)> callback, GetMessagesRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetMessagesResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.getMessages");
+        Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getMessageNames()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageNames()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("messageNames={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * メッセージを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getMessagesByUserId(std::function<void(AsyncGetMessagesByUserIdResult&)> callback, GetMessagesByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetMessagesByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.getMessagesByUserId");
+        Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getMessageNames()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageNames()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("messageNames={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * メッセージを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void readMessage(std::function<void(AsyncReadMessageResult&)> callback, ReadMessageRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<ReadMessageResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.readMessage");
+        Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getMessageName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * メッセージを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void readMessageByUserId(std::function<void(AsyncReadMessageByUserIdResult&)> callback, ReadMessageByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<ReadMessageByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.readMessageByUserId");
+        Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getMessageName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * メッセージを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteMessage(std::function<void(AsyncDeleteMessageResult&)> callback, DeleteMessageRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<void>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.deleteMessage");
+        Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getMessageName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * メッセージを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteMessageByUserId(std::function<void(AsyncDeleteMessageByUserIdResult&)> callback, DeleteMessageByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<void>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.deleteMessageByUserId");
+        Char encodeBuffer[2048];
+        if (request.getInboxName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getMessageName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
 };
 
 } }

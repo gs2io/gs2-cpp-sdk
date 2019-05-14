@@ -17,8 +17,11 @@
 #ifndef GS2_ACCOUNT_MODEL_MODEL_HPP_
 #define GS2_ACCOUNT_MODEL_MODEL_HPP_
 
+#include <gs2/core/common.hpp>
 #include "Game.hpp"
 #include "Account.hpp"
 #include "TakeOver.hpp"
+#include "FullTakeOver.hpp"
+#include "ResponseCache.hpp"
 
 #endif //GS2_ACCOUNT_MODEL_MODEL_HPP_

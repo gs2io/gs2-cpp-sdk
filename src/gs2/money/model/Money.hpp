@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace money {
+namespace gs2 { namespace  {
 
 /**
  * 課金通貨
@@ -39,44 +39,55 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 課金通貨GRN */
+        /** 課金通貨 のGRN */
         optional<StringHolder> moneyId;
         /** オーナーID */
         optional<StringHolder> ownerId;
-        /** 課金通貨名 */
+        /** 課金通貨の名前 */
         optional<StringHolder> name;
-        /** 説明文 */
+        /** 課金通貨の説明 */
         optional<StringHolder> description;
-        /** 支払い優先度 */
+        /** 消費優先度 */
         optional<StringHolder> priority;
         /** 無償課金通貨を異なるスロットで共有するか */
+        
         optional<Bool> shareFree;
-        /** 通貨 */
+        /** 通貨の種類 */
         optional<StringHolder> currency;
-        /** ストアプラットフォームのレシートの検証機能を利用するか */
-        optional<Bool> useVerifyReceipt;
-        /** Apple のアプリケーションバンドルID */
+        /** Apple AppStore のバンドルID */
         optional<StringHolder> appleKey;
-        /** Google のレシート検証用公開鍵 */
+        /** Google PlayStore の秘密鍵 */
         optional<StringHolder> googleKey;
+        /** UnityEditorが出力する偽のレシートで決済できるようにするか */
+        
+        optional<Bool> enableFakeReceipt;
+        /** ウォレット新規作成時 に実行されるスクリプト のGRN */
+        optional<StringHolder> createWalletTriggerScriptId;
+        /** ウォレット新規作成完了時 に実行されるスクリプト のGRN */
+        optional<StringHolder> createWalletDoneTriggerScriptId;
+        /** ウォレット新規作成完了時 にジョブを登録するキュー のGRN */
+        optional<StringHolder> createWalletDoneTriggerQueueId;
+        /** ウォレット残高加算時 に実行されるスクリプト のGRN */
+        optional<StringHolder> depositTriggerScriptId;
+        /** ウォレット残高加算完了時 に実行されるスクリプト のGRN */
+        optional<StringHolder> depositDoneTriggerScriptId;
+        /** ウォレット残高加算完了時 にジョブを登録するキュー のGRN */
+        optional<StringHolder> depositDoneTriggerQueueId;
+        /** ウォレット残高消費時 に実行されるスクリプト のGRN */
+        optional<StringHolder> withdrawTriggerScriptId;
+        /** ウォレット残高消費完了時 に実行されるスクリプト のGRN */
+        optional<StringHolder> withdrawDoneTriggerScriptId;
+        /** ウォレット残高消費完了時 にジョブを登録するキュー のGRN */
+        optional<StringHolder> withdrawDoneTriggerQueueId;
         /** 未使用残高 */
+        
         optional<Double> balance;
-        /** ウォレット新規作成時 に実行されるGS2-Script */
-        optional<StringHolder> createWalletTriggerScript;
-        /** ウォレット新規作成完了時 に実行されるGS2-Script */
-        optional<StringHolder> createWalletDoneTriggerScript;
-        /** ウォレット残高加算時 に実行されるGS2-Script */
-        optional<StringHolder> chargeWalletTriggerScript;
-        /** ウォレット残高加算完了時 に実行されるGS2-Script */
-        optional<StringHolder> chargeWalletDoneTriggerScript;
-        /** ウォレット残高消費時 に実行されるGS2-Script */
-        optional<StringHolder> consumeWalletTriggerScript;
-        /** ウォレット残高消費完了時 に実行されるGS2-Script */
-        optional<StringHolder> consumeWalletDoneTriggerScript;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
-        /** 最終更新日時(エポック秒) */
-        optional<Int32> updateAt;
+        /** 作成日時 */
+        
+        optional<Int64> createAt;
+        /** 最終更新日時 */
+        
+        optional<Int64> updateAt;
 
         Data()
         {}
@@ -90,16 +101,19 @@ private:
             priority(data.priority),
             shareFree(data.shareFree),
             currency(data.currency),
-            useVerifyReceipt(data.useVerifyReceipt),
             appleKey(data.appleKey),
             googleKey(data.googleKey),
+            enableFakeReceipt(data.enableFakeReceipt),
+            createWalletTriggerScriptId(data.createWalletTriggerScriptId),
+            createWalletDoneTriggerScriptId(data.createWalletDoneTriggerScriptId),
+            createWalletDoneTriggerQueueId(data.createWalletDoneTriggerQueueId),
+            depositTriggerScriptId(data.depositTriggerScriptId),
+            depositDoneTriggerScriptId(data.depositDoneTriggerScriptId),
+            depositDoneTriggerQueueId(data.depositDoneTriggerQueueId),
+            withdrawTriggerScriptId(data.withdrawTriggerScriptId),
+            withdrawDoneTriggerScriptId(data.withdrawDoneTriggerScriptId),
+            withdrawDoneTriggerQueueId(data.withdrawDoneTriggerQueueId),
             balance(data.balance),
-            createWalletTriggerScript(data.createWalletTriggerScript),
-            createWalletDoneTriggerScript(data.createWalletDoneTriggerScript),
-            chargeWalletTriggerScript(data.chargeWalletTriggerScript),
-            chargeWalletDoneTriggerScript(data.chargeWalletDoneTriggerScript),
-            consumeWalletTriggerScript(data.consumeWalletTriggerScript),
-            consumeWalletDoneTriggerScript(data.consumeWalletDoneTriggerScript),
             createAt(data.createAt),
             updateAt(data.updateAt)
         {}
@@ -113,16 +127,19 @@ private:
             priority(std::move(data.priority)),
             shareFree(std::move(data.shareFree)),
             currency(std::move(data.currency)),
-            useVerifyReceipt(std::move(data.useVerifyReceipt)),
             appleKey(std::move(data.appleKey)),
             googleKey(std::move(data.googleKey)),
+            enableFakeReceipt(std::move(data.enableFakeReceipt)),
+            createWalletTriggerScriptId(std::move(data.createWalletTriggerScriptId)),
+            createWalletDoneTriggerScriptId(std::move(data.createWalletDoneTriggerScriptId)),
+            createWalletDoneTriggerQueueId(std::move(data.createWalletDoneTriggerQueueId)),
+            depositTriggerScriptId(std::move(data.depositTriggerScriptId)),
+            depositDoneTriggerScriptId(std::move(data.depositDoneTriggerScriptId)),
+            depositDoneTriggerQueueId(std::move(data.depositDoneTriggerQueueId)),
+            withdrawTriggerScriptId(std::move(data.withdrawTriggerScriptId)),
+            withdrawDoneTriggerScriptId(std::move(data.withdrawDoneTriggerScriptId)),
+            withdrawDoneTriggerQueueId(std::move(data.withdrawDoneTriggerQueueId)),
             balance(std::move(data.balance)),
-            createWalletTriggerScript(std::move(data.createWalletTriggerScript)),
-            createWalletDoneTriggerScript(std::move(data.createWalletDoneTriggerScript)),
-            chargeWalletTriggerScript(std::move(data.chargeWalletTriggerScript)),
-            chargeWalletDoneTriggerScript(std::move(data.chargeWalletDoneTriggerScript)),
-            consumeWalletTriggerScript(std::move(data.consumeWalletTriggerScript)),
-            consumeWalletDoneTriggerScript(std::move(data.consumeWalletDoneTriggerScript)),
             createAt(std::move(data.createAt)),
             updateAt(std::move(data.updateAt))
         {}
@@ -177,12 +194,6 @@ private:
                     this->currency.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "useVerifyReceipt") == 0) {
-                if (jsonValue.IsBool())
-                {
-                    this->useVerifyReceipt = jsonValue.GetBool();
-                }
-            }
             else if (std::strcmp(name, "appleKey") == 0) {
                 if (jsonValue.IsString())
                 {
@@ -195,63 +206,87 @@ private:
                     this->googleKey.emplace(jsonValue.GetString());
                 }
             }
+            else if (std::strcmp(name, "enableFakeReceipt") == 0) {
+                if (jsonValue.IsBool())
+                {
+                    this->enableFakeReceipt = jsonValue.GetBool();
+                }
+            }
+            else if (std::strcmp(name, "createWalletTriggerScriptId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->createWalletTriggerScriptId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "createWalletDoneTriggerScriptId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->createWalletDoneTriggerScriptId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "createWalletDoneTriggerQueueId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->createWalletDoneTriggerQueueId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "depositTriggerScriptId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->depositTriggerScriptId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "depositDoneTriggerScriptId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->depositDoneTriggerScriptId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "depositDoneTriggerQueueId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->depositDoneTriggerQueueId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "withdrawTriggerScriptId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->withdrawTriggerScriptId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "withdrawDoneTriggerScriptId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->withdrawDoneTriggerScriptId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "withdrawDoneTriggerQueueId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->withdrawDoneTriggerQueueId.emplace(jsonValue.GetString());
+                }
+            }
             else if (std::strcmp(name, "balance") == 0) {
                 if (jsonValue.IsDouble())
                 {
                     this->balance = jsonValue.GetDouble();
                 }
             }
-            else if (std::strcmp(name, "createWalletTriggerScript") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->createWalletTriggerScript.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "createWalletDoneTriggerScript") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->createWalletDoneTriggerScript.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "chargeWalletTriggerScript") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->chargeWalletTriggerScript.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "chargeWalletDoneTriggerScript") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->chargeWalletDoneTriggerScript.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "consumeWalletTriggerScript") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->consumeWalletTriggerScript.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "consumeWalletDoneTriggerScript") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->consumeWalletDoneTriggerScript.emplace(jsonValue.GetString());
-                }
-            }
             else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->createAt = jsonValue.GetInt64();
                 }
             }
             else if (std::strcmp(name, "updateAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt();
+                    this->updateAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -329,12 +364,10 @@ public:
     {
         return this;
     }
-
-
     /**
-     * 課金通貨GRNを取得
+     * 課金通貨 のGRNを取得
      *
-     * @return 課金通貨GRN
+     * @return 課金通貨 のGRN
      */
     const optional<StringHolder>& getMoneyId() const
     {
@@ -342,9 +375,9 @@ public:
     }
 
     /**
-     * 課金通貨GRNを設定
+     * 課金通貨 のGRNを設定
      *
-     * @param moneyId 課金通貨GRN
+     * @param moneyId 課金通貨 のGRN
      */
     void setMoneyId(const Char* moneyId)
     {
@@ -372,9 +405,9 @@ public:
     }
 
     /**
-     * 課金通貨名を取得
+     * 課金通貨の名前を取得
      *
-     * @return 課金通貨名
+     * @return 課金通貨の名前
      */
     const optional<StringHolder>& getName() const
     {
@@ -382,9 +415,9 @@ public:
     }
 
     /**
-     * 課金通貨名を設定
+     * 課金通貨の名前を設定
      *
-     * @param name 課金通貨名
+     * @param name 課金通貨の名前
      */
     void setName(const Char* name)
     {
@@ -392,9 +425,9 @@ public:
     }
 
     /**
-     * 説明文を取得
+     * 課金通貨の説明を取得
      *
-     * @return 説明文
+     * @return 課金通貨の説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -402,9 +435,9 @@ public:
     }
 
     /**
-     * 説明文を設定
+     * 課金通貨の説明を設定
      *
-     * @param description 説明文
+     * @param description 課金通貨の説明
      */
     void setDescription(const Char* description)
     {
@@ -412,9 +445,9 @@ public:
     }
 
     /**
-     * 支払い優先度を取得
+     * 消費優先度を取得
      *
-     * @return 支払い優先度
+     * @return 消費優先度
      */
     const optional<StringHolder>& getPriority() const
     {
@@ -422,9 +455,9 @@ public:
     }
 
     /**
-     * 支払い優先度を設定
+     * 消費優先度を設定
      *
-     * @param priority 支払い優先度
+     * @param priority 消費優先度
      */
     void setPriority(const Char* priority)
     {
@@ -452,9 +485,9 @@ public:
     }
 
     /**
-     * 通貨を取得
+     * 通貨の種類を取得
      *
-     * @return 通貨
+     * @return 通貨の種類
      */
     const optional<StringHolder>& getCurrency() const
     {
@@ -462,9 +495,9 @@ public:
     }
 
     /**
-     * 通貨を設定
+     * 通貨の種類を設定
      *
-     * @param currency 通貨
+     * @param currency 通貨の種類
      */
     void setCurrency(const Char* currency)
     {
@@ -472,29 +505,9 @@ public:
     }
 
     /**
-     * ストアプラットフォームのレシートの検証機能を利用するかを取得
+     * Apple AppStore のバンドルIDを取得
      *
-     * @return ストアプラットフォームのレシートの検証機能を利用するか
-     */
-    const optional<Bool>& getUseVerifyReceipt() const
-    {
-        return ensureData().useVerifyReceipt;
-    }
-
-    /**
-     * ストアプラットフォームのレシートの検証機能を利用するかを設定
-     *
-     * @param useVerifyReceipt ストアプラットフォームのレシートの検証機能を利用するか
-     */
-    void setUseVerifyReceipt(Bool useVerifyReceipt)
-    {
-        ensureData().useVerifyReceipt.emplace(useVerifyReceipt);
-    }
-
-    /**
-     * Apple のアプリケーションバンドルIDを取得
-     *
-     * @return Apple のアプリケーションバンドルID
+     * @return Apple AppStore のバンドルID
      */
     const optional<StringHolder>& getAppleKey() const
     {
@@ -502,9 +515,9 @@ public:
     }
 
     /**
-     * Apple のアプリケーションバンドルIDを設定
+     * Apple AppStore のバンドルIDを設定
      *
-     * @param appleKey Apple のアプリケーションバンドルID
+     * @param appleKey Apple AppStore のバンドルID
      */
     void setAppleKey(const Char* appleKey)
     {
@@ -512,9 +525,9 @@ public:
     }
 
     /**
-     * Google のレシート検証用公開鍵を取得
+     * Google PlayStore の秘密鍵を取得
      *
-     * @return Google のレシート検証用公開鍵
+     * @return Google PlayStore の秘密鍵
      */
     const optional<StringHolder>& getGoogleKey() const
     {
@@ -522,13 +535,213 @@ public:
     }
 
     /**
-     * Google のレシート検証用公開鍵を設定
+     * Google PlayStore の秘密鍵を設定
      *
-     * @param googleKey Google のレシート検証用公開鍵
+     * @param googleKey Google PlayStore の秘密鍵
      */
     void setGoogleKey(const Char* googleKey)
     {
         ensureData().googleKey.emplace(googleKey);
+    }
+
+    /**
+     * UnityEditorが出力する偽のレシートで決済できるようにするかを取得
+     *
+     * @return UnityEditorが出力する偽のレシートで決済できるようにするか
+     */
+    const optional<Bool>& getEnableFakeReceipt() const
+    {
+        return ensureData().enableFakeReceipt;
+    }
+
+    /**
+     * UnityEditorが出力する偽のレシートで決済できるようにするかを設定
+     *
+     * @param enableFakeReceipt UnityEditorが出力する偽のレシートで決済できるようにするか
+     */
+    void setEnableFakeReceipt(Bool enableFakeReceipt)
+    {
+        ensureData().enableFakeReceipt.emplace(enableFakeReceipt);
+    }
+
+    /**
+     * ウォレット新規作成時 に実行されるスクリプト のGRNを取得
+     *
+     * @return ウォレット新規作成時 に実行されるスクリプト のGRN
+     */
+    const optional<StringHolder>& getCreateWalletTriggerScriptId() const
+    {
+        return ensureData().createWalletTriggerScriptId;
+    }
+
+    /**
+     * ウォレット新規作成時 に実行されるスクリプト のGRNを設定
+     *
+     * @param createWalletTriggerScriptId ウォレット新規作成時 に実行されるスクリプト のGRN
+     */
+    void setCreateWalletTriggerScriptId(const Char* createWalletTriggerScriptId)
+    {
+        ensureData().createWalletTriggerScriptId.emplace(createWalletTriggerScriptId);
+    }
+
+    /**
+     * ウォレット新規作成完了時 に実行されるスクリプト のGRNを取得
+     *
+     * @return ウォレット新規作成完了時 に実行されるスクリプト のGRN
+     */
+    const optional<StringHolder>& getCreateWalletDoneTriggerScriptId() const
+    {
+        return ensureData().createWalletDoneTriggerScriptId;
+    }
+
+    /**
+     * ウォレット新規作成完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param createWalletDoneTriggerScriptId ウォレット新規作成完了時 に実行されるスクリプト のGRN
+     */
+    void setCreateWalletDoneTriggerScriptId(const Char* createWalletDoneTriggerScriptId)
+    {
+        ensureData().createWalletDoneTriggerScriptId.emplace(createWalletDoneTriggerScriptId);
+    }
+
+    /**
+     * ウォレット新規作成完了時 にジョブを登録するキュー のGRNを取得
+     *
+     * @return ウォレット新規作成完了時 にジョブを登録するキュー のGRN
+     */
+    const optional<StringHolder>& getCreateWalletDoneTriggerQueueId() const
+    {
+        return ensureData().createWalletDoneTriggerQueueId;
+    }
+
+    /**
+     * ウォレット新規作成完了時 にジョブを登録するキュー のGRNを設定
+     *
+     * @param createWalletDoneTriggerQueueId ウォレット新規作成完了時 にジョブを登録するキュー のGRN
+     */
+    void setCreateWalletDoneTriggerQueueId(const Char* createWalletDoneTriggerQueueId)
+    {
+        ensureData().createWalletDoneTriggerQueueId.emplace(createWalletDoneTriggerQueueId);
+    }
+
+    /**
+     * ウォレット残高加算時 に実行されるスクリプト のGRNを取得
+     *
+     * @return ウォレット残高加算時 に実行されるスクリプト のGRN
+     */
+    const optional<StringHolder>& getDepositTriggerScriptId() const
+    {
+        return ensureData().depositTriggerScriptId;
+    }
+
+    /**
+     * ウォレット残高加算時 に実行されるスクリプト のGRNを設定
+     *
+     * @param depositTriggerScriptId ウォレット残高加算時 に実行されるスクリプト のGRN
+     */
+    void setDepositTriggerScriptId(const Char* depositTriggerScriptId)
+    {
+        ensureData().depositTriggerScriptId.emplace(depositTriggerScriptId);
+    }
+
+    /**
+     * ウォレット残高加算完了時 に実行されるスクリプト のGRNを取得
+     *
+     * @return ウォレット残高加算完了時 に実行されるスクリプト のGRN
+     */
+    const optional<StringHolder>& getDepositDoneTriggerScriptId() const
+    {
+        return ensureData().depositDoneTriggerScriptId;
+    }
+
+    /**
+     * ウォレット残高加算完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param depositDoneTriggerScriptId ウォレット残高加算完了時 に実行されるスクリプト のGRN
+     */
+    void setDepositDoneTriggerScriptId(const Char* depositDoneTriggerScriptId)
+    {
+        ensureData().depositDoneTriggerScriptId.emplace(depositDoneTriggerScriptId);
+    }
+
+    /**
+     * ウォレット残高加算完了時 にジョブを登録するキュー のGRNを取得
+     *
+     * @return ウォレット残高加算完了時 にジョブを登録するキュー のGRN
+     */
+    const optional<StringHolder>& getDepositDoneTriggerQueueId() const
+    {
+        return ensureData().depositDoneTriggerQueueId;
+    }
+
+    /**
+     * ウォレット残高加算完了時 にジョブを登録するキュー のGRNを設定
+     *
+     * @param depositDoneTriggerQueueId ウォレット残高加算完了時 にジョブを登録するキュー のGRN
+     */
+    void setDepositDoneTriggerQueueId(const Char* depositDoneTriggerQueueId)
+    {
+        ensureData().depositDoneTriggerQueueId.emplace(depositDoneTriggerQueueId);
+    }
+
+    /**
+     * ウォレット残高消費時 に実行されるスクリプト のGRNを取得
+     *
+     * @return ウォレット残高消費時 に実行されるスクリプト のGRN
+     */
+    const optional<StringHolder>& getWithdrawTriggerScriptId() const
+    {
+        return ensureData().withdrawTriggerScriptId;
+    }
+
+    /**
+     * ウォレット残高消費時 に実行されるスクリプト のGRNを設定
+     *
+     * @param withdrawTriggerScriptId ウォレット残高消費時 に実行されるスクリプト のGRN
+     */
+    void setWithdrawTriggerScriptId(const Char* withdrawTriggerScriptId)
+    {
+        ensureData().withdrawTriggerScriptId.emplace(withdrawTriggerScriptId);
+    }
+
+    /**
+     * ウォレット残高消費完了時 に実行されるスクリプト のGRNを取得
+     *
+     * @return ウォレット残高消費完了時 に実行されるスクリプト のGRN
+     */
+    const optional<StringHolder>& getWithdrawDoneTriggerScriptId() const
+    {
+        return ensureData().withdrawDoneTriggerScriptId;
+    }
+
+    /**
+     * ウォレット残高消費完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param withdrawDoneTriggerScriptId ウォレット残高消費完了時 に実行されるスクリプト のGRN
+     */
+    void setWithdrawDoneTriggerScriptId(const Char* withdrawDoneTriggerScriptId)
+    {
+        ensureData().withdrawDoneTriggerScriptId.emplace(withdrawDoneTriggerScriptId);
+    }
+
+    /**
+     * ウォレット残高消費完了時 にジョブを登録するキュー のGRNを取得
+     *
+     * @return ウォレット残高消費完了時 にジョブを登録するキュー のGRN
+     */
+    const optional<StringHolder>& getWithdrawDoneTriggerQueueId() const
+    {
+        return ensureData().withdrawDoneTriggerQueueId;
+    }
+
+    /**
+     * ウォレット残高消費完了時 にジョブを登録するキュー のGRNを設定
+     *
+     * @param withdrawDoneTriggerQueueId ウォレット残高消費完了時 にジョブを登録するキュー のGRN
+     */
+    void setWithdrawDoneTriggerQueueId(const Char* withdrawDoneTriggerQueueId)
+    {
+        ensureData().withdrawDoneTriggerQueueId.emplace(withdrawDoneTriggerQueueId);
     }
 
     /**
@@ -552,161 +765,41 @@ public:
     }
 
     /**
-     * ウォレット新規作成時 に実行されるGS2-Scriptを取得
+     * 作成日時を取得
      *
-     * @return ウォレット新規作成時 に実行されるGS2-Script
+     * @return 作成日時
      */
-    const optional<StringHolder>& getCreateWalletTriggerScript() const
-    {
-        return ensureData().createWalletTriggerScript;
-    }
-
-    /**
-     * ウォレット新規作成時 に実行されるGS2-Scriptを設定
-     *
-     * @param createWalletTriggerScript ウォレット新規作成時 に実行されるGS2-Script
-     */
-    void setCreateWalletTriggerScript(const Char* createWalletTriggerScript)
-    {
-        ensureData().createWalletTriggerScript.emplace(createWalletTriggerScript);
-    }
-
-    /**
-     * ウォレット新規作成完了時 に実行されるGS2-Scriptを取得
-     *
-     * @return ウォレット新規作成完了時 に実行されるGS2-Script
-     */
-    const optional<StringHolder>& getCreateWalletDoneTriggerScript() const
-    {
-        return ensureData().createWalletDoneTriggerScript;
-    }
-
-    /**
-     * ウォレット新規作成完了時 に実行されるGS2-Scriptを設定
-     *
-     * @param createWalletDoneTriggerScript ウォレット新規作成完了時 に実行されるGS2-Script
-     */
-    void setCreateWalletDoneTriggerScript(const Char* createWalletDoneTriggerScript)
-    {
-        ensureData().createWalletDoneTriggerScript.emplace(createWalletDoneTriggerScript);
-    }
-
-    /**
-     * ウォレット残高加算時 に実行されるGS2-Scriptを取得
-     *
-     * @return ウォレット残高加算時 に実行されるGS2-Script
-     */
-    const optional<StringHolder>& getChargeWalletTriggerScript() const
-    {
-        return ensureData().chargeWalletTriggerScript;
-    }
-
-    /**
-     * ウォレット残高加算時 に実行されるGS2-Scriptを設定
-     *
-     * @param chargeWalletTriggerScript ウォレット残高加算時 に実行されるGS2-Script
-     */
-    void setChargeWalletTriggerScript(const Char* chargeWalletTriggerScript)
-    {
-        ensureData().chargeWalletTriggerScript.emplace(chargeWalletTriggerScript);
-    }
-
-    /**
-     * ウォレット残高加算完了時 に実行されるGS2-Scriptを取得
-     *
-     * @return ウォレット残高加算完了時 に実行されるGS2-Script
-     */
-    const optional<StringHolder>& getChargeWalletDoneTriggerScript() const
-    {
-        return ensureData().chargeWalletDoneTriggerScript;
-    }
-
-    /**
-     * ウォレット残高加算完了時 に実行されるGS2-Scriptを設定
-     *
-     * @param chargeWalletDoneTriggerScript ウォレット残高加算完了時 に実行されるGS2-Script
-     */
-    void setChargeWalletDoneTriggerScript(const Char* chargeWalletDoneTriggerScript)
-    {
-        ensureData().chargeWalletDoneTriggerScript.emplace(chargeWalletDoneTriggerScript);
-    }
-
-    /**
-     * ウォレット残高消費時 に実行されるGS2-Scriptを取得
-     *
-     * @return ウォレット残高消費時 に実行されるGS2-Script
-     */
-    const optional<StringHolder>& getConsumeWalletTriggerScript() const
-    {
-        return ensureData().consumeWalletTriggerScript;
-    }
-
-    /**
-     * ウォレット残高消費時 に実行されるGS2-Scriptを設定
-     *
-     * @param consumeWalletTriggerScript ウォレット残高消費時 に実行されるGS2-Script
-     */
-    void setConsumeWalletTriggerScript(const Char* consumeWalletTriggerScript)
-    {
-        ensureData().consumeWalletTriggerScript.emplace(consumeWalletTriggerScript);
-    }
-
-    /**
-     * ウォレット残高消費完了時 に実行されるGS2-Scriptを取得
-     *
-     * @return ウォレット残高消費完了時 に実行されるGS2-Script
-     */
-    const optional<StringHolder>& getConsumeWalletDoneTriggerScript() const
-    {
-        return ensureData().consumeWalletDoneTriggerScript;
-    }
-
-    /**
-     * ウォレット残高消費完了時 に実行されるGS2-Scriptを設定
-     *
-     * @param consumeWalletDoneTriggerScript ウォレット残高消費完了時 に実行されるGS2-Script
-     */
-    void setConsumeWalletDoneTriggerScript(const Char* consumeWalletDoneTriggerScript)
-    {
-        ensureData().consumeWalletDoneTriggerScript.emplace(consumeWalletDoneTriggerScript);
-    }
-
-    /**
-     * 作成日時(エポック秒)を取得
-     *
-     * @return 作成日時(エポック秒)
-     */
-    const optional<Int32>& getCreateAt() const
+    const optional<Int64>& getCreateAt() const
     {
         return ensureData().createAt;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param createAt 作成日時(エポック秒)
+     * @param createAt 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
     }
 
     /**
-     * 最終更新日時(エポック秒)を取得
+     * 最終更新日時を取得
      *
-     * @return 最終更新日時(エポック秒)
+     * @return 最終更新日時
      */
-    const optional<Int32>& getUpdateAt() const
+    const optional<Int64>& getUpdateAt() const
     {
         return ensureData().updateAt;
     }
 
     /**
-     * 最終更新日時(エポック秒)を設定
+     * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時(エポック秒)
+     * @param updateAt 最終更新日時
      */
-    void setUpdateAt(Int32 updateAt)
+    void setUpdateAt(Int64 updateAt)
     {
         ensureData().updateAt.emplace(updateAt);
     }

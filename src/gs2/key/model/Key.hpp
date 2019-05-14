@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace key {
+namespace gs2 { namespace  {
 
 /**
  * 暗号鍵
@@ -39,14 +39,15 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 暗号鍵GRN */
+        /** 暗号鍵 のGRN */
         optional<StringHolder> keyId;
         /** オーナーID */
         optional<StringHolder> ownerId;
         /** 暗号鍵名 */
         optional<StringHolder> name;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
+        /** 作成日時 */
+        
+        optional<Int64> createAt;
 
         Data()
         {}
@@ -94,14 +95,14 @@ private:
                 }
             }
             else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->createAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -179,12 +180,10 @@ public:
     {
         return this;
     }
-
-
     /**
-     * 暗号鍵GRNを取得
+     * 暗号鍵 のGRNを取得
      *
-     * @return 暗号鍵GRN
+     * @return 暗号鍵 のGRN
      */
     const optional<StringHolder>& getKeyId() const
     {
@@ -192,9 +191,9 @@ public:
     }
 
     /**
-     * 暗号鍵GRNを設定
+     * 暗号鍵 のGRNを設定
      *
-     * @param keyId 暗号鍵GRN
+     * @param keyId 暗号鍵 のGRN
      */
     void setKeyId(const Char* keyId)
     {
@@ -242,21 +241,21 @@ public:
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * 作成日時を取得
      *
-     * @return 作成日時(エポック秒)
+     * @return 作成日時
      */
-    const optional<Int32>& getCreateAt() const
+    const optional<Int64>& getCreateAt() const
     {
         return ensureData().createAt;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param createAt 作成日時(エポック秒)
+     * @param createAt 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
     }

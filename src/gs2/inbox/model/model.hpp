@@ -17,7 +17,13 @@
 #ifndef GS2_INBOX_MODEL_MODEL_HPP_
 #define GS2_INBOX_MODEL_MODEL_HPP_
 
+#include <gs2/core/common.hpp>
 #include "Inbox.hpp"
+#include "User.hpp"
 #include "Message.hpp"
+#include "ResponseCache.hpp"
+#include "Body.hpp"
+#include "NotSendMessage.hpp"
+#include "NotGetMessage.hpp"
 
 #endif //GS2_INBOX_MODEL_MODEL_HPP_

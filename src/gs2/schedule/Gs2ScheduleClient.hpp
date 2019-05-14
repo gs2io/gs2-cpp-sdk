@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -23,36 +23,87 @@
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
+#include "request/DescribeSchedulesRequest.hpp"
+#include "request/CreateScheduleRequest.hpp"
+#include "request/GetScheduleStatusRequest.hpp"
+#include "request/GetScheduleRequest.hpp"
+#include "request/UpdateScheduleRequest.hpp"
+#include "request/DeleteScheduleRequest.hpp"
+#include "request/DescribeEventMastersRequest.hpp"
+#include "request/CreateEventMasterRequest.hpp"
+#include "request/GetEventMasterRequest.hpp"
+#include "request/UpdateEventMasterRequest.hpp"
+#include "request/DeleteEventMasterRequest.hpp"
+#include "request/DescribeTriggersRequest.hpp"
+#include "request/DescribeTriggersByUserIdRequest.hpp"
+#include "request/GetTriggerRequest.hpp"
+#include "request/GetTriggerByUserIdRequest.hpp"
+#include "request/TriggerByUserIdRequest.hpp"
+#include "request/DeleteTriggerRequest.hpp"
+#include "request/DeleteTriggerByUserIdRequest.hpp"
+#include "request/DescribeEventsRequest.hpp"
+#include "request/GetEventRequest.hpp"
+#include "request/ExportMasterRequest.hpp"
+#include "request/GetCurrentEventMasterRequest.hpp"
+#include "request/UpdateCurrentEventMasterRequest.hpp"
+#include "result/DescribeSchedulesResult.hpp"
+#include "result/CreateScheduleResult.hpp"
+#include "result/GetScheduleStatusResult.hpp"
+#include "result/GetScheduleResult.hpp"
+#include "result/UpdateScheduleResult.hpp"
+#include "result/DeleteScheduleResult.hpp"
+#include "result/DescribeEventMastersResult.hpp"
+#include "result/CreateEventMasterResult.hpp"
+#include "result/GetEventMasterResult.hpp"
+#include "result/UpdateEventMasterResult.hpp"
+#include "result/DeleteEventMasterResult.hpp"
+#include "result/DescribeTriggersResult.hpp"
+#include "result/DescribeTriggersByUserIdResult.hpp"
+#include "result/GetTriggerResult.hpp"
+#include "result/GetTriggerByUserIdResult.hpp"
+#include "result/TriggerByUserIdResult.hpp"
+#include "result/DeleteTriggerResult.hpp"
+#include "result/DeleteTriggerByUserIdResult.hpp"
+#include "result/DescribeEventsResult.hpp"
+#include "result/GetEventResult.hpp"
+#include "result/ExportMasterResult.hpp"
+#include "result/GetCurrentEventMasterResult.hpp"
+#include "result/UpdateCurrentEventMasterResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace schedule {
 
-typedef AsyncResult<GetCurrentEventMasterResult> AsyncGetCurrentEventMasterResult;
-typedef AsyncResult<UpdateCurrentEventMasterResult> AsyncUpdateCurrentEventMasterResult;
+typedef AsyncResult<DescribeSchedulesResult> AsyncDescribeSchedulesResult;
+typedef AsyncResult<CreateScheduleResult> AsyncCreateScheduleResult;
+typedef AsyncResult<GetScheduleStatusResult> AsyncGetScheduleStatusResult;
+typedef AsyncResult<GetScheduleResult> AsyncGetScheduleResult;
+typedef AsyncResult<UpdateScheduleResult> AsyncUpdateScheduleResult;
+typedef AsyncResult<DeleteScheduleResult> AsyncDeleteScheduleResult;
+typedef AsyncResult<DescribeEventMastersResult> AsyncDescribeEventMastersResult;
 typedef AsyncResult<CreateEventMasterResult> AsyncCreateEventMasterResult;
-typedef AsyncResult<void> AsyncDeleteEventMasterResult;
-typedef AsyncResult<DescribeEventMasterResult> AsyncDescribeEventMasterResult;
 typedef AsyncResult<GetEventMasterResult> AsyncGetEventMasterResult;
 typedef AsyncResult<UpdateEventMasterResult> AsyncUpdateEventMasterResult;
-typedef AsyncResult<DescribeEventResult> AsyncDescribeEventResult;
-typedef AsyncResult<DescribeEventByUserIdResult> AsyncDescribeEventByUserIdResult;
-typedef AsyncResult<GetEventResult> AsyncGetEventResult;
-typedef AsyncResult<GetEventByUserIdResult> AsyncGetEventByUserIdResult;
-typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
-typedef AsyncResult<CreateScheduleResult> AsyncCreateScheduleResult;
-typedef AsyncResult<void> AsyncDeleteScheduleResult;
-typedef AsyncResult<DescribeScheduleResult> AsyncDescribeScheduleResult;
-typedef AsyncResult<GetScheduleResult> AsyncGetScheduleResult;
-typedef AsyncResult<GetScheduleStatusResult> AsyncGetScheduleStatusResult;
-typedef AsyncResult<UpdateScheduleResult> AsyncUpdateScheduleResult;
-typedef AsyncResult<void> AsyncDeleteTriggerResult;
-typedef AsyncResult<DescribeTriggerResult> AsyncDescribeTriggerResult;
-typedef AsyncResult<DescribeTriggerByUserIdResult> AsyncDescribeTriggerByUserIdResult;
+typedef AsyncResult<DeleteEventMasterResult> AsyncDeleteEventMasterResult;
+typedef AsyncResult<DescribeTriggersResult> AsyncDescribeTriggersResult;
+typedef AsyncResult<DescribeTriggersByUserIdResult> AsyncDescribeTriggersByUserIdResult;
 typedef AsyncResult<GetTriggerResult> AsyncGetTriggerResult;
-typedef AsyncResult<PullTriggerResult> AsyncPullTriggerResult;
+typedef AsyncResult<GetTriggerByUserIdResult> AsyncGetTriggerByUserIdResult;
+typedef AsyncResult<TriggerByUserIdResult> AsyncTriggerByUserIdResult;
+typedef AsyncResult<DeleteTriggerResult> AsyncDeleteTriggerResult;
+typedef AsyncResult<DeleteTriggerByUserIdResult> AsyncDeleteTriggerByUserIdResult;
+typedef AsyncResult<DescribeEventsResult> AsyncDescribeEventsResult;
+typedef AsyncResult<GetEventResult> AsyncGetEventResult;
+typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
+typedef AsyncResult<GetCurrentEventMasterResult> AsyncGetCurrentEventMasterResult;
+typedef AsyncResult<UpdateCurrentEventMasterResult> AsyncUpdateCurrentEventMasterResult;
 
+/**
+ * GS2 Schedule API クライアント
+ *
+ * @author Game Server Services, Inc.
+ *
+ */
 class Gs2ScheduleClient : public AbstractGs2ClientBase
 {
 private:
@@ -104,25 +155,30 @@ private:
     void write(detail::json::JsonWriter& writer, const EventMaster& obj)
     {
         writer.writeObjectStart();
-        if (obj.getEventMasterId())
+        if (obj.getEventId())
         {
-            writer.writePropertyName("eventMasterId");
-            writer.write(*obj.getEventMasterId());
+            writer.writePropertyName("eventId");
+            writer.write(*obj.getEventId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
             writer.write(*obj.getName());
         }
-        if (obj.getMeta())
+        if (obj.getDescription())
         {
-            writer.writePropertyName("meta");
-            writer.write(*obj.getMeta());
+            writer.writePropertyName("description");
+            writer.write(*obj.getDescription());
         }
-        if (obj.getType())
+        if (obj.getMetadata())
         {
-            writer.writePropertyName("type");
-            writer.write(*obj.getType());
+            writer.writePropertyName("metadata");
+            writer.write(*obj.getMetadata());
+        }
+        if (obj.getScheduleType())
+        {
+            writer.writePropertyName("scheduleType");
+            writer.write(*obj.getScheduleType());
         }
         if (obj.getAbsoluteBegin())
         {
@@ -139,10 +195,10 @@ private:
             writer.writePropertyName("relativeTriggerName");
             writer.write(*obj.getRelativeTriggerName());
         }
-        if (obj.getRelativeSpan())
+        if (obj.getRelativeDuration())
         {
-            writer.writePropertyName("relativeSpan");
-            writer.write(*obj.getRelativeSpan());
+            writer.writePropertyName("relativeDuration");
+            writer.write(*obj.getRelativeDuration());
         }
         if (obj.getCreateAt())
         {
@@ -160,20 +216,30 @@ private:
     void write(detail::json::JsonWriter& writer, const Trigger& obj)
     {
         writer.writeObjectStart();
+        if (obj.getTriggerId())
+        {
+            writer.writePropertyName("triggerId");
+            writer.write(*obj.getTriggerId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*obj.getName());
+        }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
             writer.write(*obj.getUserId());
         }
-        if (obj.getTriggerName())
+        if (obj.getCreateAt())
         {
-            writer.writePropertyName("triggerName");
-            writer.write(*obj.getTriggerName());
+            writer.writePropertyName("createAt");
+            writer.write(*obj.getCreateAt());
         }
-        if (obj.getTriggerAt())
+        if (obj.getExpiresAt())
         {
-            writer.writePropertyName("triggerAt");
-            writer.write(*obj.getTriggerAt());
+            writer.writePropertyName("expiresAt");
+            writer.write(*obj.getExpiresAt());
         }
         writer.writeObjectEnd();
     }
@@ -181,25 +247,92 @@ private:
     void write(detail::json::JsonWriter& writer, const Event& obj)
     {
         writer.writeObjectStart();
+        if (obj.getEventId())
+        {
+            writer.writePropertyName("eventId");
+            writer.write(*obj.getEventId());
+        }
         if (obj.getName())
         {
             writer.writePropertyName("name");
             writer.write(*obj.getName());
         }
-        if (obj.getMeta())
+        if (obj.getMetadata())
         {
-            writer.writePropertyName("meta");
-            writer.write(*obj.getMeta());
+            writer.writePropertyName("metadata");
+            writer.write(*obj.getMetadata());
         }
-        if (obj.getBegin())
+        if (obj.getScheduleType())
         {
-            writer.writePropertyName("begin");
-            writer.write(*obj.getBegin());
+            writer.writePropertyName("scheduleType");
+            writer.write(*obj.getScheduleType());
         }
-        if (obj.getEnd())
+        if (obj.getAbsoluteBegin())
         {
-            writer.writePropertyName("end");
-            writer.write(*obj.getEnd());
+            writer.writePropertyName("absoluteBegin");
+            writer.write(*obj.getAbsoluteBegin());
+        }
+        if (obj.getAbsoluteEnd())
+        {
+            writer.writePropertyName("absoluteEnd");
+            writer.write(*obj.getAbsoluteEnd());
+        }
+        if (obj.getRelativeTriggerName())
+        {
+            writer.writePropertyName("relativeTriggerName");
+            writer.write(*obj.getRelativeTriggerName());
+        }
+        if (obj.getRelativeDuration())
+        {
+            writer.writePropertyName("relativeDuration");
+            writer.write(*obj.getRelativeDuration());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const CurrentEventMaster& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getScheduleName())
+        {
+            writer.writePropertyName("scheduleName");
+            writer.write(*obj.getScheduleName());
+        }
+        if (obj.getSettings())
+        {
+            writer.writePropertyName("settings");
+            writer.write(*obj.getSettings());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const ResponseCache& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getRegion())
+        {
+            writer.writePropertyName("region");
+            writer.write(*obj.getRegion());
+        }
+        if (obj.getOwnerId())
+        {
+            writer.writePropertyName("ownerId");
+            writer.write(*obj.getOwnerId());
+        }
+        if (obj.getResponseCacheId())
+        {
+            writer.writePropertyName("responseCacheId");
+            writer.write(*obj.getResponseCacheId());
+        }
+        if (obj.getRequestHash())
+        {
+            writer.writePropertyName("requestHash");
+            writer.write(*obj.getRequestHash());
+        }
+        if (obj.getResult())
+        {
+            writer.writePropertyName("result");
+            writer.write(*obj.getResult());
         }
         writer.writeObjectEnd();
     }
@@ -239,11 +372,759 @@ public:
     {
     }
 
+	/**
+	 * スケジュールの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeSchedules(std::function<void(AsyncDescribeSchedulesResult&)> callback, DescribeSchedulesRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeSchedulesResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FScheduleFunctionHandler.describeSchedules");
+        Char encodeBuffer[2048];
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
 
-    /**
-     * 現在適用されているイベントマスターを取得します<br>
-     * <br>
-     *
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スケジュールを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createSchedule(std::function<void(AsyncCreateScheduleResult&)> callback, CreateScheduleRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<CreateScheduleResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FScheduleFunctionHandler.createSchedule");
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*request.getName());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スケジュールを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getScheduleStatus(std::function<void(AsyncGetScheduleStatusResult&)> callback, GetScheduleStatusRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetScheduleStatusResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FScheduleFunctionHandler.getScheduleStatus");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スケジュールを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getSchedule(std::function<void(AsyncGetScheduleResult&)> callback, GetScheduleRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetScheduleResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FScheduleFunctionHandler.getSchedule");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スケジュールを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateSchedule(std::function<void(AsyncUpdateScheduleResult&)> callback, UpdateScheduleRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<UpdateScheduleResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FScheduleFunctionHandler.updateSchedule");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スケジュールを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteSchedule(std::function<void(AsyncDeleteScheduleResult&)> callback, DeleteScheduleRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DeleteScheduleResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FScheduleFunctionHandler.deleteSchedule");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * イベントの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeEventMasters(std::function<void(AsyncDescribeEventMastersResult&)> callback, DescribeEventMastersRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeEventMastersResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FEventMasterFunctionHandler.describeEventMasters");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * イベントを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createEventMaster(std::function<void(AsyncCreateEventMasterResult&)> callback, CreateEventMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<CreateEventMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FEventMasterFunctionHandler.createEventMaster");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*request.getName());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        if (request.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.write(*request.getMetadata());
+        }
+        if (request.getScheduleType())
+        {
+            writer.writePropertyName("scheduleType");
+            writer.write(*request.getScheduleType());
+        }
+        if (request.getAbsoluteBegin())
+        {
+            writer.writePropertyName("absoluteBegin");
+            writer.write(*request.getAbsoluteBegin());
+        }
+        if (request.getAbsoluteEnd())
+        {
+            writer.writePropertyName("absoluteEnd");
+            writer.write(*request.getAbsoluteEnd());
+        }
+        if (request.getRelativeTriggerName())
+        {
+            writer.writePropertyName("relativeTriggerName");
+            writer.write(*request.getRelativeTriggerName());
+        }
+        if (request.getRelativeDuration())
+        {
+            writer.writePropertyName("relativeDuration");
+            writer.write(*request.getRelativeDuration());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * イベントを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getEventMaster(std::function<void(AsyncGetEventMasterResult&)> callback, GetEventMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetEventMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FEventMasterFunctionHandler.getEventMaster");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getEventName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getEventName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("eventName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * イベントを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateEventMaster(std::function<void(AsyncUpdateEventMasterResult&)> callback, UpdateEventMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<UpdateEventMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FEventMasterFunctionHandler.updateEventMaster");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getEventName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getEventName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("eventName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        if (request.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.write(*request.getMetadata());
+        }
+        if (request.getScheduleType())
+        {
+            writer.writePropertyName("scheduleType");
+            writer.write(*request.getScheduleType());
+        }
+        if (request.getAbsoluteBegin())
+        {
+            writer.writePropertyName("absoluteBegin");
+            writer.write(*request.getAbsoluteBegin());
+        }
+        if (request.getAbsoluteEnd())
+        {
+            writer.writePropertyName("absoluteEnd");
+            writer.write(*request.getAbsoluteEnd());
+        }
+        if (request.getRelativeTriggerName())
+        {
+            writer.writePropertyName("relativeTriggerName");
+            writer.write(*request.getRelativeTriggerName());
+        }
+        if (request.getRelativeDuration())
+        {
+            writer.writePropertyName("relativeDuration");
+            writer.write(*request.getRelativeDuration());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * イベントを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteEventMaster(std::function<void(AsyncDeleteEventMasterResult&)> callback, DeleteEventMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DeleteEventMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FEventMasterFunctionHandler.deleteEventMaster");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getEventName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getEventName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("eventName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * トリガーの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeTriggers(std::function<void(AsyncDescribeTriggersResult&)> callback, DescribeTriggersRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeTriggersResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FTriggerFunctionHandler.describeTriggers");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * トリガーの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeTriggersByUserId(std::function<void(AsyncDescribeTriggersByUserIdResult&)> callback, DescribeTriggersByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeTriggersByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FTriggerFunctionHandler.describeTriggersByUserId");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * トリガーを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getTrigger(std::function<void(AsyncGetTriggerResult&)> callback, GetTriggerRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetTriggerResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FTriggerFunctionHandler.getTrigger");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getTriggerName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getTriggerName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("triggerName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * トリガーを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getTriggerByUserId(std::function<void(AsyncGetTriggerByUserIdResult&)> callback, GetTriggerByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetTriggerByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FTriggerFunctionHandler.getTriggerByUserId");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getTriggerName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getTriggerName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("triggerName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ユーザIDを指定してトリガーを登録<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void triggerByUserId(std::function<void(AsyncTriggerByUserIdResult&)> callback, TriggerByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<TriggerByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FTriggerFunctionHandler.triggerByUserId");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getTriggerName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getTriggerName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("triggerName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getTriggerStrategy())
+        {
+            writer.writePropertyName("triggerStrategy");
+            writer.write(*request.getTriggerStrategy());
+        }
+        if (request.getTtl())
+        {
+            writer.writePropertyName("ttl");
+            writer.write(*request.getTtl());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * トリガーを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteTrigger(std::function<void(AsyncDeleteTriggerResult&)> callback, DeleteTriggerRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DeleteTriggerResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FTriggerFunctionHandler.deleteTrigger");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getTriggerName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getTriggerName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("triggerName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * トリガーを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteTriggerByUserId(std::function<void(AsyncDeleteTriggerByUserIdResult&)> callback, DeleteTriggerByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DeleteTriggerByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FTriggerFunctionHandler.deleteTriggerByUserId");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getTriggerName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getTriggerName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("triggerName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * イベントの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeEvents(std::function<void(AsyncDescribeEventsResult&)> callback, DescribeEventsRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeEventsResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FEventFunctionHandler.describeEvents");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * イベントを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getEvent(std::function<void(AsyncGetEventResult&)> callback, GetEventRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetEventResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FEventFunctionHandler.getEvent");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getEventName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getEventName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("eventName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * イベントマスターJSONのマスターデータをエクスポートします<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<ExportMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FCurrentEventMasterFunctionHandler.exportMaster");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 現在有効なイベントマスターJSONを取得します<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -252,31 +1133,35 @@ public:
         auto& httpRequest = *new detail::HttpRequest<GetCurrentEventMasterResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/event/master");
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FCurrentEventMasterFunctionHandler.getCurrentEventMaster");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
         }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * イベントマスターを更新します<br>
-     * <br>
-     *
+	/**
+	 * 現在有効なイベントマスターJSONを更新します<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
     void updateCurrentEventMaster(std::function<void(AsyncUpdateCurrentEventMasterResult&)> callback, UpdateCurrentEventMasterRequest& request)
     {
         auto& httpRequest = *new detail::HttpRequest<UpdateCurrentEventMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/event/master");
+        url.append("/schedule-handler?handler=gs2_schedule%2Fhandler%2FCurrentEventMasterFunctionHandler.updateCurrentEventMaster");
+        Char encodeBuffer[2048];
+        if (request.getScheduleName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScheduleName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scheduleName={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -290,669 +1175,12 @@ public:
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
-
-    /**
-     * イベントマスターを新規作成します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void createEventMaster(std::function<void(AsyncCreateEventMasterResult&)> callback, CreateEventMasterRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<CreateEventMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/master/event");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getName())
-        {
-            writer.writePropertyName("name");
-            writer.write(*request.getName());
-        }
-        if (request.getType())
-        {
-            writer.writePropertyName("type");
-            writer.write(*request.getType());
-        }
-        if (request.getMeta())
-        {
-            writer.writePropertyName("meta");
-            writer.write(*request.getMeta());
-        }
-        if (request.getAbsoluteBegin())
-        {
-            writer.writePropertyName("absoluteBegin");
-            writer.write(*request.getAbsoluteBegin());
-        }
-        if (request.getAbsoluteEnd())
-        {
-            writer.writePropertyName("absoluteEnd");
-            writer.write(*request.getAbsoluteEnd());
-        }
-        if (request.getRelativeTriggerName())
-        {
-            writer.writePropertyName("relativeTriggerName");
-            writer.write(*request.getRelativeTriggerName());
-        }
-        if (request.getRelativeSpan())
-        {
-            writer.writePropertyName("relativeSpan");
-            writer.write(*request.getRelativeSpan());
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * イベントマスターを削除します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteEventMaster(std::function<void(AsyncDeleteEventMasterResult&)> callback, DeleteEventMasterRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/master/event/").append(detail::StringUtil::toStr(buffer, request.getEventName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * イベントマスターの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeEventMaster(std::function<void(AsyncDescribeEventMasterResult&)> callback, DescribeEventMasterRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeEventMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/master/event");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[2048];
-        if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * イベントマスターを取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getEventMaster(std::function<void(AsyncGetEventMasterResult&)> callback, GetEventMasterRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<GetEventMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/master/event/").append(detail::StringUtil::toStr(buffer, request.getEventName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * イベントマスターを更新します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateEventMaster(std::function<void(AsyncUpdateEventMasterResult&)> callback, UpdateEventMasterRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<UpdateEventMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/master/event/").append(detail::StringUtil::toStr(buffer, request.getEventName())).append("");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getType())
-        {
-            writer.writePropertyName("type");
-            writer.write(*request.getType());
-        }
-        if (request.getMeta())
-        {
-            writer.writePropertyName("meta");
-            writer.write(*request.getMeta());
-        }
-        if (request.getAbsoluteBegin())
-        {
-            writer.writePropertyName("absoluteBegin");
-            writer.write(*request.getAbsoluteBegin());
-        }
-        if (request.getAbsoluteEnd())
-        {
-            writer.writePropertyName("absoluteEnd");
-            writer.write(*request.getAbsoluteEnd());
-        }
-        if (request.getRelativeTriggerName())
-        {
-            writer.writePropertyName("relativeTriggerName");
-            writer.write(*request.getRelativeTriggerName());
-        }
-        if (request.getRelativeSpan())
-        {
-            writer.writePropertyName("relativeSpan");
-            writer.write(*request.getRelativeSpan());
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 開催中のイベントの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeEvent(std::function<void(AsyncDescribeEventResult&)> callback, DescribeEventRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeEventResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/event");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[2048];
-        if (request.getEventNames()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getEventNames()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("eventNames={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 開催中のイベントの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeEventByUserId(std::function<void(AsyncDescribeEventByUserIdResult&)> callback, DescribeEventByUserIdRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeEventByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/event/user/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[2048];
-        if (request.getEventNames()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getEventNames()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("eventNames={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 開催中のイベントを取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getEvent(std::function<void(AsyncGetEventResult&)> callback, GetEventRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<GetEventResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/event/").append(detail::StringUtil::toStr(buffer, request.getEventName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 開催中のイベントを取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getEventByUserId(std::function<void(AsyncGetEventByUserIdResult&)> callback, GetEventByUserIdRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<GetEventByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/event/").append(detail::StringUtil::toStr(buffer, request.getEventName())).append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * イベントマスターをエクスポートします<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<ExportMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/master");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * スケジュールを新規作成します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void createSchedule(std::function<void(AsyncCreateScheduleResult&)> callback, CreateScheduleRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<CreateScheduleResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getName())
-        {
-            writer.writePropertyName("name");
-            writer.write(*request.getName());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.write(*request.getDescription());
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * スケジュールを削除します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteSchedule(std::function<void(AsyncDeleteScheduleResult&)> callback, DeleteScheduleRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * スケジュールの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeSchedule(std::function<void(AsyncDescribeScheduleResult&)> callback, DescribeScheduleRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeScheduleResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[2048];
-        if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * スケジュールを取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getSchedule(std::function<void(AsyncGetScheduleResult&)> callback, GetScheduleRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<GetScheduleResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * スケジュールの状態を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getScheduleStatus(std::function<void(AsyncGetScheduleStatusResult&)> callback, GetScheduleStatusRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<GetScheduleStatusResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/status");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * スケジュールを更新します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateSchedule(std::function<void(AsyncUpdateScheduleResult&)> callback, UpdateScheduleRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<UpdateScheduleResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.write(*request.getDescription());
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * トリガーを削除します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteTrigger(std::function<void(AsyncDeleteTriggerResult&)> callback, DeleteTriggerRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("/trigger/").append(detail::StringUtil::toStr(buffer, request.getTriggerName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * トリガーの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeTrigger(std::function<void(AsyncDescribeTriggerResult&)> callback, DescribeTriggerRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeTriggerResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/trigger");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[2048];
-        if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * ユーザのトリガーの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeTriggerByUserId(std::function<void(AsyncDescribeTriggerByUserIdResult&)> callback, DescribeTriggerByUserIdRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeTriggerByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("/trigger");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[2048];
-        if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * トリガーを取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getTrigger(std::function<void(AsyncGetTriggerResult&)> callback, GetTriggerRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<GetTriggerResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("/trigger/").append(detail::StringUtil::toStr(buffer, request.getTriggerName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * トリガーを引きます<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void pullTrigger(std::function<void(AsyncPullTriggerResult&)> callback, PullTriggerRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<PullTriggerResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/schedule/").append(detail::StringUtil::toStr(buffer, request.getScheduleName())).append("/user/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("/trigger/").append(detail::StringUtil::toStr(buffer, request.getTriggerName())).append("");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getAction())
-        {
-            writer.writePropertyName("action");
-            writer.write(*request.getAction());
-        }
-        if (request.getTtl())
-        {
-            writer.writePropertyName("ttl");
-            writer.write(*request.getTtl());
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
 };
 
 } }

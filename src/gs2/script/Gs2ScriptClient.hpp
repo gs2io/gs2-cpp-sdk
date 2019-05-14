@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -23,18 +23,36 @@
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
+#include "request/DescribeScriptsRequest.hpp"
+#include "request/CreateScriptRequest.hpp"
+#include "request/GetScriptStatusRequest.hpp"
+#include "request/GetScriptRequest.hpp"
+#include "request/UpdateScriptRequest.hpp"
+#include "request/DeleteScriptRequest.hpp"
+#include "result/DescribeScriptsResult.hpp"
+#include "result/CreateScriptResult.hpp"
+#include "result/GetScriptStatusResult.hpp"
+#include "result/GetScriptResult.hpp"
+#include "result/UpdateScriptResult.hpp"
+#include "result/DeleteScriptResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace script {
 
+typedef AsyncResult<DescribeScriptsResult> AsyncDescribeScriptsResult;
 typedef AsyncResult<CreateScriptResult> AsyncCreateScriptResult;
-typedef AsyncResult<void> AsyncDeleteScriptResult;
-typedef AsyncResult<DescribeScriptResult> AsyncDescribeScriptResult;
+typedef AsyncResult<GetScriptStatusResult> AsyncGetScriptStatusResult;
 typedef AsyncResult<GetScriptResult> AsyncGetScriptResult;
 typedef AsyncResult<UpdateScriptResult> AsyncUpdateScriptResult;
+typedef AsyncResult<void> AsyncDeleteScriptResult;
 
+/**
+ * GS2 Script API クライアント
+ *
+ * @author Game Server Services, Inc.
+ *
+ */
 class Gs2ScriptClient : public AbstractGs2ClientBase
 {
 private:
@@ -123,11 +141,37 @@ public:
     {
     }
 
+	/**
+	 * スクリプトの一覧を取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeScripts(std::function<void(AsyncDescribeScriptsResult&)> callback, DescribeScriptsRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeScriptsResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/script-handler?handler=gs2_script%2Fhandler%2FScriptFunctionHandler.describeScripts");
+        Char encodeBuffer[2048];
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
 
-    /**
-     * スクリプトを新規作成します<br>
-     * <br>
-     *
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * スクリプトを新規作成します<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -136,10 +180,7 @@ public:
         auto& httpRequest = *new detail::HttpRequest<CreateScriptResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/script");
-        }
+        url.append("/script-handler?handler=gs2_script%2Fhandler%2FScriptFunctionHandler.createScript");
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
@@ -148,87 +189,54 @@ public:
             writer.writePropertyName("name");
             writer.write(*request.getName());
         }
-        if (request.getScript())
-        {
-            writer.writePropertyName("script");
-            writer.write(*request.getScript());
-        }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
             writer.write(*request.getDescription());
         }
+        if (request.getScript())
+        {
+            writer.writePropertyName("script");
+            writer.write(*request.getScript());
+        }
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * スクリプトを削除します<br>
-     * <br>
-     *
+	/**
+	 * スクリプトを取得します<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteScript(std::function<void(AsyncDeleteScriptResult&)> callback, DeleteScriptRequest& request)
+    void getScriptStatus(std::function<void(AsyncGetScriptStatusResult&)> callback, GetScriptStatusRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/script/").append(detail::StringUtil::toStr(buffer, request.getScriptName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * スクリプトの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeScript(std::function<void(AsyncDescribeScriptResult&)> callback, DescribeScriptRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeScriptResult>;
+        auto& httpRequest = *new detail::HttpRequest<GetScriptStatusResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/script");
+        url.append("/script-handler?handler=gs2_script%2Fhandler%2FScriptFunctionHandler.getScriptStatus");
+        Char encodeBuffer[2048];
+        if (request.getScriptName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScriptName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scriptName={value}").replace("{value}", encodeBuffer);
         }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
-        if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * スクリプトを取得します<br>
-     * <br>
-     *
+	/**
+	 * スクリプトを取得します<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -237,20 +245,22 @@ public:
         auto& httpRequest = *new detail::HttpRequest<GetScriptResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/script/").append(detail::StringUtil::toStr(buffer, request.getScriptName())).append("");
+        url.append("/script-handler?handler=gs2_script%2Fhandler%2FScriptFunctionHandler.getScript");
+        Char encodeBuffer[2048];
+        if (request.getScriptName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScriptName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scriptName={value}").replace("{value}", encodeBuffer);
         }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * スクリプトを更新します<br>
-     * <br>
-     *
+	/**
+	 * スクリプトを更新します<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -259,9 +269,11 @@ public:
         auto& httpRequest = *new detail::HttpRequest<UpdateScriptResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/script/").append(detail::StringUtil::toStr(buffer, request.getScriptName())).append("");
+        url.append("/script-handler?handler=gs2_script%2Fhandler%2FScriptFunctionHandler.updateScript");
+        Char encodeBuffer[2048];
+        if (request.getScriptName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScriptName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scriptName={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -280,12 +292,36 @@ public:
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
+	/**
+	 * スクリプトを削除します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteScript(std::function<void(AsyncDeleteScriptResult&)> callback, DeleteScriptRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<void>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/script-handler?handler=gs2_script%2Fhandler%2FScriptFunctionHandler.deleteScript");
+        Char encodeBuffer[2048];
+        if (request.getScriptName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getScriptName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("scriptName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
 };
 
 } }

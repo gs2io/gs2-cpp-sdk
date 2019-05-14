@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace schedule {
+namespace gs2 { namespace  {
 
 /**
  * スケジュール
@@ -39,18 +39,20 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** スケジュールGRN */
+        /** スケジュール のGRN */
         optional<StringHolder> scheduleId;
         /** オーナーID */
         optional<StringHolder> ownerId;
         /** スケジュール名 */
         optional<StringHolder> name;
-        /** 説明文 */
+        /** スケジュールの説明 */
         optional<StringHolder> description;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
-        /** 最終更新日時(エポック秒) */
-        optional<Int32> updateAt;
+        /** 作成日時 */
+        
+        optional<Int64> createAt;
+        /** 最終更新日時 */
+        
+        optional<Int64> updateAt;
 
         Data()
         {}
@@ -108,20 +110,20 @@ private:
                 }
             }
             else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->createAt = jsonValue.GetInt64();
                 }
             }
             else if (std::strcmp(name, "updateAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt();
+                    this->updateAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -199,12 +201,10 @@ public:
     {
         return this;
     }
-
-
     /**
-     * スケジュールGRNを取得
+     * スケジュール のGRNを取得
      *
-     * @return スケジュールGRN
+     * @return スケジュール のGRN
      */
     const optional<StringHolder>& getScheduleId() const
     {
@@ -212,9 +212,9 @@ public:
     }
 
     /**
-     * スケジュールGRNを設定
+     * スケジュール のGRNを設定
      *
-     * @param scheduleId スケジュールGRN
+     * @param scheduleId スケジュール のGRN
      */
     void setScheduleId(const Char* scheduleId)
     {
@@ -262,9 +262,9 @@ public:
     }
 
     /**
-     * 説明文を取得
+     * スケジュールの説明を取得
      *
-     * @return 説明文
+     * @return スケジュールの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -272,9 +272,9 @@ public:
     }
 
     /**
-     * 説明文を設定
+     * スケジュールの説明を設定
      *
-     * @param description 説明文
+     * @param description スケジュールの説明
      */
     void setDescription(const Char* description)
     {
@@ -282,41 +282,41 @@ public:
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * 作成日時を取得
      *
-     * @return 作成日時(エポック秒)
+     * @return 作成日時
      */
-    const optional<Int32>& getCreateAt() const
+    const optional<Int64>& getCreateAt() const
     {
         return ensureData().createAt;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param createAt 作成日時(エポック秒)
+     * @param createAt 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
     }
 
     /**
-     * 最終更新日時(エポック秒)を取得
+     * 最終更新日時を取得
      *
-     * @return 最終更新日時(エポック秒)
+     * @return 最終更新日時
      */
-    const optional<Int32>& getUpdateAt() const
+    const optional<Int64>& getUpdateAt() const
     {
         return ensureData().updateAt;
     }
 
     /**
-     * 最終更新日時(エポック秒)を設定
+     * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時(エポック秒)
+     * @param updateAt 最終更新日時
      */
-    void setUpdateAt(Int32 updateAt)
+    void setUpdateAt(Int64 updateAt)
     {
         ensureData().updateAt.emplace(updateAt);
     }

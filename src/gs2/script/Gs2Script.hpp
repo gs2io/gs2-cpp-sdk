@@ -18,7 +18,6 @@
 #define GS2_SCRIPT_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
 #include "Gs2ScriptClient.hpp"
 #include "Gs2ScriptConst.hpp"

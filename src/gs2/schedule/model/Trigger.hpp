@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace schedule {
+namespace gs2 { namespace  {
 
 /**
  * トリガー
@@ -39,28 +39,38 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザID */
+        /** トリガー のGRN */
+        optional<StringHolder> triggerId;
+        /** トリガーの名前 */
+        optional<StringHolder> name;
+        /** ユーザーID */
         optional<StringHolder> userId;
-        /** トリガーID */
-        optional<StringHolder> triggerName;
-        /** トリガーを引いた時間(エポック秒) */
-        optional<Int32> triggerAt;
+        /** 作成日時 */
+        
+        optional<Int64> createAt;
+        /** None */
+        
+        optional<Int64> expiresAt;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            triggerId(data.triggerId),
+            name(data.name),
             userId(data.userId),
-            triggerName(data.triggerName),
-            triggerAt(data.triggerAt)
+            createAt(data.createAt),
+            expiresAt(data.expiresAt)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
+            triggerId(std::move(data.triggerId)),
+            name(std::move(data.name)),
             userId(std::move(data.userId)),
-            triggerName(std::move(data.triggerName)),
-            triggerAt(std::move(data.triggerAt))
+            createAt(std::move(data.createAt)),
+            expiresAt(std::move(data.expiresAt))
         {}
 
         ~Data() = default;
@@ -71,27 +81,39 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "userId") == 0) {
+            if (std::strcmp(name, "triggerId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->triggerId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "name") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->name.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "userId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "triggerName") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name, "createAt") == 0) {
+                if (jsonValue.IsInt64())
                 {
-                    this->triggerName.emplace(jsonValue.GetString());
+                    this->createAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "triggerAt") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name, "expiresAt") == 0) {
+                if (jsonValue.IsInt64())
                 {
-                    this->triggerAt = jsonValue.GetInt();
+                    this->expiresAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -169,12 +191,50 @@ public:
     {
         return this;
     }
-
+    /**
+     * トリガー のGRNを取得
+     *
+     * @return トリガー のGRN
+     */
+    const optional<StringHolder>& getTriggerId() const
+    {
+        return ensureData().triggerId;
+    }
 
     /**
-     * ユーザIDを取得
+     * トリガー のGRNを設定
      *
-     * @return ユーザID
+     * @param triggerId トリガー のGRN
+     */
+    void setTriggerId(const Char* triggerId)
+    {
+        ensureData().triggerId.emplace(triggerId);
+    }
+
+    /**
+     * トリガーの名前を取得
+     *
+     * @return トリガーの名前
+     */
+    const optional<StringHolder>& getName() const
+    {
+        return ensureData().name;
+    }
+
+    /**
+     * トリガーの名前を設定
+     *
+     * @param name トリガーの名前
+     */
+    void setName(const Char* name)
+    {
+        ensureData().name.emplace(name);
+    }
+
+    /**
+     * ユーザーIDを取得
+     *
+     * @return ユーザーID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -182,9 +242,9 @@ public:
     }
 
     /**
-     * ユーザIDを設定
+     * ユーザーIDを設定
      *
-     * @param userId ユーザID
+     * @param userId ユーザーID
      */
     void setUserId(const Char* userId)
     {
@@ -192,43 +252,43 @@ public:
     }
 
     /**
-     * トリガーIDを取得
+     * 作成日時を取得
      *
-     * @return トリガーID
+     * @return 作成日時
      */
-    const optional<StringHolder>& getTriggerName() const
+    const optional<Int64>& getCreateAt() const
     {
-        return ensureData().triggerName;
+        return ensureData().createAt;
     }
 
     /**
-     * トリガーIDを設定
+     * 作成日時を設定
      *
-     * @param triggerName トリガーID
+     * @param createAt 作成日時
      */
-    void setTriggerName(const Char* triggerName)
+    void setCreateAt(Int64 createAt)
     {
-        ensureData().triggerName.emplace(triggerName);
+        ensureData().createAt.emplace(createAt);
     }
 
     /**
-     * トリガーを引いた時間(エポック秒)を取得
+     * Noneを取得
      *
-     * @return トリガーを引いた時間(エポック秒)
+     * @return None
      */
-    const optional<Int32>& getTriggerAt() const
+    const optional<Int64>& getExpiresAt() const
     {
-        return ensureData().triggerAt;
+        return ensureData().expiresAt;
     }
 
     /**
-     * トリガーを引いた時間(エポック秒)を設定
+     * Noneを設定
      *
-     * @param triggerAt トリガーを引いた時間(エポック秒)
+     * @param expiresAt None
      */
-    void setTriggerAt(Int32 triggerAt)
+    void setExpiresAt(Int64 expiresAt)
     {
-        ensureData().triggerAt.emplace(triggerAt);
+        ensureData().expiresAt.emplace(expiresAt);
     }
 
 

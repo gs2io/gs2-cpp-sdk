@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace inbox {
+namespace gs2 { namespace  {
 
 /**
  * メッセージ
@@ -39,20 +39,27 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** メッセージID */
+        /** メッセージ のGRN */
         optional<StringHolder> messageId;
-        /** 受信ボックスGRN */
-        optional<StringHolder> inboxId;
-        /** 発言者ユーザID */
+        /** メッセージID */
+        optional<StringHolder> name;
+        /** ユーザーID */
         optional<StringHolder> userId;
-        /** メッセージ本文 */
-        optional<StringHolder> message;
-        /** 開封時に通知を出すか */
-        optional<Bool> cooperation;
+        /** メッセージの内容に相当するメタデータ */
+        optional<StringHolder> metadata;
         /** 既読状態 */
-        optional<Bool> read;
-        /** 受信日時(エポック秒) */
-        optional<Int32> date;
+        
+        optional<Bool> isRead;
+        /** メッセージ開封時 に実行されるスクリプト のGRN */
+        optional<StringHolder> readMessageTriggerScriptId;
+        /** メッセージ開封時 に実行されるスクリプト に指定する引数 */
+        optional<StringHolder> readMessageTriggerScriptArgs;
+        /** 作成日時 */
+        
+        optional<Int64> receivedAt;
+        /** 最終更新日時 */
+        
+        optional<Int64> readAt;
 
         Data()
         {}
@@ -60,23 +67,27 @@ private:
         Data(const Data& data) :
             detail::json::IModel(data),
             messageId(data.messageId),
-            inboxId(data.inboxId),
+            name(data.name),
             userId(data.userId),
-            message(data.message),
-            cooperation(data.cooperation),
-            read(data.read),
-            date(data.date)
+            metadata(data.metadata),
+            isRead(data.isRead),
+            readMessageTriggerScriptId(data.readMessageTriggerScriptId),
+            readMessageTriggerScriptArgs(data.readMessageTriggerScriptArgs),
+            receivedAt(data.receivedAt),
+            readAt(data.readAt)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
             messageId(std::move(data.messageId)),
-            inboxId(std::move(data.inboxId)),
+            name(std::move(data.name)),
             userId(std::move(data.userId)),
-            message(std::move(data.message)),
-            cooperation(std::move(data.cooperation)),
-            read(std::move(data.read)),
-            date(std::move(data.date))
+            metadata(std::move(data.metadata)),
+            isRead(std::move(data.isRead)),
+            readMessageTriggerScriptId(std::move(data.readMessageTriggerScriptId)),
+            readMessageTriggerScriptArgs(std::move(data.readMessageTriggerScriptArgs)),
+            receivedAt(std::move(data.receivedAt)),
+            readAt(std::move(data.readAt))
         {}
 
         ~Data() = default;
@@ -93,10 +104,10 @@ private:
                     this->messageId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "inboxId") == 0) {
+            else if (std::strcmp(name, "name") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->inboxId.emplace(jsonValue.GetString());
+                    this->name.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "userId") == 0) {
@@ -105,33 +116,45 @@ private:
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "message") == 0) {
+            else if (std::strcmp(name, "metadata") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->message.emplace(jsonValue.GetString());
+                    this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "cooperation") == 0) {
+            else if (std::strcmp(name, "isRead") == 0) {
                 if (jsonValue.IsBool())
                 {
-                    this->cooperation = jsonValue.GetBool();
+                    this->isRead = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name, "read") == 0) {
-                if (jsonValue.IsBool())
+            else if (std::strcmp(name, "readMessageTriggerScriptId") == 0) {
+                if (jsonValue.IsString())
                 {
-                    this->read = jsonValue.GetBool();
+                    this->readMessageTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "date") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name, "readMessageTriggerScriptArgs") == 0) {
+                if (jsonValue.IsString())
                 {
-                    this->date = jsonValue.GetInt();
+                    this->readMessageTriggerScriptArgs.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "receivedAt") == 0) {
+                if (jsonValue.IsInt64())
+                {
+                    this->receivedAt = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name, "readAt") == 0) {
+                if (jsonValue.IsInt64())
+                {
+                    this->readAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -209,12 +232,10 @@ public:
     {
         return this;
     }
-
-
     /**
-     * メッセージIDを取得
+     * メッセージ のGRNを取得
      *
-     * @return メッセージID
+     * @return メッセージ のGRN
      */
     const optional<StringHolder>& getMessageId() const
     {
@@ -222,9 +243,9 @@ public:
     }
 
     /**
-     * メッセージIDを設定
+     * メッセージ のGRNを設定
      *
-     * @param messageId メッセージID
+     * @param messageId メッセージ のGRN
      */
     void setMessageId(const Char* messageId)
     {
@@ -232,29 +253,29 @@ public:
     }
 
     /**
-     * 受信ボックスGRNを取得
+     * メッセージIDを取得
      *
-     * @return 受信ボックスGRN
+     * @return メッセージID
      */
-    const optional<StringHolder>& getInboxId() const
+    const optional<StringHolder>& getName() const
     {
-        return ensureData().inboxId;
+        return ensureData().name;
     }
 
     /**
-     * 受信ボックスGRNを設定
+     * メッセージIDを設定
      *
-     * @param inboxId 受信ボックスGRN
+     * @param name メッセージID
      */
-    void setInboxId(const Char* inboxId)
+    void setName(const Char* name)
     {
-        ensureData().inboxId.emplace(inboxId);
+        ensureData().name.emplace(name);
     }
 
     /**
-     * 発言者ユーザIDを取得
+     * ユーザーIDを取得
      *
-     * @return 発言者ユーザID
+     * @return ユーザーID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -262,9 +283,9 @@ public:
     }
 
     /**
-     * 発言者ユーザIDを設定
+     * ユーザーIDを設定
      *
-     * @param userId 発言者ユーザID
+     * @param userId ユーザーID
      */
     void setUserId(const Char* userId)
     {
@@ -272,43 +293,23 @@ public:
     }
 
     /**
-     * メッセージ本文を取得
+     * メッセージの内容に相当するメタデータを取得
      *
-     * @return メッセージ本文
+     * @return メッセージの内容に相当するメタデータ
      */
-    const optional<StringHolder>& getMessage() const
+    const optional<StringHolder>& getMetadata() const
     {
-        return ensureData().message;
+        return ensureData().metadata;
     }
 
     /**
-     * メッセージ本文を設定
+     * メッセージの内容に相当するメタデータを設定
      *
-     * @param message メッセージ本文
+     * @param metadata メッセージの内容に相当するメタデータ
      */
-    void setMessage(const Char* message)
+    void setMetadata(const Char* metadata)
     {
-        ensureData().message.emplace(message);
-    }
-
-    /**
-     * 開封時に通知を出すかを取得
-     *
-     * @return 開封時に通知を出すか
-     */
-    const optional<Bool>& getCooperation() const
-    {
-        return ensureData().cooperation;
-    }
-
-    /**
-     * 開封時に通知を出すかを設定
-     *
-     * @param cooperation 開封時に通知を出すか
-     */
-    void setCooperation(Bool cooperation)
-    {
-        ensureData().cooperation.emplace(cooperation);
+        ensureData().metadata.emplace(metadata);
     }
 
     /**
@@ -316,39 +317,99 @@ public:
      *
      * @return 既読状態
      */
-    const optional<Bool>& getRead() const
+    const optional<Bool>& getIsRead() const
     {
-        return ensureData().read;
+        return ensureData().isRead;
     }
 
     /**
      * 既読状態を設定
      *
-     * @param read 既読状態
+     * @param isRead 既読状態
      */
-    void setRead(Bool read)
+    void setIsRead(Bool isRead)
     {
-        ensureData().read.emplace(read);
+        ensureData().isRead.emplace(isRead);
     }
 
     /**
-     * 受信日時(エポック秒)を取得
+     * メッセージ開封時 に実行されるスクリプト のGRNを取得
      *
-     * @return 受信日時(エポック秒)
+     * @return メッセージ開封時 に実行されるスクリプト のGRN
      */
-    const optional<Int32>& getDate() const
+    const optional<StringHolder>& getReadMessageTriggerScriptId() const
     {
-        return ensureData().date;
+        return ensureData().readMessageTriggerScriptId;
     }
 
     /**
-     * 受信日時(エポック秒)を設定
+     * メッセージ開封時 に実行されるスクリプト のGRNを設定
      *
-     * @param date 受信日時(エポック秒)
+     * @param readMessageTriggerScriptId メッセージ開封時 に実行されるスクリプト のGRN
      */
-    void setDate(Int32 date)
+    void setReadMessageTriggerScriptId(const Char* readMessageTriggerScriptId)
     {
-        ensureData().date.emplace(date);
+        ensureData().readMessageTriggerScriptId.emplace(readMessageTriggerScriptId);
+    }
+
+    /**
+     * メッセージ開封時 に実行されるスクリプト に指定する引数を取得
+     *
+     * @return メッセージ開封時 に実行されるスクリプト に指定する引数
+     */
+    const optional<StringHolder>& getReadMessageTriggerScriptArgs() const
+    {
+        return ensureData().readMessageTriggerScriptArgs;
+    }
+
+    /**
+     * メッセージ開封時 に実行されるスクリプト に指定する引数を設定
+     *
+     * @param readMessageTriggerScriptArgs メッセージ開封時 に実行されるスクリプト に指定する引数
+     */
+    void setReadMessageTriggerScriptArgs(const Char* readMessageTriggerScriptArgs)
+    {
+        ensureData().readMessageTriggerScriptArgs.emplace(readMessageTriggerScriptArgs);
+    }
+
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getReceivedAt() const
+    {
+        return ensureData().receivedAt;
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param receivedAt 作成日時
+     */
+    void setReceivedAt(Int64 receivedAt)
+    {
+        ensureData().receivedAt.emplace(receivedAt);
+    }
+
+    /**
+     * 最終更新日時を取得
+     *
+     * @return 最終更新日時
+     */
+    const optional<Int64>& getReadAt() const
+    {
+        return ensureData().readAt;
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param readAt 最終更新日時
+     */
+    void setReadAt(Int64 readAt)
+    {
+        ensureData().readAt.emplace(readAt);
     }
 
 

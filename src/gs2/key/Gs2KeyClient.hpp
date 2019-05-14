@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -23,19 +23,36 @@
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
+#include "request/DescribeKeysRequest.hpp"
+#include "request/CreateKeyRequest.hpp"
+#include "request/GetKeyRequest.hpp"
+#include "request/DeleteKeyRequest.hpp"
+#include "request/EncryptRequest.hpp"
+#include "request/DecryptRequest.hpp"
+#include "result/DescribeKeysResult.hpp"
+#include "result/CreateKeyResult.hpp"
+#include "result/GetKeyResult.hpp"
+#include "result/DeleteKeyResult.hpp"
+#include "result/EncryptResult.hpp"
+#include "result/DecryptResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace key {
 
+typedef AsyncResult<DescribeKeysResult> AsyncDescribeKeysResult;
 typedef AsyncResult<CreateKeyResult> AsyncCreateKeyResult;
-typedef AsyncResult<DecryptResult> AsyncDecryptResult;
-typedef AsyncResult<void> AsyncDeleteKeyResult;
-typedef AsyncResult<DescribeKeyResult> AsyncDescribeKeyResult;
-typedef AsyncResult<EncryptResult> AsyncEncryptResult;
 typedef AsyncResult<GetKeyResult> AsyncGetKeyResult;
+typedef AsyncResult<void> AsyncDeleteKeyResult;
+typedef AsyncResult<EncryptResult> AsyncEncryptResult;
+typedef AsyncResult<DecryptResult> AsyncDecryptResult;
 
+/**
+ * GS2 Key API クライアント
+ *
+ * @author Game Server Services, Inc.
+ *
+ */
 class Gs2KeyClient : public AbstractGs2ClientBase
 {
 private:
@@ -70,6 +87,37 @@ private:
         {
             writer.writePropertyName("createAt");
             writer.write(*obj.getCreateAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const FullKey& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.write(*obj.getKeyId());
+        }
+        if (obj.getOwnerId())
+        {
+            writer.writePropertyName("ownerId");
+            writer.write(*obj.getOwnerId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*obj.getName());
+        }
+        if (obj.getCreateAt())
+        {
+            writer.writePropertyName("createAt");
+            writer.write(*obj.getCreateAt());
+        }
+        if (obj.getSecret())
+        {
+            writer.writePropertyName("secret");
+            writer.write(*obj.getSecret());
         }
         writer.writeObjectEnd();
     }
@@ -109,11 +157,37 @@ public:
     {
     }
 
+	/**
+	 * 暗号鍵の一覧を取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeKeys(std::function<void(AsyncDescribeKeysResult&)> callback, DescribeKeysRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeKeysResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/key-handler?handler=gs2_key%2Fhandler%2FKeyFunctionHandler.describeKeys");
+        Char encodeBuffer[2048];
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
 
-    /**
-     * 暗号鍵を新規作成します<br>
-     * <br>
-     *
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 暗号鍵を新規作成します<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -122,10 +196,7 @@ public:
         auto& httpRequest = *new detail::HttpRequest<CreateKeyResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/key");
-        }
+        url.append("/key-handler?handler=gs2_key%2Fhandler%2FKeyFunctionHandler.createKey");
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
@@ -138,141 +209,16 @@ public:
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * 復号化処理を実行します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void decrypt(std::function<void(AsyncDecryptResult&)> callback, DecryptRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DecryptResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/key/").append(detail::StringUtil::toStr(buffer, request.getKeyName())).append("/decrypt");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getData())
-        {
-            writer.writePropertyName("data");
-            writer.write(*request.getData());
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 暗号鍵を削除します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteKey(std::function<void(AsyncDeleteKeyResult&)> callback, DeleteKeyRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/key/").append(detail::StringUtil::toStr(buffer, request.getKeyName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 暗号鍵の一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeKey(std::function<void(AsyncDescribeKeyResult&)> callback, DescribeKeyRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeKeyResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/key");
-        }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
-        if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 暗号化処理を実行します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void encrypt(std::function<void(AsyncEncryptResult&)> callback, EncryptRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<EncryptResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/key/").append(detail::StringUtil::toStr(buffer, request.getKeyName())).append("/encrypt");
-        }
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getData())
-        {
-            writer.writePropertyName("data");
-            writer.write(*request.getData());
-        }
-        writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * 暗号鍵を取得します<br>
-     * <br>
-     *
+	/**
+	 * 暗号鍵を取得します<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
@@ -281,16 +227,114 @@ public:
         auto& httpRequest = *new detail::HttpRequest<GetKeyResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/key/").append(detail::StringUtil::toStr(buffer, request.getKeyName())).append("");
+        url.append("/key-handler?handler=gs2_key%2Fhandler%2FKeyFunctionHandler.getKey");
+        Char encodeBuffer[2048];
+        if (request.getKeyName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getKeyName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("keyName={value}").replace("{value}", encodeBuffer);
         }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
+	/**
+	 * 暗号鍵を削除します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteKey(std::function<void(AsyncDeleteKeyResult&)> callback, DeleteKeyRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<void>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/key-handler?handler=gs2_key%2Fhandler%2FKeyFunctionHandler.deleteKey");
+        Char encodeBuffer[2048];
+        if (request.getKeyName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getKeyName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("keyName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * データを暗号化します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void encrypt(std::function<void(AsyncEncryptResult&)> callback, EncryptRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<EncryptResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/key-handler?handler=gs2_key%2Fhandler%2FKeyFunctionHandler.encrypt");
+        Char encodeBuffer[2048];
+        if (request.getKeyName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getKeyName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("keyName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getData())
+        {
+            writer.writePropertyName("data");
+            writer.write(*request.getData());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * データを復号します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void decrypt(std::function<void(AsyncDecryptResult&)> callback, DecryptRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DecryptResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/key-handler?handler=gs2_key%2Fhandler%2FKeyFunctionHandler.decrypt");
+        Char encodeBuffer[2048];
+        if (request.getKeyName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getKeyName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("keyName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getData())
+        {
+            writer.writePropertyName("data");
+            writer.write(*request.getData());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
 };
 
 } }

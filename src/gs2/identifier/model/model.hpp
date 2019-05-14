@@ -17,9 +17,12 @@
 #ifndef GS2_IDENTIFIER_MODEL_MODEL_HPP_
 #define GS2_IDENTIFIER_MODEL_MODEL_HPP_
 
+#include <gs2/core/common.hpp>
 #include "User.hpp"
 #include "SecurityPolicy.hpp"
 #include "Identifier.hpp"
 #include "FullIdentifier.hpp"
+#include "AttachSecurityPolicy.hpp"
+#include "ProjectToken.hpp"
 
 #endif //GS2_IDENTIFIER_MODEL_MODEL_HPP_

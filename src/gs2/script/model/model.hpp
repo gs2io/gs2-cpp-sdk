@@ -17,6 +17,7 @@
 #ifndef GS2_SCRIPT_MODEL_MODEL_HPP_
 #define GS2_SCRIPT_MODEL_MODEL_HPP_
 
+#include <gs2/core/common.hpp>
 #include "Script.hpp"
 
 #endif //GS2_SCRIPT_MODEL_MODEL_HPP_

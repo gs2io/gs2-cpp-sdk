@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace money {
+namespace gs2 { namespace  {
 
 /**
  * ウォレットの詳細
@@ -39,24 +39,49 @@ private:
     class Data : public detail::json::IModel
     {
     public:
+        /** ウォレットの詳細 のGRN */
+        optional<StringHolder> walletId;
+        /** ユーザーID */
+        optional<StringHolder> userId;
+        /** None */
+        
+        optional<Int32> slot;
         /** 単価 */
-        optional<Double> price;
-        /** 所持数 */
+        
+        optional<Float> price;
+        /** 所持量 */
+        
         optional<Int32> count;
+        /** 作成日時 */
+        
+        optional<Int64> createAt;
+        /** 最終更新日時 */
+        
+        optional<Int64> updateAt;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            walletId(data.walletId),
+            userId(data.userId),
+            slot(data.slot),
             price(data.price),
-            count(data.count)
+            count(data.count),
+            createAt(data.createAt),
+            updateAt(data.updateAt)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
+            walletId(std::move(data.walletId)),
+            userId(std::move(data.userId)),
+            slot(std::move(data.slot)),
             price(std::move(data.price)),
-            count(std::move(data.count))
+            count(std::move(data.count)),
+            createAt(std::move(data.createAt)),
+            updateAt(std::move(data.updateAt))
         {}
 
         ~Data() = default;
@@ -67,10 +92,28 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "price") == 0) {
-                if (jsonValue.IsDouble())
+            if (std::strcmp(name, "walletId") == 0) {
+                if (jsonValue.IsString())
                 {
-                    this->price = jsonValue.GetDouble();
+                    this->walletId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "userId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->userId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "slot") == 0) {
+                if (jsonValue.IsInt())
+                {
+                    this->slot = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name, "price") == 0) {
+                if (jsonValue.IsFloat())
+                {
+                    this->price = jsonValue.GetFloat();
                 }
             }
             else if (std::strcmp(name, "count") == 0) {
@@ -79,9 +122,21 @@ private:
                     this->count = jsonValue.GetInt();
                 }
             }
+            else if (std::strcmp(name, "createAt") == 0) {
+                if (jsonValue.IsInt64())
+                {
+                    this->createAt = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name, "updateAt") == 0) {
+                if (jsonValue.IsInt64())
+                {
+                    this->updateAt = jsonValue.GetInt64();
+                }
+            }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -159,14 +214,72 @@ public:
     {
         return this;
     }
+    /**
+     * ウォレットの詳細 のGRNを取得
+     *
+     * @return ウォレットの詳細 のGRN
+     */
+    const optional<StringHolder>& getWalletId() const
+    {
+        return ensureData().walletId;
+    }
 
+    /**
+     * ウォレットの詳細 のGRNを設定
+     *
+     * @param walletId ウォレットの詳細 のGRN
+     */
+    void setWalletId(const Char* walletId)
+    {
+        ensureData().walletId.emplace(walletId);
+    }
+
+    /**
+     * ユーザーIDを取得
+     *
+     * @return ユーザーID
+     */
+    const optional<StringHolder>& getUserId() const
+    {
+        return ensureData().userId;
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    void setUserId(const Char* userId)
+    {
+        ensureData().userId.emplace(userId);
+    }
+
+    /**
+     * Noneを取得
+     *
+     * @return None
+     */
+    const optional<Int32>& getSlot() const
+    {
+        return ensureData().slot;
+    }
+
+    /**
+     * Noneを設定
+     *
+     * @param slot None
+     */
+    void setSlot(Int32 slot)
+    {
+        ensureData().slot.emplace(slot);
+    }
 
     /**
      * 単価を取得
      *
      * @return 単価
      */
-    const optional<Double>& getPrice() const
+    const optional<Float>& getPrice() const
     {
         return ensureData().price;
     }
@@ -176,15 +289,15 @@ public:
      *
      * @param price 単価
      */
-    void setPrice(Double price)
+    void setPrice(Float price)
     {
         ensureData().price.emplace(price);
     }
 
     /**
-     * 所持数を取得
+     * 所持量を取得
      *
-     * @return 所持数
+     * @return 所持量
      */
     const optional<Int32>& getCount() const
     {
@@ -192,13 +305,53 @@ public:
     }
 
     /**
-     * 所持数を設定
+     * 所持量を設定
      *
-     * @param count 所持数
+     * @param count 所持量
      */
     void setCount(Int32 count)
     {
         ensureData().count.emplace(count);
+    }
+
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getCreateAt() const
+    {
+        return ensureData().createAt;
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    void setCreateAt(Int64 createAt)
+    {
+        ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 最終更新日時を取得
+     *
+     * @return 最終更新日時
+     */
+    const optional<Int64>& getUpdateAt() const
+    {
+        return ensureData().updateAt;
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    void setUpdateAt(Int64 updateAt)
+    {
+        ensureData().updateAt.emplace(updateAt);
     }
 
 

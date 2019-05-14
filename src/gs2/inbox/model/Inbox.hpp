@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,10 +25,10 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace inbox {
+namespace gs2 { namespace  {
 
 /**
- * 受信ボックス
+ * プレゼントボックス
  *
  * @author Game Server Services, Inc.
  *
@@ -39,36 +39,41 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 受信ボックスGRN */
+        /** プレゼントボックス のGRN */
         optional<StringHolder> inboxId;
         /** オーナーID */
         optional<StringHolder> ownerId;
-        /** 受信ボックス名 */
+        /** プレゼントボックス名 */
         optional<StringHolder> name;
         /** 説明文 */
         optional<StringHolder> description;
-        /** サービスクラス */
-        optional<StringHolder> serviceClass;
-        /** 開封時自動削除 */
-        optional<Bool> autoDelete;
-        /** メッセージの開封通知先URL */
-        optional<StringHolder> cooperationUrl;
-        /** メッセージ受信時 に実行されるGS2-Script */
-        optional<StringHolder> receiveMessageTriggerScript;
-        /** メッセージ受信完了時 に実行されるGS2-Script */
-        optional<StringHolder> receiveMessageDoneTriggerScript;
-        /** メッセージ開封時 に実行されるGS2-Script */
-        optional<StringHolder> readMessageTriggerScript;
-        /** メッセージ開封完了時 に実行されるGS2-Script */
-        optional<StringHolder> readMessageDoneTriggerScript;
-        /** メッセージ削除時 に実行されるGS2-Script */
-        optional<StringHolder> deleteMessageTriggerScript;
-        /** メッセージ削除完了時 に実行されるGS2-Script */
-        optional<StringHolder> deleteMessageDoneTriggerScript;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
-        /** 最終更新日時(エポック秒) */
-        optional<Int32> updateAt;
+        /** 開封したメッセージを自動的に削除するか */
+        
+        optional<Bool> isAutomaticDeletingEnabled;
+        /** メッセージ受信時 に実行されるスクリプト のGRN */
+        optional<StringHolder> receiveMessageTriggerScriptId;
+        /** メッセージ受信完了時 に実行されるスクリプト のGRN */
+        optional<StringHolder> receiveMessageDoneTriggerScriptId;
+        /** メッセージ受信完了時 にジョブが登録されるキュー のGRN */
+        optional<StringHolder> receiveMessageDoneTriggerQueueId;
+        /** メッセージ開封時 に実行されるスクリプト のGRN */
+        optional<StringHolder> readMessageTriggerScriptId;
+        /** メッセージ開封完了時 に実行されるスクリプト のGRN */
+        optional<StringHolder> readMessageDoneTriggerScriptId;
+        /** メッセージ開封完了時 にジョブが登録されるキュー のGRN */
+        optional<StringHolder> readMessageDoneTriggerQueueId;
+        /** メッセージ削除時 に実行されるスクリプト のGRN */
+        optional<StringHolder> deleteMessageTriggerScriptId;
+        /** メッセージ削除完了時 に実行されるスクリプト のGRN */
+        optional<StringHolder> deleteMessageDoneTriggerScriptId;
+        /** メッセージ削除完了時 にジョブが登録されるキュー のGRN */
+        optional<StringHolder> deleteMessageDoneTriggerQueueId;
+        /** 作成日時 */
+        
+        optional<Int64> createAt;
+        /** 最終更新日時 */
+        
+        optional<Int64> updateAt;
 
         Data()
         {}
@@ -79,15 +84,16 @@ private:
             ownerId(data.ownerId),
             name(data.name),
             description(data.description),
-            serviceClass(data.serviceClass),
-            autoDelete(data.autoDelete),
-            cooperationUrl(data.cooperationUrl),
-            receiveMessageTriggerScript(data.receiveMessageTriggerScript),
-            receiveMessageDoneTriggerScript(data.receiveMessageDoneTriggerScript),
-            readMessageTriggerScript(data.readMessageTriggerScript),
-            readMessageDoneTriggerScript(data.readMessageDoneTriggerScript),
-            deleteMessageTriggerScript(data.deleteMessageTriggerScript),
-            deleteMessageDoneTriggerScript(data.deleteMessageDoneTriggerScript),
+            isAutomaticDeletingEnabled(data.isAutomaticDeletingEnabled),
+            receiveMessageTriggerScriptId(data.receiveMessageTriggerScriptId),
+            receiveMessageDoneTriggerScriptId(data.receiveMessageDoneTriggerScriptId),
+            receiveMessageDoneTriggerQueueId(data.receiveMessageDoneTriggerQueueId),
+            readMessageTriggerScriptId(data.readMessageTriggerScriptId),
+            readMessageDoneTriggerScriptId(data.readMessageDoneTriggerScriptId),
+            readMessageDoneTriggerQueueId(data.readMessageDoneTriggerQueueId),
+            deleteMessageTriggerScriptId(data.deleteMessageTriggerScriptId),
+            deleteMessageDoneTriggerScriptId(data.deleteMessageDoneTriggerScriptId),
+            deleteMessageDoneTriggerQueueId(data.deleteMessageDoneTriggerQueueId),
             createAt(data.createAt),
             updateAt(data.updateAt)
         {}
@@ -98,15 +104,16 @@ private:
             ownerId(std::move(data.ownerId)),
             name(std::move(data.name)),
             description(std::move(data.description)),
-            serviceClass(std::move(data.serviceClass)),
-            autoDelete(std::move(data.autoDelete)),
-            cooperationUrl(std::move(data.cooperationUrl)),
-            receiveMessageTriggerScript(std::move(data.receiveMessageTriggerScript)),
-            receiveMessageDoneTriggerScript(std::move(data.receiveMessageDoneTriggerScript)),
-            readMessageTriggerScript(std::move(data.readMessageTriggerScript)),
-            readMessageDoneTriggerScript(std::move(data.readMessageDoneTriggerScript)),
-            deleteMessageTriggerScript(std::move(data.deleteMessageTriggerScript)),
-            deleteMessageDoneTriggerScript(std::move(data.deleteMessageDoneTriggerScript)),
+            isAutomaticDeletingEnabled(std::move(data.isAutomaticDeletingEnabled)),
+            receiveMessageTriggerScriptId(std::move(data.receiveMessageTriggerScriptId)),
+            receiveMessageDoneTriggerScriptId(std::move(data.receiveMessageDoneTriggerScriptId)),
+            receiveMessageDoneTriggerQueueId(std::move(data.receiveMessageDoneTriggerQueueId)),
+            readMessageTriggerScriptId(std::move(data.readMessageTriggerScriptId)),
+            readMessageDoneTriggerScriptId(std::move(data.readMessageDoneTriggerScriptId)),
+            readMessageDoneTriggerQueueId(std::move(data.readMessageDoneTriggerQueueId)),
+            deleteMessageTriggerScriptId(std::move(data.deleteMessageTriggerScriptId)),
+            deleteMessageDoneTriggerScriptId(std::move(data.deleteMessageDoneTriggerScriptId)),
+            deleteMessageDoneTriggerQueueId(std::move(data.deleteMessageDoneTriggerQueueId)),
             createAt(std::move(data.createAt)),
             updateAt(std::move(data.updateAt))
         {}
@@ -143,75 +150,81 @@ private:
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "serviceClass") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->serviceClass.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "autoDelete") == 0) {
+            else if (std::strcmp(name, "isAutomaticDeletingEnabled") == 0) {
                 if (jsonValue.IsBool())
                 {
-                    this->autoDelete = jsonValue.GetBool();
+                    this->isAutomaticDeletingEnabled = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name, "cooperationUrl") == 0) {
+            else if (std::strcmp(name, "receiveMessageTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->cooperationUrl.emplace(jsonValue.GetString());
+                    this->receiveMessageTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "receiveMessageTriggerScript") == 0) {
+            else if (std::strcmp(name, "receiveMessageDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->receiveMessageTriggerScript.emplace(jsonValue.GetString());
+                    this->receiveMessageDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "receiveMessageDoneTriggerScript") == 0) {
+            else if (std::strcmp(name, "receiveMessageDoneTriggerQueueId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->receiveMessageDoneTriggerScript.emplace(jsonValue.GetString());
+                    this->receiveMessageDoneTriggerQueueId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "readMessageTriggerScript") == 0) {
+            else if (std::strcmp(name, "readMessageTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->readMessageTriggerScript.emplace(jsonValue.GetString());
+                    this->readMessageTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "readMessageDoneTriggerScript") == 0) {
+            else if (std::strcmp(name, "readMessageDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->readMessageDoneTriggerScript.emplace(jsonValue.GetString());
+                    this->readMessageDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "deleteMessageTriggerScript") == 0) {
+            else if (std::strcmp(name, "readMessageDoneTriggerQueueId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->deleteMessageTriggerScript.emplace(jsonValue.GetString());
+                    this->readMessageDoneTriggerQueueId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "deleteMessageDoneTriggerScript") == 0) {
+            else if (std::strcmp(name, "deleteMessageTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->deleteMessageDoneTriggerScript.emplace(jsonValue.GetString());
+                    this->deleteMessageTriggerScriptId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "deleteMessageDoneTriggerScriptId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->deleteMessageDoneTriggerScriptId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "deleteMessageDoneTriggerQueueId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->deleteMessageDoneTriggerQueueId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->createAt = jsonValue.GetInt64();
                 }
             }
             else if (std::strcmp(name, "updateAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt();
+                    this->updateAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -289,12 +302,10 @@ public:
     {
         return this;
     }
-
-
     /**
-     * 受信ボックスGRNを取得
+     * プレゼントボックス のGRNを取得
      *
-     * @return 受信ボックスGRN
+     * @return プレゼントボックス のGRN
      */
     const optional<StringHolder>& getInboxId() const
     {
@@ -302,9 +313,9 @@ public:
     }
 
     /**
-     * 受信ボックスGRNを設定
+     * プレゼントボックス のGRNを設定
      *
-     * @param inboxId 受信ボックスGRN
+     * @param inboxId プレゼントボックス のGRN
      */
     void setInboxId(const Char* inboxId)
     {
@@ -332,9 +343,9 @@ public:
     }
 
     /**
-     * 受信ボックス名を取得
+     * プレゼントボックス名を取得
      *
-     * @return 受信ボックス名
+     * @return プレゼントボックス名
      */
     const optional<StringHolder>& getName() const
     {
@@ -342,9 +353,9 @@ public:
     }
 
     /**
-     * 受信ボックス名を設定
+     * プレゼントボックス名を設定
      *
-     * @param name 受信ボックス名
+     * @param name プレゼントボックス名
      */
     void setName(const Char* name)
     {
@@ -372,221 +383,241 @@ public:
     }
 
     /**
-     * サービスクラスを取得
+     * 開封したメッセージを自動的に削除するかを取得
      *
-     * @return サービスクラス
+     * @return 開封したメッセージを自動的に削除するか
      */
-    const optional<StringHolder>& getServiceClass() const
+    const optional<Bool>& getIsAutomaticDeletingEnabled() const
     {
-        return ensureData().serviceClass;
+        return ensureData().isAutomaticDeletingEnabled;
     }
 
     /**
-     * サービスクラスを設定
+     * 開封したメッセージを自動的に削除するかを設定
      *
-     * @param serviceClass サービスクラス
+     * @param isAutomaticDeletingEnabled 開封したメッセージを自動的に削除するか
      */
-    void setServiceClass(const Char* serviceClass)
+    void setIsAutomaticDeletingEnabled(Bool isAutomaticDeletingEnabled)
     {
-        ensureData().serviceClass.emplace(serviceClass);
+        ensureData().isAutomaticDeletingEnabled.emplace(isAutomaticDeletingEnabled);
     }
 
     /**
-     * 開封時自動削除を取得
+     * メッセージ受信時 に実行されるスクリプト のGRNを取得
      *
-     * @return 開封時自動削除
+     * @return メッセージ受信時 に実行されるスクリプト のGRN
      */
-    const optional<Bool>& getAutoDelete() const
+    const optional<StringHolder>& getReceiveMessageTriggerScriptId() const
     {
-        return ensureData().autoDelete;
+        return ensureData().receiveMessageTriggerScriptId;
     }
 
     /**
-     * 開封時自動削除を設定
+     * メッセージ受信時 に実行されるスクリプト のGRNを設定
      *
-     * @param autoDelete 開封時自動削除
+     * @param receiveMessageTriggerScriptId メッセージ受信時 に実行されるスクリプト のGRN
      */
-    void setAutoDelete(Bool autoDelete)
+    void setReceiveMessageTriggerScriptId(const Char* receiveMessageTriggerScriptId)
     {
-        ensureData().autoDelete.emplace(autoDelete);
+        ensureData().receiveMessageTriggerScriptId.emplace(receiveMessageTriggerScriptId);
     }
 
     /**
-     * メッセージの開封通知先URLを取得
+     * メッセージ受信完了時 に実行されるスクリプト のGRNを取得
      *
-     * @return メッセージの開封通知先URL
+     * @return メッセージ受信完了時 に実行されるスクリプト のGRN
      */
-    const optional<StringHolder>& getCooperationUrl() const
+    const optional<StringHolder>& getReceiveMessageDoneTriggerScriptId() const
     {
-        return ensureData().cooperationUrl;
+        return ensureData().receiveMessageDoneTriggerScriptId;
     }
 
     /**
-     * メッセージの開封通知先URLを設定
+     * メッセージ受信完了時 に実行されるスクリプト のGRNを設定
      *
-     * @param cooperationUrl メッセージの開封通知先URL
+     * @param receiveMessageDoneTriggerScriptId メッセージ受信完了時 に実行されるスクリプト のGRN
      */
-    void setCooperationUrl(const Char* cooperationUrl)
+    void setReceiveMessageDoneTriggerScriptId(const Char* receiveMessageDoneTriggerScriptId)
     {
-        ensureData().cooperationUrl.emplace(cooperationUrl);
+        ensureData().receiveMessageDoneTriggerScriptId.emplace(receiveMessageDoneTriggerScriptId);
     }
 
     /**
-     * メッセージ受信時 に実行されるGS2-Scriptを取得
+     * メッセージ受信完了時 にジョブが登録されるキュー のGRNを取得
      *
-     * @return メッセージ受信時 に実行されるGS2-Script
+     * @return メッセージ受信完了時 にジョブが登録されるキュー のGRN
      */
-    const optional<StringHolder>& getReceiveMessageTriggerScript() const
+    const optional<StringHolder>& getReceiveMessageDoneTriggerQueueId() const
     {
-        return ensureData().receiveMessageTriggerScript;
+        return ensureData().receiveMessageDoneTriggerQueueId;
     }
 
     /**
-     * メッセージ受信時 に実行されるGS2-Scriptを設定
+     * メッセージ受信完了時 にジョブが登録されるキュー のGRNを設定
      *
-     * @param receiveMessageTriggerScript メッセージ受信時 に実行されるGS2-Script
+     * @param receiveMessageDoneTriggerQueueId メッセージ受信完了時 にジョブが登録されるキュー のGRN
      */
-    void setReceiveMessageTriggerScript(const Char* receiveMessageTriggerScript)
+    void setReceiveMessageDoneTriggerQueueId(const Char* receiveMessageDoneTriggerQueueId)
     {
-        ensureData().receiveMessageTriggerScript.emplace(receiveMessageTriggerScript);
+        ensureData().receiveMessageDoneTriggerQueueId.emplace(receiveMessageDoneTriggerQueueId);
     }
 
     /**
-     * メッセージ受信完了時 に実行されるGS2-Scriptを取得
+     * メッセージ開封時 に実行されるスクリプト のGRNを取得
      *
-     * @return メッセージ受信完了時 に実行されるGS2-Script
+     * @return メッセージ開封時 に実行されるスクリプト のGRN
      */
-    const optional<StringHolder>& getReceiveMessageDoneTriggerScript() const
+    const optional<StringHolder>& getReadMessageTriggerScriptId() const
     {
-        return ensureData().receiveMessageDoneTriggerScript;
+        return ensureData().readMessageTriggerScriptId;
     }
 
     /**
-     * メッセージ受信完了時 に実行されるGS2-Scriptを設定
+     * メッセージ開封時 に実行されるスクリプト のGRNを設定
      *
-     * @param receiveMessageDoneTriggerScript メッセージ受信完了時 に実行されるGS2-Script
+     * @param readMessageTriggerScriptId メッセージ開封時 に実行されるスクリプト のGRN
      */
-    void setReceiveMessageDoneTriggerScript(const Char* receiveMessageDoneTriggerScript)
+    void setReadMessageTriggerScriptId(const Char* readMessageTriggerScriptId)
     {
-        ensureData().receiveMessageDoneTriggerScript.emplace(receiveMessageDoneTriggerScript);
+        ensureData().readMessageTriggerScriptId.emplace(readMessageTriggerScriptId);
     }
 
     /**
-     * メッセージ開封時 に実行されるGS2-Scriptを取得
+     * メッセージ開封完了時 に実行されるスクリプト のGRNを取得
      *
-     * @return メッセージ開封時 に実行されるGS2-Script
+     * @return メッセージ開封完了時 に実行されるスクリプト のGRN
      */
-    const optional<StringHolder>& getReadMessageTriggerScript() const
+    const optional<StringHolder>& getReadMessageDoneTriggerScriptId() const
     {
-        return ensureData().readMessageTriggerScript;
+        return ensureData().readMessageDoneTriggerScriptId;
     }
 
     /**
-     * メッセージ開封時 に実行されるGS2-Scriptを設定
+     * メッセージ開封完了時 に実行されるスクリプト のGRNを設定
      *
-     * @param readMessageTriggerScript メッセージ開封時 に実行されるGS2-Script
+     * @param readMessageDoneTriggerScriptId メッセージ開封完了時 に実行されるスクリプト のGRN
      */
-    void setReadMessageTriggerScript(const Char* readMessageTriggerScript)
+    void setReadMessageDoneTriggerScriptId(const Char* readMessageDoneTriggerScriptId)
     {
-        ensureData().readMessageTriggerScript.emplace(readMessageTriggerScript);
+        ensureData().readMessageDoneTriggerScriptId.emplace(readMessageDoneTriggerScriptId);
     }
 
     /**
-     * メッセージ開封完了時 に実行されるGS2-Scriptを取得
+     * メッセージ開封完了時 にジョブが登録されるキュー のGRNを取得
      *
-     * @return メッセージ開封完了時 に実行されるGS2-Script
+     * @return メッセージ開封完了時 にジョブが登録されるキュー のGRN
      */
-    const optional<StringHolder>& getReadMessageDoneTriggerScript() const
+    const optional<StringHolder>& getReadMessageDoneTriggerQueueId() const
     {
-        return ensureData().readMessageDoneTriggerScript;
+        return ensureData().readMessageDoneTriggerQueueId;
     }
 
     /**
-     * メッセージ開封完了時 に実行されるGS2-Scriptを設定
+     * メッセージ開封完了時 にジョブが登録されるキュー のGRNを設定
      *
-     * @param readMessageDoneTriggerScript メッセージ開封完了時 に実行されるGS2-Script
+     * @param readMessageDoneTriggerQueueId メッセージ開封完了時 にジョブが登録されるキュー のGRN
      */
-    void setReadMessageDoneTriggerScript(const Char* readMessageDoneTriggerScript)
+    void setReadMessageDoneTriggerQueueId(const Char* readMessageDoneTriggerQueueId)
     {
-        ensureData().readMessageDoneTriggerScript.emplace(readMessageDoneTriggerScript);
+        ensureData().readMessageDoneTriggerQueueId.emplace(readMessageDoneTriggerQueueId);
     }
 
     /**
-     * メッセージ削除時 に実行されるGS2-Scriptを取得
+     * メッセージ削除時 に実行されるスクリプト のGRNを取得
      *
-     * @return メッセージ削除時 に実行されるGS2-Script
+     * @return メッセージ削除時 に実行されるスクリプト のGRN
      */
-    const optional<StringHolder>& getDeleteMessageTriggerScript() const
+    const optional<StringHolder>& getDeleteMessageTriggerScriptId() const
     {
-        return ensureData().deleteMessageTriggerScript;
+        return ensureData().deleteMessageTriggerScriptId;
     }
 
     /**
-     * メッセージ削除時 に実行されるGS2-Scriptを設定
+     * メッセージ削除時 に実行されるスクリプト のGRNを設定
      *
-     * @param deleteMessageTriggerScript メッセージ削除時 に実行されるGS2-Script
+     * @param deleteMessageTriggerScriptId メッセージ削除時 に実行されるスクリプト のGRN
      */
-    void setDeleteMessageTriggerScript(const Char* deleteMessageTriggerScript)
+    void setDeleteMessageTriggerScriptId(const Char* deleteMessageTriggerScriptId)
     {
-        ensureData().deleteMessageTriggerScript.emplace(deleteMessageTriggerScript);
+        ensureData().deleteMessageTriggerScriptId.emplace(deleteMessageTriggerScriptId);
     }
 
     /**
-     * メッセージ削除完了時 に実行されるGS2-Scriptを取得
+     * メッセージ削除完了時 に実行されるスクリプト のGRNを取得
      *
-     * @return メッセージ削除完了時 に実行されるGS2-Script
+     * @return メッセージ削除完了時 に実行されるスクリプト のGRN
      */
-    const optional<StringHolder>& getDeleteMessageDoneTriggerScript() const
+    const optional<StringHolder>& getDeleteMessageDoneTriggerScriptId() const
     {
-        return ensureData().deleteMessageDoneTriggerScript;
+        return ensureData().deleteMessageDoneTriggerScriptId;
     }
 
     /**
-     * メッセージ削除完了時 に実行されるGS2-Scriptを設定
+     * メッセージ削除完了時 に実行されるスクリプト のGRNを設定
      *
-     * @param deleteMessageDoneTriggerScript メッセージ削除完了時 に実行されるGS2-Script
+     * @param deleteMessageDoneTriggerScriptId メッセージ削除完了時 に実行されるスクリプト のGRN
      */
-    void setDeleteMessageDoneTriggerScript(const Char* deleteMessageDoneTriggerScript)
+    void setDeleteMessageDoneTriggerScriptId(const Char* deleteMessageDoneTriggerScriptId)
     {
-        ensureData().deleteMessageDoneTriggerScript.emplace(deleteMessageDoneTriggerScript);
+        ensureData().deleteMessageDoneTriggerScriptId.emplace(deleteMessageDoneTriggerScriptId);
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * メッセージ削除完了時 にジョブが登録されるキュー のGRNを取得
      *
-     * @return 作成日時(エポック秒)
+     * @return メッセージ削除完了時 にジョブが登録されるキュー のGRN
      */
-    const optional<Int32>& getCreateAt() const
+    const optional<StringHolder>& getDeleteMessageDoneTriggerQueueId() const
+    {
+        return ensureData().deleteMessageDoneTriggerQueueId;
+    }
+
+    /**
+     * メッセージ削除完了時 にジョブが登録されるキュー のGRNを設定
+     *
+     * @param deleteMessageDoneTriggerQueueId メッセージ削除完了時 にジョブが登録されるキュー のGRN
+     */
+    void setDeleteMessageDoneTriggerQueueId(const Char* deleteMessageDoneTriggerQueueId)
+    {
+        ensureData().deleteMessageDoneTriggerQueueId.emplace(deleteMessageDoneTriggerQueueId);
+    }
+
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getCreateAt() const
     {
         return ensureData().createAt;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param createAt 作成日時(エポック秒)
+     * @param createAt 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
     }
 
     /**
-     * 最終更新日時(エポック秒)を取得
+     * 最終更新日時を取得
      *
-     * @return 最終更新日時(エポック秒)
+     * @return 最終更新日時
      */
-    const optional<Int32>& getUpdateAt() const
+    const optional<Int64>& getUpdateAt() const
     {
         return ensureData().updateAt;
     }
 
     /**
-     * 最終更新日時(エポック秒)を設定
+     * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時(エポック秒)
+     * @param updateAt 最終更新日時
      */
-    void setUpdateAt(Int32 updateAt)
+    void setUpdateAt(Int64 updateAt)
     {
         ensureData().updateAt.emplace(updateAt);
     }

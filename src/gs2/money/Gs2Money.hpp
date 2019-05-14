@@ -18,7 +18,6 @@
 #define GS2_MONEY_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
 #include "Gs2MoneyClient.hpp"
 #include "Gs2MoneyConst.hpp"

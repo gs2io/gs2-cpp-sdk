@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_LOCK_GS2LOCKCONST_HPP_
-#define GS2_LOCK_GS2LOCKCONST_HPP_
+#ifndef GS2_AUTH_GS2LOCKCONST_HPP_
+#define GS2_AUTH_GS2LOCKCONST_HPP_
 
 #include <gs2/core/Gs2Core.hpp>
 
@@ -39,4 +39,4 @@ public:
 
 } }
 
-#endif //GS2_LOCK_GS2LOCKCONST_HPP_
+#endif //GS2_AUTH_GS2LOCKCONST_HPP_

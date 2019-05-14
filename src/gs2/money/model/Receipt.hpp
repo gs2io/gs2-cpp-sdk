@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace money {
+namespace gs2 { namespace  {
 
 /**
  * レシート
@@ -39,30 +39,42 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザID */
+        /** レシート のGRN */
+        optional<StringHolder> receiptId;
+        /** トランザクションID */
+        optional<StringHolder> transactionId;
+        /** ユーザーID */
         optional<StringHolder> userId;
-        /** スロット番号 */
+        /** None */
+        
         optional<Int32> slot;
         /** 種類 */
         optional<StringHolder> type;
-        /** 金額 */
-        optional<Double> price;
+        /** 単価 */
+        
+        optional<Float> price;
         /** 有償課金通貨 */
+        
         optional<Int32> paid;
         /** 無償課金通貨 */
+        
         optional<Int32> free;
         /** 総数 */
+        
         optional<Int32> total;
-        /** 用途 */
-        optional<Int32> use;
-        /** 決済日時(エポック秒) */
-        optional<Int32> createAt;
+        /** ストアプラットフォームで販売されているコンテンツID */
+        optional<StringHolder> contentsId;
+        /** 作成日時 */
+        
+        optional<Int64> createAt;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            receiptId(data.receiptId),
+            transactionId(data.transactionId),
             userId(data.userId),
             slot(data.slot),
             type(data.type),
@@ -70,12 +82,14 @@ private:
             paid(data.paid),
             free(data.free),
             total(data.total),
-            use(data.use),
+            contentsId(data.contentsId),
             createAt(data.createAt)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
+            receiptId(std::move(data.receiptId)),
+            transactionId(std::move(data.transactionId)),
             userId(std::move(data.userId)),
             slot(std::move(data.slot)),
             type(std::move(data.type)),
@@ -83,7 +97,7 @@ private:
             paid(std::move(data.paid)),
             free(std::move(data.free)),
             total(std::move(data.total)),
-            use(std::move(data.use)),
+            contentsId(std::move(data.contentsId)),
             createAt(std::move(data.createAt))
         {}
 
@@ -95,7 +109,19 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "userId") == 0) {
+            if (std::strcmp(name, "receiptId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->receiptId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "transactionId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->transactionId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "userId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
@@ -114,9 +140,9 @@ private:
                 }
             }
             else if (std::strcmp(name, "price") == 0) {
-                if (jsonValue.IsDouble())
+                if (jsonValue.IsFloat())
                 {
-                    this->price = jsonValue.GetDouble();
+                    this->price = jsonValue.GetFloat();
                 }
             }
             else if (std::strcmp(name, "paid") == 0) {
@@ -137,21 +163,21 @@ private:
                     this->total = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "use") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name, "contentsId") == 0) {
+                if (jsonValue.IsString())
                 {
-                    this->use = jsonValue.GetInt();
+                    this->contentsId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->createAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -229,12 +255,50 @@ public:
     {
         return this;
     }
-
+    /**
+     * レシート のGRNを取得
+     *
+     * @return レシート のGRN
+     */
+    const optional<StringHolder>& getReceiptId() const
+    {
+        return ensureData().receiptId;
+    }
 
     /**
-     * ユーザIDを取得
+     * レシート のGRNを設定
      *
-     * @return ユーザID
+     * @param receiptId レシート のGRN
+     */
+    void setReceiptId(const Char* receiptId)
+    {
+        ensureData().receiptId.emplace(receiptId);
+    }
+
+    /**
+     * トランザクションIDを取得
+     *
+     * @return トランザクションID
+     */
+    const optional<StringHolder>& getTransactionId() const
+    {
+        return ensureData().transactionId;
+    }
+
+    /**
+     * トランザクションIDを設定
+     *
+     * @param transactionId トランザクションID
+     */
+    void setTransactionId(const Char* transactionId)
+    {
+        ensureData().transactionId.emplace(transactionId);
+    }
+
+    /**
+     * ユーザーIDを取得
+     *
+     * @return ユーザーID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -242,9 +306,9 @@ public:
     }
 
     /**
-     * ユーザIDを設定
+     * ユーザーIDを設定
      *
-     * @param userId ユーザID
+     * @param userId ユーザーID
      */
     void setUserId(const Char* userId)
     {
@@ -252,9 +316,9 @@ public:
     }
 
     /**
-     * スロット番号を取得
+     * Noneを取得
      *
-     * @return スロット番号
+     * @return None
      */
     const optional<Int32>& getSlot() const
     {
@@ -262,9 +326,9 @@ public:
     }
 
     /**
-     * スロット番号を設定
+     * Noneを設定
      *
-     * @param slot スロット番号
+     * @param slot None
      */
     void setSlot(Int32 slot)
     {
@@ -292,21 +356,21 @@ public:
     }
 
     /**
-     * 金額を取得
+     * 単価を取得
      *
-     * @return 金額
+     * @return 単価
      */
-    const optional<Double>& getPrice() const
+    const optional<Float>& getPrice() const
     {
         return ensureData().price;
     }
 
     /**
-     * 金額を設定
+     * 単価を設定
      *
-     * @param price 金額
+     * @param price 単価
      */
-    void setPrice(Double price)
+    void setPrice(Float price)
     {
         ensureData().price.emplace(price);
     }
@@ -372,41 +436,41 @@ public:
     }
 
     /**
-     * 用途を取得
+     * ストアプラットフォームで販売されているコンテンツIDを取得
      *
-     * @return 用途
+     * @return ストアプラットフォームで販売されているコンテンツID
      */
-    const optional<Int32>& getUse() const
+    const optional<StringHolder>& getContentsId() const
     {
-        return ensureData().use;
+        return ensureData().contentsId;
     }
 
     /**
-     * 用途を設定
+     * ストアプラットフォームで販売されているコンテンツIDを設定
      *
-     * @param use 用途
+     * @param contentsId ストアプラットフォームで販売されているコンテンツID
      */
-    void setUse(Int32 use)
+    void setContentsId(const Char* contentsId)
     {
-        ensureData().use.emplace(use);
+        ensureData().contentsId.emplace(contentsId);
     }
 
     /**
-     * 決済日時(エポック秒)を取得
+     * 作成日時を取得
      *
-     * @return 決済日時(エポック秒)
+     * @return 作成日時
      */
-    const optional<Int32>& getCreateAt() const
+    const optional<Int64>& getCreateAt() const
     {
         return ensureData().createAt;
     }
 
     /**
-     * 決済日時(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param createAt 決済日時(エポック秒)
+     * @param createAt 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
     }

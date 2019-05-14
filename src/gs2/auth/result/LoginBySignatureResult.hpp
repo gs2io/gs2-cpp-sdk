@@ -1,0 +1,241 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#ifndef GS2_AUTH_CONTROL_LOGINBYSIGNATURERESULT_HPP_
+#define GS2_AUTH_CONTROL_LOGINBYSIGNATURERESULT_HPP_
+
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/json/IModel.hpp>
+#include <gs2/core/json/JsonParser.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include "../model/model.hpp"
+
+namespace gs2 { namespace auth
+{
+
+/**
+ * 指定したユーザIDでGS2にログインし、アクセストークンを取得します のレスポンスモデル
+ *
+ * @author Game Server Services, Inc.
+ */
+class LoginBySignatureResult : public Gs2Object
+{
+private:
+    class Data : public detail::json::IModel
+    {
+    public:
+        /** アクセストークン */
+        optional<StringHolder> token;
+        /** ユーザーID */
+        optional<StringHolder> userId;
+        /** 有効期限 */
+        optional<Int64> expire;
+
+        Data()
+        {}
+
+        Data(const Data& data) :
+            detail::json::IModel(data),
+            token(data.token),
+            userId(data.userId),
+            expire(data.expire)
+        {}
+
+        Data(Data&& data) :
+            detail::json::IModel(std::move(data)),
+            token(std::move(data.token)),
+            userId(std::move(data.userId)),
+            expire(std::move(data.expire))
+        {}
+
+        ~Data() = default;
+
+        // TODO:
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+
+        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        {
+            if (std::strcmp(name, "token") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->token.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "userId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->userId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "expire") == 0) {
+                if (jsonValue.IsInt64())
+                {
+                    this->expire = jsonValue.GetInt64();
+                }
+            }
+        }
+    };
+
+    Data* m_pData;
+
+    Data& ensureData() {
+        if (m_pData == nullptr) {
+            m_pData = new Data();
+        }
+        return *m_pData;
+    }
+
+    const Data& ensureData() const {
+        if (m_pData == nullptr) {
+            *const_cast<Data**>(&m_pData) = new Data();
+        }
+        return *m_pData;
+    }
+
+public:
+    LoginBySignatureResult() :
+        m_pData(nullptr)
+    {}
+
+    LoginBySignatureResult(const LoginBySignatureResult& loginBySignatureResult) :
+        Gs2Object(loginBySignatureResult),
+        m_pData(loginBySignatureResult.m_pData != nullptr ? new Data(*loginBySignatureResult.m_pData) : nullptr)
+    {}
+
+    LoginBySignatureResult(LoginBySignatureResult&& loginBySignatureResult) :
+        Gs2Object(std::move(loginBySignatureResult)),
+        m_pData(loginBySignatureResult.m_pData)
+    {
+        loginBySignatureResult.m_pData = nullptr;
+    }
+
+    ~LoginBySignatureResult()
+    {
+        if (m_pData != nullptr)
+        {
+            delete m_pData;
+        }
+    }
+
+    LoginBySignatureResult& operator=(const LoginBySignatureResult& loginBySignatureResult)
+    {
+        Gs2Object::operator=(loginBySignatureResult);
+
+        if (m_pData != nullptr)
+        {
+            delete m_pData;
+        }
+        m_pData = new Data(*loginBySignatureResult.m_pData);
+
+        return *this;
+    }
+
+    LoginBySignatureResult& operator=(LoginBySignatureResult&& loginBySignatureResult)
+    {
+        Gs2Object::operator=(std::move(loginBySignatureResult));
+
+        if (m_pData != nullptr)
+        {
+            delete m_pData;
+        }
+        m_pData = loginBySignatureResult.m_pData;
+        loginBySignatureResult.m_pData = nullptr;
+
+        return *this;
+    }
+
+    const LoginBySignatureResult* operator->() const
+    {
+        return this;
+    }
+
+    LoginBySignatureResult* operator->()
+    {
+        return this;
+    }
+    /**
+     * アクセストークンを取得
+     *
+     * @return アクセストークン
+     */
+    const optional<StringHolder>& getToken() const
+    {
+        return ensureData().token;
+    }
+
+    /**
+     * アクセストークンを設定
+     *
+     * @param token アクセストークン
+     */
+    void setToken(const Char* token)
+    {
+        ensureData().token.emplace(token);
+    }
+
+    /**
+     * ユーザーIDを取得
+     *
+     * @return ユーザーID
+     */
+    const optional<StringHolder>& getUserId() const
+    {
+        return ensureData().userId;
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    void setUserId(const Char* userId)
+    {
+        ensureData().userId.emplace(userId);
+    }
+
+    /**
+     * 有効期限を取得
+     *
+     * @return 有効期限
+     */
+    const optional<Int64>& getExpire() const
+    {
+        return ensureData().expire;
+    }
+
+    /**
+     * 有効期限を設定
+     *
+     * @param expire 有効期限
+     */
+    void setExpire(Int64 expire)
+    {
+        ensureData().expire.emplace(expire);
+    }
+
+
+    detail::json::IModel& getModel()
+    {
+        return ensureData();
+    }
+};
+
+} }
+
+#endif //GS2_AUTH_CONTROL_LOGINBYSIGNATURERESULT_HPP_

@@ -17,9 +17,12 @@
 #ifndef GS2_SCHEDULE_MODEL_MODEL_HPP_
 #define GS2_SCHEDULE_MODEL_MODEL_HPP_
 
+#include <gs2/core/common.hpp>
 #include "Schedule.hpp"
 #include "EventMaster.hpp"
 #include "Trigger.hpp"
 #include "Event.hpp"
+#include "CurrentEventMaster.hpp"
+#include "ResponseCache.hpp"
 
 #endif //GS2_SCHEDULE_MODEL_MODEL_HPP_

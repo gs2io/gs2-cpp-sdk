@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,10 +25,10 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace account {
+namespace gs2 { namespace  {
 
 /**
- * 引き継ぎ情報
+ * 引き継ぎ設定
  *
  * @author Game Server Services, Inc.
  *
@@ -39,20 +39,25 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザID */
+        /** 引き継ぎ設定 のGRN */
+        optional<StringHolder> takeOverId;
+        /** ユーザーID */
         optional<StringHolder> userId;
-        /** アカウント種別 */
+        /** スロット番号 */
+        
         optional<Int32> type;
-        /** ユーザ識別子 */
+        /** 引き継ぎ用ユーザーID */
         optional<StringHolder> userIdentifier;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
+        /** 作成日時 */
+        
+        optional<Int64> createAt;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            takeOverId(data.takeOverId),
             userId(data.userId),
             type(data.type),
             userIdentifier(data.userIdentifier),
@@ -61,6 +66,7 @@ private:
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
+            takeOverId(std::move(data.takeOverId)),
             userId(std::move(data.userId)),
             type(std::move(data.type)),
             userIdentifier(std::move(data.userIdentifier)),
@@ -75,7 +81,13 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "userId") == 0) {
+            if (std::strcmp(name, "takeOverId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->takeOverId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "userId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
@@ -94,14 +106,14 @@ private:
                 }
             }
             else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->createAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -179,12 +191,30 @@ public:
     {
         return this;
     }
-
+    /**
+     * 引き継ぎ設定 のGRNを取得
+     *
+     * @return 引き継ぎ設定 のGRN
+     */
+    const optional<StringHolder>& getTakeOverId() const
+    {
+        return ensureData().takeOverId;
+    }
 
     /**
-     * ユーザIDを取得
+     * 引き継ぎ設定 のGRNを設定
      *
-     * @return ユーザID
+     * @param takeOverId 引き継ぎ設定 のGRN
+     */
+    void setTakeOverId(const Char* takeOverId)
+    {
+        ensureData().takeOverId.emplace(takeOverId);
+    }
+
+    /**
+     * ユーザーIDを取得
+     *
+     * @return ユーザーID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -192,9 +222,9 @@ public:
     }
 
     /**
-     * ユーザIDを設定
+     * ユーザーIDを設定
      *
-     * @param userId ユーザID
+     * @param userId ユーザーID
      */
     void setUserId(const Char* userId)
     {
@@ -202,9 +232,9 @@ public:
     }
 
     /**
-     * アカウント種別を取得
+     * スロット番号を取得
      *
-     * @return アカウント種別
+     * @return スロット番号
      */
     const optional<Int32>& getType() const
     {
@@ -212,9 +242,9 @@ public:
     }
 
     /**
-     * アカウント種別を設定
+     * スロット番号を設定
      *
-     * @param type アカウント種別
+     * @param type スロット番号
      */
     void setType(Int32 type)
     {
@@ -222,9 +252,9 @@ public:
     }
 
     /**
-     * ユーザ識別子を取得
+     * 引き継ぎ用ユーザーIDを取得
      *
-     * @return ユーザ識別子
+     * @return 引き継ぎ用ユーザーID
      */
     const optional<StringHolder>& getUserIdentifier() const
     {
@@ -232,9 +262,9 @@ public:
     }
 
     /**
-     * ユーザ識別子を設定
+     * 引き継ぎ用ユーザーIDを設定
      *
-     * @param userIdentifier ユーザ識別子
+     * @param userIdentifier 引き継ぎ用ユーザーID
      */
     void setUserIdentifier(const Char* userIdentifier)
     {
@@ -242,21 +272,21 @@ public:
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * 作成日時を取得
      *
-     * @return 作成日時(エポック秒)
+     * @return 作成日時
      */
-    const optional<Int32>& getCreateAt() const
+    const optional<Int64>& getCreateAt() const
     {
         return ensureData().createAt;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param createAt 作成日時(エポック秒)
+     * @param createAt 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
     }

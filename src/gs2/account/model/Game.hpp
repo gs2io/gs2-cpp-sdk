@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace account {
+namespace gs2 { namespace  {
 
 /**
  * ゲーム
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ゲームGRN */
+        /** ゲーム のGRN */
         optional<StringHolder> gameId;
         /** オーナーID */
         optional<StringHolder> ownerId;
@@ -47,30 +47,39 @@ private:
         optional<StringHolder> name;
         /** 説明文 */
         optional<StringHolder> description;
-        /** サービスクラス */
-        optional<StringHolder> serviceClass;
         /** アカウント引き継ぎ時にパスワードを変更するか */
+        
         optional<Bool> changePasswordIfTakeOver;
-        /** アカウント新規作成時 に実行されるGS2-Script */
-        optional<StringHolder> createAccountTriggerScript;
-        /** アカウント新規作成完了時 に実行されるGS2-Script */
-        optional<StringHolder> createAccountDoneTriggerScript;
-        /** 認証時 に実行されるGS2-Script */
-        optional<StringHolder> authenticationTriggerScript;
-        /** 認証完了時 に実行されるGS2-Script */
-        optional<StringHolder> authenticationDoneTriggerScript;
-        /** 引き継ぎ情報登録時 に実行されるGS2-Script */
-        optional<StringHolder> createTakeOverTriggerScript;
-        /** 引き継ぎ情報登録完了時 に実行されるGS2-Script */
-        optional<StringHolder> createTakeOverDoneTriggerScript;
-        /** 引き継ぎ実行時 に実行されるGS2-Script */
-        optional<StringHolder> doTakeOverTriggerScript;
-        /** 引き継ぎ実行完了時 に実行されるGS2-Script */
-        optional<StringHolder> doTakeOverDoneTriggerScript;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
-        /** 最終更新日時(エポック秒) */
-        optional<Int32> updateAt;
+        /** アカウント新規作成時 に実行されるスクリプト のGRN */
+        optional<StringHolder> createAccountTriggerScriptId;
+        /** アカウント新規作成完了時 に実行されるスクリプト のGRN */
+        optional<StringHolder> createAccountDoneTriggerScriptId;
+        /** アカウント新規作成完了時 にジョブが登録されるキュー のGRN */
+        optional<StringHolder> createAccountDoneTriggerQueueId;
+        /** 認証時 に実行されるスクリプト のGRN */
+        optional<StringHolder> authenticationTriggerScriptId;
+        /** 認証完了時 に実行されるスクリプト のGRN */
+        optional<StringHolder> authenticationDoneTriggerScriptId;
+        /** 認証完了時 にジョブが登録されるキュー のGRN */
+        optional<StringHolder> authenticationDoneTriggerQueueId;
+        /** 引き継ぎ情報登録時 に実行されるスクリプト のGRN */
+        optional<StringHolder> createTakeOverTriggerScriptId;
+        /** 引き継ぎ情報登録完了時 に実行されるスクリプト のGRN */
+        optional<StringHolder> createTakeOverDoneTriggerScriptId;
+        /** 引き継ぎ情報登録完了時 にジョブが登録されるキュー のGRN */
+        optional<StringHolder> createTakeOverDoneTriggerQueueId;
+        /** 引き継ぎ実行時 に実行されるスクリプト のGRN */
+        optional<StringHolder> doTakeOverTriggerScriptId;
+        /** 引き継ぎ実行完了時 に実行されるスクリプト のGRN */
+        optional<StringHolder> doTakeOverDoneTriggerScriptId;
+        /** 引き継ぎ実行完了時 にジョブが登録されるキュー のGRN */
+        optional<StringHolder> doTakeOverDoneTriggerQueueId;
+        /** 作成日時 */
+        
+        optional<Int64> createAt;
+        /** 最終更新日時 */
+        
+        optional<Int64> updateAt;
 
         Data()
         {}
@@ -81,16 +90,19 @@ private:
             ownerId(data.ownerId),
             name(data.name),
             description(data.description),
-            serviceClass(data.serviceClass),
             changePasswordIfTakeOver(data.changePasswordIfTakeOver),
-            createAccountTriggerScript(data.createAccountTriggerScript),
-            createAccountDoneTriggerScript(data.createAccountDoneTriggerScript),
-            authenticationTriggerScript(data.authenticationTriggerScript),
-            authenticationDoneTriggerScript(data.authenticationDoneTriggerScript),
-            createTakeOverTriggerScript(data.createTakeOverTriggerScript),
-            createTakeOverDoneTriggerScript(data.createTakeOverDoneTriggerScript),
-            doTakeOverTriggerScript(data.doTakeOverTriggerScript),
-            doTakeOverDoneTriggerScript(data.doTakeOverDoneTriggerScript),
+            createAccountTriggerScriptId(data.createAccountTriggerScriptId),
+            createAccountDoneTriggerScriptId(data.createAccountDoneTriggerScriptId),
+            createAccountDoneTriggerQueueId(data.createAccountDoneTriggerQueueId),
+            authenticationTriggerScriptId(data.authenticationTriggerScriptId),
+            authenticationDoneTriggerScriptId(data.authenticationDoneTriggerScriptId),
+            authenticationDoneTriggerQueueId(data.authenticationDoneTriggerQueueId),
+            createTakeOverTriggerScriptId(data.createTakeOverTriggerScriptId),
+            createTakeOverDoneTriggerScriptId(data.createTakeOverDoneTriggerScriptId),
+            createTakeOverDoneTriggerQueueId(data.createTakeOverDoneTriggerQueueId),
+            doTakeOverTriggerScriptId(data.doTakeOverTriggerScriptId),
+            doTakeOverDoneTriggerScriptId(data.doTakeOverDoneTriggerScriptId),
+            doTakeOverDoneTriggerQueueId(data.doTakeOverDoneTriggerQueueId),
             createAt(data.createAt),
             updateAt(data.updateAt)
         {}
@@ -101,16 +113,19 @@ private:
             ownerId(std::move(data.ownerId)),
             name(std::move(data.name)),
             description(std::move(data.description)),
-            serviceClass(std::move(data.serviceClass)),
             changePasswordIfTakeOver(std::move(data.changePasswordIfTakeOver)),
-            createAccountTriggerScript(std::move(data.createAccountTriggerScript)),
-            createAccountDoneTriggerScript(std::move(data.createAccountDoneTriggerScript)),
-            authenticationTriggerScript(std::move(data.authenticationTriggerScript)),
-            authenticationDoneTriggerScript(std::move(data.authenticationDoneTriggerScript)),
-            createTakeOverTriggerScript(std::move(data.createTakeOverTriggerScript)),
-            createTakeOverDoneTriggerScript(std::move(data.createTakeOverDoneTriggerScript)),
-            doTakeOverTriggerScript(std::move(data.doTakeOverTriggerScript)),
-            doTakeOverDoneTriggerScript(std::move(data.doTakeOverDoneTriggerScript)),
+            createAccountTriggerScriptId(std::move(data.createAccountTriggerScriptId)),
+            createAccountDoneTriggerScriptId(std::move(data.createAccountDoneTriggerScriptId)),
+            createAccountDoneTriggerQueueId(std::move(data.createAccountDoneTriggerQueueId)),
+            authenticationTriggerScriptId(std::move(data.authenticationTriggerScriptId)),
+            authenticationDoneTriggerScriptId(std::move(data.authenticationDoneTriggerScriptId)),
+            authenticationDoneTriggerQueueId(std::move(data.authenticationDoneTriggerQueueId)),
+            createTakeOverTriggerScriptId(std::move(data.createTakeOverTriggerScriptId)),
+            createTakeOverDoneTriggerScriptId(std::move(data.createTakeOverDoneTriggerScriptId)),
+            createTakeOverDoneTriggerQueueId(std::move(data.createTakeOverDoneTriggerQueueId)),
+            doTakeOverTriggerScriptId(std::move(data.doTakeOverTriggerScriptId)),
+            doTakeOverDoneTriggerScriptId(std::move(data.doTakeOverDoneTriggerScriptId)),
+            doTakeOverDoneTriggerQueueId(std::move(data.doTakeOverDoneTriggerQueueId)),
             createAt(std::move(data.createAt)),
             updateAt(std::move(data.updateAt))
         {}
@@ -147,81 +162,99 @@ private:
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "serviceClass") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->serviceClass.emplace(jsonValue.GetString());
-                }
-            }
             else if (std::strcmp(name, "changePasswordIfTakeOver") == 0) {
                 if (jsonValue.IsBool())
                 {
                     this->changePasswordIfTakeOver = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name, "createAccountTriggerScript") == 0) {
+            else if (std::strcmp(name, "createAccountTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->createAccountTriggerScript.emplace(jsonValue.GetString());
+                    this->createAccountTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAccountDoneTriggerScript") == 0) {
+            else if (std::strcmp(name, "createAccountDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->createAccountDoneTriggerScript.emplace(jsonValue.GetString());
+                    this->createAccountDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "authenticationTriggerScript") == 0) {
+            else if (std::strcmp(name, "createAccountDoneTriggerQueueId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->authenticationTriggerScript.emplace(jsonValue.GetString());
+                    this->createAccountDoneTriggerQueueId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "authenticationDoneTriggerScript") == 0) {
+            else if (std::strcmp(name, "authenticationTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->authenticationDoneTriggerScript.emplace(jsonValue.GetString());
+                    this->authenticationTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createTakeOverTriggerScript") == 0) {
+            else if (std::strcmp(name, "authenticationDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->createTakeOverTriggerScript.emplace(jsonValue.GetString());
+                    this->authenticationDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createTakeOverDoneTriggerScript") == 0) {
+            else if (std::strcmp(name, "authenticationDoneTriggerQueueId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->createTakeOverDoneTriggerScript.emplace(jsonValue.GetString());
+                    this->authenticationDoneTriggerQueueId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "doTakeOverTriggerScript") == 0) {
+            else if (std::strcmp(name, "createTakeOverTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->doTakeOverTriggerScript.emplace(jsonValue.GetString());
+                    this->createTakeOverTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "doTakeOverDoneTriggerScript") == 0) {
+            else if (std::strcmp(name, "createTakeOverDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->doTakeOverDoneTriggerScript.emplace(jsonValue.GetString());
+                    this->createTakeOverDoneTriggerScriptId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "createTakeOverDoneTriggerQueueId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->createTakeOverDoneTriggerQueueId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "doTakeOverTriggerScriptId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->doTakeOverTriggerScriptId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "doTakeOverDoneTriggerScriptId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->doTakeOverDoneTriggerScriptId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "doTakeOverDoneTriggerQueueId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->doTakeOverDoneTriggerQueueId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->createAt = jsonValue.GetInt64();
                 }
             }
             else if (std::strcmp(name, "updateAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt();
+                    this->updateAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -299,12 +332,10 @@ public:
     {
         return this;
     }
-
-
     /**
-     * ゲームGRNを取得
+     * ゲーム のGRNを取得
      *
-     * @return ゲームGRN
+     * @return ゲーム のGRN
      */
     const optional<StringHolder>& getGameId() const
     {
@@ -312,9 +343,9 @@ public:
     }
 
     /**
-     * ゲームGRNを設定
+     * ゲーム のGRNを設定
      *
-     * @param gameId ゲームGRN
+     * @param gameId ゲーム のGRN
      */
     void setGameId(const Char* gameId)
     {
@@ -382,26 +413,6 @@ public:
     }
 
     /**
-     * サービスクラスを取得
-     *
-     * @return サービスクラス
-     */
-    const optional<StringHolder>& getServiceClass() const
-    {
-        return ensureData().serviceClass;
-    }
-
-    /**
-     * サービスクラスを設定
-     *
-     * @param serviceClass サービスクラス
-     */
-    void setServiceClass(const Char* serviceClass)
-    {
-        ensureData().serviceClass.emplace(serviceClass);
-    }
-
-    /**
      * アカウント引き継ぎ時にパスワードを変更するかを取得
      *
      * @return アカウント引き継ぎ時にパスワードを変更するか
@@ -422,201 +433,281 @@ public:
     }
 
     /**
-     * アカウント新規作成時 に実行されるGS2-Scriptを取得
+     * アカウント新規作成時 に実行されるスクリプト のGRNを取得
      *
-     * @return アカウント新規作成時 に実行されるGS2-Script
+     * @return アカウント新規作成時 に実行されるスクリプト のGRN
      */
-    const optional<StringHolder>& getCreateAccountTriggerScript() const
+    const optional<StringHolder>& getCreateAccountTriggerScriptId() const
     {
-        return ensureData().createAccountTriggerScript;
+        return ensureData().createAccountTriggerScriptId;
     }
 
     /**
-     * アカウント新規作成時 に実行されるGS2-Scriptを設定
+     * アカウント新規作成時 に実行されるスクリプト のGRNを設定
      *
-     * @param createAccountTriggerScript アカウント新規作成時 に実行されるGS2-Script
+     * @param createAccountTriggerScriptId アカウント新規作成時 に実行されるスクリプト のGRN
      */
-    void setCreateAccountTriggerScript(const Char* createAccountTriggerScript)
+    void setCreateAccountTriggerScriptId(const Char* createAccountTriggerScriptId)
     {
-        ensureData().createAccountTriggerScript.emplace(createAccountTriggerScript);
+        ensureData().createAccountTriggerScriptId.emplace(createAccountTriggerScriptId);
     }
 
     /**
-     * アカウント新規作成完了時 に実行されるGS2-Scriptを取得
+     * アカウント新規作成完了時 に実行されるスクリプト のGRNを取得
      *
-     * @return アカウント新規作成完了時 に実行されるGS2-Script
+     * @return アカウント新規作成完了時 に実行されるスクリプト のGRN
      */
-    const optional<StringHolder>& getCreateAccountDoneTriggerScript() const
+    const optional<StringHolder>& getCreateAccountDoneTriggerScriptId() const
     {
-        return ensureData().createAccountDoneTriggerScript;
+        return ensureData().createAccountDoneTriggerScriptId;
     }
 
     /**
-     * アカウント新規作成完了時 に実行されるGS2-Scriptを設定
+     * アカウント新規作成完了時 に実行されるスクリプト のGRNを設定
      *
-     * @param createAccountDoneTriggerScript アカウント新規作成完了時 に実行されるGS2-Script
+     * @param createAccountDoneTriggerScriptId アカウント新規作成完了時 に実行されるスクリプト のGRN
      */
-    void setCreateAccountDoneTriggerScript(const Char* createAccountDoneTriggerScript)
+    void setCreateAccountDoneTriggerScriptId(const Char* createAccountDoneTriggerScriptId)
     {
-        ensureData().createAccountDoneTriggerScript.emplace(createAccountDoneTriggerScript);
+        ensureData().createAccountDoneTriggerScriptId.emplace(createAccountDoneTriggerScriptId);
     }
 
     /**
-     * 認証時 に実行されるGS2-Scriptを取得
+     * アカウント新規作成完了時 にジョブが登録されるキュー のGRNを取得
      *
-     * @return 認証時 に実行されるGS2-Script
+     * @return アカウント新規作成完了時 にジョブが登録されるキュー のGRN
      */
-    const optional<StringHolder>& getAuthenticationTriggerScript() const
+    const optional<StringHolder>& getCreateAccountDoneTriggerQueueId() const
     {
-        return ensureData().authenticationTriggerScript;
+        return ensureData().createAccountDoneTriggerQueueId;
     }
 
     /**
-     * 認証時 に実行されるGS2-Scriptを設定
+     * アカウント新規作成完了時 にジョブが登録されるキュー のGRNを設定
      *
-     * @param authenticationTriggerScript 認証時 に実行されるGS2-Script
+     * @param createAccountDoneTriggerQueueId アカウント新規作成完了時 にジョブが登録されるキュー のGRN
      */
-    void setAuthenticationTriggerScript(const Char* authenticationTriggerScript)
+    void setCreateAccountDoneTriggerQueueId(const Char* createAccountDoneTriggerQueueId)
     {
-        ensureData().authenticationTriggerScript.emplace(authenticationTriggerScript);
+        ensureData().createAccountDoneTriggerQueueId.emplace(createAccountDoneTriggerQueueId);
     }
 
     /**
-     * 認証完了時 に実行されるGS2-Scriptを取得
+     * 認証時 に実行されるスクリプト のGRNを取得
      *
-     * @return 認証完了時 に実行されるGS2-Script
+     * @return 認証時 に実行されるスクリプト のGRN
      */
-    const optional<StringHolder>& getAuthenticationDoneTriggerScript() const
+    const optional<StringHolder>& getAuthenticationTriggerScriptId() const
     {
-        return ensureData().authenticationDoneTriggerScript;
+        return ensureData().authenticationTriggerScriptId;
     }
 
     /**
-     * 認証完了時 に実行されるGS2-Scriptを設定
+     * 認証時 に実行されるスクリプト のGRNを設定
      *
-     * @param authenticationDoneTriggerScript 認証完了時 に実行されるGS2-Script
+     * @param authenticationTriggerScriptId 認証時 に実行されるスクリプト のGRN
      */
-    void setAuthenticationDoneTriggerScript(const Char* authenticationDoneTriggerScript)
+    void setAuthenticationTriggerScriptId(const Char* authenticationTriggerScriptId)
     {
-        ensureData().authenticationDoneTriggerScript.emplace(authenticationDoneTriggerScript);
+        ensureData().authenticationTriggerScriptId.emplace(authenticationTriggerScriptId);
     }
 
     /**
-     * 引き継ぎ情報登録時 に実行されるGS2-Scriptを取得
+     * 認証完了時 に実行されるスクリプト のGRNを取得
      *
-     * @return 引き継ぎ情報登録時 に実行されるGS2-Script
+     * @return 認証完了時 に実行されるスクリプト のGRN
      */
-    const optional<StringHolder>& getCreateTakeOverTriggerScript() const
+    const optional<StringHolder>& getAuthenticationDoneTriggerScriptId() const
     {
-        return ensureData().createTakeOverTriggerScript;
+        return ensureData().authenticationDoneTriggerScriptId;
     }
 
     /**
-     * 引き継ぎ情報登録時 に実行されるGS2-Scriptを設定
+     * 認証完了時 に実行されるスクリプト のGRNを設定
      *
-     * @param createTakeOverTriggerScript 引き継ぎ情報登録時 に実行されるGS2-Script
+     * @param authenticationDoneTriggerScriptId 認証完了時 に実行されるスクリプト のGRN
      */
-    void setCreateTakeOverTriggerScript(const Char* createTakeOverTriggerScript)
+    void setAuthenticationDoneTriggerScriptId(const Char* authenticationDoneTriggerScriptId)
     {
-        ensureData().createTakeOverTriggerScript.emplace(createTakeOverTriggerScript);
+        ensureData().authenticationDoneTriggerScriptId.emplace(authenticationDoneTriggerScriptId);
     }
 
     /**
-     * 引き継ぎ情報登録完了時 に実行されるGS2-Scriptを取得
+     * 認証完了時 にジョブが登録されるキュー のGRNを取得
      *
-     * @return 引き継ぎ情報登録完了時 に実行されるGS2-Script
+     * @return 認証完了時 にジョブが登録されるキュー のGRN
      */
-    const optional<StringHolder>& getCreateTakeOverDoneTriggerScript() const
+    const optional<StringHolder>& getAuthenticationDoneTriggerQueueId() const
     {
-        return ensureData().createTakeOverDoneTriggerScript;
+        return ensureData().authenticationDoneTriggerQueueId;
     }
 
     /**
-     * 引き継ぎ情報登録完了時 に実行されるGS2-Scriptを設定
+     * 認証完了時 にジョブが登録されるキュー のGRNを設定
      *
-     * @param createTakeOverDoneTriggerScript 引き継ぎ情報登録完了時 に実行されるGS2-Script
+     * @param authenticationDoneTriggerQueueId 認証完了時 にジョブが登録されるキュー のGRN
      */
-    void setCreateTakeOverDoneTriggerScript(const Char* createTakeOverDoneTriggerScript)
+    void setAuthenticationDoneTriggerQueueId(const Char* authenticationDoneTriggerQueueId)
     {
-        ensureData().createTakeOverDoneTriggerScript.emplace(createTakeOverDoneTriggerScript);
+        ensureData().authenticationDoneTriggerQueueId.emplace(authenticationDoneTriggerQueueId);
     }
 
     /**
-     * 引き継ぎ実行時 に実行されるGS2-Scriptを取得
+     * 引き継ぎ情報登録時 に実行されるスクリプト のGRNを取得
      *
-     * @return 引き継ぎ実行時 に実行されるGS2-Script
+     * @return 引き継ぎ情報登録時 に実行されるスクリプト のGRN
      */
-    const optional<StringHolder>& getDoTakeOverTriggerScript() const
+    const optional<StringHolder>& getCreateTakeOverTriggerScriptId() const
     {
-        return ensureData().doTakeOverTriggerScript;
+        return ensureData().createTakeOverTriggerScriptId;
     }
 
     /**
-     * 引き継ぎ実行時 に実行されるGS2-Scriptを設定
+     * 引き継ぎ情報登録時 に実行されるスクリプト のGRNを設定
      *
-     * @param doTakeOverTriggerScript 引き継ぎ実行時 に実行されるGS2-Script
+     * @param createTakeOverTriggerScriptId 引き継ぎ情報登録時 に実行されるスクリプト のGRN
      */
-    void setDoTakeOverTriggerScript(const Char* doTakeOverTriggerScript)
+    void setCreateTakeOverTriggerScriptId(const Char* createTakeOverTriggerScriptId)
     {
-        ensureData().doTakeOverTriggerScript.emplace(doTakeOverTriggerScript);
+        ensureData().createTakeOverTriggerScriptId.emplace(createTakeOverTriggerScriptId);
     }
 
     /**
-     * 引き継ぎ実行完了時 に実行されるGS2-Scriptを取得
+     * 引き継ぎ情報登録完了時 に実行されるスクリプト のGRNを取得
      *
-     * @return 引き継ぎ実行完了時 に実行されるGS2-Script
+     * @return 引き継ぎ情報登録完了時 に実行されるスクリプト のGRN
      */
-    const optional<StringHolder>& getDoTakeOverDoneTriggerScript() const
+    const optional<StringHolder>& getCreateTakeOverDoneTriggerScriptId() const
     {
-        return ensureData().doTakeOverDoneTriggerScript;
+        return ensureData().createTakeOverDoneTriggerScriptId;
     }
 
     /**
-     * 引き継ぎ実行完了時 に実行されるGS2-Scriptを設定
+     * 引き継ぎ情報登録完了時 に実行されるスクリプト のGRNを設定
      *
-     * @param doTakeOverDoneTriggerScript 引き継ぎ実行完了時 に実行されるGS2-Script
+     * @param createTakeOverDoneTriggerScriptId 引き継ぎ情報登録完了時 に実行されるスクリプト のGRN
      */
-    void setDoTakeOverDoneTriggerScript(const Char* doTakeOverDoneTriggerScript)
+    void setCreateTakeOverDoneTriggerScriptId(const Char* createTakeOverDoneTriggerScriptId)
     {
-        ensureData().doTakeOverDoneTriggerScript.emplace(doTakeOverDoneTriggerScript);
+        ensureData().createTakeOverDoneTriggerScriptId.emplace(createTakeOverDoneTriggerScriptId);
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * 引き継ぎ情報登録完了時 にジョブが登録されるキュー のGRNを取得
      *
-     * @return 作成日時(エポック秒)
+     * @return 引き継ぎ情報登録完了時 にジョブが登録されるキュー のGRN
      */
-    const optional<Int32>& getCreateAt() const
+    const optional<StringHolder>& getCreateTakeOverDoneTriggerQueueId() const
+    {
+        return ensureData().createTakeOverDoneTriggerQueueId;
+    }
+
+    /**
+     * 引き継ぎ情報登録完了時 にジョブが登録されるキュー のGRNを設定
+     *
+     * @param createTakeOverDoneTriggerQueueId 引き継ぎ情報登録完了時 にジョブが登録されるキュー のGRN
+     */
+    void setCreateTakeOverDoneTriggerQueueId(const Char* createTakeOverDoneTriggerQueueId)
+    {
+        ensureData().createTakeOverDoneTriggerQueueId.emplace(createTakeOverDoneTriggerQueueId);
+    }
+
+    /**
+     * 引き継ぎ実行時 に実行されるスクリプト のGRNを取得
+     *
+     * @return 引き継ぎ実行時 に実行されるスクリプト のGRN
+     */
+    const optional<StringHolder>& getDoTakeOverTriggerScriptId() const
+    {
+        return ensureData().doTakeOverTriggerScriptId;
+    }
+
+    /**
+     * 引き継ぎ実行時 に実行されるスクリプト のGRNを設定
+     *
+     * @param doTakeOverTriggerScriptId 引き継ぎ実行時 に実行されるスクリプト のGRN
+     */
+    void setDoTakeOverTriggerScriptId(const Char* doTakeOverTriggerScriptId)
+    {
+        ensureData().doTakeOverTriggerScriptId.emplace(doTakeOverTriggerScriptId);
+    }
+
+    /**
+     * 引き継ぎ実行完了時 に実行されるスクリプト のGRNを取得
+     *
+     * @return 引き継ぎ実行完了時 に実行されるスクリプト のGRN
+     */
+    const optional<StringHolder>& getDoTakeOverDoneTriggerScriptId() const
+    {
+        return ensureData().doTakeOverDoneTriggerScriptId;
+    }
+
+    /**
+     * 引き継ぎ実行完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param doTakeOverDoneTriggerScriptId 引き継ぎ実行完了時 に実行されるスクリプト のGRN
+     */
+    void setDoTakeOverDoneTriggerScriptId(const Char* doTakeOverDoneTriggerScriptId)
+    {
+        ensureData().doTakeOverDoneTriggerScriptId.emplace(doTakeOverDoneTriggerScriptId);
+    }
+
+    /**
+     * 引き継ぎ実行完了時 にジョブが登録されるキュー のGRNを取得
+     *
+     * @return 引き継ぎ実行完了時 にジョブが登録されるキュー のGRN
+     */
+    const optional<StringHolder>& getDoTakeOverDoneTriggerQueueId() const
+    {
+        return ensureData().doTakeOverDoneTriggerQueueId;
+    }
+
+    /**
+     * 引き継ぎ実行完了時 にジョブが登録されるキュー のGRNを設定
+     *
+     * @param doTakeOverDoneTriggerQueueId 引き継ぎ実行完了時 にジョブが登録されるキュー のGRN
+     */
+    void setDoTakeOverDoneTriggerQueueId(const Char* doTakeOverDoneTriggerQueueId)
+    {
+        ensureData().doTakeOverDoneTriggerQueueId.emplace(doTakeOverDoneTriggerQueueId);
+    }
+
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getCreateAt() const
     {
         return ensureData().createAt;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param createAt 作成日時(エポック秒)
+     * @param createAt 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
     }
 
     /**
-     * 最終更新日時(エポック秒)を取得
+     * 最終更新日時を取得
      *
-     * @return 最終更新日時(エポック秒)
+     * @return 最終更新日時
      */
-    const optional<Int32>& getUpdateAt() const
+    const optional<Int64>& getUpdateAt() const
     {
         return ensureData().updateAt;
     }
 
     /**
-     * 最終更新日時(エポック秒)を設定
+     * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時(エポック秒)
+     * @param updateAt 最終更新日時
      */
-    void setUpdateAt(Int32 updateAt)
+    void setUpdateAt(Int64 updateAt)
     {
         ensureData().updateAt.emplace(updateAt);
     }

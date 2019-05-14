@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -23,25 +23,60 @@
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
+#include "request/DescribeCategoriesRequest.hpp"
+#include "request/CreateCategoryRequest.hpp"
+#include "request/GetCategoryStatusRequest.hpp"
+#include "request/GetCategoryRequest.hpp"
+#include "request/UpdateCategoryRequest.hpp"
+#include "request/DeleteCategoryRequest.hpp"
+#include "request/DescribeMutexesRequest.hpp"
+#include "request/LockRequest.hpp"
+#include "request/LockByUserIdRequest.hpp"
+#include "request/UnlockRequest.hpp"
+#include "request/UnlockByUserIdRequest.hpp"
+#include "request/GetMutexRequest.hpp"
+#include "request/GetMutexByUserIdRequest.hpp"
+#include "request/DeleteMutexByUserIdRequest.hpp"
+#include "result/DescribeCategoriesResult.hpp"
+#include "result/CreateCategoryResult.hpp"
+#include "result/GetCategoryStatusResult.hpp"
+#include "result/GetCategoryResult.hpp"
+#include "result/UpdateCategoryResult.hpp"
+#include "result/DeleteCategoryResult.hpp"
+#include "result/DescribeMutexesResult.hpp"
+#include "result/LockResult.hpp"
+#include "result/LockByUserIdResult.hpp"
+#include "result/UnlockResult.hpp"
+#include "result/UnlockByUserIdResult.hpp"
+#include "result/GetMutexResult.hpp"
+#include "result/GetMutexByUserIdResult.hpp"
+#include "result/DeleteMutexByUserIdResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace lock {
 
-typedef AsyncResult<CreateLockPoolResult> AsyncCreateLockPoolResult;
-typedef AsyncResult<void> AsyncDeleteLockPoolResult;
-typedef AsyncResult<DescribeLockPoolResult> AsyncDescribeLockPoolResult;
-typedef AsyncResult<DescribeServiceClassResult> AsyncDescribeServiceClassResult;
-typedef AsyncResult<GetLockPoolResult> AsyncGetLockPoolResult;
-typedef AsyncResult<GetLockPoolStatusResult> AsyncGetLockPoolStatusResult;
-typedef AsyncResult<UpdateLockPoolResult> AsyncUpdateLockPoolResult;
+typedef AsyncResult<DescribeCategoriesResult> AsyncDescribeCategoriesResult;
+typedef AsyncResult<CreateCategoryResult> AsyncCreateCategoryResult;
+typedef AsyncResult<GetCategoryStatusResult> AsyncGetCategoryStatusResult;
+typedef AsyncResult<GetCategoryResult> AsyncGetCategoryResult;
+typedef AsyncResult<UpdateCategoryResult> AsyncUpdateCategoryResult;
+typedef AsyncResult<DeleteCategoryResult> AsyncDeleteCategoryResult;
+typedef AsyncResult<DescribeMutexesResult> AsyncDescribeMutexesResult;
 typedef AsyncResult<LockResult> AsyncLockResult;
-typedef AsyncResult<LockByUserResult> AsyncLockByUserResult;
-typedef AsyncResult<void> AsyncUnlockResult;
-typedef AsyncResult<void> AsyncUnlockByUserResult;
-typedef AsyncResult<void> AsyncUnlockForceByUserResult;
+typedef AsyncResult<LockByUserIdResult> AsyncLockByUserIdResult;
+typedef AsyncResult<UnlockResult> AsyncUnlockResult;
+typedef AsyncResult<UnlockByUserIdResult> AsyncUnlockByUserIdResult;
+typedef AsyncResult<GetMutexResult> AsyncGetMutexResult;
+typedef AsyncResult<GetMutexByUserIdResult> AsyncGetMutexByUserIdResult;
+typedef AsyncResult<DeleteMutexByUserIdResult> AsyncDeleteMutexByUserIdResult;
 
+/**
+ * GS2 Lock API クライアント
+ *
+ * @author Game Server Services, Inc.
+ *
+ */
 class Gs2LockClient : public AbstractGs2ClientBase
 {
 private:
@@ -54,13 +89,13 @@ private:
 
 private:
 
-    void write(detail::json::JsonWriter& writer, const LockPool& obj)
+    void write(detail::json::JsonWriter& writer, const Category& obj)
     {
         writer.writeObjectStart();
-        if (obj.getLockPoolId())
+        if (obj.getCategoryId())
         {
-            writer.writePropertyName("lockPoolId");
-            writer.write(*obj.getLockPoolId());
+            writer.writePropertyName("categoryId");
+            writer.write(*obj.getCategoryId());
         }
         if (obj.getOwnerId())
         {
@@ -77,11 +112,6 @@ private:
             writer.writePropertyName("description");
             writer.write(*obj.getDescription());
         }
-        if (obj.getServiceClass())
-        {
-            writer.writePropertyName("serviceClass");
-            writer.write(*obj.getServiceClass());
-        }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
@@ -95,33 +125,74 @@ private:
         writer.writeObjectEnd();
     }
 
-    void write(detail::json::JsonWriter& writer, const Lock& obj)
+    void write(detail::json::JsonWriter& writer, const Mutex& obj)
     {
         writer.writeObjectStart();
-        if (obj.getLockPoolId())
+        if (obj.getMutexId())
         {
-            writer.writePropertyName("lockPoolId");
-            writer.write(*obj.getLockPoolId());
+            writer.writePropertyName("mutexId");
+            writer.write(*obj.getMutexId());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
             writer.write(*obj.getUserId());
         }
+        if (obj.getPropertyId())
+        {
+            writer.writePropertyName("propertyId");
+            writer.write(*obj.getPropertyId());
+        }
         if (obj.getTransactionId())
         {
             writer.writePropertyName("transactionId");
             writer.write(*obj.getTransactionId());
         }
-        if (obj.getResourceName())
+        if (obj.getReferenceCount())
         {
-            writer.writePropertyName("resourceName");
-            writer.write(*obj.getResourceName());
+            writer.writePropertyName("referenceCount");
+            writer.write(*obj.getReferenceCount());
         }
-        if (obj.getTtl())
+        if (obj.getCreateAt())
         {
-            writer.writePropertyName("ttl");
-            writer.write(*obj.getTtl());
+            writer.writePropertyName("createAt");
+            writer.write(*obj.getCreateAt());
+        }
+        if (obj.getTtlAt())
+        {
+            writer.writePropertyName("ttlAt");
+            writer.write(*obj.getTtlAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const ResponseCache& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getRegion())
+        {
+            writer.writePropertyName("region");
+            writer.write(*obj.getRegion());
+        }
+        if (obj.getOwnerId())
+        {
+            writer.writePropertyName("ownerId");
+            writer.write(*obj.getOwnerId());
+        }
+        if (obj.getResponseCacheId())
+        {
+            writer.writePropertyName("responseCacheId");
+            writer.write(*obj.getResponseCacheId());
+        }
+        if (obj.getRequestHash())
+        {
+            writer.writePropertyName("requestHash");
+            writer.write(*obj.getRequestHash());
+        }
+        if (obj.getResult())
+        {
+            writer.writePropertyName("result");
+            writer.write(*obj.getResult());
         }
         writer.writeObjectEnd();
     }
@@ -161,23 +232,46 @@ public:
     {
     }
 
-
-    /**
-     * ロックプールを新規作成します<br>
-     * <br>
-     *
+	/**
+	 * カテゴリの一覧を取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createLockPool(std::function<void(AsyncCreateLockPoolResult&)> callback, CreateLockPoolRequest& request)
+    void describeCategories(std::function<void(AsyncDescribeCategoriesResult&)> callback, DescribeCategoriesRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreateLockPoolResult>;
+        auto& httpRequest = *new detail::HttpRequest<DescribeCategoriesResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.describeCategories");
+        Char encodeBuffer[2048];
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * カテゴリを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createCategory(std::function<void(AsyncCreateCategoryResult&)> callback, CreateCategoryRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<CreateCategoryResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/lockPool");
-        }
+        url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.createCategory");
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
@@ -186,11 +280,6 @@ public:
             writer.writePropertyName("name");
             writer.write(*request.getName());
         }
-        if (request.getServiceClass())
-        {
-            writer.writePropertyName("serviceClass");
-            writer.write(*request.getServiceClass());
-        }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
@@ -200,159 +289,81 @@ public:
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * ロックプールを削除します<br>
-     * <br>
-     *
+	/**
+	 * カテゴリを取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteLockPool(std::function<void(AsyncDeleteLockPoolResult&)> callback, DeleteLockPoolRequest& request)
+    void getCategoryStatus(std::function<void(AsyncGetCategoryStatusResult&)> callback, GetCategoryStatusRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/lockPool/").append(detail::StringUtil::toStr(buffer, request.getLockPoolName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * ロックプールの一覧を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeLockPool(std::function<void(AsyncDescribeLockPoolResult&)> callback, DescribeLockPoolRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<DescribeLockPoolResult>;
+        auto& httpRequest = *new detail::HttpRequest<GetCategoryStatusResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/lockPool");
+        url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.getCategoryStatus");
+        Char encodeBuffer[2048];
+        if (request.getCategoryName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
-        if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("limit={value}").replace("{value}", encodeBuffer) + "&";
-        }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * サービスクラスの一覧を取得します<br>
-     * <br>
-     *
+	/**
+	 * カテゴリを取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeServiceClass(std::function<void(AsyncDescribeServiceClassResult&)> callback, DescribeServiceClassRequest& request)
+    void getCategory(std::function<void(AsyncGetCategoryResult&)> callback, GetCategoryRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeServiceClassResult>;
+        auto& httpRequest = *new detail::HttpRequest<GetCategoryResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/lockPool/serviceClass");
+        url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.getCategory");
+        Char encodeBuffer[2048];
+        if (request.getCategoryName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * ロックプールを取得します<br>
-     * <br>
-     *
+	/**
+	 * カテゴリを更新<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getLockPool(std::function<void(AsyncGetLockPoolResult&)> callback, GetLockPoolRequest& request)
+    void updateCategory(std::function<void(AsyncUpdateCategoryResult&)> callback, UpdateCategoryRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetLockPoolResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/lockPool/").append(detail::StringUtil::toStr(buffer, request.getLockPoolName())).append("");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * ロックプールの状態を取得します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getLockPoolStatus(std::function<void(AsyncGetLockPoolStatusResult&)> callback, GetLockPoolStatusRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<GetLockPoolStatusResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
-        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/lockPool/").append(detail::StringUtil::toStr(buffer, request.getLockPoolName())).append("/status");
-        }
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
-    }
-
-    /**
-     * ロックプールを更新します<br>
-     * <br>
-     *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateLockPool(std::function<void(AsyncUpdateLockPoolResult&)> callback, UpdateLockPoolRequest& request)
-    {
-        auto& httpRequest = *new detail::HttpRequest<UpdateLockPoolResult>;
+        auto& httpRequest = *new detail::HttpRequest<UpdateCategoryResult>;
         httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/lockPool/").append(detail::StringUtil::toStr(buffer, request.getLockPoolName())).append("");
+        url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.updateCategory");
+        Char encodeBuffer[2048];
+        if (request.getCategoryName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
-        if (request.getServiceClass())
-        {
-            writer.writePropertyName("serviceClass");
-            writer.write(*request.getServiceClass());
-        }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
@@ -362,142 +373,370 @@ public:
         auto body = writer.toString();
         auto bodySize = strlen(body);
         httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * ロックを取得します。<br>
-     * <br>
-     *
+	/**
+	 * カテゴリを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteCategory(std::function<void(AsyncDeleteCategoryResult&)> callback, DeleteCategoryRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DeleteCategoryResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.deleteCategory");
+        Char encodeBuffer[2048];
+        if (request.getCategoryName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ミューテックスの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeMutexes(std::function<void(AsyncDescribeMutexesResult&)> callback, DescribeMutexesRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeMutexesResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.describeMutexes");
+        Char encodeBuffer[2048];
+        if (request.getCategoryName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ミューテックスを取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
     void lock(std::function<void(AsyncLockResult&)> callback, LockRequest& request)
     {
         auto& httpRequest = *new detail::HttpRequest<LockResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.lock");
+        Char encodeBuffer[2048];
+        if (request.getCategoryName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPropertyId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPropertyId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getTransactionId())
         {
-            char buffer[128];
-            url.append("/lockPool/").append(detail::StringUtil::toStr(buffer, request.getLockPoolName())).append("/lock/transaction/").append(detail::StringUtil::toStr(buffer, request.getTransactionId())).append("/resource/").append(detail::StringUtil::toStr(buffer, request.getResourceName())).append("");
+            writer.writePropertyName("transactionId");
+            writer.write(*request.getTransactionId());
         }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
-        if (request.getTtl()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getTtl()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("ttl={value}").replace("{value}", encodeBuffer) + "&";
+        if (request.getTtl())
+        {
+            writer.writePropertyName("ttl");
+            writer.write(*request.getTtl());
         }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * ロックを取得します。<br>
-     * <br>
-     *
+	/**
+	 * ミューテックスを取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void lockByUser(std::function<void(AsyncLockByUserResult&)> callback, LockByUserRequest& request)
+    void lockByUserId(std::function<void(AsyncLockByUserIdResult&)> callback, LockByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<LockByUserResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& httpRequest = *new detail::HttpRequest<LockByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.lockByUserId");
+        Char encodeBuffer[2048];
+        if (request.getCategoryName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPropertyId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPropertyId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getTransactionId())
         {
-            char buffer[128];
-            url.append("/lockPool/").append(detail::StringUtil::toStr(buffer, request.getLockPoolName())).append("/lock/user/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("/transaction/").append(detail::StringUtil::toStr(buffer, request.getTransactionId())).append("/resource/").append(detail::StringUtil::toStr(buffer, request.getResourceName())).append("");
+            writer.writePropertyName("transactionId");
+            writer.write(*request.getTransactionId());
         }
-        detail::StringVariable queryString("");
-        Char encodeBuffer[1024];
-        if (request.getTtl()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getTtl()).c_str(), sizeof(encodeBuffer));
-            queryString += detail::StringVariable("ttl={value}").replace("{value}", encodeBuffer) + "&";
+        if (request.getTtl())
+        {
+            writer.writePropertyName("ttl");
+            writer.write(*request.getTtl());
         }
-        if (queryString.endsWith("&")) {
-            url += "?" + queryString.substr(0, queryString.size() - 1);
-        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * アンロックします。<br>
-     * <br>
-     *
+	/**
+	 * ミューテックスを取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
     void unlock(std::function<void(AsyncUnlockResult&)> callback, UnlockRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& httpRequest = *new detail::HttpRequest<UnlockResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/lockPool/").append(detail::StringUtil::toStr(buffer, request.getLockPoolName())).append("/lock/transaction/").append(detail::StringUtil::toStr(buffer, request.getTransactionId())).append("/resource/").append(detail::StringUtil::toStr(buffer, request.getResourceName())).append("");
+        url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.unlock");
+        Char encodeBuffer[2048];
+        if (request.getCategoryName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
+        if (request.getPropertyId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPropertyId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getTransactionId())
+        {
+            writer.writePropertyName("transactionId");
+            writer.write(*request.getTransactionId());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * アンロックします。<br>
-     * <br>
-     *
+	/**
+	 * ミューテックスを取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void unlockByUser(std::function<void(AsyncUnlockByUserResult&)> callback, UnlockByUserRequest& request)
+    void unlockByUserId(std::function<void(AsyncUnlockByUserIdResult&)> callback, UnlockByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& httpRequest = *new detail::HttpRequest<UnlockByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/lockPool/").append(detail::StringUtil::toStr(buffer, request.getLockPoolName())).append("/lock/user/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("/transaction/").append(detail::StringUtil::toStr(buffer, request.getTransactionId())).append("/resource/").append(detail::StringUtil::toStr(buffer, request.getResourceName())).append("");
+        url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.unlockByUserId");
+        Char encodeBuffer[2048];
+        if (request.getCategoryName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
+        if (request.getPropertyId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPropertyId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getTransactionId())
+        {
+            writer.writePropertyName("transactionId");
+            writer.write(*request.getTransactionId());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
-    /**
-     * 強制的にアンロックします。<br>
-     * <br>
-     * このAPIを利用すると、トランザクションやロックカウンターの状態を無視して強制的にアンロック出来ます。<br>
-     * <br>
-     *
+	/**
+	 * ミューテックスを取得<br>
+	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void unlockForceByUser(std::function<void(AsyncUnlockForceByUserResult&)> callback, UnlockForceByUserRequest& request)
+    void getMutex(std::function<void(AsyncGetMutexResult&)> callback, GetMutexRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& httpRequest = *new detail::HttpRequest<GetMutexResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
-        {
-            char buffer[128];
-            url.append("/lockPool/").append(detail::StringUtil::toStr(buffer, request.getLockPoolName())).append("/lock/user/").append(detail::StringUtil::toStr(buffer, request.getUserId())).append("/resource/").append(detail::StringUtil::toStr(buffer, request.getResourceName())).append("");
+        url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.getMutex");
+        Char encodeBuffer[2048];
+        if (request.getCategoryName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
+        if (request.getPropertyId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPropertyId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
+        }
+
         setUrl(httpRequest, url.c_str());
         setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
         httpRequest.setCallback(callback);
         send(httpRequest);
     }
 
+	/**
+	 * ミューテックスを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getMutexByUserId(std::function<void(AsyncGetMutexByUserIdResult&)> callback, GetMutexByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetMutexByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.getMutexByUserId");
+        Char encodeBuffer[2048];
+        if (request.getCategoryName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPropertyId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPropertyId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ミューテックスを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteMutexByUserId(std::function<void(AsyncDeleteMutexByUserIdResult&)> callback, DeleteMutexByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DeleteMutexByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.deleteMutexByUserId");
+        Char encodeBuffer[2048];
+        if (request.getCategoryName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPropertyId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPropertyId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
 };
 
 } }

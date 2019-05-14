@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_MONEY_GS2MONEYCONST_HPP_
-#define GS2_MONEY_GS2MONEYCONST_HPP_
+#ifndef GS2_AUTH_GS2MONEYCONST_HPP_
+#define GS2_AUTH_GS2MONEYCONST_HPP_
 
 #include <gs2/core/Gs2Core.hpp>
 
@@ -39,4 +39,4 @@ public:
 
 } }
 
-#endif //GS2_MONEY_GS2MONEYCONST_HPP_
+#endif //GS2_AUTH_GS2MONEYCONST_HPP_

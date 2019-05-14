@@ -1,0 +1,1071 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#ifndef GS2_DISTRIBUTOR_GS2DISTRIBUTORCLIENT_HPP_
+#define GS2_DISTRIBUTOR_GS2DISTRIBUTORCLIENT_HPP_
+
+#include <gs2/core/AbstractGs2Client.hpp>
+#include <gs2/core/json/JsonWriter.hpp>
+#include <gs2/core/network/HttpRequest.hpp>
+#include <gs2/core/util/StringUtil.hpp>
+#include <gs2/core/util/StringVariable.hpp>
+#include <gs2/core/util/UrlEncoder.hpp>
+#include "model/model.hpp"
+#include "request/DescribeDistributorsRequest.hpp"
+#include "request/CreateDistributorRequest.hpp"
+#include "request/GetDistributorStatusRequest.hpp"
+#include "request/GetDistributorRequest.hpp"
+#include "request/UpdateDistributorRequest.hpp"
+#include "request/DeleteDistributorRequest.hpp"
+#include "request/DescribeDistributorModelMastersRequest.hpp"
+#include "request/CreateDistributorModelMasterRequest.hpp"
+#include "request/GetDistributorModelMasterRequest.hpp"
+#include "request/UpdateDistributorModelMasterRequest.hpp"
+#include "request/DeleteDistributorModelMasterRequest.hpp"
+#include "request/DescribeDistributorModelsRequest.hpp"
+#include "request/GetDistributorModelRequest.hpp"
+#include "request/ExportMasterRequest.hpp"
+#include "request/GetCurrentDistributorMasterRequest.hpp"
+#include "request/UpdateCurrentDistributorMasterRequest.hpp"
+#include "request/DistributeRequest.hpp"
+#include "request/DistributeByUserIdRequest.hpp"
+#include "request/RunStampTaskRequest.hpp"
+#include "request/RunStampSheetRequest.hpp"
+#include "result/DescribeDistributorsResult.hpp"
+#include "result/CreateDistributorResult.hpp"
+#include "result/GetDistributorStatusResult.hpp"
+#include "result/GetDistributorResult.hpp"
+#include "result/UpdateDistributorResult.hpp"
+#include "result/DeleteDistributorResult.hpp"
+#include "result/DescribeDistributorModelMastersResult.hpp"
+#include "result/CreateDistributorModelMasterResult.hpp"
+#include "result/GetDistributorModelMasterResult.hpp"
+#include "result/UpdateDistributorModelMasterResult.hpp"
+#include "result/DeleteDistributorModelMasterResult.hpp"
+#include "result/DescribeDistributorModelsResult.hpp"
+#include "result/GetDistributorModelResult.hpp"
+#include "result/ExportMasterResult.hpp"
+#include "result/GetCurrentDistributorMasterResult.hpp"
+#include "result/UpdateCurrentDistributorMasterResult.hpp"
+#include "result/DistributeResult.hpp"
+#include "result/DistributeByUserIdResult.hpp"
+#include "result/RunStampTaskResult.hpp"
+#include "result/RunStampSheetResult.hpp"
+#include <cstring>
+
+namespace gs2 { namespace distributor {
+
+typedef AsyncResult<DescribeDistributorsResult> AsyncDescribeDistributorsResult;
+typedef AsyncResult<CreateDistributorResult> AsyncCreateDistributorResult;
+typedef AsyncResult<GetDistributorStatusResult> AsyncGetDistributorStatusResult;
+typedef AsyncResult<GetDistributorResult> AsyncGetDistributorResult;
+typedef AsyncResult<UpdateDistributorResult> AsyncUpdateDistributorResult;
+typedef AsyncResult<DeleteDistributorResult> AsyncDeleteDistributorResult;
+typedef AsyncResult<DescribeDistributorModelMastersResult> AsyncDescribeDistributorModelMastersResult;
+typedef AsyncResult<CreateDistributorModelMasterResult> AsyncCreateDistributorModelMasterResult;
+typedef AsyncResult<GetDistributorModelMasterResult> AsyncGetDistributorModelMasterResult;
+typedef AsyncResult<UpdateDistributorModelMasterResult> AsyncUpdateDistributorModelMasterResult;
+typedef AsyncResult<DeleteDistributorModelMasterResult> AsyncDeleteDistributorModelMasterResult;
+typedef AsyncResult<DescribeDistributorModelsResult> AsyncDescribeDistributorModelsResult;
+typedef AsyncResult<GetDistributorModelResult> AsyncGetDistributorModelResult;
+typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
+typedef AsyncResult<GetCurrentDistributorMasterResult> AsyncGetCurrentDistributorMasterResult;
+typedef AsyncResult<UpdateCurrentDistributorMasterResult> AsyncUpdateCurrentDistributorMasterResult;
+typedef AsyncResult<DistributeResult> AsyncDistributeResult;
+typedef AsyncResult<DistributeByUserIdResult> AsyncDistributeByUserIdResult;
+typedef AsyncResult<RunStampTaskResult> AsyncRunStampTaskResult;
+typedef AsyncResult<RunStampSheetResult> AsyncRunStampSheetResult;
+
+/**
+ * GS2 Distributor API クライアント
+ *
+ * @author Game Server Services, Inc.
+ *
+ */
+class Gs2DistributorClient : public AbstractGs2ClientBase
+{
+private:
+    constexpr static const Char* ENDPOINT = "distributor";
+
+    virtual const Char* getEndPoint() const
+    {
+        return ENDPOINT;
+    }
+
+private:
+
+    void write(detail::json::JsonWriter& writer, const Distributor& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getDistributorId())
+        {
+            writer.writePropertyName("distributorId");
+            writer.write(*obj.getDistributorId());
+        }
+        if (obj.getOwnerId())
+        {
+            writer.writePropertyName("ownerId");
+            writer.write(*obj.getOwnerId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*obj.getName());
+        }
+        if (obj.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*obj.getDescription());
+        }
+        if (obj.getCreateAt())
+        {
+            writer.writePropertyName("createAt");
+            writer.write(*obj.getCreateAt());
+        }
+        if (obj.getUpdateAt())
+        {
+            writer.writePropertyName("updateAt");
+            writer.write(*obj.getUpdateAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const DistributorModelMaster& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getDistributorModelId())
+        {
+            writer.writePropertyName("distributorModelId");
+            writer.write(*obj.getDistributorModelId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*obj.getName());
+        }
+        if (obj.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*obj.getDescription());
+        }
+        if (obj.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.write(*obj.getMetadata());
+        }
+        if (obj.getAssumeUserId())
+        {
+            writer.writePropertyName("assumeUserId");
+            writer.write(*obj.getAssumeUserId());
+        }
+        if (obj.getInboxId())
+        {
+            writer.writePropertyName("inboxId");
+            writer.write(*obj.getInboxId());
+        }
+        if (obj.getWhiteListTargetIds())
+        {
+            writer.writePropertyName("whiteListTargetIds");
+            writer.writeArrayStart();
+            auto& list = *obj.getWhiteListTargetIds();
+            for (Int32 i = 0; i < list.getCount(); ++i)
+            {
+                writer.write(list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        if (obj.getCreateAt())
+        {
+            writer.writePropertyName("createAt");
+            writer.write(*obj.getCreateAt());
+        }
+        if (obj.getUpdateAt())
+        {
+            writer.writePropertyName("updateAt");
+            writer.write(*obj.getUpdateAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const DistributorModel& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getDistributorModelId())
+        {
+            writer.writePropertyName("distributorModelId");
+            writer.write(*obj.getDistributorModelId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.write(*obj.getMetadata());
+        }
+        if (obj.getAssumeUserId())
+        {
+            writer.writePropertyName("assumeUserId");
+            writer.write(*obj.getAssumeUserId());
+        }
+        if (obj.getInboxId())
+        {
+            writer.writePropertyName("inboxId");
+            writer.write(*obj.getInboxId());
+        }
+        if (obj.getWhiteListTargetIds())
+        {
+            writer.writePropertyName("whiteListTargetIds");
+            writer.writeArrayStart();
+            auto& list = *obj.getWhiteListTargetIds();
+            for (Int32 i = 0; i < list.getCount(); ++i)
+            {
+                writer.write(list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const CurrentDistributorMaster& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getDistributorName())
+        {
+            writer.writePropertyName("distributorName");
+            writer.write(*obj.getDistributorName());
+        }
+        if (obj.getSettings())
+        {
+            writer.writePropertyName("settings");
+            writer.write(*obj.getSettings());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const Distribute& obj)
+    {
+        writer.writeObjectStart();
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const ResponseCache& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getRegion())
+        {
+            writer.writePropertyName("region");
+            writer.write(*obj.getRegion());
+        }
+        if (obj.getOwnerId())
+        {
+            writer.writePropertyName("ownerId");
+            writer.write(*obj.getOwnerId());
+        }
+        if (obj.getResponseCacheId())
+        {
+            writer.writePropertyName("responseCacheId");
+            writer.write(*obj.getResponseCacheId());
+        }
+        if (obj.getRequestHash())
+        {
+            writer.writePropertyName("requestHash");
+            writer.write(*obj.getRequestHash());
+        }
+        if (obj.getResult())
+        {
+            writer.writePropertyName("result");
+            writer.write(*obj.getResult());
+        }
+        writer.writeObjectEnd();
+    }
+
+    void write(detail::json::JsonWriter& writer, const DistributeResource& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getAction())
+        {
+            writer.writePropertyName("action");
+            writer.write(*obj.getAction());
+        }
+        if (obj.getRequest())
+        {
+            writer.writePropertyName("request");
+            writer.write(*obj.getRequest());
+        }
+        writer.writeObjectEnd();
+    }
+
+
+
+public:
+    /**
+     * コンストラクタ。
+     *
+     * @param credential 認証情報
+     */
+    Gs2DistributorClient(IGs2Credential& credential) :
+        AbstractGs2ClientBase(credential)
+    {
+    }
+
+    /**
+     * コンストラクタ。
+     *
+     * @param credential 認証情報
+	 * @param region アクセス先リージョン
+     */
+    Gs2DistributorClient(IGs2Credential& credential, const Region& region) :
+        AbstractGs2ClientBase(credential, region)
+    {
+    }
+
+    /**
+     * コンストラクタ。
+     *
+     * @param credential 認証情報
+	 * @param region アクセス先リージョン
+     */
+    Gs2DistributorClient(IGs2Credential& credential, const Char region[]) :
+        AbstractGs2ClientBase(credential, region)
+    {
+    }
+
+	/**
+	 * ディストリビュータの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeDistributors(std::function<void(AsyncDescribeDistributorsResult&)> callback, DescribeDistributorsRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeDistributorsResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributorFunctionHandler.describeDistributors");
+        Char encodeBuffer[2048];
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ディストリビュータを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createDistributor(std::function<void(AsyncCreateDistributorResult&)> callback, CreateDistributorRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<CreateDistributorResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributorFunctionHandler.createDistributor");
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*request.getName());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ディストリビュータを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getDistributorStatus(std::function<void(AsyncGetDistributorStatusResult&)> callback, GetDistributorStatusRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetDistributorStatusResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributorFunctionHandler.getDistributorStatus");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ディストリビュータを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getDistributor(std::function<void(AsyncGetDistributorResult&)> callback, GetDistributorRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetDistributorResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributorFunctionHandler.getDistributor");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ディストリビュータを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateDistributor(std::function<void(AsyncUpdateDistributorResult&)> callback, UpdateDistributorRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<UpdateDistributorResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributorFunctionHandler.updateDistributor");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ディストリビュータを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteDistributor(std::function<void(AsyncDeleteDistributorResult&)> callback, DeleteDistributorRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DeleteDistributorResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributorFunctionHandler.deleteDistributor");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ディストリビュータの種類の一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeDistributorModelMasters(std::function<void(AsyncDescribeDistributorModelMastersResult&)> callback, DescribeDistributorModelMastersRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeDistributorModelMastersResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributorModelMasterFunctionHandler.describeDistributorModelMasters");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getPageToken()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getLimit()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ディストリビュータの種類を新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createDistributorModelMaster(std::function<void(AsyncCreateDistributorModelMasterResult&)> callback, CreateDistributorModelMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<CreateDistributorModelMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributorModelMasterFunctionHandler.createDistributorModelMaster");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getName())
+        {
+            writer.writePropertyName("name");
+            writer.write(*request.getName());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        if (request.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.write(*request.getMetadata());
+        }
+        if (request.getAssumeUserId())
+        {
+            writer.writePropertyName("assumeUserId");
+            writer.write(*request.getAssumeUserId());
+        }
+        if (request.getInboxId())
+        {
+            writer.writePropertyName("inboxId");
+            writer.write(*request.getInboxId());
+        }
+        if (request.getWhiteListTargetIds())
+        {
+            writer.writePropertyName("whiteListTargetIds");
+            writer.writeArrayStart();
+            auto& list = *request.getWhiteListTargetIds();
+            for (Int32 i = 0; i < list.getCount(); ++i)
+            {
+                writer.write(list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ディストリビュータの種類を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getDistributorModelMaster(std::function<void(AsyncGetDistributorModelMasterResult&)> callback, GetDistributorModelMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetDistributorModelMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributorModelMasterFunctionHandler.getDistributorModelMaster");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getDistributorModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorModelName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ディストリビュータの種類を更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateDistributorModelMaster(std::function<void(AsyncUpdateDistributorModelMasterResult&)> callback, UpdateDistributorModelMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<UpdateDistributorModelMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributorModelMasterFunctionHandler.updateDistributorModelMaster");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getDistributorModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorModelName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.write(*request.getDescription());
+        }
+        if (request.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.write(*request.getMetadata());
+        }
+        if (request.getAssumeUserId())
+        {
+            writer.writePropertyName("assumeUserId");
+            writer.write(*request.getAssumeUserId());
+        }
+        if (request.getInboxId())
+        {
+            writer.writePropertyName("inboxId");
+            writer.write(*request.getInboxId());
+        }
+        if (request.getWhiteListTargetIds())
+        {
+            writer.writePropertyName("whiteListTargetIds");
+            writer.writeArrayStart();
+            auto& list = *request.getWhiteListTargetIds();
+            for (Int32 i = 0; i < list.getCount(); ++i)
+            {
+                writer.write(list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ディストリビュータの種類を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteDistributorModelMaster(std::function<void(AsyncDeleteDistributorModelMasterResult&)> callback, DeleteDistributorModelMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DeleteDistributorModelMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributorModelMasterFunctionHandler.deleteDistributorModelMaster");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getDistributorModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorModelName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ディストリビュータの種類の一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeDistributorModels(std::function<void(AsyncDescribeDistributorModelsResult&)> callback, DescribeDistributorModelsRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DescribeDistributorModelsResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributorModelFunctionHandler.describeDistributorModels");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ディストリビュータの種類を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getDistributorModel(std::function<void(AsyncGetDistributorModelResult&)> callback, GetDistributorModelRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetDistributorModelResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributorModelFunctionHandler.getDistributorModel");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getDistributorModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorModelName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ディストリビューターマスターJSONのマスターデータをエクスポートします<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<ExportMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FCurrentDistributorMasterFunctionHandler.exportMaster");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 現在有効なディストリビューターマスターJSONを取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getCurrentDistributorMaster(std::function<void(AsyncGetCurrentDistributorMasterResult&)> callback, GetCurrentDistributorMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<GetCurrentDistributorMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FCurrentDistributorMasterFunctionHandler.getCurrentDistributorMaster");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 現在有効なディストリビューターマスターJSONを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentDistributorMaster(std::function<void(AsyncUpdateCurrentDistributorMasterResult&)> callback, UpdateCurrentDistributorMasterRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<UpdateCurrentDistributorMasterResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FCurrentDistributorMasterFunctionHandler.updateCurrentDistributorMaster");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getSettings())
+        {
+            writer.writePropertyName("settings");
+            writer.write(*request.getSettings());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 所持品を配布する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void distribute(std::function<void(AsyncDistributeResult&)> callback, DistributeRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DistributeResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributeFunctionHandler.distribute");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getDistributorModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorModelName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getDistributeResource())
+        {
+            writer.writePropertyName("distributeResource");
+            write(writer, *request.getDistributeResource());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * ユーザーIDを指定して所持品を配布する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void distributeByUserId(std::function<void(AsyncDistributeByUserIdResult&)> callback, DistributeByUserIdRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<DistributeByUserIdResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributeFunctionHandler.distributeByUserId");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getDistributorModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorModelName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getUserId()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getDistributeResource())
+        {
+            writer.writePropertyName("distributeResource");
+            write(writer, *request.getDistributeResource());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 所持品を配布する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void runStampTask(std::function<void(AsyncRunStampTaskResult&)> callback, RunStampTaskRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<RunStampTaskResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributeFunctionHandler.runStampTask");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getDistributorModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorModelName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getStampTask())
+        {
+            writer.writePropertyName("stampTask");
+            writer.write(*request.getStampTask());
+        }
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.write(*request.getKeyId());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+
+	/**
+	 * 所持品を配布する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void runStampSheet(std::function<void(AsyncRunStampSheetResult&)> callback, RunStampSheetRequest& request)
+    {
+        auto& httpRequest = *new detail::HttpRequest<RunStampSheetResult>;
+        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
+        url.append("/distributor-handler?handler=gs2_distributor%2Fhandler%2FDistributeFunctionHandler.runStampSheet");
+        Char encodeBuffer[2048];
+        if (request.getDistributorName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorName={value}").replace("{value}", encodeBuffer);
+        }
+        if (request.getDistributorModelName()) {
+            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getDistributorModelName()).c_str(), sizeof(encodeBuffer));
+            url += "&" + detail::StringVariable("distributorModelName={value}").replace("{value}", encodeBuffer);
+        }
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getStampSheet())
+        {
+            writer.writePropertyName("stampSheet");
+            writer.write(*request.getStampSheet());
+        }
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.write(*request.getKeyId());
+        }
+        writer.writeObjectEnd();
+        auto body = writer.toString();
+        auto bodySize = strlen(body);
+        httpRequest.setRequestData(body, bodySize);
+
+        setUrl(httpRequest, url.c_str());
+        setHeaders(httpRequest, request);
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+        }
+        httpRequest.setCallback(callback);
+        send(httpRequest);
+    }
+};
+
+} }
+
+#endif //GS2_DISTRIBUTOR_GS2DISTRIBUTORCLIENT_HPP_

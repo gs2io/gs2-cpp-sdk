@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace script {
+namespace gs2 { namespace  {
 
 /**
  * スクリプト
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** スクリプトGRN */
+        /** スクリプト のGRN */
         optional<StringHolder> scriptId;
         /** オーナーID */
         optional<StringHolder> ownerId;
@@ -47,12 +47,14 @@ private:
         optional<StringHolder> name;
         /** 説明文 */
         optional<StringHolder> description;
-        /** スクリプトデータ */
+        /** Luaスクリプト */
         optional<StringHolder> script;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
-        /** 最終更新日時(エポック秒) */
-        optional<Int32> updateAt;
+        /** 作成日時 */
+        
+        optional<Int64> createAt;
+        /** 最終更新日時 */
+        
+        optional<Int64> updateAt;
 
         Data()
         {}
@@ -118,20 +120,20 @@ private:
                 }
             }
             else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->createAt = jsonValue.GetInt64();
                 }
             }
             else if (std::strcmp(name, "updateAt") == 0) {
-                if (jsonValue.IsInt())
+                if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt();
+                    this->updateAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
+
     Data* m_pData;
 
     Data& ensureData() {
@@ -209,12 +211,10 @@ public:
     {
         return this;
     }
-
-
     /**
-     * スクリプトGRNを取得
+     * スクリプト のGRNを取得
      *
-     * @return スクリプトGRN
+     * @return スクリプト のGRN
      */
     const optional<StringHolder>& getScriptId() const
     {
@@ -222,9 +222,9 @@ public:
     }
 
     /**
-     * スクリプトGRNを設定
+     * スクリプト のGRNを設定
      *
-     * @param scriptId スクリプトGRN
+     * @param scriptId スクリプト のGRN
      */
     void setScriptId(const Char* scriptId)
     {
@@ -292,9 +292,9 @@ public:
     }
 
     /**
-     * スクリプトデータを取得
+     * Luaスクリプトを取得
      *
-     * @return スクリプトデータ
+     * @return Luaスクリプト
      */
     const optional<StringHolder>& getScript() const
     {
@@ -302,9 +302,9 @@ public:
     }
 
     /**
-     * スクリプトデータを設定
+     * Luaスクリプトを設定
      *
-     * @param script スクリプトデータ
+     * @param script Luaスクリプト
      */
     void setScript(const Char* script)
     {
@@ -312,41 +312,41 @@ public:
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * 作成日時を取得
      *
-     * @return 作成日時(エポック秒)
+     * @return 作成日時
      */
-    const optional<Int32>& getCreateAt() const
+    const optional<Int64>& getCreateAt() const
     {
         return ensureData().createAt;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param createAt 作成日時(エポック秒)
+     * @param createAt 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
     }
 
     /**
-     * 最終更新日時(エポック秒)を取得
+     * 最終更新日時を取得
      *
-     * @return 最終更新日時(エポック秒)
+     * @return 最終更新日時
      */
-    const optional<Int32>& getUpdateAt() const
+    const optional<Int64>& getUpdateAt() const
     {
         return ensureData().updateAt;
     }
 
     /**
-     * 最終更新日時(エポック秒)を設定
+     * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時(エポック秒)
+     * @param updateAt 最終更新日時
      */
-    void setUpdateAt(Int32 updateAt)
+    void setUpdateAt(Int64 updateAt)
     {
         ensureData().updateAt.emplace(updateAt);
     }
