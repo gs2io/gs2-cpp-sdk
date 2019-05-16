@@ -28,10 +28,6 @@ GS2_START_OF_NAMESPACE
 
 namespace detail {
 
-namespace {
-
-}
-
 HttpTask::HttpTask() :
     m_HttpRequest(*new ::cocos2d::network::HttpRequest())
 {

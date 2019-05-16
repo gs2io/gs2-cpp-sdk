@@ -33,7 +33,6 @@ GS2_START_OF_NAMESPACE
 
 namespace detail {
 
-// HTTP リクエストを実行して、コールバック呼出後に自殺する
 class HttpTask : public Gs2Object
 {
 private:
@@ -63,12 +62,12 @@ public:
 class Gs2HttpTaskBase : public HttpTask
 {
 private:
-    virtual void callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse);
+    void callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse) GS2_OVERRIDE;
     virtual void invokeUserCallback(const Char responseBody[], Gs2ClientException* pClientException) const = 0;
 
 public:
     Gs2HttpTaskBase() = default;
-    ~Gs2HttpTaskBase() = default;
+    ~Gs2HttpTaskBase() GS2_OVERRIDE = default;
 };
 
 
@@ -81,7 +80,7 @@ public:
 private:
     CallbackType m_Callback;
 
-    virtual void invokeUserCallback(const Char responseBody[], Gs2ClientException* pClientException) const
+    void invokeUserCallback(const Char responseBody[], Gs2ClientException* pClientException) const GS2_OVERRIDE
     {
         T result;
         if (responseBody != nullptr && pClientException == nullptr)
@@ -98,8 +97,9 @@ public:
         m_Callback(nullptr)
     {
     }
+    ~Gs2HttpTask() GS2_OVERRIDE = default;
 
-    void setCallback(CallbackType callback)
+    void setCallback(CallbackType& callback)
     {
         this->m_Callback = callback;
     }
@@ -115,7 +115,7 @@ public:
 private:
     CallbackType m_Callback;
 
-    virtual void invokeUserCallback(const Char responseBody[], Gs2ClientException* pClientException) const
+    void invokeUserCallback(const Char responseBody[], Gs2ClientException* pClientException) const GS2_OVERRIDE
     {
         AsyncResult<void> asyncResult(pClientException);
         m_Callback(asyncResult);
@@ -127,8 +127,9 @@ public:
         m_Callback(nullptr)
     {
     }
+    ~Gs2HttpTask() GS2_OVERRIDE = default;
 
-    void setCallback(CallbackType callback)
+    void setCallback(CallbackType& callback)
     {
         this->m_Callback = callback;
     }
