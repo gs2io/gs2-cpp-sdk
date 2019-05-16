@@ -19,17 +19,15 @@
 
 #include "../Gs2Object.hpp"
 #include "../AsyncResult.hpp"
+#include <string>
+#include <vector>
+#include <network/HttpRequest.h>
 
 namespace cocos2d { namespace network {
     class HttpClient;
     class HttpRequest;
     class HttpResponse;
 }}
-
-namespace std {
-    template<class T> class vector<T>;
-    class string;
-}
 
 GS2_START_OF_NAMESPACE
 
@@ -41,7 +39,8 @@ class HttpTask : public Gs2Object
 private:
     ::cocos2d::network::HttpRequest &m_HttpRequest;
 
-    virtual void callback(const Char responseBody[], Gs2ClientException* pClientException) = 0;
+    static void callbackHandler(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse);
+    virtual void callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse) = 0;
 
 public:
     HttpTask();
@@ -108,7 +107,7 @@ public:
 
 
 template<>
-class HttpRequest<void> : public HttpRequestBase
+class Gs2HttpTask<void> : public Gs2HttpTaskBase
 {
 public:
     typedef std::function<void(AsyncResult<void>&)> CallbackType;
@@ -116,15 +115,15 @@ public:
 private:
     CallbackType m_Callback;
 
-    virtual void invokeCallback(const Char responseBody[], Gs2ClientException* pClientException) const
+    virtual void invokeUserCallback(const Char responseBody[], Gs2ClientException* pClientException) const
     {
         AsyncResult<void> asyncResult(pClientException);
         m_Callback(asyncResult);
     }
 
 public:
-    HttpRequest() :
-        HttpRequestBase(),
+    Gs2HttpTask() :
+        Gs2HttpTaskBase(),
         m_Callback(nullptr)
     {
     }

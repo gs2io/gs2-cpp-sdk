@@ -15,22 +15,20 @@
  */
 
 #include "HttpRequest.hpp"
+#include "../exception/Gs2ClientException.hpp"
+#include "../json/JsonParser.hpp"
+#include "../model/IGs2Credential.hpp"
+#include "../model/ErrorResponse.hpp"
 #include <network/HttpClient.h>
 #include <network/HttpRequest.h>
 #include <network/HttpResponse.h>
+#include <vector>
 
 GS2_START_OF_NAMESPACE
 
 namespace detail {
 
 namespace {
-
-void callbackHandler(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse)
-{
-    HttpTask* pHttpTask = reinterpret_cast<HttpTask*>(pResponse->getHttpRequest()->getUserData());
-    pHttpTask->callback(*pClient, *pResponse);
-    delete pHttpTask;
-}
 
 }
 
@@ -42,6 +40,13 @@ HttpTask::HttpTask() :
 HttpTask::~HttpTask()
 {
     m_HttpRequest.release();
+}
+
+void HttpTask::callbackHandler(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse)
+{
+    HttpTask* pHttpTask = reinterpret_cast<HttpTask*>(pResponse->getHttpRequest()->getUserData());
+    pHttpTask->callback(pClient, pResponse);
+    delete pHttpTask;
 }
 
 void HttpTask::send()

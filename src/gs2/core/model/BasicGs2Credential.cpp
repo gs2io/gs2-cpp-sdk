@@ -59,7 +59,7 @@ const StringHolder& BasicGs2Credential::getClientSecret() const
     return m_ClientSecret;
 }
 
-void BasicGs2Credential::authorize(detail::HttpRequestBase& httpRequest, const Gs2BasicRequest& basicRequest) const
+void BasicGs2Credential::authorize(std::vector<std::string>& headerEntries, const Gs2BasicRequest& basicRequest) const
 {
     auto timestamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     char timestampString[21];
@@ -81,9 +81,9 @@ void BasicGs2Credential::authorize(detail::HttpRequestBase& httpRequest, const G
     char base64EncodedSignature[detail::getBase64EncodedLength(sizeof(hmac.data)) + 1];
     detail::encodeBase64(base64EncodedSignature, hmac.data, sizeof(hmac.data));
 
-    httpRequest.addHeader("X-GS2-CLIENT-ID", getClientId());
-    httpRequest.addHeader("X-GS2-REQUEST-TIMESTAMP", timestampString);
-    httpRequest.addHeader("X-GS2-REQUEST-SIGN", base64EncodedSignature);
+    detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-CLIENT-ID", getClientId());
+    detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-TIMESTAMP", timestampString);
+    detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-SIGN", base64EncodedSignature);
 }
 
 GS2_END_OF_NAMESPACE

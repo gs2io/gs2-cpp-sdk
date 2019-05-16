@@ -18,6 +18,8 @@
 #define GS2_CORE_MODEL_IGS2CREDENTIAL_HPP_
 
 #include "../Gs2Object.hpp"
+#include <string>
+#include <vector>
 
 GS2_START_OF_NAMESPACE
 
@@ -30,7 +32,7 @@ class IGs2Credential {
     friend class AbstractGs2ClientBase;
 
 private:
-    virtual void authorize(detail::HttpRequestBase& request, const Gs2BasicRequest& basicRequest) const = 0;
+    virtual void authorize(std::vector<std::string>& headerEntries, const Gs2BasicRequest& basicRequest) const = 0;
 
 public:
     IGs2Credential() = default;

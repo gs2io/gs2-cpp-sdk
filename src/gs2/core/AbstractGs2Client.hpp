@@ -19,6 +19,7 @@
 
 #include "Gs2Object.hpp"
 #include "model/Region.hpp"
+#include <string>
 
 namespace cocos2d { namespace network {
 class HttpClient;
@@ -79,25 +80,15 @@ protected:
      * @param httpRequest HTTPリクエスト
      * @param url URLパターン
      */
-    void setUrl(detail::HttpRequestBase& httpRequestBase, const Char url[]) const;
+    void setUrl(::cocos2d::network::HttpRequest& httpRequest, const Char url[]) const;
 
     /**
      * HTTPリクエストにヘッダを設定
      *
-     * @param httpRequest HTTPリクエスト
+     * @param headerEntries ヘッダエントリのリスト
      * @param basicRequest リクエストモデル
      */
-    void setHeaders(detail::HttpRequestBase& httpRequestBase, const Gs2BasicRequest& basicRequest) const;
-
-    /**
-     * HTTPリクエストを実行する
-     *
-     * @param httpRequest HTTPリクエスト
-     */
-    void send(detail::HttpRequestBase& httpRequest);
-
-private:
-    static void callbackHandler(cocos2d::network::HttpClient* client, cocos2d::network::HttpResponse* response);
+    void setHeaderEntries(std::vector<std::string>& headerEntries, const Gs2BasicRequest& basicRequest) const;
 };
 
 GS2_END_OF_NAMESPACE

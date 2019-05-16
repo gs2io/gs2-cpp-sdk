@@ -35,7 +35,7 @@ private:
     /** クライアントシークレット */
     StringHolder m_ClientSecret;
 
-    void authorize(detail::HttpRequestBase& request, const Gs2BasicRequest& basicRequest) const GS2_OVERRIDE;
+    virtual void authorize(std::vector<std::string>& headerEntries, const Gs2BasicRequest& basicRequest) const GS2_OVERRIDE;
 
 public:
     BasicGs2Credential() = default;

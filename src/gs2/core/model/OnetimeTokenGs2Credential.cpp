@@ -34,14 +34,14 @@ OnetimeTokenGs2Credential::OnetimeTokenGs2Credential(const Char token[])
 //    }
 }
 
-void OnetimeTokenGs2Credential::authorize(detail::HttpRequestBase& httpRequest, const Gs2BasicRequest& basicRequest) const
+void OnetimeTokenGs2Credential::authorize(std::vector<std::string>& headerEntries, const Gs2BasicRequest& basicRequest) const
 {
     auto timestamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     char timestampString[21];
     std::sprintf(timestampString, "%ld", timestamp);
 
-    httpRequest.addHeader("X-GS2-REQUEST-TIMESTAMP", timestampString);
-    httpRequest.addHeader("X-GS2-ONETIME-TOKEN", m_Token);
+    detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-TIMESTAMP", timestampString);
+    detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ONETIME-TOKEN", m_Token);
 }
 
 GS2_END_OF_NAMESPACE
