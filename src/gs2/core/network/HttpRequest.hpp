@@ -19,53 +19,62 @@
 
 #include "../Gs2Object.hpp"
 #include "../AsyncResult.hpp"
-#include <network/HttpRequest.h>
-#include <vector>
-#include <string>
+
+namespace cocos2d { namespace network {
+    class HttpClient;
+    class HttpRequest;
+    class HttpResponse;
+}}
+
+namespace std {
+    template<class T> class vector<T>;
+    class string;
+}
 
 GS2_START_OF_NAMESPACE
 
 namespace detail {
 
-class HttpRequestBase : public ::cocos2d::network::HttpRequest, public Gs2Object
+// HTTP リクエストを実行して、コールバック呼出後に自殺する
+class HttpTask : public Gs2Object
 {
 private:
-    std::vector<std::string> m_Headers;
+    ::cocos2d::network::HttpRequest &m_HttpRequest;
 
-    // cocos2d::network::HttpRequest::setHeaders() の呼び出しを防止
-    void setHeaders() {}
-
-protected:
-    // cocos2d::network::HttpRequest::Ref::release() によって破棄する
-    ~HttpRequestBase() = default;
+    virtual void callback(const Char responseBody[], Gs2ClientException* pClientException) = 0;
 
 public:
-    HttpRequestBase() = default;
+    HttpTask();
+    virtual ~HttpTask();
 
-    void addHeader(const Char entry[])
+    // 最大1回までしか呼べません
+    void send();
+
+    // ユーザデータは設定しても send 時に上書きされます
+    ::cocos2d::network::HttpRequest &getHttpRequest()
     {
-        m_Headers.push_back(entry);
+        return m_HttpRequest;
     }
 
-    void addHeader(const Char key[], const Char value[])
-    {
-        std::string entry(key);
-        entry.append(": ");
-        entry.append(value);
-
-        m_Headers.push_back(entry);
-    }
-
-    void applyHeader()
-    {
-        cocos2d::network::HttpRequest::setHeaders(m_Headers);
-    }
-
-    virtual void invokeCallback(const Char response[], Gs2ClientException* exception) const = 0;
+    // ユーティリティ
+    static void addHeaderEntry(std::vector<std::string>& headers, const Char key[], const Char value[]);
 };
 
+
+class Gs2HttpTaskBase : public HttpTask
+{
+private:
+    virtual void callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse);
+    virtual void invokeUserCallback(const Char responseBody[], Gs2ClientException* pClientException) const = 0;
+
+public:
+    Gs2HttpTaskBase() = default;
+    ~Gs2HttpTaskBase() = default;
+};
+
+
 template <class T>
-class HttpRequest : public HttpRequestBase
+class Gs2HttpTask : public Gs2HttpTaskBase
 {
 public:
     typedef std::function<void(AsyncResult<T>&)> CallbackType;
@@ -73,25 +82,7 @@ public:
 private:
     CallbackType m_Callback;
 
-    ~HttpRequest()
-    {
-        //CCLOG("HttpRequest destructed.");
-    }
-
-public:
-    HttpRequest()
-            : HttpRequestBase(),
-              m_Callback(nullptr)
-    {
-        //CCLOG("HttpRequest constructed.");
-    }
-
-    void setCallback(CallbackType callback)
-    {
-        this->m_Callback = callback;
-    }
-
-    virtual void invokeCallback(const Char responseBody[], Gs2ClientException* pClientException) const
+    virtual void invokeUserCallback(const Char responseBody[], Gs2ClientException* pClientException) const
     {
         T result;
         if (responseBody != nullptr && pClientException == nullptr)
@@ -101,7 +92,20 @@ public:
         AsyncResult<T> asyncResult(&result, pClientException);
         m_Callback(asyncResult);
     }
+
+public:
+    Gs2HttpTask() :
+        Gs2HttpTaskBase(),
+        m_Callback(nullptr)
+    {
+    }
+
+    void setCallback(CallbackType callback)
+    {
+        this->m_Callback = callback;
+    }
 };
+
 
 template<>
 class HttpRequest<void> : public HttpRequestBase
@@ -112,28 +116,22 @@ public:
 private:
     CallbackType m_Callback;
 
-    ~HttpRequest()
+    virtual void invokeCallback(const Char responseBody[], Gs2ClientException* pClientException) const
     {
-        //CCLOG("HttpRequest destructed.");
+        AsyncResult<void> asyncResult(pClientException);
+        m_Callback(asyncResult);
     }
 
 public:
-    HttpRequest()
-            : HttpRequestBase(),
-              m_Callback(nullptr)
+    HttpRequest() :
+        HttpRequestBase(),
+        m_Callback(nullptr)
     {
-        //CCLOG("HttpRequest constructed.");
     }
 
     void setCallback(CallbackType callback)
     {
         this->m_Callback = callback;
-    }
-
-    virtual void invokeCallback(const Char responseBody[], Gs2ClientException* pClientException) const
-    {
-        AsyncResult<void> asyncResult(pClientException);
-        m_Callback(asyncResult);
     }
 };
 
