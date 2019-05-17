@@ -16,17 +16,69 @@
 
 #include "Gs2LoginTask.hpp"
 #include "../model/BasicGs2Credential.hpp"
+#include "../json/JsonWriter.hpp"
+#include "../json/JsonParser.hpp"
 
 GS2_START_OF_NAMESPACE
 
 namespace detail {
+
+struct ProjectTokenModel : public detail::json::IModel
+{
+    /** プロジェクトトークン */
+    optional<StringHolder> token;
+
+    void set(const Char name[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE
+    {
+        if (std::strcmp(name, "token") == 0) {
+            if (jsonValue.IsString())
+            {
+                this->token.emplace(jsonValue.GetString());
+            }
+        }
+    }
+};
+
+struct LoginResultModel : public detail::json::IModel
+{
+    /** プロジェクトトークン */
+    optional<ProjectTokenModel> item;
+
+    void set(const Char name[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE
+    {
+        if (std::strcmp(name, "item") == 0) {
+            if (jsonValue.IsObject())
+            {
+                const auto& jsonObject = jsonValue.GetObject();
+                this->item.emplace();
+                detail::json::JsonParser::parse(&*this->item, jsonObject);
+            }
+        }
+    }
+};
 
 Gs2LoginTask::Gs2LoginTask(BasicGs2Credential& basicGs2Credential) :
     Gs2HttpTask(),
     m_BasicGs2Credential(basicGs2Credential),
     m_pGs2StandardHttpTaskHead(nullptr)
 {
+    getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+    auto& writer = detail::json::JsonWriter::getInstance();
+    writer.reset();
+    writer.writeObjectStart();
+    writer.writePropertyName("clientId");
+    writer.write(basicGs2Credential.getClientId());
+    writer.writePropertyName("clientSecret");
+    writer.write(basicGs2Credential.getClientSecret());
+    writer.writeObjectEnd();
+    auto body = writer.toString();
+    auto bodySize = strlen(body);
+    getHttpRequest().setRequestData(body, bodySize);
 
+    getHttpRequest().setUrl("https://asia-northeast1-gs2-on-gcp.cloudfunctions.net/identifier-handler?handler=gs2_identifier%2Fhandler%2FProjectTokenFunctionHandler.login");   // TODO
+    std::vector<std::string> headerEntries;
+    headerEntries.emplace_back("Content-Type: application/json");
+    getHttpRequest().setHeaders(headerEntries);
 }
 
 Gs2LoginTask::~Gs2LoginTask()
@@ -45,18 +97,36 @@ void Gs2LoginTask::callbackGs2Response(const Char responseBody[], Gs2ClientExcep
 
     if (pClientException == nullptr)
     {
-        // TODO: m_BasicGs2Credential.m_ProjectToken = hogehoge;
-
-        while (auto* pGs2StandardHttpTask = popGs2HttpStandardHttpTask())
+        LoginResultModel resultModel;
+        if (responseBody != nullptr)
         {
-            m_BasicGs2Credential.authorizeAndExecute(*pGs2StandardHttpTask);
+            json::JsonParser::parse(&resultModel, responseBody);
+        }
+
+        if (resultModel.item && resultModel.item->token)
+        {
+            m_BasicGs2Credential.m_ProjectToken = *resultModel.item->token;
+
+            while (auto* pGs2StandardHttpTask = popGs2HttpStandardHttpTask())
+            {
+                m_BasicGs2Credential.authorizeAndExecuteImpl(*pGs2StandardHttpTask);
+            }
+        }
+        else
+        {
+            Gs2ClientException gs2ClientException;
+            gs2ClientException.setType(Gs2ClientException::UnknownException);
+            while (auto* pGs2StandardHttpTaskHead = popGs2HttpStandardHttpTask())
+            {
+                pGs2StandardHttpTaskHead->callbackGs2Response("", &gs2ClientException);
+            }
         }
     }
     else
     {
         while (auto* pGs2StandardHttpTaskHead = popGs2HttpStandardHttpTask())
         {
-            pGs2StandardHttpTaskHead->callbackGs2Response(responseBody, pClientException);
+            pGs2StandardHttpTaskHead->callbackGs2Response("", pClientException);
         }
     }
 

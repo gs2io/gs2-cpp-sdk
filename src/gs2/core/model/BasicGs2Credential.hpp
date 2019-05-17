@@ -44,6 +44,8 @@ private:
     /** プロジェクトトークンの取得タスク */
     detail::Gs2LoginTask* m_pGs2LoginTask;
 
+    void authorizeAndExecuteImpl(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase);
+
 public:
     /**
      * コンストラクタ。

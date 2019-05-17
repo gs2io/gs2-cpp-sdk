@@ -34,7 +34,8 @@ GS2_START_OF_NAMESPACE
 BasicGs2Credential::BasicGs2Credential(const Char clientId[], const Char clientSecret[]) :
     IGs2Credential(),
     m_ClientId(clientId), 
-    m_ClientSecret(clientSecret)
+    m_ClientSecret(clientSecret),
+    m_pGs2LoginTask(nullptr)
 {
 }
 
@@ -58,9 +59,9 @@ optional<StringHolder> BasicGs2Credential::getProjectToken() const
     return m_ProjectToken;
 }
 
-void BasicGs2Credential::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase)
+void BasicGs2Credential::authorizeAndExecuteImpl(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase)
 {
-    std::lock_guard<std::mutex> lock(m_Mutex);
+    assert(!m_Mutex.try_lock());
 
     if (m_ProjectToken)
     {
@@ -69,6 +70,7 @@ void BasicGs2Credential::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs
         detail::HttpTask::addHeaderEntry(headers, "X-GS2-CLIENT-ID", getClientId());
         detail::HttpTask::addHeaderEntry(headers, "X-GS2-PROJECT-TOKEN", *m_ProjectToken);
 
+        gs2StandardHttpTaskBase.getHttpRequest().setHeaders(headers);
         gs2StandardHttpTaskBase.send();
     }
     else
@@ -84,6 +86,12 @@ void BasicGs2Credential::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs
             m_pGs2LoginTask->pushGs2HttpStandardHttpTask(gs2StandardHttpTaskBase);
         }
     }
+}
+
+void BasicGs2Credential::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase)
+{
+    std::lock_guard<std::mutex> lock(m_Mutex);
+    authorizeAndExecuteImpl(gs2StandardHttpTaskBase);
 }
 
 GS2_END_OF_NAMESPACE
