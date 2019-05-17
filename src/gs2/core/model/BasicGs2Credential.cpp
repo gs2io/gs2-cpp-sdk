@@ -15,7 +15,8 @@
  */
 
 #include "BasicGs2Credential.hpp"
-#include "../network/HttpRequest.hpp"
+#include "../network/Gs2StandardHttpTask.hpp"
+#include "../network/Gs2LoginTask.hpp"
 #include "../control/Gs2BasicRequest.hpp"
 #include "../util/StringVariable.hpp"
 #include "../util/SignUtil.hpp"
@@ -30,60 +31,59 @@ GS2_START_OF_NAMESPACE
  * @param clientId クライアントID
  * @param clientSecret クライアントシークレット
  */
-BasicGs2Credential::BasicGs2Credential(const Char clientId[], const Char clientSecret[])
-: m_ClientId(clientId),
-  m_ClientSecret(clientSecret)
+BasicGs2Credential::BasicGs2Credential(const Char clientId[], const Char clientSecret[]) :
+    IGs2Credential(),
+    m_ClientId(clientId), 
+    m_ClientSecret(clientSecret)
 {
-//    if(clientId == null || clientSecret == null) {
-//        throw new IllegalArgumentException("invalid credential");
-//    }
+}
+
+BasicGs2Credential::~BasicGs2Credential()
+{
+    if (m_pGs2LoginTask)
+    {
+        delete m_pGs2LoginTask;
+    }
 }
 
 /**
- * クライアントIDを取得。
+ * プロジェクトトークンを取得。
  *
- * @return クライアントID
+ * @return プロジェクトトークン
  */
-const StringHolder& BasicGs2Credential::getClientId() const
+optional<StringHolder> BasicGs2Credential::getProjectToken() const
 {
-    return m_ClientId;
+    std::lock_guard<std::mutex> lock(m_Mutex);
+
+    return m_ProjectToken;
 }
 
-/**
- * クライアントシークレットを取得。
- *
- * @return クライアントシークレット
- */
-const StringHolder& BasicGs2Credential::getClientSecret() const
+void BasicGs2Credential::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase)
 {
-    return m_ClientSecret;
-}
+    std::lock_guard<std::mutex> lock(m_Mutex);
 
-void BasicGs2Credential::authorize(std::vector<std::string>& headerEntries, const Gs2BasicRequest& basicRequest) const
-{
-    auto timestamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    char timestampString[21];
-    std::sprintf(timestampString, "%ld", timestamp);
+    if (m_ProjectToken)
+    {
+        auto headers = gs2StandardHttpTaskBase.getHttpRequest().getHeaders();
 
-    auto decodedClientSecret = Gs2Object::getAllocator().malloc(detail::getBase64DecodedLengthMax(m_ClientSecret.getSize() - 1));
-    auto decodedSize = detail::decodeBase64(decodedClientSecret, m_ClientSecret);
+        detail::HttpTask::addHeaderEntry(headers, "X-GS2-CLIENT-ID", getClientId());
+        detail::HttpTask::addHeaderEntry(headers, "X-GS2-PROJECT-TOKEN", *m_ProjectToken);
 
-    detail::StringVariable body(basicRequest.getModuleName());
-    body.append(":");
-    body.append(basicRequest.getFunctionName());
-    body.append(":");
-    body.append(timestampString);
-
-    detail::SignUtil::HmacSha256 hmac;
-    detail::SignUtil::sign(hmac, decodedClientSecret, decodedSize, body.c_str(), body.size());
-    Gs2Object::getAllocator().free(decodedClientSecret);
-
-    char base64EncodedSignature[detail::getBase64EncodedLength(sizeof(hmac.data)) + 1];
-    detail::encodeBase64(base64EncodedSignature, hmac.data, sizeof(hmac.data));
-
-    detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-CLIENT-ID", getClientId());
-    detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-TIMESTAMP", timestampString);
-    detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-SIGN", base64EncodedSignature);
+        gs2StandardHttpTaskBase.send();
+    }
+    else
+    {
+        if (m_pGs2LoginTask == nullptr)
+        {
+            m_pGs2LoginTask = new detail::Gs2LoginTask(*this);
+            m_pGs2LoginTask->pushGs2HttpStandardHttpTask(gs2StandardHttpTaskBase);
+            m_pGs2LoginTask->send();
+        }
+        else
+        {
+            m_pGs2LoginTask->pushGs2HttpStandardHttpTask(gs2StandardHttpTaskBase);
+        }
+    }
 }
 
 GS2_END_OF_NAMESPACE

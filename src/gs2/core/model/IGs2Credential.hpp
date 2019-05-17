@@ -18,25 +18,20 @@
 #define GS2_CORE_MODEL_IGS2CREDENTIAL_HPP_
 
 #include "../Gs2Object.hpp"
-#include <string>
-#include <vector>
 
 GS2_START_OF_NAMESPACE
 
 namespace detail {
-class HttpRequestBase;
+class Gs2StandardHttpTaskBase;
 }
-class Gs2BasicRequest;
 
-class IGs2Credential {
-    friend class AbstractGs2ClientBase;
-
-private:
-    virtual void authorize(std::vector<std::string>& headerEntries, const Gs2BasicRequest& basicRequest) const = 0;
-
+class IGs2Credential : public Gs2Object
+{
 public:
     IGs2Credential() = default;
     virtual ~IGs2Credential() = default;
+
+    virtual void authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase) = 0;
 };
 
 GS2_END_OF_NAMESPACE

@@ -59,80 +59,15 @@ public:
 };
 
 
-class Gs2HttpTaskBase : public HttpTask
+class Gs2HttpTask : public HttpTask
 {
 private:
     void callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse) GS2_OVERRIDE;
-    virtual void invokeUserCallback(const Char responseBody[], Gs2ClientException* pClientException) const = 0;
+    virtual void callbackGs2Response(const Char responseBody[], Gs2ClientException* pClientException) = 0;
 
 public:
-    Gs2HttpTaskBase() = default;
-    ~Gs2HttpTaskBase() GS2_OVERRIDE = default;
-};
-
-
-template <class T>
-class Gs2HttpTask : public Gs2HttpTaskBase
-{
-public:
-    typedef std::function<void(AsyncResult<T>&)> CallbackType;
-
-private:
-    CallbackType m_Callback;
-
-    void invokeUserCallback(const Char responseBody[], Gs2ClientException* pClientException) const GS2_OVERRIDE
-    {
-        T result;
-        if (responseBody != nullptr && pClientException == nullptr)
-        {
-            json::JsonParser::parse(&result.getModel(), responseBody);
-        }
-        AsyncResult<T> asyncResult(&result, pClientException);
-        m_Callback(asyncResult);
-    }
-
-public:
-    Gs2HttpTask() :
-        Gs2HttpTaskBase(),
-        m_Callback(nullptr)
-    {
-    }
+    Gs2HttpTask() = default;
     ~Gs2HttpTask() GS2_OVERRIDE = default;
-
-    void setCallback(CallbackType& callback)
-    {
-        this->m_Callback = callback;
-    }
-};
-
-
-template<>
-class Gs2HttpTask<void> : public Gs2HttpTaskBase
-{
-public:
-    typedef std::function<void(AsyncResult<void>&)> CallbackType;
-
-private:
-    CallbackType m_Callback;
-
-    void invokeUserCallback(const Char responseBody[], Gs2ClientException* pClientException) const GS2_OVERRIDE
-    {
-        AsyncResult<void> asyncResult(pClientException);
-        m_Callback(asyncResult);
-    }
-
-public:
-    Gs2HttpTask() :
-        Gs2HttpTaskBase(),
-        m_Callback(nullptr)
-    {
-    }
-    ~Gs2HttpTask() GS2_OVERRIDE = default;
-
-    void setCallback(CallbackType& callback)
-    {
-        this->m_Callback = callback;
-    }
 };
 
 }

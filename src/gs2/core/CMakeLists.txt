@@ -48,11 +48,12 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/BasicGs2Credential.hpp
         model/ErrorResponse.hpp
         model/IGs2Credential.hpp
-        model/OnetimeTokenGs2Credential.hpp
         model/Region.hpp
         model/RequestError.hpp
         model/StampSheet.hpp
         model/StampTask.hpp
+        network/Gs2StandardHttpTask.hpp
+        network/Gs2LoginTask.hpp
         network/HttpRequest.hpp
         util/Base64.hpp
         util/DefaultAllocator.hpp
@@ -74,8 +75,9 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         json/JsonParser.cpp
         json/JsonWriter.cpp
         model/BasicGs2Credential.cpp
-        model/OnetimeTokenGs2Credential.cpp
         model/Region.cpp
+        network/Gs2StandardHttpTask.cpp
+        network/Gs2LoginTask.cpp
         network/HttpRequest.cpp
         util/Base64.cpp
         util/DefaultAllocator.cpp

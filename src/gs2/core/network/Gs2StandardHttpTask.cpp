@@ -14,13 +14,14 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_CORE_HPP_
-#define GS2_CORE_HPP_
+#include <gs2/core/model/BasicGs2Credential.hpp>
+#include "Gs2StandardHttpTask.hpp"
 
-#include "common.hpp"
-#include "Gs2Constant.hpp"
-#include "Gs2Object.hpp"
-#include "IAllocator.hpp"
-#include "model/BasicGs2Credential.hpp"
+GS2_START_OF_NAMESPACE
 
-#endif //GS2_CORE_HPP_
+namespace detail {
+
+
+}
+
+GS2_END_OF_NAMESPACE

@@ -55,7 +55,6 @@ void AbstractGs2ClientBase::setUrl(::cocos2d::network::HttpRequest& httpRequest,
 void AbstractGs2ClientBase::setHeaderEntries(std::vector<std::string>& headerEntries, const Gs2BasicRequest& basicRequest) const
 {
     headerEntries.push_back("Content-Type: application/json");
-    m_Credential.authorize(headerEntries, basicRequest);
 
     if (basicRequest.getRequestId())
     {

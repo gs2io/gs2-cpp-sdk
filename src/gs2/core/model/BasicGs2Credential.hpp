@@ -19,28 +19,32 @@
 
 #include "IGs2Credential.hpp"
 #include "../util/StringHolder.hpp"
+#include <mutex>
 
 GS2_START_OF_NAMESPACE
 
 namespace detail {
-class HttpRequestBase;
+class Gs2StandardHttpTaskBase;
+class Gs2LoginTask;
 }
-class Gs2BasicRequest;
 
 class BasicGs2Credential : public IGs2Credential
 {
+    friend class detail::Gs2LoginTask;
+
 private:
+    /** 排他制御 */
+    mutable std::mutex m_Mutex;
     /** クライアントID */
     StringHolder m_ClientId;
     /** クライアントシークレット */
     StringHolder m_ClientSecret;
-
-    virtual void authorize(std::vector<std::string>& headerEntries, const Gs2BasicRequest& basicRequest) const GS2_OVERRIDE;
+    /** プロジェクトトークン */
+    optional<StringHolder> m_ProjectToken;
+    /** プロジェクトトークンの取得タスク */
+    detail::Gs2LoginTask* m_pGs2LoginTask;
 
 public:
-    BasicGs2Credential() = default;
-    virtual ~BasicGs2Credential() = default;
-
     /**
      * コンストラクタ。
      *
@@ -49,19 +53,36 @@ public:
      */
     BasicGs2Credential(const Char clientId[], const Char clientSecret[]);
 
+    ~BasicGs2Credential() GS2_OVERRIDE;
+
     /**
      * クライアントIDを取得。
      *
      * @return クライアントID
      */
-    const StringHolder& getClientId() const;
+    const StringHolder& getClientId() const
+    {
+        return m_ClientId;
+    }
 
     /**
      * クライアントシークレットを取得。
      *
      * @return クライアントシークレット
      */
-    const StringHolder& getClientSecret() const;
+    const StringHolder& getClientSecret() const
+    {
+        return m_ClientSecret;
+    }
+
+    /**
+     * プロジェクトトークンを取得。
+     *
+     * @return プロジェクトトークン
+     */
+    optional<StringHolder> getProjectToken() const;
+
+    void authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase) GS2_OVERRIDE;
 };
 
 GS2_END_OF_NAMESPACE

@@ -89,6 +89,11 @@ protected:
      * @param basicRequest リクエストモデル
      */
     void setHeaderEntries(std::vector<std::string>& headerEntries, const Gs2BasicRequest& basicRequest) const;
+
+    IGs2Credential& getCredential()
+    {
+        return m_Credential;
+    }
 };
 
 GS2_END_OF_NAMESPACE

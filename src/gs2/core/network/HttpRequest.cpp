@@ -63,7 +63,7 @@ void HttpTask::addHeaderEntry(std::vector<std::string>& headers, const Char key[
 }
 
 
-void Gs2HttpTaskBase::callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse)
+void Gs2HttpTask::callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse)
 {
     auto responseCode = pResponse->getResponseCode();
     CCLOG("Response code: %i", responseCode);
@@ -114,7 +114,7 @@ void Gs2HttpTaskBase::callback(::cocos2d::network::HttpClient *pClient, ::cocos2
         pGs2ClientException = &gs2ClientException;
     }
 
-    invokeUserCallback(responseBody, pGs2ClientException);
+    callbackGs2Response(responseBody, pGs2ClientException);
 }
 
 }
