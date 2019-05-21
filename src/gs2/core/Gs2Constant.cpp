@@ -24,6 +24,6 @@ const Int32 Gs2Constant::RETRY_NUM = 3;
 
 const Int32 Gs2Constant::RETRY_WAIT = 1000;
 
-const Char* Gs2Constant::ENDPOINT_HOST = "https://{service}.{region}.gs2io.com";
+const Char* Gs2Constant::ENDPOINT_HOST = "https://asia-northeast1-gs2-on-gcp.cloudfunctions.net";
 
 GS2_END_OF_NAMESPACE
