@@ -19,7 +19,6 @@
 
 #include <gs2/core/common.hpp>
 #include "Money.hpp"
-#include "User.hpp"
 #include "Summary.hpp"
 #include "Wallet.hpp"
 #include "Receipt.hpp"

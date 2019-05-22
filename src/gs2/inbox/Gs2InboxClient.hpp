@@ -19,7 +19,7 @@
 
 #include <gs2/core/AbstractGs2Client.hpp>
 #include <gs2/core/json/JsonWriter.hpp>
-#include <gs2/core/network/HttpRequest.hpp>
+#include <gs2/core/network/Gs2StandardHttpTask.hpp>
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
@@ -61,6 +61,7 @@
 #include "result/DeleteMessageResult.hpp"
 #include "result/DeleteMessageByUserIdResult.hpp"
 #include <cstring>
+#include <network/HttpRequest.h>
 
 namespace gs2 { namespace inbox {
 
@@ -100,7 +101,6 @@ private:
     }
 
 private:
-
     void write(detail::json::JsonWriter& writer, const Inbox& obj)
     {
         writer.writeObjectStart();
@@ -183,17 +183,6 @@ private:
         {
             writer.writePropertyName("updateAt");
             writer.write(*obj.getUpdateAt());
-        }
-        writer.writeObjectEnd();
-    }
-
-    void write(detail::json::JsonWriter& writer, const User& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getUserId())
-        {
-            writer.writePropertyName("userId");
-            writer.write(*obj.getUserId());
         }
         writer.writeObjectEnd();
     }
@@ -381,8 +370,8 @@ public:
      */
     void describeInboxes(std::function<void(AsyncDescribeInboxesResult&)> callback, DescribeInboxesRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeInboxesResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeInboxesResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.describeInboxes");
         Char encodeBuffer[2048];
@@ -395,10 +384,11 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -409,8 +399,8 @@ public:
      */
     void createInbox(std::function<void(AsyncCreateInboxResult&)> callback, CreateInboxRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreateInboxResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<CreateInboxResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.createInbox");
         auto& writer = detail::json::JsonWriter::getInstance();
@@ -479,12 +469,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -495,8 +486,8 @@ public:
      */
     void getInboxStatus(std::function<void(AsyncGetInboxStatusResult&)> callback, GetInboxStatusRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetInboxStatusResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetInboxStatusResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.getInboxStatus");
         Char encodeBuffer[2048];
@@ -505,10 +496,11 @@ public:
             url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -519,8 +511,8 @@ public:
      */
     void getInbox(std::function<void(AsyncGetInboxResult&)> callback, GetInboxRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetInboxResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetInboxResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.getInbox");
         Char encodeBuffer[2048];
@@ -529,10 +521,11 @@ public:
             url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -543,8 +536,8 @@ public:
      */
     void updateInbox(std::function<void(AsyncUpdateInboxResult&)> callback, UpdateInboxRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UpdateInboxResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UpdateInboxResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.updateInbox");
         Char encodeBuffer[2048];
@@ -613,12 +606,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -629,8 +623,8 @@ public:
      */
     void deleteInbox(std::function<void(AsyncDeleteInboxResult&)> callback, DeleteInboxRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<void>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.deleteInbox");
         Char encodeBuffer[2048];
@@ -639,10 +633,11 @@ public:
             url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -653,8 +648,8 @@ public:
      */
     void describeMessages(std::function<void(AsyncDescribeMessagesResult&)> callback, DescribeMessagesRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeMessagesResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeMessagesResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.describeMessages");
         Char encodeBuffer[2048];
@@ -671,14 +666,15 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -689,8 +685,8 @@ public:
      */
     void describeMessagesByUserId(std::function<void(AsyncDescribeMessagesByUserIdResult&)> callback, DescribeMessagesByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeMessagesByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeMessagesByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.describeMessagesByUserId");
         Char encodeBuffer[2048];
@@ -711,14 +707,15 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -729,8 +726,8 @@ public:
      */
     void sendMessageByUserId(std::function<void(AsyncSendMessageByUserIdResult&)> callback, SendMessageByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<SendMessageByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<SendMessageByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.sendMessageByUserId");
         Char encodeBuffer[2048];
@@ -764,16 +761,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -784,8 +782,8 @@ public:
      */
     void sendMessagesByUserId(std::function<void(AsyncSendMessagesByUserIdResult&)> callback, SendMessagesByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<SendMessagesByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<SendMessagesByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.sendMessagesByUserId");
         Char encodeBuffer[2048];
@@ -810,12 +808,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -826,8 +825,8 @@ public:
      */
     void getMessage(std::function<void(AsyncGetMessageResult&)> callback, GetMessageRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetMessageResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetMessageResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.getMessage");
         Char encodeBuffer[2048];
@@ -840,14 +839,15 @@ public:
             url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -858,8 +858,8 @@ public:
      */
     void getMessageByUserId(std::function<void(AsyncGetMessageByUserIdResult&)> callback, GetMessageByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetMessageByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetMessageByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.getMessageByUserId");
         Char encodeBuffer[2048];
@@ -876,14 +876,15 @@ public:
             url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -894,8 +895,8 @@ public:
      */
     void getMessages(std::function<void(AsyncGetMessagesResult&)> callback, GetMessagesRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetMessagesResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetMessagesResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.getMessages");
         Char encodeBuffer[2048];
@@ -908,14 +909,15 @@ public:
             url += "&" + detail::StringVariable("messageNames={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -926,8 +928,8 @@ public:
      */
     void getMessagesByUserId(std::function<void(AsyncGetMessagesByUserIdResult&)> callback, GetMessagesByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetMessagesByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetMessagesByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.getMessagesByUserId");
         Char encodeBuffer[2048];
@@ -944,14 +946,15 @@ public:
             url += "&" + detail::StringVariable("messageNames={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -962,8 +965,8 @@ public:
      */
     void readMessage(std::function<void(AsyncReadMessageResult&)> callback, ReadMessageRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<ReadMessageResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<ReadMessageResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.readMessage");
         Char encodeBuffer[2048];
@@ -981,16 +984,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1001,8 +1005,8 @@ public:
      */
     void readMessageByUserId(std::function<void(AsyncReadMessageByUserIdResult&)> callback, ReadMessageByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<ReadMessageByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<ReadMessageByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.readMessageByUserId");
         Char encodeBuffer[2048];
@@ -1024,16 +1028,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1044,8 +1049,8 @@ public:
      */
     void deleteMessage(std::function<void(AsyncDeleteMessageResult&)> callback, DeleteMessageRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<void>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.deleteMessage");
         Char encodeBuffer[2048];
@@ -1058,14 +1063,15 @@ public:
             url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1076,8 +1082,8 @@ public:
      */
     void deleteMessageByUserId(std::function<void(AsyncDeleteMessageByUserIdResult&)> callback, DeleteMessageByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<void>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.deleteMessageByUserId");
         Char encodeBuffer[2048];
@@ -1094,14 +1100,15 @@ public:
             url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 };
 

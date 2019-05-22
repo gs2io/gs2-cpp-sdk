@@ -19,7 +19,7 @@
 
 #include <gs2/core/AbstractGs2Client.hpp>
 #include <gs2/core/json/JsonWriter.hpp>
-#include <gs2/core/network/HttpRequest.hpp>
+#include <gs2/core/network/Gs2StandardHttpTask.hpp>
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
@@ -67,6 +67,7 @@
 #include "result/DeleteTakeOverByUserIdentifierResult.hpp"
 #include "result/DoTakeOverResult.hpp"
 #include <cstring>
+#include <network/HttpRequest.h>
 
 namespace gs2 { namespace account {
 
@@ -109,7 +110,6 @@ private:
     }
 
 private:
-
     void write(detail::json::JsonWriter& writer, const Game& obj)
     {
         writer.writeObjectStart();
@@ -378,8 +378,8 @@ public:
      */
     void describeGames(std::function<void(AsyncDescribeGamesResult&)> callback, DescribeGamesRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeGamesResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeGamesResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FGameFunctionHandler.describeGames");
         Char encodeBuffer[2048];
@@ -392,10 +392,11 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -406,8 +407,8 @@ public:
      */
     void createGame(std::function<void(AsyncCreateGameResult&)> callback, CreateGameRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreateGameResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<CreateGameResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FGameFunctionHandler.createGame");
         auto& writer = detail::json::JsonWriter::getInstance();
@@ -491,12 +492,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -507,8 +509,8 @@ public:
      */
     void getGameStatus(std::function<void(AsyncGetGameStatusResult&)> callback, GetGameStatusRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetGameStatusResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetGameStatusResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FGameFunctionHandler.getGameStatus");
         Char encodeBuffer[2048];
@@ -517,10 +519,11 @@ public:
             url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -531,8 +534,8 @@ public:
      */
     void getGame(std::function<void(AsyncGetGameResult&)> callback, GetGameRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetGameResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetGameResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FGameFunctionHandler.getGame");
         Char encodeBuffer[2048];
@@ -541,10 +544,11 @@ public:
             url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -555,8 +559,8 @@ public:
      */
     void updateGame(std::function<void(AsyncUpdateGameResult&)> callback, UpdateGameRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UpdateGameResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UpdateGameResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FGameFunctionHandler.updateGame");
         Char encodeBuffer[2048];
@@ -640,12 +644,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -656,8 +661,8 @@ public:
      */
     void deleteGame(std::function<void(AsyncDeleteGameResult&)> callback, DeleteGameRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<void>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FGameFunctionHandler.deleteGame");
         Char encodeBuffer[2048];
@@ -666,10 +671,11 @@ public:
             url += "&" + detail::StringVariable("gameName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -680,8 +686,8 @@ public:
      */
     void describeAccounts(std::function<void(AsyncDescribeAccountsResult&)> callback, DescribeAccountsRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeAccountsResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeAccountsResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FAccountFunctionHandler.describeAccounts");
         Char encodeBuffer[2048];
@@ -698,10 +704,11 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -712,8 +719,8 @@ public:
      */
     void createAccount(std::function<void(AsyncCreateAccountResult&)> callback, CreateAccountRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreateAccountResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<CreateAccountResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FAccountFunctionHandler.createAccount");
         Char encodeBuffer[2048];
@@ -727,12 +734,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -743,8 +751,8 @@ public:
      */
     void getAccount(std::function<void(AsyncGetAccountResult&)> callback, GetAccountRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetAccountResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetAccountResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FAccountFunctionHandler.getAccount");
         Char encodeBuffer[2048];
@@ -757,14 +765,15 @@ public:
             url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -775,8 +784,8 @@ public:
      */
     void deleteAccount(std::function<void(AsyncDeleteAccountResult&)> callback, DeleteAccountRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<void>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FAccountFunctionHandler.deleteAccount");
         Char encodeBuffer[2048];
@@ -789,14 +798,15 @@ public:
             url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -807,8 +817,8 @@ public:
      */
     void authentication(std::function<void(AsyncAuthenticationResult&)> callback, AuthenticationRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<AuthenticationResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<AuthenticationResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FAccountFunctionHandler.authentication");
         Char encodeBuffer[2048];
@@ -836,16 +846,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -856,8 +867,8 @@ public:
      */
     void describeTakeOvers(std::function<void(AsyncDescribeTakeOversResult&)> callback, DescribeTakeOversRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeTakeOversResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeTakeOversResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.describeTakeOvers");
         Char encodeBuffer[2048];
@@ -874,14 +885,15 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -892,8 +904,8 @@ public:
      */
     void createTakeOver(std::function<void(AsyncCreateTakeOverResult&)> callback, CreateTakeOverRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreateTakeOverResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<CreateTakeOverResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.createTakeOver");
         Char encodeBuffer[2048];
@@ -922,16 +934,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -942,8 +955,8 @@ public:
      */
     void createTakeOverByUserId(std::function<void(AsyncCreateTakeOverByUserIdResult&)> callback, CreateTakeOverByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreateTakeOverByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<CreateTakeOverByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.createTakeOverByUserId");
         Char encodeBuffer[2048];
@@ -976,16 +989,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -996,8 +1010,8 @@ public:
      */
     void getTakeOver(std::function<void(AsyncGetTakeOverResult&)> callback, GetTakeOverRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetTakeOverResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetTakeOverResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.getTakeOver");
         Char encodeBuffer[2048];
@@ -1014,14 +1028,15 @@ public:
             url += "&" + detail::StringVariable("userIdentifier={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1032,8 +1047,8 @@ public:
      */
     void getTakeOverByUserId(std::function<void(AsyncGetTakeOverByUserIdResult&)> callback, GetTakeOverByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetTakeOverByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetTakeOverByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.getTakeOverByUserId");
         Char encodeBuffer[2048];
@@ -1054,14 +1069,15 @@ public:
             url += "&" + detail::StringVariable("userIdentifier={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1072,8 +1088,8 @@ public:
      */
     void updateTakeOver(std::function<void(AsyncUpdateTakeOverResult&)> callback, UpdateTakeOverRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UpdateTakeOverResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UpdateTakeOverResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.updateTakeOver");
         Char encodeBuffer[2048];
@@ -1105,16 +1121,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1125,8 +1142,8 @@ public:
      */
     void updateTakeOverByUserId(std::function<void(AsyncUpdateTakeOverByUserIdResult&)> callback, UpdateTakeOverByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UpdateTakeOverByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UpdateTakeOverByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.updateTakeOverByUserId");
         Char encodeBuffer[2048];
@@ -1162,16 +1179,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1182,8 +1200,8 @@ public:
      */
     void deleteTakeOver(std::function<void(AsyncDeleteTakeOverResult&)> callback, DeleteTakeOverRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<void>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.deleteTakeOver");
         Char encodeBuffer[2048];
@@ -1200,14 +1218,15 @@ public:
             url += "&" + detail::StringVariable("userIdentifier={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1218,8 +1237,8 @@ public:
      */
     void deleteTakeOverByUserIdentifier(std::function<void(AsyncDeleteTakeOverByUserIdentifierResult&)> callback, DeleteTakeOverByUserIdentifierRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<void>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.deleteTakeOverByUserIdentifier");
         Char encodeBuffer[2048];
@@ -1236,14 +1255,15 @@ public:
             url += "&" + detail::StringVariable("userIdentifier={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1254,8 +1274,8 @@ public:
      */
     void doTakeOver(std::function<void(AsyncDoTakeOverResult&)> callback, DoTakeOverRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DoTakeOverResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DoTakeOverResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/account-handler?handler=gs2_account%2Fhandler%2FTakeOverFunctionHandler.doTakeOver");
         Char encodeBuffer[2048];
@@ -1283,12 +1303,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 };
 

@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace auth {
 
 /**
  * アクセストークン
@@ -46,7 +46,6 @@ private:
         /** ユーザーID */
         optional<StringHolder> userId;
         /** 有効期限 */
-        
         optional<Int64> expire;
 
         Data()

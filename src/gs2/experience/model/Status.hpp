@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace experience {
 
 /**
  * ステータス
@@ -48,19 +48,14 @@ private:
         /** プロパティID */
         optional<StringHolder> propertyId;
         /** 累計獲得経験値 */
-        
         optional<Int64> experienceValue;
         /** 累計獲得経験値 */
-        
         optional<Int64> rankValue;
         /** 現在のランクキャップ */
-        
         optional<Int64> rankCapValue;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 最終更新日時 */
-        
         optional<Int64> updateAt;
 
         Data()

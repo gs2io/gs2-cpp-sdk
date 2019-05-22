@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace inventory {
 
 /**
  * インベントリマスター
@@ -48,16 +48,12 @@ private:
         /** インベントリマスターの説明 */
         optional<StringHolder> description;
         /** インベントリの初期サイズ */
-        
         optional<Int32> initialCapacity;
         /** インベントリの最大サイズ */
-        
         optional<Int32> maxCapacity;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 最終更新日時 */
-        
         optional<Int64> updateAt;
 
         Data()

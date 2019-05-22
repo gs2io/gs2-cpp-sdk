@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace distributor {
 
 /**
  * ディストリビュータ
@@ -48,10 +48,8 @@ private:
         /** ディストリビュータの説明 */
         optional<StringHolder> description;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 最終更新日時 */
-        
         optional<Int64> updateAt;
 
         Data()

@@ -19,7 +19,7 @@
 
 #include <gs2/core/AbstractGs2Client.hpp>
 #include <gs2/core/json/JsonWriter.hpp>
-#include <gs2/core/network/HttpRequest.hpp>
+#include <gs2/core/network/Gs2StandardHttpTask.hpp>
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
@@ -81,6 +81,7 @@
 #include "result/GetCurrentLotteryMasterResult.hpp"
 #include "result/UpdateCurrentLotteryMasterResult.hpp"
 #include <cstring>
+#include <network/HttpRequest.h>
 
 namespace gs2 { namespace lottery {
 
@@ -130,7 +131,6 @@ private:
     }
 
 private:
-
     void write(detail::json::JsonWriter& writer, const Group& obj)
     {
         writer.writeObjectStart();
@@ -623,8 +623,8 @@ public:
      */
     void describeGroups(std::function<void(AsyncDescribeGroupsResult&)> callback, DescribeGroupsRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeGroupsResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeGroupsResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FGroupFunctionHandler.describeGroups");
         Char encodeBuffer[2048];
@@ -637,10 +637,11 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -651,8 +652,8 @@ public:
      */
     void createGroup(std::function<void(AsyncCreateGroupResult&)> callback, CreateGroupRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreateGroupResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<CreateGroupResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FGroupFunctionHandler.createGroup");
         auto& writer = detail::json::JsonWriter::getInstance();
@@ -671,12 +672,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -687,8 +689,8 @@ public:
      */
     void getGroupStatus(std::function<void(AsyncGetGroupStatusResult&)> callback, GetGroupStatusRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetGroupStatusResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetGroupStatusResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FGroupFunctionHandler.getGroupStatus");
         Char encodeBuffer[2048];
@@ -697,10 +699,11 @@ public:
             url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -711,8 +714,8 @@ public:
      */
     void getGroup(std::function<void(AsyncGetGroupResult&)> callback, GetGroupRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetGroupResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetGroupResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FGroupFunctionHandler.getGroup");
         Char encodeBuffer[2048];
@@ -721,10 +724,11 @@ public:
             url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -735,8 +739,8 @@ public:
      */
     void updateGroup(std::function<void(AsyncUpdateGroupResult&)> callback, UpdateGroupRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UpdateGroupResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UpdateGroupResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FGroupFunctionHandler.updateGroup");
         Char encodeBuffer[2048];
@@ -755,12 +759,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -771,8 +776,8 @@ public:
      */
     void deleteGroup(std::function<void(AsyncDeleteGroupResult&)> callback, DeleteGroupRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DeleteGroupResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DeleteGroupResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FGroupFunctionHandler.deleteGroup");
         Char encodeBuffer[2048];
@@ -781,10 +786,11 @@ public:
             url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -795,8 +801,8 @@ public:
      */
     void describeLotteryModelMasters(std::function<void(AsyncDescribeLotteryModelMastersResult&)> callback, DescribeLotteryModelMastersRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeLotteryModelMastersResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeLotteryModelMastersResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryModelMasterFunctionHandler.describeLotteryModelMasters");
         Char encodeBuffer[2048];
@@ -813,10 +819,11 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -827,8 +834,8 @@ public:
      */
     void createLotteryModelMaster(std::function<void(AsyncCreateLotteryModelMasterResult&)> callback, CreateLotteryModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreateLotteryModelMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<CreateLotteryModelMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryModelMasterFunctionHandler.createLotteryModelMaster");
         Char encodeBuffer[2048];
@@ -882,12 +889,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -898,8 +906,8 @@ public:
      */
     void getLotteryModelMaster(std::function<void(AsyncGetLotteryModelMasterResult&)> callback, GetLotteryModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetLotteryModelMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetLotteryModelMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryModelMasterFunctionHandler.getLotteryModelMaster");
         Char encodeBuffer[2048];
@@ -912,10 +920,11 @@ public:
             url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -926,8 +935,8 @@ public:
      */
     void updateLotteryModelMaster(std::function<void(AsyncUpdateLotteryModelMasterResult&)> callback, UpdateLotteryModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UpdateLotteryModelMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UpdateLotteryModelMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryModelMasterFunctionHandler.updateLotteryModelMaster");
         Char encodeBuffer[2048];
@@ -980,12 +989,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -996,8 +1006,8 @@ public:
      */
     void deleteLotteryModelMaster(std::function<void(AsyncDeleteLotteryModelMasterResult&)> callback, DeleteLotteryModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DeleteLotteryModelMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DeleteLotteryModelMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryModelMasterFunctionHandler.deleteLotteryModelMaster");
         Char encodeBuffer[2048];
@@ -1010,10 +1020,11 @@ public:
             url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1024,8 +1035,8 @@ public:
      */
     void describePrizeTableMasters(std::function<void(AsyncDescribePrizeTableMastersResult&)> callback, DescribePrizeTableMastersRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribePrizeTableMastersResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribePrizeTableMastersResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FPrizeTableMasterFunctionHandler.describePrizeTableMasters");
         Char encodeBuffer[2048];
@@ -1042,10 +1053,11 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1056,8 +1068,8 @@ public:
      */
     void createPrizeTableMaster(std::function<void(AsyncCreatePrizeTableMasterResult&)> callback, CreatePrizeTableMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreatePrizeTableMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<CreatePrizeTableMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FPrizeTableMasterFunctionHandler.createPrizeTableMaster");
         Char encodeBuffer[2048];
@@ -1097,12 +1109,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1113,8 +1126,8 @@ public:
      */
     void getPrizeTableMaster(std::function<void(AsyncGetPrizeTableMasterResult&)> callback, GetPrizeTableMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetPrizeTableMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetPrizeTableMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FPrizeTableMasterFunctionHandler.getPrizeTableMaster");
         Char encodeBuffer[2048];
@@ -1127,10 +1140,11 @@ public:
             url += "&" + detail::StringVariable("prizeTableName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1141,8 +1155,8 @@ public:
      */
     void updatePrizeTableMaster(std::function<void(AsyncUpdatePrizeTableMasterResult&)> callback, UpdatePrizeTableMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UpdatePrizeTableMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UpdatePrizeTableMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FPrizeTableMasterFunctionHandler.updatePrizeTableMaster");
         Char encodeBuffer[2048];
@@ -1181,12 +1195,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1197,8 +1212,8 @@ public:
      */
     void deletePrizeTableMaster(std::function<void(AsyncDeletePrizeTableMasterResult&)> callback, DeletePrizeTableMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DeletePrizeTableMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DeletePrizeTableMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FPrizeTableMasterFunctionHandler.deletePrizeTableMaster");
         Char encodeBuffer[2048];
@@ -1211,10 +1226,11 @@ public:
             url += "&" + detail::StringVariable("prizeTableName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1225,8 +1241,8 @@ public:
      */
     void describeBoxes(std::function<void(AsyncDescribeBoxesResult&)> callback, DescribeBoxesRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeBoxesResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeBoxesResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FBoxFunctionHandler.describeBoxes");
         Char encodeBuffer[2048];
@@ -1247,14 +1263,15 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1265,8 +1282,8 @@ public:
      */
     void getBox(std::function<void(AsyncGetBoxResult&)> callback, GetBoxRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetBoxResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetBoxResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FBoxFunctionHandler.getBox");
         Char encodeBuffer[2048];
@@ -1279,14 +1296,15 @@ public:
             url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1297,8 +1315,8 @@ public:
      */
     void getBoxByUserId(std::function<void(AsyncGetBoxByUserIdResult&)> callback, GetBoxByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetBoxByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetBoxByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FBoxFunctionHandler.getBoxByUserId");
         Char encodeBuffer[2048];
@@ -1315,14 +1333,15 @@ public:
             url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1333,8 +1352,8 @@ public:
      */
     void resetBox(std::function<void(AsyncResetBoxResult&)> callback, ResetBoxRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<void>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FBoxFunctionHandler.resetBox");
         Char encodeBuffer[2048];
@@ -1347,14 +1366,15 @@ public:
             url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1365,8 +1385,8 @@ public:
      */
     void resetBoxByUserId(std::function<void(AsyncResetBoxByUserIdResult&)> callback, ResetBoxByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<void>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<void>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FBoxFunctionHandler.resetBoxByUserId");
         Char encodeBuffer[2048];
@@ -1383,14 +1403,15 @@ public:
             url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1401,8 +1422,8 @@ public:
      */
     void describeLotteryModels(std::function<void(AsyncDescribeLotteryModelsResult&)> callback, DescribeLotteryModelsRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeLotteryModelsResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeLotteryModelsResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryModelFunctionHandler.describeLotteryModels");
         Char encodeBuffer[2048];
@@ -1411,10 +1432,11 @@ public:
             url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1425,8 +1447,8 @@ public:
      */
     void getLotteryModel(std::function<void(AsyncGetLotteryModelResult&)> callback, GetLotteryModelRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetLotteryModelResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetLotteryModelResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryModelFunctionHandler.getLotteryModel");
         Char encodeBuffer[2048];
@@ -1439,10 +1461,11 @@ public:
             url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1453,8 +1476,8 @@ public:
      */
     void draw(std::function<void(AsyncDrawResult&)> callback, DrawRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DrawResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DrawResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryFunctionHandler.draw");
         Char encodeBuffer[2048];
@@ -1467,14 +1490,15 @@ public:
             url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1485,8 +1509,8 @@ public:
      */
     void describeProbabilities(std::function<void(AsyncDescribeProbabilitiesResult&)> callback, DescribeProbabilitiesRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeProbabilitiesResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeProbabilitiesResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryFunctionHandler.describeProbabilities");
         Char encodeBuffer[2048];
@@ -1499,10 +1523,11 @@ public:
             url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1513,8 +1538,8 @@ public:
      */
     void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<ExportMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<ExportMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FCurrentLotteryMasterFunctionHandler.exportMaster");
         Char encodeBuffer[2048];
@@ -1523,10 +1548,11 @@ public:
             url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1537,8 +1563,8 @@ public:
      */
     void getCurrentLotteryMaster(std::function<void(AsyncGetCurrentLotteryMasterResult&)> callback, GetCurrentLotteryMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetCurrentLotteryMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetCurrentLotteryMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FCurrentLotteryMasterFunctionHandler.getCurrentLotteryMaster");
         Char encodeBuffer[2048];
@@ -1547,10 +1573,11 @@ public:
             url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1561,8 +1588,8 @@ public:
      */
     void updateCurrentLotteryMaster(std::function<void(AsyncUpdateCurrentLotteryMasterResult&)> callback, UpdateCurrentLotteryMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UpdateCurrentLotteryMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UpdateCurrentLotteryMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FCurrentLotteryMasterFunctionHandler.updateCurrentLotteryMaster");
         Char encodeBuffer[2048];
@@ -1581,12 +1608,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 };
 

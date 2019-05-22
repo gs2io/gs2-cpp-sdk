@@ -19,7 +19,7 @@
 
 #include <gs2/core/AbstractGs2Client.hpp>
 #include <gs2/core/json/JsonWriter.hpp>
-#include <gs2/core/network/HttpRequest.hpp>
+#include <gs2/core/network/Gs2StandardHttpTask.hpp>
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
@@ -107,6 +107,7 @@
 #include "result/AcquireItemSetByStampSheetResult.hpp"
 #include "result/ConsumeItemSetByStampTaskResult.hpp"
 #include <cstring>
+#include <network/HttpRequest.h>
 
 namespace gs2 { namespace inventory {
 
@@ -169,7 +170,6 @@ private:
     }
 
 private:
-
     void write(detail::json::JsonWriter& writer, const Category& obj)
     {
         writer.writeObjectStart();
@@ -568,8 +568,8 @@ public:
      */
     void describeCategories(std::function<void(AsyncDescribeCategoriesResult&)> callback, DescribeCategoriesRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeCategoriesResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeCategoriesResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FCategoryFunctionHandler.describeCategories");
         Char encodeBuffer[2048];
@@ -582,10 +582,11 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -596,8 +597,8 @@ public:
      */
     void createCategory(std::function<void(AsyncCreateCategoryResult&)> callback, CreateCategoryRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreateCategoryResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<CreateCategoryResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FCategoryFunctionHandler.createCategory");
         auto& writer = detail::json::JsonWriter::getInstance();
@@ -626,12 +627,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -642,8 +644,8 @@ public:
      */
     void getCategoryStatus(std::function<void(AsyncGetCategoryStatusResult&)> callback, GetCategoryStatusRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetCategoryStatusResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetCategoryStatusResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FCategoryFunctionHandler.getCategoryStatus");
         Char encodeBuffer[2048];
@@ -652,10 +654,11 @@ public:
             url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -666,8 +669,8 @@ public:
      */
     void getCategory(std::function<void(AsyncGetCategoryResult&)> callback, GetCategoryRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetCategoryResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetCategoryResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FCategoryFunctionHandler.getCategory");
         Char encodeBuffer[2048];
@@ -676,10 +679,11 @@ public:
             url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -690,8 +694,8 @@ public:
      */
     void updateCategory(std::function<void(AsyncUpdateCategoryResult&)> callback, UpdateCategoryRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UpdateCategoryResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UpdateCategoryResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FCategoryFunctionHandler.updateCategory");
         Char encodeBuffer[2048];
@@ -720,12 +724,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -736,8 +741,8 @@ public:
      */
     void deleteCategory(std::function<void(AsyncDeleteCategoryResult&)> callback, DeleteCategoryRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DeleteCategoryResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DeleteCategoryResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FCategoryFunctionHandler.deleteCategory");
         Char encodeBuffer[2048];
@@ -746,10 +751,11 @@ public:
             url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -760,8 +766,8 @@ public:
      */
     void describeInventoryModelMasters(std::function<void(AsyncDescribeInventoryModelMastersResult&)> callback, DescribeInventoryModelMastersRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeInventoryModelMastersResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeInventoryModelMastersResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryModelMasterFunctionHandler.describeInventoryModelMasters");
         Char encodeBuffer[2048];
@@ -778,10 +784,11 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -792,8 +799,8 @@ public:
      */
     void createInventoryModelMaster(std::function<void(AsyncCreateInventoryModelMasterResult&)> callback, CreateInventoryModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreateInventoryModelMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<CreateInventoryModelMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryModelMasterFunctionHandler.createInventoryModelMaster");
         Char encodeBuffer[2048];
@@ -832,12 +839,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -848,8 +856,8 @@ public:
      */
     void getInventoryModelMaster(std::function<void(AsyncGetInventoryModelMasterResult&)> callback, GetInventoryModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetInventoryModelMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetInventoryModelMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryModelMasterFunctionHandler.getInventoryModelMaster");
         Char encodeBuffer[2048];
@@ -862,10 +870,11 @@ public:
             url += "&" + detail::StringVariable("inventoryModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -876,8 +885,8 @@ public:
      */
     void updateInventoryModelMaster(std::function<void(AsyncUpdateInventoryModelMasterResult&)> callback, UpdateInventoryModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UpdateInventoryModelMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UpdateInventoryModelMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryModelMasterFunctionHandler.updateInventoryModelMaster");
         Char encodeBuffer[2048];
@@ -915,12 +924,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -931,8 +941,8 @@ public:
      */
     void deleteInventoryModelMaster(std::function<void(AsyncDeleteInventoryModelMasterResult&)> callback, DeleteInventoryModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DeleteInventoryModelMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DeleteInventoryModelMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryModelMasterFunctionHandler.deleteInventoryModelMaster");
         Char encodeBuffer[2048];
@@ -945,10 +955,11 @@ public:
             url += "&" + detail::StringVariable("inventoryModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -959,8 +970,8 @@ public:
      */
     void describeInventoryModels(std::function<void(AsyncDescribeInventoryModelsResult&)> callback, DescribeInventoryModelsRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeInventoryModelsResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeInventoryModelsResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryModelFunctionHandler.describeInventoryModels");
         Char encodeBuffer[2048];
@@ -969,10 +980,11 @@ public:
             url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -983,8 +995,8 @@ public:
      */
     void getInventoryModel(std::function<void(AsyncGetInventoryModelResult&)> callback, GetInventoryModelRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetInventoryModelResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetInventoryModelResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryModelFunctionHandler.getInventoryModel");
         Char encodeBuffer[2048];
@@ -997,10 +1009,11 @@ public:
             url += "&" + detail::StringVariable("inventoryModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1011,8 +1024,8 @@ public:
      */
     void describeItemModelMasters(std::function<void(AsyncDescribeItemModelMastersResult&)> callback, DescribeItemModelMastersRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeItemModelMastersResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeItemModelMastersResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemModelMasterFunctionHandler.describeItemModelMasters");
         Char encodeBuffer[2048];
@@ -1033,10 +1046,11 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1047,8 +1061,8 @@ public:
      */
     void createItemModelMaster(std::function<void(AsyncCreateItemModelMasterResult&)> callback, CreateItemModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreateItemModelMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<CreateItemModelMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemModelMasterFunctionHandler.createItemModelMaster");
         Char encodeBuffer[2048];
@@ -1092,12 +1106,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1108,8 +1123,8 @@ public:
      */
     void getItemModelMaster(std::function<void(AsyncGetItemModelMasterResult&)> callback, GetItemModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetItemModelMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetItemModelMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemModelMasterFunctionHandler.getItemModelMaster");
         Char encodeBuffer[2048];
@@ -1126,10 +1141,11 @@ public:
             url += "&" + detail::StringVariable("itemModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1140,8 +1156,8 @@ public:
      */
     void updateItemModelMaster(std::function<void(AsyncUpdateItemModelMasterResult&)> callback, UpdateItemModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UpdateItemModelMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UpdateItemModelMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemModelMasterFunctionHandler.updateItemModelMaster");
         Char encodeBuffer[2048];
@@ -1183,12 +1199,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1199,8 +1216,8 @@ public:
      */
     void deleteItemModelMaster(std::function<void(AsyncDeleteItemModelMasterResult&)> callback, DeleteItemModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DeleteItemModelMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DeleteItemModelMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemModelMasterFunctionHandler.deleteItemModelMaster");
         Char encodeBuffer[2048];
@@ -1217,10 +1234,11 @@ public:
             url += "&" + detail::StringVariable("itemModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1231,8 +1249,8 @@ public:
      */
     void describeItemModels(std::function<void(AsyncDescribeItemModelsResult&)> callback, DescribeItemModelsRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeItemModelsResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeItemModelsResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemModelFunctionHandler.describeItemModels");
         Char encodeBuffer[2048];
@@ -1245,10 +1263,11 @@ public:
             url += "&" + detail::StringVariable("inventoryModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1259,8 +1278,8 @@ public:
      */
     void getItemModel(std::function<void(AsyncGetItemModelResult&)> callback, GetItemModelRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetItemModelResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetItemModelResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemModelFunctionHandler.getItemModel");
         Char encodeBuffer[2048];
@@ -1277,10 +1296,11 @@ public:
             url += "&" + detail::StringVariable("itemModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1291,8 +1311,8 @@ public:
      */
     void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<ExportMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<ExportMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FCurrentItemModelMasterFunctionHandler.exportMaster");
         Char encodeBuffer[2048];
@@ -1301,10 +1321,11 @@ public:
             url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1315,8 +1336,8 @@ public:
      */
     void getCurrentItemModelMaster(std::function<void(AsyncGetCurrentItemModelMasterResult&)> callback, GetCurrentItemModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetCurrentItemModelMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetCurrentItemModelMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FCurrentItemModelMasterFunctionHandler.getCurrentItemModelMaster");
         Char encodeBuffer[2048];
@@ -1325,10 +1346,11 @@ public:
             url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1339,8 +1361,8 @@ public:
      */
     void updateCurrentItemModelMaster(std::function<void(AsyncUpdateCurrentItemModelMasterResult&)> callback, UpdateCurrentItemModelMasterRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UpdateCurrentItemModelMasterResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UpdateCurrentItemModelMasterResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FCurrentItemModelMasterFunctionHandler.updateCurrentItemModelMaster");
         Char encodeBuffer[2048];
@@ -1359,12 +1381,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1375,8 +1398,8 @@ public:
      */
     void describeInventories(std::function<void(AsyncDescribeInventoriesResult&)> callback, DescribeInventoriesRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeInventoriesResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeInventoriesResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryFunctionHandler.describeInventories");
         Char encodeBuffer[2048];
@@ -1393,14 +1416,15 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1411,8 +1435,8 @@ public:
      */
     void getInventory(std::function<void(AsyncGetInventoryResult&)> callback, GetInventoryRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetInventoryResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetInventoryResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryFunctionHandler.getInventory");
         Char encodeBuffer[2048];
@@ -1425,14 +1449,15 @@ public:
             url += "&" + detail::StringVariable("inventoryModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1443,8 +1468,8 @@ public:
      */
     void getInventoryByUserId(std::function<void(AsyncGetInventoryByUserIdResult&)> callback, GetInventoryByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetInventoryByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetInventoryByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryFunctionHandler.getInventoryByUserId");
         Char encodeBuffer[2048];
@@ -1461,14 +1486,15 @@ public:
             url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1479,8 +1505,8 @@ public:
      */
     void addCapacityByUserId(std::function<void(AsyncAddCapacityByUserIdResult&)> callback, AddCapacityByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<AddCapacityByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<AddCapacityByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryFunctionHandler.addCapacityByUserId");
         Char encodeBuffer[2048];
@@ -1507,16 +1533,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1527,8 +1554,8 @@ public:
      */
     void setCapacityByUserId(std::function<void(AsyncSetCapacityByUserIdResult&)> callback, SetCapacityByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<SetCapacityByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<SetCapacityByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryFunctionHandler.setCapacityByUserId");
         Char encodeBuffer[2048];
@@ -1555,16 +1582,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1575,8 +1603,8 @@ public:
      */
     void deleteInventoryByUserId(std::function<void(AsyncDeleteInventoryByUserIdResult&)> callback, DeleteInventoryByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DeleteInventoryByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DeleteInventoryByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryFunctionHandler.deleteInventoryByUserId");
         Char encodeBuffer[2048];
@@ -1593,14 +1621,15 @@ public:
             url += "&" + detail::StringVariable("inventoryModelName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1611,8 +1640,8 @@ public:
      */
     void addCapacityByStampSheet(std::function<void(AsyncAddCapacityByStampSheetResult&)> callback, AddCapacityByStampSheetRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<AddCapacityByStampSheetResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<AddCapacityByStampSheetResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryFunctionHandler.addCapacityByStampSheet");
         auto& writer = detail::json::JsonWriter::getInstance();
@@ -1631,16 +1660,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1651,8 +1681,8 @@ public:
      */
     void setCapacityByStampSheet(std::function<void(AsyncSetCapacityByStampSheetResult&)> callback, SetCapacityByStampSheetRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<SetCapacityByStampSheetResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<SetCapacityByStampSheetResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FInventoryFunctionHandler.setCapacityByStampSheet");
         auto& writer = detail::json::JsonWriter::getInstance();
@@ -1671,16 +1701,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1691,8 +1722,8 @@ public:
      */
     void describeItemSets(std::function<void(AsyncDescribeItemSetsResult&)> callback, DescribeItemSetsRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeItemSetsResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeItemSetsResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemSetFunctionHandler.describeItemSets");
         Char encodeBuffer[2048];
@@ -1713,14 +1744,15 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1731,8 +1763,8 @@ public:
      */
     void describeItemSetsByUserId(std::function<void(AsyncDescribeItemSetsByUserIdResult&)> callback, DescribeItemSetsByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeItemSetsByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeItemSetsByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemSetFunctionHandler.describeItemSetsByUserId");
         Char encodeBuffer[2048];
@@ -1757,14 +1789,15 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1775,8 +1808,8 @@ public:
      */
     void getItemSet(std::function<void(AsyncGetItemSetResult&)> callback, GetItemSetRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetItemSetResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetItemSetResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemSetFunctionHandler.getItemSet");
         Char encodeBuffer[2048];
@@ -1797,14 +1830,15 @@ public:
             url += "&" + detail::StringVariable("expiresAt={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1815,8 +1849,8 @@ public:
      */
     void getItemSetByUserId(std::function<void(AsyncGetItemSetByUserIdResult&)> callback, GetItemSetByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetItemSetByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetItemSetByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemSetFunctionHandler.getItemSetByUserId");
         Char encodeBuffer[2048];
@@ -1841,14 +1875,15 @@ public:
             url += "&" + detail::StringVariable("expiresAt={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1859,8 +1894,8 @@ public:
      */
     void acquireItemSetByUserId(std::function<void(AsyncAcquireItemSetByUserIdResult&)> callback, AcquireItemSetByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<AcquireItemSetByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<AcquireItemSetByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemSetFunctionHandler.acquireItemSetByUserId");
         Char encodeBuffer[2048];
@@ -1896,16 +1931,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1916,8 +1952,8 @@ public:
      */
     void consumeItemSet(std::function<void(AsyncConsumeItemSetResult&)> callback, ConsumeItemSetRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<ConsumeItemSetResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<ConsumeItemSetResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemSetFunctionHandler.consumeItemSet");
         Char encodeBuffer[2048];
@@ -1949,16 +1985,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1969,8 +2006,8 @@ public:
      */
     void consumeItemSetByUserId(std::function<void(AsyncConsumeItemSetByUserIdResult&)> callback, ConsumeItemSetByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<ConsumeItemSetByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<ConsumeItemSetByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemSetFunctionHandler.consumeItemSetByUserId");
         Char encodeBuffer[2048];
@@ -2006,16 +2043,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -2026,8 +2064,8 @@ public:
      */
     void deleteItemSetByUserId(std::function<void(AsyncDeleteItemSetByUserIdResult&)> callback, DeleteItemSetByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DeleteItemSetByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DeleteItemSetByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemSetFunctionHandler.deleteItemSetByUserId");
         Char encodeBuffer[2048];
@@ -2052,14 +2090,15 @@ public:
             url += "&" + detail::StringVariable("expiresAt={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -2070,8 +2109,8 @@ public:
      */
     void acquireItemSetByStampSheet(std::function<void(AsyncAcquireItemSetByStampSheetResult&)> callback, AcquireItemSetByStampSheetRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<AcquireItemSetByStampSheetResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<AcquireItemSetByStampSheetResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemSetFunctionHandler.acquireItemSetByStampSheet");
         auto& writer = detail::json::JsonWriter::getInstance();
@@ -2090,16 +2129,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -2110,8 +2150,8 @@ public:
      */
     void consumeItemSetByStampTask(std::function<void(AsyncConsumeItemSetByStampTaskResult&)> callback, ConsumeItemSetByStampTaskRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<ConsumeItemSetByStampTaskResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<ConsumeItemSetByStampTaskResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inventory-handler?handler=gs2_inventory%2Fhandler%2FItemSetFunctionHandler.consumeItemSetByStampTask");
         auto& writer = detail::json::JsonWriter::getInstance();
@@ -2130,16 +2170,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 };
 

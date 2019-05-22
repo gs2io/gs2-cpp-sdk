@@ -19,7 +19,7 @@
 
 #include <gs2/core/AbstractGs2Client.hpp>
 #include <gs2/core/json/JsonWriter.hpp>
-#include <gs2/core/network/HttpRequest.hpp>
+#include <gs2/core/network/Gs2StandardHttpTask.hpp>
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
@@ -53,6 +53,7 @@
 #include "result/GetMutexByUserIdResult.hpp"
 #include "result/DeleteMutexByUserIdResult.hpp"
 #include <cstring>
+#include <network/HttpRequest.h>
 
 namespace gs2 { namespace lock {
 
@@ -88,7 +89,6 @@ private:
     }
 
 private:
-
     void write(detail::json::JsonWriter& writer, const Category& obj)
     {
         writer.writeObjectStart();
@@ -240,8 +240,8 @@ public:
      */
     void describeCategories(std::function<void(AsyncDescribeCategoriesResult&)> callback, DescribeCategoriesRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeCategoriesResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeCategoriesResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.describeCategories");
         Char encodeBuffer[2048];
@@ -254,10 +254,11 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -268,8 +269,8 @@ public:
      */
     void createCategory(std::function<void(AsyncCreateCategoryResult&)> callback, CreateCategoryRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<CreateCategoryResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<CreateCategoryResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.createCategory");
         auto& writer = detail::json::JsonWriter::getInstance();
@@ -288,12 +289,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -304,8 +306,8 @@ public:
      */
     void getCategoryStatus(std::function<void(AsyncGetCategoryStatusResult&)> callback, GetCategoryStatusRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetCategoryStatusResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetCategoryStatusResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.getCategoryStatus");
         Char encodeBuffer[2048];
@@ -314,10 +316,11 @@ public:
             url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -328,8 +331,8 @@ public:
      */
     void getCategory(std::function<void(AsyncGetCategoryResult&)> callback, GetCategoryRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetCategoryResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetCategoryResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.getCategory");
         Char encodeBuffer[2048];
@@ -338,10 +341,11 @@ public:
             url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -352,8 +356,8 @@ public:
      */
     void updateCategory(std::function<void(AsyncUpdateCategoryResult&)> callback, UpdateCategoryRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UpdateCategoryResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UpdateCategoryResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.updateCategory");
         Char encodeBuffer[2048];
@@ -372,12 +376,13 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -388,8 +393,8 @@ public:
      */
     void deleteCategory(std::function<void(AsyncDeleteCategoryResult&)> callback, DeleteCategoryRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DeleteCategoryResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DeleteCategoryResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.deleteCategory");
         Char encodeBuffer[2048];
@@ -398,10 +403,11 @@ public:
             url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -412,8 +418,8 @@ public:
      */
     void describeMutexes(std::function<void(AsyncDescribeMutexesResult&)> callback, DescribeMutexesRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DescribeMutexesResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DescribeMutexesResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.describeMutexes");
         Char encodeBuffer[2048];
@@ -430,14 +436,15 @@ public:
             url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -448,8 +455,8 @@ public:
      */
     void lock(std::function<void(AsyncLockResult&)> callback, LockRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<LockResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<LockResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.lock");
         Char encodeBuffer[2048];
@@ -477,16 +484,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -497,8 +505,8 @@ public:
      */
     void lockByUserId(std::function<void(AsyncLockByUserIdResult&)> callback, LockByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<LockByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<LockByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.lockByUserId");
         Char encodeBuffer[2048];
@@ -530,16 +538,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -550,8 +559,8 @@ public:
      */
     void unlock(std::function<void(AsyncUnlockResult&)> callback, UnlockRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UnlockResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UnlockResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.unlock");
         Char encodeBuffer[2048];
@@ -574,16 +583,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -594,8 +604,8 @@ public:
      */
     void unlockByUserId(std::function<void(AsyncUnlockByUserIdResult&)> callback, UnlockByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<UnlockByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<UnlockByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.unlockByUserId");
         Char encodeBuffer[2048];
@@ -622,16 +632,17 @@ public:
         writer.writeObjectEnd();
         auto body = writer.toString();
         auto bodySize = strlen(body);
-        httpRequest.setRequestData(body, bodySize);
+        gs2StandardHttpTask.getHttpRequest().setRequestData(body, bodySize);
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -642,8 +653,8 @@ public:
      */
     void getMutex(std::function<void(AsyncGetMutexResult&)> callback, GetMutexRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetMutexResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetMutexResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.getMutex");
         Char encodeBuffer[2048];
@@ -656,14 +667,15 @@ public:
             url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -674,8 +686,8 @@ public:
      */
     void getMutexByUserId(std::function<void(AsyncGetMutexByUserIdResult&)> callback, GetMutexByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<GetMutexByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<GetMutexByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.getMutexByUserId");
         Char encodeBuffer[2048];
@@ -692,14 +704,15 @@ public:
             url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -710,8 +723,8 @@ public:
      */
     void deleteMutexByUserId(std::function<void(AsyncDeleteMutexByUserIdResult&)> callback, DeleteMutexByUserIdRequest& request)
     {
-        auto& httpRequest = *new detail::HttpRequest<DeleteMutexByUserIdResult>;
-        httpRequest.setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& gs2StandardHttpTask = *new detail::Gs2StandardHttpTask<DeleteMutexByUserIdResult>(callback);
+        gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.deleteMutexByUserId");
         Char encodeBuffer[2048];
@@ -728,14 +741,15 @@ public:
             url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
         }
 
-        setUrl(httpRequest, url.c_str());
-        setHeaders(httpRequest, request);
+        setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
+        std::vector<std::string> headerEntries;
+        setHeaderEntries(headerEntries, request);
         if (request.getDuplicationAvoider())
         {
-            httpRequest.addHeader("X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
+            detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
-        httpRequest.setCallback(callback);
-        send(httpRequest);
+        gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
+        getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
 };
 

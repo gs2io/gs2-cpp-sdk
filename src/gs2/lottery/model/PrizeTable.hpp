@@ -23,9 +23,10 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "Prize.hpp"
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace lottery {
 
 /**
  * 景品の排出確率テーブル
@@ -46,7 +47,6 @@ private:
         /** 景品テーブルのメタデータ */
         optional<StringHolder> metadata;
         /** 景品リスト */
-        
         optional<List<Prize>> prizes;
 
         Data()

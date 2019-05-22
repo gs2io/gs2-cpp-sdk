@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace inventory {
 
 /**
  * アイテムセット
@@ -48,19 +48,14 @@ private:
         /** アイテムモデルの種類名 */
         optional<StringHolder> itemModelName;
         /** 所持数量 */
-        
         optional<Int64> count;
         /** 表示順番 */
-        
         optional<Int32> sortValue;
         /** 有効期限 */
-        
         optional<Int64> expiresAt;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 最終更新日時 */
-        
         optional<Int64> updateAt;
 
         Data()

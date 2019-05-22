@@ -23,9 +23,10 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "ItemModel.hpp"
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace inventory {
 
 /**
  * インベントリマスター
@@ -46,13 +47,10 @@ private:
         /** インベントリの種類のメタデータ */
         optional<StringHolder> metadata;
         /** インベントリの初期サイズ */
-        
         optional<Int32> initialCapacity;
         /** インベントリの最大サイズ */
-        
         optional<Int32> maxCapacity;
         /** インベントリに格納可能なアイテムモデル一覧 */
-        
         optional<List<ItemModel>> itemModels;
 
         Data()

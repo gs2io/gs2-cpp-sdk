@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace schedule {
 
 /**
  * イベント
@@ -48,15 +48,12 @@ private:
         /** イベント期間の種類 */
         optional<StringHolder> scheduleType;
         /** イベントの開始日時 */
-        
         optional<Int64> absoluteBegin;
         /** イベントの終了日時 */
-        
         optional<Int64> absoluteEnd;
         /** イベントの開始トリガー */
         optional<StringHolder> relativeTriggerName;
         /** イベントの開催期間(秒) */
-        
         optional<Int32> relativeDuration;
 
         Data()

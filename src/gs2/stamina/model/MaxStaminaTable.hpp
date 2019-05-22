@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace stamina {
 
 /**
  * スタミナ最大値テーブル
@@ -48,7 +48,6 @@ private:
         /** 経験値の種類 のGRN */
         optional<StringHolder> experienceModelId;
         /** ランク毎のスタミナの最大値テーブル */
-        
         optional<List<Int32>> values;
 
         Data()
@@ -110,9 +109,10 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->values.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        Int32 item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
-                        *this->values += std::move(item);
+                        if (json->IsInt())
+                        {
+                            *this->values += json->GetInt();
+                        }
                     }
                 }
             }

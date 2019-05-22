@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace lock {
 
 /**
  * ミューテックス
@@ -48,13 +48,10 @@ private:
         /** ロックを取得したトランザクションID */
         optional<StringHolder> transactionId;
         /** 参照回数 */
-        
         optional<Int32> referenceCount;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 作成日時 */
-        
         optional<Int64> ttlAt;
 
         Data()

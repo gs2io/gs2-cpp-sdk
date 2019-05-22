@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace identifier {
 
 /**
  * GSI
@@ -46,7 +46,6 @@ private:
         /** ユーザー名 */
         optional<StringHolder> userName;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** クライアントシークレット */
         optional<StringHolder> clientSecret;

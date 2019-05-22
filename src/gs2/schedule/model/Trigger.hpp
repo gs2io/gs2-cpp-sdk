@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace schedule {
 
 /**
  * トリガー
@@ -46,10 +46,8 @@ private:
         /** ユーザーID */
         optional<StringHolder> userId;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** None */
-        
         optional<Int64> expiresAt;
 
         Data()

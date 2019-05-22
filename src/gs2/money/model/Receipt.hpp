@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace money {
 
 /**
  * レシート
@@ -46,26 +46,20 @@ private:
         /** ユーザーID */
         optional<StringHolder> userId;
         /** None */
-        
         optional<Int32> slot;
         /** 種類 */
         optional<StringHolder> type;
         /** 単価 */
-        
         optional<Float> price;
         /** 有償課金通貨 */
-        
         optional<Int32> paid;
         /** 無償課金通貨 */
-        
         optional<Int32> free;
         /** 総数 */
-        
         optional<Int32> total;
         /** ストアプラットフォームで販売されているコンテンツID */
         optional<StringHolder> contentsId;
         /** 作成日時 */
-        
         optional<Int64> createAt;
 
         Data()

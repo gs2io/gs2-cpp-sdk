@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace lottery {
 
 /**
  * 排出済みの景品情報
@@ -42,10 +42,8 @@ private:
         /** プロパティID */
         optional<StringHolder> propertyId;
         /** 残り数量 */
-        
         optional<Int32> remaining;
         /** 初期数量 */
-        
         optional<Int32> initial;
 
         Data()

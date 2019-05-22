@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace account {
 
 /**
  * 引き継ぎ設定
@@ -44,12 +44,10 @@ private:
         /** ユーザーID */
         optional<StringHolder> userId;
         /** スロット番号 */
-        
         optional<Int32> type;
         /** 引き継ぎ用ユーザーID */
         optional<StringHolder> userIdentifier;
         /** 作成日時 */
-        
         optional<Int64> createAt;
 
         Data()

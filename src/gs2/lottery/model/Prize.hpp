@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace lottery {
 
 /**
  * 景品
@@ -46,7 +46,6 @@ private:
         /** 景品テーブル名 */
         optional<StringHolder> prizeTableName;
         /** 排出重み */
-        
         optional<Int32> weight;
 
         Data()

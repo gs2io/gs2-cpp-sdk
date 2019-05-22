@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace inbox {
 
 /**
  * プレゼントボックス
@@ -48,7 +48,6 @@ private:
         /** 説明文 */
         optional<StringHolder> description;
         /** 開封したメッセージを自動的に削除するか */
-        
         optional<Bool> isAutomaticDeletingEnabled;
         /** メッセージ受信時 に実行されるスクリプト のGRN */
         optional<StringHolder> receiveMessageTriggerScriptId;
@@ -69,10 +68,8 @@ private:
         /** メッセージ削除完了時 にジョブが登録されるキュー のGRN */
         optional<StringHolder> deleteMessageDoneTriggerQueueId;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 最終更新日時 */
-        
         optional<Int64> updateAt;
 
         Data()

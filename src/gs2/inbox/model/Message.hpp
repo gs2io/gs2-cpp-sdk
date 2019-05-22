@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace inbox {
 
 /**
  * メッセージ
@@ -48,17 +48,14 @@ private:
         /** メッセージの内容に相当するメタデータ */
         optional<StringHolder> metadata;
         /** 既読状態 */
-        
         optional<Bool> isRead;
         /** メッセージ開封時 に実行されるスクリプト のGRN */
         optional<StringHolder> readMessageTriggerScriptId;
         /** メッセージ開封時 に実行されるスクリプト に指定する引数 */
         optional<StringHolder> readMessageTriggerScriptArgs;
         /** 作成日時 */
-        
         optional<Int64> receivedAt;
         /** 最終更新日時 */
-        
         optional<Int64> readAt;
 
         Data()

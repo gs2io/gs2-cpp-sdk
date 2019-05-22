@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace identifier {
 
 /**
  * 割り当てられたセキュリティポリシー
@@ -42,10 +42,8 @@ private:
         /** ユーザー のGRN */
         optional<StringHolder> userId;
         /** セキュリティポリシー のGRNのリスト */
-        
         optional<List<StringHolder>> securityPolicyIds;
         /** 作成日時 */
-        
         optional<Int64> attachAt;
 
         Data()
@@ -85,9 +83,12 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->securityPolicyIds.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        auto valueStr = json->GetString();
-                        StringHolder stringHolder(valueStr);
-                        *this->securityPolicyIds += std::move(stringHolder);
+                        if (jsonValue.IsString())
+                        {
+                            auto valueStr = json->GetString();
+                            StringHolder stringHolder(valueStr);
+                            *this->securityPolicyIds += std::move(stringHolder);
+                        }
                     }
                 }
             }

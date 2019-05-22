@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace inventory {
 
 /**
  * インベントリ
@@ -46,16 +46,12 @@ private:
         /** ユーザーID */
         optional<StringHolder> userId;
         /** 現在のインベントリのキャパシティ使用量 */
-        
         optional<Int32> currentInventoryCapacityUsage;
         /** 現在のインベントリの最大キャパシティ */
-        
         optional<Int32> currentInventoryMaxCapacity;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 最終更新日時 */
-        
         optional<Int64> updateAt;
 
         Data()

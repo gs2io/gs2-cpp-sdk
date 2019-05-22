@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace money {
 
 /**
  * 課金通貨
@@ -50,7 +50,6 @@ private:
         /** 消費優先度 */
         optional<StringHolder> priority;
         /** 無償課金通貨を異なるスロットで共有するか */
-        
         optional<Bool> shareFree;
         /** 通貨の種類 */
         optional<StringHolder> currency;
@@ -59,7 +58,6 @@ private:
         /** Google PlayStore の秘密鍵 */
         optional<StringHolder> googleKey;
         /** UnityEditorが出力する偽のレシートで決済できるようにするか */
-        
         optional<Bool> enableFakeReceipt;
         /** ウォレット新規作成時 に実行されるスクリプト のGRN */
         optional<StringHolder> createWalletTriggerScriptId;
@@ -80,13 +78,10 @@ private:
         /** ウォレット残高消費完了時 にジョブを登録するキュー のGRN */
         optional<StringHolder> withdrawDoneTriggerQueueId;
         /** 未使用残高 */
-        
         optional<Double> balance;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 最終更新日時 */
-        
         optional<Int64> updateAt;
 
         Data()

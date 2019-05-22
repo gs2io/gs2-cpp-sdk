@@ -24,7 +24,6 @@
 #include "ThresholdMaster.hpp"
 #include "Threshold.hpp"
 #include "CurrentExperienceMaster.hpp"
-#include "User.hpp"
 #include "Status.hpp"
 #include "ResponseCache.hpp"
 #include "Property.hpp"

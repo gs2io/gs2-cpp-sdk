@@ -23,9 +23,10 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "MaxStaminaTable.hpp"
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace stamina {
 
 /**
  * スタミナモデルマスター
@@ -46,22 +47,16 @@ private:
         /** スタミナの種類のメタデータ */
         optional<StringHolder> metadata;
         /** スタミナを回復する速度(秒) */
-        
         optional<Int32> recoverIntervalMinutes;
         /** 時間経過後に回復する量 */
-        
         optional<Int32> recoverValue;
         /** スタミナの最大値の初期値 */
-        
         optional<Int32> initialCapacity;
         /** 最大値を超えて回復するか */
-        
         optional<Bool> isOverflow;
         /** 溢れた状況での最大値 */
-        
         optional<Int32> maxCapacity;
         /** GS2-Experience と連携する際に使用するスタミナ最大値テーブル */
-        
         optional<MaxStaminaTable> maxStaminaTable;
 
         Data()

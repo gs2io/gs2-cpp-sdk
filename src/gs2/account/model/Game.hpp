@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace account {
 
 /**
  * ゲーム
@@ -48,7 +48,6 @@ private:
         /** 説明文 */
         optional<StringHolder> description;
         /** アカウント引き継ぎ時にパスワードを変更するか */
-        
         optional<Bool> changePasswordIfTakeOver;
         /** アカウント新規作成時 に実行されるスクリプト のGRN */
         optional<StringHolder> createAccountTriggerScriptId;
@@ -75,10 +74,8 @@ private:
         /** 引き継ぎ実行完了時 にジョブが登録されるキュー のGRN */
         optional<StringHolder> doTakeOverDoneTriggerQueueId;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 最終更新日時 */
-        
         optional<Int64> updateAt;
 
         Data()

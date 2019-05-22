@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace stamina {
 
 /**
  * スタミナ
@@ -46,22 +46,16 @@ private:
         /** ユーザーID */
         optional<StringHolder> userId;
         /** 最終更新時におけるスタミナ値 */
-        
         optional<Int32> value;
         /** スタミナの最大値 */
-        
         optional<Int32> maxValue;
         /** スタミナの最大値を超えて格納されているスタミナ値 */
-        
         optional<Int32> overflowValue;
         /** 作成日時 */
-        
         optional<Int64> lastRecoveredAt;
         /** 作成日時 */
-        
         optional<Int64> createdAt;
         /** 最終更新日時 */
-        
         optional<Int64> updatedAt;
 
         Data()

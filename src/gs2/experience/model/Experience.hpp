@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace experience {
 
 /**
  * 経験値
@@ -66,10 +66,8 @@ private:
         /** ランクキャップ変化完了時 にジョブが登録されるキュー のGRN */
         optional<StringHolder> changeRankCapDoneTriggerQueueId;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 最終更新日時 */
-        
         optional<Int64> updateAt;
 
         Data()

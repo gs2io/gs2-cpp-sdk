@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace lottery {
 
 /**
  * 抽選の種類
@@ -48,7 +48,6 @@ private:
         /** 抽選モード */
         optional<StringHolder> mode;
         /** 抽選回数 */
-        
         optional<Int32> count;
         /** 抽選方法 */
         optional<StringHolder> method;

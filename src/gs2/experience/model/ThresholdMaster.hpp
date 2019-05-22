@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace experience {
 
 /**
  * ランクアップ閾値
@@ -48,13 +48,10 @@ private:
         /** ランクアップ閾値のメタデータ */
         optional<StringHolder> metadata;
         /** ランクアップ経験値閾値リスト */
-        
         optional<List<Int64>> values;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 最終更新日時 */
-        
         optional<Int64> updateAt;
 
         Data()
@@ -120,9 +117,10 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->values.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        Int64 item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
-                        *this->values += std::move(item);
+                        if (json->IsInt64())
+                        {
+                            *this->values += json->GetInt64();
+                        }
                     }
                 }
             }

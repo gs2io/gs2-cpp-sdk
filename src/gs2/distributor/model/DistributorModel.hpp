@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace distributor {
 
 /**
  * ディストリビュータの種類
@@ -50,7 +50,6 @@ private:
         /** 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN */
         optional<StringHolder> inboxId;
         /** ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト */
-        
         optional<List<StringHolder>> whiteListTargetIds;
 
         Data()
@@ -120,9 +119,12 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->whiteListTargetIds.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        auto valueStr = json->GetString();
-                        StringHolder stringHolder(valueStr);
-                        *this->whiteListTargetIds += std::move(stringHolder);
+                        if (jsonValue.IsString())
+                        {
+                            auto valueStr = json->GetString();
+                            StringHolder stringHolder(valueStr);
+                            *this->whiteListTargetIds += std::move(stringHolder);
+                        }
                     }
                 }
             }

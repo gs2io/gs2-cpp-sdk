@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace lottery {
 
 /**
  * 抽選の種類
@@ -50,7 +50,6 @@ private:
         /** 抽選モード */
         optional<StringHolder> mode;
         /** 抽選回数 */
-        
         optional<Int32> count;
         /** 抽選方法 */
         optional<StringHolder> method;
@@ -59,10 +58,8 @@ private:
         /** 抽選テーブルを確定するスクリプト のGRN */
         optional<StringHolder> choicePrizeTableScriptId;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 最終更新日時 */
-        
         optional<Int64> updateAt;
 
         Data()

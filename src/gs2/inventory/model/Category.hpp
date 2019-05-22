@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace inventory {
 
 /**
  * カテゴリ
@@ -52,10 +52,8 @@ private:
         /** 入手上限に当たって入手できなかった数量を通知するジョブを追加する キュー のGRN */
         optional<StringHolder> overflowTriggerQueueId;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 最終更新日時 */
-        
         optional<Int64> updateAt;
 
         Data()

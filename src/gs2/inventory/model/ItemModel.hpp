@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace inventory {
 
 /**
  * アイテムマスター
@@ -46,10 +46,8 @@ private:
         /** アイテムモデルの種類のメタデータ */
         optional<StringHolder> metadata;
         /** 所有可能な最大数量 */
-        
         optional<Int64> maxCount;
         /** 表示順番 */
-        
         optional<Int32> sortValue;
 
         Data()

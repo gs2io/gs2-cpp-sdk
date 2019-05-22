@@ -23,9 +23,10 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "BoxItem.hpp"
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace lottery {
 
 /**
  * 排出済みの景品情報
@@ -46,7 +47,6 @@ private:
         /** ユーザーID */
         optional<StringHolder> userId;
         /** 排出済みの景品情報のリスト */
-        
         optional<List<BoxItem>> items;
 
         Data()

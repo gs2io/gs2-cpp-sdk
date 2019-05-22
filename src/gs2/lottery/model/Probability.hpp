@@ -23,9 +23,10 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "DrawnPrize.hpp"
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace lottery {
 
 /**
  * 排出レート
@@ -40,10 +41,8 @@ private:
     {
     public:
         /** 排出された景品 */
-        
         optional<DrawnPrize> prize;
         /** 排出確率(0.0〜1.0) */
-        
         optional<Float> rate;
 
         Data()

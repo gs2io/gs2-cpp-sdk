@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace lottery {
 
 /**
  * 排出済みの景品情報
@@ -46,13 +46,10 @@ private:
         /** ユーザーID */
         optional<StringHolder> userId;
         /** 排出済み景品のインデックスのリスト */
-        
         optional<List<Int32>> drawnIndexes;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 最終更新日時 */
-        
         optional<Int64> updateAt;
 
         Data()
@@ -110,9 +107,10 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->drawnIndexes.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        Int32 item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
-                        *this->drawnIndexes += std::move(item);
+                        if (json->IsInt())
+                        {
+                            *this->drawnIndexes += json->GetInt();
+                        }
                     }
                 }
             }

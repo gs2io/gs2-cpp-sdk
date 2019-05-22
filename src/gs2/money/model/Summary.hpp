@@ -25,7 +25,7 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace money {
 
 /**
  * ウォレットの概要
@@ -44,19 +44,14 @@ private:
         /** ユーザーID */
         optional<StringHolder> userId;
         /** None */
-        
         optional<Int32> slot;
         /** 有償課金通貨所持量 */
-        
         optional<Int32> paid;
         /** 無償課金通貨所持量 */
-        
         optional<Int32> free;
         /** 作成日時 */
-        
         optional<Int64> createAt;
         /** 最終更新日時 */
-        
         optional<Int64> updateAt;
 
         Data()

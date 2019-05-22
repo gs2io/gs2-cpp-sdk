@@ -19,7 +19,6 @@
 
 #include <gs2/core/common.hpp>
 #include "Inbox.hpp"
-#include "User.hpp"
 #include "Message.hpp"
 #include "ResponseCache.hpp"
 #include "Body.hpp"

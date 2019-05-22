@@ -23,9 +23,10 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "Threshold.hpp"
 #include <cstring>
 
-namespace gs2 { namespace  {
+namespace gs2 { namespace experience {
 
 /**
  * 経験値の種類
@@ -46,16 +47,12 @@ private:
         /** 経験値の種類のメタデータ */
         optional<StringHolder> metadata;
         /** 経験値の初期値 */
-        
         optional<Int64> defaultExperience;
         /** ランクキャップの初期値 */
-        
         optional<Int64> defaultRankCap;
         /** ランクキャップの最大値 */
-        
         optional<Int64> maxRankCap;
         /** ランクアップ閾値 */
-        
         optional<Threshold> rankThreshold;
 
         Data()
