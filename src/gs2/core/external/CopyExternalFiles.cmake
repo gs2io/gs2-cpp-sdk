@@ -61,86 +61,9 @@ set(rapidjson_ETC_FILE_ENTRIES
         rapidjson/readme.md
         )
 
-set(cryptopp_HEADER_FILE_ENTRIES
-        cryptopp/adv-simd.h
-        cryptopp/aes.h
-        cryptopp/algebra.cpp.h
-        cryptopp/algebra.h
-        cryptopp/algparam.h
-        cryptopp/argnames.h
-        cryptopp/asn.h
-        cryptopp/config.h
-        cryptopp/cpu.h
-        cryptopp/cryptlib.h
-        cryptopp/eprecomp.cpp.h
-        cryptopp/eprecomp.h
-        cryptopp/filters.h
-        cryptopp/fips140.h
-        cryptopp/fltrimpl.h
-        cryptopp/hmac.h
-        cryptopp/integer.h
-        cryptopp/iterhash.h
-        cryptopp/misc.h
-        cryptopp/modarith.h
-        cryptopp/mqueue.h
-        cryptopp/nbtheory.h
-        cryptopp/oids.h
-        cryptopp/osrng.h
-        cryptopp/ossig.h
-        cryptopp/pch.h
-        cryptopp/ppc-simd.h
-        cryptopp/pubkey.h
-        cryptopp/queue.h
-        cryptopp/randpool.h
-        cryptopp/rijndael.h
-        cryptopp/rng.h
-        cryptopp/secblock.h
-        cryptopp/seckey.h
-        cryptopp/sha.h
-        cryptopp/simple.h
-        cryptopp/smartptr.h
-        cryptopp/stdcpp.h
-        cryptopp/trap.h
-        cryptopp/trdlocal.h
-        cryptopp/words.h)
-
-set(cryptopp_SOURCE_FILE_ENTRIES
-        cryptopp/algparam.cpp
-        cryptopp/asn.cpp
-        cryptopp/cpu.cpp
-        cryptopp/crc-simd.cpp
-        cryptopp/cryptlib.cpp
-        cryptopp/filters.cpp
-        cryptopp/fips140.cpp
-        cryptopp/gcm-simd.cpp
-        cryptopp/hmac.cpp
-        cryptopp/integer.cpp
-        cryptopp/iterhash.cpp
-        cryptopp/misc.cpp
-        cryptopp/mqueue.cpp
-        cryptopp/nbtheory.cpp
-        cryptopp/neon-simd.cpp
-        cryptopp/osrng.cpp
-        cryptopp/pubkey.cpp
-        cryptopp/queue.cpp
-        cryptopp/rdtables.cpp
-        cryptopp/rijndael-simd.cpp
-        cryptopp/rijndael.cpp
-        cryptopp/rng.cpp
-        cryptopp/sha.cpp
-        cryptopp/sha-simd.cpp
-        cryptopp/sse-simd.cpp
-        )
-
-set(cryptopp_ETC_FILE_ENTRIES
-        cryptopp/License.txt
-        cryptopp/Readme.txt
-        )
-
 set(EXTERNAL_SOURCE_FILE_ENTRIES
         ${optional_SOURCE_FILE_ENTRIES}
         ${rapidjson_SOURCE_FILE_ENTRIES}
-        ${cryptopp_SOURCE_FILE_ENTRIES}
         )
 
 set(EXTERNAL_FILE_ENTRIES
@@ -151,9 +74,6 @@ set(EXTERNAL_FILE_ENTRIES
         ${rapidjson_HEADER_FILE_ENTRIES}
         ${rapidjson_SOURCE_FILE_ENTRIES}
         ${rapidjson_ETC_FILE_ENTRIES}
-        ${cryptopp_HEADER_FILE_ENTRIES}
-        ${cryptopp_SOURCE_FILE_ENTRIES}
-        ${cryptopp_ETC_FILE_ENTRIES}
         )
 
 macro(define_external_file_rule SRC_DIR DST_DIR OUTPUT_FILES_VARIABLE OUTPUT_SOURCE_FILES_VARIABLE)
