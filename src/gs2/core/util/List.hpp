@@ -131,6 +131,32 @@ public:
     }
 };
 
+template<typename T>
+bool operator!=(const List<T>& lhs, const List<T>& lhr)
+{
+    Int32 count = lhs.getCount();
+    if (count != lhr.getCount())
+    {
+        return true;
+    }
+
+    for (Int32 i = 0; i < count; ++i)
+    {
+        if (lhs[i] != lhr[i])
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+template<typename T>
+bool operator==(const List<T>& lhs, const List<T>& lhr)
+{
+    return !(lhs != lhr);
+}
+
 template<> class List<StringHolder> : public Gs2Object {
 
 private:
