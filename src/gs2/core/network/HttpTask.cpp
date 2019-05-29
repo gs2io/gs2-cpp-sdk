@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-#include "HttpRequest.hpp"
+#include "HttpTask.hpp"
 #include "../exception/Gs2ClientException.hpp"
 #include "../json/JsonParser.hpp"
 #include "../model/IGs2Credential.hpp"

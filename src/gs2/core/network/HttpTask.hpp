@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_CORE_NETWORK_HTTPREQUEST_HPP_
-#define GS2_CORE_NETWORK_HTTPREQUEST_HPP_
+#ifndef GS2_CORE_NETWORK_HTTPTASK_HPP_
+#define GS2_CORE_NETWORK_HTTPTASK_HPP_
 
 #include "../Gs2Object.hpp"
 #include "../AsyncResult.hpp"
@@ -74,4 +74,4 @@ public:
 
 GS2_END_OF_NAMESPACE
 
-#endif //GS2_CORE_NETWORK_HTTPREQUEST_HPP_
+#endif //GS2_CORE_NETWORK_HTTPTASK_HPP_

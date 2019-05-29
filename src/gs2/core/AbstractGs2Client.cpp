@@ -18,7 +18,7 @@
 #include "AsyncResult.hpp"
 #include "control/Gs2BasicRequest.hpp"
 #include "model/IGs2Credential.hpp"
-#include "network/HttpRequest.hpp"
+#include "network/HttpTask.hpp"
 #include "util/StringVariable.hpp"
 #include <string>
 #include <network/HttpRequest.h>

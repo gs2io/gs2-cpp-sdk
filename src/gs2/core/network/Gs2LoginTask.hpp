@@ -17,7 +17,7 @@
 #ifndef GS2_CORE_NETWORK_GS2LOGINTASK_HPP_
 #define GS2_CORE_NETWORK_GS2LOGINTASK_HPP_
 
-#include "HttpRequest.hpp"
+#include "HttpTask.hpp"
 #include "Gs2StandardHttpTask.hpp"
 
 GS2_START_OF_NAMESPACE

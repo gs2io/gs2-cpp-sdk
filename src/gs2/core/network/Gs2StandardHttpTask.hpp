@@ -17,7 +17,7 @@
 #ifndef GS2_CORE_NETWORK_GS2STANDARDHTTPTASK_HPP_
 #define GS2_CORE_NETWORK_GS2STANDARDHTTPTASK_HPP_
 
-#include "HttpRequest.hpp"
+#include "HttpTask.hpp"
 #include <mutex>
 
 GS2_START_OF_NAMESPACE
