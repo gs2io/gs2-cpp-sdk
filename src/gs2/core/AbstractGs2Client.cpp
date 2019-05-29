@@ -52,19 +52,4 @@ void AbstractGs2ClientBase::setUrl(::cocos2d::network::HttpRequest& httpRequest,
     httpRequest.setUrl(urlString.c_str());
 }
 
-void AbstractGs2ClientBase::setHeaderEntries(std::vector<std::string>& headerEntries, const Gs2BasicRequest& basicRequest) const
-{
-    headerEntries.push_back("Content-Type: application/json");
-
-    if (basicRequest.getRequestId())
-    {
-        detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *basicRequest.getRequestId());
-    }
-
-    if (basicRequest.getAccessToken())
-    {
-        detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *basicRequest.getAccessToken());
-    }
-}
-
 GS2_END_OF_NAMESPACE

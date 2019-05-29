@@ -82,14 +82,6 @@ protected:
      */
     void setUrl(::cocos2d::network::HttpRequest& httpRequest, const Char url[]) const;
 
-    /**
-     * HTTPリクエストにヘッダを設定
-     *
-     * @param headerEntries ヘッダエントリのリスト
-     * @param basicRequest リクエストモデル
-     */
-    void setHeaderEntries(std::vector<std::string>& headerEntries, const Gs2BasicRequest& basicRequest) const;
-
     IGs2Credential& getCredential()
     {
         return m_Credential;
