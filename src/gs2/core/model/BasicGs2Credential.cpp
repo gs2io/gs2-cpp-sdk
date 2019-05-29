@@ -19,7 +19,6 @@
 #include "../network/Gs2LoginTask.hpp"
 #include "../control/Gs2BasicRequest.hpp"
 #include "../util/StringVariable.hpp"
-#include "../util/SignUtil.hpp"
 #include "../util/Base64.hpp"
 #include <chrono>
 

@@ -58,7 +58,6 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         util/Base64.hpp
         util/DefaultAllocator.hpp
         util/List.hpp
-        util/SignUtil.hpp
         util/StandardAllocator.hpp
         util/StringHolder.hpp
         util/StringUtil.hpp
@@ -81,7 +80,6 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         network/HttpRequest.cpp
         util/Base64.cpp
         util/DefaultAllocator.cpp
-        util/SignUtil.cpp
         util/StringHolder.cpp
         util/StringUtil.cpp
         util/StringVariable.cpp
