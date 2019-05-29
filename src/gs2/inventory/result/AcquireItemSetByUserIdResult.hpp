@@ -67,7 +67,7 @@ private:
             overflowCount(std::move(data.overflowCount))
         {}
 
-        ~Data() = default;
+        virtual ~Data() = default;
 
         // TODO:
         Data& operator=(const Data&) = delete;

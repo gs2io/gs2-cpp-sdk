@@ -59,7 +59,7 @@ private:
             boxItems(std::move(data.boxItems))
         {}
 
-        ~Data() = default;
+        virtual ~Data() = default;
 
         // TODO:
         Data& operator=(const Data&) = delete;

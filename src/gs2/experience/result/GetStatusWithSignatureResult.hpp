@@ -63,7 +63,7 @@ private:
             signature(std::move(data.signature))
         {}
 
-        ~Data() = default;
+        virtual ~Data() = default;
 
         // TODO:
         Data& operator=(const Data&) = delete;

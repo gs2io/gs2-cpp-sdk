@@ -59,7 +59,7 @@ private:
             overflowValue(std::move(data.overflowValue))
         {}
 
-        ~Data() = default;
+        virtual ~Data() = default;
 
         // TODO:
         Data& operator=(const Data&) = delete;

@@ -59,7 +59,7 @@ private:
             notGetItems(std::move(data.notGetItems))
         {}
 
-        ~Data() = default;
+        virtual ~Data() = default;
 
         // TODO:
         Data& operator=(const Data&) = delete;

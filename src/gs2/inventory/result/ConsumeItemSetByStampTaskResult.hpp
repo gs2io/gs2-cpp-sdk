@@ -67,7 +67,7 @@ private:
             newContextStack(std::move(data.newContextStack))
         {}
 
-        ~Data() = default;
+        virtual ~Data() = default;
 
         // TODO:
         Data& operator=(const Data&) = delete;

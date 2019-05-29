@@ -55,7 +55,7 @@ private:
             status(std::move(data.status))
         {}
 
-        ~Data() = default;
+        virtual ~Data() = default;
 
         // TODO:
         Data& operator=(const Data&) = delete;

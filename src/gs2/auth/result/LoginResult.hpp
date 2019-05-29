@@ -63,7 +63,7 @@ private:
             expire(std::move(data.expire))
         {}
 
-        ~Data() = default;
+        virtual ~Data() = default;
 
         // TODO:
         Data& operator=(const Data&) = delete;

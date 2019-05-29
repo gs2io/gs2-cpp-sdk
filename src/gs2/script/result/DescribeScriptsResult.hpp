@@ -59,7 +59,7 @@ private:
             nextPageToken(std::move(data.nextPageToken))
         {}
 
-        ~Data() = default;
+        virtual ~Data() = default;
 
         // TODO:
         Data& operator=(const Data&) = delete;

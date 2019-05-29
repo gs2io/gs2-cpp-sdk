@@ -63,7 +63,7 @@ private:
             inventory(std::move(data.inventory))
         {}
 
-        ~Data() = default;
+        virtual ~Data() = default;
 
         // TODO:
         Data& operator=(const Data&) = delete;

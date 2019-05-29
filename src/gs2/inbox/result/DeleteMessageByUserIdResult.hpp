@@ -51,7 +51,7 @@ private:
             detail::json::IModel(std::move(data))
         {}
 
-        ~Data() = default;
+        virtual ~Data() = default;
 
         // TODO:
         Data& operator=(const Data&) = delete;

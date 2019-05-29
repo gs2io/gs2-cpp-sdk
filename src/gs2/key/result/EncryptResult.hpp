@@ -55,7 +55,7 @@ private:
             data(std::move(data.data))
         {}
 
-        ~Data() = default;
+        virtual ~Data() = default;
 
         // TODO:
         Data& operator=(const Data&) = delete;
