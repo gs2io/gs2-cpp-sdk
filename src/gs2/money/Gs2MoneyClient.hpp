@@ -453,7 +453,14 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
         getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
@@ -565,7 +572,15 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        headerEntries.push_back("Content-Type: application/json");
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
         getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
@@ -590,7 +605,14 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
         getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
@@ -615,7 +637,14 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
         getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
@@ -717,7 +746,15 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        headerEntries.push_back("Content-Type: application/json");
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
         getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
@@ -742,7 +779,14 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
         getCredential().authorizeAndExecute(gs2StandardHttpTask);
     }
@@ -779,7 +823,14 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         if (request.getDuplicationAvoider())
         {
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
@@ -812,7 +863,14 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         if (request.getDuplicationAvoider())
         {
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
@@ -849,7 +907,14 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         if (request.getDuplicationAvoider())
         {
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
@@ -894,7 +959,14 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         if (request.getDuplicationAvoider())
         {
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
@@ -958,7 +1030,15 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        headerEntries.push_back("Content-Type: application/json");
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         if (request.getDuplicationAvoider())
         {
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
@@ -1008,7 +1088,15 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        headerEntries.push_back("Content-Type: application/json");
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         if (request.getDuplicationAvoider())
         {
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
@@ -1062,7 +1150,15 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        headerEntries.push_back("Content-Type: application/json");
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         if (request.getDuplicationAvoider())
         {
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
@@ -1103,7 +1199,15 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        headerEntries.push_back("Content-Type: application/json");
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         if (request.getDuplicationAvoider())
         {
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
@@ -1149,7 +1253,15 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        headerEntries.push_back("Content-Type: application/json");
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         if (request.getDuplicationAvoider())
         {
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
@@ -1190,7 +1302,15 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        headerEntries.push_back("Content-Type: application/json");
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         if (request.getDuplicationAvoider())
         {
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
@@ -1239,7 +1359,14 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         if (request.getDuplicationAvoider())
         {
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
@@ -1292,7 +1419,14 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         if (request.getDuplicationAvoider())
         {
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
@@ -1329,7 +1463,14 @@ public:
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
         std::vector<std::string> headerEntries;
-        setHeaderEntries(headerEntries, request);
+        if (request.getRequestId())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+        }
+        if (request.getAccessToken())
+        {
+            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+        }
         if (request.getDuplicationAvoider())
         {
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
