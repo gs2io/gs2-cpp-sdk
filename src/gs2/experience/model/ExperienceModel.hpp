@@ -36,6 +36,8 @@ namespace gs2 { namespace experience {
  */
 class ExperienceModel : public Gs2Object
 {
+    friend bool operator!=(const ExperienceModel& lhs, const ExperienceModel& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -233,6 +235,17 @@ public:
     }
 
     /**
+     * 経験値の種類 のGRNを設定
+     *
+     * @param experienceModelId 経験値の種類 のGRN
+     */
+    ExperienceModel& withExperienceModelId(const Char* experienceModelId)
+    {
+        setExperienceModelId(experienceModelId);
+        return *this;
+    }
+
+    /**
      * 経験値の種類名を取得
      *
      * @return 経験値の種類名
@@ -250,6 +263,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * 経験値の種類名を設定
+     *
+     * @param name 経験値の種類名
+     */
+    ExperienceModel& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -273,6 +297,17 @@ public:
     }
 
     /**
+     * 経験値の種類のメタデータを設定
+     *
+     * @param metadata 経験値の種類のメタデータ
+     */
+    ExperienceModel& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
+    }
+
+    /**
      * 経験値の初期値を取得
      *
      * @return 経験値の初期値
@@ -290,6 +325,17 @@ public:
     void setDefaultExperience(Int64 defaultExperience)
     {
         ensureData().defaultExperience.emplace(defaultExperience);
+    }
+
+    /**
+     * 経験値の初期値を設定
+     *
+     * @param defaultExperience 経験値の初期値
+     */
+    ExperienceModel& withDefaultExperience(Int64 defaultExperience)
+    {
+        setDefaultExperience(defaultExperience);
+        return *this;
     }
 
     /**
@@ -313,6 +359,17 @@ public:
     }
 
     /**
+     * ランクキャップの初期値を設定
+     *
+     * @param defaultRankCap ランクキャップの初期値
+     */
+    ExperienceModel& withDefaultRankCap(Int64 defaultRankCap)
+    {
+        setDefaultRankCap(defaultRankCap);
+        return *this;
+    }
+
+    /**
      * ランクキャップの最大値を取得
      *
      * @return ランクキャップの最大値
@@ -330,6 +387,17 @@ public:
     void setMaxRankCap(Int64 maxRankCap)
     {
         ensureData().maxRankCap.emplace(maxRankCap);
+    }
+
+    /**
+     * ランクキャップの最大値を設定
+     *
+     * @param maxRankCap ランクキャップの最大値
+     */
+    ExperienceModel& withMaxRankCap(Int64 maxRankCap)
+    {
+        setMaxRankCap(maxRankCap);
+        return *this;
     }
 
     /**
@@ -352,12 +420,68 @@ public:
         ensureData().rankThreshold.emplace(rankThreshold);
     }
 
+    /**
+     * ランクアップ閾値を設定
+     *
+     * @param rankThreshold ランクアップ閾値
+     */
+    ExperienceModel& withRankThreshold(const Threshold& rankThreshold)
+    {
+        setRankThreshold(rankThreshold);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const ExperienceModel& lhs, const ExperienceModel& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->experienceModelId != lhr.m_pData->experienceModelId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->defaultExperience != lhr.m_pData->defaultExperience)
+        {
+            return true;
+        }
+        if (lhs.m_pData->defaultRankCap != lhr.m_pData->defaultRankCap)
+        {
+            return true;
+        }
+        if (lhs.m_pData->maxRankCap != lhr.m_pData->maxRankCap)
+        {
+            return true;
+        }
+        if (lhs.m_pData->rankThreshold != lhr.m_pData->rankThreshold)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const ExperienceModel& lhs, const ExperienceModel& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

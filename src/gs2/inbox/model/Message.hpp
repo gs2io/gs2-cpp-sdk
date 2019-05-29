@@ -35,6 +35,8 @@ namespace gs2 { namespace inbox {
  */
 class Message : public Gs2Object
 {
+    friend bool operator!=(const Message& lhs, const Message& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -250,6 +252,17 @@ public:
     }
 
     /**
+     * メッセージ のGRNを設定
+     *
+     * @param messageId メッセージ のGRN
+     */
+    Message& withMessageId(const Char* messageId)
+    {
+        setMessageId(messageId);
+        return *this;
+    }
+
+    /**
      * メッセージIDを取得
      *
      * @return メッセージID
@@ -267,6 +280,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * メッセージIDを設定
+     *
+     * @param name メッセージID
+     */
+    Message& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -290,6 +314,17 @@ public:
     }
 
     /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    Message& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
+    }
+
+    /**
      * メッセージの内容に相当するメタデータを取得
      *
      * @return メッセージの内容に相当するメタデータ
@@ -307,6 +342,17 @@ public:
     void setMetadata(const Char* metadata)
     {
         ensureData().metadata.emplace(metadata);
+    }
+
+    /**
+     * メッセージの内容に相当するメタデータを設定
+     *
+     * @param metadata メッセージの内容に相当するメタデータ
+     */
+    Message& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
     }
 
     /**
@@ -330,6 +376,17 @@ public:
     }
 
     /**
+     * 既読状態を設定
+     *
+     * @param isRead 既読状態
+     */
+    Message& withIsRead(Bool isRead)
+    {
+        setIsRead(isRead);
+        return *this;
+    }
+
+    /**
      * メッセージ開封時 に実行されるスクリプト のGRNを取得
      *
      * @return メッセージ開封時 に実行されるスクリプト のGRN
@@ -347,6 +404,17 @@ public:
     void setReadMessageTriggerScriptId(const Char* readMessageTriggerScriptId)
     {
         ensureData().readMessageTriggerScriptId.emplace(readMessageTriggerScriptId);
+    }
+
+    /**
+     * メッセージ開封時 に実行されるスクリプト のGRNを設定
+     *
+     * @param readMessageTriggerScriptId メッセージ開封時 に実行されるスクリプト のGRN
+     */
+    Message& withReadMessageTriggerScriptId(const Char* readMessageTriggerScriptId)
+    {
+        setReadMessageTriggerScriptId(readMessageTriggerScriptId);
+        return *this;
     }
 
     /**
@@ -370,6 +438,17 @@ public:
     }
 
     /**
+     * メッセージ開封時 に実行されるスクリプト に指定する引数を設定
+     *
+     * @param readMessageTriggerScriptArgs メッセージ開封時 に実行されるスクリプト に指定する引数
+     */
+    Message& withReadMessageTriggerScriptArgs(const Char* readMessageTriggerScriptArgs)
+    {
+        setReadMessageTriggerScriptArgs(readMessageTriggerScriptArgs);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -387,6 +466,17 @@ public:
     void setReceivedAt(Int64 receivedAt)
     {
         ensureData().receivedAt.emplace(receivedAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param receivedAt 作成日時
+     */
+    Message& withReceivedAt(Int64 receivedAt)
+    {
+        setReceivedAt(receivedAt);
+        return *this;
     }
 
     /**
@@ -409,12 +499,76 @@ public:
         ensureData().readAt.emplace(readAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param readAt 最終更新日時
+     */
+    Message& withReadAt(Int64 readAt)
+    {
+        setReadAt(readAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Message& lhs, const Message& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->messageId != lhr.m_pData->messageId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->isRead != lhr.m_pData->isRead)
+        {
+            return true;
+        }
+        if (lhs.m_pData->readMessageTriggerScriptId != lhr.m_pData->readMessageTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->readMessageTriggerScriptArgs != lhr.m_pData->readMessageTriggerScriptArgs)
+        {
+            return true;
+        }
+        if (lhs.m_pData->receivedAt != lhr.m_pData->receivedAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->readAt != lhr.m_pData->readAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Message& lhs, const Message& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

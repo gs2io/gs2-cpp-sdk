@@ -35,6 +35,8 @@ namespace gs2 { namespace experience {
  */
 class Experience : public Gs2Object
 {
+    friend bool operator!=(const Experience& lhs, const Experience& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -310,6 +312,17 @@ public:
     }
 
     /**
+     * 経験値 のGRNを設定
+     *
+     * @param experienceId 経験値 のGRN
+     */
+    Experience& withExperienceId(const Char* experienceId)
+    {
+        setExperienceId(experienceId);
+        return *this;
+    }
+
+    /**
      * オーナーIDを取得
      *
      * @return オーナーID
@@ -327,6 +340,17 @@ public:
     void setOwnerId(const Char* ownerId)
     {
         ensureData().ownerId.emplace(ownerId);
+    }
+
+    /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    Experience& withOwnerId(const Char* ownerId)
+    {
+        setOwnerId(ownerId);
+        return *this;
     }
 
     /**
@@ -350,6 +374,17 @@ public:
     }
 
     /**
+     * 経験値名を設定
+     *
+     * @param name 経験値名
+     */
+    Experience& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
+    }
+
+    /**
      * 経験値の説明を取得
      *
      * @return 経験値の説明
@@ -367,6 +402,17 @@ public:
     void setDescription(const Char* description)
     {
         ensureData().description.emplace(description);
+    }
+
+    /**
+     * 経験値の説明を設定
+     *
+     * @param description 経験値の説明
+     */
+    Experience& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
     }
 
     /**
@@ -390,6 +436,17 @@ public:
     }
 
     /**
+     * ランクキャップ取得時 に実行されるスクリプト のGRNを設定
+     *
+     * @param experienceCapScriptId ランクキャップ取得時 に実行されるスクリプト のGRN
+     */
+    Experience& withExperienceCapScriptId(const Char* experienceCapScriptId)
+    {
+        setExperienceCapScriptId(experienceCapScriptId);
+        return *this;
+    }
+
+    /**
      * 経験値変化時 に実行されるスクリプト のGRNを取得
      *
      * @return 経験値変化時 に実行されるスクリプト のGRN
@@ -407,6 +464,17 @@ public:
     void setChangeExperienceTriggerScriptId(const Char* changeExperienceTriggerScriptId)
     {
         ensureData().changeExperienceTriggerScriptId.emplace(changeExperienceTriggerScriptId);
+    }
+
+    /**
+     * 経験値変化時 に実行されるスクリプト のGRNを設定
+     *
+     * @param changeExperienceTriggerScriptId 経験値変化時 に実行されるスクリプト のGRN
+     */
+    Experience& withChangeExperienceTriggerScriptId(const Char* changeExperienceTriggerScriptId)
+    {
+        setChangeExperienceTriggerScriptId(changeExperienceTriggerScriptId);
+        return *this;
     }
 
     /**
@@ -430,6 +498,17 @@ public:
     }
 
     /**
+     * 経験値変化完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param changeExperienceDoneTriggerScriptId 経験値変化完了時 に実行されるスクリプト のGRN
+     */
+    Experience& withChangeExperienceDoneTriggerScriptId(const Char* changeExperienceDoneTriggerScriptId)
+    {
+        setChangeExperienceDoneTriggerScriptId(changeExperienceDoneTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * 経験値変化完了時 にジョブが登録されるキュー のGRNを取得
      *
      * @return 経験値変化完了時 にジョブが登録されるキュー のGRN
@@ -447,6 +526,17 @@ public:
     void setChangeExperienceDoneTriggerQueueId(const Char* changeExperienceDoneTriggerQueueId)
     {
         ensureData().changeExperienceDoneTriggerQueueId.emplace(changeExperienceDoneTriggerQueueId);
+    }
+
+    /**
+     * 経験値変化完了時 にジョブが登録されるキュー のGRNを設定
+     *
+     * @param changeExperienceDoneTriggerQueueId 経験値変化完了時 にジョブが登録されるキュー のGRN
+     */
+    Experience& withChangeExperienceDoneTriggerQueueId(const Char* changeExperienceDoneTriggerQueueId)
+    {
+        setChangeExperienceDoneTriggerQueueId(changeExperienceDoneTriggerQueueId);
+        return *this;
     }
 
     /**
@@ -470,6 +560,17 @@ public:
     }
 
     /**
+     * ランク変化時 に実行されるスクリプト のGRNを設定
+     *
+     * @param changeRankTriggerScriptId ランク変化時 に実行されるスクリプト のGRN
+     */
+    Experience& withChangeRankTriggerScriptId(const Char* changeRankTriggerScriptId)
+    {
+        setChangeRankTriggerScriptId(changeRankTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * ランク変化時 にジョブが登録されるキュー のGRNを取得
      *
      * @return ランク変化時 にジョブが登録されるキュー のGRN
@@ -487,6 +588,17 @@ public:
     void setChangeRankTriggerQueueId(const Char* changeRankTriggerQueueId)
     {
         ensureData().changeRankTriggerQueueId.emplace(changeRankTriggerQueueId);
+    }
+
+    /**
+     * ランク変化時 にジョブが登録されるキュー のGRNを設定
+     *
+     * @param changeRankTriggerQueueId ランク変化時 にジョブが登録されるキュー のGRN
+     */
+    Experience& withChangeRankTriggerQueueId(const Char* changeRankTriggerQueueId)
+    {
+        setChangeRankTriggerQueueId(changeRankTriggerQueueId);
+        return *this;
     }
 
     /**
@@ -510,6 +622,17 @@ public:
     }
 
     /**
+     * ランクキャップ変化時 に実行されるスクリプト のGRNを設定
+     *
+     * @param changeRankCapTriggerScriptId ランクキャップ変化時 に実行されるスクリプト のGRN
+     */
+    Experience& withChangeRankCapTriggerScriptId(const Char* changeRankCapTriggerScriptId)
+    {
+        setChangeRankCapTriggerScriptId(changeRankCapTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * ランクキャップ変化完了時 に実行されるスクリプト のGRNを取得
      *
      * @return ランクキャップ変化完了時 に実行されるスクリプト のGRN
@@ -527,6 +650,17 @@ public:
     void setChangeRankCapDoneTriggerScriptId(const Char* changeRankCapDoneTriggerScriptId)
     {
         ensureData().changeRankCapDoneTriggerScriptId.emplace(changeRankCapDoneTriggerScriptId);
+    }
+
+    /**
+     * ランクキャップ変化完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param changeRankCapDoneTriggerScriptId ランクキャップ変化完了時 に実行されるスクリプト のGRN
+     */
+    Experience& withChangeRankCapDoneTriggerScriptId(const Char* changeRankCapDoneTriggerScriptId)
+    {
+        setChangeRankCapDoneTriggerScriptId(changeRankCapDoneTriggerScriptId);
+        return *this;
     }
 
     /**
@@ -550,6 +684,17 @@ public:
     }
 
     /**
+     * ランクキャップ変化完了時 にジョブが登録されるキュー のGRNを設定
+     *
+     * @param changeRankCapDoneTriggerQueueId ランクキャップ変化完了時 にジョブが登録されるキュー のGRN
+     */
+    Experience& withChangeRankCapDoneTriggerQueueId(const Char* changeRankCapDoneTriggerQueueId)
+    {
+        setChangeRankCapDoneTriggerQueueId(changeRankCapDoneTriggerQueueId);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -567,6 +712,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Experience& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -589,12 +745,100 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    Experience& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Experience& lhs, const Experience& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->experienceId != lhr.m_pData->experienceId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->experienceCapScriptId != lhr.m_pData->experienceCapScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->changeExperienceTriggerScriptId != lhr.m_pData->changeExperienceTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->changeExperienceDoneTriggerScriptId != lhr.m_pData->changeExperienceDoneTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->changeExperienceDoneTriggerQueueId != lhr.m_pData->changeExperienceDoneTriggerQueueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->changeRankTriggerScriptId != lhr.m_pData->changeRankTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->changeRankTriggerQueueId != lhr.m_pData->changeRankTriggerQueueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->changeRankCapTriggerScriptId != lhr.m_pData->changeRankCapTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->changeRankCapDoneTriggerScriptId != lhr.m_pData->changeRankCapDoneTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->changeRankCapDoneTriggerQueueId != lhr.m_pData->changeRankCapDoneTriggerQueueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Experience& lhs, const Experience& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

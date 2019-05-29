@@ -35,6 +35,8 @@ namespace gs2 { namespace lottery {
  */
 class BoxItem : public Gs2Object
 {
+    friend bool operator!=(const BoxItem& lhs, const BoxItem& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -190,6 +192,17 @@ public:
     }
 
     /**
+     * プロパティIDを設定
+     *
+     * @param propertyId プロパティID
+     */
+    BoxItem& withPropertyId(const Char* propertyId)
+    {
+        setPropertyId(propertyId);
+        return *this;
+    }
+
+    /**
      * 残り数量を取得
      *
      * @return 残り数量
@@ -207,6 +220,17 @@ public:
     void setRemaining(Int32 remaining)
     {
         ensureData().remaining.emplace(remaining);
+    }
+
+    /**
+     * 残り数量を設定
+     *
+     * @param remaining 残り数量
+     */
+    BoxItem& withRemaining(Int32 remaining)
+    {
+        setRemaining(remaining);
+        return *this;
     }
 
     /**
@@ -229,12 +253,52 @@ public:
         ensureData().initial.emplace(initial);
     }
 
+    /**
+     * 初期数量を設定
+     *
+     * @param initial 初期数量
+     */
+    BoxItem& withInitial(Int32 initial)
+    {
+        setInitial(initial);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const BoxItem& lhs, const BoxItem& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->propertyId != lhr.m_pData->propertyId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->remaining != lhr.m_pData->remaining)
+        {
+            return true;
+        }
+        if (lhs.m_pData->initial != lhr.m_pData->initial)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const BoxItem& lhs, const BoxItem& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

@@ -35,6 +35,8 @@ namespace gs2 { namespace lottery {
  */
 class ResponseCache : public Gs2Object
 {
+    friend bool operator!=(const ResponseCache& lhs, const ResponseCache& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -210,6 +212,17 @@ public:
     }
 
     /**
+     * Noneを設定
+     *
+     * @param region None
+     */
+    ResponseCache& withRegion(const Char* region)
+    {
+        setRegion(region);
+        return *this;
+    }
+
+    /**
      * オーナーIDを取得
      *
      * @return オーナーID
@@ -227,6 +240,17 @@ public:
     void setOwnerId(const Char* ownerId)
     {
         ensureData().ownerId.emplace(ownerId);
+    }
+
+    /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    ResponseCache& withOwnerId(const Char* ownerId)
+    {
+        setOwnerId(ownerId);
+        return *this;
     }
 
     /**
@@ -250,6 +274,17 @@ public:
     }
 
     /**
+     * レスポンスキャッシュ のGRNを設定
+     *
+     * @param responseCacheId レスポンスキャッシュ のGRN
+     */
+    ResponseCache& withResponseCacheId(const Char* responseCacheId)
+    {
+        setResponseCacheId(responseCacheId);
+        return *this;
+    }
+
+    /**
      * Noneを取得
      *
      * @return None
@@ -267,6 +302,17 @@ public:
     void setRequestHash(const Char* requestHash)
     {
         ensureData().requestHash.emplace(requestHash);
+    }
+
+    /**
+     * Noneを設定
+     *
+     * @param requestHash None
+     */
+    ResponseCache& withRequestHash(const Char* requestHash)
+    {
+        setRequestHash(requestHash);
+        return *this;
     }
 
     /**
@@ -289,12 +335,60 @@ public:
         ensureData().result.emplace(result);
     }
 
+    /**
+     * APIの応答内容を設定
+     *
+     * @param result APIの応答内容
+     */
+    ResponseCache& withResult(const Char* result)
+    {
+        setResult(result);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const ResponseCache& lhs, const ResponseCache& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->region != lhr.m_pData->region)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->responseCacheId != lhr.m_pData->responseCacheId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->requestHash != lhr.m_pData->requestHash)
+        {
+            return true;
+        }
+        if (lhs.m_pData->result != lhr.m_pData->result)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const ResponseCache& lhs, const ResponseCache& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

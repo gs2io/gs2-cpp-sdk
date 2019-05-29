@@ -35,6 +35,8 @@ namespace gs2 { namespace experience {
  */
 class ThresholdMaster : public Gs2Object
 {
+    friend bool operator!=(const ThresholdMaster& lhs, const ThresholdMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -237,6 +239,17 @@ public:
     }
 
     /**
+     * ランクアップ閾値 のGRNを設定
+     *
+     * @param thresholdId ランクアップ閾値 のGRN
+     */
+    ThresholdMaster& withThresholdId(const Char* thresholdId)
+    {
+        setThresholdId(thresholdId);
+        return *this;
+    }
+
+    /**
      * ランクアップ閾値名を取得
      *
      * @return ランクアップ閾値名
@@ -254,6 +267,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * ランクアップ閾値名を設定
+     *
+     * @param name ランクアップ閾値名
+     */
+    ThresholdMaster& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -277,6 +301,17 @@ public:
     }
 
     /**
+     * ランクアップ閾値の説明を設定
+     *
+     * @param description ランクアップ閾値の説明
+     */
+    ThresholdMaster& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
+    }
+
+    /**
      * ランクアップ閾値のメタデータを取得
      *
      * @return ランクアップ閾値のメタデータ
@@ -294,6 +329,17 @@ public:
     void setMetadata(const Char* metadata)
     {
         ensureData().metadata.emplace(metadata);
+    }
+
+    /**
+     * ランクアップ閾値のメタデータを設定
+     *
+     * @param metadata ランクアップ閾値のメタデータ
+     */
+    ThresholdMaster& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
     }
 
     /**
@@ -317,6 +363,17 @@ public:
     }
 
     /**
+     * ランクアップ経験値閾値リストを設定
+     *
+     * @param values ランクアップ経験値閾値リスト
+     */
+    ThresholdMaster& withValues(const List<Int64>& values)
+    {
+        setValues(values);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -334,6 +391,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    ThresholdMaster& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -356,12 +424,68 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    ThresholdMaster& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const ThresholdMaster& lhs, const ThresholdMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->thresholdId != lhr.m_pData->thresholdId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->values != lhr.m_pData->values)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const ThresholdMaster& lhs, const ThresholdMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

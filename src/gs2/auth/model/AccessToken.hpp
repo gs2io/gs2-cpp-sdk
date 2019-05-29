@@ -35,6 +35,8 @@ namespace gs2 { namespace auth {
  */
 class AccessToken : public Gs2Object
 {
+    friend bool operator!=(const AccessToken& lhs, const AccessToken& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -200,6 +202,17 @@ public:
     }
 
     /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    AccessToken& withOwnerId(const Char* ownerId)
+    {
+        setOwnerId(ownerId);
+        return *this;
+    }
+
+    /**
      * アクセストークンを取得
      *
      * @return アクセストークン
@@ -217,6 +230,17 @@ public:
     void setToken(const Char* token)
     {
         ensureData().token.emplace(token);
+    }
+
+    /**
+     * アクセストークンを設定
+     *
+     * @param token アクセストークン
+     */
+    AccessToken& withToken(const Char* token)
+    {
+        setToken(token);
+        return *this;
     }
 
     /**
@@ -240,6 +264,17 @@ public:
     }
 
     /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    AccessToken& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
+    }
+
+    /**
      * 有効期限を取得
      *
      * @return 有効期限
@@ -259,12 +294,56 @@ public:
         ensureData().expire.emplace(expire);
     }
 
+    /**
+     * 有効期限を設定
+     *
+     * @param expire 有効期限
+     */
+    AccessToken& withExpire(Int64 expire)
+    {
+        setExpire(expire);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const AccessToken& lhs, const AccessToken& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->token != lhr.m_pData->token)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->expire != lhr.m_pData->expire)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const AccessToken& lhs, const AccessToken& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

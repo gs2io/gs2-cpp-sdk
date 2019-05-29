@@ -35,6 +35,8 @@ namespace gs2 { namespace stamina {
  */
 class StaminaModelMaster : public Gs2Object
 {
+    friend bool operator!=(const StaminaModelMaster& lhs, const StaminaModelMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -290,6 +292,17 @@ public:
     }
 
     /**
+     * スタミナモデルマスター のGRNを設定
+     *
+     * @param staminaModelId スタミナモデルマスター のGRN
+     */
+    StaminaModelMaster& withStaminaModelId(const Char* staminaModelId)
+    {
+        setStaminaModelId(staminaModelId);
+        return *this;
+    }
+
+    /**
      * スタミナの種類名を取得
      *
      * @return スタミナの種類名
@@ -307,6 +320,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * スタミナの種類名を設定
+     *
+     * @param name スタミナの種類名
+     */
+    StaminaModelMaster& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -330,6 +354,17 @@ public:
     }
 
     /**
+     * スタミナの種類のメタデータを設定
+     *
+     * @param metadata スタミナの種類のメタデータ
+     */
+    StaminaModelMaster& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
+    }
+
+    /**
      * スタミナモデルマスターの説明を取得
      *
      * @return スタミナモデルマスターの説明
@@ -347,6 +382,17 @@ public:
     void setDescription(const Char* description)
     {
         ensureData().description.emplace(description);
+    }
+
+    /**
+     * スタミナモデルマスターの説明を設定
+     *
+     * @param description スタミナモデルマスターの説明
+     */
+    StaminaModelMaster& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
     }
 
     /**
@@ -370,6 +416,17 @@ public:
     }
 
     /**
+     * スタミナを回復する速度(秒)を設定
+     *
+     * @param recoverIntervalMinutes スタミナを回復する速度(秒)
+     */
+    StaminaModelMaster& withRecoverIntervalMinutes(Int32 recoverIntervalMinutes)
+    {
+        setRecoverIntervalMinutes(recoverIntervalMinutes);
+        return *this;
+    }
+
+    /**
      * 時間経過後に回復する量を取得
      *
      * @return 時間経過後に回復する量
@@ -387,6 +444,17 @@ public:
     void setRecoverValue(Int32 recoverValue)
     {
         ensureData().recoverValue.emplace(recoverValue);
+    }
+
+    /**
+     * 時間経過後に回復する量を設定
+     *
+     * @param recoverValue 時間経過後に回復する量
+     */
+    StaminaModelMaster& withRecoverValue(Int32 recoverValue)
+    {
+        setRecoverValue(recoverValue);
+        return *this;
     }
 
     /**
@@ -410,6 +478,17 @@ public:
     }
 
     /**
+     * スタミナの最大値の初期値を設定
+     *
+     * @param initialCapacity スタミナの最大値の初期値
+     */
+    StaminaModelMaster& withInitialCapacity(Int32 initialCapacity)
+    {
+        setInitialCapacity(initialCapacity);
+        return *this;
+    }
+
+    /**
      * 最大値を超えて回復するかを取得
      *
      * @return 最大値を超えて回復するか
@@ -427,6 +506,17 @@ public:
     void setIsOverflow(Bool isOverflow)
     {
         ensureData().isOverflow.emplace(isOverflow);
+    }
+
+    /**
+     * 最大値を超えて回復するかを設定
+     *
+     * @param isOverflow 最大値を超えて回復するか
+     */
+    StaminaModelMaster& withIsOverflow(Bool isOverflow)
+    {
+        setIsOverflow(isOverflow);
+        return *this;
     }
 
     /**
@@ -450,6 +540,17 @@ public:
     }
 
     /**
+     * 溢れた状況での最大値を設定
+     *
+     * @param maxCapacity 溢れた状況での最大値
+     */
+    StaminaModelMaster& withMaxCapacity(Int32 maxCapacity)
+    {
+        setMaxCapacity(maxCapacity);
+        return *this;
+    }
+
+    /**
      * GS2-Experience と連携してスタミナの最大値を決定するかを取得
      *
      * @return GS2-Experience と連携してスタミナの最大値を決定するか
@@ -467,6 +568,17 @@ public:
     void setIsCollaborateGs2Experience(Bool isCollaborateGs2Experience)
     {
         ensureData().isCollaborateGs2Experience.emplace(isCollaborateGs2Experience);
+    }
+
+    /**
+     * GS2-Experience と連携してスタミナの最大値を決定するかを設定
+     *
+     * @param isCollaborateGs2Experience GS2-Experience と連携してスタミナの最大値を決定するか
+     */
+    StaminaModelMaster& withIsCollaborateGs2Experience(Bool isCollaborateGs2Experience)
+    {
+        setIsCollaborateGs2Experience(isCollaborateGs2Experience);
+        return *this;
     }
 
     /**
@@ -490,6 +602,17 @@ public:
     }
 
     /**
+     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRNを設定
+     *
+     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRN
+     */
+    StaminaModelMaster& withMaxStaminaTableId(const Char* maxStaminaTableId)
+    {
+        setMaxStaminaTableId(maxStaminaTableId);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -507,6 +630,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    StaminaModelMaster& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -529,12 +663,92 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    StaminaModelMaster& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const StaminaModelMaster& lhs, const StaminaModelMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->staminaModelId != lhr.m_pData->staminaModelId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->recoverIntervalMinutes != lhr.m_pData->recoverIntervalMinutes)
+        {
+            return true;
+        }
+        if (lhs.m_pData->recoverValue != lhr.m_pData->recoverValue)
+        {
+            return true;
+        }
+        if (lhs.m_pData->initialCapacity != lhr.m_pData->initialCapacity)
+        {
+            return true;
+        }
+        if (lhs.m_pData->isOverflow != lhr.m_pData->isOverflow)
+        {
+            return true;
+        }
+        if (lhs.m_pData->maxCapacity != lhr.m_pData->maxCapacity)
+        {
+            return true;
+        }
+        if (lhs.m_pData->isCollaborateGs2Experience != lhr.m_pData->isCollaborateGs2Experience)
+        {
+            return true;
+        }
+        if (lhs.m_pData->maxStaminaTableId != lhr.m_pData->maxStaminaTableId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const StaminaModelMaster& lhs, const StaminaModelMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

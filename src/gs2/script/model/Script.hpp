@@ -35,6 +35,8 @@ namespace gs2 { namespace script {
  */
 class Script : public Gs2Object
 {
+    friend bool operator!=(const Script& lhs, const Script& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -230,6 +232,17 @@ public:
     }
 
     /**
+     * スクリプト のGRNを設定
+     *
+     * @param scriptId スクリプト のGRN
+     */
+    Script& withScriptId(const Char* scriptId)
+    {
+        setScriptId(scriptId);
+        return *this;
+    }
+
+    /**
      * オーナーIDを取得
      *
      * @return オーナーID
@@ -247,6 +260,17 @@ public:
     void setOwnerId(const Char* ownerId)
     {
         ensureData().ownerId.emplace(ownerId);
+    }
+
+    /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    Script& withOwnerId(const Char* ownerId)
+    {
+        setOwnerId(ownerId);
+        return *this;
     }
 
     /**
@@ -270,6 +294,17 @@ public:
     }
 
     /**
+     * スクリプト名を設定
+     *
+     * @param name スクリプト名
+     */
+    Script& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
+    }
+
+    /**
      * 説明文を取得
      *
      * @return 説明文
@@ -287,6 +322,17 @@ public:
     void setDescription(const Char* description)
     {
         ensureData().description.emplace(description);
+    }
+
+    /**
+     * 説明文を設定
+     *
+     * @param description 説明文
+     */
+    Script& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
     }
 
     /**
@@ -310,6 +356,17 @@ public:
     }
 
     /**
+     * Luaスクリプトを設定
+     *
+     * @param script Luaスクリプト
+     */
+    Script& withScript(const Char* script)
+    {
+        setScript(script);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -327,6 +384,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Script& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -349,12 +417,68 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    Script& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Script& lhs, const Script& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->scriptId != lhr.m_pData->scriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->script != lhr.m_pData->script)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Script& lhs, const Script& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

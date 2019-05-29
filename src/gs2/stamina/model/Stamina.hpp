@@ -35,6 +35,8 @@ namespace gs2 { namespace stamina {
  */
 class Stamina : public Gs2Object
 {
+    friend bool operator!=(const Stamina& lhs, const Stamina& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -250,6 +252,17 @@ public:
     }
 
     /**
+     * スタミナ のGRNを設定
+     *
+     * @param staminaId スタミナ のGRN
+     */
+    Stamina& withStaminaId(const Char* staminaId)
+    {
+        setStaminaId(staminaId);
+        return *this;
+    }
+
+    /**
      * スタミナの種類名を取得
      *
      * @return スタミナの種類名
@@ -267,6 +280,17 @@ public:
     void setStaminaModelName(const Char* staminaModelName)
     {
         ensureData().staminaModelName.emplace(staminaModelName);
+    }
+
+    /**
+     * スタミナの種類名を設定
+     *
+     * @param staminaModelName スタミナの種類名
+     */
+    Stamina& withStaminaModelName(const Char* staminaModelName)
+    {
+        setStaminaModelName(staminaModelName);
+        return *this;
     }
 
     /**
@@ -290,6 +314,17 @@ public:
     }
 
     /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    Stamina& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
+    }
+
+    /**
      * 最終更新時におけるスタミナ値を取得
      *
      * @return 最終更新時におけるスタミナ値
@@ -307,6 +342,17 @@ public:
     void setValue(Int32 value)
     {
         ensureData().value.emplace(value);
+    }
+
+    /**
+     * 最終更新時におけるスタミナ値を設定
+     *
+     * @param value 最終更新時におけるスタミナ値
+     */
+    Stamina& withValue(Int32 value)
+    {
+        setValue(value);
+        return *this;
     }
 
     /**
@@ -330,6 +376,17 @@ public:
     }
 
     /**
+     * スタミナの最大値を設定
+     *
+     * @param maxValue スタミナの最大値
+     */
+    Stamina& withMaxValue(Int32 maxValue)
+    {
+        setMaxValue(maxValue);
+        return *this;
+    }
+
+    /**
      * スタミナの最大値を超えて格納されているスタミナ値を取得
      *
      * @return スタミナの最大値を超えて格納されているスタミナ値
@@ -347,6 +404,17 @@ public:
     void setOverflowValue(Int32 overflowValue)
     {
         ensureData().overflowValue.emplace(overflowValue);
+    }
+
+    /**
+     * スタミナの最大値を超えて格納されているスタミナ値を設定
+     *
+     * @param overflowValue スタミナの最大値を超えて格納されているスタミナ値
+     */
+    Stamina& withOverflowValue(Int32 overflowValue)
+    {
+        setOverflowValue(overflowValue);
+        return *this;
     }
 
     /**
@@ -370,6 +438,17 @@ public:
     }
 
     /**
+     * 作成日時を設定
+     *
+     * @param lastRecoveredAt 作成日時
+     */
+    Stamina& withLastRecoveredAt(Int64 lastRecoveredAt)
+    {
+        setLastRecoveredAt(lastRecoveredAt);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -387,6 +466,17 @@ public:
     void setCreatedAt(Int64 createdAt)
     {
         ensureData().createdAt.emplace(createdAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    Stamina& withCreatedAt(Int64 createdAt)
+    {
+        setCreatedAt(createdAt);
+        return *this;
     }
 
     /**
@@ -409,12 +499,76 @@ public:
         ensureData().updatedAt.emplace(updatedAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    Stamina& withUpdatedAt(Int64 updatedAt)
+    {
+        setUpdatedAt(updatedAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Stamina& lhs, const Stamina& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->staminaId != lhr.m_pData->staminaId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->staminaModelName != lhr.m_pData->staminaModelName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->value != lhr.m_pData->value)
+        {
+            return true;
+        }
+        if (lhs.m_pData->maxValue != lhr.m_pData->maxValue)
+        {
+            return true;
+        }
+        if (lhs.m_pData->overflowValue != lhr.m_pData->overflowValue)
+        {
+            return true;
+        }
+        if (lhs.m_pData->lastRecoveredAt != lhr.m_pData->lastRecoveredAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Stamina& lhs, const Stamina& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

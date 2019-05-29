@@ -35,6 +35,8 @@ namespace gs2 { namespace identifier {
  */
 class ProjectToken : public Gs2Object
 {
+    friend bool operator!=(const ProjectToken& lhs, const ProjectToken& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -169,12 +171,44 @@ public:
         ensureData().token.emplace(token);
     }
 
+    /**
+     * プロジェクトトークンを設定
+     *
+     * @param token プロジェクトトークン
+     */
+    ProjectToken& withToken(const Char* token)
+    {
+        setToken(token);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const ProjectToken& lhs, const ProjectToken& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->token != lhr.m_pData->token)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const ProjectToken& lhs, const ProjectToken& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

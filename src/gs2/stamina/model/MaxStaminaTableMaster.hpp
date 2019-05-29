@@ -35,6 +35,8 @@ namespace gs2 { namespace stamina {
  */
 class MaxStaminaTableMaster : public Gs2Object
 {
+    friend bool operator!=(const MaxStaminaTableMaster& lhs, const MaxStaminaTableMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -227,6 +229,17 @@ public:
     }
 
     /**
+     * スタミナ最大値テーブル のGRNを設定
+     *
+     * @param maxStaminaTableId スタミナ最大値テーブル のGRN
+     */
+    MaxStaminaTableMaster& withMaxStaminaTableId(const Char* maxStaminaTableId)
+    {
+        setMaxStaminaTableId(maxStaminaTableId);
+        return *this;
+    }
+
+    /**
      * 最大スタミナ値テーブル名を取得
      *
      * @return 最大スタミナ値テーブル名
@@ -244,6 +257,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * 最大スタミナ値テーブル名を設定
+     *
+     * @param name 最大スタミナ値テーブル名
+     */
+    MaxStaminaTableMaster& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -267,6 +291,17 @@ public:
     }
 
     /**
+     * 最大スタミナ値テーブルのメタデータを設定
+     *
+     * @param metadata 最大スタミナ値テーブルのメタデータ
+     */
+    MaxStaminaTableMaster& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
+    }
+
+    /**
      * スタミナ最大値テーブルの説明を取得
      *
      * @return スタミナ最大値テーブルの説明
@@ -284,6 +319,17 @@ public:
     void setDescription(const Char* description)
     {
         ensureData().description.emplace(description);
+    }
+
+    /**
+     * スタミナ最大値テーブルの説明を設定
+     *
+     * @param description スタミナ最大値テーブルの説明
+     */
+    MaxStaminaTableMaster& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
     }
 
     /**
@@ -307,6 +353,17 @@ public:
     }
 
     /**
+     * 経験値の種類 のGRNを設定
+     *
+     * @param experienceModelId 経験値の種類 のGRN
+     */
+    MaxStaminaTableMaster& withExperienceModelId(const Char* experienceModelId)
+    {
+        setExperienceModelId(experienceModelId);
+        return *this;
+    }
+
+    /**
      * ランク毎のスタミナの最大値テーブルを取得
      *
      * @return ランク毎のスタミナの最大値テーブル
@@ -326,12 +383,64 @@ public:
         ensureData().values.emplace(values);
     }
 
+    /**
+     * ランク毎のスタミナの最大値テーブルを設定
+     *
+     * @param values ランク毎のスタミナの最大値テーブル
+     */
+    MaxStaminaTableMaster& withValues(const List<Int32>& values)
+    {
+        setValues(values);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const MaxStaminaTableMaster& lhs, const MaxStaminaTableMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->maxStaminaTableId != lhr.m_pData->maxStaminaTableId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->experienceModelId != lhr.m_pData->experienceModelId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->values != lhr.m_pData->values)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const MaxStaminaTableMaster& lhs, const MaxStaminaTableMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

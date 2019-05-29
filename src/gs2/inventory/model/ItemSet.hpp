@@ -35,6 +35,8 @@ namespace gs2 { namespace inventory {
  */
 class ItemSet : public Gs2Object
 {
+    friend bool operator!=(const ItemSet& lhs, const ItemSet& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -250,6 +252,17 @@ public:
     }
 
     /**
+     * アイテムセット のGRNを設定
+     *
+     * @param itemSetId アイテムセット のGRN
+     */
+    ItemSet& withItemSetId(const Char* itemSetId)
+    {
+        setItemSetId(itemSetId);
+        return *this;
+    }
+
+    /**
      * インベントリモデル名を取得
      *
      * @return インベントリモデル名
@@ -267,6 +280,17 @@ public:
     void setInventoryModelName(const Char* inventoryModelName)
     {
         ensureData().inventoryModelName.emplace(inventoryModelName);
+    }
+
+    /**
+     * インベントリモデル名を設定
+     *
+     * @param inventoryModelName インベントリモデル名
+     */
+    ItemSet& withInventoryModelName(const Char* inventoryModelName)
+    {
+        setInventoryModelName(inventoryModelName);
+        return *this;
     }
 
     /**
@@ -290,6 +314,17 @@ public:
     }
 
     /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    ItemSet& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
+    }
+
+    /**
      * アイテムモデルの種類名を取得
      *
      * @return アイテムモデルの種類名
@@ -307,6 +342,17 @@ public:
     void setItemModelName(const Char* itemModelName)
     {
         ensureData().itemModelName.emplace(itemModelName);
+    }
+
+    /**
+     * アイテムモデルの種類名を設定
+     *
+     * @param itemModelName アイテムモデルの種類名
+     */
+    ItemSet& withItemModelName(const Char* itemModelName)
+    {
+        setItemModelName(itemModelName);
+        return *this;
     }
 
     /**
@@ -330,6 +376,17 @@ public:
     }
 
     /**
+     * 所持数量を設定
+     *
+     * @param count 所持数量
+     */
+    ItemSet& withCount(Int64 count)
+    {
+        setCount(count);
+        return *this;
+    }
+
+    /**
      * 表示順番を取得
      *
      * @return 表示順番
@@ -347,6 +404,17 @@ public:
     void setSortValue(Int32 sortValue)
     {
         ensureData().sortValue.emplace(sortValue);
+    }
+
+    /**
+     * 表示順番を設定
+     *
+     * @param sortValue 表示順番
+     */
+    ItemSet& withSortValue(Int32 sortValue)
+    {
+        setSortValue(sortValue);
+        return *this;
     }
 
     /**
@@ -370,6 +438,17 @@ public:
     }
 
     /**
+     * 有効期限を設定
+     *
+     * @param expiresAt 有効期限
+     */
+    ItemSet& withExpiresAt(Int64 expiresAt)
+    {
+        setExpiresAt(expiresAt);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -387,6 +466,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    ItemSet& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -409,12 +499,76 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    ItemSet& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const ItemSet& lhs, const ItemSet& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->itemSetId != lhr.m_pData->itemSetId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->inventoryModelName != lhr.m_pData->inventoryModelName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->itemModelName != lhr.m_pData->itemModelName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->count != lhr.m_pData->count)
+        {
+            return true;
+        }
+        if (lhs.m_pData->sortValue != lhr.m_pData->sortValue)
+        {
+            return true;
+        }
+        if (lhs.m_pData->expiresAt != lhr.m_pData->expiresAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const ItemSet& lhs, const ItemSet& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

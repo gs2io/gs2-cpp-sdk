@@ -35,6 +35,8 @@ namespace gs2 { namespace lottery {
  */
 class CurrentLotteryMaster : public Gs2Object
 {
+    friend bool operator!=(const CurrentLotteryMaster& lhs, const CurrentLotteryMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -180,6 +182,17 @@ public:
     }
 
     /**
+     * グループ名を設定
+     *
+     * @param groupName グループ名
+     */
+    CurrentLotteryMaster& withGroupName(const Char* groupName)
+    {
+        setGroupName(groupName);
+        return *this;
+    }
+
+    /**
      * マスターデータを取得
      *
      * @return マスターデータ
@@ -199,12 +212,48 @@ public:
         ensureData().settings.emplace(settings);
     }
 
+    /**
+     * マスターデータを設定
+     *
+     * @param settings マスターデータ
+     */
+    CurrentLotteryMaster& withSettings(const Char* settings)
+    {
+        setSettings(settings);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const CurrentLotteryMaster& lhs, const CurrentLotteryMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->groupName != lhr.m_pData->groupName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->settings != lhr.m_pData->settings)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const CurrentLotteryMaster& lhs, const CurrentLotteryMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

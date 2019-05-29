@@ -35,6 +35,8 @@ namespace gs2 { namespace key {
  */
 class Key : public Gs2Object
 {
+    friend bool operator!=(const Key& lhs, const Key& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -200,6 +202,17 @@ public:
     }
 
     /**
+     * 暗号鍵 のGRNを設定
+     *
+     * @param keyId 暗号鍵 のGRN
+     */
+    Key& withKeyId(const Char* keyId)
+    {
+        setKeyId(keyId);
+        return *this;
+    }
+
+    /**
      * オーナーIDを取得
      *
      * @return オーナーID
@@ -217,6 +230,17 @@ public:
     void setOwnerId(const Char* ownerId)
     {
         ensureData().ownerId.emplace(ownerId);
+    }
+
+    /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    Key& withOwnerId(const Char* ownerId)
+    {
+        setOwnerId(ownerId);
+        return *this;
     }
 
     /**
@@ -240,6 +264,17 @@ public:
     }
 
     /**
+     * 暗号鍵名を設定
+     *
+     * @param name 暗号鍵名
+     */
+    Key& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -259,12 +294,56 @@ public:
         ensureData().createAt.emplace(createAt);
     }
 
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Key& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Key& lhs, const Key& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->keyId != lhr.m_pData->keyId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Key& lhs, const Key& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

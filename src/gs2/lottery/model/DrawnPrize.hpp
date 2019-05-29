@@ -35,6 +35,8 @@ namespace gs2 { namespace lottery {
  */
 class DrawnPrize : public Gs2Object
 {
+    friend bool operator!=(const DrawnPrize& lhs, const DrawnPrize& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -169,12 +171,44 @@ public:
         ensureData().propertyId.emplace(propertyId);
     }
 
+    /**
+     * プロパティIDを設定
+     *
+     * @param propertyId プロパティID
+     */
+    DrawnPrize& withPropertyId(const Char* propertyId)
+    {
+        setPropertyId(propertyId);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const DrawnPrize& lhs, const DrawnPrize& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->propertyId != lhr.m_pData->propertyId)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const DrawnPrize& lhs, const DrawnPrize& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

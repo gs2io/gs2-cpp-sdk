@@ -36,6 +36,8 @@ namespace gs2 { namespace lottery {
  */
 class Probability : public Gs2Object
 {
+    friend bool operator!=(const Probability& lhs, const Probability& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -183,6 +185,17 @@ public:
     }
 
     /**
+     * 排出された景品を設定
+     *
+     * @param prize 排出された景品
+     */
+    Probability& withPrize(const DrawnPrize& prize)
+    {
+        setPrize(prize);
+        return *this;
+    }
+
+    /**
      * 排出確率(0.0〜1.0)を取得
      *
      * @return 排出確率(0.0〜1.0)
@@ -202,12 +215,48 @@ public:
         ensureData().rate.emplace(rate);
     }
 
+    /**
+     * 排出確率(0.0〜1.0)を設定
+     *
+     * @param rate 排出確率(0.0〜1.0)
+     */
+    Probability& withRate(Float rate)
+    {
+        setRate(rate);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Probability& lhs, const Probability& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->prize != lhr.m_pData->prize)
+        {
+            return true;
+        }
+        if (lhs.m_pData->rate != lhr.m_pData->rate)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Probability& lhs, const Probability& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

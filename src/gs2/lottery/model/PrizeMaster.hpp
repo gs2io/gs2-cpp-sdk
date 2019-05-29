@@ -35,6 +35,8 @@ namespace gs2 { namespace lottery {
  */
 class PrizeMaster : public Gs2Object
 {
+    friend bool operator!=(const PrizeMaster& lhs, const PrizeMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -200,6 +202,17 @@ public:
     }
 
     /**
+     * 景品の種類を設定
+     *
+     * @param type 景品の種類
+     */
+    PrizeMaster& withType(const Char* type)
+    {
+        setType(type);
+        return *this;
+    }
+
+    /**
      * プロパティIDを取得
      *
      * @return プロパティID
@@ -217,6 +230,17 @@ public:
     void setPropertyId(const Char* propertyId)
     {
         ensureData().propertyId.emplace(propertyId);
+    }
+
+    /**
+     * プロパティIDを設定
+     *
+     * @param propertyId プロパティID
+     */
+    PrizeMaster& withPropertyId(const Char* propertyId)
+    {
+        setPropertyId(propertyId);
+        return *this;
     }
 
     /**
@@ -240,6 +264,17 @@ public:
     }
 
     /**
+     * 景品テーブルの名前を設定
+     *
+     * @param prizeTableName 景品テーブルの名前
+     */
+    PrizeMaster& withPrizeTableName(const Char* prizeTableName)
+    {
+        setPrizeTableName(prizeTableName);
+        return *this;
+    }
+
+    /**
      * 排出重み/BOXに入れる数量を取得
      *
      * @return 排出重み/BOXに入れる数量
@@ -259,12 +294,56 @@ public:
         ensureData().weight.emplace(weight);
     }
 
+    /**
+     * 排出重み/BOXに入れる数量を設定
+     *
+     * @param weight 排出重み/BOXに入れる数量
+     */
+    PrizeMaster& withWeight(Int32 weight)
+    {
+        setWeight(weight);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const PrizeMaster& lhs, const PrizeMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->type != lhr.m_pData->type)
+        {
+            return true;
+        }
+        if (lhs.m_pData->propertyId != lhr.m_pData->propertyId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->prizeTableName != lhr.m_pData->prizeTableName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->weight != lhr.m_pData->weight)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const PrizeMaster& lhs, const PrizeMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

@@ -35,6 +35,8 @@ namespace gs2 { namespace identifier {
  */
 class AttachSecurityPolicy : public Gs2Object
 {
+    friend bool operator!=(const AttachSecurityPolicy& lhs, const AttachSecurityPolicy& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -199,6 +201,17 @@ public:
     }
 
     /**
+     * ユーザー のGRNを設定
+     *
+     * @param userId ユーザー のGRN
+     */
+    AttachSecurityPolicy& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
+    }
+
+    /**
      * セキュリティポリシー のGRNのリストを取得
      *
      * @return セキュリティポリシー のGRNのリスト
@@ -216,6 +229,17 @@ public:
     void setSecurityPolicyIds(const List<StringHolder>& securityPolicyIds)
     {
         ensureData().securityPolicyIds.emplace(securityPolicyIds);
+    }
+
+    /**
+     * セキュリティポリシー のGRNのリストを設定
+     *
+     * @param securityPolicyIds セキュリティポリシー のGRNのリスト
+     */
+    AttachSecurityPolicy& withSecurityPolicyIds(const List<StringHolder>& securityPolicyIds)
+    {
+        setSecurityPolicyIds(securityPolicyIds);
+        return *this;
     }
 
     /**
@@ -238,12 +262,52 @@ public:
         ensureData().attachAt.emplace(attachAt);
     }
 
+    /**
+     * 作成日時を設定
+     *
+     * @param attachAt 作成日時
+     */
+    AttachSecurityPolicy& withAttachAt(Int64 attachAt)
+    {
+        setAttachAt(attachAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const AttachSecurityPolicy& lhs, const AttachSecurityPolicy& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->securityPolicyIds != lhr.m_pData->securityPolicyIds)
+        {
+            return true;
+        }
+        if (lhs.m_pData->attachAt != lhr.m_pData->attachAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const AttachSecurityPolicy& lhs, const AttachSecurityPolicy& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

@@ -35,7 +35,19 @@ namespace gs2 { namespace distributor {
  */
 class Distribute : public Gs2Object
 {
+    friend bool operator!=(const Distribute& lhs, const Distribute& lhr);
+
 };
+
+bool operator!=(const Distribute& lhs, const Distribute& lhr)
+{
+    return false;
+}
+
+bool operator==(const Distribute& lhs, const Distribute& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

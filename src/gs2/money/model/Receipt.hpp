@@ -35,6 +35,8 @@ namespace gs2 { namespace money {
  */
 class Receipt : public Gs2Object
 {
+    friend bool operator!=(const Receipt& lhs, const Receipt& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -270,6 +272,17 @@ public:
     }
 
     /**
+     * レシート のGRNを設定
+     *
+     * @param receiptId レシート のGRN
+     */
+    Receipt& withReceiptId(const Char* receiptId)
+    {
+        setReceiptId(receiptId);
+        return *this;
+    }
+
+    /**
      * トランザクションIDを取得
      *
      * @return トランザクションID
@@ -287,6 +300,17 @@ public:
     void setTransactionId(const Char* transactionId)
     {
         ensureData().transactionId.emplace(transactionId);
+    }
+
+    /**
+     * トランザクションIDを設定
+     *
+     * @param transactionId トランザクションID
+     */
+    Receipt& withTransactionId(const Char* transactionId)
+    {
+        setTransactionId(transactionId);
+        return *this;
     }
 
     /**
@@ -310,6 +334,17 @@ public:
     }
 
     /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    Receipt& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
+    }
+
+    /**
      * Noneを取得
      *
      * @return None
@@ -327,6 +362,17 @@ public:
     void setSlot(Int32 slot)
     {
         ensureData().slot.emplace(slot);
+    }
+
+    /**
+     * Noneを設定
+     *
+     * @param slot None
+     */
+    Receipt& withSlot(Int32 slot)
+    {
+        setSlot(slot);
+        return *this;
     }
 
     /**
@@ -350,6 +396,17 @@ public:
     }
 
     /**
+     * 種類を設定
+     *
+     * @param type 種類
+     */
+    Receipt& withType(const Char* type)
+    {
+        setType(type);
+        return *this;
+    }
+
+    /**
      * 単価を取得
      *
      * @return 単価
@@ -367,6 +424,17 @@ public:
     void setPrice(Float price)
     {
         ensureData().price.emplace(price);
+    }
+
+    /**
+     * 単価を設定
+     *
+     * @param price 単価
+     */
+    Receipt& withPrice(Float price)
+    {
+        setPrice(price);
+        return *this;
     }
 
     /**
@@ -390,6 +458,17 @@ public:
     }
 
     /**
+     * 有償課金通貨を設定
+     *
+     * @param paid 有償課金通貨
+     */
+    Receipt& withPaid(Int32 paid)
+    {
+        setPaid(paid);
+        return *this;
+    }
+
+    /**
      * 無償課金通貨を取得
      *
      * @return 無償課金通貨
@@ -407,6 +486,17 @@ public:
     void setFree(Int32 free)
     {
         ensureData().free.emplace(free);
+    }
+
+    /**
+     * 無償課金通貨を設定
+     *
+     * @param free 無償課金通貨
+     */
+    Receipt& withFree(Int32 free)
+    {
+        setFree(free);
+        return *this;
     }
 
     /**
@@ -430,6 +520,17 @@ public:
     }
 
     /**
+     * 総数を設定
+     *
+     * @param total 総数
+     */
+    Receipt& withTotal(Int32 total)
+    {
+        setTotal(total);
+        return *this;
+    }
+
+    /**
      * ストアプラットフォームで販売されているコンテンツIDを取得
      *
      * @return ストアプラットフォームで販売されているコンテンツID
@@ -447,6 +548,17 @@ public:
     void setContentsId(const Char* contentsId)
     {
         ensureData().contentsId.emplace(contentsId);
+    }
+
+    /**
+     * ストアプラットフォームで販売されているコンテンツIDを設定
+     *
+     * @param contentsId ストアプラットフォームで販売されているコンテンツID
+     */
+    Receipt& withContentsId(const Char* contentsId)
+    {
+        setContentsId(contentsId);
+        return *this;
     }
 
     /**
@@ -469,12 +581,84 @@ public:
         ensureData().createAt.emplace(createAt);
     }
 
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Receipt& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Receipt& lhs, const Receipt& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->receiptId != lhr.m_pData->receiptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->transactionId != lhr.m_pData->transactionId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->slot != lhr.m_pData->slot)
+        {
+            return true;
+        }
+        if (lhs.m_pData->type != lhr.m_pData->type)
+        {
+            return true;
+        }
+        if (lhs.m_pData->price != lhr.m_pData->price)
+        {
+            return true;
+        }
+        if (lhs.m_pData->paid != lhr.m_pData->paid)
+        {
+            return true;
+        }
+        if (lhs.m_pData->free != lhr.m_pData->free)
+        {
+            return true;
+        }
+        if (lhs.m_pData->total != lhr.m_pData->total)
+        {
+            return true;
+        }
+        if (lhs.m_pData->contentsId != lhr.m_pData->contentsId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Receipt& lhs, const Receipt& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

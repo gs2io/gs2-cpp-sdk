@@ -35,6 +35,8 @@ namespace gs2 { namespace inventory {
  */
 class ItemModel : public Gs2Object
 {
+    friend bool operator!=(const ItemModel& lhs, const ItemModel& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -210,6 +212,17 @@ public:
     }
 
     /**
+     * アイテムマスター のGRNを設定
+     *
+     * @param itemModelId アイテムマスター のGRN
+     */
+    ItemModel& withItemModelId(const Char* itemModelId)
+    {
+        setItemModelId(itemModelId);
+        return *this;
+    }
+
+    /**
      * アイテムモデルの種類名を取得
      *
      * @return アイテムモデルの種類名
@@ -227,6 +240,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * アイテムモデルの種類名を設定
+     *
+     * @param name アイテムモデルの種類名
+     */
+    ItemModel& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -250,6 +274,17 @@ public:
     }
 
     /**
+     * アイテムモデルの種類のメタデータを設定
+     *
+     * @param metadata アイテムモデルの種類のメタデータ
+     */
+    ItemModel& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
+    }
+
+    /**
      * 所有可能な最大数量を取得
      *
      * @return 所有可能な最大数量
@@ -267,6 +302,17 @@ public:
     void setMaxCount(Int64 maxCount)
     {
         ensureData().maxCount.emplace(maxCount);
+    }
+
+    /**
+     * 所有可能な最大数量を設定
+     *
+     * @param maxCount 所有可能な最大数量
+     */
+    ItemModel& withMaxCount(Int64 maxCount)
+    {
+        setMaxCount(maxCount);
+        return *this;
     }
 
     /**
@@ -289,12 +335,60 @@ public:
         ensureData().sortValue.emplace(sortValue);
     }
 
+    /**
+     * 表示順番を設定
+     *
+     * @param sortValue 表示順番
+     */
+    ItemModel& withSortValue(Int32 sortValue)
+    {
+        setSortValue(sortValue);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const ItemModel& lhs, const ItemModel& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->itemModelId != lhr.m_pData->itemModelId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->maxCount != lhr.m_pData->maxCount)
+        {
+            return true;
+        }
+        if (lhs.m_pData->sortValue != lhr.m_pData->sortValue)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const ItemModel& lhs, const ItemModel& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

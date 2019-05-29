@@ -36,6 +36,8 @@ namespace gs2 { namespace lottery {
  */
 class PrizeTableMaster : public Gs2Object
 {
+    friend bool operator!=(const PrizeTableMaster& lhs, const PrizeTableMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -237,6 +239,17 @@ public:
     }
 
     /**
+     * 景品の排出確率テーブル のGRNを設定
+     *
+     * @param prizeTableId 景品の排出確率テーブル のGRN
+     */
+    PrizeTableMaster& withPrizeTableId(const Char* prizeTableId)
+    {
+        setPrizeTableId(prizeTableId);
+        return *this;
+    }
+
+    /**
      * 景品テーブル名を取得
      *
      * @return 景品テーブル名
@@ -254,6 +267,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * 景品テーブル名を設定
+     *
+     * @param name 景品テーブル名
+     */
+    PrizeTableMaster& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -277,6 +301,17 @@ public:
     }
 
     /**
+     * 景品テーブルのメタデータを設定
+     *
+     * @param metadata 景品テーブルのメタデータ
+     */
+    PrizeTableMaster& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
+    }
+
+    /**
      * 景品の排出確率テーブルの説明を取得
      *
      * @return 景品の排出確率テーブルの説明
@@ -294,6 +329,17 @@ public:
     void setDescription(const Char* description)
     {
         ensureData().description.emplace(description);
+    }
+
+    /**
+     * 景品の排出確率テーブルの説明を設定
+     *
+     * @param description 景品の排出確率テーブルの説明
+     */
+    PrizeTableMaster& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
     }
 
     /**
@@ -317,6 +363,17 @@ public:
     }
 
     /**
+     * 景品リストを設定
+     *
+     * @param prizes 景品リスト
+     */
+    PrizeTableMaster& withPrizes(const List<PrizeMaster>& prizes)
+    {
+        setPrizes(prizes);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -334,6 +391,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    PrizeTableMaster& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -356,12 +424,68 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    PrizeTableMaster& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const PrizeTableMaster& lhs, const PrizeTableMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->prizeTableId != lhr.m_pData->prizeTableId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->prizes != lhr.m_pData->prizes)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const PrizeTableMaster& lhs, const PrizeTableMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

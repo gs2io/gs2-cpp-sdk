@@ -35,6 +35,8 @@ namespace gs2 { namespace inventory {
  */
 class ItemModelMaster : public Gs2Object
 {
+    friend bool operator!=(const ItemModelMaster& lhs, const ItemModelMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -250,6 +252,17 @@ public:
     }
 
     /**
+     * アイテムマスター のGRNを設定
+     *
+     * @param itemModelId アイテムマスター のGRN
+     */
+    ItemModelMaster& withItemModelId(const Char* itemModelId)
+    {
+        setItemModelId(itemModelId);
+        return *this;
+    }
+
+    /**
      * インベントリの種類名を取得
      *
      * @return インベントリの種類名
@@ -267,6 +280,17 @@ public:
     void setInventoryModelName(const Char* inventoryModelName)
     {
         ensureData().inventoryModelName.emplace(inventoryModelName);
+    }
+
+    /**
+     * インベントリの種類名を設定
+     *
+     * @param inventoryModelName インベントリの種類名
+     */
+    ItemModelMaster& withInventoryModelName(const Char* inventoryModelName)
+    {
+        setInventoryModelName(inventoryModelName);
+        return *this;
     }
 
     /**
@@ -290,6 +314,17 @@ public:
     }
 
     /**
+     * アイテムモデルの種類名を設定
+     *
+     * @param name アイテムモデルの種類名
+     */
+    ItemModelMaster& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
+    }
+
+    /**
      * アイテムマスターの説明を取得
      *
      * @return アイテムマスターの説明
@@ -307,6 +342,17 @@ public:
     void setDescription(const Char* description)
     {
         ensureData().description.emplace(description);
+    }
+
+    /**
+     * アイテムマスターの説明を設定
+     *
+     * @param description アイテムマスターの説明
+     */
+    ItemModelMaster& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
     }
 
     /**
@@ -330,6 +376,17 @@ public:
     }
 
     /**
+     * アイテムモデルの種類のメタデータを設定
+     *
+     * @param metadata アイテムモデルの種類のメタデータ
+     */
+    ItemModelMaster& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
+    }
+
+    /**
      * 所有可能な最大数量を取得
      *
      * @return 所有可能な最大数量
@@ -347,6 +404,17 @@ public:
     void setMaxCount(Int64 maxCount)
     {
         ensureData().maxCount.emplace(maxCount);
+    }
+
+    /**
+     * 所有可能な最大数量を設定
+     *
+     * @param maxCount 所有可能な最大数量
+     */
+    ItemModelMaster& withMaxCount(Int64 maxCount)
+    {
+        setMaxCount(maxCount);
+        return *this;
     }
 
     /**
@@ -370,6 +438,17 @@ public:
     }
 
     /**
+     * 表示順番を設定
+     *
+     * @param sortValue 表示順番
+     */
+    ItemModelMaster& withSortValue(Int32 sortValue)
+    {
+        setSortValue(sortValue);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -387,6 +466,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    ItemModelMaster& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -409,12 +499,76 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    ItemModelMaster& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const ItemModelMaster& lhs, const ItemModelMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->itemModelId != lhr.m_pData->itemModelId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->inventoryModelName != lhr.m_pData->inventoryModelName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->maxCount != lhr.m_pData->maxCount)
+        {
+            return true;
+        }
+        if (lhs.m_pData->sortValue != lhr.m_pData->sortValue)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const ItemModelMaster& lhs, const ItemModelMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

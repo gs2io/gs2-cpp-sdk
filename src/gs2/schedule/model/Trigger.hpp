@@ -35,6 +35,8 @@ namespace gs2 { namespace schedule {
  */
 class Trigger : public Gs2Object
 {
+    friend bool operator!=(const Trigger& lhs, const Trigger& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -210,6 +212,17 @@ public:
     }
 
     /**
+     * トリガー のGRNを設定
+     *
+     * @param triggerId トリガー のGRN
+     */
+    Trigger& withTriggerId(const Char* triggerId)
+    {
+        setTriggerId(triggerId);
+        return *this;
+    }
+
+    /**
      * トリガーの名前を取得
      *
      * @return トリガーの名前
@@ -227,6 +240,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * トリガーの名前を設定
+     *
+     * @param name トリガーの名前
+     */
+    Trigger& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -250,6 +274,17 @@ public:
     }
 
     /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    Trigger& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -267,6 +302,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Trigger& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -289,12 +335,60 @@ public:
         ensureData().expiresAt.emplace(expiresAt);
     }
 
+    /**
+     * Noneを設定
+     *
+     * @param expiresAt None
+     */
+    Trigger& withExpiresAt(Int64 expiresAt)
+    {
+        setExpiresAt(expiresAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Trigger& lhs, const Trigger& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->triggerId != lhr.m_pData->triggerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->expiresAt != lhr.m_pData->expiresAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Trigger& lhs, const Trigger& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

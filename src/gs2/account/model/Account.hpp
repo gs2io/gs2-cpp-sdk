@@ -35,6 +35,8 @@ namespace gs2 { namespace account {
  */
 class Account : public Gs2Object
 {
+    friend bool operator!=(const Account& lhs, const Account& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -200,6 +202,17 @@ public:
     }
 
     /**
+     * アカウント のGRNを設定
+     *
+     * @param accountId アカウント のGRN
+     */
+    Account& withAccountId(const Char* accountId)
+    {
+        setAccountId(accountId);
+        return *this;
+    }
+
+    /**
      * アカウントIDを取得
      *
      * @return アカウントID
@@ -217,6 +230,17 @@ public:
     void setUserId(const Char* userId)
     {
         ensureData().userId.emplace(userId);
+    }
+
+    /**
+     * アカウントIDを設定
+     *
+     * @param userId アカウントID
+     */
+    Account& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
     }
 
     /**
@@ -240,6 +264,17 @@ public:
     }
 
     /**
+     * パスワードを設定
+     *
+     * @param password パスワード
+     */
+    Account& withPassword(const Char* password)
+    {
+        setPassword(password);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -259,12 +294,56 @@ public:
         ensureData().createAt.emplace(createAt);
     }
 
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Account& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Account& lhs, const Account& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->accountId != lhr.m_pData->accountId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->password != lhr.m_pData->password)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Account& lhs, const Account& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

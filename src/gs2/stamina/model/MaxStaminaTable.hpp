@@ -35,6 +35,8 @@ namespace gs2 { namespace stamina {
  */
 class MaxStaminaTable : public Gs2Object
 {
+    friend bool operator!=(const MaxStaminaTable& lhs, const MaxStaminaTable& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -217,6 +219,17 @@ public:
     }
 
     /**
+     * スタミナ最大値テーブル のGRNを設定
+     *
+     * @param maxStaminaTableId スタミナ最大値テーブル のGRN
+     */
+    MaxStaminaTable& withMaxStaminaTableId(const Char* maxStaminaTableId)
+    {
+        setMaxStaminaTableId(maxStaminaTableId);
+        return *this;
+    }
+
+    /**
      * 最大スタミナ値テーブル名を取得
      *
      * @return 最大スタミナ値テーブル名
@@ -234,6 +247,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * 最大スタミナ値テーブル名を設定
+     *
+     * @param name 最大スタミナ値テーブル名
+     */
+    MaxStaminaTable& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -257,6 +281,17 @@ public:
     }
 
     /**
+     * 最大スタミナ値テーブルのメタデータを設定
+     *
+     * @param metadata 最大スタミナ値テーブルのメタデータ
+     */
+    MaxStaminaTable& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
+    }
+
+    /**
      * 経験値の種類 のGRNを取得
      *
      * @return 経験値の種類 のGRN
@@ -274,6 +309,17 @@ public:
     void setExperienceModelId(const Char* experienceModelId)
     {
         ensureData().experienceModelId.emplace(experienceModelId);
+    }
+
+    /**
+     * 経験値の種類 のGRNを設定
+     *
+     * @param experienceModelId 経験値の種類 のGRN
+     */
+    MaxStaminaTable& withExperienceModelId(const Char* experienceModelId)
+    {
+        setExperienceModelId(experienceModelId);
+        return *this;
     }
 
     /**
@@ -296,12 +342,60 @@ public:
         ensureData().values.emplace(values);
     }
 
+    /**
+     * ランク毎のスタミナの最大値テーブルを設定
+     *
+     * @param values ランク毎のスタミナの最大値テーブル
+     */
+    MaxStaminaTable& withValues(const List<Int32>& values)
+    {
+        setValues(values);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const MaxStaminaTable& lhs, const MaxStaminaTable& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->maxStaminaTableId != lhr.m_pData->maxStaminaTableId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->experienceModelId != lhr.m_pData->experienceModelId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->values != lhr.m_pData->values)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const MaxStaminaTable& lhs, const MaxStaminaTable& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

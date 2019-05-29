@@ -35,6 +35,8 @@ namespace gs2 { namespace inventory {
  */
 class CurrentItemModelMaster : public Gs2Object
 {
+    friend bool operator!=(const CurrentItemModelMaster& lhs, const CurrentItemModelMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -180,6 +182,17 @@ public:
     }
 
     /**
+     * カテゴリ名を設定
+     *
+     * @param categoryName カテゴリ名
+     */
+    CurrentItemModelMaster& withCategoryName(const Char* categoryName)
+    {
+        setCategoryName(categoryName);
+        return *this;
+    }
+
+    /**
      * マスターデータを取得
      *
      * @return マスターデータ
@@ -199,12 +212,48 @@ public:
         ensureData().settings.emplace(settings);
     }
 
+    /**
+     * マスターデータを設定
+     *
+     * @param settings マスターデータ
+     */
+    CurrentItemModelMaster& withSettings(const Char* settings)
+    {
+        setSettings(settings);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const CurrentItemModelMaster& lhs, const CurrentItemModelMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->categoryName != lhr.m_pData->categoryName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->settings != lhr.m_pData->settings)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const CurrentItemModelMaster& lhs, const CurrentItemModelMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

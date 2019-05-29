@@ -35,6 +35,8 @@ namespace gs2 { namespace distributor {
  */
 class DistributorModel : public Gs2Object
 {
+    friend bool operator!=(const DistributorModel& lhs, const DistributorModel& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -229,6 +231,17 @@ public:
     }
 
     /**
+     * ディストリビュータの種類 のGRNを設定
+     *
+     * @param distributorModelId ディストリビュータの種類 のGRN
+     */
+    DistributorModel& withDistributorModelId(const Char* distributorModelId)
+    {
+        setDistributorModelId(distributorModelId);
+        return *this;
+    }
+
+    /**
      * ディストリビューターの種類名を取得
      *
      * @return ディストリビューターの種類名
@@ -246,6 +259,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * ディストリビューターの種類名を設定
+     *
+     * @param name ディストリビューターの種類名
+     */
+    DistributorModel& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -269,6 +293,17 @@ public:
     }
 
     /**
+     * ディストリビューターの種類のメタデータを設定
+     *
+     * @param metadata ディストリビューターの種類のメタデータ
+     */
+    DistributorModel& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
+    }
+
+    /**
      * 所持品の配布処理の権限判定に使用する ユーザー のGRNを取得
      *
      * @return 所持品の配布処理の権限判定に使用する ユーザー のGRN
@@ -286,6 +321,17 @@ public:
     void setAssumeUserId(const Char* assumeUserId)
     {
         ensureData().assumeUserId.emplace(assumeUserId);
+    }
+
+    /**
+     * 所持品の配布処理の権限判定に使用する ユーザー のGRNを設定
+     *
+     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザー のGRN
+     */
+    DistributorModel& withAssumeUserId(const Char* assumeUserId)
+    {
+        setAssumeUserId(assumeUserId);
+        return *this;
     }
 
     /**
@@ -309,6 +355,17 @@ public:
     }
 
     /**
+     * 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRNを設定
+     *
+     * @param inboxId 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN
+     */
+    DistributorModel& withInboxId(const Char* inboxId)
+    {
+        setInboxId(inboxId);
+        return *this;
+    }
+
+    /**
      * ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリストを取得
      *
      * @return ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト
@@ -328,12 +385,64 @@ public:
         ensureData().whiteListTargetIds.emplace(whiteListTargetIds);
     }
 
+    /**
+     * ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリストを設定
+     *
+     * @param whiteListTargetIds ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト
+     */
+    DistributorModel& withWhiteListTargetIds(const List<StringHolder>& whiteListTargetIds)
+    {
+        setWhiteListTargetIds(whiteListTargetIds);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const DistributorModel& lhs, const DistributorModel& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->distributorModelId != lhr.m_pData->distributorModelId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->assumeUserId != lhr.m_pData->assumeUserId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->inboxId != lhr.m_pData->inboxId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->whiteListTargetIds != lhr.m_pData->whiteListTargetIds)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const DistributorModel& lhs, const DistributorModel& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

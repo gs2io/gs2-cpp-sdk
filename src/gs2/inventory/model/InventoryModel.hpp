@@ -36,6 +36,8 @@ namespace gs2 { namespace inventory {
  */
 class InventoryModel : public Gs2Object
 {
+    friend bool operator!=(const InventoryModel& lhs, const InventoryModel& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -227,6 +229,17 @@ public:
     }
 
     /**
+     * インベントリマスター のGRNを設定
+     *
+     * @param inventoryModelId インベントリマスター のGRN
+     */
+    InventoryModel& withInventoryModelId(const Char* inventoryModelId)
+    {
+        setInventoryModelId(inventoryModelId);
+        return *this;
+    }
+
+    /**
      * インベントリの種類名を取得
      *
      * @return インベントリの種類名
@@ -244,6 +257,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * インベントリの種類名を設定
+     *
+     * @param name インベントリの種類名
+     */
+    InventoryModel& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -267,6 +291,17 @@ public:
     }
 
     /**
+     * インベントリの種類のメタデータを設定
+     *
+     * @param metadata インベントリの種類のメタデータ
+     */
+    InventoryModel& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
+    }
+
+    /**
      * インベントリの初期サイズを取得
      *
      * @return インベントリの初期サイズ
@@ -284,6 +319,17 @@ public:
     void setInitialCapacity(Int32 initialCapacity)
     {
         ensureData().initialCapacity.emplace(initialCapacity);
+    }
+
+    /**
+     * インベントリの初期サイズを設定
+     *
+     * @param initialCapacity インベントリの初期サイズ
+     */
+    InventoryModel& withInitialCapacity(Int32 initialCapacity)
+    {
+        setInitialCapacity(initialCapacity);
+        return *this;
     }
 
     /**
@@ -307,6 +353,17 @@ public:
     }
 
     /**
+     * インベントリの最大サイズを設定
+     *
+     * @param maxCapacity インベントリの最大サイズ
+     */
+    InventoryModel& withMaxCapacity(Int32 maxCapacity)
+    {
+        setMaxCapacity(maxCapacity);
+        return *this;
+    }
+
+    /**
      * インベントリに格納可能なアイテムモデル一覧を取得
      *
      * @return インベントリに格納可能なアイテムモデル一覧
@@ -326,12 +383,64 @@ public:
         ensureData().itemModels.emplace(itemModels);
     }
 
+    /**
+     * インベントリに格納可能なアイテムモデル一覧を設定
+     *
+     * @param itemModels インベントリに格納可能なアイテムモデル一覧
+     */
+    InventoryModel& withItemModels(const List<ItemModel>& itemModels)
+    {
+        setItemModels(itemModels);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const InventoryModel& lhs, const InventoryModel& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->inventoryModelId != lhr.m_pData->inventoryModelId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->initialCapacity != lhr.m_pData->initialCapacity)
+        {
+            return true;
+        }
+        if (lhs.m_pData->maxCapacity != lhr.m_pData->maxCapacity)
+        {
+            return true;
+        }
+        if (lhs.m_pData->itemModels != lhr.m_pData->itemModels)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const InventoryModel& lhs, const InventoryModel& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

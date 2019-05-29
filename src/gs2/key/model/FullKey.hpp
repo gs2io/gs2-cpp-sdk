@@ -35,6 +35,8 @@ namespace gs2 { namespace key {
  */
 class FullKey : public Gs2Object
 {
+    friend bool operator!=(const FullKey& lhs, const FullKey& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -210,6 +212,17 @@ public:
     }
 
     /**
+     * 暗号鍵 のGRNを設定
+     *
+     * @param keyId 暗号鍵 のGRN
+     */
+    FullKey& withKeyId(const Char* keyId)
+    {
+        setKeyId(keyId);
+        return *this;
+    }
+
+    /**
      * オーナーIDを取得
      *
      * @return オーナーID
@@ -227,6 +240,17 @@ public:
     void setOwnerId(const Char* ownerId)
     {
         ensureData().ownerId.emplace(ownerId);
+    }
+
+    /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    FullKey& withOwnerId(const Char* ownerId)
+    {
+        setOwnerId(ownerId);
+        return *this;
     }
 
     /**
@@ -250,6 +274,17 @@ public:
     }
 
     /**
+     * 暗号鍵名を設定
+     *
+     * @param name 暗号鍵名
+     */
+    FullKey& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -267,6 +302,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    FullKey& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -289,12 +335,60 @@ public:
         ensureData().secret.emplace(secret);
     }
 
+    /**
+     * 暗号鍵を設定
+     *
+     * @param secret 暗号鍵
+     */
+    FullKey& withSecret(const Char* secret)
+    {
+        setSecret(secret);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const FullKey& lhs, const FullKey& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->keyId != lhr.m_pData->keyId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->secret != lhr.m_pData->secret)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const FullKey& lhs, const FullKey& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

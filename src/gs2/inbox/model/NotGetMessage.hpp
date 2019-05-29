@@ -35,6 +35,8 @@ namespace gs2 { namespace inbox {
  */
 class NotGetMessage : public Gs2Object
 {
+    friend bool operator!=(const NotGetMessage& lhs, const NotGetMessage& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -180,6 +182,17 @@ public:
     }
 
     /**
+     * 取得できなかったメッセージのIDを設定
+     *
+     * @param messageName 取得できなかったメッセージのID
+     */
+    NotGetMessage& withMessageName(const Char* messageName)
+    {
+        setMessageName(messageName);
+        return *this;
+    }
+
+    /**
      * 取得できなかった理由を取得
      *
      * @return 取得できなかった理由
@@ -199,12 +212,48 @@ public:
         ensureData().reason.emplace(reason);
     }
 
+    /**
+     * 取得できなかった理由を設定
+     *
+     * @param reason 取得できなかった理由
+     */
+    NotGetMessage& withReason(const Char* reason)
+    {
+        setReason(reason);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const NotGetMessage& lhs, const NotGetMessage& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->messageName != lhr.m_pData->messageName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->reason != lhr.m_pData->reason)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const NotGetMessage& lhs, const NotGetMessage& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

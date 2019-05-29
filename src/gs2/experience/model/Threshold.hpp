@@ -35,6 +35,8 @@ namespace gs2 { namespace experience {
  */
 class Threshold : public Gs2Object
 {
+    friend bool operator!=(const Threshold& lhs, const Threshold& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -207,6 +209,17 @@ public:
     }
 
     /**
+     * ランクアップ閾値 のGRNを設定
+     *
+     * @param thresholdId ランクアップ閾値 のGRN
+     */
+    Threshold& withThresholdId(const Char* thresholdId)
+    {
+        setThresholdId(thresholdId);
+        return *this;
+    }
+
+    /**
      * ランクアップ閾値名を取得
      *
      * @return ランクアップ閾値名
@@ -224,6 +237,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * ランクアップ閾値名を設定
+     *
+     * @param name ランクアップ閾値名
+     */
+    Threshold& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -247,6 +271,17 @@ public:
     }
 
     /**
+     * ランクアップ閾値のメタデータを設定
+     *
+     * @param metadata ランクアップ閾値のメタデータ
+     */
+    Threshold& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
+    }
+
+    /**
      * ランクアップ経験値閾値リストを取得
      *
      * @return ランクアップ経験値閾値リスト
@@ -266,12 +301,56 @@ public:
         ensureData().values.emplace(values);
     }
 
+    /**
+     * ランクアップ経験値閾値リストを設定
+     *
+     * @param values ランクアップ経験値閾値リスト
+     */
+    Threshold& withValues(const List<Int64>& values)
+    {
+        setValues(values);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Threshold& lhs, const Threshold& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->thresholdId != lhr.m_pData->thresholdId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->values != lhr.m_pData->values)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Threshold& lhs, const Threshold& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

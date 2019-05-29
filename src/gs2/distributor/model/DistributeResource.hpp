@@ -35,6 +35,8 @@ namespace gs2 { namespace distributor {
  */
 class DistributeResource : public Gs2Object
 {
+    friend bool operator!=(const DistributeResource& lhs, const DistributeResource& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -180,6 +182,17 @@ public:
     }
 
     /**
+     * アクションを設定
+     *
+     * @param action アクション
+     */
+    DistributeResource& withAction(const Char* action)
+    {
+        setAction(action);
+        return *this;
+    }
+
+    /**
      * 加算リクエストのJSONを取得
      *
      * @return 加算リクエストのJSON
@@ -199,12 +212,48 @@ public:
         ensureData().request.emplace(request);
     }
 
+    /**
+     * 加算リクエストのJSONを設定
+     *
+     * @param request 加算リクエストのJSON
+     */
+    DistributeResource& withRequest(const Char* request)
+    {
+        setRequest(request);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const DistributeResource& lhs, const DistributeResource& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->action != lhr.m_pData->action)
+        {
+            return true;
+        }
+        if (lhs.m_pData->request != lhr.m_pData->request)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const DistributeResource& lhs, const DistributeResource& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

@@ -35,6 +35,8 @@ namespace gs2 { namespace account {
  */
 class Game : public Gs2Object
 {
+    friend bool operator!=(const Game& lhs, const Game& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -350,6 +352,17 @@ public:
     }
 
     /**
+     * ゲーム のGRNを設定
+     *
+     * @param gameId ゲーム のGRN
+     */
+    Game& withGameId(const Char* gameId)
+    {
+        setGameId(gameId);
+        return *this;
+    }
+
+    /**
      * オーナーIDを取得
      *
      * @return オーナーID
@@ -367,6 +380,17 @@ public:
     void setOwnerId(const Char* ownerId)
     {
         ensureData().ownerId.emplace(ownerId);
+    }
+
+    /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    Game& withOwnerId(const Char* ownerId)
+    {
+        setOwnerId(ownerId);
+        return *this;
     }
 
     /**
@@ -390,6 +414,17 @@ public:
     }
 
     /**
+     * ゲーム名を設定
+     *
+     * @param name ゲーム名
+     */
+    Game& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
+    }
+
+    /**
      * 説明文を取得
      *
      * @return 説明文
@@ -407,6 +442,17 @@ public:
     void setDescription(const Char* description)
     {
         ensureData().description.emplace(description);
+    }
+
+    /**
+     * 説明文を設定
+     *
+     * @param description 説明文
+     */
+    Game& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
     }
 
     /**
@@ -430,6 +476,17 @@ public:
     }
 
     /**
+     * アカウント引き継ぎ時にパスワードを変更するかを設定
+     *
+     * @param changePasswordIfTakeOver アカウント引き継ぎ時にパスワードを変更するか
+     */
+    Game& withChangePasswordIfTakeOver(Bool changePasswordIfTakeOver)
+    {
+        setChangePasswordIfTakeOver(changePasswordIfTakeOver);
+        return *this;
+    }
+
+    /**
      * アカウント新規作成時 に実行されるスクリプト のGRNを取得
      *
      * @return アカウント新規作成時 に実行されるスクリプト のGRN
@@ -447,6 +504,17 @@ public:
     void setCreateAccountTriggerScriptId(const Char* createAccountTriggerScriptId)
     {
         ensureData().createAccountTriggerScriptId.emplace(createAccountTriggerScriptId);
+    }
+
+    /**
+     * アカウント新規作成時 に実行されるスクリプト のGRNを設定
+     *
+     * @param createAccountTriggerScriptId アカウント新規作成時 に実行されるスクリプト のGRN
+     */
+    Game& withCreateAccountTriggerScriptId(const Char* createAccountTriggerScriptId)
+    {
+        setCreateAccountTriggerScriptId(createAccountTriggerScriptId);
+        return *this;
     }
 
     /**
@@ -470,6 +538,17 @@ public:
     }
 
     /**
+     * アカウント新規作成完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param createAccountDoneTriggerScriptId アカウント新規作成完了時 に実行されるスクリプト のGRN
+     */
+    Game& withCreateAccountDoneTriggerScriptId(const Char* createAccountDoneTriggerScriptId)
+    {
+        setCreateAccountDoneTriggerScriptId(createAccountDoneTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * アカウント新規作成完了時 にジョブが登録されるキュー のGRNを取得
      *
      * @return アカウント新規作成完了時 にジョブが登録されるキュー のGRN
@@ -487,6 +566,17 @@ public:
     void setCreateAccountDoneTriggerQueueId(const Char* createAccountDoneTriggerQueueId)
     {
         ensureData().createAccountDoneTriggerQueueId.emplace(createAccountDoneTriggerQueueId);
+    }
+
+    /**
+     * アカウント新規作成完了時 にジョブが登録されるキュー のGRNを設定
+     *
+     * @param createAccountDoneTriggerQueueId アカウント新規作成完了時 にジョブが登録されるキュー のGRN
+     */
+    Game& withCreateAccountDoneTriggerQueueId(const Char* createAccountDoneTriggerQueueId)
+    {
+        setCreateAccountDoneTriggerQueueId(createAccountDoneTriggerQueueId);
+        return *this;
     }
 
     /**
@@ -510,6 +600,17 @@ public:
     }
 
     /**
+     * 認証時 に実行されるスクリプト のGRNを設定
+     *
+     * @param authenticationTriggerScriptId 認証時 に実行されるスクリプト のGRN
+     */
+    Game& withAuthenticationTriggerScriptId(const Char* authenticationTriggerScriptId)
+    {
+        setAuthenticationTriggerScriptId(authenticationTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * 認証完了時 に実行されるスクリプト のGRNを取得
      *
      * @return 認証完了時 に実行されるスクリプト のGRN
@@ -527,6 +628,17 @@ public:
     void setAuthenticationDoneTriggerScriptId(const Char* authenticationDoneTriggerScriptId)
     {
         ensureData().authenticationDoneTriggerScriptId.emplace(authenticationDoneTriggerScriptId);
+    }
+
+    /**
+     * 認証完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param authenticationDoneTriggerScriptId 認証完了時 に実行されるスクリプト のGRN
+     */
+    Game& withAuthenticationDoneTriggerScriptId(const Char* authenticationDoneTriggerScriptId)
+    {
+        setAuthenticationDoneTriggerScriptId(authenticationDoneTriggerScriptId);
+        return *this;
     }
 
     /**
@@ -550,6 +662,17 @@ public:
     }
 
     /**
+     * 認証完了時 にジョブが登録されるキュー のGRNを設定
+     *
+     * @param authenticationDoneTriggerQueueId 認証完了時 にジョブが登録されるキュー のGRN
+     */
+    Game& withAuthenticationDoneTriggerQueueId(const Char* authenticationDoneTriggerQueueId)
+    {
+        setAuthenticationDoneTriggerQueueId(authenticationDoneTriggerQueueId);
+        return *this;
+    }
+
+    /**
      * 引き継ぎ情報登録時 に実行されるスクリプト のGRNを取得
      *
      * @return 引き継ぎ情報登録時 に実行されるスクリプト のGRN
@@ -567,6 +690,17 @@ public:
     void setCreateTakeOverTriggerScriptId(const Char* createTakeOverTriggerScriptId)
     {
         ensureData().createTakeOverTriggerScriptId.emplace(createTakeOverTriggerScriptId);
+    }
+
+    /**
+     * 引き継ぎ情報登録時 に実行されるスクリプト のGRNを設定
+     *
+     * @param createTakeOverTriggerScriptId 引き継ぎ情報登録時 に実行されるスクリプト のGRN
+     */
+    Game& withCreateTakeOverTriggerScriptId(const Char* createTakeOverTriggerScriptId)
+    {
+        setCreateTakeOverTriggerScriptId(createTakeOverTriggerScriptId);
+        return *this;
     }
 
     /**
@@ -590,6 +724,17 @@ public:
     }
 
     /**
+     * 引き継ぎ情報登録完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param createTakeOverDoneTriggerScriptId 引き継ぎ情報登録完了時 に実行されるスクリプト のGRN
+     */
+    Game& withCreateTakeOverDoneTriggerScriptId(const Char* createTakeOverDoneTriggerScriptId)
+    {
+        setCreateTakeOverDoneTriggerScriptId(createTakeOverDoneTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * 引き継ぎ情報登録完了時 にジョブが登録されるキュー のGRNを取得
      *
      * @return 引き継ぎ情報登録完了時 にジョブが登録されるキュー のGRN
@@ -607,6 +752,17 @@ public:
     void setCreateTakeOverDoneTriggerQueueId(const Char* createTakeOverDoneTriggerQueueId)
     {
         ensureData().createTakeOverDoneTriggerQueueId.emplace(createTakeOverDoneTriggerQueueId);
+    }
+
+    /**
+     * 引き継ぎ情報登録完了時 にジョブが登録されるキュー のGRNを設定
+     *
+     * @param createTakeOverDoneTriggerQueueId 引き継ぎ情報登録完了時 にジョブが登録されるキュー のGRN
+     */
+    Game& withCreateTakeOverDoneTriggerQueueId(const Char* createTakeOverDoneTriggerQueueId)
+    {
+        setCreateTakeOverDoneTriggerQueueId(createTakeOverDoneTriggerQueueId);
+        return *this;
     }
 
     /**
@@ -630,6 +786,17 @@ public:
     }
 
     /**
+     * 引き継ぎ実行時 に実行されるスクリプト のGRNを設定
+     *
+     * @param doTakeOverTriggerScriptId 引き継ぎ実行時 に実行されるスクリプト のGRN
+     */
+    Game& withDoTakeOverTriggerScriptId(const Char* doTakeOverTriggerScriptId)
+    {
+        setDoTakeOverTriggerScriptId(doTakeOverTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * 引き継ぎ実行完了時 に実行されるスクリプト のGRNを取得
      *
      * @return 引き継ぎ実行完了時 に実行されるスクリプト のGRN
@@ -647,6 +814,17 @@ public:
     void setDoTakeOverDoneTriggerScriptId(const Char* doTakeOverDoneTriggerScriptId)
     {
         ensureData().doTakeOverDoneTriggerScriptId.emplace(doTakeOverDoneTriggerScriptId);
+    }
+
+    /**
+     * 引き継ぎ実行完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param doTakeOverDoneTriggerScriptId 引き継ぎ実行完了時 に実行されるスクリプト のGRN
+     */
+    Game& withDoTakeOverDoneTriggerScriptId(const Char* doTakeOverDoneTriggerScriptId)
+    {
+        setDoTakeOverDoneTriggerScriptId(doTakeOverDoneTriggerScriptId);
+        return *this;
     }
 
     /**
@@ -670,6 +848,17 @@ public:
     }
 
     /**
+     * 引き継ぎ実行完了時 にジョブが登録されるキュー のGRNを設定
+     *
+     * @param doTakeOverDoneTriggerQueueId 引き継ぎ実行完了時 にジョブが登録されるキュー のGRN
+     */
+    Game& withDoTakeOverDoneTriggerQueueId(const Char* doTakeOverDoneTriggerQueueId)
+    {
+        setDoTakeOverDoneTriggerQueueId(doTakeOverDoneTriggerQueueId);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -687,6 +876,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Game& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -709,12 +909,116 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    Game& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Game& lhs, const Game& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->gameId != lhr.m_pData->gameId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->changePasswordIfTakeOver != lhr.m_pData->changePasswordIfTakeOver)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAccountTriggerScriptId != lhr.m_pData->createAccountTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAccountDoneTriggerScriptId != lhr.m_pData->createAccountDoneTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAccountDoneTriggerQueueId != lhr.m_pData->createAccountDoneTriggerQueueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->authenticationTriggerScriptId != lhr.m_pData->authenticationTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->authenticationDoneTriggerScriptId != lhr.m_pData->authenticationDoneTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->authenticationDoneTriggerQueueId != lhr.m_pData->authenticationDoneTriggerQueueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createTakeOverTriggerScriptId != lhr.m_pData->createTakeOverTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createTakeOverDoneTriggerScriptId != lhr.m_pData->createTakeOverDoneTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createTakeOverDoneTriggerQueueId != lhr.m_pData->createTakeOverDoneTriggerQueueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->doTakeOverTriggerScriptId != lhr.m_pData->doTakeOverTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->doTakeOverDoneTriggerScriptId != lhr.m_pData->doTakeOverDoneTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->doTakeOverDoneTriggerQueueId != lhr.m_pData->doTakeOverDoneTriggerQueueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Game& lhs, const Game& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

@@ -35,6 +35,8 @@ namespace gs2 { namespace money {
  */
 class Money : public Gs2Object
 {
+    friend bool operator!=(const Money& lhs, const Money& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -380,6 +382,17 @@ public:
     }
 
     /**
+     * 課金通貨 のGRNを設定
+     *
+     * @param moneyId 課金通貨 のGRN
+     */
+    Money& withMoneyId(const Char* moneyId)
+    {
+        setMoneyId(moneyId);
+        return *this;
+    }
+
+    /**
      * オーナーIDを取得
      *
      * @return オーナーID
@@ -397,6 +410,17 @@ public:
     void setOwnerId(const Char* ownerId)
     {
         ensureData().ownerId.emplace(ownerId);
+    }
+
+    /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    Money& withOwnerId(const Char* ownerId)
+    {
+        setOwnerId(ownerId);
+        return *this;
     }
 
     /**
@@ -420,6 +444,17 @@ public:
     }
 
     /**
+     * 課金通貨の名前を設定
+     *
+     * @param name 課金通貨の名前
+     */
+    Money& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
+    }
+
+    /**
      * 課金通貨の説明を取得
      *
      * @return 課金通貨の説明
@@ -437,6 +472,17 @@ public:
     void setDescription(const Char* description)
     {
         ensureData().description.emplace(description);
+    }
+
+    /**
+     * 課金通貨の説明を設定
+     *
+     * @param description 課金通貨の説明
+     */
+    Money& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
     }
 
     /**
@@ -460,6 +506,17 @@ public:
     }
 
     /**
+     * 消費優先度を設定
+     *
+     * @param priority 消費優先度
+     */
+    Money& withPriority(const Char* priority)
+    {
+        setPriority(priority);
+        return *this;
+    }
+
+    /**
      * 無償課金通貨を異なるスロットで共有するかを取得
      *
      * @return 無償課金通貨を異なるスロットで共有するか
@@ -477,6 +534,17 @@ public:
     void setShareFree(Bool shareFree)
     {
         ensureData().shareFree.emplace(shareFree);
+    }
+
+    /**
+     * 無償課金通貨を異なるスロットで共有するかを設定
+     *
+     * @param shareFree 無償課金通貨を異なるスロットで共有するか
+     */
+    Money& withShareFree(Bool shareFree)
+    {
+        setShareFree(shareFree);
+        return *this;
     }
 
     /**
@@ -500,6 +568,17 @@ public:
     }
 
     /**
+     * 通貨の種類を設定
+     *
+     * @param currency 通貨の種類
+     */
+    Money& withCurrency(const Char* currency)
+    {
+        setCurrency(currency);
+        return *this;
+    }
+
+    /**
      * Apple AppStore のバンドルIDを取得
      *
      * @return Apple AppStore のバンドルID
@@ -517,6 +596,17 @@ public:
     void setAppleKey(const Char* appleKey)
     {
         ensureData().appleKey.emplace(appleKey);
+    }
+
+    /**
+     * Apple AppStore のバンドルIDを設定
+     *
+     * @param appleKey Apple AppStore のバンドルID
+     */
+    Money& withAppleKey(const Char* appleKey)
+    {
+        setAppleKey(appleKey);
+        return *this;
     }
 
     /**
@@ -540,6 +630,17 @@ public:
     }
 
     /**
+     * Google PlayStore の秘密鍵を設定
+     *
+     * @param googleKey Google PlayStore の秘密鍵
+     */
+    Money& withGoogleKey(const Char* googleKey)
+    {
+        setGoogleKey(googleKey);
+        return *this;
+    }
+
+    /**
      * UnityEditorが出力する偽のレシートで決済できるようにするかを取得
      *
      * @return UnityEditorが出力する偽のレシートで決済できるようにするか
@@ -557,6 +658,17 @@ public:
     void setEnableFakeReceipt(Bool enableFakeReceipt)
     {
         ensureData().enableFakeReceipt.emplace(enableFakeReceipt);
+    }
+
+    /**
+     * UnityEditorが出力する偽のレシートで決済できるようにするかを設定
+     *
+     * @param enableFakeReceipt UnityEditorが出力する偽のレシートで決済できるようにするか
+     */
+    Money& withEnableFakeReceipt(Bool enableFakeReceipt)
+    {
+        setEnableFakeReceipt(enableFakeReceipt);
+        return *this;
     }
 
     /**
@@ -580,6 +692,17 @@ public:
     }
 
     /**
+     * ウォレット新規作成時 に実行されるスクリプト のGRNを設定
+     *
+     * @param createWalletTriggerScriptId ウォレット新規作成時 に実行されるスクリプト のGRN
+     */
+    Money& withCreateWalletTriggerScriptId(const Char* createWalletTriggerScriptId)
+    {
+        setCreateWalletTriggerScriptId(createWalletTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * ウォレット新規作成完了時 に実行されるスクリプト のGRNを取得
      *
      * @return ウォレット新規作成完了時 に実行されるスクリプト のGRN
@@ -597,6 +720,17 @@ public:
     void setCreateWalletDoneTriggerScriptId(const Char* createWalletDoneTriggerScriptId)
     {
         ensureData().createWalletDoneTriggerScriptId.emplace(createWalletDoneTriggerScriptId);
+    }
+
+    /**
+     * ウォレット新規作成完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param createWalletDoneTriggerScriptId ウォレット新規作成完了時 に実行されるスクリプト のGRN
+     */
+    Money& withCreateWalletDoneTriggerScriptId(const Char* createWalletDoneTriggerScriptId)
+    {
+        setCreateWalletDoneTriggerScriptId(createWalletDoneTriggerScriptId);
+        return *this;
     }
 
     /**
@@ -620,6 +754,17 @@ public:
     }
 
     /**
+     * ウォレット新規作成完了時 にジョブを登録するキュー のGRNを設定
+     *
+     * @param createWalletDoneTriggerQueueId ウォレット新規作成完了時 にジョブを登録するキュー のGRN
+     */
+    Money& withCreateWalletDoneTriggerQueueId(const Char* createWalletDoneTriggerQueueId)
+    {
+        setCreateWalletDoneTriggerQueueId(createWalletDoneTriggerQueueId);
+        return *this;
+    }
+
+    /**
      * ウォレット残高加算時 に実行されるスクリプト のGRNを取得
      *
      * @return ウォレット残高加算時 に実行されるスクリプト のGRN
@@ -637,6 +782,17 @@ public:
     void setDepositTriggerScriptId(const Char* depositTriggerScriptId)
     {
         ensureData().depositTriggerScriptId.emplace(depositTriggerScriptId);
+    }
+
+    /**
+     * ウォレット残高加算時 に実行されるスクリプト のGRNを設定
+     *
+     * @param depositTriggerScriptId ウォレット残高加算時 に実行されるスクリプト のGRN
+     */
+    Money& withDepositTriggerScriptId(const Char* depositTriggerScriptId)
+    {
+        setDepositTriggerScriptId(depositTriggerScriptId);
+        return *this;
     }
 
     /**
@@ -660,6 +816,17 @@ public:
     }
 
     /**
+     * ウォレット残高加算完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param depositDoneTriggerScriptId ウォレット残高加算完了時 に実行されるスクリプト のGRN
+     */
+    Money& withDepositDoneTriggerScriptId(const Char* depositDoneTriggerScriptId)
+    {
+        setDepositDoneTriggerScriptId(depositDoneTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * ウォレット残高加算完了時 にジョブを登録するキュー のGRNを取得
      *
      * @return ウォレット残高加算完了時 にジョブを登録するキュー のGRN
@@ -677,6 +844,17 @@ public:
     void setDepositDoneTriggerQueueId(const Char* depositDoneTriggerQueueId)
     {
         ensureData().depositDoneTriggerQueueId.emplace(depositDoneTriggerQueueId);
+    }
+
+    /**
+     * ウォレット残高加算完了時 にジョブを登録するキュー のGRNを設定
+     *
+     * @param depositDoneTriggerQueueId ウォレット残高加算完了時 にジョブを登録するキュー のGRN
+     */
+    Money& withDepositDoneTriggerQueueId(const Char* depositDoneTriggerQueueId)
+    {
+        setDepositDoneTriggerQueueId(depositDoneTriggerQueueId);
+        return *this;
     }
 
     /**
@@ -700,6 +878,17 @@ public:
     }
 
     /**
+     * ウォレット残高消費時 に実行されるスクリプト のGRNを設定
+     *
+     * @param withdrawTriggerScriptId ウォレット残高消費時 に実行されるスクリプト のGRN
+     */
+    Money& withWithdrawTriggerScriptId(const Char* withdrawTriggerScriptId)
+    {
+        setWithdrawTriggerScriptId(withdrawTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * ウォレット残高消費完了時 に実行されるスクリプト のGRNを取得
      *
      * @return ウォレット残高消費完了時 に実行されるスクリプト のGRN
@@ -717,6 +906,17 @@ public:
     void setWithdrawDoneTriggerScriptId(const Char* withdrawDoneTriggerScriptId)
     {
         ensureData().withdrawDoneTriggerScriptId.emplace(withdrawDoneTriggerScriptId);
+    }
+
+    /**
+     * ウォレット残高消費完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param withdrawDoneTriggerScriptId ウォレット残高消費完了時 に実行されるスクリプト のGRN
+     */
+    Money& withWithdrawDoneTriggerScriptId(const Char* withdrawDoneTriggerScriptId)
+    {
+        setWithdrawDoneTriggerScriptId(withdrawDoneTriggerScriptId);
+        return *this;
     }
 
     /**
@@ -740,6 +940,17 @@ public:
     }
 
     /**
+     * ウォレット残高消費完了時 にジョブを登録するキュー のGRNを設定
+     *
+     * @param withdrawDoneTriggerQueueId ウォレット残高消費完了時 にジョブを登録するキュー のGRN
+     */
+    Money& withWithdrawDoneTriggerQueueId(const Char* withdrawDoneTriggerQueueId)
+    {
+        setWithdrawDoneTriggerQueueId(withdrawDoneTriggerQueueId);
+        return *this;
+    }
+
+    /**
      * 未使用残高を取得
      *
      * @return 未使用残高
@@ -757,6 +968,17 @@ public:
     void setBalance(Double balance)
     {
         ensureData().balance.emplace(balance);
+    }
+
+    /**
+     * 未使用残高を設定
+     *
+     * @param balance 未使用残高
+     */
+    Money& withBalance(Double balance)
+    {
+        setBalance(balance);
+        return *this;
     }
 
     /**
@@ -780,6 +1002,17 @@ public:
     }
 
     /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Money& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
+    }
+
+    /**
      * 最終更新日時を取得
      *
      * @return 最終更新日時
@@ -799,12 +1032,128 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    Money& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Money& lhs, const Money& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->moneyId != lhr.m_pData->moneyId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->priority != lhr.m_pData->priority)
+        {
+            return true;
+        }
+        if (lhs.m_pData->shareFree != lhr.m_pData->shareFree)
+        {
+            return true;
+        }
+        if (lhs.m_pData->currency != lhr.m_pData->currency)
+        {
+            return true;
+        }
+        if (lhs.m_pData->appleKey != lhr.m_pData->appleKey)
+        {
+            return true;
+        }
+        if (lhs.m_pData->googleKey != lhr.m_pData->googleKey)
+        {
+            return true;
+        }
+        if (lhs.m_pData->enableFakeReceipt != lhr.m_pData->enableFakeReceipt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createWalletTriggerScriptId != lhr.m_pData->createWalletTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createWalletDoneTriggerScriptId != lhr.m_pData->createWalletDoneTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createWalletDoneTriggerQueueId != lhr.m_pData->createWalletDoneTriggerQueueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->depositTriggerScriptId != lhr.m_pData->depositTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->depositDoneTriggerScriptId != lhr.m_pData->depositDoneTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->depositDoneTriggerQueueId != lhr.m_pData->depositDoneTriggerQueueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->withdrawTriggerScriptId != lhr.m_pData->withdrawTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->withdrawDoneTriggerScriptId != lhr.m_pData->withdrawDoneTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->withdrawDoneTriggerQueueId != lhr.m_pData->withdrawDoneTriggerQueueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->balance != lhr.m_pData->balance)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Money& lhs, const Money& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

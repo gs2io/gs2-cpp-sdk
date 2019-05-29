@@ -35,6 +35,8 @@ namespace gs2 { namespace lottery {
  */
 class LotteryModel : public Gs2Object
 {
+    friend bool operator!=(const LotteryModel& lhs, const LotteryModel& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -240,6 +242,17 @@ public:
     }
 
     /**
+     * 抽選の種類 のGRNを設定
+     *
+     * @param lotteryModelId 抽選の種類 のGRN
+     */
+    LotteryModel& withLotteryModelId(const Char* lotteryModelId)
+    {
+        setLotteryModelId(lotteryModelId);
+        return *this;
+    }
+
+    /**
      * 抽選モデルの種類名を取得
      *
      * @return 抽選モデルの種類名
@@ -257,6 +270,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * 抽選モデルの種類名を設定
+     *
+     * @param name 抽選モデルの種類名
+     */
+    LotteryModel& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -280,6 +304,17 @@ public:
     }
 
     /**
+     * 抽選モデルの種類のメタデータを設定
+     *
+     * @param metadata 抽選モデルの種類のメタデータ
+     */
+    LotteryModel& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
+    }
+
+    /**
      * 抽選モードを取得
      *
      * @return 抽選モード
@@ -297,6 +332,17 @@ public:
     void setMode(const Char* mode)
     {
         ensureData().mode.emplace(mode);
+    }
+
+    /**
+     * 抽選モードを設定
+     *
+     * @param mode 抽選モード
+     */
+    LotteryModel& withMode(const Char* mode)
+    {
+        setMode(mode);
+        return *this;
     }
 
     /**
@@ -320,6 +366,17 @@ public:
     }
 
     /**
+     * 抽選回数を設定
+     *
+     * @param count 抽選回数
+     */
+    LotteryModel& withCount(Int32 count)
+    {
+        setCount(count);
+        return *this;
+    }
+
+    /**
      * 抽選方法を取得
      *
      * @return 抽選方法
@@ -337,6 +394,17 @@ public:
     void setMethod(const Char* method)
     {
         ensureData().method.emplace(method);
+    }
+
+    /**
+     * 抽選方法を設定
+     *
+     * @param method 抽選方法
+     */
+    LotteryModel& withMethod(const Char* method)
+    {
+        setMethod(method);
+        return *this;
     }
 
     /**
@@ -360,6 +428,17 @@ public:
     }
 
     /**
+     * 景品テーブルの名前を設定
+     *
+     * @param prizeTableName 景品テーブルの名前
+     */
+    LotteryModel& withPrizeTableName(const Char* prizeTableName)
+    {
+        setPrizeTableName(prizeTableName);
+        return *this;
+    }
+
+    /**
      * 抽選テーブルを確定するスクリプト のGRNを取得
      *
      * @return 抽選テーブルを確定するスクリプト のGRN
@@ -379,12 +458,72 @@ public:
         ensureData().choicePrizeTableScriptId.emplace(choicePrizeTableScriptId);
     }
 
+    /**
+     * 抽選テーブルを確定するスクリプト のGRNを設定
+     *
+     * @param choicePrizeTableScriptId 抽選テーブルを確定するスクリプト のGRN
+     */
+    LotteryModel& withChoicePrizeTableScriptId(const Char* choicePrizeTableScriptId)
+    {
+        setChoicePrizeTableScriptId(choicePrizeTableScriptId);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const LotteryModel& lhs, const LotteryModel& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->lotteryModelId != lhr.m_pData->lotteryModelId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->mode != lhr.m_pData->mode)
+        {
+            return true;
+        }
+        if (lhs.m_pData->count != lhr.m_pData->count)
+        {
+            return true;
+        }
+        if (lhs.m_pData->method != lhr.m_pData->method)
+        {
+            return true;
+        }
+        if (lhs.m_pData->prizeTableName != lhr.m_pData->prizeTableName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->choicePrizeTableScriptId != lhr.m_pData->choicePrizeTableScriptId)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const LotteryModel& lhs, const LotteryModel& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

@@ -35,6 +35,8 @@ namespace gs2 { namespace schedule {
  */
 class Event : public Gs2Object
 {
+    friend bool operator!=(const Event& lhs, const Event& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -240,6 +242,17 @@ public:
     }
 
     /**
+     * イベント のGRNを設定
+     *
+     * @param eventId イベント のGRN
+     */
+    Event& withEventId(const Char* eventId)
+    {
+        setEventId(eventId);
+        return *this;
+    }
+
+    /**
      * ディストリビューターの種類名を取得
      *
      * @return ディストリビューターの種類名
@@ -257,6 +270,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * ディストリビューターの種類名を設定
+     *
+     * @param name ディストリビューターの種類名
+     */
+    Event& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -280,6 +304,17 @@ public:
     }
 
     /**
+     * ディストリビューターの種類のメタデータを設定
+     *
+     * @param metadata ディストリビューターの種類のメタデータ
+     */
+    Event& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
+    }
+
+    /**
      * イベント期間の種類を取得
      *
      * @return イベント期間の種類
@@ -297,6 +332,17 @@ public:
     void setScheduleType(const Char* scheduleType)
     {
         ensureData().scheduleType.emplace(scheduleType);
+    }
+
+    /**
+     * イベント期間の種類を設定
+     *
+     * @param scheduleType イベント期間の種類
+     */
+    Event& withScheduleType(const Char* scheduleType)
+    {
+        setScheduleType(scheduleType);
+        return *this;
     }
 
     /**
@@ -320,6 +366,17 @@ public:
     }
 
     /**
+     * イベントの開始日時を設定
+     *
+     * @param absoluteBegin イベントの開始日時
+     */
+    Event& withAbsoluteBegin(Int64 absoluteBegin)
+    {
+        setAbsoluteBegin(absoluteBegin);
+        return *this;
+    }
+
+    /**
      * イベントの終了日時を取得
      *
      * @return イベントの終了日時
@@ -337,6 +394,17 @@ public:
     void setAbsoluteEnd(Int64 absoluteEnd)
     {
         ensureData().absoluteEnd.emplace(absoluteEnd);
+    }
+
+    /**
+     * イベントの終了日時を設定
+     *
+     * @param absoluteEnd イベントの終了日時
+     */
+    Event& withAbsoluteEnd(Int64 absoluteEnd)
+    {
+        setAbsoluteEnd(absoluteEnd);
+        return *this;
     }
 
     /**
@@ -360,6 +428,17 @@ public:
     }
 
     /**
+     * イベントの開始トリガーを設定
+     *
+     * @param relativeTriggerName イベントの開始トリガー
+     */
+    Event& withRelativeTriggerName(const Char* relativeTriggerName)
+    {
+        setRelativeTriggerName(relativeTriggerName);
+        return *this;
+    }
+
+    /**
      * イベントの開催期間(秒)を取得
      *
      * @return イベントの開催期間(秒)
@@ -379,12 +458,72 @@ public:
         ensureData().relativeDuration.emplace(relativeDuration);
     }
 
+    /**
+     * イベントの開催期間(秒)を設定
+     *
+     * @param relativeDuration イベントの開催期間(秒)
+     */
+    Event& withRelativeDuration(Int32 relativeDuration)
+    {
+        setRelativeDuration(relativeDuration);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Event& lhs, const Event& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->eventId != lhr.m_pData->eventId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->scheduleType != lhr.m_pData->scheduleType)
+        {
+            return true;
+        }
+        if (lhs.m_pData->absoluteBegin != lhr.m_pData->absoluteBegin)
+        {
+            return true;
+        }
+        if (lhs.m_pData->absoluteEnd != lhr.m_pData->absoluteEnd)
+        {
+            return true;
+        }
+        if (lhs.m_pData->relativeTriggerName != lhr.m_pData->relativeTriggerName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->relativeDuration != lhr.m_pData->relativeDuration)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Event& lhs, const Event& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

@@ -35,6 +35,8 @@ namespace gs2 { namespace schedule {
  */
 class CurrentEventMaster : public Gs2Object
 {
+    friend bool operator!=(const CurrentEventMaster& lhs, const CurrentEventMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -180,6 +182,17 @@ public:
     }
 
     /**
+     * スケジュール名を設定
+     *
+     * @param scheduleName スケジュール名
+     */
+    CurrentEventMaster& withScheduleName(const Char* scheduleName)
+    {
+        setScheduleName(scheduleName);
+        return *this;
+    }
+
+    /**
      * マスターデータを取得
      *
      * @return マスターデータ
@@ -199,12 +212,48 @@ public:
         ensureData().settings.emplace(settings);
     }
 
+    /**
+     * マスターデータを設定
+     *
+     * @param settings マスターデータ
+     */
+    CurrentEventMaster& withSettings(const Char* settings)
+    {
+        setSettings(settings);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const CurrentEventMaster& lhs, const CurrentEventMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->scheduleName != lhr.m_pData->scheduleName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->settings != lhr.m_pData->settings)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const CurrentEventMaster& lhs, const CurrentEventMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

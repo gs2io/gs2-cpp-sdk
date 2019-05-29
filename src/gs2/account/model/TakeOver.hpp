@@ -35,6 +35,8 @@ namespace gs2 { namespace account {
  */
 class TakeOver : public Gs2Object
 {
+    friend bool operator!=(const TakeOver& lhs, const TakeOver& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -210,6 +212,17 @@ public:
     }
 
     /**
+     * 引き継ぎ設定 のGRNを設定
+     *
+     * @param takeOverId 引き継ぎ設定 のGRN
+     */
+    TakeOver& withTakeOverId(const Char* takeOverId)
+    {
+        setTakeOverId(takeOverId);
+        return *this;
+    }
+
+    /**
      * ユーザーIDを取得
      *
      * @return ユーザーID
@@ -227,6 +240,17 @@ public:
     void setUserId(const Char* userId)
     {
         ensureData().userId.emplace(userId);
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    TakeOver& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
     }
 
     /**
@@ -250,6 +274,17 @@ public:
     }
 
     /**
+     * スロット番号を設定
+     *
+     * @param type スロット番号
+     */
+    TakeOver& withType(Int32 type)
+    {
+        setType(type);
+        return *this;
+    }
+
+    /**
      * 引き継ぎ用ユーザーIDを取得
      *
      * @return 引き継ぎ用ユーザーID
@@ -267,6 +302,17 @@ public:
     void setUserIdentifier(const Char* userIdentifier)
     {
         ensureData().userIdentifier.emplace(userIdentifier);
+    }
+
+    /**
+     * 引き継ぎ用ユーザーIDを設定
+     *
+     * @param userIdentifier 引き継ぎ用ユーザーID
+     */
+    TakeOver& withUserIdentifier(const Char* userIdentifier)
+    {
+        setUserIdentifier(userIdentifier);
+        return *this;
     }
 
     /**
@@ -289,12 +335,60 @@ public:
         ensureData().createAt.emplace(createAt);
     }
 
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    TakeOver& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const TakeOver& lhs, const TakeOver& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->takeOverId != lhr.m_pData->takeOverId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->type != lhr.m_pData->type)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userIdentifier != lhr.m_pData->userIdentifier)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const TakeOver& lhs, const TakeOver& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

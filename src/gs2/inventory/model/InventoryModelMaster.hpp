@@ -35,6 +35,8 @@ namespace gs2 { namespace inventory {
  */
 class InventoryModelMaster : public Gs2Object
 {
+    friend bool operator!=(const InventoryModelMaster& lhs, const InventoryModelMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -240,6 +242,17 @@ public:
     }
 
     /**
+     * インベントリマスター のGRNを設定
+     *
+     * @param inventoryModelId インベントリマスター のGRN
+     */
+    InventoryModelMaster& withInventoryModelId(const Char* inventoryModelId)
+    {
+        setInventoryModelId(inventoryModelId);
+        return *this;
+    }
+
+    /**
      * インベントリの種類名を取得
      *
      * @return インベントリの種類名
@@ -257,6 +270,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * インベントリの種類名を設定
+     *
+     * @param name インベントリの種類名
+     */
+    InventoryModelMaster& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -280,6 +304,17 @@ public:
     }
 
     /**
+     * インベントリの種類のメタデータを設定
+     *
+     * @param metadata インベントリの種類のメタデータ
+     */
+    InventoryModelMaster& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
+    }
+
+    /**
      * インベントリマスターの説明を取得
      *
      * @return インベントリマスターの説明
@@ -297,6 +332,17 @@ public:
     void setDescription(const Char* description)
     {
         ensureData().description.emplace(description);
+    }
+
+    /**
+     * インベントリマスターの説明を設定
+     *
+     * @param description インベントリマスターの説明
+     */
+    InventoryModelMaster& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
     }
 
     /**
@@ -320,6 +366,17 @@ public:
     }
 
     /**
+     * インベントリの初期サイズを設定
+     *
+     * @param initialCapacity インベントリの初期サイズ
+     */
+    InventoryModelMaster& withInitialCapacity(Int32 initialCapacity)
+    {
+        setInitialCapacity(initialCapacity);
+        return *this;
+    }
+
+    /**
      * インベントリの最大サイズを取得
      *
      * @return インベントリの最大サイズ
@@ -337,6 +394,17 @@ public:
     void setMaxCapacity(Int32 maxCapacity)
     {
         ensureData().maxCapacity.emplace(maxCapacity);
+    }
+
+    /**
+     * インベントリの最大サイズを設定
+     *
+     * @param maxCapacity インベントリの最大サイズ
+     */
+    InventoryModelMaster& withMaxCapacity(Int32 maxCapacity)
+    {
+        setMaxCapacity(maxCapacity);
+        return *this;
     }
 
     /**
@@ -360,6 +428,17 @@ public:
     }
 
     /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    InventoryModelMaster& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
+    }
+
+    /**
      * 最終更新日時を取得
      *
      * @return 最終更新日時
@@ -379,12 +458,72 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    InventoryModelMaster& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const InventoryModelMaster& lhs, const InventoryModelMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->inventoryModelId != lhr.m_pData->inventoryModelId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->initialCapacity != lhr.m_pData->initialCapacity)
+        {
+            return true;
+        }
+        if (lhs.m_pData->maxCapacity != lhr.m_pData->maxCapacity)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const InventoryModelMaster& lhs, const InventoryModelMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

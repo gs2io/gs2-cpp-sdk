@@ -35,6 +35,8 @@ namespace gs2 { namespace inbox {
  */
 class Body : public Gs2Object
 {
+    friend bool operator!=(const Body& lhs, const Body& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -200,6 +202,17 @@ public:
     }
 
     /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    Body& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
+    }
+
+    /**
      * メッセージの内容に相当するメタデータを取得
      *
      * @return メッセージの内容に相当するメタデータ
@@ -217,6 +230,17 @@ public:
     void setMetadata(const Char* metadata)
     {
         ensureData().metadata.emplace(metadata);
+    }
+
+    /**
+     * メッセージの内容に相当するメタデータを設定
+     *
+     * @param metadata メッセージの内容に相当するメタデータ
+     */
+    Body& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
     }
 
     /**
@@ -240,6 +264,17 @@ public:
     }
 
     /**
+     * メッセージ開封時 に実行されるスクリプト のGRNを設定
+     *
+     * @param readMessageTriggerScriptId メッセージ開封時 に実行されるスクリプト のGRN
+     */
+    Body& withReadMessageTriggerScriptId(const Char* readMessageTriggerScriptId)
+    {
+        setReadMessageTriggerScriptId(readMessageTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * メッセージ開封時 に実行されるスクリプト に指定する引数を取得
      *
      * @return メッセージ開封時 に実行されるスクリプト に指定する引数
@@ -259,12 +294,56 @@ public:
         ensureData().readMessageTriggerScriptArgs.emplace(readMessageTriggerScriptArgs);
     }
 
+    /**
+     * メッセージ開封時 に実行されるスクリプト に指定する引数を設定
+     *
+     * @param readMessageTriggerScriptArgs メッセージ開封時 に実行されるスクリプト に指定する引数
+     */
+    Body& withReadMessageTriggerScriptArgs(const Char* readMessageTriggerScriptArgs)
+    {
+        setReadMessageTriggerScriptArgs(readMessageTriggerScriptArgs);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Body& lhs, const Body& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->readMessageTriggerScriptId != lhr.m_pData->readMessageTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->readMessageTriggerScriptArgs != lhr.m_pData->readMessageTriggerScriptArgs)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Body& lhs, const Body& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

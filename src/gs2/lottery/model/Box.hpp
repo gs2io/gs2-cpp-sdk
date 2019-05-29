@@ -35,6 +35,8 @@ namespace gs2 { namespace lottery {
  */
 class Box : public Gs2Object
 {
+    friend bool operator!=(const Box& lhs, const Box& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -227,6 +229,17 @@ public:
     }
 
     /**
+     * 排出済みの景品情報 のGRNを設定
+     *
+     * @param boxId 排出済みの景品情報 のGRN
+     */
+    Box& withBoxId(const Char* boxId)
+    {
+        setBoxId(boxId);
+        return *this;
+    }
+
+    /**
      * 景品テーブル名を取得
      *
      * @return 景品テーブル名
@@ -244,6 +257,17 @@ public:
     void setPrizeTableName(const Char* prizeTableName)
     {
         ensureData().prizeTableName.emplace(prizeTableName);
+    }
+
+    /**
+     * 景品テーブル名を設定
+     *
+     * @param prizeTableName 景品テーブル名
+     */
+    Box& withPrizeTableName(const Char* prizeTableName)
+    {
+        setPrizeTableName(prizeTableName);
+        return *this;
     }
 
     /**
@@ -267,6 +291,17 @@ public:
     }
 
     /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    Box& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
+    }
+
+    /**
      * 排出済み景品のインデックスのリストを取得
      *
      * @return 排出済み景品のインデックスのリスト
@@ -284,6 +319,17 @@ public:
     void setDrawnIndexes(const List<Int32>& drawnIndexes)
     {
         ensureData().drawnIndexes.emplace(drawnIndexes);
+    }
+
+    /**
+     * 排出済み景品のインデックスのリストを設定
+     *
+     * @param drawnIndexes 排出済み景品のインデックスのリスト
+     */
+    Box& withDrawnIndexes(const List<Int32>& drawnIndexes)
+    {
+        setDrawnIndexes(drawnIndexes);
+        return *this;
     }
 
     /**
@@ -307,6 +353,17 @@ public:
     }
 
     /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Box& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
+    }
+
+    /**
      * 最終更新日時を取得
      *
      * @return 最終更新日時
@@ -326,12 +383,64 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    Box& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Box& lhs, const Box& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->boxId != lhr.m_pData->boxId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->prizeTableName != lhr.m_pData->prizeTableName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->drawnIndexes != lhr.m_pData->drawnIndexes)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Box& lhs, const Box& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

@@ -35,6 +35,8 @@ namespace gs2 { namespace experience {
  */
 class Status : public Gs2Object
 {
+    friend bool operator!=(const Status& lhs, const Status& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -250,6 +252,17 @@ public:
     }
 
     /**
+     * ステータス のGRNを設定
+     *
+     * @param statusId ステータス のGRN
+     */
+    Status& withStatusId(const Char* statusId)
+    {
+        setStatusId(statusId);
+        return *this;
+    }
+
+    /**
      * 経験値の種類名を取得
      *
      * @return 経験値の種類名
@@ -267,6 +280,17 @@ public:
     void setExperienceModelName(const Char* experienceModelName)
     {
         ensureData().experienceModelName.emplace(experienceModelName);
+    }
+
+    /**
+     * 経験値の種類名を設定
+     *
+     * @param experienceModelName 経験値の種類名
+     */
+    Status& withExperienceModelName(const Char* experienceModelName)
+    {
+        setExperienceModelName(experienceModelName);
+        return *this;
     }
 
     /**
@@ -290,6 +314,17 @@ public:
     }
 
     /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    Status& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
+    }
+
+    /**
      * プロパティIDを取得
      *
      * @return プロパティID
@@ -307,6 +342,17 @@ public:
     void setPropertyId(const Char* propertyId)
     {
         ensureData().propertyId.emplace(propertyId);
+    }
+
+    /**
+     * プロパティIDを設定
+     *
+     * @param propertyId プロパティID
+     */
+    Status& withPropertyId(const Char* propertyId)
+    {
+        setPropertyId(propertyId);
+        return *this;
     }
 
     /**
@@ -330,6 +376,17 @@ public:
     }
 
     /**
+     * 累計獲得経験値を設定
+     *
+     * @param experienceValue 累計獲得経験値
+     */
+    Status& withExperienceValue(Int64 experienceValue)
+    {
+        setExperienceValue(experienceValue);
+        return *this;
+    }
+
+    /**
      * 累計獲得経験値を取得
      *
      * @return 累計獲得経験値
@@ -347,6 +404,17 @@ public:
     void setRankValue(Int64 rankValue)
     {
         ensureData().rankValue.emplace(rankValue);
+    }
+
+    /**
+     * 累計獲得経験値を設定
+     *
+     * @param rankValue 累計獲得経験値
+     */
+    Status& withRankValue(Int64 rankValue)
+    {
+        setRankValue(rankValue);
+        return *this;
     }
 
     /**
@@ -370,6 +438,17 @@ public:
     }
 
     /**
+     * 現在のランクキャップを設定
+     *
+     * @param rankCapValue 現在のランクキャップ
+     */
+    Status& withRankCapValue(Int64 rankCapValue)
+    {
+        setRankCapValue(rankCapValue);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -387,6 +466,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Status& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -409,12 +499,76 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    Status& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Status& lhs, const Status& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->statusId != lhr.m_pData->statusId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->experienceModelName != lhr.m_pData->experienceModelName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->propertyId != lhr.m_pData->propertyId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->experienceValue != lhr.m_pData->experienceValue)
+        {
+            return true;
+        }
+        if (lhs.m_pData->rankValue != lhr.m_pData->rankValue)
+        {
+            return true;
+        }
+        if (lhs.m_pData->rankCapValue != lhr.m_pData->rankCapValue)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Status& lhs, const Status& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

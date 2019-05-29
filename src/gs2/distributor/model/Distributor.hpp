@@ -35,6 +35,8 @@ namespace gs2 { namespace distributor {
  */
 class Distributor : public Gs2Object
 {
+    friend bool operator!=(const Distributor& lhs, const Distributor& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -220,6 +222,17 @@ public:
     }
 
     /**
+     * ディストリビュータ のGRNを設定
+     *
+     * @param distributorId ディストリビュータ のGRN
+     */
+    Distributor& withDistributorId(const Char* distributorId)
+    {
+        setDistributorId(distributorId);
+        return *this;
+    }
+
+    /**
      * オーナーIDを取得
      *
      * @return オーナーID
@@ -237,6 +250,17 @@ public:
     void setOwnerId(const Char* ownerId)
     {
         ensureData().ownerId.emplace(ownerId);
+    }
+
+    /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    Distributor& withOwnerId(const Char* ownerId)
+    {
+        setOwnerId(ownerId);
+        return *this;
     }
 
     /**
@@ -260,6 +284,17 @@ public:
     }
 
     /**
+     * ディストリビュータ名を設定
+     *
+     * @param name ディストリビュータ名
+     */
+    Distributor& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
+    }
+
+    /**
      * ディストリビュータの説明を取得
      *
      * @return ディストリビュータの説明
@@ -277,6 +312,17 @@ public:
     void setDescription(const Char* description)
     {
         ensureData().description.emplace(description);
+    }
+
+    /**
+     * ディストリビュータの説明を設定
+     *
+     * @param description ディストリビュータの説明
+     */
+    Distributor& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
     }
 
     /**
@@ -300,6 +346,17 @@ public:
     }
 
     /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Distributor& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
+    }
+
+    /**
      * 最終更新日時を取得
      *
      * @return 最終更新日時
@@ -319,12 +376,64 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    Distributor& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Distributor& lhs, const Distributor& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->distributorId != lhr.m_pData->distributorId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Distributor& lhs, const Distributor& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

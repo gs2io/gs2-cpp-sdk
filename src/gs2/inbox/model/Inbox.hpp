@@ -35,6 +35,8 @@ namespace gs2 { namespace inbox {
  */
 class Inbox : public Gs2Object
 {
+    friend bool operator!=(const Inbox& lhs, const Inbox& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -320,6 +322,17 @@ public:
     }
 
     /**
+     * プレゼントボックス のGRNを設定
+     *
+     * @param inboxId プレゼントボックス のGRN
+     */
+    Inbox& withInboxId(const Char* inboxId)
+    {
+        setInboxId(inboxId);
+        return *this;
+    }
+
+    /**
      * オーナーIDを取得
      *
      * @return オーナーID
@@ -337,6 +350,17 @@ public:
     void setOwnerId(const Char* ownerId)
     {
         ensureData().ownerId.emplace(ownerId);
+    }
+
+    /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    Inbox& withOwnerId(const Char* ownerId)
+    {
+        setOwnerId(ownerId);
+        return *this;
     }
 
     /**
@@ -360,6 +384,17 @@ public:
     }
 
     /**
+     * プレゼントボックス名を設定
+     *
+     * @param name プレゼントボックス名
+     */
+    Inbox& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
+    }
+
+    /**
      * 説明文を取得
      *
      * @return 説明文
@@ -377,6 +412,17 @@ public:
     void setDescription(const Char* description)
     {
         ensureData().description.emplace(description);
+    }
+
+    /**
+     * 説明文を設定
+     *
+     * @param description 説明文
+     */
+    Inbox& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
     }
 
     /**
@@ -400,6 +446,17 @@ public:
     }
 
     /**
+     * 開封したメッセージを自動的に削除するかを設定
+     *
+     * @param isAutomaticDeletingEnabled 開封したメッセージを自動的に削除するか
+     */
+    Inbox& withIsAutomaticDeletingEnabled(Bool isAutomaticDeletingEnabled)
+    {
+        setIsAutomaticDeletingEnabled(isAutomaticDeletingEnabled);
+        return *this;
+    }
+
+    /**
      * メッセージ受信時 に実行されるスクリプト のGRNを取得
      *
      * @return メッセージ受信時 に実行されるスクリプト のGRN
@@ -417,6 +474,17 @@ public:
     void setReceiveMessageTriggerScriptId(const Char* receiveMessageTriggerScriptId)
     {
         ensureData().receiveMessageTriggerScriptId.emplace(receiveMessageTriggerScriptId);
+    }
+
+    /**
+     * メッセージ受信時 に実行されるスクリプト のGRNを設定
+     *
+     * @param receiveMessageTriggerScriptId メッセージ受信時 に実行されるスクリプト のGRN
+     */
+    Inbox& withReceiveMessageTriggerScriptId(const Char* receiveMessageTriggerScriptId)
+    {
+        setReceiveMessageTriggerScriptId(receiveMessageTriggerScriptId);
+        return *this;
     }
 
     /**
@@ -440,6 +508,17 @@ public:
     }
 
     /**
+     * メッセージ受信完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param receiveMessageDoneTriggerScriptId メッセージ受信完了時 に実行されるスクリプト のGRN
+     */
+    Inbox& withReceiveMessageDoneTriggerScriptId(const Char* receiveMessageDoneTriggerScriptId)
+    {
+        setReceiveMessageDoneTriggerScriptId(receiveMessageDoneTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * メッセージ受信完了時 にジョブが登録されるキュー のGRNを取得
      *
      * @return メッセージ受信完了時 にジョブが登録されるキュー のGRN
@@ -457,6 +536,17 @@ public:
     void setReceiveMessageDoneTriggerQueueId(const Char* receiveMessageDoneTriggerQueueId)
     {
         ensureData().receiveMessageDoneTriggerQueueId.emplace(receiveMessageDoneTriggerQueueId);
+    }
+
+    /**
+     * メッセージ受信完了時 にジョブが登録されるキュー のGRNを設定
+     *
+     * @param receiveMessageDoneTriggerQueueId メッセージ受信完了時 にジョブが登録されるキュー のGRN
+     */
+    Inbox& withReceiveMessageDoneTriggerQueueId(const Char* receiveMessageDoneTriggerQueueId)
+    {
+        setReceiveMessageDoneTriggerQueueId(receiveMessageDoneTriggerQueueId);
+        return *this;
     }
 
     /**
@@ -480,6 +570,17 @@ public:
     }
 
     /**
+     * メッセージ開封時 に実行されるスクリプト のGRNを設定
+     *
+     * @param readMessageTriggerScriptId メッセージ開封時 に実行されるスクリプト のGRN
+     */
+    Inbox& withReadMessageTriggerScriptId(const Char* readMessageTriggerScriptId)
+    {
+        setReadMessageTriggerScriptId(readMessageTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * メッセージ開封完了時 に実行されるスクリプト のGRNを取得
      *
      * @return メッセージ開封完了時 に実行されるスクリプト のGRN
@@ -497,6 +598,17 @@ public:
     void setReadMessageDoneTriggerScriptId(const Char* readMessageDoneTriggerScriptId)
     {
         ensureData().readMessageDoneTriggerScriptId.emplace(readMessageDoneTriggerScriptId);
+    }
+
+    /**
+     * メッセージ開封完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param readMessageDoneTriggerScriptId メッセージ開封完了時 に実行されるスクリプト のGRN
+     */
+    Inbox& withReadMessageDoneTriggerScriptId(const Char* readMessageDoneTriggerScriptId)
+    {
+        setReadMessageDoneTriggerScriptId(readMessageDoneTriggerScriptId);
+        return *this;
     }
 
     /**
@@ -520,6 +632,17 @@ public:
     }
 
     /**
+     * メッセージ開封完了時 にジョブが登録されるキュー のGRNを設定
+     *
+     * @param readMessageDoneTriggerQueueId メッセージ開封完了時 にジョブが登録されるキュー のGRN
+     */
+    Inbox& withReadMessageDoneTriggerQueueId(const Char* readMessageDoneTriggerQueueId)
+    {
+        setReadMessageDoneTriggerQueueId(readMessageDoneTriggerQueueId);
+        return *this;
+    }
+
+    /**
      * メッセージ削除時 に実行されるスクリプト のGRNを取得
      *
      * @return メッセージ削除時 に実行されるスクリプト のGRN
@@ -537,6 +660,17 @@ public:
     void setDeleteMessageTriggerScriptId(const Char* deleteMessageTriggerScriptId)
     {
         ensureData().deleteMessageTriggerScriptId.emplace(deleteMessageTriggerScriptId);
+    }
+
+    /**
+     * メッセージ削除時 に実行されるスクリプト のGRNを設定
+     *
+     * @param deleteMessageTriggerScriptId メッセージ削除時 に実行されるスクリプト のGRN
+     */
+    Inbox& withDeleteMessageTriggerScriptId(const Char* deleteMessageTriggerScriptId)
+    {
+        setDeleteMessageTriggerScriptId(deleteMessageTriggerScriptId);
+        return *this;
     }
 
     /**
@@ -560,6 +694,17 @@ public:
     }
 
     /**
+     * メッセージ削除完了時 に実行されるスクリプト のGRNを設定
+     *
+     * @param deleteMessageDoneTriggerScriptId メッセージ削除完了時 に実行されるスクリプト のGRN
+     */
+    Inbox& withDeleteMessageDoneTriggerScriptId(const Char* deleteMessageDoneTriggerScriptId)
+    {
+        setDeleteMessageDoneTriggerScriptId(deleteMessageDoneTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * メッセージ削除完了時 にジョブが登録されるキュー のGRNを取得
      *
      * @return メッセージ削除完了時 にジョブが登録されるキュー のGRN
@@ -577,6 +722,17 @@ public:
     void setDeleteMessageDoneTriggerQueueId(const Char* deleteMessageDoneTriggerQueueId)
     {
         ensureData().deleteMessageDoneTriggerQueueId.emplace(deleteMessageDoneTriggerQueueId);
+    }
+
+    /**
+     * メッセージ削除完了時 にジョブが登録されるキュー のGRNを設定
+     *
+     * @param deleteMessageDoneTriggerQueueId メッセージ削除完了時 にジョブが登録されるキュー のGRN
+     */
+    Inbox& withDeleteMessageDoneTriggerQueueId(const Char* deleteMessageDoneTriggerQueueId)
+    {
+        setDeleteMessageDoneTriggerQueueId(deleteMessageDoneTriggerQueueId);
+        return *this;
     }
 
     /**
@@ -600,6 +756,17 @@ public:
     }
 
     /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Inbox& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
+    }
+
+    /**
      * 最終更新日時を取得
      *
      * @return 最終更新日時
@@ -619,12 +786,104 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    Inbox& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Inbox& lhs, const Inbox& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->inboxId != lhr.m_pData->inboxId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->isAutomaticDeletingEnabled != lhr.m_pData->isAutomaticDeletingEnabled)
+        {
+            return true;
+        }
+        if (lhs.m_pData->receiveMessageTriggerScriptId != lhr.m_pData->receiveMessageTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->receiveMessageDoneTriggerScriptId != lhr.m_pData->receiveMessageDoneTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->receiveMessageDoneTriggerQueueId != lhr.m_pData->receiveMessageDoneTriggerQueueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->readMessageTriggerScriptId != lhr.m_pData->readMessageTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->readMessageDoneTriggerScriptId != lhr.m_pData->readMessageDoneTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->readMessageDoneTriggerQueueId != lhr.m_pData->readMessageDoneTriggerQueueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->deleteMessageTriggerScriptId != lhr.m_pData->deleteMessageTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->deleteMessageDoneTriggerScriptId != lhr.m_pData->deleteMessageDoneTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->deleteMessageDoneTriggerQueueId != lhr.m_pData->deleteMessageDoneTriggerQueueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Inbox& lhs, const Inbox& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

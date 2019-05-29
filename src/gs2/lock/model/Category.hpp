@@ -35,6 +35,8 @@ namespace gs2 { namespace lock {
  */
 class Category : public Gs2Object
 {
+    friend bool operator!=(const Category& lhs, const Category& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -220,6 +222,17 @@ public:
     }
 
     /**
+     * カテゴリ のGRNを設定
+     *
+     * @param categoryId カテゴリ のGRN
+     */
+    Category& withCategoryId(const Char* categoryId)
+    {
+        setCategoryId(categoryId);
+        return *this;
+    }
+
+    /**
      * オーナーIDを取得
      *
      * @return オーナーID
@@ -237,6 +250,17 @@ public:
     void setOwnerId(const Char* ownerId)
     {
         ensureData().ownerId.emplace(ownerId);
+    }
+
+    /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    Category& withOwnerId(const Char* ownerId)
+    {
+        setOwnerId(ownerId);
+        return *this;
     }
 
     /**
@@ -260,6 +284,17 @@ public:
     }
 
     /**
+     * カテゴリ名を設定
+     *
+     * @param name カテゴリ名
+     */
+    Category& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
+    }
+
+    /**
      * カテゴリの説明を取得
      *
      * @return カテゴリの説明
@@ -277,6 +312,17 @@ public:
     void setDescription(const Char* description)
     {
         ensureData().description.emplace(description);
+    }
+
+    /**
+     * カテゴリの説明を設定
+     *
+     * @param description カテゴリの説明
+     */
+    Category& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
     }
 
     /**
@@ -300,6 +346,17 @@ public:
     }
 
     /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Category& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
+    }
+
+    /**
      * 最終更新日時を取得
      *
      * @return 最終更新日時
@@ -319,12 +376,64 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    Category& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Category& lhs, const Category& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->categoryId != lhr.m_pData->categoryId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Category& lhs, const Category& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

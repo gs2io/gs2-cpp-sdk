@@ -35,6 +35,8 @@ namespace gs2 { namespace inventory {
  */
 class Inventory : public Gs2Object
 {
+    friend bool operator!=(const Inventory& lhs, const Inventory& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -230,6 +232,17 @@ public:
     }
 
     /**
+     * インベントリ のGRNを設定
+     *
+     * @param inventoryId インベントリ のGRN
+     */
+    Inventory& withInventoryId(const Char* inventoryId)
+    {
+        setInventoryId(inventoryId);
+        return *this;
+    }
+
+    /**
      * インベントリモデル名を取得
      *
      * @return インベントリモデル名
@@ -247,6 +260,17 @@ public:
     void setInventoryModelName(const Char* inventoryModelName)
     {
         ensureData().inventoryModelName.emplace(inventoryModelName);
+    }
+
+    /**
+     * インベントリモデル名を設定
+     *
+     * @param inventoryModelName インベントリモデル名
+     */
+    Inventory& withInventoryModelName(const Char* inventoryModelName)
+    {
+        setInventoryModelName(inventoryModelName);
+        return *this;
     }
 
     /**
@@ -270,6 +294,17 @@ public:
     }
 
     /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    Inventory& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
+    }
+
+    /**
      * 現在のインベントリのキャパシティ使用量を取得
      *
      * @return 現在のインベントリのキャパシティ使用量
@@ -287,6 +322,17 @@ public:
     void setCurrentInventoryCapacityUsage(Int32 currentInventoryCapacityUsage)
     {
         ensureData().currentInventoryCapacityUsage.emplace(currentInventoryCapacityUsage);
+    }
+
+    /**
+     * 現在のインベントリのキャパシティ使用量を設定
+     *
+     * @param currentInventoryCapacityUsage 現在のインベントリのキャパシティ使用量
+     */
+    Inventory& withCurrentInventoryCapacityUsage(Int32 currentInventoryCapacityUsage)
+    {
+        setCurrentInventoryCapacityUsage(currentInventoryCapacityUsage);
+        return *this;
     }
 
     /**
@@ -310,6 +356,17 @@ public:
     }
 
     /**
+     * 現在のインベントリの最大キャパシティを設定
+     *
+     * @param currentInventoryMaxCapacity 現在のインベントリの最大キャパシティ
+     */
+    Inventory& withCurrentInventoryMaxCapacity(Int32 currentInventoryMaxCapacity)
+    {
+        setCurrentInventoryMaxCapacity(currentInventoryMaxCapacity);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -327,6 +384,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Inventory& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -349,12 +417,68 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    Inventory& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Inventory& lhs, const Inventory& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->inventoryId != lhr.m_pData->inventoryId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->inventoryModelName != lhr.m_pData->inventoryModelName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->currentInventoryCapacityUsage != lhr.m_pData->currentInventoryCapacityUsage)
+        {
+            return true;
+        }
+        if (lhs.m_pData->currentInventoryMaxCapacity != lhr.m_pData->currentInventoryMaxCapacity)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Inventory& lhs, const Inventory& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

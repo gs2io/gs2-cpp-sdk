@@ -36,6 +36,8 @@ namespace gs2 { namespace lottery {
  */
 class PrizeTable : public Gs2Object
 {
+    friend bool operator!=(const PrizeTable& lhs, const PrizeTable& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -207,6 +209,17 @@ public:
     }
 
     /**
+     * 景品の排出確率テーブル のGRNを設定
+     *
+     * @param prizeTableId 景品の排出確率テーブル のGRN
+     */
+    PrizeTable& withPrizeTableId(const Char* prizeTableId)
+    {
+        setPrizeTableId(prizeTableId);
+        return *this;
+    }
+
+    /**
      * 景品テーブル名を取得
      *
      * @return 景品テーブル名
@@ -224,6 +237,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * 景品テーブル名を設定
+     *
+     * @param name 景品テーブル名
+     */
+    PrizeTable& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -247,6 +271,17 @@ public:
     }
 
     /**
+     * 景品テーブルのメタデータを設定
+     *
+     * @param metadata 景品テーブルのメタデータ
+     */
+    PrizeTable& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
+    }
+
+    /**
      * 景品リストを取得
      *
      * @return 景品リスト
@@ -266,12 +301,56 @@ public:
         ensureData().prizes.emplace(prizes);
     }
 
+    /**
+     * 景品リストを設定
+     *
+     * @param prizes 景品リスト
+     */
+    PrizeTable& withPrizes(const List<Prize>& prizes)
+    {
+        setPrizes(prizes);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const PrizeTable& lhs, const PrizeTable& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->prizeTableId != lhr.m_pData->prizeTableId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->prizes != lhr.m_pData->prizes)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const PrizeTable& lhs, const PrizeTable& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

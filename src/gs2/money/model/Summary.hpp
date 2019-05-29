@@ -35,6 +35,8 @@ namespace gs2 { namespace money {
  */
 class Summary : public Gs2Object
 {
+    friend bool operator!=(const Summary& lhs, const Summary& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -230,6 +232,17 @@ public:
     }
 
     /**
+     * ウォレットの概要 のGRNを設定
+     *
+     * @param summaryId ウォレットの概要 のGRN
+     */
+    Summary& withSummaryId(const Char* summaryId)
+    {
+        setSummaryId(summaryId);
+        return *this;
+    }
+
+    /**
      * ユーザーIDを取得
      *
      * @return ユーザーID
@@ -247,6 +260,17 @@ public:
     void setUserId(const Char* userId)
     {
         ensureData().userId.emplace(userId);
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    Summary& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
     }
 
     /**
@@ -270,6 +294,17 @@ public:
     }
 
     /**
+     * Noneを設定
+     *
+     * @param slot None
+     */
+    Summary& withSlot(Int32 slot)
+    {
+        setSlot(slot);
+        return *this;
+    }
+
+    /**
      * 有償課金通貨所持量を取得
      *
      * @return 有償課金通貨所持量
@@ -287,6 +322,17 @@ public:
     void setPaid(Int32 paid)
     {
         ensureData().paid.emplace(paid);
+    }
+
+    /**
+     * 有償課金通貨所持量を設定
+     *
+     * @param paid 有償課金通貨所持量
+     */
+    Summary& withPaid(Int32 paid)
+    {
+        setPaid(paid);
+        return *this;
     }
 
     /**
@@ -310,6 +356,17 @@ public:
     }
 
     /**
+     * 無償課金通貨所持量を設定
+     *
+     * @param free 無償課金通貨所持量
+     */
+    Summary& withFree(Int32 free)
+    {
+        setFree(free);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -327,6 +384,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Summary& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -349,12 +417,68 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    Summary& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Summary& lhs, const Summary& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->summaryId != lhr.m_pData->summaryId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->slot != lhr.m_pData->slot)
+        {
+            return true;
+        }
+        if (lhs.m_pData->paid != lhr.m_pData->paid)
+        {
+            return true;
+        }
+        if (lhs.m_pData->free != lhr.m_pData->free)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Summary& lhs, const Summary& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

@@ -35,6 +35,8 @@ namespace gs2 { namespace lock {
  */
 class Mutex : public Gs2Object
 {
+    friend bool operator!=(const Mutex& lhs, const Mutex& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -230,6 +232,17 @@ public:
     }
 
     /**
+     * ミューテックス のGRNを設定
+     *
+     * @param mutexId ミューテックス のGRN
+     */
+    Mutex& withMutexId(const Char* mutexId)
+    {
+        setMutexId(mutexId);
+        return *this;
+    }
+
+    /**
      * ユーザーIDを取得
      *
      * @return ユーザーID
@@ -247,6 +260,17 @@ public:
     void setUserId(const Char* userId)
     {
         ensureData().userId.emplace(userId);
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    Mutex& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
     }
 
     /**
@@ -270,6 +294,17 @@ public:
     }
 
     /**
+     * プロパティIDを設定
+     *
+     * @param propertyId プロパティID
+     */
+    Mutex& withPropertyId(const Char* propertyId)
+    {
+        setPropertyId(propertyId);
+        return *this;
+    }
+
+    /**
      * ロックを取得したトランザクションIDを取得
      *
      * @return ロックを取得したトランザクションID
@@ -287,6 +322,17 @@ public:
     void setTransactionId(const Char* transactionId)
     {
         ensureData().transactionId.emplace(transactionId);
+    }
+
+    /**
+     * ロックを取得したトランザクションIDを設定
+     *
+     * @param transactionId ロックを取得したトランザクションID
+     */
+    Mutex& withTransactionId(const Char* transactionId)
+    {
+        setTransactionId(transactionId);
+        return *this;
     }
 
     /**
@@ -310,6 +356,17 @@ public:
     }
 
     /**
+     * 参照回数を設定
+     *
+     * @param referenceCount 参照回数
+     */
+    Mutex& withReferenceCount(Int32 referenceCount)
+    {
+        setReferenceCount(referenceCount);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -327,6 +384,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Mutex& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -349,12 +417,68 @@ public:
         ensureData().ttlAt.emplace(ttlAt);
     }
 
+    /**
+     * 作成日時を設定
+     *
+     * @param ttlAt 作成日時
+     */
+    Mutex& withTtlAt(Int64 ttlAt)
+    {
+        setTtlAt(ttlAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Mutex& lhs, const Mutex& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->mutexId != lhr.m_pData->mutexId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->propertyId != lhr.m_pData->propertyId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->transactionId != lhr.m_pData->transactionId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->referenceCount != lhr.m_pData->referenceCount)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ttlAt != lhr.m_pData->ttlAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Mutex& lhs, const Mutex& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

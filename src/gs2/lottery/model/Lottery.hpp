@@ -35,7 +35,19 @@ namespace gs2 { namespace lottery {
  */
 class Lottery : public Gs2Object
 {
+    friend bool operator!=(const Lottery& lhs, const Lottery& lhr);
+
 };
+
+bool operator!=(const Lottery& lhs, const Lottery& lhr)
+{
+    return false;
+}
+
+bool operator==(const Lottery& lhs, const Lottery& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

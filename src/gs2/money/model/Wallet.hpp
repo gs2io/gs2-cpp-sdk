@@ -35,6 +35,8 @@ namespace gs2 { namespace money {
  */
 class Wallet : public Gs2Object
 {
+    friend bool operator!=(const Wallet& lhs, const Wallet& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -230,6 +232,17 @@ public:
     }
 
     /**
+     * ウォレットの詳細 のGRNを設定
+     *
+     * @param walletId ウォレットの詳細 のGRN
+     */
+    Wallet& withWalletId(const Char* walletId)
+    {
+        setWalletId(walletId);
+        return *this;
+    }
+
+    /**
      * ユーザーIDを取得
      *
      * @return ユーザーID
@@ -247,6 +260,17 @@ public:
     void setUserId(const Char* userId)
     {
         ensureData().userId.emplace(userId);
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    Wallet& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
     }
 
     /**
@@ -270,6 +294,17 @@ public:
     }
 
     /**
+     * Noneを設定
+     *
+     * @param slot None
+     */
+    Wallet& withSlot(Int32 slot)
+    {
+        setSlot(slot);
+        return *this;
+    }
+
+    /**
      * 単価を取得
      *
      * @return 単価
@@ -287,6 +322,17 @@ public:
     void setPrice(Float price)
     {
         ensureData().price.emplace(price);
+    }
+
+    /**
+     * 単価を設定
+     *
+     * @param price 単価
+     */
+    Wallet& withPrice(Float price)
+    {
+        setPrice(price);
+        return *this;
     }
 
     /**
@@ -310,6 +356,17 @@ public:
     }
 
     /**
+     * 所持量を設定
+     *
+     * @param count 所持量
+     */
+    Wallet& withCount(Int32 count)
+    {
+        setCount(count);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -327,6 +384,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Wallet& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -349,12 +417,68 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    Wallet& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Wallet& lhs, const Wallet& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->walletId != lhr.m_pData->walletId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->slot != lhr.m_pData->slot)
+        {
+            return true;
+        }
+        if (lhs.m_pData->price != lhr.m_pData->price)
+        {
+            return true;
+        }
+        if (lhs.m_pData->count != lhr.m_pData->count)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Wallet& lhs, const Wallet& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

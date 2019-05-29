@@ -35,6 +35,8 @@ namespace gs2 { namespace identifier {
  */
 class Identifier : public Gs2Object
 {
+    friend bool operator!=(const Identifier& lhs, const Identifier& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -200,6 +202,17 @@ public:
     }
 
     /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    Identifier& withOwnerId(const Char* ownerId)
+    {
+        setOwnerId(ownerId);
+        return *this;
+    }
+
+    /**
      * クライアントIDを取得
      *
      * @return クライアントID
@@ -217,6 +230,17 @@ public:
     void setClientId(const Char* clientId)
     {
         ensureData().clientId.emplace(clientId);
+    }
+
+    /**
+     * クライアントIDを設定
+     *
+     * @param clientId クライアントID
+     */
+    Identifier& withClientId(const Char* clientId)
+    {
+        setClientId(clientId);
+        return *this;
     }
 
     /**
@@ -240,6 +264,17 @@ public:
     }
 
     /**
+     * ユーザー名を設定
+     *
+     * @param userName ユーザー名
+     */
+    Identifier& withUserName(const Char* userName)
+    {
+        setUserName(userName);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -259,12 +294,56 @@ public:
         ensureData().createAt.emplace(createAt);
     }
 
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Identifier& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Identifier& lhs, const Identifier& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->clientId != lhr.m_pData->clientId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userName != lhr.m_pData->userName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Identifier& lhs, const Identifier& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

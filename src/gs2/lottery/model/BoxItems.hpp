@@ -36,6 +36,8 @@ namespace gs2 { namespace lottery {
  */
 class BoxItems : public Gs2Object
 {
+    friend bool operator!=(const BoxItems& lhs, const BoxItems& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -207,6 +209,17 @@ public:
     }
 
     /**
+     * 排出済みの景品情報 のGRNを設定
+     *
+     * @param boxId 排出済みの景品情報 のGRN
+     */
+    BoxItems& withBoxId(const Char* boxId)
+    {
+        setBoxId(boxId);
+        return *this;
+    }
+
+    /**
      * 景品テーブル名を取得
      *
      * @return 景品テーブル名
@@ -224,6 +237,17 @@ public:
     void setPrizeTableName(const Char* prizeTableName)
     {
         ensureData().prizeTableName.emplace(prizeTableName);
+    }
+
+    /**
+     * 景品テーブル名を設定
+     *
+     * @param prizeTableName 景品テーブル名
+     */
+    BoxItems& withPrizeTableName(const Char* prizeTableName)
+    {
+        setPrizeTableName(prizeTableName);
+        return *this;
     }
 
     /**
@@ -247,6 +271,17 @@ public:
     }
 
     /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    BoxItems& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
+    }
+
+    /**
      * 排出済みの景品情報のリストを取得
      *
      * @return 排出済みの景品情報のリスト
@@ -266,12 +301,56 @@ public:
         ensureData().items.emplace(items);
     }
 
+    /**
+     * 排出済みの景品情報のリストを設定
+     *
+     * @param items 排出済みの景品情報のリスト
+     */
+    BoxItems& withItems(const List<BoxItem>& items)
+    {
+        setItems(items);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const BoxItems& lhs, const BoxItems& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->boxId != lhr.m_pData->boxId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->prizeTableName != lhr.m_pData->prizeTableName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->items != lhr.m_pData->items)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const BoxItems& lhs, const BoxItems& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

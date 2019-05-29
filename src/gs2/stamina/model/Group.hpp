@@ -35,6 +35,8 @@ namespace gs2 { namespace stamina {
  */
 class Group : public Gs2Object
 {
+    friend bool operator!=(const Group& lhs, const Group& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -240,6 +242,17 @@ public:
     }
 
     /**
+     * スタミナの種類 のGRNを設定
+     *
+     * @param groupId スタミナの種類 のGRN
+     */
+    Group& withGroupId(const Char* groupId)
+    {
+        setGroupId(groupId);
+        return *this;
+    }
+
+    /**
      * オーナーIDを取得
      *
      * @return オーナーID
@@ -257,6 +270,17 @@ public:
     void setOwnerId(const Char* ownerId)
     {
         ensureData().ownerId.emplace(ownerId);
+    }
+
+    /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    Group& withOwnerId(const Char* ownerId)
+    {
+        setOwnerId(ownerId);
+        return *this;
     }
 
     /**
@@ -280,6 +304,17 @@ public:
     }
 
     /**
+     * スタミナの種類名を設定
+     *
+     * @param name スタミナの種類名
+     */
+    Group& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
+    }
+
+    /**
      * 説明文を取得
      *
      * @return 説明文
@@ -297,6 +332,17 @@ public:
     void setDescription(const Char* description)
     {
         ensureData().description.emplace(description);
+    }
+
+    /**
+     * 説明文を設定
+     *
+     * @param description 説明文
+     */
+    Group& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
     }
 
     /**
@@ -320,6 +366,17 @@ public:
     }
 
     /**
+     * スタミナオーバーフロー上限に当たって回復できなかったスタミナを通知する スクリプト のGRNを設定
+     *
+     * @param overflowTriggerScriptId スタミナオーバーフロー上限に当たって回復できなかったスタミナを通知する スクリプト のGRN
+     */
+    Group& withOverflowTriggerScriptId(const Char* overflowTriggerScriptId)
+    {
+        setOverflowTriggerScriptId(overflowTriggerScriptId);
+        return *this;
+    }
+
+    /**
      * スタミナオーバーフロー上限に当たって回復できなかったスタミナを追加する キュー のGRNを取得
      *
      * @return スタミナオーバーフロー上限に当たって回復できなかったスタミナを追加する キュー のGRN
@@ -337,6 +394,17 @@ public:
     void setOverflowTriggerQueueId(const Char* overflowTriggerQueueId)
     {
         ensureData().overflowTriggerQueueId.emplace(overflowTriggerQueueId);
+    }
+
+    /**
+     * スタミナオーバーフロー上限に当たって回復できなかったスタミナを追加する キュー のGRNを設定
+     *
+     * @param overflowTriggerQueueId スタミナオーバーフロー上限に当たって回復できなかったスタミナを追加する キュー のGRN
+     */
+    Group& withOverflowTriggerQueueId(const Char* overflowTriggerQueueId)
+    {
+        setOverflowTriggerQueueId(overflowTriggerQueueId);
+        return *this;
     }
 
     /**
@@ -360,6 +428,17 @@ public:
     }
 
     /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    Group& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
+    }
+
+    /**
      * 最終更新日時を取得
      *
      * @return 最終更新日時
@@ -379,12 +458,72 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    Group& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const Group& lhs, const Group& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->groupId != lhr.m_pData->groupId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->overflowTriggerScriptId != lhr.m_pData->overflowTriggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->overflowTriggerQueueId != lhr.m_pData->overflowTriggerQueueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const Group& lhs, const Group& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

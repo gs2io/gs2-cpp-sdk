@@ -35,6 +35,8 @@ namespace gs2 { namespace account {
  */
 class FullTakeOver : public Gs2Object
 {
+    friend bool operator!=(const FullTakeOver& lhs, const FullTakeOver& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -220,6 +222,17 @@ public:
     }
 
     /**
+     * 引き継ぎ設定 のGRNを設定
+     *
+     * @param takeOverId 引き継ぎ設定 のGRN
+     */
+    FullTakeOver& withTakeOverId(const Char* takeOverId)
+    {
+        setTakeOverId(takeOverId);
+        return *this;
+    }
+
+    /**
      * ユーザーIDを取得
      *
      * @return ユーザーID
@@ -237,6 +250,17 @@ public:
     void setUserId(const Char* userId)
     {
         ensureData().userId.emplace(userId);
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    FullTakeOver& withUserId(const Char* userId)
+    {
+        setUserId(userId);
+        return *this;
     }
 
     /**
@@ -260,6 +284,17 @@ public:
     }
 
     /**
+     * スロット番号を設定
+     *
+     * @param type スロット番号
+     */
+    FullTakeOver& withType(Int32 type)
+    {
+        setType(type);
+        return *this;
+    }
+
+    /**
      * 引き継ぎ用ユーザーIDを取得
      *
      * @return 引き継ぎ用ユーザーID
@@ -277,6 +312,17 @@ public:
     void setUserIdentifier(const Char* userIdentifier)
     {
         ensureData().userIdentifier.emplace(userIdentifier);
+    }
+
+    /**
+     * 引き継ぎ用ユーザーIDを設定
+     *
+     * @param userIdentifier 引き継ぎ用ユーザーID
+     */
+    FullTakeOver& withUserIdentifier(const Char* userIdentifier)
+    {
+        setUserIdentifier(userIdentifier);
+        return *this;
     }
 
     /**
@@ -300,6 +346,17 @@ public:
     }
 
     /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    FullTakeOver& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
+    }
+
+    /**
      * パスワードを取得
      *
      * @return パスワード
@@ -319,12 +376,64 @@ public:
         ensureData().password.emplace(password);
     }
 
+    /**
+     * パスワードを設定
+     *
+     * @param password パスワード
+     */
+    FullTakeOver& withPassword(const Char* password)
+    {
+        setPassword(password);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const FullTakeOver& lhs, const FullTakeOver& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->takeOverId != lhr.m_pData->takeOverId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->type != lhr.m_pData->type)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userIdentifier != lhr.m_pData->userIdentifier)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->password != lhr.m_pData->password)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const FullTakeOver& lhs, const FullTakeOver& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

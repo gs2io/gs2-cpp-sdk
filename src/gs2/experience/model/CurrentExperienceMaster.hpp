@@ -35,6 +35,8 @@ namespace gs2 { namespace experience {
  */
 class CurrentExperienceMaster : public Gs2Object
 {
+    friend bool operator!=(const CurrentExperienceMaster& lhs, const CurrentExperienceMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -180,6 +182,17 @@ public:
     }
 
     /**
+     * 経験値名を設定
+     *
+     * @param experienceName 経験値名
+     */
+    CurrentExperienceMaster& withExperienceName(const Char* experienceName)
+    {
+        setExperienceName(experienceName);
+        return *this;
+    }
+
+    /**
      * マスターデータを取得
      *
      * @return マスターデータ
@@ -199,12 +212,48 @@ public:
         ensureData().settings.emplace(settings);
     }
 
+    /**
+     * マスターデータを設定
+     *
+     * @param settings マスターデータ
+     */
+    CurrentExperienceMaster& withSettings(const Char* settings)
+    {
+        setSettings(settings);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const CurrentExperienceMaster& lhs, const CurrentExperienceMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->experienceName != lhr.m_pData->experienceName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->settings != lhr.m_pData->settings)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const CurrentExperienceMaster& lhs, const CurrentExperienceMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

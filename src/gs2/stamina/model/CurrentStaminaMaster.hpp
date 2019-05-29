@@ -35,6 +35,8 @@ namespace gs2 { namespace stamina {
  */
 class CurrentStaminaMaster : public Gs2Object
 {
+    friend bool operator!=(const CurrentStaminaMaster& lhs, const CurrentStaminaMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -180,6 +182,17 @@ public:
     }
 
     /**
+     * スタミナの種類名を設定
+     *
+     * @param groupName スタミナの種類名
+     */
+    CurrentStaminaMaster& withGroupName(const Char* groupName)
+    {
+        setGroupName(groupName);
+        return *this;
+    }
+
+    /**
      * マスターデータを取得
      *
      * @return マスターデータ
@@ -199,12 +212,48 @@ public:
         ensureData().settings.emplace(settings);
     }
 
+    /**
+     * マスターデータを設定
+     *
+     * @param settings マスターデータ
+     */
+    CurrentStaminaMaster& withSettings(const Char* settings)
+    {
+        setSettings(settings);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const CurrentStaminaMaster& lhs, const CurrentStaminaMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->groupName != lhr.m_pData->groupName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->settings != lhr.m_pData->settings)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const CurrentStaminaMaster& lhs, const CurrentStaminaMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

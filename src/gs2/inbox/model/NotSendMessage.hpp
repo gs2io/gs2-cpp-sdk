@@ -36,6 +36,8 @@ namespace gs2 { namespace inbox {
  */
 class NotSendMessage : public Gs2Object
 {
+    friend bool operator!=(const NotSendMessage& lhs, const NotSendMessage& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -183,6 +185,17 @@ public:
     }
 
     /**
+     * 送信できなかったメッセージのボディを設定
+     *
+     * @param body 送信できなかったメッセージのボディ
+     */
+    NotSendMessage& withBody(const Body& body)
+    {
+        setBody(body);
+        return *this;
+    }
+
+    /**
      * 送信できなかった理由を取得
      *
      * @return 送信できなかった理由
@@ -202,12 +215,48 @@ public:
         ensureData().reason.emplace(reason);
     }
 
+    /**
+     * 送信できなかった理由を設定
+     *
+     * @param reason 送信できなかった理由
+     */
+    NotSendMessage& withReason(const Char* reason)
+    {
+        setReason(reason);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const NotSendMessage& lhs, const NotSendMessage& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->body != lhr.m_pData->body)
+        {
+            return true;
+        }
+        if (lhs.m_pData->reason != lhr.m_pData->reason)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const NotSendMessage& lhs, const NotSendMessage& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

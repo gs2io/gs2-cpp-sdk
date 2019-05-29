@@ -35,6 +35,8 @@ namespace gs2 { namespace distributor {
  */
 class CurrentDistributorMaster : public Gs2Object
 {
+    friend bool operator!=(const CurrentDistributorMaster& lhs, const CurrentDistributorMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -180,6 +182,17 @@ public:
     }
 
     /**
+     * ディストリビュータ名を設定
+     *
+     * @param distributorName ディストリビュータ名
+     */
+    CurrentDistributorMaster& withDistributorName(const Char* distributorName)
+    {
+        setDistributorName(distributorName);
+        return *this;
+    }
+
+    /**
      * マスターデータを取得
      *
      * @return マスターデータ
@@ -199,12 +212,48 @@ public:
         ensureData().settings.emplace(settings);
     }
 
+    /**
+     * マスターデータを設定
+     *
+     * @param settings マスターデータ
+     */
+    CurrentDistributorMaster& withSettings(const Char* settings)
+    {
+        setSettings(settings);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const CurrentDistributorMaster& lhs, const CurrentDistributorMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->distributorName != lhr.m_pData->distributorName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->settings != lhr.m_pData->settings)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const CurrentDistributorMaster& lhs, const CurrentDistributorMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

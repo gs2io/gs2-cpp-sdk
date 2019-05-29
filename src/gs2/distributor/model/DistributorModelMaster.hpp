@@ -35,6 +35,8 @@ namespace gs2 { namespace distributor {
  */
 class DistributorModelMaster : public Gs2Object
 {
+    friend bool operator!=(const DistributorModelMaster& lhs, const DistributorModelMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -259,6 +261,17 @@ public:
     }
 
     /**
+     * ディストリビュータの種類 のGRNを設定
+     *
+     * @param distributorModelId ディストリビュータの種類 のGRN
+     */
+    DistributorModelMaster& withDistributorModelId(const Char* distributorModelId)
+    {
+        setDistributorModelId(distributorModelId);
+        return *this;
+    }
+
+    /**
      * ディストリビューターの種類名を取得
      *
      * @return ディストリビューターの種類名
@@ -276,6 +289,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * ディストリビューターの種類名を設定
+     *
+     * @param name ディストリビューターの種類名
+     */
+    DistributorModelMaster& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -299,6 +323,17 @@ public:
     }
 
     /**
+     * ディストリビュータの種類の説明を設定
+     *
+     * @param description ディストリビュータの種類の説明
+     */
+    DistributorModelMaster& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
+    }
+
+    /**
      * ディストリビューターの種類のメタデータを取得
      *
      * @return ディストリビューターの種類のメタデータ
@@ -316,6 +351,17 @@ public:
     void setMetadata(const Char* metadata)
     {
         ensureData().metadata.emplace(metadata);
+    }
+
+    /**
+     * ディストリビューターの種類のメタデータを設定
+     *
+     * @param metadata ディストリビューターの種類のメタデータ
+     */
+    DistributorModelMaster& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
     }
 
     /**
@@ -339,6 +385,17 @@ public:
     }
 
     /**
+     * 所持品の配布処理の権限判定に使用する ユーザー のGRNを設定
+     *
+     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザー のGRN
+     */
+    DistributorModelMaster& withAssumeUserId(const Char* assumeUserId)
+    {
+        setAssumeUserId(assumeUserId);
+        return *this;
+    }
+
+    /**
      * 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRNを取得
      *
      * @return 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN
@@ -356,6 +413,17 @@ public:
     void setInboxId(const Char* inboxId)
     {
         ensureData().inboxId.emplace(inboxId);
+    }
+
+    /**
+     * 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRNを設定
+     *
+     * @param inboxId 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN
+     */
+    DistributorModelMaster& withInboxId(const Char* inboxId)
+    {
+        setInboxId(inboxId);
+        return *this;
     }
 
     /**
@@ -379,6 +447,17 @@ public:
     }
 
     /**
+     * ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリストを設定
+     *
+     * @param whiteListTargetIds ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト
+     */
+    DistributorModelMaster& withWhiteListTargetIds(const List<StringHolder>& whiteListTargetIds)
+    {
+        setWhiteListTargetIds(whiteListTargetIds);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -396,6 +475,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    DistributorModelMaster& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -418,12 +508,76 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    DistributorModelMaster& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const DistributorModelMaster& lhs, const DistributorModelMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->distributorModelId != lhr.m_pData->distributorModelId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->assumeUserId != lhr.m_pData->assumeUserId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->inboxId != lhr.m_pData->inboxId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->whiteListTargetIds != lhr.m_pData->whiteListTargetIds)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const DistributorModelMaster& lhs, const DistributorModelMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

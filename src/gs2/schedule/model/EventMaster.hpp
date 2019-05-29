@@ -35,6 +35,8 @@ namespace gs2 { namespace schedule {
  */
 class EventMaster : public Gs2Object
 {
+    friend bool operator!=(const EventMaster& lhs, const EventMaster& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
@@ -270,6 +272,17 @@ public:
     }
 
     /**
+     * イベント のGRNを設定
+     *
+     * @param eventId イベント のGRN
+     */
+    EventMaster& withEventId(const Char* eventId)
+    {
+        setEventId(eventId);
+        return *this;
+    }
+
+    /**
      * ディストリビューターの種類名を取得
      *
      * @return ディストリビューターの種類名
@@ -287,6 +300,17 @@ public:
     void setName(const Char* name)
     {
         ensureData().name.emplace(name);
+    }
+
+    /**
+     * ディストリビューターの種類名を設定
+     *
+     * @param name ディストリビューターの種類名
+     */
+    EventMaster& withName(const Char* name)
+    {
+        setName(name);
+        return *this;
     }
 
     /**
@@ -310,6 +334,17 @@ public:
     }
 
     /**
+     * イベントの説明を設定
+     *
+     * @param description イベントの説明
+     */
+    EventMaster& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
+    }
+
+    /**
      * ディストリビューターの種類のメタデータを取得
      *
      * @return ディストリビューターの種類のメタデータ
@@ -327,6 +362,17 @@ public:
     void setMetadata(const Char* metadata)
     {
         ensureData().metadata.emplace(metadata);
+    }
+
+    /**
+     * ディストリビューターの種類のメタデータを設定
+     *
+     * @param metadata ディストリビューターの種類のメタデータ
+     */
+    EventMaster& withMetadata(const Char* metadata)
+    {
+        setMetadata(metadata);
+        return *this;
     }
 
     /**
@@ -350,6 +396,17 @@ public:
     }
 
     /**
+     * イベント期間の種類を設定
+     *
+     * @param scheduleType イベント期間の種類
+     */
+    EventMaster& withScheduleType(const Char* scheduleType)
+    {
+        setScheduleType(scheduleType);
+        return *this;
+    }
+
+    /**
      * イベントの開始日時を取得
      *
      * @return イベントの開始日時
@@ -367,6 +424,17 @@ public:
     void setAbsoluteBegin(Int64 absoluteBegin)
     {
         ensureData().absoluteBegin.emplace(absoluteBegin);
+    }
+
+    /**
+     * イベントの開始日時を設定
+     *
+     * @param absoluteBegin イベントの開始日時
+     */
+    EventMaster& withAbsoluteBegin(Int64 absoluteBegin)
+    {
+        setAbsoluteBegin(absoluteBegin);
+        return *this;
     }
 
     /**
@@ -390,6 +458,17 @@ public:
     }
 
     /**
+     * イベントの終了日時を設定
+     *
+     * @param absoluteEnd イベントの終了日時
+     */
+    EventMaster& withAbsoluteEnd(Int64 absoluteEnd)
+    {
+        setAbsoluteEnd(absoluteEnd);
+        return *this;
+    }
+
+    /**
      * イベントの開始トリガーを取得
      *
      * @return イベントの開始トリガー
@@ -407,6 +486,17 @@ public:
     void setRelativeTriggerName(const Char* relativeTriggerName)
     {
         ensureData().relativeTriggerName.emplace(relativeTriggerName);
+    }
+
+    /**
+     * イベントの開始トリガーを設定
+     *
+     * @param relativeTriggerName イベントの開始トリガー
+     */
+    EventMaster& withRelativeTriggerName(const Char* relativeTriggerName)
+    {
+        setRelativeTriggerName(relativeTriggerName);
+        return *this;
     }
 
     /**
@@ -430,6 +520,17 @@ public:
     }
 
     /**
+     * イベントの開催期間(秒)を設定
+     *
+     * @param relativeDuration イベントの開催期間(秒)
+     */
+    EventMaster& withRelativeDuration(Int32 relativeDuration)
+    {
+        setRelativeDuration(relativeDuration);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -447,6 +548,17 @@ public:
     void setCreateAt(Int64 createAt)
     {
         ensureData().createAt.emplace(createAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createAt 作成日時
+     */
+    EventMaster& withCreateAt(Int64 createAt)
+    {
+        setCreateAt(createAt);
+        return *this;
     }
 
     /**
@@ -469,12 +581,84 @@ public:
         ensureData().updateAt.emplace(updateAt);
     }
 
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updateAt 最終更新日時
+     */
+    EventMaster& withUpdateAt(Int64 updateAt)
+    {
+        setUpdateAt(updateAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
         return ensureData();
     }
 };
+
+bool operator!=(const EventMaster& lhs, const EventMaster& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->eventId != lhr.m_pData->eventId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->scheduleType != lhr.m_pData->scheduleType)
+        {
+            return true;
+        }
+        if (lhs.m_pData->absoluteBegin != lhr.m_pData->absoluteBegin)
+        {
+            return true;
+        }
+        if (lhs.m_pData->absoluteEnd != lhr.m_pData->absoluteEnd)
+        {
+            return true;
+        }
+        if (lhs.m_pData->relativeTriggerName != lhr.m_pData->relativeTriggerName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->relativeDuration != lhr.m_pData->relativeDuration)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool operator==(const EventMaster& lhs, const EventMaster& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 
