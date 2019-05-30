@@ -272,6 +272,23 @@ public:
     // TODO: move
 };
 
+
+namespace detail {
+
+template<typename T>
+inline Int32 getCountOfListElements(const List<T>& list)
+{
+	return list.getCount();
+}
+
+template<typename T>
+inline void addToList(List<T>& list, T&& value)
+{
+	list += std::move(value);
+}
+
+}
+
 GS2_END_OF_NAMESPACE
 
 #endif //GS2_CORE_UTIL_LIST_HPP_
