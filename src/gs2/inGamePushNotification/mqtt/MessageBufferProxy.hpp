@@ -48,7 +48,7 @@ public:
         *m_pCurrent++ = static_cast<UInt8>(value);
     }
 
-    inline void writeU32(UInt16 value) {
+    inline void writeU32(UInt32 value) {
         // TODO: assert(m_pCurrent + 4 < &m_Buffer[m_Size]);
         *m_pCurrent++ = static_cast<UInt8>(value >> 24);
         *m_pCurrent++ = static_cast<UInt8>(value >> 16);
