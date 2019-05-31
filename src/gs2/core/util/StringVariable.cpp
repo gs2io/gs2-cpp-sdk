@@ -25,7 +25,7 @@ namespace detail {
 
 StringVariable::StringVariable(const List<StringHolder>& list)
 {
-    auto count = list.getCount();
+    auto count = getCountOfListElements(list);
     if (count > 0)
     {
         append(list[0].getCString());
