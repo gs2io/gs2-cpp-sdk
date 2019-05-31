@@ -75,7 +75,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         Message item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
-                        *this->sendItems += std::move(item);
+                        detail::addToList(*this->sendItems, std::move(item));
                     }
                 }
             }
@@ -87,7 +87,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         NotSendMessage item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
-                        *this->notSendItems += std::move(item);
+                        detail::addToList(*this->notSendItems, std::move(item));
                     }
                 }
             }

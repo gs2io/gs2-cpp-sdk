@@ -122,7 +122,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         PrizeMaster item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
-                        *this->prizes += std::move(item);
+                        detail::addToList(*this->prizes, std::move(item));
                     }
                 }
             }

@@ -143,7 +143,7 @@ private:
                         {
                             auto valueStr = json->GetString();
                             StringHolder stringHolder(valueStr);
-                            *this->whiteListTargetIds += std::move(stringHolder);
+                            detail::addToList(*this->whiteListTargetIds, std::move(stringHolder));
                         }
                     }
                 }

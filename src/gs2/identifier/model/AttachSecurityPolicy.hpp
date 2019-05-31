@@ -89,7 +89,7 @@ private:
                         {
                             auto valueStr = json->GetString();
                             StringHolder stringHolder(valueStr);
-                            *this->securityPolicyIds += std::move(stringHolder);
+                            detail::addToList(*this->securityPolicyIds, std::move(stringHolder));
                         }
                     }
                 }
