@@ -274,6 +274,12 @@ public:
 };
 
 
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable:4582)
+#pragma warning(disable:4583)
+#endif
+
 template <class T>
 union storage_t
 {
@@ -287,6 +293,10 @@ union storage_t
 
   ~storage_t(){}
 };
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
 
 
 template <class T>
