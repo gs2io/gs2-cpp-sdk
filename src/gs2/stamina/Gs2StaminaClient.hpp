@@ -161,42 +161,42 @@ private:
         if (obj.getGroupId())
         {
             writer.writePropertyName("groupId");
-            writer.write(*obj.getGroupId());
+            writer.writeCharArray(*obj.getGroupId());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*obj.getDescription());
+            writer.writeCharArray(*obj.getDescription());
         }
         if (obj.getOverflowTriggerScriptId())
         {
             writer.writePropertyName("overflowTriggerScriptId");
-            writer.write(*obj.getOverflowTriggerScriptId());
+            writer.writeCharArray(*obj.getOverflowTriggerScriptId());
         }
         if (obj.getOverflowTriggerQueueId())
         {
             writer.writePropertyName("overflowTriggerQueueId");
-            writer.write(*obj.getOverflowTriggerQueueId());
+            writer.writeCharArray(*obj.getOverflowTriggerQueueId());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -207,67 +207,67 @@ private:
         if (obj.getStaminaModelId())
         {
             writer.writePropertyName("staminaModelId");
-            writer.write(*obj.getStaminaModelId());
+            writer.writeCharArray(*obj.getStaminaModelId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*obj.getMetadata());
+            writer.writeCharArray(*obj.getMetadata());
         }
         if (obj.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*obj.getDescription());
+            writer.writeCharArray(*obj.getDescription());
         }
         if (obj.getRecoverIntervalMinutes())
         {
             writer.writePropertyName("recoverIntervalMinutes");
-            writer.write(*obj.getRecoverIntervalMinutes());
+            writer.writeInt32(*obj.getRecoverIntervalMinutes());
         }
         if (obj.getRecoverValue())
         {
             writer.writePropertyName("recoverValue");
-            writer.write(*obj.getRecoverValue());
+            writer.writeInt32(*obj.getRecoverValue());
         }
         if (obj.getInitialCapacity())
         {
             writer.writePropertyName("initialCapacity");
-            writer.write(*obj.getInitialCapacity());
+            writer.writeInt32(*obj.getInitialCapacity());
         }
         if (obj.getIsOverflow())
         {
             writer.writePropertyName("isOverflow");
-            writer.write(*obj.getIsOverflow());
+            writer.writeBool(*obj.getIsOverflow());
         }
         if (obj.getMaxCapacity())
         {
             writer.writePropertyName("maxCapacity");
-            writer.write(*obj.getMaxCapacity());
+            writer.writeInt32(*obj.getMaxCapacity());
         }
         if (obj.getIsCollaborateGs2Experience())
         {
             writer.writePropertyName("isCollaborateGs2Experience");
-            writer.write(*obj.getIsCollaborateGs2Experience());
+            writer.writeBool(*obj.getIsCollaborateGs2Experience());
         }
         if (obj.getMaxStaminaTableId())
         {
             writer.writePropertyName("maxStaminaTableId");
-            writer.write(*obj.getMaxStaminaTableId());
+            writer.writeCharArray(*obj.getMaxStaminaTableId());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -278,36 +278,36 @@ private:
         if (obj.getMaxStaminaTableId())
         {
             writer.writePropertyName("maxStaminaTableId");
-            writer.write(*obj.getMaxStaminaTableId());
+            writer.writeCharArray(*obj.getMaxStaminaTableId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*obj.getMetadata());
+            writer.writeCharArray(*obj.getMetadata());
         }
         if (obj.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*obj.getDescription());
+            writer.writeCharArray(*obj.getDescription());
         }
         if (obj.getExperienceModelId())
         {
             writer.writePropertyName("experienceModelId");
-            writer.write(*obj.getExperienceModelId());
+            writer.writeCharArray(*obj.getExperienceModelId());
         }
         if (obj.getValues())
         {
             writer.writePropertyName("values");
             writer.writeArrayStart();
             auto& list = *obj.getValues();
-            for (Int32 i = 0; i < list.getCount(); ++i)
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.write(list[i]);
+                writer.writeInt32(list[i]);
             }
             writer.writeArrayEnd();
         }
@@ -320,12 +320,12 @@ private:
         if (obj.getGroupName())
         {
             writer.writePropertyName("groupName");
-            writer.write(*obj.getGroupName());
+            writer.writeCharArray(*obj.getGroupName());
         }
         if (obj.getSettings())
         {
             writer.writePropertyName("settings");
-            writer.write(*obj.getSettings());
+            writer.writeCharArray(*obj.getSettings());
         }
         writer.writeObjectEnd();
     }
@@ -336,42 +336,42 @@ private:
         if (obj.getStaminaModelId())
         {
             writer.writePropertyName("staminaModelId");
-            writer.write(*obj.getStaminaModelId());
+            writer.writeCharArray(*obj.getStaminaModelId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*obj.getMetadata());
+            writer.writeCharArray(*obj.getMetadata());
         }
         if (obj.getRecoverIntervalMinutes())
         {
             writer.writePropertyName("recoverIntervalMinutes");
-            writer.write(*obj.getRecoverIntervalMinutes());
+            writer.writeInt32(*obj.getRecoverIntervalMinutes());
         }
         if (obj.getRecoverValue())
         {
             writer.writePropertyName("recoverValue");
-            writer.write(*obj.getRecoverValue());
+            writer.writeInt32(*obj.getRecoverValue());
         }
         if (obj.getInitialCapacity())
         {
             writer.writePropertyName("initialCapacity");
-            writer.write(*obj.getInitialCapacity());
+            writer.writeInt32(*obj.getInitialCapacity());
         }
         if (obj.getIsOverflow())
         {
             writer.writePropertyName("isOverflow");
-            writer.write(*obj.getIsOverflow());
+            writer.writeBool(*obj.getIsOverflow());
         }
         if (obj.getMaxCapacity())
         {
             writer.writePropertyName("maxCapacity");
-            writer.write(*obj.getMaxCapacity());
+            writer.writeInt32(*obj.getMaxCapacity());
         }
         if (obj.getMaxStaminaTable())
         {
@@ -387,31 +387,31 @@ private:
         if (obj.getMaxStaminaTableId())
         {
             writer.writePropertyName("maxStaminaTableId");
-            writer.write(*obj.getMaxStaminaTableId());
+            writer.writeCharArray(*obj.getMaxStaminaTableId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*obj.getMetadata());
+            writer.writeCharArray(*obj.getMetadata());
         }
         if (obj.getExperienceModelId())
         {
             writer.writePropertyName("experienceModelId");
-            writer.write(*obj.getExperienceModelId());
+            writer.writeCharArray(*obj.getExperienceModelId());
         }
         if (obj.getValues())
         {
             writer.writePropertyName("values");
             writer.writeArrayStart();
             auto& list = *obj.getValues();
-            for (Int32 i = 0; i < list.getCount(); ++i)
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.write(list[i]);
+                writer.writeInt32(list[i]);
             }
             writer.writeArrayEnd();
         }
@@ -424,47 +424,47 @@ private:
         if (obj.getStaminaId())
         {
             writer.writePropertyName("staminaId");
-            writer.write(*obj.getStaminaId());
+            writer.writeCharArray(*obj.getStaminaId());
         }
         if (obj.getStaminaModelName())
         {
             writer.writePropertyName("staminaModelName");
-            writer.write(*obj.getStaminaModelName());
+            writer.writeCharArray(*obj.getStaminaModelName());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
-            writer.write(*obj.getUserId());
+            writer.writeCharArray(*obj.getUserId());
         }
         if (obj.getValue())
         {
             writer.writePropertyName("value");
-            writer.write(*obj.getValue());
+            writer.writeInt32(*obj.getValue());
         }
         if (obj.getMaxValue())
         {
             writer.writePropertyName("maxValue");
-            writer.write(*obj.getMaxValue());
+            writer.writeInt32(*obj.getMaxValue());
         }
         if (obj.getOverflowValue())
         {
             writer.writePropertyName("overflowValue");
-            writer.write(*obj.getOverflowValue());
+            writer.writeInt32(*obj.getOverflowValue());
         }
         if (obj.getLastRecoveredAt())
         {
             writer.writePropertyName("lastRecoveredAt");
-            writer.write(*obj.getLastRecoveredAt());
+            writer.writeInt64(*obj.getLastRecoveredAt());
         }
         if (obj.getCreatedAt())
         {
             writer.writePropertyName("createdAt");
-            writer.write(*obj.getCreatedAt());
+            writer.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
             writer.writePropertyName("updatedAt");
-            writer.write(*obj.getUpdatedAt());
+            writer.writeInt64(*obj.getUpdatedAt());
         }
         writer.writeObjectEnd();
     }
@@ -475,27 +475,27 @@ private:
         if (obj.getRegion())
         {
             writer.writePropertyName("region");
-            writer.write(*obj.getRegion());
+            writer.writeCharArray(*obj.getRegion());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getResponseCacheId())
         {
             writer.writePropertyName("responseCacheId");
-            writer.write(*obj.getResponseCacheId());
+            writer.writeCharArray(*obj.getResponseCacheId());
         }
         if (obj.getRequestHash())
         {
             writer.writePropertyName("requestHash");
-            writer.write(*obj.getRequestHash());
+            writer.writeCharArray(*obj.getRequestHash());
         }
         if (obj.getResult())
         {
             writer.writePropertyName("result");
-            writer.write(*obj.getResult());
+            writer.writeCharArray(*obj.getResult());
         }
         writer.writeObjectEnd();
     }
@@ -589,22 +589,22 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getOverflowTriggerScriptId())
         {
             writer.writePropertyName("overflowTriggerScriptId");
-            writer.write(*request.getOverflowTriggerScriptId());
+            writer.writeCharArray(*request.getOverflowTriggerScriptId());
         }
         if (request.getOverflowTriggerQueueId())
         {
             writer.writePropertyName("overflowTriggerQueueId");
-            writer.write(*request.getOverflowTriggerQueueId());
+            writer.writeCharArray(*request.getOverflowTriggerQueueId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -713,17 +713,17 @@ public:
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getOverflowTriggerScriptId())
         {
             writer.writePropertyName("overflowTriggerScriptId");
-            writer.write(*request.getOverflowTriggerScriptId());
+            writer.writeCharArray(*request.getOverflowTriggerScriptId());
         }
         if (request.getOverflowTriggerQueueId())
         {
             writer.writePropertyName("overflowTriggerQueueId");
-            writer.write(*request.getOverflowTriggerQueueId());
+            writer.writeCharArray(*request.getOverflowTriggerQueueId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -840,52 +840,52 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*request.getMetadata());
+            writer.writeCharArray(*request.getMetadata());
         }
         if (request.getRecoverIntervalMinutes())
         {
             writer.writePropertyName("recoverIntervalMinutes");
-            writer.write(*request.getRecoverIntervalMinutes());
+            writer.writeInt32(*request.getRecoverIntervalMinutes());
         }
         if (request.getRecoverValue())
         {
             writer.writePropertyName("recoverValue");
-            writer.write(*request.getRecoverValue());
+            writer.writeInt32(*request.getRecoverValue());
         }
         if (request.getInitialCapacity())
         {
             writer.writePropertyName("initialCapacity");
-            writer.write(*request.getInitialCapacity());
+            writer.writeInt32(*request.getInitialCapacity());
         }
         if (request.getIsOverflow())
         {
             writer.writePropertyName("isOverflow");
-            writer.write(*request.getIsOverflow());
+            writer.writeBool(*request.getIsOverflow());
         }
         if (request.getMaxCapacity())
         {
             writer.writePropertyName("maxCapacity");
-            writer.write(*request.getMaxCapacity());
+            writer.writeInt32(*request.getMaxCapacity());
         }
         if (request.getIsCollaborateGs2Experience())
         {
             writer.writePropertyName("isCollaborateGs2Experience");
-            writer.write(*request.getIsCollaborateGs2Experience());
+            writer.writeBool(*request.getIsCollaborateGs2Experience());
         }
         if (request.getMaxStaminaTableId())
         {
             writer.writePropertyName("maxStaminaTableId");
-            writer.write(*request.getMaxStaminaTableId());
+            writer.writeCharArray(*request.getMaxStaminaTableId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -970,47 +970,47 @@ public:
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*request.getMetadata());
+            writer.writeCharArray(*request.getMetadata());
         }
         if (request.getRecoverIntervalMinutes())
         {
             writer.writePropertyName("recoverIntervalMinutes");
-            writer.write(*request.getRecoverIntervalMinutes());
+            writer.writeInt32(*request.getRecoverIntervalMinutes());
         }
         if (request.getRecoverValue())
         {
             writer.writePropertyName("recoverValue");
-            writer.write(*request.getRecoverValue());
+            writer.writeInt32(*request.getRecoverValue());
         }
         if (request.getInitialCapacity())
         {
             writer.writePropertyName("initialCapacity");
-            writer.write(*request.getInitialCapacity());
+            writer.writeInt32(*request.getInitialCapacity());
         }
         if (request.getIsOverflow())
         {
             writer.writePropertyName("isOverflow");
-            writer.write(*request.getIsOverflow());
+            writer.writeBool(*request.getIsOverflow());
         }
         if (request.getMaxCapacity())
         {
             writer.writePropertyName("maxCapacity");
-            writer.write(*request.getMaxCapacity());
+            writer.writeInt32(*request.getMaxCapacity());
         }
         if (request.getIsCollaborateGs2Experience())
         {
             writer.writePropertyName("isCollaborateGs2Experience");
-            writer.write(*request.getIsCollaborateGs2Experience());
+            writer.writeBool(*request.getIsCollaborateGs2Experience());
         }
         if (request.getMaxStaminaTableId())
         {
             writer.writePropertyName("maxStaminaTableId");
-            writer.write(*request.getMaxStaminaTableId());
+            writer.writeCharArray(*request.getMaxStaminaTableId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1131,31 +1131,31 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*request.getMetadata());
+            writer.writeCharArray(*request.getMetadata());
         }
         if (request.getExperienceModelId())
         {
             writer.writePropertyName("experienceModelId");
-            writer.write(*request.getExperienceModelId());
+            writer.writeCharArray(*request.getExperienceModelId());
         }
         if (request.getValues())
         {
             writer.writePropertyName("values");
             writer.writeArrayStart();
             auto& list = *request.getValues();
-            for (Int32 i = 0; i < list.getCount(); ++i)
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.write(list[i]);
+                writer.writeInt32(list[i]);
             }
             writer.writeArrayEnd();
         }
@@ -1242,26 +1242,26 @@ public:
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*request.getMetadata());
+            writer.writeCharArray(*request.getMetadata());
         }
         if (request.getExperienceModelId())
         {
             writer.writePropertyName("experienceModelId");
-            writer.write(*request.getExperienceModelId());
+            writer.writeCharArray(*request.getExperienceModelId());
         }
         if (request.getValues())
         {
             writer.writePropertyName("values");
             writer.writeArrayStart();
             auto& list = *request.getValues();
-            for (Int32 i = 0; i < list.getCount(); ++i)
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.write(list[i]);
+                writer.writeInt32(list[i]);
             }
             writer.writeArrayEnd();
         }
@@ -1408,7 +1408,7 @@ public:
         if (request.getSettings())
         {
             writer.writePropertyName("settings");
-            writer.write(*request.getSettings());
+            writer.writeCharArray(*request.getSettings());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1701,7 +1701,7 @@ public:
         if (request.getConsumeValue())
         {
             writer.writePropertyName("consumeValue");
-            writer.write(*request.getConsumeValue());
+            writer.writeInt32(*request.getConsumeValue());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1758,7 +1758,7 @@ public:
         if (request.getConsumeValue())
         {
             writer.writePropertyName("consumeValue");
-            writer.write(*request.getConsumeValue());
+            writer.writeInt32(*request.getConsumeValue());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1815,7 +1815,7 @@ public:
         if (request.getRecoverValue())
         {
             writer.writePropertyName("recoverValue");
-            writer.write(*request.getRecoverValue());
+            writer.writeInt32(*request.getRecoverValue());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1872,7 +1872,7 @@ public:
         if (request.getRaiseValue())
         {
             writer.writePropertyName("raiseValue");
-            writer.write(*request.getRaiseValue());
+            writer.writeInt32(*request.getRaiseValue());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1929,7 +1929,7 @@ public:
         if (request.getMaxValue())
         {
             writer.writePropertyName("maxValue");
-            writer.write(*request.getMaxValue());
+            writer.writeInt32(*request.getMaxValue());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1982,17 +1982,17 @@ public:
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         if (request.getSignedStatusBody())
         {
             writer.writePropertyName("signedStatusBody");
-            writer.write(*request.getSignedStatusBody());
+            writer.writeCharArray(*request.getSignedStatusBody());
         }
         if (request.getSignedStatusSignature())
         {
             writer.writePropertyName("signedStatusSignature");
-            writer.write(*request.getSignedStatusSignature());
+            writer.writeCharArray(*request.getSignedStatusSignature());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -2085,7 +2085,7 @@ public:
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -2134,7 +2134,7 @@ public:
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -2183,7 +2183,7 @@ public:
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -2227,12 +2227,12 @@ public:
         if (request.getStampTask())
         {
             writer.writePropertyName("stampTask");
-            writer.write(*request.getStampTask());
+            writer.writeCharArray(*request.getStampTask());
         }
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();

@@ -113,32 +113,32 @@ private:
         if (obj.getDistributorId())
         {
             writer.writePropertyName("distributorId");
-            writer.write(*obj.getDistributorId());
+            writer.writeCharArray(*obj.getDistributorId());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*obj.getDescription());
+            writer.writeCharArray(*obj.getDescription());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -149,53 +149,53 @@ private:
         if (obj.getDistributorModelId())
         {
             writer.writePropertyName("distributorModelId");
-            writer.write(*obj.getDistributorModelId());
+            writer.writeCharArray(*obj.getDistributorModelId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*obj.getDescription());
+            writer.writeCharArray(*obj.getDescription());
         }
         if (obj.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*obj.getMetadata());
+            writer.writeCharArray(*obj.getMetadata());
         }
         if (obj.getAssumeUserId())
         {
             writer.writePropertyName("assumeUserId");
-            writer.write(*obj.getAssumeUserId());
+            writer.writeCharArray(*obj.getAssumeUserId());
         }
         if (obj.getInboxId())
         {
             writer.writePropertyName("inboxId");
-            writer.write(*obj.getInboxId());
+            writer.writeCharArray(*obj.getInboxId());
         }
         if (obj.getWhiteListTargetIds())
         {
             writer.writePropertyName("whiteListTargetIds");
             writer.writeArrayStart();
             auto& list = *obj.getWhiteListTargetIds();
-            for (Int32 i = 0; i < list.getCount(); ++i)
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.write(list[i]);
+                writer.writeCharArray(list[i]);
             }
             writer.writeArrayEnd();
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -206,36 +206,36 @@ private:
         if (obj.getDistributorModelId())
         {
             writer.writePropertyName("distributorModelId");
-            writer.write(*obj.getDistributorModelId());
+            writer.writeCharArray(*obj.getDistributorModelId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*obj.getMetadata());
+            writer.writeCharArray(*obj.getMetadata());
         }
         if (obj.getAssumeUserId())
         {
             writer.writePropertyName("assumeUserId");
-            writer.write(*obj.getAssumeUserId());
+            writer.writeCharArray(*obj.getAssumeUserId());
         }
         if (obj.getInboxId())
         {
             writer.writePropertyName("inboxId");
-            writer.write(*obj.getInboxId());
+            writer.writeCharArray(*obj.getInboxId());
         }
         if (obj.getWhiteListTargetIds())
         {
             writer.writePropertyName("whiteListTargetIds");
             writer.writeArrayStart();
             auto& list = *obj.getWhiteListTargetIds();
-            for (Int32 i = 0; i < list.getCount(); ++i)
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.write(list[i]);
+                writer.writeCharArray(list[i]);
             }
             writer.writeArrayEnd();
         }
@@ -248,12 +248,12 @@ private:
         if (obj.getDistributorName())
         {
             writer.writePropertyName("distributorName");
-            writer.write(*obj.getDistributorName());
+            writer.writeCharArray(*obj.getDistributorName());
         }
         if (obj.getSettings())
         {
             writer.writePropertyName("settings");
-            writer.write(*obj.getSettings());
+            writer.writeCharArray(*obj.getSettings());
         }
         writer.writeObjectEnd();
     }
@@ -270,27 +270,27 @@ private:
         if (obj.getRegion())
         {
             writer.writePropertyName("region");
-            writer.write(*obj.getRegion());
+            writer.writeCharArray(*obj.getRegion());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getResponseCacheId())
         {
             writer.writePropertyName("responseCacheId");
-            writer.write(*obj.getResponseCacheId());
+            writer.writeCharArray(*obj.getResponseCacheId());
         }
         if (obj.getRequestHash())
         {
             writer.writePropertyName("requestHash");
-            writer.write(*obj.getRequestHash());
+            writer.writeCharArray(*obj.getRequestHash());
         }
         if (obj.getResult())
         {
             writer.writePropertyName("result");
-            writer.write(*obj.getResult());
+            writer.writeCharArray(*obj.getResult());
         }
         writer.writeObjectEnd();
     }
@@ -301,12 +301,12 @@ private:
         if (obj.getAction())
         {
             writer.writePropertyName("action");
-            writer.write(*obj.getAction());
+            writer.writeCharArray(*obj.getAction());
         }
         if (obj.getRequest())
         {
             writer.writePropertyName("request");
-            writer.write(*obj.getRequest());
+            writer.writeCharArray(*obj.getRequest());
         }
         writer.writeObjectEnd();
     }
@@ -400,12 +400,12 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -514,7 +514,7 @@ public:
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -631,36 +631,36 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*request.getMetadata());
+            writer.writeCharArray(*request.getMetadata());
         }
         if (request.getAssumeUserId())
         {
             writer.writePropertyName("assumeUserId");
-            writer.write(*request.getAssumeUserId());
+            writer.writeCharArray(*request.getAssumeUserId());
         }
         if (request.getInboxId())
         {
             writer.writePropertyName("inboxId");
-            writer.write(*request.getInboxId());
+            writer.writeCharArray(*request.getInboxId());
         }
         if (request.getWhiteListTargetIds())
         {
             writer.writePropertyName("whiteListTargetIds");
             writer.writeArrayStart();
             auto& list = *request.getWhiteListTargetIds();
-            for (Int32 i = 0; i < list.getCount(); ++i)
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.write(list[i]);
+                writer.writeCharArray(list[i]);
             }
             writer.writeArrayEnd();
         }
@@ -747,31 +747,31 @@ public:
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*request.getMetadata());
+            writer.writeCharArray(*request.getMetadata());
         }
         if (request.getAssumeUserId())
         {
             writer.writePropertyName("assumeUserId");
-            writer.write(*request.getAssumeUserId());
+            writer.writeCharArray(*request.getAssumeUserId());
         }
         if (request.getInboxId())
         {
             writer.writePropertyName("inboxId");
-            writer.write(*request.getInboxId());
+            writer.writeCharArray(*request.getInboxId());
         }
         if (request.getWhiteListTargetIds())
         {
             writer.writePropertyName("whiteListTargetIds");
             writer.writeArrayStart();
             auto& list = *request.getWhiteListTargetIds();
-            for (Int32 i = 0; i < list.getCount(); ++i)
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.write(list[i]);
+                writer.writeCharArray(list[i]);
             }
             writer.writeArrayEnd();
         }
@@ -986,7 +986,7 @@ public:
         if (request.getSettings())
         {
             writer.writePropertyName("settings");
-            writer.write(*request.getSettings());
+            writer.writeCharArray(*request.getSettings());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1145,12 +1145,12 @@ public:
         if (request.getStampTask())
         {
             writer.writePropertyName("stampTask");
-            writer.write(*request.getStampTask());
+            writer.writeCharArray(*request.getStampTask());
         }
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1203,12 +1203,12 @@ public:
         if (request.getStampSheet())
         {
             writer.writePropertyName("stampSheet");
-            writer.write(*request.getStampSheet());
+            writer.writeCharArray(*request.getStampSheet());
         }
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();

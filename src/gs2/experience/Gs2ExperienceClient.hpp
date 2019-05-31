@@ -161,77 +161,77 @@ private:
         if (obj.getExperienceId())
         {
             writer.writePropertyName("experienceId");
-            writer.write(*obj.getExperienceId());
+            writer.writeCharArray(*obj.getExperienceId());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*obj.getDescription());
+            writer.writeCharArray(*obj.getDescription());
         }
         if (obj.getExperienceCapScriptId())
         {
             writer.writePropertyName("experienceCapScriptId");
-            writer.write(*obj.getExperienceCapScriptId());
+            writer.writeCharArray(*obj.getExperienceCapScriptId());
         }
         if (obj.getChangeExperienceTriggerScriptId())
         {
             writer.writePropertyName("changeExperienceTriggerScriptId");
-            writer.write(*obj.getChangeExperienceTriggerScriptId());
+            writer.writeCharArray(*obj.getChangeExperienceTriggerScriptId());
         }
         if (obj.getChangeExperienceDoneTriggerScriptId())
         {
             writer.writePropertyName("changeExperienceDoneTriggerScriptId");
-            writer.write(*obj.getChangeExperienceDoneTriggerScriptId());
+            writer.writeCharArray(*obj.getChangeExperienceDoneTriggerScriptId());
         }
         if (obj.getChangeExperienceDoneTriggerQueueId())
         {
             writer.writePropertyName("changeExperienceDoneTriggerQueueId");
-            writer.write(*obj.getChangeExperienceDoneTriggerQueueId());
+            writer.writeCharArray(*obj.getChangeExperienceDoneTriggerQueueId());
         }
         if (obj.getChangeRankTriggerScriptId())
         {
             writer.writePropertyName("changeRankTriggerScriptId");
-            writer.write(*obj.getChangeRankTriggerScriptId());
+            writer.writeCharArray(*obj.getChangeRankTriggerScriptId());
         }
         if (obj.getChangeRankTriggerQueueId())
         {
             writer.writePropertyName("changeRankTriggerQueueId");
-            writer.write(*obj.getChangeRankTriggerQueueId());
+            writer.writeCharArray(*obj.getChangeRankTriggerQueueId());
         }
         if (obj.getChangeRankCapTriggerScriptId())
         {
             writer.writePropertyName("changeRankCapTriggerScriptId");
-            writer.write(*obj.getChangeRankCapTriggerScriptId());
+            writer.writeCharArray(*obj.getChangeRankCapTriggerScriptId());
         }
         if (obj.getChangeRankCapDoneTriggerScriptId())
         {
             writer.writePropertyName("changeRankCapDoneTriggerScriptId");
-            writer.write(*obj.getChangeRankCapDoneTriggerScriptId());
+            writer.writeCharArray(*obj.getChangeRankCapDoneTriggerScriptId());
         }
         if (obj.getChangeRankCapDoneTriggerQueueId())
         {
             writer.writePropertyName("changeRankCapDoneTriggerQueueId");
-            writer.write(*obj.getChangeRankCapDoneTriggerQueueId());
+            writer.writeCharArray(*obj.getChangeRankCapDoneTriggerQueueId());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -242,52 +242,52 @@ private:
         if (obj.getExperienceModelId())
         {
             writer.writePropertyName("experienceModelId");
-            writer.write(*obj.getExperienceModelId());
+            writer.writeCharArray(*obj.getExperienceModelId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*obj.getDescription());
+            writer.writeCharArray(*obj.getDescription());
         }
         if (obj.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*obj.getMetadata());
+            writer.writeCharArray(*obj.getMetadata());
         }
         if (obj.getDefaultExperience())
         {
             writer.writePropertyName("defaultExperience");
-            writer.write(*obj.getDefaultExperience());
+            writer.writeInt64(*obj.getDefaultExperience());
         }
         if (obj.getDefaultRankCap())
         {
             writer.writePropertyName("defaultRankCap");
-            writer.write(*obj.getDefaultRankCap());
+            writer.writeInt64(*obj.getDefaultRankCap());
         }
         if (obj.getMaxRankCap())
         {
             writer.writePropertyName("maxRankCap");
-            writer.write(*obj.getMaxRankCap());
+            writer.writeInt64(*obj.getMaxRankCap());
         }
         if (obj.getRankThresholdId())
         {
             writer.writePropertyName("rankThresholdId");
-            writer.write(*obj.getRankThresholdId());
+            writer.writeCharArray(*obj.getRankThresholdId());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -298,32 +298,32 @@ private:
         if (obj.getExperienceModelId())
         {
             writer.writePropertyName("experienceModelId");
-            writer.write(*obj.getExperienceModelId());
+            writer.writeCharArray(*obj.getExperienceModelId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*obj.getMetadata());
+            writer.writeCharArray(*obj.getMetadata());
         }
         if (obj.getDefaultExperience())
         {
             writer.writePropertyName("defaultExperience");
-            writer.write(*obj.getDefaultExperience());
+            writer.writeInt64(*obj.getDefaultExperience());
         }
         if (obj.getDefaultRankCap())
         {
             writer.writePropertyName("defaultRankCap");
-            writer.write(*obj.getDefaultRankCap());
+            writer.writeInt64(*obj.getDefaultRankCap());
         }
         if (obj.getMaxRankCap())
         {
             writer.writePropertyName("maxRankCap");
-            writer.write(*obj.getMaxRankCap());
+            writer.writeInt64(*obj.getMaxRankCap());
         }
         if (obj.getRankThreshold())
         {
@@ -339,43 +339,43 @@ private:
         if (obj.getThresholdId())
         {
             writer.writePropertyName("thresholdId");
-            writer.write(*obj.getThresholdId());
+            writer.writeCharArray(*obj.getThresholdId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*obj.getDescription());
+            writer.writeCharArray(*obj.getDescription());
         }
         if (obj.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*obj.getMetadata());
+            writer.writeCharArray(*obj.getMetadata());
         }
         if (obj.getValues())
         {
             writer.writePropertyName("values");
             writer.writeArrayStart();
             auto& list = *obj.getValues();
-            for (Int32 i = 0; i < list.getCount(); ++i)
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.write(list[i]);
+                writer.writeInt64(list[i]);
             }
             writer.writeArrayEnd();
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -386,26 +386,26 @@ private:
         if (obj.getThresholdId())
         {
             writer.writePropertyName("thresholdId");
-            writer.write(*obj.getThresholdId());
+            writer.writeCharArray(*obj.getThresholdId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*obj.getMetadata());
+            writer.writeCharArray(*obj.getMetadata());
         }
         if (obj.getValues())
         {
             writer.writePropertyName("values");
             writer.writeArrayStart();
             auto& list = *obj.getValues();
-            for (Int32 i = 0; i < list.getCount(); ++i)
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.write(list[i]);
+                writer.writeInt64(list[i]);
             }
             writer.writeArrayEnd();
         }
@@ -418,12 +418,12 @@ private:
         if (obj.getExperienceName())
         {
             writer.writePropertyName("experienceName");
-            writer.write(*obj.getExperienceName());
+            writer.writeCharArray(*obj.getExperienceName());
         }
         if (obj.getSettings())
         {
             writer.writePropertyName("settings");
-            writer.write(*obj.getSettings());
+            writer.writeCharArray(*obj.getSettings());
         }
         writer.writeObjectEnd();
     }
@@ -434,47 +434,47 @@ private:
         if (obj.getStatusId())
         {
             writer.writePropertyName("statusId");
-            writer.write(*obj.getStatusId());
+            writer.writeCharArray(*obj.getStatusId());
         }
         if (obj.getExperienceModelName())
         {
             writer.writePropertyName("experienceModelName");
-            writer.write(*obj.getExperienceModelName());
+            writer.writeCharArray(*obj.getExperienceModelName());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
-            writer.write(*obj.getUserId());
+            writer.writeCharArray(*obj.getUserId());
         }
         if (obj.getPropertyId())
         {
             writer.writePropertyName("propertyId");
-            writer.write(*obj.getPropertyId());
+            writer.writeCharArray(*obj.getPropertyId());
         }
         if (obj.getExperienceValue())
         {
             writer.writePropertyName("experienceValue");
-            writer.write(*obj.getExperienceValue());
+            writer.writeInt64(*obj.getExperienceValue());
         }
         if (obj.getRankValue())
         {
             writer.writePropertyName("rankValue");
-            writer.write(*obj.getRankValue());
+            writer.writeInt64(*obj.getRankValue());
         }
         if (obj.getRankCapValue())
         {
             writer.writePropertyName("rankCapValue");
-            writer.write(*obj.getRankCapValue());
+            writer.writeInt64(*obj.getRankCapValue());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -485,27 +485,27 @@ private:
         if (obj.getRegion())
         {
             writer.writePropertyName("region");
-            writer.write(*obj.getRegion());
+            writer.writeCharArray(*obj.getRegion());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getResponseCacheId())
         {
             writer.writePropertyName("responseCacheId");
-            writer.write(*obj.getResponseCacheId());
+            writer.writeCharArray(*obj.getResponseCacheId());
         }
         if (obj.getRequestHash())
         {
             writer.writePropertyName("requestHash");
-            writer.write(*obj.getRequestHash());
+            writer.writeCharArray(*obj.getRequestHash());
         }
         if (obj.getResult())
         {
             writer.writePropertyName("result");
-            writer.write(*obj.getResult());
+            writer.writeCharArray(*obj.getResult());
         }
         writer.writeObjectEnd();
     }
@@ -516,12 +516,12 @@ private:
         if (obj.getExperienceModelName())
         {
             writer.writePropertyName("experienceModelName");
-            writer.write(*obj.getExperienceModelName());
+            writer.writeCharArray(*obj.getExperienceModelName());
         }
         if (obj.getPropertyId())
         {
             writer.writePropertyName("propertyId");
-            writer.write(*obj.getPropertyId());
+            writer.writeCharArray(*obj.getPropertyId());
         }
         writer.writeObjectEnd();
     }
@@ -615,57 +615,57 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getExperienceCapScriptId())
         {
             writer.writePropertyName("experienceCapScriptId");
-            writer.write(*request.getExperienceCapScriptId());
+            writer.writeCharArray(*request.getExperienceCapScriptId());
         }
         if (request.getChangeExperienceTriggerScriptId())
         {
             writer.writePropertyName("changeExperienceTriggerScriptId");
-            writer.write(*request.getChangeExperienceTriggerScriptId());
+            writer.writeCharArray(*request.getChangeExperienceTriggerScriptId());
         }
         if (request.getChangeExperienceDoneTriggerScriptId())
         {
             writer.writePropertyName("changeExperienceDoneTriggerScriptId");
-            writer.write(*request.getChangeExperienceDoneTriggerScriptId());
+            writer.writeCharArray(*request.getChangeExperienceDoneTriggerScriptId());
         }
         if (request.getChangeExperienceDoneTriggerQueueId())
         {
             writer.writePropertyName("changeExperienceDoneTriggerQueueId");
-            writer.write(*request.getChangeExperienceDoneTriggerQueueId());
+            writer.writeCharArray(*request.getChangeExperienceDoneTriggerQueueId());
         }
         if (request.getChangeRankTriggerScriptId())
         {
             writer.writePropertyName("changeRankTriggerScriptId");
-            writer.write(*request.getChangeRankTriggerScriptId());
+            writer.writeCharArray(*request.getChangeRankTriggerScriptId());
         }
         if (request.getChangeRankTriggerQueueId())
         {
             writer.writePropertyName("changeRankTriggerQueueId");
-            writer.write(*request.getChangeRankTriggerQueueId());
+            writer.writeCharArray(*request.getChangeRankTriggerQueueId());
         }
         if (request.getChangeRankCapTriggerScriptId())
         {
             writer.writePropertyName("changeRankCapTriggerScriptId");
-            writer.write(*request.getChangeRankCapTriggerScriptId());
+            writer.writeCharArray(*request.getChangeRankCapTriggerScriptId());
         }
         if (request.getChangeRankCapDoneTriggerScriptId())
         {
             writer.writePropertyName("changeRankCapDoneTriggerScriptId");
-            writer.write(*request.getChangeRankCapDoneTriggerScriptId());
+            writer.writeCharArray(*request.getChangeRankCapDoneTriggerScriptId());
         }
         if (request.getChangeRankCapDoneTriggerQueueId())
         {
             writer.writePropertyName("changeRankCapDoneTriggerQueueId");
-            writer.write(*request.getChangeRankCapDoneTriggerQueueId());
+            writer.writeCharArray(*request.getChangeRankCapDoneTriggerQueueId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -774,52 +774,52 @@ public:
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getExperienceCapScriptId())
         {
             writer.writePropertyName("experienceCapScriptId");
-            writer.write(*request.getExperienceCapScriptId());
+            writer.writeCharArray(*request.getExperienceCapScriptId());
         }
         if (request.getChangeExperienceTriggerScriptId())
         {
             writer.writePropertyName("changeExperienceTriggerScriptId");
-            writer.write(*request.getChangeExperienceTriggerScriptId());
+            writer.writeCharArray(*request.getChangeExperienceTriggerScriptId());
         }
         if (request.getChangeExperienceDoneTriggerScriptId())
         {
             writer.writePropertyName("changeExperienceDoneTriggerScriptId");
-            writer.write(*request.getChangeExperienceDoneTriggerScriptId());
+            writer.writeCharArray(*request.getChangeExperienceDoneTriggerScriptId());
         }
         if (request.getChangeExperienceDoneTriggerQueueId())
         {
             writer.writePropertyName("changeExperienceDoneTriggerQueueId");
-            writer.write(*request.getChangeExperienceDoneTriggerQueueId());
+            writer.writeCharArray(*request.getChangeExperienceDoneTriggerQueueId());
         }
         if (request.getChangeRankTriggerScriptId())
         {
             writer.writePropertyName("changeRankTriggerScriptId");
-            writer.write(*request.getChangeRankTriggerScriptId());
+            writer.writeCharArray(*request.getChangeRankTriggerScriptId());
         }
         if (request.getChangeRankTriggerQueueId())
         {
             writer.writePropertyName("changeRankTriggerQueueId");
-            writer.write(*request.getChangeRankTriggerQueueId());
+            writer.writeCharArray(*request.getChangeRankTriggerQueueId());
         }
         if (request.getChangeRankCapTriggerScriptId())
         {
             writer.writePropertyName("changeRankCapTriggerScriptId");
-            writer.write(*request.getChangeRankCapTriggerScriptId());
+            writer.writeCharArray(*request.getChangeRankCapTriggerScriptId());
         }
         if (request.getChangeRankCapDoneTriggerScriptId())
         {
             writer.writePropertyName("changeRankCapDoneTriggerScriptId");
-            writer.write(*request.getChangeRankCapDoneTriggerScriptId());
+            writer.writeCharArray(*request.getChangeRankCapDoneTriggerScriptId());
         }
         if (request.getChangeRankCapDoneTriggerQueueId())
         {
             writer.writePropertyName("changeRankCapDoneTriggerQueueId");
-            writer.write(*request.getChangeRankCapDoneTriggerQueueId());
+            writer.writeCharArray(*request.getChangeRankCapDoneTriggerQueueId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -936,37 +936,37 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*request.getMetadata());
+            writer.writeCharArray(*request.getMetadata());
         }
         if (request.getDefaultExperience())
         {
             writer.writePropertyName("defaultExperience");
-            writer.write(*request.getDefaultExperience());
+            writer.writeInt64(*request.getDefaultExperience());
         }
         if (request.getDefaultRankCap())
         {
             writer.writePropertyName("defaultRankCap");
-            writer.write(*request.getDefaultRankCap());
+            writer.writeInt64(*request.getDefaultRankCap());
         }
         if (request.getMaxRankCap())
         {
             writer.writePropertyName("maxRankCap");
-            writer.write(*request.getMaxRankCap());
+            writer.writeInt64(*request.getMaxRankCap());
         }
         if (request.getRankThresholdId())
         {
             writer.writePropertyName("rankThresholdId");
-            writer.write(*request.getRankThresholdId());
+            writer.writeCharArray(*request.getRankThresholdId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1051,32 +1051,32 @@ public:
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*request.getMetadata());
+            writer.writeCharArray(*request.getMetadata());
         }
         if (request.getDefaultExperience())
         {
             writer.writePropertyName("defaultExperience");
-            writer.write(*request.getDefaultExperience());
+            writer.writeInt64(*request.getDefaultExperience());
         }
         if (request.getDefaultRankCap())
         {
             writer.writePropertyName("defaultRankCap");
-            writer.write(*request.getDefaultRankCap());
+            writer.writeInt64(*request.getDefaultRankCap());
         }
         if (request.getMaxRankCap())
         {
             writer.writePropertyName("maxRankCap");
-            writer.write(*request.getMaxRankCap());
+            writer.writeInt64(*request.getMaxRankCap());
         }
         if (request.getRankThresholdId())
         {
             writer.writePropertyName("rankThresholdId");
-            writer.write(*request.getRankThresholdId());
+            writer.writeCharArray(*request.getRankThresholdId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1265,26 +1265,26 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*request.getMetadata());
+            writer.writeCharArray(*request.getMetadata());
         }
         if (request.getValues())
         {
             writer.writePropertyName("values");
             writer.writeArrayStart();
             auto& list = *request.getValues();
-            for (Int32 i = 0; i < list.getCount(); ++i)
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.write(list[i]);
+                writer.writeInt64(list[i]);
             }
             writer.writeArrayEnd();
         }
@@ -1371,21 +1371,21 @@ public:
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*request.getMetadata());
+            writer.writeCharArray(*request.getMetadata());
         }
         if (request.getValues())
         {
             writer.writePropertyName("values");
             writer.writeArrayStart();
             auto& list = *request.getValues();
-            for (Int32 i = 0; i < list.getCount(); ++i)
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.write(list[i]);
+                writer.writeInt64(list[i]);
             }
             writer.writeArrayEnd();
         }
@@ -1532,7 +1532,7 @@ public:
         if (request.getSettings())
         {
             writer.writePropertyName("settings");
-            writer.write(*request.getSettings());
+            writer.writeCharArray(*request.getSettings());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1819,7 +1819,7 @@ public:
             writer.writePropertyName("properties");
             writer.writeArrayStart();
             auto& list = *request.getProperties();
-            for (Int32 i = 0; i < list.getCount(); ++i)
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
                 write(writer, list[i]);
             }
@@ -1878,7 +1878,7 @@ public:
             writer.writePropertyName("properties");
             writer.writeArrayStart();
             auto& list = *request.getProperties();
-            for (Int32 i = 0; i < list.getCount(); ++i)
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
                 write(writer, list[i]);
             }
@@ -1943,7 +1943,7 @@ public:
         if (request.getExperienceValue())
         {
             writer.writePropertyName("experienceValue");
-            writer.write(*request.getExperienceValue());
+            writer.writeInt64(*request.getExperienceValue());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -2004,7 +2004,7 @@ public:
         if (request.getExperienceValue())
         {
             writer.writePropertyName("experienceValue");
-            writer.write(*request.getExperienceValue());
+            writer.writeInt64(*request.getExperienceValue());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -2065,7 +2065,7 @@ public:
         if (request.getRankCapValue())
         {
             writer.writePropertyName("rankCapValue");
-            writer.write(*request.getRankCapValue());
+            writer.writeInt64(*request.getRankCapValue());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -2126,7 +2126,7 @@ public:
         if (request.getRankCapValue())
         {
             writer.writePropertyName("rankCapValue");
-            writer.write(*request.getRankCapValue());
+            writer.writeInt64(*request.getRankCapValue());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -2218,12 +2218,12 @@ public:
         if (request.getStampSheet())
         {
             writer.writePropertyName("stampSheet");
-            writer.write(*request.getStampSheet());
+            writer.writeCharArray(*request.getStampSheet());
         }
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -2267,12 +2267,12 @@ public:
         if (request.getStampSheet())
         {
             writer.writePropertyName("stampSheet");
-            writer.write(*request.getStampSheet());
+            writer.writeCharArray(*request.getStampSheet());
         }
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -2316,12 +2316,12 @@ public:
         if (request.getStampSheet())
         {
             writer.writePropertyName("stampSheet");
-            writer.write(*request.getStampSheet());
+            writer.writeCharArray(*request.getStampSheet());
         }
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();

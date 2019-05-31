@@ -59,22 +59,22 @@ private:
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getToken())
         {
             writer.writePropertyName("token");
-            writer.write(*obj.getToken());
+            writer.writeCharArray(*obj.getToken());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
-            writer.write(*obj.getUserId());
+            writer.writeCharArray(*obj.getUserId());
         }
         if (obj.getExpire())
         {
             writer.writePropertyName("expire");
-            writer.write(*obj.getExpire());
+            writer.writeInt64(*obj.getExpire());
         }
         writer.writeObjectEnd();
     }
@@ -134,7 +134,7 @@ public:
         if (request.getUserId())
         {
             writer.writePropertyName("userId");
-            writer.write(*request.getUserId());
+            writer.writeCharArray(*request.getUserId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -179,22 +179,22 @@ public:
         if (request.getUserId())
         {
             writer.writePropertyName("userId");
-            writer.write(*request.getUserId());
+            writer.writeCharArray(*request.getUserId());
         }
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         if (request.getBody())
         {
             writer.writePropertyName("body");
-            writer.write(*request.getBody());
+            writer.writeCharArray(*request.getBody());
         }
         if (request.getSignature())
         {
             writer.writePropertyName("signature");
-            writer.write(*request.getSignature());
+            writer.writeCharArray(*request.getSignature());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();

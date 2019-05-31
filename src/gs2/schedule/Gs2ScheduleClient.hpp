@@ -122,32 +122,32 @@ private:
         if (obj.getScheduleId())
         {
             writer.writePropertyName("scheduleId");
-            writer.write(*obj.getScheduleId());
+            writer.writeCharArray(*obj.getScheduleId());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*obj.getDescription());
+            writer.writeCharArray(*obj.getDescription());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -158,57 +158,57 @@ private:
         if (obj.getEventId())
         {
             writer.writePropertyName("eventId");
-            writer.write(*obj.getEventId());
+            writer.writeCharArray(*obj.getEventId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*obj.getDescription());
+            writer.writeCharArray(*obj.getDescription());
         }
         if (obj.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*obj.getMetadata());
+            writer.writeCharArray(*obj.getMetadata());
         }
         if (obj.getScheduleType())
         {
             writer.writePropertyName("scheduleType");
-            writer.write(*obj.getScheduleType());
+            writer.writeCharArray(*obj.getScheduleType());
         }
         if (obj.getAbsoluteBegin())
         {
             writer.writePropertyName("absoluteBegin");
-            writer.write(*obj.getAbsoluteBegin());
+            writer.writeInt64(*obj.getAbsoluteBegin());
         }
         if (obj.getAbsoluteEnd())
         {
             writer.writePropertyName("absoluteEnd");
-            writer.write(*obj.getAbsoluteEnd());
+            writer.writeInt64(*obj.getAbsoluteEnd());
         }
         if (obj.getRelativeTriggerName())
         {
             writer.writePropertyName("relativeTriggerName");
-            writer.write(*obj.getRelativeTriggerName());
+            writer.writeCharArray(*obj.getRelativeTriggerName());
         }
         if (obj.getRelativeDuration())
         {
             writer.writePropertyName("relativeDuration");
-            writer.write(*obj.getRelativeDuration());
+            writer.writeInt32(*obj.getRelativeDuration());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -219,27 +219,27 @@ private:
         if (obj.getTriggerId())
         {
             writer.writePropertyName("triggerId");
-            writer.write(*obj.getTriggerId());
+            writer.writeCharArray(*obj.getTriggerId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
-            writer.write(*obj.getUserId());
+            writer.writeCharArray(*obj.getUserId());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getExpiresAt())
         {
             writer.writePropertyName("expiresAt");
-            writer.write(*obj.getExpiresAt());
+            writer.writeInt64(*obj.getExpiresAt());
         }
         writer.writeObjectEnd();
     }
@@ -250,42 +250,42 @@ private:
         if (obj.getEventId())
         {
             writer.writePropertyName("eventId");
-            writer.write(*obj.getEventId());
+            writer.writeCharArray(*obj.getEventId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*obj.getMetadata());
+            writer.writeCharArray(*obj.getMetadata());
         }
         if (obj.getScheduleType())
         {
             writer.writePropertyName("scheduleType");
-            writer.write(*obj.getScheduleType());
+            writer.writeCharArray(*obj.getScheduleType());
         }
         if (obj.getAbsoluteBegin())
         {
             writer.writePropertyName("absoluteBegin");
-            writer.write(*obj.getAbsoluteBegin());
+            writer.writeInt64(*obj.getAbsoluteBegin());
         }
         if (obj.getAbsoluteEnd())
         {
             writer.writePropertyName("absoluteEnd");
-            writer.write(*obj.getAbsoluteEnd());
+            writer.writeInt64(*obj.getAbsoluteEnd());
         }
         if (obj.getRelativeTriggerName())
         {
             writer.writePropertyName("relativeTriggerName");
-            writer.write(*obj.getRelativeTriggerName());
+            writer.writeCharArray(*obj.getRelativeTriggerName());
         }
         if (obj.getRelativeDuration())
         {
             writer.writePropertyName("relativeDuration");
-            writer.write(*obj.getRelativeDuration());
+            writer.writeInt32(*obj.getRelativeDuration());
         }
         writer.writeObjectEnd();
     }
@@ -296,12 +296,12 @@ private:
         if (obj.getScheduleName())
         {
             writer.writePropertyName("scheduleName");
-            writer.write(*obj.getScheduleName());
+            writer.writeCharArray(*obj.getScheduleName());
         }
         if (obj.getSettings())
         {
             writer.writePropertyName("settings");
-            writer.write(*obj.getSettings());
+            writer.writeCharArray(*obj.getSettings());
         }
         writer.writeObjectEnd();
     }
@@ -312,27 +312,27 @@ private:
         if (obj.getRegion())
         {
             writer.writePropertyName("region");
-            writer.write(*obj.getRegion());
+            writer.writeCharArray(*obj.getRegion());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getResponseCacheId())
         {
             writer.writePropertyName("responseCacheId");
-            writer.write(*obj.getResponseCacheId());
+            writer.writeCharArray(*obj.getResponseCacheId());
         }
         if (obj.getRequestHash())
         {
             writer.writePropertyName("requestHash");
-            writer.write(*obj.getRequestHash());
+            writer.writeCharArray(*obj.getRequestHash());
         }
         if (obj.getResult())
         {
             writer.writePropertyName("result");
-            writer.write(*obj.getResult());
+            writer.writeCharArray(*obj.getResult());
         }
         writer.writeObjectEnd();
     }
@@ -426,12 +426,12 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -540,7 +540,7 @@ public:
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -657,42 +657,42 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*request.getMetadata());
+            writer.writeCharArray(*request.getMetadata());
         }
         if (request.getScheduleType())
         {
             writer.writePropertyName("scheduleType");
-            writer.write(*request.getScheduleType());
+            writer.writeCharArray(*request.getScheduleType());
         }
         if (request.getAbsoluteBegin())
         {
             writer.writePropertyName("absoluteBegin");
-            writer.write(*request.getAbsoluteBegin());
+            writer.writeInt64(*request.getAbsoluteBegin());
         }
         if (request.getAbsoluteEnd())
         {
             writer.writePropertyName("absoluteEnd");
-            writer.write(*request.getAbsoluteEnd());
+            writer.writeInt64(*request.getAbsoluteEnd());
         }
         if (request.getRelativeTriggerName())
         {
             writer.writePropertyName("relativeTriggerName");
-            writer.write(*request.getRelativeTriggerName());
+            writer.writeCharArray(*request.getRelativeTriggerName());
         }
         if (request.getRelativeDuration())
         {
             writer.writePropertyName("relativeDuration");
-            writer.write(*request.getRelativeDuration());
+            writer.writeInt32(*request.getRelativeDuration());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -777,37 +777,37 @@ public:
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getMetadata())
         {
             writer.writePropertyName("metadata");
-            writer.write(*request.getMetadata());
+            writer.writeCharArray(*request.getMetadata());
         }
         if (request.getScheduleType())
         {
             writer.writePropertyName("scheduleType");
-            writer.write(*request.getScheduleType());
+            writer.writeCharArray(*request.getScheduleType());
         }
         if (request.getAbsoluteBegin())
         {
             writer.writePropertyName("absoluteBegin");
-            writer.write(*request.getAbsoluteBegin());
+            writer.writeInt64(*request.getAbsoluteBegin());
         }
         if (request.getAbsoluteEnd())
         {
             writer.writePropertyName("absoluteEnd");
-            writer.write(*request.getAbsoluteEnd());
+            writer.writeInt64(*request.getAbsoluteEnd());
         }
         if (request.getRelativeTriggerName())
         {
             writer.writePropertyName("relativeTriggerName");
-            writer.write(*request.getRelativeTriggerName());
+            writer.writeCharArray(*request.getRelativeTriggerName());
         }
         if (request.getRelativeDuration())
         {
             writer.writePropertyName("relativeDuration");
-            writer.write(*request.getRelativeDuration());
+            writer.writeInt32(*request.getRelativeDuration());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1072,12 +1072,12 @@ public:
         if (request.getTriggerStrategy())
         {
             writer.writePropertyName("triggerStrategy");
-            writer.write(*request.getTriggerStrategy());
+            writer.writeCharArray(*request.getTriggerStrategy());
         }
         if (request.getTtl())
         {
             writer.writePropertyName("ttl");
-            writer.write(*request.getTtl());
+            writer.writeInt32(*request.getTtl());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1350,7 +1350,7 @@ public:
         if (request.getSettings())
         {
             writer.writePropertyName("settings");
-            writer.write(*request.getSettings());
+            writer.writeCharArray(*request.getSettings());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();

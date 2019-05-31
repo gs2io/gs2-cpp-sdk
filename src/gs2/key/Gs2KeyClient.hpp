@@ -71,22 +71,22 @@ private:
         if (obj.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*obj.getKeyId());
+            writer.writeCharArray(*obj.getKeyId());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         writer.writeObjectEnd();
     }
@@ -97,27 +97,27 @@ private:
         if (obj.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*obj.getKeyId());
+            writer.writeCharArray(*obj.getKeyId());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getSecret())
         {
             writer.writePropertyName("secret");
-            writer.write(*obj.getSecret());
+            writer.writeCharArray(*obj.getSecret());
         }
         writer.writeObjectEnd();
     }
@@ -211,7 +211,7 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -320,7 +320,7 @@ public:
         if (request.getData())
         {
             writer.writePropertyName("data");
-            writer.write(*request.getData());
+            writer.writeCharArray(*request.getData());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -365,7 +365,7 @@ public:
         if (request.getData())
         {
             writer.writePropertyName("data");
-            writer.write(*request.getData());
+            writer.writeCharArray(*request.getData());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();

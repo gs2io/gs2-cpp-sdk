@@ -95,32 +95,32 @@ private:
         if (obj.getCategoryId())
         {
             writer.writePropertyName("categoryId");
-            writer.write(*obj.getCategoryId());
+            writer.writeCharArray(*obj.getCategoryId());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*obj.getDescription());
+            writer.writeCharArray(*obj.getDescription());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -131,37 +131,37 @@ private:
         if (obj.getMutexId())
         {
             writer.writePropertyName("mutexId");
-            writer.write(*obj.getMutexId());
+            writer.writeCharArray(*obj.getMutexId());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
-            writer.write(*obj.getUserId());
+            writer.writeCharArray(*obj.getUserId());
         }
         if (obj.getPropertyId())
         {
             writer.writePropertyName("propertyId");
-            writer.write(*obj.getPropertyId());
+            writer.writeCharArray(*obj.getPropertyId());
         }
         if (obj.getTransactionId())
         {
             writer.writePropertyName("transactionId");
-            writer.write(*obj.getTransactionId());
+            writer.writeCharArray(*obj.getTransactionId());
         }
         if (obj.getReferenceCount())
         {
             writer.writePropertyName("referenceCount");
-            writer.write(*obj.getReferenceCount());
+            writer.writeInt32(*obj.getReferenceCount());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getTtlAt())
         {
             writer.writePropertyName("ttlAt");
-            writer.write(*obj.getTtlAt());
+            writer.writeInt64(*obj.getTtlAt());
         }
         writer.writeObjectEnd();
     }
@@ -172,27 +172,27 @@ private:
         if (obj.getRegion())
         {
             writer.writePropertyName("region");
-            writer.write(*obj.getRegion());
+            writer.writeCharArray(*obj.getRegion());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getResponseCacheId())
         {
             writer.writePropertyName("responseCacheId");
-            writer.write(*obj.getResponseCacheId());
+            writer.writeCharArray(*obj.getResponseCacheId());
         }
         if (obj.getRequestHash())
         {
             writer.writePropertyName("requestHash");
-            writer.write(*obj.getRequestHash());
+            writer.writeCharArray(*obj.getRequestHash());
         }
         if (obj.getResult())
         {
             writer.writePropertyName("result");
-            writer.write(*obj.getResult());
+            writer.writeCharArray(*obj.getResult());
         }
         writer.writeObjectEnd();
     }
@@ -286,12 +286,12 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -400,7 +400,7 @@ public:
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -525,12 +525,12 @@ public:
         if (request.getTransactionId())
         {
             writer.writePropertyName("transactionId");
-            writer.write(*request.getTransactionId());
+            writer.writeCharArray(*request.getTransactionId());
         }
         if (request.getTtl())
         {
             writer.writePropertyName("ttl");
-            writer.write(*request.getTtl());
+            writer.writeInt64(*request.getTtl());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -587,12 +587,12 @@ public:
         if (request.getTransactionId())
         {
             writer.writePropertyName("transactionId");
-            writer.write(*request.getTransactionId());
+            writer.writeCharArray(*request.getTransactionId());
         }
         if (request.getTtl())
         {
             writer.writePropertyName("ttl");
-            writer.write(*request.getTtl());
+            writer.writeInt64(*request.getTtl());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -645,7 +645,7 @@ public:
         if (request.getTransactionId())
         {
             writer.writePropertyName("transactionId");
-            writer.write(*request.getTransactionId());
+            writer.writeCharArray(*request.getTransactionId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -702,7 +702,7 @@ public:
         if (request.getTransactionId())
         {
             writer.writePropertyName("transactionId");
-            writer.write(*request.getTransactionId());
+            writer.writeCharArray(*request.getTransactionId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();

@@ -110,112 +110,112 @@ private:
         if (obj.getMoneyId())
         {
             writer.writePropertyName("moneyId");
-            writer.write(*obj.getMoneyId());
+            writer.writeCharArray(*obj.getMoneyId());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*obj.getDescription());
+            writer.writeCharArray(*obj.getDescription());
         }
         if (obj.getPriority())
         {
             writer.writePropertyName("priority");
-            writer.write(*obj.getPriority());
+            writer.writeCharArray(*obj.getPriority());
         }
         if (obj.getShareFree())
         {
             writer.writePropertyName("shareFree");
-            writer.write(*obj.getShareFree());
+            writer.writeBool(*obj.getShareFree());
         }
         if (obj.getCurrency())
         {
             writer.writePropertyName("currency");
-            writer.write(*obj.getCurrency());
+            writer.writeCharArray(*obj.getCurrency());
         }
         if (obj.getAppleKey())
         {
             writer.writePropertyName("appleKey");
-            writer.write(*obj.getAppleKey());
+            writer.writeCharArray(*obj.getAppleKey());
         }
         if (obj.getGoogleKey())
         {
             writer.writePropertyName("googleKey");
-            writer.write(*obj.getGoogleKey());
+            writer.writeCharArray(*obj.getGoogleKey());
         }
         if (obj.getEnableFakeReceipt())
         {
             writer.writePropertyName("enableFakeReceipt");
-            writer.write(*obj.getEnableFakeReceipt());
+            writer.writeBool(*obj.getEnableFakeReceipt());
         }
         if (obj.getCreateWalletTriggerScriptId())
         {
             writer.writePropertyName("createWalletTriggerScriptId");
-            writer.write(*obj.getCreateWalletTriggerScriptId());
+            writer.writeCharArray(*obj.getCreateWalletTriggerScriptId());
         }
         if (obj.getCreateWalletDoneTriggerScriptId())
         {
             writer.writePropertyName("createWalletDoneTriggerScriptId");
-            writer.write(*obj.getCreateWalletDoneTriggerScriptId());
+            writer.writeCharArray(*obj.getCreateWalletDoneTriggerScriptId());
         }
         if (obj.getCreateWalletDoneTriggerQueueId())
         {
             writer.writePropertyName("createWalletDoneTriggerQueueId");
-            writer.write(*obj.getCreateWalletDoneTriggerQueueId());
+            writer.writeCharArray(*obj.getCreateWalletDoneTriggerQueueId());
         }
         if (obj.getDepositTriggerScriptId())
         {
             writer.writePropertyName("depositTriggerScriptId");
-            writer.write(*obj.getDepositTriggerScriptId());
+            writer.writeCharArray(*obj.getDepositTriggerScriptId());
         }
         if (obj.getDepositDoneTriggerScriptId())
         {
             writer.writePropertyName("depositDoneTriggerScriptId");
-            writer.write(*obj.getDepositDoneTriggerScriptId());
+            writer.writeCharArray(*obj.getDepositDoneTriggerScriptId());
         }
         if (obj.getDepositDoneTriggerQueueId())
         {
             writer.writePropertyName("depositDoneTriggerQueueId");
-            writer.write(*obj.getDepositDoneTriggerQueueId());
+            writer.writeCharArray(*obj.getDepositDoneTriggerQueueId());
         }
         if (obj.getWithdrawTriggerScriptId())
         {
             writer.writePropertyName("withdrawTriggerScriptId");
-            writer.write(*obj.getWithdrawTriggerScriptId());
+            writer.writeCharArray(*obj.getWithdrawTriggerScriptId());
         }
         if (obj.getWithdrawDoneTriggerScriptId())
         {
             writer.writePropertyName("withdrawDoneTriggerScriptId");
-            writer.write(*obj.getWithdrawDoneTriggerScriptId());
+            writer.writeCharArray(*obj.getWithdrawDoneTriggerScriptId());
         }
         if (obj.getWithdrawDoneTriggerQueueId())
         {
             writer.writePropertyName("withdrawDoneTriggerQueueId");
-            writer.write(*obj.getWithdrawDoneTriggerQueueId());
+            writer.writeCharArray(*obj.getWithdrawDoneTriggerQueueId());
         }
         if (obj.getBalance())
         {
             writer.writePropertyName("balance");
-            writer.write(*obj.getBalance());
+            writer.writeDouble(*obj.getBalance());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -226,37 +226,37 @@ private:
         if (obj.getSummaryId())
         {
             writer.writePropertyName("summaryId");
-            writer.write(*obj.getSummaryId());
+            writer.writeCharArray(*obj.getSummaryId());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
-            writer.write(*obj.getUserId());
+            writer.writeCharArray(*obj.getUserId());
         }
         if (obj.getSlot())
         {
             writer.writePropertyName("slot");
-            writer.write(*obj.getSlot());
+            writer.writeInt32(*obj.getSlot());
         }
         if (obj.getPaid())
         {
             writer.writePropertyName("paid");
-            writer.write(*obj.getPaid());
+            writer.writeInt32(*obj.getPaid());
         }
         if (obj.getFree())
         {
             writer.writePropertyName("free");
-            writer.write(*obj.getFree());
+            writer.writeInt32(*obj.getFree());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -267,37 +267,37 @@ private:
         if (obj.getWalletId())
         {
             writer.writePropertyName("walletId");
-            writer.write(*obj.getWalletId());
+            writer.writeCharArray(*obj.getWalletId());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
-            writer.write(*obj.getUserId());
+            writer.writeCharArray(*obj.getUserId());
         }
         if (obj.getSlot())
         {
             writer.writePropertyName("slot");
-            writer.write(*obj.getSlot());
+            writer.writeInt32(*obj.getSlot());
         }
         if (obj.getPrice())
         {
             writer.writePropertyName("price");
-            writer.write(*obj.getPrice());
+            writer.writeFloat(*obj.getPrice());
         }
         if (obj.getCount())
         {
             writer.writePropertyName("count");
-            writer.write(*obj.getCount());
+            writer.writeInt32(*obj.getCount());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -308,57 +308,57 @@ private:
         if (obj.getReceiptId())
         {
             writer.writePropertyName("receiptId");
-            writer.write(*obj.getReceiptId());
+            writer.writeCharArray(*obj.getReceiptId());
         }
         if (obj.getTransactionId())
         {
             writer.writePropertyName("transactionId");
-            writer.write(*obj.getTransactionId());
+            writer.writeCharArray(*obj.getTransactionId());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
-            writer.write(*obj.getUserId());
+            writer.writeCharArray(*obj.getUserId());
         }
         if (obj.getSlot())
         {
             writer.writePropertyName("slot");
-            writer.write(*obj.getSlot());
+            writer.writeInt32(*obj.getSlot());
         }
         if (obj.getType())
         {
             writer.writePropertyName("type");
-            writer.write(*obj.getType());
+            writer.writeCharArray(*obj.getType());
         }
         if (obj.getPrice())
         {
             writer.writePropertyName("price");
-            writer.write(*obj.getPrice());
+            writer.writeFloat(*obj.getPrice());
         }
         if (obj.getPaid())
         {
             writer.writePropertyName("paid");
-            writer.write(*obj.getPaid());
+            writer.writeInt32(*obj.getPaid());
         }
         if (obj.getFree())
         {
             writer.writePropertyName("free");
-            writer.write(*obj.getFree());
+            writer.writeInt32(*obj.getFree());
         }
         if (obj.getTotal())
         {
             writer.writePropertyName("total");
-            writer.write(*obj.getTotal());
+            writer.writeInt32(*obj.getTotal());
         }
         if (obj.getContentsId())
         {
             writer.writePropertyName("contentsId");
-            writer.write(*obj.getContentsId());
+            writer.writeCharArray(*obj.getContentsId());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         writer.writeObjectEnd();
     }
@@ -369,27 +369,27 @@ private:
         if (obj.getRegion())
         {
             writer.writePropertyName("region");
-            writer.write(*obj.getRegion());
+            writer.writeCharArray(*obj.getRegion());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getResponseCacheId())
         {
             writer.writePropertyName("responseCacheId");
-            writer.write(*obj.getResponseCacheId());
+            writer.writeCharArray(*obj.getResponseCacheId());
         }
         if (obj.getRequestHash())
         {
             writer.writePropertyName("requestHash");
-            writer.write(*obj.getRequestHash());
+            writer.writeCharArray(*obj.getRequestHash());
         }
         if (obj.getResult())
         {
             writer.writePropertyName("result");
-            writer.write(*obj.getResult());
+            writer.writeCharArray(*obj.getResult());
         }
         writer.writeObjectEnd();
     }
@@ -483,87 +483,87 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getPriority())
         {
             writer.writePropertyName("priority");
-            writer.write(*request.getPriority());
+            writer.writeCharArray(*request.getPriority());
         }
         if (request.getShareFree())
         {
             writer.writePropertyName("shareFree");
-            writer.write(*request.getShareFree());
+            writer.writeBool(*request.getShareFree());
         }
         if (request.getCurrency())
         {
             writer.writePropertyName("currency");
-            writer.write(*request.getCurrency());
+            writer.writeCharArray(*request.getCurrency());
         }
         if (request.getAppleKey())
         {
             writer.writePropertyName("appleKey");
-            writer.write(*request.getAppleKey());
+            writer.writeCharArray(*request.getAppleKey());
         }
         if (request.getGoogleKey())
         {
             writer.writePropertyName("googleKey");
-            writer.write(*request.getGoogleKey());
+            writer.writeCharArray(*request.getGoogleKey());
         }
         if (request.getEnableFakeReceipt())
         {
             writer.writePropertyName("enableFakeReceipt");
-            writer.write(*request.getEnableFakeReceipt());
+            writer.writeBool(*request.getEnableFakeReceipt());
         }
         if (request.getCreateWalletTriggerScriptId())
         {
             writer.writePropertyName("createWalletTriggerScriptId");
-            writer.write(*request.getCreateWalletTriggerScriptId());
+            writer.writeCharArray(*request.getCreateWalletTriggerScriptId());
         }
         if (request.getCreateWalletDoneTriggerScriptId())
         {
             writer.writePropertyName("createWalletDoneTriggerScriptId");
-            writer.write(*request.getCreateWalletDoneTriggerScriptId());
+            writer.writeCharArray(*request.getCreateWalletDoneTriggerScriptId());
         }
         if (request.getCreateWalletDoneTriggerQueueId())
         {
             writer.writePropertyName("createWalletDoneTriggerQueueId");
-            writer.write(*request.getCreateWalletDoneTriggerQueueId());
+            writer.writeCharArray(*request.getCreateWalletDoneTriggerQueueId());
         }
         if (request.getDepositTriggerScriptId())
         {
             writer.writePropertyName("depositTriggerScriptId");
-            writer.write(*request.getDepositTriggerScriptId());
+            writer.writeCharArray(*request.getDepositTriggerScriptId());
         }
         if (request.getDepositDoneTriggerScriptId())
         {
             writer.writePropertyName("depositDoneTriggerScriptId");
-            writer.write(*request.getDepositDoneTriggerScriptId());
+            writer.writeCharArray(*request.getDepositDoneTriggerScriptId());
         }
         if (request.getDepositDoneTriggerQueueId())
         {
             writer.writePropertyName("depositDoneTriggerQueueId");
-            writer.write(*request.getDepositDoneTriggerQueueId());
+            writer.writeCharArray(*request.getDepositDoneTriggerQueueId());
         }
         if (request.getWithdrawTriggerScriptId())
         {
             writer.writePropertyName("withdrawTriggerScriptId");
-            writer.write(*request.getWithdrawTriggerScriptId());
+            writer.writeCharArray(*request.getWithdrawTriggerScriptId());
         }
         if (request.getWithdrawDoneTriggerScriptId())
         {
             writer.writePropertyName("withdrawDoneTriggerScriptId");
-            writer.write(*request.getWithdrawDoneTriggerScriptId());
+            writer.writeCharArray(*request.getWithdrawDoneTriggerScriptId());
         }
         if (request.getWithdrawDoneTriggerQueueId())
         {
             writer.writePropertyName("withdrawDoneTriggerQueueId");
-            writer.write(*request.getWithdrawDoneTriggerQueueId());
+            writer.writeCharArray(*request.getWithdrawDoneTriggerQueueId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -672,72 +672,72 @@ public:
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getPriority())
         {
             writer.writePropertyName("priority");
-            writer.write(*request.getPriority());
+            writer.writeCharArray(*request.getPriority());
         }
         if (request.getAppleKey())
         {
             writer.writePropertyName("appleKey");
-            writer.write(*request.getAppleKey());
+            writer.writeCharArray(*request.getAppleKey());
         }
         if (request.getGoogleKey())
         {
             writer.writePropertyName("googleKey");
-            writer.write(*request.getGoogleKey());
+            writer.writeCharArray(*request.getGoogleKey());
         }
         if (request.getEnableFakeReceipt())
         {
             writer.writePropertyName("enableFakeReceipt");
-            writer.write(*request.getEnableFakeReceipt());
+            writer.writeBool(*request.getEnableFakeReceipt());
         }
         if (request.getCreateWalletTriggerScriptId())
         {
             writer.writePropertyName("createWalletTriggerScriptId");
-            writer.write(*request.getCreateWalletTriggerScriptId());
+            writer.writeCharArray(*request.getCreateWalletTriggerScriptId());
         }
         if (request.getCreateWalletDoneTriggerScriptId())
         {
             writer.writePropertyName("createWalletDoneTriggerScriptId");
-            writer.write(*request.getCreateWalletDoneTriggerScriptId());
+            writer.writeCharArray(*request.getCreateWalletDoneTriggerScriptId());
         }
         if (request.getCreateWalletDoneTriggerQueueId())
         {
             writer.writePropertyName("createWalletDoneTriggerQueueId");
-            writer.write(*request.getCreateWalletDoneTriggerQueueId());
+            writer.writeCharArray(*request.getCreateWalletDoneTriggerQueueId());
         }
         if (request.getDepositTriggerScriptId())
         {
             writer.writePropertyName("depositTriggerScriptId");
-            writer.write(*request.getDepositTriggerScriptId());
+            writer.writeCharArray(*request.getDepositTriggerScriptId());
         }
         if (request.getDepositDoneTriggerScriptId())
         {
             writer.writePropertyName("depositDoneTriggerScriptId");
-            writer.write(*request.getDepositDoneTriggerScriptId());
+            writer.writeCharArray(*request.getDepositDoneTriggerScriptId());
         }
         if (request.getDepositDoneTriggerQueueId())
         {
             writer.writePropertyName("depositDoneTriggerQueueId");
-            writer.write(*request.getDepositDoneTriggerQueueId());
+            writer.writeCharArray(*request.getDepositDoneTriggerQueueId());
         }
         if (request.getWithdrawTriggerScriptId())
         {
             writer.writePropertyName("withdrawTriggerScriptId");
-            writer.write(*request.getWithdrawTriggerScriptId());
+            writer.writeCharArray(*request.getWithdrawTriggerScriptId());
         }
         if (request.getWithdrawDoneTriggerScriptId())
         {
             writer.writePropertyName("withdrawDoneTriggerScriptId");
-            writer.write(*request.getWithdrawDoneTriggerScriptId());
+            writer.writeCharArray(*request.getWithdrawDoneTriggerScriptId());
         }
         if (request.getWithdrawDoneTriggerQueueId())
         {
             writer.writePropertyName("withdrawDoneTriggerQueueId");
-            writer.write(*request.getWithdrawDoneTriggerQueueId());
+            writer.writeCharArray(*request.getWithdrawDoneTriggerQueueId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1006,22 +1006,22 @@ public:
         if (request.getPrice())
         {
             writer.writePropertyName("price");
-            writer.write(*request.getPrice());
+            writer.writeFloat(*request.getPrice());
         }
         if (request.getCount())
         {
             writer.writePropertyName("count");
-            writer.write(*request.getCount());
+            writer.writeInt32(*request.getCount());
         }
         if (request.getTransactionId())
         {
             writer.writePropertyName("transactionId");
-            writer.write(*request.getTransactionId());
+            writer.writeCharArray(*request.getTransactionId());
         }
         if (request.getContentsId())
         {
             writer.writePropertyName("contentsId");
-            writer.write(*request.getContentsId());
+            writer.writeCharArray(*request.getContentsId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1074,12 +1074,12 @@ public:
         if (request.getCount())
         {
             writer.writePropertyName("count");
-            writer.write(*request.getCount());
+            writer.writeInt32(*request.getCount());
         }
         if (request.getPaidOnly())
         {
             writer.writePropertyName("paidOnly");
-            writer.write(*request.getPaidOnly());
+            writer.writeBool(*request.getPaidOnly());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1136,12 +1136,12 @@ public:
         if (request.getCount())
         {
             writer.writePropertyName("count");
-            writer.write(*request.getCount());
+            writer.writeInt32(*request.getCount());
         }
         if (request.getPaidOnly())
         {
             writer.writePropertyName("paidOnly");
-            writer.write(*request.getPaidOnly());
+            writer.writeBool(*request.getPaidOnly());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1190,7 +1190,7 @@ public:
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1234,17 +1234,17 @@ public:
         if (request.getStampSheet())
         {
             writer.writePropertyName("stampSheet");
-            writer.write(*request.getStampSheet());
+            writer.writeCharArray(*request.getStampSheet());
         }
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         if (request.getReceipt())
         {
             writer.writePropertyName("receipt");
-            writer.write(*request.getReceipt());
+            writer.writeCharArray(*request.getReceipt());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1288,12 +1288,12 @@ public:
         if (request.getStampTask())
         {
             writer.writePropertyName("stampTask");
-            writer.write(*request.getStampTask());
+            writer.writeCharArray(*request.getStampTask());
         }
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();

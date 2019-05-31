@@ -71,37 +71,37 @@ private:
         if (obj.getScriptId())
         {
             writer.writePropertyName("scriptId");
-            writer.write(*obj.getScriptId());
+            writer.writeCharArray(*obj.getScriptId());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*obj.getDescription());
+            writer.writeCharArray(*obj.getDescription());
         }
         if (obj.getScript())
         {
             writer.writePropertyName("script");
-            writer.write(*obj.getScript());
+            writer.writeCharArray(*obj.getScript());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -195,17 +195,17 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getScript())
         {
             writer.writePropertyName("script");
-            writer.write(*request.getScript());
+            writer.writeCharArray(*request.getScript());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -314,12 +314,12 @@ public:
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getScript())
         {
             writer.writePropertyName("script");
-            writer.write(*request.getScript());
+            writer.writeCharArray(*request.getScript());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();

@@ -116,97 +116,97 @@ private:
         if (obj.getGameId())
         {
             writer.writePropertyName("gameId");
-            writer.write(*obj.getGameId());
+            writer.writeCharArray(*obj.getGameId());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*obj.getName());
+            writer.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*obj.getDescription());
+            writer.writeCharArray(*obj.getDescription());
         }
         if (obj.getChangePasswordIfTakeOver())
         {
             writer.writePropertyName("changePasswordIfTakeOver");
-            writer.write(*obj.getChangePasswordIfTakeOver());
+            writer.writeBool(*obj.getChangePasswordIfTakeOver());
         }
         if (obj.getCreateAccountTriggerScriptId())
         {
             writer.writePropertyName("createAccountTriggerScriptId");
-            writer.write(*obj.getCreateAccountTriggerScriptId());
+            writer.writeCharArray(*obj.getCreateAccountTriggerScriptId());
         }
         if (obj.getCreateAccountDoneTriggerScriptId())
         {
             writer.writePropertyName("createAccountDoneTriggerScriptId");
-            writer.write(*obj.getCreateAccountDoneTriggerScriptId());
+            writer.writeCharArray(*obj.getCreateAccountDoneTriggerScriptId());
         }
         if (obj.getCreateAccountDoneTriggerQueueId())
         {
             writer.writePropertyName("createAccountDoneTriggerQueueId");
-            writer.write(*obj.getCreateAccountDoneTriggerQueueId());
+            writer.writeCharArray(*obj.getCreateAccountDoneTriggerQueueId());
         }
         if (obj.getAuthenticationTriggerScriptId())
         {
             writer.writePropertyName("authenticationTriggerScriptId");
-            writer.write(*obj.getAuthenticationTriggerScriptId());
+            writer.writeCharArray(*obj.getAuthenticationTriggerScriptId());
         }
         if (obj.getAuthenticationDoneTriggerScriptId())
         {
             writer.writePropertyName("authenticationDoneTriggerScriptId");
-            writer.write(*obj.getAuthenticationDoneTriggerScriptId());
+            writer.writeCharArray(*obj.getAuthenticationDoneTriggerScriptId());
         }
         if (obj.getAuthenticationDoneTriggerQueueId())
         {
             writer.writePropertyName("authenticationDoneTriggerQueueId");
-            writer.write(*obj.getAuthenticationDoneTriggerQueueId());
+            writer.writeCharArray(*obj.getAuthenticationDoneTriggerQueueId());
         }
         if (obj.getCreateTakeOverTriggerScriptId())
         {
             writer.writePropertyName("createTakeOverTriggerScriptId");
-            writer.write(*obj.getCreateTakeOverTriggerScriptId());
+            writer.writeCharArray(*obj.getCreateTakeOverTriggerScriptId());
         }
         if (obj.getCreateTakeOverDoneTriggerScriptId())
         {
             writer.writePropertyName("createTakeOverDoneTriggerScriptId");
-            writer.write(*obj.getCreateTakeOverDoneTriggerScriptId());
+            writer.writeCharArray(*obj.getCreateTakeOverDoneTriggerScriptId());
         }
         if (obj.getCreateTakeOverDoneTriggerQueueId())
         {
             writer.writePropertyName("createTakeOverDoneTriggerQueueId");
-            writer.write(*obj.getCreateTakeOverDoneTriggerQueueId());
+            writer.writeCharArray(*obj.getCreateTakeOverDoneTriggerQueueId());
         }
         if (obj.getDoTakeOverTriggerScriptId())
         {
             writer.writePropertyName("doTakeOverTriggerScriptId");
-            writer.write(*obj.getDoTakeOverTriggerScriptId());
+            writer.writeCharArray(*obj.getDoTakeOverTriggerScriptId());
         }
         if (obj.getDoTakeOverDoneTriggerScriptId())
         {
             writer.writePropertyName("doTakeOverDoneTriggerScriptId");
-            writer.write(*obj.getDoTakeOverDoneTriggerScriptId());
+            writer.writeCharArray(*obj.getDoTakeOverDoneTriggerScriptId());
         }
         if (obj.getDoTakeOverDoneTriggerQueueId())
         {
             writer.writePropertyName("doTakeOverDoneTriggerQueueId");
-            writer.write(*obj.getDoTakeOverDoneTriggerQueueId());
+            writer.writeCharArray(*obj.getDoTakeOverDoneTriggerQueueId());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getUpdateAt())
         {
             writer.writePropertyName("updateAt");
-            writer.write(*obj.getUpdateAt());
+            writer.writeInt64(*obj.getUpdateAt());
         }
         writer.writeObjectEnd();
     }
@@ -217,22 +217,22 @@ private:
         if (obj.getAccountId())
         {
             writer.writePropertyName("accountId");
-            writer.write(*obj.getAccountId());
+            writer.writeCharArray(*obj.getAccountId());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
-            writer.write(*obj.getUserId());
+            writer.writeCharArray(*obj.getUserId());
         }
         if (obj.getPassword())
         {
             writer.writePropertyName("password");
-            writer.write(*obj.getPassword());
+            writer.writeCharArray(*obj.getPassword());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         writer.writeObjectEnd();
     }
@@ -243,27 +243,27 @@ private:
         if (obj.getTakeOverId())
         {
             writer.writePropertyName("takeOverId");
-            writer.write(*obj.getTakeOverId());
+            writer.writeCharArray(*obj.getTakeOverId());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
-            writer.write(*obj.getUserId());
+            writer.writeCharArray(*obj.getUserId());
         }
         if (obj.getType())
         {
             writer.writePropertyName("type");
-            writer.write(*obj.getType());
+            writer.writeInt32(*obj.getType());
         }
         if (obj.getUserIdentifier())
         {
             writer.writePropertyName("userIdentifier");
-            writer.write(*obj.getUserIdentifier());
+            writer.writeCharArray(*obj.getUserIdentifier());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         writer.writeObjectEnd();
     }
@@ -274,32 +274,32 @@ private:
         if (obj.getTakeOverId())
         {
             writer.writePropertyName("takeOverId");
-            writer.write(*obj.getTakeOverId());
+            writer.writeCharArray(*obj.getTakeOverId());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
-            writer.write(*obj.getUserId());
+            writer.writeCharArray(*obj.getUserId());
         }
         if (obj.getType())
         {
             writer.writePropertyName("type");
-            writer.write(*obj.getType());
+            writer.writeInt32(*obj.getType());
         }
         if (obj.getUserIdentifier())
         {
             writer.writePropertyName("userIdentifier");
-            writer.write(*obj.getUserIdentifier());
+            writer.writeCharArray(*obj.getUserIdentifier());
         }
         if (obj.getCreateAt())
         {
             writer.writePropertyName("createAt");
-            writer.write(*obj.getCreateAt());
+            writer.writeInt64(*obj.getCreateAt());
         }
         if (obj.getPassword())
         {
             writer.writePropertyName("password");
-            writer.write(*obj.getPassword());
+            writer.writeCharArray(*obj.getPassword());
         }
         writer.writeObjectEnd();
     }
@@ -310,27 +310,27 @@ private:
         if (obj.getRegion())
         {
             writer.writePropertyName("region");
-            writer.write(*obj.getRegion());
+            writer.writeCharArray(*obj.getRegion());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
-            writer.write(*obj.getOwnerId());
+            writer.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getResponseCacheId())
         {
             writer.writePropertyName("responseCacheId");
-            writer.write(*obj.getResponseCacheId());
+            writer.writeCharArray(*obj.getResponseCacheId());
         }
         if (obj.getRequestHash())
         {
             writer.writePropertyName("requestHash");
-            writer.write(*obj.getRequestHash());
+            writer.writeCharArray(*obj.getRequestHash());
         }
         if (obj.getResult())
         {
             writer.writePropertyName("result");
-            writer.write(*obj.getResult());
+            writer.writeCharArray(*obj.getResult());
         }
         writer.writeObjectEnd();
     }
@@ -424,77 +424,77 @@ public:
         if (request.getName())
         {
             writer.writePropertyName("name");
-            writer.write(*request.getName());
+            writer.writeCharArray(*request.getName());
         }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getChangePasswordIfTakeOver())
         {
             writer.writePropertyName("changePasswordIfTakeOver");
-            writer.write(*request.getChangePasswordIfTakeOver());
+            writer.writeBool(*request.getChangePasswordIfTakeOver());
         }
         if (request.getCreateAccountTriggerScriptId())
         {
             writer.writePropertyName("createAccountTriggerScriptId");
-            writer.write(*request.getCreateAccountTriggerScriptId());
+            writer.writeCharArray(*request.getCreateAccountTriggerScriptId());
         }
         if (request.getCreateAccountDoneTriggerScriptId())
         {
             writer.writePropertyName("createAccountDoneTriggerScriptId");
-            writer.write(*request.getCreateAccountDoneTriggerScriptId());
+            writer.writeCharArray(*request.getCreateAccountDoneTriggerScriptId());
         }
         if (request.getCreateAccountDoneTriggerQueueId())
         {
             writer.writePropertyName("createAccountDoneTriggerQueueId");
-            writer.write(*request.getCreateAccountDoneTriggerQueueId());
+            writer.writeCharArray(*request.getCreateAccountDoneTriggerQueueId());
         }
         if (request.getAuthenticationTriggerScriptId())
         {
             writer.writePropertyName("authenticationTriggerScriptId");
-            writer.write(*request.getAuthenticationTriggerScriptId());
+            writer.writeCharArray(*request.getAuthenticationTriggerScriptId());
         }
         if (request.getAuthenticationDoneTriggerScriptId())
         {
             writer.writePropertyName("authenticationDoneTriggerScriptId");
-            writer.write(*request.getAuthenticationDoneTriggerScriptId());
+            writer.writeCharArray(*request.getAuthenticationDoneTriggerScriptId());
         }
         if (request.getAuthenticationDoneTriggerQueueId())
         {
             writer.writePropertyName("authenticationDoneTriggerQueueId");
-            writer.write(*request.getAuthenticationDoneTriggerQueueId());
+            writer.writeCharArray(*request.getAuthenticationDoneTriggerQueueId());
         }
         if (request.getCreateTakeOverTriggerScriptId())
         {
             writer.writePropertyName("createTakeOverTriggerScriptId");
-            writer.write(*request.getCreateTakeOverTriggerScriptId());
+            writer.writeCharArray(*request.getCreateTakeOverTriggerScriptId());
         }
         if (request.getCreateTakeOverDoneTriggerScriptId())
         {
             writer.writePropertyName("createTakeOverDoneTriggerScriptId");
-            writer.write(*request.getCreateTakeOverDoneTriggerScriptId());
+            writer.writeCharArray(*request.getCreateTakeOverDoneTriggerScriptId());
         }
         if (request.getCreateTakeOverDoneTriggerQueueId())
         {
             writer.writePropertyName("createTakeOverDoneTriggerQueueId");
-            writer.write(*request.getCreateTakeOverDoneTriggerQueueId());
+            writer.writeCharArray(*request.getCreateTakeOverDoneTriggerQueueId());
         }
         if (request.getDoTakeOverTriggerScriptId())
         {
             writer.writePropertyName("doTakeOverTriggerScriptId");
-            writer.write(*request.getDoTakeOverTriggerScriptId());
+            writer.writeCharArray(*request.getDoTakeOverTriggerScriptId());
         }
         if (request.getDoTakeOverDoneTriggerScriptId())
         {
             writer.writePropertyName("doTakeOverDoneTriggerScriptId");
-            writer.write(*request.getDoTakeOverDoneTriggerScriptId());
+            writer.writeCharArray(*request.getDoTakeOverDoneTriggerScriptId());
         }
         if (request.getDoTakeOverDoneTriggerQueueId())
         {
             writer.writePropertyName("doTakeOverDoneTriggerQueueId");
-            writer.write(*request.getDoTakeOverDoneTriggerQueueId());
+            writer.writeCharArray(*request.getDoTakeOverDoneTriggerQueueId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -603,72 +603,72 @@ public:
         if (request.getDescription())
         {
             writer.writePropertyName("description");
-            writer.write(*request.getDescription());
+            writer.writeCharArray(*request.getDescription());
         }
         if (request.getChangePasswordIfTakeOver())
         {
             writer.writePropertyName("changePasswordIfTakeOver");
-            writer.write(*request.getChangePasswordIfTakeOver());
+            writer.writeBool(*request.getChangePasswordIfTakeOver());
         }
         if (request.getCreateAccountTriggerScriptId())
         {
             writer.writePropertyName("createAccountTriggerScriptId");
-            writer.write(*request.getCreateAccountTriggerScriptId());
+            writer.writeCharArray(*request.getCreateAccountTriggerScriptId());
         }
         if (request.getCreateAccountDoneTriggerScriptId())
         {
             writer.writePropertyName("createAccountDoneTriggerScriptId");
-            writer.write(*request.getCreateAccountDoneTriggerScriptId());
+            writer.writeCharArray(*request.getCreateAccountDoneTriggerScriptId());
         }
         if (request.getCreateAccountDoneTriggerQueueId())
         {
             writer.writePropertyName("createAccountDoneTriggerQueueId");
-            writer.write(*request.getCreateAccountDoneTriggerQueueId());
+            writer.writeCharArray(*request.getCreateAccountDoneTriggerQueueId());
         }
         if (request.getAuthenticationTriggerScriptId())
         {
             writer.writePropertyName("authenticationTriggerScriptId");
-            writer.write(*request.getAuthenticationTriggerScriptId());
+            writer.writeCharArray(*request.getAuthenticationTriggerScriptId());
         }
         if (request.getAuthenticationDoneTriggerScriptId())
         {
             writer.writePropertyName("authenticationDoneTriggerScriptId");
-            writer.write(*request.getAuthenticationDoneTriggerScriptId());
+            writer.writeCharArray(*request.getAuthenticationDoneTriggerScriptId());
         }
         if (request.getAuthenticationDoneTriggerQueueId())
         {
             writer.writePropertyName("authenticationDoneTriggerQueueId");
-            writer.write(*request.getAuthenticationDoneTriggerQueueId());
+            writer.writeCharArray(*request.getAuthenticationDoneTriggerQueueId());
         }
         if (request.getCreateTakeOverTriggerScriptId())
         {
             writer.writePropertyName("createTakeOverTriggerScriptId");
-            writer.write(*request.getCreateTakeOverTriggerScriptId());
+            writer.writeCharArray(*request.getCreateTakeOverTriggerScriptId());
         }
         if (request.getCreateTakeOverDoneTriggerScriptId())
         {
             writer.writePropertyName("createTakeOverDoneTriggerScriptId");
-            writer.write(*request.getCreateTakeOverDoneTriggerScriptId());
+            writer.writeCharArray(*request.getCreateTakeOverDoneTriggerScriptId());
         }
         if (request.getCreateTakeOverDoneTriggerQueueId())
         {
             writer.writePropertyName("createTakeOverDoneTriggerQueueId");
-            writer.write(*request.getCreateTakeOverDoneTriggerQueueId());
+            writer.writeCharArray(*request.getCreateTakeOverDoneTriggerQueueId());
         }
         if (request.getDoTakeOverTriggerScriptId())
         {
             writer.writePropertyName("doTakeOverTriggerScriptId");
-            writer.write(*request.getDoTakeOverTriggerScriptId());
+            writer.writeCharArray(*request.getDoTakeOverTriggerScriptId());
         }
         if (request.getDoTakeOverDoneTriggerScriptId())
         {
             writer.writePropertyName("doTakeOverDoneTriggerScriptId");
-            writer.write(*request.getDoTakeOverDoneTriggerScriptId());
+            writer.writeCharArray(*request.getDoTakeOverDoneTriggerScriptId());
         }
         if (request.getDoTakeOverDoneTriggerQueueId())
         {
             writer.writePropertyName("doTakeOverDoneTriggerQueueId");
-            writer.write(*request.getDoTakeOverDoneTriggerQueueId());
+            writer.writeCharArray(*request.getDoTakeOverDoneTriggerQueueId());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -909,12 +909,12 @@ public:
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
-            writer.write(*request.getKeyId());
+            writer.writeCharArray(*request.getKeyId());
         }
         if (request.getPassword())
         {
             writer.writePropertyName("password");
-            writer.write(*request.getPassword());
+            writer.writeCharArray(*request.getPassword());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1007,17 +1007,17 @@ public:
         if (request.getType())
         {
             writer.writePropertyName("type");
-            writer.write(*request.getType());
+            writer.writeInt32(*request.getType());
         }
         if (request.getUserIdentifier())
         {
             writer.writePropertyName("userIdentifier");
-            writer.write(*request.getUserIdentifier());
+            writer.writeCharArray(*request.getUserIdentifier());
         }
         if (request.getPassword())
         {
             writer.writePropertyName("password");
-            writer.write(*request.getPassword());
+            writer.writeCharArray(*request.getPassword());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1070,17 +1070,17 @@ public:
         if (request.getType())
         {
             writer.writePropertyName("type");
-            writer.write(*request.getType());
+            writer.writeInt32(*request.getType());
         }
         if (request.getUserIdentifier())
         {
             writer.writePropertyName("userIdentifier");
-            writer.write(*request.getUserIdentifier());
+            writer.writeCharArray(*request.getUserIdentifier());
         }
         if (request.getPassword())
         {
             writer.writePropertyName("password");
-            writer.write(*request.getPassword());
+            writer.writeCharArray(*request.getPassword());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1229,12 +1229,12 @@ public:
         if (request.getOldPassword())
         {
             writer.writePropertyName("oldPassword");
-            writer.write(*request.getOldPassword());
+            writer.writeCharArray(*request.getOldPassword());
         }
         if (request.getPassword())
         {
             writer.writePropertyName("password");
-            writer.write(*request.getPassword());
+            writer.writeCharArray(*request.getPassword());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1295,12 +1295,12 @@ public:
         if (request.getOldPassword())
         {
             writer.writePropertyName("oldPassword");
-            writer.write(*request.getOldPassword());
+            writer.writeCharArray(*request.getOldPassword());
         }
         if (request.getPassword())
         {
             writer.writePropertyName("password");
-            writer.write(*request.getPassword());
+            writer.writeCharArray(*request.getPassword());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
@@ -1441,12 +1441,12 @@ public:
         if (request.getUserIdentifier())
         {
             writer.writePropertyName("userIdentifier");
-            writer.write(*request.getUserIdentifier());
+            writer.writeCharArray(*request.getUserIdentifier());
         }
         if (request.getPassword())
         {
             writer.writePropertyName("password");
-            writer.write(*request.getPassword());
+            writer.writeCharArray(*request.getPassword());
         }
         writer.writeObjectEnd();
         auto body = writer.toString();
