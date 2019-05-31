@@ -23,35 +23,17 @@ GS2_START_OF_NAMESPACE
 
 namespace detail {
 
-struct ProjectTokenModel : public detail::json::IModel
-{
-    /** プロジェクトトークン */
-    optional<StringHolder> token;
-
-    void set(const Char name[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE
-    {
-        if (std::strcmp(name, "token") == 0) {
-            if (jsonValue.IsString())
-            {
-                this->token.emplace(jsonValue.GetString());
-            }
-        }
-    }
-};
-
 struct LoginResultModel : public detail::json::IModel
 {
     /** プロジェクトトークン */
-    optional<ProjectTokenModel> item;
+    optional<StringHolder> accessToken;
 
     void set(const Char name[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE
     {
-        if (std::strcmp(name, "item") == 0) {
-            if (jsonValue.IsObject())
+        if (std::strcmp(name, "access_token") == 0) {
+            if (jsonValue.IsString())
             {
-                const auto& jsonObject = jsonValue.GetObject();
-                this->item.emplace();
-                detail::json::JsonParser::parse(&*this->item, jsonObject);
+                this->accessToken.emplace(jsonValue.GetString());
             }
         }
     }
@@ -66,9 +48,9 @@ Gs2LoginTask::Gs2LoginTask(BasicGs2Credential& basicGs2Credential) :
     auto& writer = detail::json::JsonWriter::getInstance();
     writer.reset();
     writer.writeObjectStart();
-    writer.writePropertyName("clientId");
+    writer.writePropertyName("client_id");
     writer.write(basicGs2Credential.getClientId());
-    writer.writePropertyName("clientSecret");
+    writer.writePropertyName("client_secret");
     writer.write(basicGs2Credential.getClientSecret());
     writer.writeObjectEnd();
     auto body = writer.toString();
@@ -103,9 +85,9 @@ void Gs2LoginTask::callbackGs2Response(const Char responseBody[], Gs2ClientExcep
             json::JsonParser::parse(&resultModel, responseBody);
         }
 
-        if (resultModel.item && resultModel.item->token)
+        if (resultModel.accessToken)
         {
-            m_BasicGs2Credential.m_ProjectToken = *resultModel.item->token;
+            m_BasicGs2Credential.m_ProjectToken = std::move(*resultModel.accessToken);
 
             while (auto* pGs2StandardHttpTask = popGs2HttpStandardHttpTask())
             {
