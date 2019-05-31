@@ -61,32 +61,32 @@ void JsonWriter::writePropertyName(const Char* name)
     writer->Key(name);
 }
 
-void JsonWriter::write(const Char* value)
+void JsonWriter::writeCharArray(const Char* value)
 {
     writer->String(value);
 }
 
-void JsonWriter::write(bool value)
+void JsonWriter::writeBool(bool value)
 {
     writer->Bool(value);
 }
 
-void JsonWriter::write(Int32 value)
+void JsonWriter::writeInt32(Int32 value)
 {
     writer->Int(value);
 }
 
-void JsonWriter::write(Int64 value)
+void JsonWriter::writeInt64(Int64 value)
 {
     writer->Int64(value);
 }
 
-void JsonWriter::write(Float value)
+void JsonWriter::writeFloat(Float value)
 {
     writer->Double(value);
 }
 
-void JsonWriter::write(Double value)
+void JsonWriter::writeDouble(Double value)
 {
     writer->Double(value);
 }

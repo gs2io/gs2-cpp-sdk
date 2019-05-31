@@ -56,12 +56,12 @@ public:
 
     void writePropertyName(const Char* name);
 
-    void write(const Char* value);
-    void write(Bool value);
-    void write(Int32 value);
-    void write(Int64 value);
-    void write(Float value);
-    void write(Double value);
+    void writeCharArray(const Char* value);
+    void writeBool(Bool value);
+    void writeInt32(Int32 value);
+    void writeInt64(Int64 value);
+    void writeFloat(Float value);
+    void writeDouble(Double value);
 
     void writeArrayEnd();
     void writeObjectEnd();

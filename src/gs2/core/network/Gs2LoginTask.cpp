@@ -49,9 +49,9 @@ Gs2LoginTask::Gs2LoginTask(BasicGs2Credential& basicGs2Credential) :
     writer.reset();
     writer.writeObjectStart();
     writer.writePropertyName("client_id");
-    writer.write(basicGs2Credential.getClientId());
+    writer.writeCharArray(basicGs2Credential.getClientId());
     writer.writePropertyName("client_secret");
-    writer.write(basicGs2Credential.getClientSecret());
+    writer.writeCharArray(basicGs2Credential.getClientSecret());
     writer.writeObjectEnd();
     auto body = writer.toString();
     auto bodySize = strlen(body);
