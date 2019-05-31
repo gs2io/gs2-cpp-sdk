@@ -27,8 +27,8 @@ const char MqttProtocolIdentifier[] = {'M', 'Q', 'I', 's', 'd', 'p'};
 
 ConnectRequest::ConnectRequest()
         : m_IsCleanSession(true),
-          m_KeepAliveInterval(60),
-          m_pUserId("")
+          m_pUserId(""),
+          m_KeepAliveInterval(60)
 {
 }
 
