@@ -90,6 +90,11 @@ public:
     {}
 
     ~IntrusiveListBase() = default;
+
+    bool isEmpty() const
+    {
+        return m_pHead == nullptr;
+    }
 };
 
 template<typename T>
