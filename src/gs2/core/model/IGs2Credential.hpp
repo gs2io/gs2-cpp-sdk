@@ -30,8 +30,6 @@ class IGs2Credential : public Gs2Object
 public:
     IGs2Credential() = default;
     virtual ~IGs2Credential() = default;
-
-    virtual void authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase) = 0;
 };
 
 GS2_END_OF_NAMESPACE

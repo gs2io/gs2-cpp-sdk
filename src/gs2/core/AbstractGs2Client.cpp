@@ -18,27 +18,27 @@
 #include "AsyncResult.hpp"
 #include "control/Gs2BasicRequest.hpp"
 #include "model/IGs2Credential.hpp"
-#include "network/HttpTask.hpp"
+#include "network/Gs2RestSession.hpp"
 #include "util/StringVariable.hpp"
 #include <string>
 #include <network/HttpRequest.h>
 
 GS2_START_OF_NAMESPACE
 
-AbstractGs2ClientBase::AbstractGs2ClientBase(IGs2Credential& credential) :
-    m_Credential(credential),
+AbstractGs2ClientBase::AbstractGs2ClientBase(Gs2RestSession& gs2RestSession) :
+    m_Gs2RestSession(gs2RestSession),
     m_Region(Region::AP_NORTHEAST_1)
 {
 }
 
-AbstractGs2ClientBase::AbstractGs2ClientBase(IGs2Credential& credential, const Region& region) :
-    m_Credential(credential),
+AbstractGs2ClientBase::AbstractGs2ClientBase(Gs2RestSession& gs2RestSession, const Region& region) :
+    m_Gs2RestSession(gs2RestSession),
     m_Region(region)
 {
 }
 
-AbstractGs2ClientBase::AbstractGs2ClientBase(IGs2Credential& credential, const Char region[]) :
-    m_Credential(credential),
+AbstractGs2ClientBase::AbstractGs2ClientBase(Gs2RestSession& gs2RestSession, const Char region[]) :
+    m_Gs2RestSession(gs2RestSession),
     m_Region(region)
 {
 }
@@ -50,6 +50,11 @@ void AbstractGs2ClientBase::setUrl(::cocos2d::network::HttpRequest& httpRequest,
     urlString.replace("{region}", m_Region.getName());
 
     httpRequest.setUrl(urlString.c_str());
+}
+
+void AbstractGs2ClientBase::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase)
+{
+    m_Gs2RestSession.authorizeAndExecute(gs2StandardHttpTaskBase);
 }
 
 GS2_END_OF_NAMESPACE

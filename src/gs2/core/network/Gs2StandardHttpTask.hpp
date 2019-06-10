@@ -19,17 +19,16 @@
 
 #include "HttpTask.hpp"
 #include "../util/IntrusiveList.hpp"
-#include <mutex>
 
 GS2_START_OF_NAMESPACE
 
-namespace detail {
+class Gs2RestSession;
 
-class Gs2LoginTask;
+namespace detail {
 
 class Gs2StandardHttpTaskBase : public Gs2HttpTask, public IntrusiveListItem<Gs2StandardHttpTaskBase>
 {
-    friend class Gs2LoginTask;
+    friend class gs2::Gs2RestSession;
 
 private:
     void callbackGs2Response(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE = 0;

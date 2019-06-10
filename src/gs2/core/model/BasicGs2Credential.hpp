@@ -23,28 +23,13 @@
 
 GS2_START_OF_NAMESPACE
 
-namespace detail {
-class Gs2StandardHttpTaskBase;
-class Gs2LoginTask;
-}
-
 class BasicGs2Credential : public IGs2Credential
 {
-    friend class detail::Gs2LoginTask;
-
 private:
-    /** 排他制御 */
-    mutable std::mutex m_Mutex;
     /** クライアントID */
     StringHolder m_ClientId;
     /** クライアントシークレット */
     StringHolder m_ClientSecret;
-    /** プロジェクトトークン */
-    optional<StringHolder> m_ProjectToken;
-    /** プロジェクトトークンの取得タスク */
-    detail::Gs2LoginTask* m_pGs2LoginTask;
-
-    void authorizeAndExecuteImpl(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase);
 
 public:
     /**
@@ -55,7 +40,7 @@ public:
      */
     BasicGs2Credential(const Char clientId[], const Char clientSecret[]);
 
-    ~BasicGs2Credential() GS2_OVERRIDE;
+    ~BasicGs2Credential() GS2_OVERRIDE = default;
 
     /**
      * クライアントIDを取得。
@@ -76,15 +61,6 @@ public:
     {
         return m_ClientSecret;
     }
-
-    /**
-     * プロジェクトトークンを取得。
-     *
-     * @return プロジェクトトークン
-     */
-    optional<StringHolder> getProjectToken() const;
-
-    void authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase) GS2_OVERRIDE;
 };
 
 GS2_END_OF_NAMESPACE

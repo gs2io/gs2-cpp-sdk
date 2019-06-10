@@ -17,6 +17,7 @@
 #include "Gs2RestSession.hpp"
 #include "../json/JsonWriter.hpp"
 #include "../json/JsonParser.hpp"
+#include "Gs2StandardHttpTask.hpp"
 
 GS2_START_OF_NAMESPACE
 
@@ -182,6 +183,33 @@ void Gs2RestSession::disconnect(DisconnectCallbackType callback)
     else
     {
         m_DisconnectCallbackHolderList.push(*new DisconnectCallbackHolder(std::move(callback)));
+    }
+}
+
+void Gs2RestSession::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase)
+{
+    std::lock_guard<std::mutex> lock(m_Mutex);
+
+    if (m_ProjectToken)
+    {
+        auto headers = gs2StandardHttpTaskBase.getHttpRequest().getHeaders();
+
+        detail::HttpTask::addHeaderEntry(headers, "X-GS2-CLIENT-ID", m_Gs2Credential.getClientId());
+        detail::HttpTask::addHeaderEntry(headers, "X-GS2-PROJECT-TOKEN", *m_ProjectToken);
+
+        gs2StandardHttpTaskBase.getHttpRequest().setHeaders(headers);
+
+        // TODO: 実行中タスクに登録
+
+        gs2StandardHttpTaskBase.send();
+    }
+    else
+    {
+        // 失敗を即コールバック
+
+        Gs2ClientException gs2ClientException;
+        gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
+        gs2StandardHttpTaskBase.callbackGs2Response("", &gs2ClientException);
     }
 }
 

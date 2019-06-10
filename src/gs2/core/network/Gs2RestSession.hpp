@@ -29,8 +29,16 @@
 
 GS2_START_OF_NAMESPACE
 
+class AbstractGs2ClientBase;
+
+namespace detail {
+    class Gs2StandardHttpTaskBase;
+}
+
 class Gs2RestSession : public Gs2Object
 {
+    friend class AbstractGs2ClientBase;
+
 public:
     typedef std::function<void(AsyncResult<void>&)> ConnectCallbackType;
     typedef std::function<void()> DisconnectCallbackType;
@@ -102,6 +110,9 @@ public:
     void connect(ConnectCallbackType callback);
 
     void disconnect(DisconnectCallbackType callback);
+
+private:
+    void authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase);
 };
 
 GS2_END_OF_NAMESPACE
