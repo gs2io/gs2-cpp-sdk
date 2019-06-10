@@ -54,6 +54,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/StampTask.hpp
         network/Gs2StandardHttpTask.hpp
         network/Gs2LoginTask.hpp
+        network/Gs2RestSession.hpp
         network/HttpTask.hpp
         util/Base64.hpp
         util/DefaultAllocator.hpp
@@ -78,6 +79,7 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         model/Region.cpp
         network/Gs2StandardHttpTask.cpp
         network/Gs2LoginTask.cpp
+        network/Gs2RestSession.cpp
         network/HttpTask.cpp
         util/Base64.cpp
         util/DefaultAllocator.cpp
