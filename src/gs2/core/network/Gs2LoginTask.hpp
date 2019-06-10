@@ -19,6 +19,7 @@
 
 #include "HttpTask.hpp"
 #include "Gs2StandardHttpTask.hpp"
+#include "../util/IntrusiveList.hpp"
 
 GS2_START_OF_NAMESPACE
 
@@ -32,23 +33,11 @@ class Gs2LoginTask : public Gs2HttpTask
 
 private:
     BasicGs2Credential& m_BasicGs2Credential;
-    Gs2StandardHttpTaskBase* m_pGs2StandardHttpTaskHead;
-
-    Gs2StandardHttpTaskBase* popGs2HttpStandardHttpTask()
-    {
-        auto* pGs2StandardHttpTask = m_pGs2StandardHttpTaskHead;
-        if (pGs2StandardHttpTask != nullptr)
-        {
-            m_pGs2StandardHttpTaskHead = pGs2StandardHttpTask->m_pNext;
-            pGs2StandardHttpTask->m_pNext = nullptr;
-        }
-        return pGs2StandardHttpTask;
-    }
+    IntrusiveList<Gs2StandardHttpTaskBase> m_Gs2StandardHttpTaskList;
 
     void pushGs2HttpStandardHttpTask(Gs2StandardHttpTaskBase& gs2StandardHttpTask)
     {
-        gs2StandardHttpTask.m_pNext = m_pGs2StandardHttpTaskHead;
-        m_pGs2StandardHttpTaskHead = &gs2StandardHttpTask;
+        m_Gs2StandardHttpTaskList.push(gs2StandardHttpTask);
     }
 
     void callbackGs2Response(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE;

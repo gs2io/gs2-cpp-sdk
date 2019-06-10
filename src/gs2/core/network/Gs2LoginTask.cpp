@@ -41,8 +41,7 @@ struct LoginResultModel : public detail::json::IModel
 
 Gs2LoginTask::Gs2LoginTask(BasicGs2Credential& basicGs2Credential) :
     Gs2HttpTask(),
-    m_BasicGs2Credential(basicGs2Credential),
-    m_pGs2StandardHttpTaskHead(nullptr)
+    m_BasicGs2Credential(basicGs2Credential)
 {
     getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
     auto& writer = detail::json::JsonWriter::getInstance();
@@ -67,9 +66,9 @@ Gs2LoginTask::~Gs2LoginTask()
 {
     Gs2ClientException gs2ClientException;
     gs2ClientException.setType(Gs2ClientException::UnknownException);
-    while (auto* pGs2StandardHttpTaskHead = popGs2HttpStandardHttpTask())
+    while (auto* pGs2StandardHttpTask = m_Gs2StandardHttpTaskList.pop())
     {
-        pGs2StandardHttpTaskHead->callbackGs2Response("", &gs2ClientException);
+        pGs2StandardHttpTask->callbackGs2Response("", &gs2ClientException);
     }
 }
 
@@ -89,7 +88,7 @@ void Gs2LoginTask::callbackGs2Response(const Char responseBody[], Gs2ClientExcep
         {
             m_BasicGs2Credential.m_ProjectToken = std::move(*resultModel.accessToken);
 
-            while (auto* pGs2StandardHttpTask = popGs2HttpStandardHttpTask())
+            while (auto* pGs2StandardHttpTask = m_Gs2StandardHttpTaskList.pop())
             {
                 m_BasicGs2Credential.authorizeAndExecuteImpl(*pGs2StandardHttpTask);
             }
@@ -98,17 +97,17 @@ void Gs2LoginTask::callbackGs2Response(const Char responseBody[], Gs2ClientExcep
         {
             Gs2ClientException gs2ClientException;
             gs2ClientException.setType(Gs2ClientException::UnknownException);
-            while (auto* pGs2StandardHttpTaskHead = popGs2HttpStandardHttpTask())
+            while (auto* pGs2StandardHttpTask = m_Gs2StandardHttpTaskList.pop())
             {
-                pGs2StandardHttpTaskHead->callbackGs2Response("", &gs2ClientException);
+                pGs2StandardHttpTask->callbackGs2Response("", &gs2ClientException);
             }
         }
     }
     else
     {
-        while (auto* pGs2StandardHttpTaskHead = popGs2HttpStandardHttpTask())
+        while (auto* pGs2StandardHttpTask = m_Gs2StandardHttpTaskList.pop())
         {
-            pGs2StandardHttpTaskHead->callbackGs2Response("", pClientException);
+            pGs2StandardHttpTask->callbackGs2Response("", pClientException);
         }
     }
 

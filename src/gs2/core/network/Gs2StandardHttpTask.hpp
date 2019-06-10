@@ -18,6 +18,7 @@
 #define GS2_CORE_NETWORK_GS2STANDARDHTTPTASK_HPP_
 
 #include "HttpTask.hpp"
+#include "../util/IntrusiveList.hpp"
 #include <mutex>
 
 GS2_START_OF_NAMESPACE
@@ -26,12 +27,11 @@ namespace detail {
 
 class Gs2LoginTask;
 
-class Gs2StandardHttpTaskBase : public Gs2HttpTask
+class Gs2StandardHttpTaskBase : public Gs2HttpTask, public IntrusiveListItem<Gs2StandardHttpTaskBase>
 {
     friend class Gs2LoginTask;
 
 private:
-    Gs2StandardHttpTaskBase* m_pNext;
     void callbackGs2Response(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE = 0;
 
 public:
