@@ -84,6 +84,23 @@ protected:
         return pHead;
     }
 
+    IntrusiveListItemBase* remove(IntrusiveListItemBase& item)
+    {
+        auto** ppItem = &m_pHead;
+        while (*ppItem != nullptr)
+        {
+            if (*ppItem == &item)
+            {
+                *ppItem = item.m_pNext;
+                return &item;
+            }
+
+            ppItem = &item.m_pNext;
+        }
+
+        return nullptr;
+    }
+
 public:
     IntrusiveListBase():
         m_pHead(nullptr)
@@ -112,6 +129,11 @@ public:
     T* pop()
     {
         return static_cast<T*>(IntrusiveListBase::pop());
+    }
+
+    T* remove(T& item)
+    {
+        return static_cast<T*>(IntrusiveListBase::remove(item));
     }
 };
 
