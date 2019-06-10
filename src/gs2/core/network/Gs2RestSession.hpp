@@ -89,6 +89,21 @@ private:
 
     std::mutex m_Mutex;
 
+    bool isAvailable() const
+    {
+        return !!m_ProjectToken;
+    };
+
+    bool isConnecting() const
+    {
+        return !m_ConnectCallbackHolderList.isEmpty();
+    }
+
+    bool isDisconnecting() const
+    {
+        return !m_DisconnectCallbackHolderList.isEmpty();
+    }
+
 public:
     explicit Gs2RestSession(const BasicGs2Credential& gs2Credential) :
         m_Gs2Credential(gs2Credential),
