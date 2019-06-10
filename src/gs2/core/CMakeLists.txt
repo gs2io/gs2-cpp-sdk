@@ -57,6 +57,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         network/HttpTask.hpp
         util/Base64.hpp
         util/DefaultAllocator.hpp
+        util/IntrusiveList.hpp
         util/List.hpp
         util/StandardAllocator.hpp
         util/StringHolder.hpp
