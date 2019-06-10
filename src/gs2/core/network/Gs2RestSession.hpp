@@ -104,6 +104,9 @@ private:
         return !m_DisconnectCallbackHolderList.isEmpty();
     }
 
+    void triggerConnectCallback(AsyncResult<void>& result);
+    void triggerDisconnectCallback();
+
 public:
     explicit Gs2RestSession(const BasicGs2Credential& gs2Credential) :
         m_Gs2Credential(gs2Credential),

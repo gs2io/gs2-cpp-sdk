@@ -80,17 +80,9 @@ void Gs2RestSession::Gs2LoginTask::callbackGs2Response(const Char responseBody[]
         Gs2ClientException gs2ClientException;
         gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
         AsyncResult<void> result(&gs2ClientException);
-        while (auto* pConnectCallbackHolder = m_Gs2RestSession.m_ConnectCallbackHolderList.pop())
-        {
-            pConnectCallbackHolder->callback()(result);
-            delete pConnectCallbackHolder;
-        }
+        m_Gs2RestSession.triggerConnectCallback(result);
 
-        while (auto* pDisconnectCallbackHolder = m_Gs2RestSession.m_DisconnectCallbackHolderList.pop())
-        {
-            pDisconnectCallbackHolder->callback()();
-            delete pDisconnectCallbackHolder;
-        }
+        m_Gs2RestSession.triggerDisconnectCallback();
     }
     else if (pClientException == nullptr)
     {
@@ -109,11 +101,7 @@ void Gs2RestSession::Gs2LoginTask::callbackGs2Response(const Char responseBody[]
             m_Gs2RestSession.m_ProjectToken = std::move(*resultModel.accessToken);
 
             AsyncResult<void> result;
-            while (auto* pConnectCallbackHolder = m_Gs2RestSession.m_ConnectCallbackHolderList.pop())
-            {
-                pConnectCallbackHolder->callback()(result);
-                delete pConnectCallbackHolder;
-            }
+            m_Gs2RestSession.triggerConnectCallback(result);
         }
         else
         {
@@ -123,11 +111,7 @@ void Gs2RestSession::Gs2LoginTask::callbackGs2Response(const Char responseBody[]
             gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
 
             AsyncResult<void> result(&gs2ClientException);
-            while (auto* pConnectCallbackHolder = m_Gs2RestSession.m_ConnectCallbackHolderList.pop())
-            {
-                pConnectCallbackHolder->callback()(result);
-                delete pConnectCallbackHolder;
-            }
+            m_Gs2RestSession.triggerConnectCallback(result);
         }
     }
     else
@@ -135,11 +119,7 @@ void Gs2RestSession::Gs2LoginTask::callbackGs2Response(const Char responseBody[]
         // ログイン処理がエラーになった場合
 
         AsyncResult<void> result(pClientException);
-        while (auto* pConnectCallbackHolder = m_Gs2RestSession.m_ConnectCallbackHolderList.pop())
-        {
-            pConnectCallbackHolder->callback()(result);
-            delete pConnectCallbackHolder;
-        }
+        m_Gs2RestSession.triggerConnectCallback(result);
     }
 
     // Gs2LoginTask (HttpTask) はコールバック呼出後に自殺するのでポインタだけを無効化する
@@ -149,6 +129,24 @@ void Gs2RestSession::Gs2LoginTask::callbackGs2Response(const Char responseBody[]
 Gs2RestSession::~Gs2RestSession()
 {
     // TODO: disconnect() して完了待ち
+}
+
+void Gs2RestSession::triggerConnectCallback(AsyncResult<void>& result)
+{
+    while (auto* pConnectCallbackHolder = m_ConnectCallbackHolderList.pop())
+    {
+        pConnectCallbackHolder->callback()(result);
+        delete pConnectCallbackHolder;
+    }
+}
+
+void Gs2RestSession::triggerDisconnectCallback()
+{
+    while (auto* pDisconnectCallbackHolder = m_DisconnectCallbackHolderList.pop())
+    {
+        pDisconnectCallbackHolder->callback()();
+        delete pDisconnectCallbackHolder;
+    }
 }
 
 void Gs2RestSession::connect(ConnectCallbackType callback)
