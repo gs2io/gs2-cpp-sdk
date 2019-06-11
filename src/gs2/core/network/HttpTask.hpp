@@ -59,6 +59,7 @@ public:
 };
 
 
+// コールバック後に自殺することに注意
 class Gs2HttpTask : public HttpTask
 {
 private:
@@ -68,6 +69,8 @@ private:
 public:
     Gs2HttpTask() = default;
     ~Gs2HttpTask() GS2_OVERRIDE = default;
+
+    void callbackAndDestroy(const Char responseBody[], Gs2ClientException* pClientException);
 };
 
 }

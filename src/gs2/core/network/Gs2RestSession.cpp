@@ -212,7 +212,7 @@ void Gs2RestSession::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2Sta
 
         Gs2ClientException gs2ClientException;
         gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-        gs2StandardHttpTaskBase.callbackGs2Response("", &gs2ClientException);
+        gs2StandardHttpTaskBase.callbackAndDestroy("", &gs2ClientException);
     }
 }
 

@@ -42,7 +42,6 @@ void HttpTask::callbackHandler(::cocos2d::network::HttpClient *pClient, ::cocos2
 {
     HttpTask* pHttpTask = reinterpret_cast<HttpTask*>(pResponse->getHttpRequest()->getUserData());
     pHttpTask->callback(pClient, pResponse);
-    delete pHttpTask;
 }
 
 void HttpTask::send()
@@ -114,7 +113,13 @@ void Gs2HttpTask::callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::n
         pGs2ClientException = &gs2ClientException;
     }
 
-    callbackGs2Response(responseBody, pGs2ClientException);
+    callbackAndDestroy(responseBody, pGs2ClientException);
+}
+
+void Gs2HttpTask::callbackAndDestroy(const Char responseBody[], Gs2ClientException* pClientException)
+{
+    callbackGs2Response(responseBody, pClientException);
+    delete this;
 }
 
 }

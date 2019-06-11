@@ -28,8 +28,6 @@ namespace detail {
 
 class Gs2StandardHttpTaskBase : public Gs2HttpTask, public IntrusiveListItem<Gs2StandardHttpTaskBase>
 {
-    friend class gs2::Gs2RestSession;
-
 private:
     void callbackGs2Response(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE = 0;
 
