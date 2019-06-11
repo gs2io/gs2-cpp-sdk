@@ -14,7 +14,6 @@
  * permissions and limitations under the License.
  */
 
-#include <gs2/core/model/BasicGs2Credential.hpp>
 #include "Gs2StandardHttpTask.hpp"
 #include "Gs2RestSession.hpp"
 
