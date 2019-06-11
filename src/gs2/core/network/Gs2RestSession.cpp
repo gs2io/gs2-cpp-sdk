@@ -64,81 +64,6 @@ Gs2RestSession::Gs2LoginTask::Gs2LoginTask(Gs2RestSession& gs2RestSession) :
     getHttpRequest().setHeaders(headerEntries);
 }
 
-void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2ClientException* pClientException)
-{
-    // 接続完了コールバック
-
-    m_Gs2RestSession.m_Mutex.lock();
-
-    if (m_Gs2RestSession.isDisconnecting())
-    {
-        // ログイン処理中に disconnect() が呼ばれた場合
-
-        m_Gs2RestSession.m_ProjectToken.reset();
-
-        detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_Gs2RestSession.m_ConnectCallbackHolderList));
-        detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_Gs2RestSession.m_DisconnectCallbackHolderList));
-
-        m_Gs2RestSession.m_Mutex.unlock();
-
-        // connect() はすべてキャンセルする
-        Gs2ClientException gs2ClientException;
-        gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-        AsyncResult<void> result(&gs2ClientException);
-        Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
-
-        Gs2RestSession::triggerDisconnectCallback(disconnectCallbackHolderList);
-    }
-    else if (pClientException == nullptr)
-    {
-        // ログイン処理がエラーなく応答された場合
-
-        LoginResultModel resultModel;
-        if (responseBody != nullptr)
-        {
-            detail::json::JsonParser::parse(&resultModel, responseBody);
-        }
-
-        if (resultModel.accessToken)
-        {
-            // 応答からプロジェクトトークンが取得できた場合
-
-            m_Gs2RestSession.m_ProjectToken = std::move(*resultModel.accessToken);
-            detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_Gs2RestSession.m_ConnectCallbackHolderList));
-
-            m_Gs2RestSession.m_Mutex.unlock();
-
-            AsyncResult<void> result;
-            Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
-        }
-        else
-        {
-            // 応答からプロジェクトトークンが取得できなかった場合
-
-            detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_Gs2RestSession.m_ConnectCallbackHolderList));
-
-            m_Gs2RestSession.m_Mutex.unlock();
-
-            Gs2ClientException gs2ClientException;
-            gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-
-            AsyncResult<void> result(&gs2ClientException);
-            Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
-        }
-    }
-    else
-    {
-        // ログイン処理がエラーになった場合
-
-        detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_Gs2RestSession.m_ConnectCallbackHolderList));
-
-        m_Gs2RestSession.m_Mutex.unlock();
-
-        AsyncResult<void> result(pClientException);
-        Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
-    }
-}
-
 Gs2RestSession::~Gs2RestSession()
 {
     // disconnect() が複数のコールバックを叩き終わらないうちに破棄されないように、1回ロックへ入る
@@ -185,6 +110,81 @@ void Gs2RestSession::connect(ConnectCallbackType callback)
         m_ConnectCallbackHolderList.push(*new ConnectCallbackHolder(std::move(callback)));
 
         m_Mutex.unlock();
+    }
+}
+
+void Gs2RestSession::connectCallback(const Char responseBody[], Gs2ClientException* pClientException)
+{
+    // 接続完了コールバック
+
+    m_Mutex.lock();
+
+    if (isDisconnecting())
+    {
+        // ログイン処理中に disconnect() が呼ばれた場合
+
+        m_ProjectToken.reset();
+
+        detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
+        detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_DisconnectCallbackHolderList));
+
+        m_Mutex.unlock();
+
+        // connect() はすべてキャンセルする
+        Gs2ClientException gs2ClientException;
+        gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
+        AsyncResult<void> result(&gs2ClientException);
+        Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
+
+        Gs2RestSession::triggerDisconnectCallback(disconnectCallbackHolderList);
+    }
+    else if (pClientException == nullptr)
+    {
+        // ログイン処理がエラーなく応答された場合
+
+        LoginResultModel resultModel;
+        if (responseBody != nullptr)
+        {
+            detail::json::JsonParser::parse(&resultModel, responseBody);
+        }
+
+        if (resultModel.accessToken)
+        {
+            // 応答からプロジェクトトークンが取得できた場合
+
+            m_ProjectToken = std::move(*resultModel.accessToken);
+            detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
+
+            m_Mutex.unlock();
+
+            AsyncResult<void> result;
+            Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
+        }
+        else
+        {
+            // 応答からプロジェクトトークンが取得できなかった場合
+
+            detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
+
+            m_Mutex.unlock();
+
+            Gs2ClientException gs2ClientException;
+            gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
+
+            AsyncResult<void> result(&gs2ClientException);
+            Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
+        }
+    }
+    else
+    {
+        // ログイン処理がエラーになった場合
+
+        detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
+
+        m_Mutex.unlock();
+
+        AsyncResult<void> result(pClientException);
+        Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
     }
 }
 

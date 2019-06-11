@@ -70,7 +70,10 @@ private:
         Gs2RestSession& m_Gs2RestSession;
 
     private:
-        void callback(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE;
+        void callback(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE
+        {
+            m_Gs2RestSession.connectCallback(responseBody, pClientException);
+        }
 
     public:
         explicit Gs2LoginTask(Gs2RestSession& gs2RestSession);
@@ -106,6 +109,8 @@ private:
     {
         return !m_Gs2StandardHttpTaskBaseList.isEmpty();
     }
+
+    void connectCallback(const Char responseBody[], Gs2ClientException* pClientException);
 
     static void triggerConnectCallback(detail::IntrusiveList<ConnectCallbackHolder>& connectCallbackHolderList, AsyncResult<void>& result);
     static void triggerDisconnectCallback(detail::IntrusiveList<DisconnectCallbackHolder>& disconnectCallbackHolderList);
