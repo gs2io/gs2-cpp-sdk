@@ -84,7 +84,6 @@ private:
     detail::IntrusiveList<ConnectCallbackHolder> m_ConnectCallbackHolderList;
     detail::IntrusiveList<DisconnectCallbackHolder> m_DisconnectCallbackHolderList;
     detail::IntrusiveList<detail::Gs2StandardHttpTaskBase> m_Gs2StandardHttpTaskBaseList;
-    Gs2LoginTask* m_pGs2LoginTask;
 
     std::mutex m_Mutex;
 

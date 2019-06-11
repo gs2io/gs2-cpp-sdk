@@ -121,9 +121,6 @@ void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2Client
         AsyncResult<void> result(pClientException);
         m_Gs2RestSession.triggerConnectCallback(result);
     }
-
-    // Gs2LoginTask (HttpTask) はコールバック呼出後に自殺するのでポインタだけを無効化する
-    m_Gs2RestSession.m_pGs2LoginTask = nullptr;
 }
 
 Gs2RestSession::~Gs2RestSession()
@@ -163,9 +160,7 @@ void Gs2RestSession::connect(ConnectCallbackType callback)
     {
         if (!isConnecting())
         {
-            assert(m_pGs2LoginTask == nullptr);
-            m_pGs2LoginTask = new Gs2LoginTask(*this);
-            m_pGs2LoginTask->send();
+            (new Gs2LoginTask(*this))->send();
         }
 
         // isConnecting() はコールバックホルダリストが空かどうかで判定するので、追加はあとから行う
