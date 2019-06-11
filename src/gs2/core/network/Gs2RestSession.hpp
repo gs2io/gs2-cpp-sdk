@@ -107,8 +107,8 @@ private:
         return !m_Gs2StandardHttpTaskBaseList.isEmpty();
     }
 
-    void triggerConnectCallback(AsyncResult<void>& result);
-    void triggerDisconnectCallback();
+    static void triggerConnectCallback(detail::IntrusiveList<ConnectCallbackHolder>& connectCallbackHolderList, AsyncResult<void>& result);
+    static void triggerDisconnectCallback(detail::IntrusiveList<DisconnectCallbackHolder>& disconnectCallbackHolderList);
 
 public:
     explicit Gs2RestSession(const BasicGs2Credential& gs2Credential) :

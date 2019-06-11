@@ -68,7 +68,7 @@ void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2Client
 {
     // 接続完了コールバック
 
-    std::lock_guard<std::mutex> lock(m_Gs2RestSession.m_Mutex);
+    m_Gs2RestSession.m_Mutex.lock();
 
     if (m_Gs2RestSession.isDisconnecting())
     {
@@ -76,13 +76,18 @@ void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2Client
 
         m_Gs2RestSession.m_ProjectToken.reset();
 
+        detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_Gs2RestSession.m_ConnectCallbackHolderList));
+        detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_Gs2RestSession.m_DisconnectCallbackHolderList));
+
+        m_Gs2RestSession.m_Mutex.unlock();
+
         // connect() はすべてキャンセルする
         Gs2ClientException gs2ClientException;
         gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
         AsyncResult<void> result(&gs2ClientException);
-        m_Gs2RestSession.triggerConnectCallback(result);
+        Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
 
-        m_Gs2RestSession.triggerDisconnectCallback();
+        Gs2RestSession::triggerDisconnectCallback(disconnectCallbackHolderList);
     }
     else if (pClientException == nullptr)
     {
@@ -99,27 +104,38 @@ void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2Client
             // 応答からプロジェクトトークンが取得できた場合
 
             m_Gs2RestSession.m_ProjectToken = std::move(*resultModel.accessToken);
+            detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_Gs2RestSession.m_ConnectCallbackHolderList));
+
+            m_Gs2RestSession.m_Mutex.unlock();
 
             AsyncResult<void> result;
-            m_Gs2RestSession.triggerConnectCallback(result);
+            Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
         }
         else
         {
             // 応答からプロジェクトトークンが取得できなかった場合
 
+            detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_Gs2RestSession.m_ConnectCallbackHolderList));
+
+            m_Gs2RestSession.m_Mutex.unlock();
+
             Gs2ClientException gs2ClientException;
             gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
 
             AsyncResult<void> result(&gs2ClientException);
-            m_Gs2RestSession.triggerConnectCallback(result);
+            Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
         }
     }
     else
     {
         // ログイン処理がエラーになった場合
 
+        detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_Gs2RestSession.m_ConnectCallbackHolderList));
+
+        m_Gs2RestSession.m_Mutex.unlock();
+
         AsyncResult<void> result(pClientException);
-        m_Gs2RestSession.triggerConnectCallback(result);
+        Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
     }
 }
 
@@ -129,18 +145,18 @@ Gs2RestSession::~Gs2RestSession()
     std::lock_guard<std::mutex> lock(m_Mutex);
 }
 
-void Gs2RestSession::triggerConnectCallback(AsyncResult<void>& result)
+void Gs2RestSession::triggerConnectCallback(detail::IntrusiveList<ConnectCallbackHolder>& connectCallbackHolderList, AsyncResult<void>& result)
 {
-    while (auto* pConnectCallbackHolder = m_ConnectCallbackHolderList.pop())
+    while (auto* pConnectCallbackHolder = connectCallbackHolderList.pop())
     {
         pConnectCallbackHolder->callback()(result);
         delete pConnectCallbackHolder;
     }
 }
 
-void Gs2RestSession::triggerDisconnectCallback()
+void Gs2RestSession::triggerDisconnectCallback(detail::IntrusiveList<DisconnectCallbackHolder>& disconnectCallbackHolderList)
 {
-    while (auto* pDisconnectCallbackHolder = m_DisconnectCallbackHolderList.pop())
+    while (auto* pDisconnectCallbackHolder = disconnectCallbackHolderList.pop())
     {
         pDisconnectCallbackHolder->callback()();
         delete pDisconnectCallbackHolder;
@@ -149,10 +165,12 @@ void Gs2RestSession::triggerDisconnectCallback()
 
 void Gs2RestSession::connect(ConnectCallbackType callback)
 {
-    std::lock_guard<std::mutex> lock(m_Mutex);
+    m_Mutex.lock();
 
     if (isAvailable())
     {
+        m_Mutex.unlock();
+
         AsyncResult<void> result;
         callback(result);
     }
@@ -165,29 +183,36 @@ void Gs2RestSession::connect(ConnectCallbackType callback)
 
         // isConnecting() はコールバックホルダリストが空かどうかで判定するので、追加はあとから行う
         m_ConnectCallbackHolderList.push(*new ConnectCallbackHolder(std::move(callback)));
+
+        m_Mutex.unlock();
     }
 }
 
 void Gs2RestSession::disconnect(DisconnectCallbackType callback)
 {
-    std::lock_guard<std::mutex> lock(m_Mutex);
+    m_Mutex.lock();
 
     if (isConnecting() || isUsed())
     {
         // 接続処理中、もしくは処理中のタスクがあるなら、コールバックは接続処理完了後に返す
         m_DisconnectCallbackHolderList.push(*new DisconnectCallbackHolder(std::move(callback)));
+
+        m_Mutex.unlock();
     }
     else
     {
         // 接続処理中、もしくは処理中でなければ、即座にコールバックを返す
         m_ProjectToken.reset();
+
+        m_Mutex.unlock();
+
         callback();
     }
 }
 
 void Gs2RestSession::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase)
 {
-    std::lock_guard<std::mutex> lock(m_Mutex);
+    m_Mutex.lock();
 
     if (isAvailable() && !isDisconnecting())
     {
@@ -203,10 +228,14 @@ void Gs2RestSession::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2Sta
         m_Gs2StandardHttpTaskBaseList.push(gs2StandardHttpTaskBase);
 
         gs2StandardHttpTaskBase.send();
+
+        m_Mutex.unlock();
     }
     else
     {
         // 失敗を即コールバック
+
+        m_Mutex.unlock();
 
         Gs2ClientException gs2ClientException;
         gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
@@ -216,7 +245,7 @@ void Gs2RestSession::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2Sta
 
 void Gs2RestSession::notifyComplete(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase)
 {
-    std::lock_guard<std::mutex> lock(m_Mutex);
+    m_Mutex.lock();
 
     m_Gs2StandardHttpTaskBaseList.remove(gs2StandardHttpTaskBase);
 
@@ -225,7 +254,16 @@ void Gs2RestSession::notifyComplete(detail::Gs2StandardHttpTaskBase& gs2Standard
         // タスク終了を待機していた disconnect があれば実行してコールバック
 
         m_ProjectToken.reset();
-        triggerDisconnectCallback();
+
+        detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_DisconnectCallbackHolderList));
+
+        m_Mutex.unlock();
+
+        Gs2RestSession::triggerDisconnectCallback(disconnectCallbackHolderList);
+    }
+    else
+    {
+        m_Mutex.unlock();
     }
 }
 
