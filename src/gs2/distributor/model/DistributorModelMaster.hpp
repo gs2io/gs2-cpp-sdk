@@ -139,7 +139,7 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->whiteListTargetIds.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        if (jsonValue.IsString())
+                        if (json->IsString())
                         {
                             auto valueStr = json->GetString();
                             StringHolder stringHolder(valueStr);
