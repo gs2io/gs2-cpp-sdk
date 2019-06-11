@@ -20,6 +20,7 @@
 #include <gs2/core/AbstractGs2Client.hpp>
 #include <gs2/core/json/JsonWriter.hpp>
 #include <gs2/core/network/Gs2StandardHttpTask.hpp>
+#include <gs2/core/network/Gs2RestSession.hpp>
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
@@ -400,32 +401,32 @@ public:
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
      */
-    Gs2MoneyClient(IGs2Credential& credential) :
-        AbstractGs2ClientBase(credential)
+    Gs2MoneyClient(Gs2RestSession& gs2RestSession) :
+        AbstractGs2ClientBase(gs2RestSession)
     {
     }
 
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
 	 * @param region アクセス先リージョン
      */
-    Gs2MoneyClient(IGs2Credential& credential, const Region& region) :
-        AbstractGs2ClientBase(credential, region)
+    Gs2MoneyClient(Gs2RestSession& gs2RestSession, const Region& region) :
+        AbstractGs2ClientBase(gs2RestSession, region)
     {
     }
 
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
 	 * @param region アクセス先リージョン
      */
-    Gs2MoneyClient(IGs2Credential& credential, const Char region[]) :
-        AbstractGs2ClientBase(credential, region)
+    Gs2MoneyClient(Gs2RestSession& gs2RestSession, const Char region[]) :
+        AbstractGs2ClientBase(gs2RestSession, region)
     {
     }
 
@@ -441,14 +442,16 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FMoneyFunctionHandler.describeMoneys");
-        Char encodeBuffer[2048];
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -462,7 +465,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -582,7 +585,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -597,10 +600,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FMoneyFunctionHandler.getMoneyStatus");
-        Char encodeBuffer[2048];
         if (request.getMoneyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMoneyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMoneyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -614,7 +617,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -629,10 +632,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FMoneyFunctionHandler.getMoney");
-        Char encodeBuffer[2048];
         if (request.getMoneyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMoneyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMoneyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -646,7 +649,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -661,10 +664,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FMoneyFunctionHandler.updateMoney");
-        Char encodeBuffer[2048];
         if (request.getMoneyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMoneyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMoneyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -756,7 +759,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -771,10 +774,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FMoneyFunctionHandler.deleteMoney");
-        Char encodeBuffer[2048];
         if (request.getMoneyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMoneyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMoneyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -788,7 +791,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -803,22 +806,26 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FWalletFunctionHandler.describeWallets");
-        Char encodeBuffer[2048];
         if (request.getMoneyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMoneyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMoneyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -836,7 +843,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -851,14 +858,16 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FWalletFunctionHandler.getWallet");
-        Char encodeBuffer[2048];
         if (request.getMoneyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMoneyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMoneyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getSlot()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSlot()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("slot={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int32 value = *request.getSlot();
+            std::sprintf(urlSafeValue, "%d", value);
+            url += "&" + detail::StringVariable("slot={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -876,7 +885,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -891,18 +900,21 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FWalletFunctionHandler.getWalletByUserId");
-        Char encodeBuffer[2048];
         if (request.getMoneyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMoneyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMoneyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getSlot()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSlot()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("slot={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int32 value = *request.getSlot();
+            std::sprintf(urlSafeValue, "%d", value);
+            url += "&" + detail::StringVariable("slot={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -920,7 +932,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -935,26 +947,32 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FWalletFunctionHandler.getWalletDetail");
-        Char encodeBuffer[2048];
         if (request.getMoneyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMoneyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMoneyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getSlot()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSlot()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("slot={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int32 value = *request.getSlot();
+            std::sprintf(urlSafeValue, "%d", value);
+            url += "&" + detail::StringVariable("slot={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -972,7 +990,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -987,18 +1005,21 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FWalletFunctionHandler.depositByUserId");
-        Char encodeBuffer[2048];
         if (request.getMoneyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMoneyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMoneyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getSlot()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSlot()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("slot={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int32 value = *request.getSlot();
+            std::sprintf(urlSafeValue, "%d", value);
+            url += "&" + detail::StringVariable("slot={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1044,7 +1065,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1059,14 +1080,16 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FWalletFunctionHandler.withdraw");
-        Char encodeBuffer[2048];
         if (request.getMoneyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMoneyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMoneyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getSlot()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSlot()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("slot={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int32 value = *request.getSlot();
+            std::sprintf(urlSafeValue, "%d", value);
+            url += "&" + detail::StringVariable("slot={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1102,7 +1125,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1117,18 +1140,21 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FWalletFunctionHandler.withdrawByUserId");
-        Char encodeBuffer[2048];
         if (request.getMoneyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMoneyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMoneyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getSlot()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSlot()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("slot={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int32 value = *request.getSlot();
+            std::sprintf(urlSafeValue, "%d", value);
+            url += "&" + detail::StringVariable("slot={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1164,7 +1190,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1179,10 +1205,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FWalletFunctionHandler.depositByStampSheet");
-        Char encodeBuffer[2048];
         if (request.getStampSheet()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStampSheet()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("stampSheet={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStampSheet(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("stampSheet={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1213,7 +1239,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1267,7 +1293,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1316,7 +1342,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1331,30 +1357,38 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FReceiptFunctionHandler.describeReceipts");
-        Char encodeBuffer[2048];
         if (request.getMoneyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMoneyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMoneyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getBegin()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getBegin()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("begin={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getBegin();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("begin={value}").replace("{value}", urlSafeValue);
         }
         if (request.getEnd()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getEnd()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("end={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getEnd();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("end={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1372,7 +1406,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1387,34 +1421,44 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FReceiptFunctionHandler.describeReceiptsByUserIdAndSlot");
-        Char encodeBuffer[2048];
         if (request.getMoneyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMoneyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMoneyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getSlot()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSlot()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("slot={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int32 value = *request.getSlot();
+            std::sprintf(urlSafeValue, "%d", value);
+            url += "&" + detail::StringVariable("slot={value}").replace("{value}", urlSafeValue);
         }
         if (request.getBegin()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getBegin()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("begin={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getBegin();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("begin={value}").replace("{value}", urlSafeValue);
         }
         if (request.getEnd()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getEnd()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("end={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getEnd();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("end={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1432,7 +1476,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1447,18 +1491,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/money-handler?handler=gs2_money%2Fhandler%2FReceiptFunctionHandler.getByUserIdAndTransactionId");
-        Char encodeBuffer[2048];
         if (request.getMoneyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMoneyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMoneyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("moneyName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getTransactionId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getTransactionId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("transactionId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getTransactionId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("transactionId={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1476,7 +1522,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 };
 

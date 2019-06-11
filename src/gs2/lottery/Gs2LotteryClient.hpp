@@ -20,6 +20,7 @@
 #include <gs2/core/AbstractGs2Client.hpp>
 #include <gs2/core/json/JsonWriter.hpp>
 #include <gs2/core/network/Gs2StandardHttpTask.hpp>
+#include <gs2/core/network/Gs2RestSession.hpp>
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
@@ -586,32 +587,32 @@ public:
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
      */
-    Gs2LotteryClient(IGs2Credential& credential) :
-        AbstractGs2ClientBase(credential)
+    Gs2LotteryClient(Gs2RestSession& gs2RestSession) :
+        AbstractGs2ClientBase(gs2RestSession)
     {
     }
 
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
 	 * @param region アクセス先リージョン
      */
-    Gs2LotteryClient(IGs2Credential& credential, const Region& region) :
-        AbstractGs2ClientBase(credential, region)
+    Gs2LotteryClient(Gs2RestSession& gs2RestSession, const Region& region) :
+        AbstractGs2ClientBase(gs2RestSession, region)
     {
     }
 
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
 	 * @param region アクセス先リージョン
      */
-    Gs2LotteryClient(IGs2Credential& credential, const Char region[]) :
-        AbstractGs2ClientBase(credential, region)
+    Gs2LotteryClient(Gs2RestSession& gs2RestSession, const Char region[]) :
+        AbstractGs2ClientBase(gs2RestSession, region)
     {
     }
 
@@ -627,14 +628,16 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FGroupFunctionHandler.describeGroups");
-        Char encodeBuffer[2048];
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -648,7 +651,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -693,7 +696,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -708,10 +711,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FGroupFunctionHandler.getGroupStatus");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -725,7 +728,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -740,10 +743,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FGroupFunctionHandler.getGroup");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -757,7 +760,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -772,10 +775,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FGroupFunctionHandler.updateGroup");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -802,7 +805,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -817,10 +820,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FGroupFunctionHandler.deleteGroup");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -834,7 +837,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -849,18 +852,21 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryModelMasterFunctionHandler.describeLotteryModelMasters");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -874,7 +880,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -889,10 +895,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryModelMasterFunctionHandler.createLotteryModelMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -954,7 +960,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -969,14 +975,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryModelMasterFunctionHandler.getLotteryModelMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLotteryModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLotteryModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getLotteryModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -990,7 +997,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1005,14 +1012,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryModelMasterFunctionHandler.updateLotteryModelMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLotteryModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLotteryModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getLotteryModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1069,7 +1077,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1084,14 +1092,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryModelMasterFunctionHandler.deleteLotteryModelMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLotteryModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLotteryModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getLotteryModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1105,7 +1114,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1120,18 +1129,21 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FPrizeTableMasterFunctionHandler.describePrizeTableMasters");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1145,7 +1157,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1160,10 +1172,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FPrizeTableMasterFunctionHandler.createPrizeTableMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1211,7 +1223,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1226,14 +1238,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FPrizeTableMasterFunctionHandler.getPrizeTableMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPrizeTableName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPrizeTableName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("prizeTableName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPrizeTableName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("prizeTableName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1247,7 +1260,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1262,14 +1275,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FPrizeTableMasterFunctionHandler.updatePrizeTableMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPrizeTableName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPrizeTableName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("prizeTableName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPrizeTableName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("prizeTableName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1312,7 +1326,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1327,14 +1341,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FPrizeTableMasterFunctionHandler.deletePrizeTableMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPrizeTableName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPrizeTableName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("prizeTableName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPrizeTableName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("prizeTableName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1348,7 +1363,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1363,22 +1378,26 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FBoxFunctionHandler.describeBoxes");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLotteryModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLotteryModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getLotteryModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1396,7 +1415,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1411,14 +1430,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FBoxFunctionHandler.getBox");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLotteryModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLotteryModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getLotteryModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1436,7 +1456,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1451,18 +1471,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FBoxFunctionHandler.getBoxByUserId");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLotteryModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLotteryModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getLotteryModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1480,7 +1502,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1495,14 +1517,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FBoxFunctionHandler.resetBox");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLotteryModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLotteryModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getLotteryModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1520,7 +1543,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1535,18 +1558,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FBoxFunctionHandler.resetBoxByUserId");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLotteryModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLotteryModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getLotteryModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1564,7 +1589,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1579,10 +1604,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryModelFunctionHandler.describeLotteryModels");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1596,7 +1621,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1611,14 +1636,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryModelFunctionHandler.getLotteryModel");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLotteryModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLotteryModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getLotteryModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1632,7 +1658,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1647,14 +1673,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryFunctionHandler.draw");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLotteryModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLotteryModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getLotteryModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1672,7 +1699,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1687,14 +1714,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FLotteryFunctionHandler.describeProbabilities");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLotteryModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLotteryModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getLotteryModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("lotteryModelName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1708,7 +1736,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1723,10 +1751,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FCurrentLotteryMasterFunctionHandler.exportMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1740,7 +1768,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1755,10 +1783,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FCurrentLotteryMasterFunctionHandler.getCurrentLotteryMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1772,7 +1800,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1787,10 +1815,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lottery-handler?handler=gs2_lottery%2Fhandler%2FCurrentLotteryMasterFunctionHandler.updateCurrentLotteryMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1817,7 +1845,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 };
 

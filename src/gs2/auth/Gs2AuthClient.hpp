@@ -20,6 +20,7 @@
 #include <gs2/core/AbstractGs2Client.hpp>
 #include <gs2/core/json/JsonWriter.hpp>
 #include <gs2/core/network/Gs2StandardHttpTask.hpp>
+#include <gs2/core/network/Gs2RestSession.hpp>
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
@@ -85,32 +86,32 @@ public:
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
      */
-    Gs2AuthClient(IGs2Credential& credential) :
-        AbstractGs2ClientBase(credential)
+    Gs2AuthClient(Gs2RestSession& gs2RestSession) :
+        AbstractGs2ClientBase(gs2RestSession)
     {
     }
 
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
 	 * @param region アクセス先リージョン
      */
-    Gs2AuthClient(IGs2Credential& credential, const Region& region) :
-        AbstractGs2ClientBase(credential, region)
+    Gs2AuthClient(Gs2RestSession& gs2RestSession, const Region& region) :
+        AbstractGs2ClientBase(gs2RestSession, region)
     {
     }
 
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
 	 * @param region アクセス先リージョン
      */
-    Gs2AuthClient(IGs2Credential& credential, const Char region[]) :
-        AbstractGs2ClientBase(credential, region)
+    Gs2AuthClient(Gs2RestSession& gs2RestSession, const Char region[]) :
+        AbstractGs2ClientBase(gs2RestSession, region)
     {
     }
 
@@ -157,7 +158,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -217,7 +218,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 };
 

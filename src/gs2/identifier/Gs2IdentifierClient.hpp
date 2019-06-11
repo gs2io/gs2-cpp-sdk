@@ -20,6 +20,7 @@
 #include <gs2/core/AbstractGs2Client.hpp>
 #include <gs2/core/json/JsonWriter.hpp>
 #include <gs2/core/network/Gs2StandardHttpTask.hpp>
+#include <gs2/core/network/Gs2RestSession.hpp>
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
@@ -288,32 +289,32 @@ public:
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
      */
-    Gs2IdentifierClient(IGs2Credential& credential) :
-        AbstractGs2ClientBase(credential)
+    Gs2IdentifierClient(Gs2RestSession& gs2RestSession) :
+        AbstractGs2ClientBase(gs2RestSession)
     {
     }
 
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
 	 * @param region アクセス先リージョン
      */
-    Gs2IdentifierClient(IGs2Credential& credential, const Region& region) :
-        AbstractGs2ClientBase(credential, region)
+    Gs2IdentifierClient(Gs2RestSession& gs2RestSession, const Region& region) :
+        AbstractGs2ClientBase(gs2RestSession, region)
     {
     }
 
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
 	 * @param region アクセス先リージョン
      */
-    Gs2IdentifierClient(IGs2Credential& credential, const Char region[]) :
-        AbstractGs2ClientBase(credential, region)
+    Gs2IdentifierClient(Gs2RestSession& gs2RestSession, const Char region[]) :
+        AbstractGs2ClientBase(gs2RestSession, region)
     {
     }
 
@@ -329,14 +330,16 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FUserFunctionHandler.describeUsers");
-        Char encodeBuffer[2048];
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -350,7 +353,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -395,7 +398,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -410,10 +413,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FUserFunctionHandler.updateUser");
-        Char encodeBuffer[2048];
         if (request.getUserName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -440,7 +443,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -455,10 +458,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FUserFunctionHandler.getUserStatus");
-        Char encodeBuffer[2048];
         if (request.getUserName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -472,7 +475,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -487,10 +490,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FUserFunctionHandler.getUser");
-        Char encodeBuffer[2048];
         if (request.getUserName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -504,7 +507,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -519,10 +522,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FUserFunctionHandler.deleteUser");
-        Char encodeBuffer[2048];
         if (request.getUserName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -536,7 +539,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -551,14 +554,16 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FSecurityPolicyFunctionHandler.describeSecurityPolicies");
-        Char encodeBuffer[2048];
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -572,7 +577,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -587,14 +592,16 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FSecurityPolicyFunctionHandler.describeCommonSecurityPolicies");
-        Char encodeBuffer[2048];
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -608,7 +615,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -658,7 +665,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -673,10 +680,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FSecurityPolicyFunctionHandler.updateSecurityPolicy");
-        Char encodeBuffer[2048];
         if (request.getSecurityPolicyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSecurityPolicyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("securityPolicyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getSecurityPolicyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("securityPolicyName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -708,7 +715,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -723,10 +730,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FSecurityPolicyFunctionHandler.getSecurityPolicyStatus");
-        Char encodeBuffer[2048];
         if (request.getSecurityPolicyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSecurityPolicyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("securityPolicyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getSecurityPolicyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("securityPolicyName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -740,7 +747,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -755,10 +762,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FSecurityPolicyFunctionHandler.getSecurityPolicy");
-        Char encodeBuffer[2048];
         if (request.getSecurityPolicyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSecurityPolicyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("securityPolicyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getSecurityPolicyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("securityPolicyName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -772,7 +779,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -787,10 +794,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FSecurityPolicyFunctionHandler.deleteSecurityPolicy");
-        Char encodeBuffer[2048];
         if (request.getSecurityPolicyName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSecurityPolicyName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("securityPolicyName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getSecurityPolicyName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("securityPolicyName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -804,7 +811,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -819,18 +826,21 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FIdentifierFunctionHandler.describeIdentifiers");
-        Char encodeBuffer[2048];
         if (request.getUserName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -844,7 +854,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -859,10 +869,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FIdentifierFunctionHandler.createIdentifier");
-        Char encodeBuffer[2048];
         if (request.getUserName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -884,7 +894,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -899,14 +909,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FIdentifierFunctionHandler.getIdentifier");
-        Char encodeBuffer[2048];
         if (request.getUserName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getClientId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getClientId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("clientId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getClientId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("clientId={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -920,7 +931,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -935,14 +946,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FIdentifierFunctionHandler.deleteIdentifier");
-        Char encodeBuffer[2048];
         if (request.getUserName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getClientId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getClientId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("clientId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getClientId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("clientId={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -956,7 +968,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -971,10 +983,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FAttachSecurityPolicyFunctionHandler.getHasSecurityPolicy");
-        Char encodeBuffer[2048];
         if (request.getUserName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -988,7 +1000,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1003,10 +1015,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FAttachSecurityPolicyFunctionHandler.attachSecurityPolicy");
-        Char encodeBuffer[2048];
         if (request.getUserName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1033,7 +1045,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1048,14 +1060,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/identifier-handler?handler=gs2_identifier%2Fhandler%2FAttachSecurityPolicyFunctionHandler.detachSecurityPolicy");
-        Char encodeBuffer[2048];
         if (request.getUserName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getSecurityPolicyId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getSecurityPolicyId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("securityPolicyId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getSecurityPolicyId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("securityPolicyId={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1069,7 +1082,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1114,7 +1127,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 };
 

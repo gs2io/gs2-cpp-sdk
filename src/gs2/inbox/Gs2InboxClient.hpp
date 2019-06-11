@@ -20,6 +20,7 @@
 #include <gs2/core/AbstractGs2Client.hpp>
 #include <gs2/core/json/JsonWriter.hpp>
 #include <gs2/core/network/Gs2StandardHttpTask.hpp>
+#include <gs2/core/network/Gs2RestSession.hpp>
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
@@ -333,32 +334,32 @@ public:
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
      */
-    Gs2InboxClient(IGs2Credential& credential) :
-        AbstractGs2ClientBase(credential)
+    Gs2InboxClient(Gs2RestSession& gs2RestSession) :
+        AbstractGs2ClientBase(gs2RestSession)
     {
     }
 
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
 	 * @param region アクセス先リージョン
      */
-    Gs2InboxClient(IGs2Credential& credential, const Region& region) :
-        AbstractGs2ClientBase(credential, region)
+    Gs2InboxClient(Gs2RestSession& gs2RestSession, const Region& region) :
+        AbstractGs2ClientBase(gs2RestSession, region)
     {
     }
 
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
 	 * @param region アクセス先リージョン
      */
-    Gs2InboxClient(IGs2Credential& credential, const Char region[]) :
-        AbstractGs2ClientBase(credential, region)
+    Gs2InboxClient(Gs2RestSession& gs2RestSession, const Char region[]) :
+        AbstractGs2ClientBase(gs2RestSession, region)
     {
     }
 
@@ -374,14 +375,16 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.describeInboxes");
-        Char encodeBuffer[2048];
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -395,7 +398,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -490,7 +493,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -505,10 +508,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.getInboxStatus");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -522,7 +525,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -537,10 +540,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.getInbox");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -554,7 +557,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -569,10 +572,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.updateInbox");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -649,7 +652,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -664,10 +667,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FInboxFunctionHandler.deleteInbox");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -681,7 +684,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -696,18 +699,21 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.describeMessages");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -725,7 +731,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -740,22 +746,26 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.describeMessagesByUserId");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -773,7 +783,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -788,10 +798,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.sendMessageByUserId");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -837,7 +847,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -852,10 +862,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.sendMessagesByUserId");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -888,7 +898,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -903,14 +913,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.getMessage");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getMessageName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMessageName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -928,7 +939,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -943,18 +954,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.getMessageByUserId");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getMessageName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMessageName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -972,7 +985,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -987,14 +1000,14 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.getMessages");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getMessageNames()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageNames()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("messageNames={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            url += "&" + detail::StringVariable("messageNames={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1012,7 +1025,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1027,18 +1040,19 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.getMessagesByUserId");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getMessageNames()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageNames()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("messageNames={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            url += "&" + detail::StringVariable("messageNames={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1056,7 +1070,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1071,14 +1085,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.readMessage");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getMessageName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMessageName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1104,7 +1119,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1119,18 +1134,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.readMessageByUserId");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getMessageName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMessageName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1156,7 +1173,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1171,14 +1188,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.deleteMessage");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getMessageName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMessageName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1196,7 +1214,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1211,18 +1229,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/inbox-handler?handler=gs2_inbox%2Fhandler%2FMessageFunctionHandler.deleteMessageByUserId");
-        Char encodeBuffer[2048];
         if (request.getInboxName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getInboxName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getInboxName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("inboxName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getMessageName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMessageName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMessageName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("messageName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1240,7 +1260,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 };
 

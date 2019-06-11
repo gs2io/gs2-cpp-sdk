@@ -20,6 +20,7 @@
 #include <gs2/core/AbstractGs2Client.hpp>
 #include <gs2/core/json/JsonWriter.hpp>
 #include <gs2/core/network/Gs2StandardHttpTask.hpp>
+#include <gs2/core/network/Gs2RestSession.hpp>
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
@@ -506,32 +507,32 @@ public:
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
      */
-    Gs2StaminaClient(IGs2Credential& credential) :
-        AbstractGs2ClientBase(credential)
+    Gs2StaminaClient(Gs2RestSession& gs2RestSession) :
+        AbstractGs2ClientBase(gs2RestSession)
     {
     }
 
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
 	 * @param region アクセス先リージョン
      */
-    Gs2StaminaClient(IGs2Credential& credential, const Region& region) :
-        AbstractGs2ClientBase(credential, region)
+    Gs2StaminaClient(Gs2RestSession& gs2RestSession, const Region& region) :
+        AbstractGs2ClientBase(gs2RestSession, region)
     {
     }
 
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
 	 * @param region アクセス先リージョン
      */
-    Gs2StaminaClient(IGs2Credential& credential, const Char region[]) :
-        AbstractGs2ClientBase(credential, region)
+    Gs2StaminaClient(Gs2RestSession& gs2RestSession, const Char region[]) :
+        AbstractGs2ClientBase(gs2RestSession, region)
     {
     }
 
@@ -547,14 +548,16 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FGroupFunctionHandler.describeGroups");
-        Char encodeBuffer[2048];
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -568,7 +571,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -623,7 +626,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -638,10 +641,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FGroupFunctionHandler.getGroupStatus");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -655,7 +658,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -670,10 +673,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FGroupFunctionHandler.getGroup");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -687,7 +690,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -702,10 +705,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FGroupFunctionHandler.updateGroup");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -742,7 +745,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -757,10 +760,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FGroupFunctionHandler.deleteGroup");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -774,7 +777,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -789,18 +792,21 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaModelMasterFunctionHandler.describeStaminaModelMasters");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -814,7 +820,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -829,10 +835,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaModelMasterFunctionHandler.createStaminaModelMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -904,7 +910,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -919,14 +925,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaModelMasterFunctionHandler.getStaminaModelMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getStaminaModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStaminaModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -940,7 +947,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -955,14 +962,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaModelMasterFunctionHandler.updateStaminaModelMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getStaminaModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStaminaModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1029,7 +1037,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1044,14 +1052,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaModelMasterFunctionHandler.deleteStaminaModelMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getStaminaModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStaminaModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1065,7 +1074,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1080,18 +1089,21 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FMaxStaminaTableMasterFunctionHandler.describeMaxStaminaTableMasters");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1105,7 +1117,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1120,10 +1132,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FMaxStaminaTableMasterFunctionHandler.createMaxStaminaTableMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1176,7 +1188,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1191,14 +1203,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FMaxStaminaTableMasterFunctionHandler.getMaxStaminaTableMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getMaxStaminaTableName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMaxStaminaTableName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("maxStaminaTableName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMaxStaminaTableName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("maxStaminaTableName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1212,7 +1225,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1227,14 +1240,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FMaxStaminaTableMasterFunctionHandler.updateMaxStaminaTableMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getMaxStaminaTableName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMaxStaminaTableName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("maxStaminaTableName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMaxStaminaTableName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("maxStaminaTableName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1282,7 +1296,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1297,14 +1311,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FMaxStaminaTableMasterFunctionHandler.deleteMaxStaminaTableMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getMaxStaminaTableName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getMaxStaminaTableName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("maxStaminaTableName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getMaxStaminaTableName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("maxStaminaTableName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1318,7 +1333,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1333,10 +1348,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FCurrentStaminaMasterFunctionHandler.exportMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1350,7 +1365,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1365,10 +1380,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FCurrentStaminaMasterFunctionHandler.getCurrentStaminaMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1382,7 +1397,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1397,10 +1412,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FCurrentStaminaMasterFunctionHandler.updateCurrentStaminaMaster");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1427,7 +1442,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1442,10 +1457,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaModelFunctionHandler.describeStaminaModels");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1459,7 +1474,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1474,14 +1489,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaModelFunctionHandler.getStaminaModel");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getStaminaModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStaminaModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1495,7 +1511,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1510,18 +1526,21 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.describeStaminas");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1539,7 +1558,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1554,22 +1573,26 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.describeStaminasByUserId");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1587,7 +1610,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1602,14 +1625,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.getStamina");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getStaminaModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStaminaModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1627,7 +1651,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1642,18 +1666,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.getStaminaByUserId");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getStaminaModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStaminaModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -1671,7 +1697,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1686,14 +1712,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.consumeStamina");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getStaminaModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStaminaModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1724,7 +1751,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1739,18 +1766,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.consumeStaminaByUserId");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getStaminaModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStaminaModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1781,7 +1810,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1796,18 +1825,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.recoverStaminaByUserId");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getStaminaModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStaminaModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1838,7 +1869,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1853,18 +1884,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.raiseMaxValueByUserId");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getStaminaModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStaminaModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1895,7 +1928,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1910,18 +1943,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.setMaxValueByUserId");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getStaminaModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStaminaModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -1952,7 +1987,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -1967,14 +2002,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.setMaxValueByStatus");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getStaminaModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStaminaModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -2015,7 +2051,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -2030,18 +2066,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.deleteStaminaByUserId");
-        Char encodeBuffer[2048];
         if (request.getGroupName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getGroupName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getGroupName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("groupName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getStaminaModelName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStaminaModelName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStaminaModelName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("staminaModelName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -2059,7 +2097,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -2074,10 +2112,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.recoverStaminaByStampSheet");
-        Char encodeBuffer[2048];
         if (request.getStampSheet()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStampSheet()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("stampSheet={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStampSheet(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("stampSheet={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -2108,7 +2146,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -2123,10 +2161,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.raiseMaxValueByStampSheet");
-        Char encodeBuffer[2048];
         if (request.getStampSheet()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStampSheet()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("stampSheet={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStampSheet(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("stampSheet={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -2157,7 +2195,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -2172,10 +2210,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/stamina-handler?handler=gs2_stamina%2Fhandler%2FStaminaFunctionHandler.setMaxValueByStampSheet");
-        Char encodeBuffer[2048];
         if (request.getStampSheet()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getStampSheet()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("stampSheet={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getStampSheet(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("stampSheet={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -2206,7 +2244,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -2255,7 +2293,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 };
 

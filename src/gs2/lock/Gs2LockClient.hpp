@@ -20,6 +20,7 @@
 #include <gs2/core/AbstractGs2Client.hpp>
 #include <gs2/core/json/JsonWriter.hpp>
 #include <gs2/core/network/Gs2StandardHttpTask.hpp>
+#include <gs2/core/network/Gs2RestSession.hpp>
 #include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
@@ -203,32 +204,32 @@ public:
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
      */
-    Gs2LockClient(IGs2Credential& credential) :
-        AbstractGs2ClientBase(credential)
+    Gs2LockClient(Gs2RestSession& gs2RestSession) :
+        AbstractGs2ClientBase(gs2RestSession)
     {
     }
 
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
 	 * @param region アクセス先リージョン
      */
-    Gs2LockClient(IGs2Credential& credential, const Region& region) :
-        AbstractGs2ClientBase(credential, region)
+    Gs2LockClient(Gs2RestSession& gs2RestSession, const Region& region) :
+        AbstractGs2ClientBase(gs2RestSession, region)
     {
     }
 
     /**
      * コンストラクタ。
      *
-     * @param credential 認証情報
+     * @param gs2RestSession REST API 用セッション
 	 * @param region アクセス先リージョン
      */
-    Gs2LockClient(IGs2Credential& credential, const Char region[]) :
-        AbstractGs2ClientBase(credential, region)
+    Gs2LockClient(Gs2RestSession& gs2RestSession, const Char region[]) :
+        AbstractGs2ClientBase(gs2RestSession, region)
     {
     }
 
@@ -244,14 +245,16 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.describeCategories");
-        Char encodeBuffer[2048];
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -265,7 +268,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -310,7 +313,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -325,10 +328,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.getCategoryStatus");
-        Char encodeBuffer[2048];
         if (request.getCategoryName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getCategoryName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -342,7 +345,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -357,10 +360,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.getCategory");
-        Char encodeBuffer[2048];
         if (request.getCategoryName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getCategoryName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -374,7 +377,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -389,10 +392,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.updateCategory");
-        Char encodeBuffer[2048];
         if (request.getCategoryName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getCategoryName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -419,7 +422,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -434,10 +437,10 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FCategoryFunctionHandler.deleteCategory");
-        Char encodeBuffer[2048];
         if (request.getCategoryName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getCategoryName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -451,7 +454,7 @@ public:
             detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -466,18 +469,21 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.describeMutexes");
-        Char encodeBuffer[2048];
         if (request.getCategoryName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getCategoryName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPageToken()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPageToken()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("pageToken={value}").replace("{value}", urlSafeValue);
         }
         if (request.getLimit()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getLimit()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("limit={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += "&" + detail::StringVariable("limit={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -495,7 +501,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -510,14 +516,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.lock");
-        Char encodeBuffer[2048];
         if (request.getCategoryName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getCategoryName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPropertyId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPropertyId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPropertyId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -553,7 +560,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -568,18 +575,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.lockByUserId");
-        Char encodeBuffer[2048];
         if (request.getCategoryName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getCategoryName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPropertyId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPropertyId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPropertyId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -615,7 +624,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -630,14 +639,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.unlock");
-        Char encodeBuffer[2048];
         if (request.getCategoryName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getCategoryName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPropertyId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPropertyId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPropertyId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -668,7 +678,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -683,18 +693,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.unlockByUserId");
-        Char encodeBuffer[2048];
         if (request.getCategoryName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getCategoryName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPropertyId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPropertyId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPropertyId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
@@ -725,7 +737,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -740,14 +752,15 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.getMutex");
-        Char encodeBuffer[2048];
         if (request.getCategoryName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getCategoryName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPropertyId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPropertyId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPropertyId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -765,7 +778,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -780,18 +793,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.getMutexByUserId");
-        Char encodeBuffer[2048];
         if (request.getCategoryName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getCategoryName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPropertyId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPropertyId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPropertyId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -809,7 +824,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 
 	/**
@@ -824,18 +839,20 @@ public:
         gs2StandardHttpTask.getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
         detail::StringVariable url(Gs2Constant::ENDPOINT_HOST);
         url.append("/lock-handler?handler=gs2_lock%2Fhandler%2FMutexFunctionHandler.deleteMutexByUserId");
-        Char encodeBuffer[2048];
         if (request.getCategoryName()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getCategoryName()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getCategoryName(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("categoryName={value}").replace("{value}", urlSafeValue);
         }
         if (request.getUserId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getUserId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("userId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getUserId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("userId={value}").replace("{value}", urlSafeValue);
         }
         if (request.getPropertyId()) {
-            gs2::detail::encodeUrl(encodeBuffer, detail::StringVariable(*request.getPropertyId()).c_str(), sizeof(encodeBuffer));
-            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", encodeBuffer);
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPropertyId(), sizeof(urlSafeValue));
+            url += "&" + detail::StringVariable("propertyId={value}").replace("{value}", urlSafeValue);
         }
 
         setUrl(gs2StandardHttpTask.getHttpRequest(), url.c_str());
@@ -853,7 +870,7 @@ public:
             detail::Gs2HttpTask::addHeaderEntry(headerEntries, "X-GS2-DUPLICATION-AVOIDER", *request.getDuplicationAvoider());
         }
         gs2StandardHttpTask.getHttpRequest().setHeaders(headerEntries);
-        getCredential().authorizeAndExecute(gs2StandardHttpTask);
+        authorizeAndExecute(gs2StandardHttpTask);
     }
 };
 
