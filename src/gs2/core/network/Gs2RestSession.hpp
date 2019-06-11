@@ -112,8 +112,7 @@ private:
 
 public:
     explicit Gs2RestSession(const BasicGs2Credential& gs2Credential) :
-        m_Gs2Credential(gs2Credential),
-        m_pGs2LoginTask(nullptr)
+        m_Gs2Credential(gs2Credential)
     {}
 
     ~Gs2RestSession();
