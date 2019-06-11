@@ -83,6 +83,7 @@ private:
 
     detail::IntrusiveList<ConnectCallbackHolder> m_ConnectCallbackHolderList;
     detail::IntrusiveList<DisconnectCallbackHolder> m_DisconnectCallbackHolderList;
+    detail::IntrusiveList<detail::Gs2StandardHttpTaskBase> m_Gs2StandardHttpTaskBaseList;
     Gs2LoginTask* m_pGs2LoginTask;
 
     std::mutex m_Mutex;
@@ -100,6 +101,11 @@ private:
     bool isDisconnecting() const
     {
         return !m_DisconnectCallbackHolderList.isEmpty();
+    }
+
+    bool isUsed() const
+    {
+        return !m_Gs2StandardHttpTaskBaseList.isEmpty();
     }
 
     void triggerConnectCallback(AsyncResult<void>& result);
@@ -129,6 +135,8 @@ public:
 
 private:
     void authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase);
+
+    void notifyComplete(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase);
 };
 
 GS2_END_OF_NAMESPACE

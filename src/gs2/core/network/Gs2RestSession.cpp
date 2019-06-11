@@ -176,14 +176,14 @@ void Gs2RestSession::disconnect(DisconnectCallbackType callback)
 {
     std::lock_guard<std::mutex> lock(m_Mutex);
 
-    if (isConnecting())
+    if (isConnecting() || isUsed())
     {
-        // 接続処理中なら、コールバックは接続処理完了後に返す
+        // 接続処理中、もしくは処理中のタスクがあるなら、コールバックは接続処理完了後に返す
         m_DisconnectCallbackHolderList.push(*new DisconnectCallbackHolder(std::move(callback)));
     }
     else
     {
-        // 接続処理中でなければ、即座にコールバックを返す
+        // 接続処理中、もしくは処理中でなければ、即座にコールバックを返す
         m_ProjectToken.reset();
         callback();
     }
@@ -204,7 +204,7 @@ void Gs2RestSession::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2Sta
 
         gs2StandardHttpTaskBase.getHttpRequest().setHeaders(headers);
 
-        // TODO: 実行中タスクに登録
+        m_Gs2StandardHttpTaskBaseList.push(gs2StandardHttpTaskBase);
 
         gs2StandardHttpTaskBase.send();
     }
@@ -215,6 +215,21 @@ void Gs2RestSession::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2Sta
         Gs2ClientException gs2ClientException;
         gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
         gs2StandardHttpTaskBase.callbackAndDestroy("", &gs2ClientException);
+    }
+}
+
+void Gs2RestSession::notifyComplete(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase)
+{
+    std::lock_guard<std::mutex> lock(m_Mutex);
+
+    m_Gs2StandardHttpTaskBaseList.remove(gs2StandardHttpTaskBase);
+
+    if (isDisconnecting() && !isUsed())
+    {
+        // タスク終了を待機していた disconnect があれば実行してコールバック
+
+        m_ProjectToken.reset();
+        triggerDisconnectCallback();
     }
 }
 

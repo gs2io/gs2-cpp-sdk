@@ -24,6 +24,7 @@ namespace detail {
 void Gs2StandardHttpTaskBase::callback(const Char responseBody[], Gs2ClientException* pGs2ClientException)
 {
     callbackGs2Response(responseBody, pGs2ClientException);
+    m_Gs2RestSession.notifyComplete(*this);
 }
 
 void Gs2StandardHttpTaskBase::sendBySession()
