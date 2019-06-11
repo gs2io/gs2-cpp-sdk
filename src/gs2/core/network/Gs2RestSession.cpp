@@ -128,7 +128,8 @@ void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2Client
 
 Gs2RestSession::~Gs2RestSession()
 {
-    // TODO: disconnect() して完了待ち
+    // disconnect() が複数のコールバックを叩き終わらないうちに破棄されないように、1回ロックへ入る
+    std::lock_guard<std::mutex> lock(m_Mutex);
 }
 
 void Gs2RestSession::triggerConnectCallback(AsyncResult<void>& result)
