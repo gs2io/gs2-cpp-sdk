@@ -92,10 +92,11 @@ protected:
             if (*ppItem == &item)
             {
                 *ppItem = item.m_pNext;
+                item.m_pNext = nullptr;
                 return &item;
             }
 
-            ppItem = &item.m_pNext;
+            ppItem = &(*ppItem)->m_pNext;
         }
 
         return nullptr;
