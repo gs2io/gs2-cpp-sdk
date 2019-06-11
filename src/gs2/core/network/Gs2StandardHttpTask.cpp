@@ -16,11 +16,21 @@
 
 #include <gs2/core/model/BasicGs2Credential.hpp>
 #include "Gs2StandardHttpTask.hpp"
+#include "Gs2RestSession.hpp"
 
 GS2_START_OF_NAMESPACE
 
 namespace detail {
 
+void Gs2StandardHttpTaskBase::callback(const Char responseBody[], Gs2ClientException* pGs2ClientException)
+{
+    callbackGs2Response(responseBody, pGs2ClientException);
+}
+
+void Gs2StandardHttpTaskBase::sendBySession()
+{
+    m_Gs2RestSession.authorizeAndExecute(*this);
+}
 
 }
 

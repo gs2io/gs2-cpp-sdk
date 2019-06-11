@@ -116,9 +116,9 @@ void Gs2HttpTask::callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::n
     callbackAndDestroy(responseBody, pGs2ClientException);
 }
 
-void Gs2HttpTask::callbackAndDestroy(const Char responseBody[], Gs2ClientException* pClientException)
+void Gs2HttpTask::callbackAndDestroy(const Char responseBody[], Gs2ClientException* pGs2ClientException)
 {
-    callbackGs2Response(responseBody, pClientException);
+    callback(responseBody, pGs2ClientException);
     delete this;
 }
 

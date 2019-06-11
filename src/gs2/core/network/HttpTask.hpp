@@ -64,13 +64,13 @@ class Gs2HttpTask : public HttpTask
 {
 private:
     void callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse) GS2_OVERRIDE;
-    virtual void callbackGs2Response(const Char responseBody[], Gs2ClientException* pClientException) = 0;
+    virtual void callback(const Char responseBody[], Gs2ClientException* pGs2ClientException) = 0;
 
 public:
     Gs2HttpTask() = default;
     ~Gs2HttpTask() GS2_OVERRIDE = default;
 
-    void callbackAndDestroy(const Char responseBody[], Gs2ClientException* pClientException);
+    void callbackAndDestroy(const Char responseBody[], Gs2ClientException* pGs2ClientException);
 };
 
 }

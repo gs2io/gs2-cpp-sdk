@@ -82,7 +82,10 @@ protected:
      */
     void setUrl(::cocos2d::network::HttpRequest& httpRequest, const Char url[]) const;
 
-    void authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase);
+    Gs2RestSession& getGs2RestSession()
+    {
+        return m_Gs2RestSession;
+    }
 };
 
 GS2_END_OF_NAMESPACE

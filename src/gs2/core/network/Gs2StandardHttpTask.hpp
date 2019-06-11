@@ -29,11 +29,20 @@ namespace detail {
 class Gs2StandardHttpTaskBase : public Gs2HttpTask, public IntrusiveListItem<Gs2StandardHttpTaskBase>
 {
 private:
-    void callbackGs2Response(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE = 0;
+    Gs2RestSession& m_Gs2RestSession;
+
+private:
+    void callback(const Char responseBody[], Gs2ClientException* pGs2ClientException) GS2_OVERRIDE;
+    virtual void callbackGs2Response(const Char responseBody[], Gs2ClientException* pGs2ClientException) = 0;
 
 public:
-    Gs2StandardHttpTaskBase() = default;
+    Gs2StandardHttpTaskBase(Gs2RestSession& gs2RestSession) :
+        m_Gs2RestSession(gs2RestSession)
+    {}
+
     ~Gs2StandardHttpTaskBase() GS2_OVERRIDE = default;
+
+    void sendBySession();
 };
 
 template <class T>
@@ -45,20 +54,20 @@ public:
 private:
     CallbackType m_Callback;
 
-    void callbackGs2Response(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE
+    void callbackGs2Response(const Char responseBody[], Gs2ClientException* pGs2ClientException) GS2_OVERRIDE
     {
         T result;
-        if (responseBody != nullptr && pClientException == nullptr)
+        if (responseBody != nullptr && pGs2ClientException == nullptr)
         {
             json::JsonParser::parse(&result.getModel(), responseBody);
         }
-        AsyncResult<T> asyncResult(&result, pClientException);
+        AsyncResult<T> asyncResult(&result, pGs2ClientException);
         m_Callback(asyncResult);
     }
 
 public:
-    explicit Gs2StandardHttpTask(CallbackType& callback) :
-        Gs2StandardHttpTaskBase(),
+    explicit Gs2StandardHttpTask(Gs2RestSession& gs2RestSession, CallbackType& callback) :
+        Gs2StandardHttpTaskBase(gs2RestSession),
         m_Callback(callback)
     {
     }
@@ -74,15 +83,15 @@ public:
 private:
     CallbackType m_Callback;
 
-    void callbackGs2Response(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE
+    void callbackGs2Response(const Char responseBody[], Gs2ClientException* pGs2ClientException) GS2_OVERRIDE
     {
-        AsyncResult<void> asyncResult(pClientException);
+        AsyncResult<void> asyncResult(pGs2ClientException);
         m_Callback(asyncResult);
     }
 
 public:
-    explicit Gs2StandardHttpTask(CallbackType& callback) :
-        Gs2StandardHttpTaskBase(),
+    explicit Gs2StandardHttpTask(Gs2RestSession& gs2RestSession, CallbackType& callback) :
+        Gs2StandardHttpTaskBase(gs2RestSession),
         m_Callback(callback)
     {
     }

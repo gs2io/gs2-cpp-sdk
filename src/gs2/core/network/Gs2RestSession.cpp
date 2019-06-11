@@ -64,7 +64,7 @@ Gs2RestSession::Gs2LoginTask::Gs2LoginTask(Gs2RestSession& gs2RestSession) :
     getHttpRequest().setHeaders(headerEntries);
 }
 
-void Gs2RestSession::Gs2LoginTask::callbackGs2Response(const Char responseBody[], Gs2ClientException* pClientException)
+void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2ClientException* pClientException)
 {
     // 接続完了コールバック
 

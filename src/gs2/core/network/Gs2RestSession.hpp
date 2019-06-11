@@ -29,15 +29,13 @@
 
 GS2_START_OF_NAMESPACE
 
-class AbstractGs2ClientBase;
-
 namespace detail {
     class Gs2StandardHttpTaskBase;
 }
 
 class Gs2RestSession : public Gs2Object
 {
-    friend class AbstractGs2ClientBase;
+    friend class detail::Gs2StandardHttpTaskBase;
 
 public:
     typedef std::function<void(AsyncResult<void>&)> ConnectCallbackType;
@@ -72,7 +70,7 @@ private:
         Gs2RestSession& m_Gs2RestSession;
 
     private:
-        void callbackGs2Response(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE;
+        void callback(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE;
 
     public:
         explicit Gs2LoginTask(Gs2RestSession& gs2RestSession);

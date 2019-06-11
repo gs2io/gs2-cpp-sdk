@@ -52,9 +52,4 @@ void AbstractGs2ClientBase::setUrl(::cocos2d::network::HttpRequest& httpRequest,
     httpRequest.setUrl(urlString.c_str());
 }
 
-void AbstractGs2ClientBase::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase)
-{
-    m_Gs2RestSession.authorizeAndExecute(gs2StandardHttpTaskBase);
-}
-
 GS2_END_OF_NAMESPACE
