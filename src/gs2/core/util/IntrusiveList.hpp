@@ -109,6 +109,15 @@ public:
         m_pHead(nullptr)
     {}
 
+    IntrusiveListBase(const IntrusiveListBase&) = delete;
+
+    IntrusiveListBase(IntrusiveListBase&& intrusiveListBase) :
+        Gs2Object(),
+        m_pHead(intrusiveListBase.m_pHead)
+    {
+        intrusiveListBase.m_pHead = nullptr;
+    }
+
     ~IntrusiveListBase() = default;
 
     bool isEmpty() const
@@ -122,6 +131,11 @@ class IntrusiveList : public IntrusiveListBase
 {
 public:
     IntrusiveList() = default;
+
+    IntrusiveList(IntrusiveList&& intrusiveList) :
+        IntrusiveListBase(std::move(intrusiveList))
+    {}
+
     ~IntrusiveList() = default;
 
     void push(T& item)
