@@ -193,8 +193,10 @@ void Gs2RestSession::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2Sta
 {
     std::lock_guard<std::mutex> lock(m_Mutex);
 
-    if (isAvailable())
+    if (isAvailable() && !isDisconnecting())
     {
+        // connect が完了していて、かつ disconnect が呼ばれていなければタスクを実行
+
         auto headers = gs2StandardHttpTaskBase.getHttpRequest().getHeaders();
 
         detail::HttpTask::addHeaderEntry(headers, "X-GS2-CLIENT-ID", m_Gs2Credential.getClientId());
