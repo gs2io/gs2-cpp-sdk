@@ -37,7 +37,8 @@ protected:
     }
 
 public:
-    IntrusiveListItemBase():
+    IntrusiveListItemBase() :
+        Gs2Object(),
         m_pNext(nullptr)
     {}
 
@@ -103,7 +104,8 @@ protected:
     }
 
 public:
-    IntrusiveListBase():
+    IntrusiveListBase() :
+        Gs2Object(),
         m_pHead(nullptr)
     {}
 
