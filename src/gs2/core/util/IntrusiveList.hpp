@@ -18,12 +18,14 @@
 #define GS2_CORE_UTIL_INTRUSIVELIST_HPP_
 
 #include "../Gs2Object.hpp"
+#include <cassert>
+#include <utility>
 
 GS2_START_OF_NAMESPACE
 
 namespace detail {
 
-class IntrusiveListItemBase : public Gs2Object
+class IntrusiveListItemBase
 {
     friend class IntrusiveListBase;
 
@@ -38,7 +40,6 @@ protected:
 
 public:
     IntrusiveListItemBase() :
-        Gs2Object(),
         m_pNext(nullptr)
     {}
 

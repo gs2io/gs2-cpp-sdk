@@ -43,7 +43,7 @@ public:
 
 private:
     template <typename T>
-    class CallbackHolder : public detail::IntrusiveListItem<CallbackHolder<T>>
+    class CallbackHolder : public Gs2Object, public detail::IntrusiveListItem<CallbackHolder<T>>
     {
     private:
         T m_Callback;
