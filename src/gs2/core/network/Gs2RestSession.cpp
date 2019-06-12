@@ -210,24 +210,27 @@ void Gs2RestSession::disconnect(DisconnectCallbackType callback)
     }
 }
 
-void Gs2RestSession::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase)
+void Gs2RestSession::authorizeAndExecute(detail::Gs2SessionTask& gs2SessionTask)
 {
+    // TODO: [TORIAEZU]
+    detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase = *static_cast<detail::Gs2StandardHttpTaskBase*>(&gs2SessionTask);
+
     m_Mutex.lock();
 
     if (isAvailable() && !isDisconnecting())
     {
         // connect が完了していて、かつ disconnect が呼ばれていなければタスクを実行
 
-        auto headers = gs2StandardHttpTaskBase.getHttpRequest().getHeaders();
+        auto headers = gs2StandardHttpTaskBase.getGs2HttpTask().getHttpRequest().getHeaders();
 
         detail::HttpTask::addHeaderEntry(headers, "X-GS2-CLIENT-ID", m_Gs2Credential.getClientId());
         detail::HttpTask::addHeaderEntry(headers, "X-GS2-PROJECT-TOKEN", *m_ProjectToken);
 
-        gs2StandardHttpTaskBase.getHttpRequest().setHeaders(headers);
+        gs2StandardHttpTaskBase.getGs2HttpTask().getHttpRequest().setHeaders(headers);
 
         m_Gs2StandardHttpTaskBaseList.push(gs2StandardHttpTaskBase);
 
-        gs2StandardHttpTaskBase.send();
+        gs2StandardHttpTaskBase.execute();
 
         m_Mutex.unlock();
     }
@@ -239,12 +242,15 @@ void Gs2RestSession::authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2Sta
 
         Gs2ClientException gs2ClientException;
         gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-        gs2StandardHttpTaskBase.callbackAndDestroy("", &gs2ClientException);
+        gs2StandardHttpTaskBase.callback("", &gs2ClientException);
     }
 }
 
-void Gs2RestSession::notifyComplete(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase)
+void Gs2RestSession::notifyComplete(detail::Gs2SessionTask& gs2SessionTask)
 {
+    // TODO: [TORIAEZU]
+    detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase = *static_cast<detail::Gs2StandardHttpTaskBase*>(&gs2SessionTask);
+
     m_Mutex.lock();
 
     m_Gs2StandardHttpTaskBaseList.remove(gs2StandardHttpTaskBase);

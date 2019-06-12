@@ -17,6 +17,7 @@
 #ifndef GS2_CORE_NETWORK_GS2STANDARDHTTPTASK_HPP_
 #define GS2_CORE_NETWORK_GS2STANDARDHTTPTASK_HPP_
 
+#include "Gs2SessionTask.hpp"
 #include "HttpTask.hpp"
 #include "../util/IntrusiveList.hpp"
 
@@ -26,23 +27,43 @@ class Gs2RestSession;
 
 namespace detail {
 
-class Gs2StandardHttpTaskBase : public Gs2HttpTask, public IntrusiveListItem<Gs2StandardHttpTaskBase>
+class Gs2StandardHttpTaskBase : public Gs2SessionTask
 {
 private:
-    Gs2RestSession& m_Gs2RestSession;
+    class Gs2RestTask : public Gs2HttpTask
+    {
+    private:
+        Gs2StandardHttpTaskBase& m_Gs2StandardHttpTaskBase;
+        void callback(const Char responseBody[], Gs2ClientException* pGs2ClientException) GS2_OVERRIDE
+        {
+            m_Gs2StandardHttpTaskBase.callback(responseBody, pGs2ClientException);
+        }
+
+    public:
+        Gs2RestTask(Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase) :
+            m_Gs2StandardHttpTaskBase(gs2StandardHttpTaskBase)
+        {}
+
+        ~Gs2RestTask() GS2_OVERRIDE = default;
+    };
 
 private:
-    void callback(const Char responseBody[], Gs2ClientException* pGs2ClientException) GS2_OVERRIDE;
-    virtual void callbackGs2Response(const Char responseBody[], Gs2ClientException* pGs2ClientException) = 0;
+    Gs2RestTask m_Gs2RestTask;
 
 public:
     Gs2StandardHttpTaskBase(Gs2RestSession& gs2RestSession) :
-        m_Gs2RestSession(gs2RestSession)
+        Gs2SessionTask(gs2RestSession),
+        m_Gs2RestTask(*this)
     {}
 
     ~Gs2StandardHttpTaskBase() GS2_OVERRIDE = default;
 
-    void sendBySession();
+    Gs2HttpTask& getGs2HttpTask()
+    {
+        return m_Gs2RestTask;
+    }
+
+    void execute() GS2_OVERRIDE;
 };
 
 template <class T>
@@ -54,7 +75,7 @@ public:
 private:
     CallbackType m_Callback;
 
-    void callbackGs2Response(const Char responseBody[], Gs2ClientException* pGs2ClientException) GS2_OVERRIDE
+    void triggerUserCallback(const Char responseBody[], Gs2ClientException* pGs2ClientException) GS2_OVERRIDE
     {
         T result;
         if (responseBody != nullptr && pGs2ClientException == nullptr)
@@ -83,7 +104,7 @@ public:
 private:
     CallbackType m_Callback;
 
-    void callbackGs2Response(const Char responseBody[], Gs2ClientException* pGs2ClientException) GS2_OVERRIDE
+    void triggerUserCallback(const Char responseBody[], Gs2ClientException* pGs2ClientException) GS2_OVERRIDE
     {
         AsyncResult<void> asyncResult(pGs2ClientException);
         m_Callback(asyncResult);

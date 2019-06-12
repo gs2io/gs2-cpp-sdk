@@ -30,11 +30,13 @@
 GS2_START_OF_NAMESPACE
 
 namespace detail {
+    class Gs2SessionTask;
     class Gs2StandardHttpTaskBase;
 }
 
 class Gs2RestSession : public Gs2Object
 {
+    friend class detail::Gs2SessionTask;
     friend class detail::Gs2StandardHttpTaskBase;
 
 public:
@@ -73,6 +75,7 @@ private:
         void callback(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE
         {
             m_Gs2RestSession.connectCallback(responseBody, pClientException);
+            delete this;
         }
 
     public:
@@ -137,9 +140,9 @@ public:
     void disconnect(DisconnectCallbackType callback);
 
 private:
-    void authorizeAndExecute(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase);
+    void authorizeAndExecute(detail::Gs2SessionTask& gs2SessionTask);
 
-    void notifyComplete(detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase);
+    void notifyComplete(detail::Gs2SessionTask& gs2SessionTask);
 };
 
 GS2_END_OF_NAMESPACE

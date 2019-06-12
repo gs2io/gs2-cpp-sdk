@@ -52,6 +52,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/RequestError.hpp
         model/StampSheet.hpp
         model/StampTask.hpp
+        network/Gs2SessionTask.hpp
         network/Gs2StandardHttpTask.hpp
         network/Gs2RestSession.hpp
         network/HttpTask.hpp
@@ -76,6 +77,7 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         json/JsonWriter.cpp
         model/BasicGs2Credential.cpp
         model/Region.cpp
+        network/Gs2SessionTask.cpp
         network/Gs2StandardHttpTask.cpp
         network/Gs2RestSession.cpp
         network/HttpTask.cpp
