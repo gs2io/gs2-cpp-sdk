@@ -17,132 +17,38 @@
 #ifndef GS2_CORE_NETWORK_GS2RESTSESSION_HPP_
 #define GS2_CORE_NETWORK_GS2RESTSESSION_HPP_
 
-#include "../Gs2Object.hpp"
-#include "../AsyncResult.hpp"
-#include "../external/optional/optional.hpp"
-#include "../model/BasicGs2Credential.hpp"
-#include "../util/IntrusiveList.hpp"
-#include "../util/StringHolder.hpp"
+#include "Gs2Session.hpp"
 #include "HttpTask.hpp"
-#include <functional>
-#include <mutex>
 
 GS2_START_OF_NAMESPACE
 
-namespace detail {
-    class Gs2SessionTask;
-    class Gs2StandardHttpTaskBase;
-}
-
-class Gs2RestSession : public Gs2Object
+class Gs2RestSession : public Gs2Session
 {
-    friend class detail::Gs2SessionTask;
-    friend class detail::Gs2StandardHttpTaskBase;
-
-public:
-    typedef std::function<void(AsyncResult<void>&)> ConnectCallbackType;
-    typedef std::function<void()> DisconnectCallbackType;
-
 private:
-    template <typename T>
-    class CallbackHolder : public Gs2Object, public detail::IntrusiveListItem<CallbackHolder<T>>
-    {
-    private:
-        T m_Callback;
-
-    public:
-        explicit CallbackHolder(T&& callback) :
-            m_Callback(callback)
-        {}
-
-        ~CallbackHolder() = default;
-
-        const T& callback() const
-        {
-            return m_Callback;
-        }
-    };
-
-    typedef CallbackHolder<ConnectCallbackType> ConnectCallbackHolder;
-    typedef CallbackHolder<DisconnectCallbackType> DisconnectCallbackHolder;
-
     class Gs2LoginTask : public detail::Gs2HttpTask
     {
     private:
         Gs2RestSession& m_Gs2RestSession;
 
     private:
-        void callback(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE
-        {
-            m_Gs2RestSession.connectCallback(responseBody, pClientException);
-            delete this;
-        }
+        void callback(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE;
 
     public:
         explicit Gs2LoginTask(Gs2RestSession& gs2RestSession);
         ~Gs2LoginTask() GS2_OVERRIDE = default;
     };
 
-private:
-    const BasicGs2Credential& m_Gs2Credential;
-    optional<StringHolder> m_ProjectToken;
-
-    detail::IntrusiveList<ConnectCallbackHolder> m_ConnectCallbackHolderList;
-    detail::IntrusiveList<DisconnectCallbackHolder> m_DisconnectCallbackHolderList;
-    detail::IntrusiveList<detail::Gs2StandardHttpTaskBase> m_Gs2StandardHttpTaskBaseList;
-
-    std::mutex m_Mutex;
-
-    bool isAvailable() const
-    {
-        return !!m_ProjectToken;
-    };
-
-    bool isConnecting() const
-    {
-        return !m_ConnectCallbackHolderList.isEmpty();
-    }
-
-    bool isDisconnecting() const
-    {
-        return !m_DisconnectCallbackHolderList.isEmpty();
-    }
-
-    bool isUsed() const
-    {
-        return !m_Gs2StandardHttpTaskBaseList.isEmpty();
-    }
-
-    void connectCallback(const Char responseBody[], Gs2ClientException* pClientException);
-
-    static void triggerConnectCallback(detail::IntrusiveList<ConnectCallbackHolder>& connectCallbackHolderList, AsyncResult<void>& result);
-    static void triggerDisconnectCallback(detail::IntrusiveList<DisconnectCallbackHolder>& disconnectCallbackHolderList);
-
 public:
     explicit Gs2RestSession(const BasicGs2Credential& gs2Credential) :
-        m_Gs2Credential(gs2Credential)
+        Gs2Session(gs2Credential)
     {}
 
-    ~Gs2RestSession();
-
-    const BasicGs2Credential& getGs2Credential() const
-    {
-        return m_Gs2Credential;
-    }
-
-    const optional<StringHolder>& getProjectToken() const
-    {
-        return m_ProjectToken;
-    }
-
-    void connect(ConnectCallbackType callback);
-
-    void disconnect(DisconnectCallbackType callback);
+    ~Gs2RestSession() GS2_OVERRIDE = default;
 
 private:
-    void authorizeAndExecute(detail::Gs2SessionTask& gs2SessionTask);
-
-    void notifyComplete(detail::Gs2SessionTask& gs2SessionTask);
+    void connectImpl() GS2_OVERRIDE;
+    bool disconnectImpl() GS2_OVERRIDE;
+    void prepareImpl(detail::Gs2SessionTask& gs2SessionTask) GS2_OVERRIDE;
 };
 
 GS2_END_OF_NAMESPACE

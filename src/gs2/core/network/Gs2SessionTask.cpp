@@ -15,7 +15,7 @@
  */
 
 #include "Gs2SessionTask.hpp"
-#include "Gs2RestSession.hpp"
+#include "Gs2Session.hpp"
 
 GS2_START_OF_NAMESPACE
 
@@ -28,9 +28,9 @@ void Gs2SessionTask::callback(const Char responseBody[], Gs2ClientException* pGs
     delete this;
 }
 
-void Gs2SessionTask::sendBySession()
+void Gs2SessionTask::execute()
 {
-    m_Gs2Session.authorizeAndExecute(*this);
+    m_Gs2Session.execute(*this);
 }
 
 }

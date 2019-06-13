@@ -29,23 +29,23 @@ class HttpResponse;
 
 GS2_START_OF_NAMESPACE
 
-class Gs2RestSession;
+class Gs2Session;
 class Gs2BasicRequest;
 
 class AbstractGs2ClientBase : public Gs2Object
 {
 private:
     /** 認証情報 */
-    Gs2RestSession& m_Gs2RestSession;
+    Gs2Session& m_Gs2Session;
     /** アクセス先リージョン */
     Region m_Region;
 
 public:
-    explicit AbstractGs2ClientBase(Gs2RestSession& gs2RestSession);
+    explicit AbstractGs2ClientBase(Gs2Session& gs2Session);
 
-    AbstractGs2ClientBase(Gs2RestSession& gs2RestSession, const Region& region);
+    AbstractGs2ClientBase(Gs2Session& gs2Session, const Region& region);
 
-    AbstractGs2ClientBase(Gs2RestSession& gs2RestSession, const Char region[]);
+    AbstractGs2ClientBase(Gs2Session& gs2Session, const Char region[]);
 
     /**
      * アクセス先リージョンを取得
@@ -78,9 +78,9 @@ protected:
      */
     void setUrl(::cocos2d::network::HttpRequest& httpRequest, const Char url[]) const;
 
-    Gs2RestSession& getGs2RestSession()
+    Gs2Session& getGs2Session()
     {
-        return m_Gs2RestSession;
+        return m_Gs2Session;
     }
 };
 

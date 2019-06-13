@@ -55,6 +55,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         network/Gs2SessionTask.hpp
         network/Gs2StandardHttpTask.hpp
         network/Gs2RestSession.hpp
+        network/Gs2Session.hpp
         network/HttpTask.hpp
         util/Base64.hpp
         util/DefaultAllocator.hpp
@@ -80,6 +81,7 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         network/Gs2SessionTask.cpp
         network/Gs2StandardHttpTask.cpp
         network/Gs2RestSession.cpp
+        network/Gs2Session.cpp
         network/HttpTask.cpp
         util/Base64.cpp
         util/DefaultAllocator.cpp

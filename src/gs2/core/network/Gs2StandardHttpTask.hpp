@@ -18,12 +18,10 @@
 #define GS2_CORE_NETWORK_GS2STANDARDHTTPTASK_HPP_
 
 #include "Gs2SessionTask.hpp"
+#include "Gs2RestSession.hpp"
 #include "HttpTask.hpp"
-#include "../util/IntrusiveList.hpp"
 
 GS2_START_OF_NAMESPACE
-
-class Gs2RestSession;
 
 namespace detail {
 
@@ -50,8 +48,10 @@ private:
 private:
     Gs2RestTask m_Gs2RestTask;
 
+    void executeImpl() GS2_OVERRIDE;
+
 public:
-    Gs2StandardHttpTaskBase(Gs2RestSession& gs2RestSession) :
+    explicit Gs2StandardHttpTaskBase(Gs2RestSession& gs2RestSession) :
         Gs2SessionTask(gs2RestSession),
         m_Gs2RestTask(*this)
     {}
@@ -62,8 +62,6 @@ public:
     {
         return m_Gs2RestTask;
     }
-
-    void execute() GS2_OVERRIDE;
 };
 
 template <class T>

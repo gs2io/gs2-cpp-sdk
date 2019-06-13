@@ -22,23 +22,25 @@
 
 GS2_START_OF_NAMESPACE
 
-// TODO
-class Gs2RestSession;
-typedef Gs2RestSession IGs2Session;
+class Gs2Session;
 class Gs2ClientException;
 
 namespace detail {
 
 class Gs2SessionTask : public Gs2Object, public detail::IntrusiveListItem<Gs2SessionTask>
 {
+    friend gs2::Gs2Session;
+
 protected:
-    IGs2Session& m_Gs2Session;
+    Gs2Session& m_Gs2Session;
 
 private:
     virtual void triggerUserCallback(const Char responseBody[], Gs2ClientException* pGs2ClientException) = 0;
 
+    virtual void executeImpl() = 0;     // Gs2Session から利用
+
 public:
-    Gs2SessionTask(IGs2Session& gs2Session) :
+    Gs2SessionTask(Gs2Session& gs2Session) :
         m_Gs2Session(gs2Session)
     {}
 
@@ -46,9 +48,7 @@ public:
 
     void callback(const Char responseBody[], Gs2ClientException* pGs2ClientException);
 
-    virtual void execute() = 0;
-
-    void sendBySession();
+    void execute();
 };
 
 }

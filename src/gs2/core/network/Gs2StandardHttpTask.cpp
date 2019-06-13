@@ -15,13 +15,12 @@
  */
 
 #include "Gs2StandardHttpTask.hpp"
-#include "Gs2RestSession.hpp"
 
 GS2_START_OF_NAMESPACE
 
 namespace detail {
 
-void Gs2StandardHttpTaskBase::execute()
+void Gs2StandardHttpTaskBase::executeImpl()
 {
     m_Gs2RestTask.send();
 }

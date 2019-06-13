@@ -18,27 +18,27 @@
 #include "AsyncResult.hpp"
 #include "control/Gs2BasicRequest.hpp"
 #include "model/IGs2Credential.hpp"
-#include "network/Gs2RestSession.hpp"
+#include "network/Gs2Session.hpp"
 #include "util/StringVariable.hpp"
 #include <string>
 #include <network/HttpRequest.h>
 
 GS2_START_OF_NAMESPACE
 
-AbstractGs2ClientBase::AbstractGs2ClientBase(Gs2RestSession& gs2RestSession) :
-    m_Gs2RestSession(gs2RestSession),
+AbstractGs2ClientBase::AbstractGs2ClientBase(Gs2Session& gs2Session) :
+    m_Gs2Session(gs2Session),
     m_Region(Region::AP_NORTHEAST_1)
 {
 }
 
-AbstractGs2ClientBase::AbstractGs2ClientBase(Gs2RestSession& gs2RestSession, const Region& region) :
-    m_Gs2RestSession(gs2RestSession),
+AbstractGs2ClientBase::AbstractGs2ClientBase(Gs2Session& gs2Session, const Region& region) :
+    m_Gs2Session(gs2Session),
     m_Region(region)
 {
 }
 
-AbstractGs2ClientBase::AbstractGs2ClientBase(Gs2RestSession& gs2RestSession, const Char region[]) :
-    m_Gs2RestSession(gs2RestSession),
+AbstractGs2ClientBase::AbstractGs2ClientBase(Gs2Session& gs2Session, const Char region[]) :
+    m_Gs2Session(gs2Session),
     m_Region(region)
 {
 }

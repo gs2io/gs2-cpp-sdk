@@ -50,9 +50,9 @@ Gs2RestSession::Gs2LoginTask::Gs2LoginTask(Gs2RestSession& gs2RestSession) :
     writer.reset();
     writer.writeObjectStart();
     writer.writePropertyName("client_id");
-    writer.writeCharArray(gs2RestSession.m_Gs2Credential.getClientId());
+    writer.writeCharArray(gs2RestSession.getGs2Credential().getClientId());
     writer.writePropertyName("client_secret");
-    writer.writeCharArray(gs2RestSession.m_Gs2Credential.getClientSecret());
+    writer.writeCharArray(gs2RestSession.getGs2Credential().getClientSecret());
     writer.writeObjectEnd();
     auto body = writer.toString();
     auto bodySize = strlen(body);
@@ -64,81 +64,11 @@ Gs2RestSession::Gs2LoginTask::Gs2LoginTask(Gs2RestSession& gs2RestSession) :
     getHttpRequest().setHeaders(headerEntries);
 }
 
-Gs2RestSession::~Gs2RestSession()
-{
-    // disconnect() が複数のコールバックを叩き終わらないうちに破棄されないように、1回ロックへ入る
-    std::lock_guard<std::mutex> lock(m_Mutex);
-}
-
-void Gs2RestSession::triggerConnectCallback(detail::IntrusiveList<ConnectCallbackHolder>& connectCallbackHolderList, AsyncResult<void>& result)
-{
-    while (auto* pConnectCallbackHolder = connectCallbackHolderList.pop())
-    {
-        pConnectCallbackHolder->callback()(result);
-        delete pConnectCallbackHolder;
-    }
-}
-
-void Gs2RestSession::triggerDisconnectCallback(detail::IntrusiveList<DisconnectCallbackHolder>& disconnectCallbackHolderList)
-{
-    while (auto* pDisconnectCallbackHolder = disconnectCallbackHolderList.pop())
-    {
-        pDisconnectCallbackHolder->callback()();
-        delete pDisconnectCallbackHolder;
-    }
-}
-
-void Gs2RestSession::connect(ConnectCallbackType callback)
-{
-    m_Mutex.lock();
-
-    if (isAvailable())
-    {
-        m_Mutex.unlock();
-
-        AsyncResult<void> result;
-        callback(result);
-    }
-    else
-    {
-        if (!isConnecting())
-        {
-            (new Gs2LoginTask(*this))->send();
-        }
-
-        // isConnecting() はコールバックホルダリストが空かどうかで判定するので、追加はあとから行う
-        m_ConnectCallbackHolderList.push(*new ConnectCallbackHolder(std::move(callback)));
-
-        m_Mutex.unlock();
-    }
-}
-
-void Gs2RestSession::connectCallback(const Char responseBody[], Gs2ClientException* pClientException)
+void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2ClientException* pClientException)
 {
     // 接続完了コールバック
 
-    m_Mutex.lock();
-
-    if (isDisconnecting())
-    {
-        // ログイン処理中に disconnect() が呼ばれた場合
-
-        m_ProjectToken.reset();
-
-        detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
-        detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_DisconnectCallbackHolderList));
-
-        m_Mutex.unlock();
-
-        // connect() はすべてキャンセルする
-        Gs2ClientException gs2ClientException;
-        gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-        AsyncResult<void> result(&gs2ClientException);
-        Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
-
-        Gs2RestSession::triggerDisconnectCallback(disconnectCallbackHolderList);
-    }
-    else if (pClientException == nullptr)
+    if (pClientException == nullptr)
     {
         // ログイン処理がエラーなく応答された場合
 
@@ -152,125 +82,50 @@ void Gs2RestSession::connectCallback(const Char responseBody[], Gs2ClientExcepti
         {
             // 応答からプロジェクトトークンが取得できた場合
 
-            m_ProjectToken = std::move(*resultModel.accessToken);
-            detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
-
-            m_Mutex.unlock();
-
-            AsyncResult<void> result;
-            Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
+            m_Gs2RestSession.connectCallback(resultModel.accessToken, pClientException);
         }
         else
         {
             // 応答からプロジェクトトークンが取得できなかった場合
 
-            detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
-
-            m_Mutex.unlock();
-
             Gs2ClientException gs2ClientException;
             gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-
-            AsyncResult<void> result(&gs2ClientException);
-            Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
+            m_Gs2RestSession.connectCallback(resultModel.accessToken, &gs2ClientException);
         }
     }
     else
     {
         // ログイン処理がエラーになった場合
 
-        detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
-
-        m_Mutex.unlock();
-
-        AsyncResult<void> result(pClientException);
-        Gs2RestSession::triggerConnectCallback(connectCallbackHolderList, result);
+        optional<StringHolder> projectToken;
+        m_Gs2RestSession.connectCallback(projectToken, pClientException);
     }
+
+    delete this;
 }
 
-void Gs2RestSession::disconnect(DisconnectCallbackType callback)
+void Gs2RestSession::connectImpl()
 {
-    m_Mutex.lock();
-
-    if (isConnecting() || isUsed())
-    {
-        // 接続処理中、もしくは処理中のタスクがあるなら、コールバックは接続処理完了後に返す
-        m_DisconnectCallbackHolderList.push(*new DisconnectCallbackHolder(std::move(callback)));
-
-        m_Mutex.unlock();
-    }
-    else
-    {
-        // 接続処理中、もしくは処理中でなければ、即座にコールバックを返す
-        m_ProjectToken.reset();
-
-        m_Mutex.unlock();
-
-        callback();
-    }
+    (new Gs2LoginTask(*this))->send();
 }
 
-void Gs2RestSession::authorizeAndExecute(detail::Gs2SessionTask& gs2SessionTask)
+bool Gs2RestSession::disconnectImpl()
 {
-    // TODO: [TORIAEZU]
-    detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase = *static_cast<detail::Gs2StandardHttpTaskBase*>(&gs2SessionTask);
+    disconnectCallback(true);
 
-    m_Mutex.lock();
-
-    if (isAvailable() && !isDisconnecting())
-    {
-        // connect が完了していて、かつ disconnect が呼ばれていなければタスクを実行
-
-        auto headers = gs2StandardHttpTaskBase.getGs2HttpTask().getHttpRequest().getHeaders();
-
-        detail::HttpTask::addHeaderEntry(headers, "X-GS2-CLIENT-ID", m_Gs2Credential.getClientId());
-        detail::HttpTask::addHeaderEntry(headers, "X-GS2-PROJECT-TOKEN", *m_ProjectToken);
-
-        gs2StandardHttpTaskBase.getGs2HttpTask().getHttpRequest().setHeaders(headers);
-
-        m_Gs2StandardHttpTaskBaseList.push(gs2StandardHttpTaskBase);
-
-        gs2StandardHttpTaskBase.execute();
-
-        m_Mutex.unlock();
-    }
-    else
-    {
-        // 失敗を即コールバック
-
-        m_Mutex.unlock();
-
-        Gs2ClientException gs2ClientException;
-        gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-        gs2StandardHttpTaskBase.callback("", &gs2ClientException);
-    }
+    return true;
 }
 
-void Gs2RestSession::notifyComplete(detail::Gs2SessionTask& gs2SessionTask)
+void Gs2RestSession::prepareImpl(detail::Gs2SessionTask& gs2SessionTask)
 {
-    // TODO: [TORIAEZU]
-    detail::Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase = *static_cast<detail::Gs2StandardHttpTaskBase*>(&gs2SessionTask);
+    auto& gs2StandardHttpTaskBase = static_cast<detail::Gs2StandardHttpTaskBase&>(gs2SessionTask);
 
-    m_Mutex.lock();
+    auto headers = gs2StandardHttpTaskBase.getGs2HttpTask().getHttpRequest().getHeaders();
 
-    m_Gs2StandardHttpTaskBaseList.remove(gs2StandardHttpTaskBase);
+    detail::HttpTask::addHeaderEntry(headers, "X-GS2-CLIENT-ID", getGs2Credential().getClientId());
+    detail::HttpTask::addHeaderEntry(headers, "X-GS2-PROJECT-TOKEN", *getProjectToken());
 
-    if (isDisconnecting() && !isUsed())
-    {
-        // タスク終了を待機していた disconnect があれば実行してコールバック
-
-        m_ProjectToken.reset();
-
-        detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_DisconnectCallbackHolderList));
-
-        m_Mutex.unlock();
-
-        Gs2RestSession::triggerDisconnectCallback(disconnectCallbackHolderList);
-    }
-    else
-    {
-        m_Mutex.unlock();
-    }
+    gs2StandardHttpTaskBase.getGs2HttpTask().getHttpRequest().setHeaders(headers);
 }
 
 GS2_END_OF_NAMESPACE
