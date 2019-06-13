@@ -32,10 +32,6 @@ GS2_START_OF_NAMESPACE
 class Gs2RestSession;
 class Gs2BasicRequest;
 
-namespace detail {
-class Gs2StandardHttpTaskBase;
-}
-
 class AbstractGs2ClientBase : public Gs2Object
 {
 private:
