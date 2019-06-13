@@ -17,7 +17,7 @@
 #include "Gs2RestSession.hpp"
 #include "../json/JsonWriter.hpp"
 #include "../json/JsonParser.hpp"
-#include "Gs2StandardHttpTask.hpp"
+#include "Gs2RestSessionTask.hpp"
 
 GS2_START_OF_NAMESPACE
 
@@ -118,7 +118,7 @@ bool Gs2RestSession::disconnectImpl()
 
 void Gs2RestSession::prepareImpl(detail::Gs2SessionTask& gs2SessionTask)
 {
-    auto& gs2StandardHttpTaskBase = static_cast<detail::Gs2StandardHttpTaskBase&>(gs2SessionTask);
+    auto& gs2StandardHttpTaskBase = static_cast<detail::Gs2RestSessionTaskBase&>(gs2SessionTask);
 
     auto headers = gs2StandardHttpTaskBase.getGs2HttpTask().getHttpRequest().getHeaders();
 

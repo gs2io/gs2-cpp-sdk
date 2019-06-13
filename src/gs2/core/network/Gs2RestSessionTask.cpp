@@ -14,13 +14,13 @@
  * permissions and limitations under the License.
  */
 
-#include "Gs2StandardHttpTask.hpp"
+#include "Gs2RestSessionTask.hpp"
 
 GS2_START_OF_NAMESPACE
 
 namespace detail {
 
-void Gs2StandardHttpTaskBase::executeImpl()
+void Gs2RestSessionTaskBase::executeImpl()
 {
     m_Gs2RestTask.send();
 }

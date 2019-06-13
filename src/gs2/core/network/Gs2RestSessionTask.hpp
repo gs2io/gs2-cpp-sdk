@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_CORE_NETWORK_GS2STANDARDHTTPTASK_HPP_
-#define GS2_CORE_NETWORK_GS2STANDARDHTTPTASK_HPP_
+#ifndef GS2_CORE_NETWORK_GS2RESTSESSIONTASK_HPP_
+#define GS2_CORE_NETWORK_GS2RESTSESSIONTASK_HPP_
 
 #include "Gs2SessionTask.hpp"
 #include "Gs2RestSession.hpp"
@@ -25,20 +25,20 @@ GS2_START_OF_NAMESPACE
 
 namespace detail {
 
-class Gs2StandardHttpTaskBase : public Gs2SessionTask
+class Gs2RestSessionTaskBase : public Gs2SessionTask
 {
 private:
     class Gs2RestTask : public Gs2HttpTask
     {
     private:
-        Gs2StandardHttpTaskBase& m_Gs2StandardHttpTaskBase;
+        Gs2RestSessionTaskBase& m_Gs2StandardHttpTaskBase;
         void callback(const Char responseBody[], Gs2ClientException* pGs2ClientException) GS2_OVERRIDE
         {
             m_Gs2StandardHttpTaskBase.callback(responseBody, pGs2ClientException);
         }
 
     public:
-        Gs2RestTask(Gs2StandardHttpTaskBase& gs2StandardHttpTaskBase) :
+        Gs2RestTask(Gs2RestSessionTaskBase& gs2StandardHttpTaskBase) :
             m_Gs2StandardHttpTaskBase(gs2StandardHttpTaskBase)
         {}
 
@@ -51,12 +51,12 @@ private:
     void executeImpl() GS2_OVERRIDE;
 
 public:
-    explicit Gs2StandardHttpTaskBase(Gs2RestSession& gs2RestSession) :
+    explicit Gs2RestSessionTaskBase(Gs2RestSession& gs2RestSession) :
         Gs2SessionTask(gs2RestSession),
         m_Gs2RestTask(*this)
     {}
 
-    ~Gs2StandardHttpTaskBase() GS2_OVERRIDE = default;
+    ~Gs2RestSessionTaskBase() GS2_OVERRIDE = default;
 
     Gs2HttpTask& getGs2HttpTask()
     {
@@ -65,7 +65,7 @@ public:
 };
 
 template <class T>
-class Gs2StandardHttpTask : public Gs2StandardHttpTaskBase
+class Gs2RestSessionTask : public Gs2RestSessionTaskBase
 {
 public:
     typedef std::function<void(AsyncResult<T>&)> CallbackType;
@@ -85,8 +85,8 @@ private:
     }
 
 public:
-    explicit Gs2StandardHttpTask(Gs2RestSession& gs2RestSession, CallbackType& callback) :
-        Gs2StandardHttpTaskBase(gs2RestSession),
+    explicit Gs2RestSessionTask(Gs2RestSession& gs2RestSession, CallbackType& callback) :
+        Gs2RestSessionTaskBase(gs2RestSession),
         m_Callback(callback)
     {
     }
@@ -94,7 +94,7 @@ public:
 
 
 template<>
-class Gs2StandardHttpTask<void> : public Gs2StandardHttpTaskBase
+class Gs2RestSessionTask<void> : public Gs2RestSessionTaskBase
 {
 public:
     typedef std::function<void(AsyncResult<void>&)> CallbackType;
@@ -109,8 +109,8 @@ private:
     }
 
 public:
-    explicit Gs2StandardHttpTask(Gs2RestSession& gs2RestSession, CallbackType& callback) :
-        Gs2StandardHttpTaskBase(gs2RestSession),
+    explicit Gs2RestSessionTask(Gs2RestSession& gs2RestSession, CallbackType& callback) :
+        Gs2RestSessionTaskBase(gs2RestSession),
         m_Callback(callback)
     {
     }
@@ -120,4 +120,4 @@ public:
 
 GS2_END_OF_NAMESPACE
 
-#endif //GS2_CORE_NETWORK_GS2STANDARDHTTPTASK_HPP_
+#endif //GS2_CORE_NETWORK_GS2RESTSESSIONTASK_HPP_
