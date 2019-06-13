@@ -15,11 +15,6 @@
  */
 
 #include "BasicGs2Credential.hpp"
-#include "../network/Gs2StandardHttpTask.hpp"
-#include "../control/Gs2BasicRequest.hpp"
-#include "../util/StringVariable.hpp"
-#include "../util/Base64.hpp"
-#include <chrono>
 
 GS2_START_OF_NAMESPACE
 
