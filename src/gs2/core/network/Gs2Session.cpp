@@ -45,28 +45,130 @@ void Gs2Session::triggerDisconnectCallback(detail::IntrusiveList<DisconnectCallb
     }
 }
 
-void Gs2Session::connect(ConnectCallbackType callback)
+void Gs2Session::changeStateToIdle()
 {
-    m_Mutex.lock();
+    assert(m_State == State::Connecting || m_State == State::CancellingConnect || m_State == State::Disconnecting);
 
-    if (isAvailable())
+    assert(m_ConnectCallbackHolderList.isEmpty());      // すべてコールバックされ（るために取り出され）ているべき
+    assert(m_DisconnectCallbackHolderList.isEmpty());   // すべてコールバックされ（るために取り出され）ているべき
+    assert(m_Gs2SessionTaskList.isEmpty());             // Connected になる前に登録はできない
+
+    m_State = State::Idle;
+
+    exitStateLock();
+}
+
+void Gs2Session::changeStateToConnecting()
+{
+    assert(m_State == State::Idle || m_State == State::Disconnecting);
+
+    assert(!m_ConnectCallbackHolderList.isEmpty());     // connect() タスクが登録されているときのみ遷移する
+    assert(m_DisconnectCallbackHolderList.isEmpty());   // すべてコールバックされ（るために取り出され）ているべき
+    assert(m_Gs2SessionTaskList.isEmpty());             // Connected になる前に登録はできない
+
+    m_State = State::Connecting;
+
+    connectImpl();
+
+    exitStateLock();
+}
+
+void Gs2Session::changeStateToCancellingConnect()
+{
+    assert(m_State == State::Connecting);
+
+    assert(!m_ConnectCallbackHolderList.isEmpty());     // Connecting は connect() タスクが必ず存在する
+    assert(!m_DisconnectCallbackHolderList.isEmpty());  // 接続処理中の disconnect() によってのみ遷移する
+    assert(m_Gs2SessionTaskList.isEmpty());             // Connected になる前に登録はできない
+
+    m_State = State::CancellingConnect;
+
+    cancelConnectImpl();
+
+    exitStateLock();
+}
+
+void Gs2Session::changeStateToConnected(StringHolder&& projectToken)
+{
+    assert(m_State == State::Connecting);
+
+    assert(m_ConnectCallbackHolderList.isEmpty());      // すべてコールバックされ（るために取り出され）ているべき
+    assert(m_DisconnectCallbackHolderList.isEmpty());   // disconnect() が呼ばれている場合は Disconnecting に遷移しなければならない
+    assert(m_Gs2SessionTaskList.isEmpty());             // Connected になる前に登録はできない
+
+    m_ProjectToken = std::move(projectToken);
+
+    m_State = State::Connected;
+
+    exitStateLock();
+}
+
+void Gs2Session::changeStateToCancellingTasks()
+{
+    assert(m_State == State::Connected);
+
+    assert(m_ConnectCallbackHolderList.isEmpty());      // Connected のあいだの connect() は即時返却される
+    // 外部要因による切断の場合に disconnect() を呼ばなくても遷移することがある
+    assert(!m_Gs2SessionTaskList.isEmpty());            // キャンセルしたいタスクがあるから遷移するのである
+
+    m_State = State::CancellingTasks;
+
+    exitStateLock();
+}
+
+void Gs2Session::changeStateToDisconnecting()
+{
+    assert(m_State == State::Connecting || m_State == State::CancellingConnect || m_State == State::Connected || m_State == State::CancellingTasks);
+
+    // CancellingTasks のあいだには次の connect() が積まれることがある
+    // 外部要因による切断の場合に disconnect() を呼ばなくても遷移することがある
+    assert(m_Gs2SessionTaskList.isEmpty());             // タスクがなくなったときに遷移する
+
+    m_ProjectToken.reset();
+
+    m_State = State::Disconnecting;
+
+    bool isDisconnectInstant = disconnectImpl();
+
+    if (isDisconnectInstant)
     {
-        m_Mutex.unlock();
-
-        AsyncResult<void> result;
-        callback(result);
+        // Idle か Connecting に遷移しているはずだけど、ロックから出てしまっているので検証はしない
     }
     else
     {
-        if (!isConnecting())
-        {
-            connectImpl();
-        }
+        exitStateLock();
+    }
+}
 
-        // isConnecting() はコールバックホルダリストが空かどうかで判定するので、追加はあとから行う
+void Gs2Session::keepCurrentState()
+{
+    exitStateLock();
+}
+
+void Gs2Session::connect(ConnectCallbackType callback)
+{
+    enterStateLock();
+
+    switch (m_State)
+    {
+    case State::Idle:
         m_ConnectCallbackHolderList.push(*new ConnectCallbackHolder(std::move(callback)));
+        changeStateToConnecting();
+        break;
 
-        m_Mutex.unlock();
+    case State::Connecting:
+    case State::CancellingConnect:
+    case State::CancellingTasks:    // 切断処理が終わってから実行される
+    case State::Disconnecting:      // 切断処理が終わってから実行される
+        m_ConnectCallbackHolderList.push(*new ConnectCallbackHolder(std::move(callback)));
+        keepCurrentState();
+        break;
+
+    case State::Connected:
+        keepCurrentState();
+        AsyncResult<void> result;
+        callback(result);
+        break;
     }
 }
 
@@ -74,38 +176,24 @@ void Gs2Session::connectCallback(optional<StringHolder>& projectToken, Gs2Client
 {
     // 接続完了コールバック
 
-    m_Mutex.lock();
+    enterStateLock();
 
-    if (isDisconnecting())
-    {
-        // ログイン処理中に disconnect() が呼ばれた場合
-
-        m_ProjectToken.reset();
-
-        detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
-        detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_DisconnectCallbackHolderList));
-
-        m_Mutex.unlock();
-
-        // connect() はすべてキャンセルする
-        Gs2ClientException gs2ClientException;
-        gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-        AsyncResult<void> result(&gs2ClientException);
-        Gs2Session::triggerConnectCallback(connectCallbackHolderList, result);
-
-        Gs2Session::triggerDisconnectCallback(disconnectCallbackHolderList);
-    }
-    else if (pClientException == nullptr)
+    if (pClientException == nullptr)
     {
         // ログイン処理がエラーなく応答された場合
 
         if (projectToken)
         {
-            m_ProjectToken = std::move(projectToken);
-
             detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
 
-            m_Mutex.unlock();
+            if (m_DisconnectCallbackHolderList.isEmpty())
+            {
+                changeStateToConnected(std::move(*projectToken));
+            }
+            else
+            {
+                changeStateToDisconnecting();
+            }
 
             AsyncResult<void> result;
             Gs2Session::triggerConnectCallback(connectCallbackHolderList, result);
@@ -113,16 +201,19 @@ void Gs2Session::connectCallback(optional<StringHolder>& projectToken, Gs2Client
         else
         {
             // 応答からプロジェクトトークンが取得できなかった場合
+            // ただし、ここには来ないように派生クラスを実装しなければならない
 
             detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
+            detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_DisconnectCallbackHolderList));
 
-            m_Mutex.unlock();
+            changeStateToIdle();
 
             Gs2ClientException gs2ClientException;
             gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
 
             AsyncResult<void> result(&gs2ClientException);
             Gs2Session::triggerConnectCallback(connectCallbackHolderList, result);
+            Gs2Session::triggerDisconnectCallback(disconnectCallbackHolderList);
         }
     }
     else
@@ -130,82 +221,96 @@ void Gs2Session::connectCallback(optional<StringHolder>& projectToken, Gs2Client
         // ログイン処理がエラーになった場合
 
         detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
+        detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_DisconnectCallbackHolderList));
 
-        m_Mutex.unlock();
+        changeStateToIdle();
 
         AsyncResult<void> result(pClientException);
         Gs2Session::triggerConnectCallback(connectCallbackHolderList, result);
+        Gs2Session::triggerDisconnectCallback(disconnectCallbackHolderList);
     }
 }
 
 void Gs2Session::disconnect(DisconnectCallbackType callback)
 {
-    m_Mutex.lock();
+    enterStateLock();
 
-    m_DisconnectCallbackHolderList.push(*new DisconnectCallbackHolder(std::move(callback)));
-
-    if (isConnecting() || isUsed())
+    if (m_State == State::Idle)
     {
-        // 接続処理中、もしくは処理中のタスクがあるなら、切断処理は notifyComplete() の中で処理完了後に開始する
+        // 即コールバック
+        keepCurrentState();
 
-        m_Mutex.unlock();
+        callback();
     }
     else
     {
-        // 接続処理中、もしくは処理中でなければ、即座に切断処理を開始する
+        m_DisconnectCallbackHolderList.push(*new DisconnectCallbackHolder(std::move(callback)));
 
-        bool isDisconnectInstant = startDisconnect();
-
-        if (!isDisconnectInstant)
+        switch(m_State)
         {
-            m_Mutex.unlock();
+        case State::Connecting:
+            changeStateToCancellingConnect();
+            break;
+
+        case State::Connected:
+            if (m_Gs2SessionTaskList.isEmpty())
+            {
+                changeStateToDisconnecting();
+            }
+            else
+            {
+                changeStateToCancellingTasks();
+            }
+            break;
+
+        case State::Idle:   // ここには来ない
+        case State::CancellingConnect:
+        case State::CancellingTasks:
+        case State::Disconnecting:
+            keepCurrentState();
+            break;
         }
     }
-}
-
-bool Gs2Session::startDisconnect()
-{
-    // m_Mutex のロックを取った上で呼ぶこと
-
-    m_ProjectToken.reset();
-    return disconnectImpl();
 }
 
 void Gs2Session::disconnectCallback(bool isDisconnectInstant)
 {
     if (!isDisconnectInstant)
     {
-        m_Mutex.lock();
+        enterStateLock();
     }
 
     detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_DisconnectCallbackHolderList));
 
-    m_Mutex.unlock();
+    if (m_ConnectCallbackHolderList.isEmpty())
+    {
+        changeStateToIdle();
+    }
+    else
+    {
+        changeStateToConnecting();
+    }
 
     Gs2Session::triggerDisconnectCallback(disconnectCallbackHolderList);
 }
 
 void Gs2Session::execute(detail::Gs2SessionTask &gs2SessionTask)
 {
-    m_Mutex.lock();
+    enterStateLock();
 
-    if (isAvailable() && !isDisconnecting())
+    if (m_State == State::Connected)
     {
-        // connect が完了していて、かつ disconnect が呼ばれていなければタスクを実行
-
         prepareImpl(gs2SessionTask);
 
         m_Gs2SessionTaskList.push(gs2SessionTask);
 
-        m_Mutex.unlock();
+        keepCurrentState();
 
         gs2SessionTask.executeImpl();
     }
     else
     {
-        // 失敗を即コールバック
-
-        m_Mutex.unlock();
+        keepCurrentState();
 
         Gs2ClientException gs2ClientException;
         gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
@@ -215,24 +320,17 @@ void Gs2Session::execute(detail::Gs2SessionTask &gs2SessionTask)
 
 void Gs2Session::notifyComplete(detail::Gs2SessionTask& gs2SessionTask)
 {
-    m_Mutex.lock();
+    enterStateLock();
 
     m_Gs2SessionTaskList.remove(gs2SessionTask);
 
-    if (isDisconnecting() && !isUsed())
+    if (m_State == State::CancellingTasks && m_Gs2SessionTaskList.isEmpty())
     {
-        // タスク終了を待機していた disconnect があれば実行
-
-        bool isDisconnectInstant = startDisconnect();
-
-        if (!isDisconnectInstant)
-        {
-            m_Mutex.unlock();
-        }
+        changeStateToDisconnecting();
     }
     else
     {
-        m_Mutex.unlock();
+        keepCurrentState();
     }
 }
 

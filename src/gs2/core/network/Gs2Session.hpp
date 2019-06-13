@@ -41,6 +41,15 @@ public:
     typedef std::function<void()> DisconnectCallbackType;
 
 private:
+    enum class State {
+        Idle,
+        Connecting,
+        CancellingConnect,
+        Connected,
+        CancellingTasks,
+        Disconnecting,
+    };
+
     template <typename T>
     class CallbackHolder : public Gs2Object, public detail::IntrusiveListItem<CallbackHolder<T>>
     {
@@ -64,6 +73,10 @@ private:
     typedef CallbackHolder<DisconnectCallbackType> DisconnectCallbackHolder;
 
 private:
+    mutable std::mutex m_Mutex;
+
+    State m_State;
+
     const BasicGs2Credential& m_Gs2Credential;
     optional<StringHolder> m_ProjectToken;
 
@@ -71,33 +84,21 @@ private:
     detail::IntrusiveList<DisconnectCallbackHolder> m_DisconnectCallbackHolderList;
     detail::IntrusiveList<detail::Gs2SessionTask> m_Gs2SessionTaskList;
 
-    std::mutex m_Mutex;
-
     static void triggerConnectCallback(detail::IntrusiveList<ConnectCallbackHolder>& connectCallbackHolderList, AsyncResult<void>& result);
     static void triggerDisconnectCallback(detail::IntrusiveList<DisconnectCallbackHolder>& disconnectCallbackHolderList);
 
+    inline void enterStateLock() { m_Mutex.lock(); }
+    inline void exitStateLock() { m_Mutex.unlock(); };
+
+    void changeStateToIdle();
+    void changeStateToConnecting();
+    void changeStateToCancellingConnect();
+    void changeStateToConnected(StringHolder&& projectToken);
+    void changeStateToCancellingTasks();
+    void changeStateToDisconnecting();
+    void keepCurrentState();
+
 protected:
-    bool isAvailable() const
-    {
-        return !!m_ProjectToken;
-    };
-
-    bool isConnecting() const
-    {
-        return !m_ConnectCallbackHolderList.isEmpty();
-    }
-
-    bool isDisconnecting() const
-    {
-        return !m_DisconnectCallbackHolderList.isEmpty();
-    }
-
-    bool isUsed() const
-    {
-        return !m_Gs2SessionTaskList.isEmpty();
-    }
-
-    bool startDisconnect();
     void connectCallback(optional<StringHolder>& projectToken, Gs2ClientException* pClientException);
     void disconnectCallback(bool isDisconnectInstant);
 
@@ -107,6 +108,7 @@ protected:
 
 public:
     explicit Gs2Session(const BasicGs2Credential& gs2Credential) :
+        m_State(State::Idle),
         m_Gs2Credential(gs2Credential)
     {}
 
@@ -127,10 +129,13 @@ public:
     void disconnect(DisconnectCallbackType callback);
 
 private:
+    // 以下の関数は m_Mutex のロック内から呼ばれます
     virtual void connectImpl() = 0;
+    virtual void cancelConnectImpl() {}
     virtual bool disconnectImpl() = 0;  // 中で disconnectCallback() を呼んだ場合は true を返すこと
     virtual void prepareImpl(detail::Gs2SessionTask &gs2SessionTask) = 0;
 };
+
 
 GS2_END_OF_NAMESPACE
 

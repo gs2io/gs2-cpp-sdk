@@ -19,6 +19,7 @@
 
 #include "Gs2Session.hpp"
 #include "HttpTask.hpp"
+#include <atomic>
 
 GS2_START_OF_NAMESPACE
 
@@ -38,15 +39,20 @@ private:
         ~Gs2LoginTask() GS2_OVERRIDE = default;
     };
 
+private:
+    std::atomic<bool> m_IsConnectCancelled;
+
 public:
     explicit Gs2RestSession(const BasicGs2Credential& gs2Credential) :
-        Gs2Session(gs2Credential)
+        Gs2Session(gs2Credential),
+        m_IsConnectCancelled(false)
     {}
 
     ~Gs2RestSession() GS2_OVERRIDE = default;
 
 private:
     void connectImpl() GS2_OVERRIDE;
+    void cancelConnectImpl() GS2_OVERRIDE;
     bool disconnectImpl() GS2_OVERRIDE;
     void prepareImpl(detail::Gs2SessionTask& gs2SessionTask) GS2_OVERRIDE;
 };

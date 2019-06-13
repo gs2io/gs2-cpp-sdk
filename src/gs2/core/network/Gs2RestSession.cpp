@@ -68,7 +68,16 @@ void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2Client
 {
     // 接続完了コールバック
 
-    if (pClientException == nullptr)
+    if (m_Gs2RestSession.m_IsConnectCancelled)
+    {
+        // キャンセルされた場合
+
+        optional<StringHolder> projectToken;
+        Gs2ClientException gs2ClientException;
+        gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
+        m_Gs2RestSession.connectCallback(projectToken, &gs2ClientException);
+    }
+    else if (pClientException == nullptr)
     {
         // ログイン処理がエラーなく応答された場合
 
@@ -106,7 +115,14 @@ void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2Client
 
 void Gs2RestSession::connectImpl()
 {
+    m_IsConnectCancelled = false;
+
     (new Gs2LoginTask(*this))->send();
+}
+
+void Gs2RestSession::cancelConnectImpl()
+{
+    m_IsConnectCancelled = true;
 }
 
 bool Gs2RestSession::disconnectImpl()
