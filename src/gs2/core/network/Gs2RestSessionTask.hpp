@@ -85,7 +85,7 @@ private:
     }
 
 public:
-    explicit Gs2RestSessionTask(Gs2RestSession& gs2RestSession, CallbackType& callback) :
+    Gs2RestSessionTask(Gs2RestSession& gs2RestSession, CallbackType& callback) :
         Gs2RestSessionTaskBase(gs2RestSession),
         m_Callback(callback)
     {
@@ -109,7 +109,7 @@ private:
     }
 
 public:
-    explicit Gs2RestSessionTask(Gs2RestSession& gs2RestSession, CallbackType& callback) :
+    Gs2RestSessionTask(Gs2RestSession& gs2RestSession, CallbackType& callback) :
         Gs2RestSessionTaskBase(gs2RestSession),
         m_Callback(callback)
     {
