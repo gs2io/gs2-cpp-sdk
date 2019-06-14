@@ -53,6 +53,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/StampSheet.hpp
         model/StampTask.hpp
         network/Gs2SessionTask.hpp
+        network/Gs2SessionTaskId.hpp
         network/Gs2RestSession.hpp
         network/Gs2RestSessionTask.hpp
         network/Gs2Session.hpp

@@ -23,6 +23,7 @@
 #include "../model/BasicGs2Credential.hpp"
 #include "../util/IntrusiveList.hpp"
 #include "../util/StringHolder.hpp"
+#include "Gs2SessionTaskId.hpp"
 #include <functional>
 #include <mutex>
 
@@ -84,6 +85,8 @@ private:
     detail::IntrusiveList<DisconnectCallbackHolder> m_DisconnectCallbackHolderList;
     detail::IntrusiveList<detail::Gs2SessionTask> m_Gs2SessionTaskList;
 
+    detail::Gs2SessionTaskId::Generator m_Gs2SessionIdTaskGenerator;
+
     static void triggerConnectCallback(detail::IntrusiveList<ConnectCallbackHolder>& connectCallbackHolderList, AsyncResult<void>& result);
     static void triggerDisconnectCallback(detail::IntrusiveList<DisconnectCallbackHolder>& disconnectCallbackHolderList);
 
@@ -105,6 +108,8 @@ protected:
     // Gs2SessionTask から利用
     void execute(detail::Gs2SessionTask &gs2SessionTask);
     void notifyComplete(detail::Gs2SessionTask& gs2SessionTask);
+
+    detail::Gs2SessionTask* findGs2SessionTask(const detail::Gs2SessionTaskId& gs2SessionTaskId);
 
 public:
     explicit Gs2Session(const BasicGs2Credential& gs2Credential) :

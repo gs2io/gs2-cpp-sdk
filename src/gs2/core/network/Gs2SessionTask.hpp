@@ -19,6 +19,7 @@
 
 #include "../Gs2Object.hpp"
 #include "../util/IntrusiveList.hpp"
+#include "Gs2SessionTaskId.hpp"
 
 GS2_START_OF_NAMESPACE
 
@@ -33,6 +34,7 @@ class Gs2SessionTask : public Gs2Object, public detail::IntrusiveListItem<Gs2Ses
 
 protected:
     Gs2Session& m_Gs2Session;
+    Gs2SessionTaskId m_Gs2SessionTaskId;
 
 private:
     virtual void triggerUserCallback(const Char responseBody[], Gs2ClientException* pGs2ClientException) = 0;

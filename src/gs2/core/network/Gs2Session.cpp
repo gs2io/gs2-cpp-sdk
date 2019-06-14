@@ -300,6 +300,8 @@ void Gs2Session::execute(detail::Gs2SessionTask &gs2SessionTask)
 
     if (m_State == State::Connected)
     {
+        gs2SessionTask.m_Gs2SessionTaskId = m_Gs2SessionIdTaskGenerator.issue();
+
         prepareImpl(gs2SessionTask);
 
         m_Gs2SessionTaskList.push(gs2SessionTask);
@@ -332,6 +334,21 @@ void Gs2Session::notifyComplete(detail::Gs2SessionTask& gs2SessionTask)
     {
         keepCurrentState();
     }
+}
+
+detail::Gs2SessionTask* Gs2Session::findGs2SessionTask(const detail::Gs2SessionTaskId& gs2SessionTaskId)
+{
+    std::lock_guard<std::mutex> lock(m_Mutex);
+
+    for (auto p = m_Gs2SessionTaskList.getHead(); p != nullptr; p = p->getNext())
+    {
+        if (p->m_Gs2SessionTaskId == gs2SessionTaskId)
+        {
+            return p;
+        }
+    }
+
+    return nullptr;
 }
 
 GS2_END_OF_NAMESPACE
