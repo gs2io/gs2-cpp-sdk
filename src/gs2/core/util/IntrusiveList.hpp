@@ -104,6 +104,11 @@ protected:
         return nullptr;
     }
 
+    IntrusiveListItemBase* getHead()
+    {
+        return m_pHead;
+    }
+
 public:
     IntrusiveListBase() :
         Gs2Object(),
@@ -152,6 +157,11 @@ public:
     T* remove(T& item)
     {
         return static_cast<T*>(IntrusiveListBase::remove(item));
+    }
+
+    T* getHead()
+    {
+        return static_cast<T*>(IntrusiveListBase::getHead());
     }
 };
 
