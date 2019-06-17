@@ -75,7 +75,7 @@ void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2Client
         optional<StringHolder> projectToken;
         Gs2ClientException gs2ClientException;
         gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-        m_Gs2RestSession.connectCallback(projectToken, &gs2ClientException);
+        m_Gs2RestSession.connectCallback(nullptr, &gs2ClientException);
     }
     else if (pClientException == nullptr)
     {
@@ -91,7 +91,7 @@ void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2Client
         {
             // 応答からプロジェクトトークンが取得できた場合
 
-            m_Gs2RestSession.connectCallback(resultModel.accessToken, pClientException);
+            m_Gs2RestSession.connectCallback(&*resultModel.accessToken, pClientException);
         }
         else
         {
@@ -99,15 +99,14 @@ void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2Client
 
             Gs2ClientException gs2ClientException;
             gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-            m_Gs2RestSession.connectCallback(resultModel.accessToken, &gs2ClientException);
+            m_Gs2RestSession.connectCallback(nullptr, &gs2ClientException);
         }
     }
     else
     {
         // ログイン処理がエラーになった場合
 
-        optional<StringHolder> projectToken;
-        m_Gs2RestSession.connectCallback(projectToken, pClientException);
+        m_Gs2RestSession.connectCallback(nullptr, pClientException);
     }
 
     delete this;

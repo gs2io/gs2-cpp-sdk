@@ -172,7 +172,7 @@ void Gs2Session::connect(ConnectCallbackType callback)
     }
 }
 
-void Gs2Session::connectCallback(optional<StringHolder>& projectToken, Gs2ClientException* pClientException)
+void Gs2Session::connectCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException)
 {
     // 接続完了コールバック
 
@@ -182,13 +182,13 @@ void Gs2Session::connectCallback(optional<StringHolder>& projectToken, Gs2Client
     {
         // ログイン処理がエラーなく応答された場合
 
-        if (projectToken)
+        if (pProjectToken != nullptr)
         {
             detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
 
             if (m_DisconnectCallbackHolderList.isEmpty())
             {
-                changeStateToConnected(std::move(*projectToken));
+                changeStateToConnected(std::move(*pProjectToken));
             }
             else
             {
@@ -308,7 +308,7 @@ void Gs2Session::execute(detail::Gs2SessionTask &gs2SessionTask)
 
         keepCurrentState();
 
-        gs2SessionTask.executeImpl();
+        gs2SessionTask.executeImpl();   // TODO: 即失敗に対応する、いや onClose でリストから外されているから無視でいいかも？
     }
     else
     {

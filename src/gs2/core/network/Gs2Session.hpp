@@ -102,7 +102,7 @@ private:
     void keepCurrentState();
 
 protected:
-    void connectCallback(optional<StringHolder>& projectToken, Gs2ClientException* pClientException);
+    void connectCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException);
     void disconnectCallback(bool isDisconnectInstant);
 
     // Gs2SessionTask から利用
