@@ -29,7 +29,18 @@ typedef GS2_RAPIDJSON_NAMESPACE::GenericValue<GS2_RAPIDJSON_NAMESPACE::UTF8<>, A
 class IModel : public Gs2Object
 {
 public:
-    virtual void set(const Char name[], const JsonConstValue& jsonValue) = 0;
+    virtual void set(const JsonConstValue& jsonValue)
+    {
+        if(jsonValue.IsArray()) {
+            set("", jsonValue);
+        } else if(jsonValue.IsObject()) {
+            for (auto it = jsonValue.MemberBegin(); it != jsonValue.MemberEnd(); ++it) {
+                set(it->name.GetString(), it->value);
+            }
+        }
+    }
+
+    virtual void set(const Char name[], const JsonConstValue& jsonValue) {}
 };
 
 } }

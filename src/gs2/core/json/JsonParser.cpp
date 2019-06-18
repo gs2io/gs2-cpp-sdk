@@ -32,13 +32,7 @@ void JsonParser::parse(IModel* model, const Char json[])
     auto allocator = Allocator::getInstance();
     JsonDocument document(&allocator, 1024, &allocator);
     document.Parse(json);
-    if(document.IsArray()) {
-        model->set("", document);
-    } else if(document.IsObject()) {
-        for (auto it = document.MemberBegin(); it != document.MemberEnd(); ++it) {
-            model->set(it->name.GetString(), it->value);
-        }
-    }
+    model->set(document);
 }
 
 } }
