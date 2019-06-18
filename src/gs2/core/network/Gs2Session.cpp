@@ -46,9 +46,21 @@ void Gs2Session::triggerDisconnectCallback(detail::IntrusiveList<DisconnectCallb
     }
 }
 
+void Gs2Session::triggerCancelTasksCallback(detail::IntrusiveList<detail::Gs2SessionTask>& gs2SessionTaskList, Gs2ClientException& gs2ClientException)
+{
+    detail::Gs2ClientErrorResponse clientErrorResponse;
+    clientErrorResponse.getGs2ClientException() = gs2ClientException;   // TODO: move?
+
+    while (auto* pGs2SessionTask = gs2SessionTaskList.pop())
+    {
+        pGs2SessionTask->triggerUserCallback(clientErrorResponse);  // notifyComplete() は不要なのでユーザコールバックのみ呼ぶ
+        delete pGs2SessionTask;
+    }
+}
+
 void Gs2Session::changeStateToIdle()
 {
-    assert(m_State == State::Connecting || m_State == State::CancellingConnect || m_State == State::Disconnecting);
+    // 外部要因による切断がありうるので、どの状態からでも遷移しうる
 
     assert(m_ConnectCallbackHolderList.isEmpty());      // すべてコールバックされ（るために取り出され）ているべき
     assert(m_DisconnectCallbackHolderList.isEmpty());   // すべてコールバックされ（るために取り出され）ているべき
@@ -274,13 +286,14 @@ void Gs2Session::disconnect(DisconnectCallbackType callback)
     }
 }
 
-void Gs2Session::disconnectCallback(bool isDisconnectInstant)
+void Gs2Session::disconnectCallback(Gs2ClientException& gs2ClientException, bool isDisconnectInstant)
 {
     if (!isDisconnectInstant)
     {
         enterStateLock();
     }
 
+    detail::IntrusiveList<detail::Gs2SessionTask> gs2SessionTaskList(std::move(m_Gs2SessionTaskList));
     detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_DisconnectCallbackHolderList));
 
     if (m_ConnectCallbackHolderList.isEmpty())
@@ -292,7 +305,19 @@ void Gs2Session::disconnectCallback(bool isDisconnectInstant)
         changeStateToConnecting();
     }
 
+    Gs2Session::triggerCancelTasksCallback(gs2SessionTaskList, gs2ClientException);
     Gs2Session::triggerDisconnectCallback(disconnectCallbackHolderList);
+}
+
+void Gs2Session::cancelTasksCallback(Gs2ClientException& gs2ClientException)
+{
+    enterStateLock();
+
+    auto gs2SessionTaskList = std::move(m_Gs2SessionTaskList);
+
+    keepCurrentState();
+
+    triggerCancelTasksCallback(gs2SessionTaskList, gs2ClientException);
 }
 
 void Gs2Session::execute(detail::Gs2SessionTask &gs2SessionTask)

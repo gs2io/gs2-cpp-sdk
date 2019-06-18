@@ -18,28 +18,9 @@
 #include "../json/JsonWriter.hpp"
 #include "../json/JsonParser.hpp"
 #include "Gs2RestSessionTask.hpp"
+#include "LoginResultModel.hpp"
 
 GS2_START_OF_NAMESPACE
-
-namespace {
-
-struct LoginResultModel : public detail::json::IModel
-{
-    /** プロジェクトトークン */
-    optional<StringHolder> accessToken;
-
-    void set(const Char name[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE
-    {
-        if (std::strcmp(name, "access_token") == 0) {
-            if (jsonValue.IsString())
-            {
-                this->accessToken.emplace(jsonValue.GetString());
-            }
-        }
-    }
-};
-
-}
 
 Gs2RestSession::Gs2LoginTask::Gs2LoginTask(Gs2RestSession& gs2RestSession) :
     Gs2HttpTask(),
@@ -87,7 +68,7 @@ void Gs2RestSession::Gs2LoginTask::callback(detail::Gs2RestResponse& gs2RestResp
     {
         // ログイン処理がエラーなく応答された場合
 
-        LoginResultModel resultModel;
+        detail::LoginResultModel resultModel;
         gs2RestResponse.exportTo(resultModel);
 
         if (resultModel.accessToken)
@@ -123,7 +104,8 @@ void Gs2RestSession::cancelConnectImpl()
 
 bool Gs2RestSession::disconnectImpl()
 {
-    disconnectCallback(true);
+    Gs2ClientException gs2ClientException;  // TODO
+    disconnectCallback(gs2ClientException, true);
 
     return true;
 }

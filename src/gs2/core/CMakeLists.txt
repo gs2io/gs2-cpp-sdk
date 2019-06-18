@@ -57,8 +57,13 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         network/Gs2SessionTaskId.hpp
         network/Gs2RestSession.hpp
         network/Gs2RestSessionTask.hpp
+        network/Gs2WebSocketResponse.hpp
+        network/Gs2WebSocketSession.hpp
+        network/Gs2WebSocketSessionTask.hpp
         network/Gs2Session.hpp
         network/HttpTask.hpp
+        network/LoginResultModel.hpp
+        network/WebSocketSessionTask.hpp
         util/Base64.hpp
         util/DefaultAllocator.hpp
         util/IntrusiveList.hpp
@@ -85,8 +90,12 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         network/Gs2SessionTask.cpp
         network/Gs2RestSession.cpp
         network/Gs2RestSessionTask.cpp
+        network/Gs2WebSocketResponse.cpp
+        network/Gs2WebSocketSession.cpp
+        network/Gs2WebSocketSessionTask.cpp
         network/Gs2Session.cpp
         network/HttpTask.cpp
+        network/WebSocket.cpp
         util/Base64.cpp
         util/DefaultAllocator.cpp
         util/StringHolder.cpp

@@ -89,6 +89,7 @@ private:
 
     static void triggerConnectCallback(detail::IntrusiveList<ConnectCallbackHolder>& connectCallbackHolderList, AsyncResult<void>& result);
     static void triggerDisconnectCallback(detail::IntrusiveList<DisconnectCallbackHolder>& disconnectCallbackHolderList);
+    static void triggerCancelTasksCallback(detail::IntrusiveList<detail::Gs2SessionTask>& gs2SessionTaskList, Gs2ClientException& gs2ClientException);
 
     inline void enterStateLock() { m_Mutex.lock(); }
     inline void exitStateLock() { m_Mutex.unlock(); };
@@ -103,7 +104,8 @@ private:
 
 protected:
     void connectCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException);
-    void disconnectCallback(bool isDisconnectInstant);
+    void disconnectCallback(Gs2ClientException& gs2ClientException, bool isDisconnectInstant);
+    void cancelTasksCallback(Gs2ClientException& gs2ClientException);
 
     // Gs2SessionTask から利用
     void execute(detail::Gs2SessionTask &gs2SessionTask);
