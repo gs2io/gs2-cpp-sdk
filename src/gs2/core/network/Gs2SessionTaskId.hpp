@@ -28,12 +28,12 @@ class Gs2SessionTaskId : public Gs2Object
     friend bool operator==(const Gs2SessionTaskId& gs2SessionTaskId1, const Gs2SessionTaskId& gs2SessionTaskId2);
 
 public:
-    typedef UInt32 ValueType;
+    typedef Int32 ValueType;
 
     friend bool operator==(const Gs2SessionTaskId& gs2SessionTaskId, ValueType value);
 
-    static const ValueType InvalidIdValue = 0U;
-    static const ValueType ReservedIdValueMax = 10000U;
+    static const ValueType InvalidIdValue = 0;
+    static const ValueType ReservedIdValueMax = 10000;
 
     class Generator : public Gs2Object
     {
@@ -49,11 +49,11 @@ public:
 
         ValueType issue()
         {
-            if (m_Counter < ReservedIdValueMax)
+            if (++m_Counter <= ReservedIdValueMax)
             {
-                m_Counter = ReservedIdValueMax;
+                m_Counter = ReservedIdValueMax + 1;
             }
-            return ++m_Counter;
+            return m_Counter;
         }
     };
 
