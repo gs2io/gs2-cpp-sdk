@@ -14,23 +14,28 @@
  * permissions and limitations under the License.
  */
 
-#include "Gs2SessionTask.hpp"
-#include "Gs2Session.hpp"
+#include "Gs2RestResponse.hpp"
+#include "../json/JsonParser.hpp"
 
 GS2_START_OF_NAMESPACE
 
 namespace detail {
 
-void Gs2SessionTask::callback(Gs2Response& gs2Response)
+void Gs2RestResponse::Model::set(const detail::json::JsonConstValue& jsonValue)
 {
-    triggerUserCallback(gs2Response);
-    m_Gs2Session.notifyComplete(*this);
-    delete this;
+    m_Gs2RestResponse.importFrom(jsonValue, m_StatusCode);
 }
 
-void Gs2SessionTask::execute()
+Gs2RestResponse::Gs2RestResponse(const char message[], Int32 statusCode)
+    : Gs2Response(message)
 {
-    m_Gs2Session.execute(*this);
+    Model model(*this, statusCode);
+    json::JsonParser::parse(&model, message);
+}
+
+void Gs2RestResponse::exportTo(json::IModel& model)
+{
+    json::JsonParser::parse(&model, getMessage());
 }
 
 }

@@ -28,6 +28,8 @@ class Gs2ClientException;
 
 namespace detail {
 
+class Gs2Response;
+
 class Gs2SessionTask : public Gs2Object, public detail::IntrusiveListItem<Gs2SessionTask>
 {
     friend gs2::Gs2Session;
@@ -37,7 +39,7 @@ protected:
     Gs2SessionTaskId m_Gs2SessionTaskId;
 
 private:
-    virtual void triggerUserCallback(const Char responseBody[], Gs2ClientException* pGs2ClientException) = 0;
+    virtual void triggerUserCallback(Gs2Response& gs2Response) = 0;
 
     virtual void executeImpl() = 0;     // Gs2Session から利用
 
@@ -48,7 +50,7 @@ public:
 
     virtual ~Gs2SessionTask() = default;
 
-    void callback(const Char responseBody[], Gs2ClientException* pGs2ClientException);
+    void callback(Gs2Response& gs2Response);
 
     void execute();
 };

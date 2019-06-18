@@ -32,7 +32,7 @@ private:
         Gs2RestSession& m_Gs2RestSession;
 
     private:
-        void callback(const Char responseBody[], Gs2ClientException* pClientException) GS2_OVERRIDE;
+        void callback(detail::Gs2RestResponse& gs2RestResponse) GS2_OVERRIDE;
 
     public:
         explicit Gs2LoginTask(Gs2RestSession& gs2RestSession);

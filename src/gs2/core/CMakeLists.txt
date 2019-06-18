@@ -46,12 +46,13 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         json/JsonParser.hpp
         json/JsonWriter.hpp
         model/BasicGs2Credential.hpp
-        model/ErrorResponse.hpp
         model/IGs2Credential.hpp
         model/Region.hpp
         model/RequestError.hpp
         model/StampSheet.hpp
         model/StampTask.hpp
+        network/Gs2Response.hpp
+        network/Gs2RestResponse.hpp
         network/Gs2SessionTask.hpp
         network/Gs2SessionTaskId.hpp
         network/Gs2RestSession.hpp
@@ -79,6 +80,8 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         json/JsonWriter.cpp
         model/BasicGs2Credential.cpp
         model/Region.cpp
+        network/Gs2Response.cpp
+        network/Gs2RestResponse.cpp
         network/Gs2SessionTask.cpp
         network/Gs2RestSession.cpp
         network/Gs2RestSessionTask.cpp

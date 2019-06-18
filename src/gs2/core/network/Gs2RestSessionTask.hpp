@@ -20,6 +20,7 @@
 #include "Gs2SessionTask.hpp"
 #include "Gs2RestSession.hpp"
 #include "HttpTask.hpp"
+#include "Gs2RestResponse.hpp"
 
 GS2_START_OF_NAMESPACE
 
@@ -32,9 +33,9 @@ private:
     {
     private:
         Gs2RestSessionTaskBase& m_Gs2StandardHttpTaskBase;
-        void callback(const Char responseBody[], Gs2ClientException* pGs2ClientException) GS2_OVERRIDE
+        void callback(Gs2RestResponse& gs2RestResponse) GS2_OVERRIDE
         {
-            m_Gs2StandardHttpTaskBase.callback(responseBody, pGs2ClientException);
+            m_Gs2StandardHttpTaskBase.callback(gs2RestResponse);
         }
 
     public:
@@ -73,14 +74,11 @@ public:
 private:
     CallbackType m_Callback;
 
-    void triggerUserCallback(const Char responseBody[], Gs2ClientException* pGs2ClientException) GS2_OVERRIDE
+    void triggerUserCallback(Gs2Response& gs2Response) GS2_OVERRIDE
     {
         T result;
-        if (responseBody != nullptr && pGs2ClientException == nullptr)
-        {
-            json::JsonParser::parse(&result.getModel(), responseBody);
-        }
-        AsyncResult<T> asyncResult(&result, pGs2ClientException);
+        gs2Response.exportTo(result.getModel());
+        AsyncResult<T> asyncResult(result, gs2Response.getGs2ClientException());
         m_Callback(asyncResult);
     }
 
@@ -102,9 +100,9 @@ public:
 private:
     CallbackType m_Callback;
 
-    void triggerUserCallback(const Char responseBody[], Gs2ClientException* pGs2ClientException) GS2_OVERRIDE
+    void triggerUserCallback(Gs2Response& gs2Response) GS2_OVERRIDE
     {
-        AsyncResult<void> asyncResult(pGs2ClientException);
+        AsyncResult<void> asyncResult(gs2Response.getGs2ClientException());
         m_Callback(asyncResult);
     }
 

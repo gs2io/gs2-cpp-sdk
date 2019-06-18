@@ -64,7 +64,7 @@ Gs2RestSession::Gs2LoginTask::Gs2LoginTask(Gs2RestSession& gs2RestSession) :
     getHttpRequest().setHeaders(headerEntries);
 }
 
-void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2ClientException* pClientException)
+void Gs2RestSession::Gs2LoginTask::callback(detail::Gs2RestResponse& gs2RestResponse)
 {
     // 接続完了コールバック
 
@@ -77,21 +77,24 @@ void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2Client
         gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
         m_Gs2RestSession.connectCallback(nullptr, &gs2ClientException);
     }
-    else if (pClientException == nullptr)
+    else if (gs2RestResponse.getGs2ClientException())
+    {
+        // ログイン処理がエラーになった場合
+
+        m_Gs2RestSession.connectCallback(nullptr, &*gs2RestResponse.getGs2ClientException());
+    }
+    else
     {
         // ログイン処理がエラーなく応答された場合
 
         LoginResultModel resultModel;
-        if (responseBody != nullptr)
-        {
-            detail::json::JsonParser::parse(&resultModel, responseBody);
-        }
+        gs2RestResponse.exportTo(resultModel);
 
         if (resultModel.accessToken)
         {
             // 応答からプロジェクトトークンが取得できた場合
 
-            m_Gs2RestSession.connectCallback(&*resultModel.accessToken, pClientException);
+            m_Gs2RestSession.connectCallback(&*resultModel.accessToken, nullptr);
         }
         else
         {
@@ -101,12 +104,6 @@ void Gs2RestSession::Gs2LoginTask::callback(const Char responseBody[], Gs2Client
             gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
             m_Gs2RestSession.connectCallback(nullptr, &gs2ClientException);
         }
-    }
-    else
-    {
-        // ログイン処理がエラーになった場合
-
-        m_Gs2RestSession.connectCallback(nullptr, pClientException);
     }
 
     delete this;

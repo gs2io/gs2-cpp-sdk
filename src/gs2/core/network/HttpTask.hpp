@@ -18,7 +18,6 @@
 #define GS2_CORE_NETWORK_HTTPTASK_HPP_
 
 #include "../Gs2Object.hpp"
-#include "../AsyncResult.hpp"
 #include <string>
 #include <vector>
 #include <network/HttpRequest.h>
@@ -32,6 +31,8 @@ namespace cocos2d { namespace network {
 GS2_START_OF_NAMESPACE
 
 namespace detail {
+
+class Gs2RestResponse;
 
 class HttpTask : public Gs2Object
 {
@@ -63,7 +64,7 @@ class Gs2HttpTask : public HttpTask
 {
 private:
     void callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse) GS2_OVERRIDE;
-    virtual void callback(const Char responseBody[], Gs2ClientException* pGs2ClientException) = 0;
+    virtual void callback(Gs2RestResponse& gs2RestResponse) = 0;
 
 public:
     Gs2HttpTask() = default;

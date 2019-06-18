@@ -18,6 +18,7 @@
 #include "Gs2SessionTask.hpp"
 #include "../json/JsonWriter.hpp"
 #include "../json/JsonParser.hpp"
+#include "Gs2Response.hpp"
 
 GS2_START_OF_NAMESPACE
 
@@ -211,7 +212,7 @@ void Gs2Session::connectCallback(StringHolder* pProjectToken, Gs2ClientException
             Gs2ClientException gs2ClientException;
             gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
 
-            AsyncResult<void> result(&gs2ClientException);
+            AsyncResult<void> result(gs2ClientException);
             Gs2Session::triggerConnectCallback(connectCallbackHolderList, result);
             Gs2Session::triggerDisconnectCallback(disconnectCallbackHolderList);
         }
@@ -225,7 +226,7 @@ void Gs2Session::connectCallback(StringHolder* pProjectToken, Gs2ClientException
 
         changeStateToIdle();
 
-        AsyncResult<void> result(pClientException);
+        AsyncResult<void> result(*pClientException);
         Gs2Session::triggerConnectCallback(connectCallbackHolderList, result);
         Gs2Session::triggerDisconnectCallback(disconnectCallbackHolderList);
     }
@@ -314,9 +315,11 @@ void Gs2Session::execute(detail::Gs2SessionTask &gs2SessionTask)
     {
         keepCurrentState();
 
-        Gs2ClientException gs2ClientException;
-        gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-        gs2SessionTask.callback("", &gs2ClientException);
+        detail::Gs2ClientErrorResponse gs2ClientErrorResponse;
+        auto& gs2ClientException = gs2ClientErrorResponse.getGs2ClientException();
+        gs2ClientException.emplace();
+        gs2ClientException->setType(Gs2ClientException::UnknownException);   // TODO
+        gs2SessionTask.callback(gs2ClientErrorResponse);
     }
 }
 
