@@ -54,6 +54,8 @@ private:
     cocos2d::network::WebSocket m_WebSocket;
     Delegate m_Delegate;
 
+    void writeRootCaCertificatesCallback(bool isSuccessful);
+
     virtual void onOpen() = 0;
     virtual void onMessage(const cocos2d::network::WebSocket::Data& data) = 0;
     virtual void onClose() = 0;

@@ -20,6 +20,8 @@
 #include "../json/IModel.hpp"
 #include "../json/JsonParser.hpp"
 #include "../model/IGs2Credential.hpp"
+#include "RootCaCertificates.hpp"
+#include <platform/CCFileUtils.h>
 #include <cstdlib>
 #include <limits>
 //#include <base/CCDirector.h>
@@ -75,10 +77,41 @@ WebSocket::~WebSocket()
 
 bool WebSocket::open()
 {
-//    return m_WebSocket.init(m_Delegate, "wss://gateway-ws.ap-northeast-1.gen2.gs2io.com");
-    return m_WebSocket.init(m_Delegate, "ws://gateway-ws.ap-northeast-1.gen2.gs2io.com");
-//    return m_WebSocket.init(m_Delegate, "wss://echo.websocket.org");
-//    return m_WebSocket.init(m_Delegate, "wss://demos.kaazing.com/echo");
+    auto path = std::move(cocos2d::FileUtils::getInstance()->getWritablePath() + "root-ca");
+
+    if (cocos2d::FileUtils::getInstance()->isFileExist(path))
+    {
+        return m_WebSocket.init(m_Delegate, "wss://gateway-ws.ap-northeast-1.gen2.gs2io.com", nullptr, path);
+    }
+    else
+    {
+        cocos2d::Data data;
+        data.copy(reinterpret_cast<const unsigned char*>(RootCaCertificates), SizeOfRootCaCertificates - 1);
+        cocos2d::FileUtils::getInstance()->writeDataToFile(
+            std::move(data),
+            path,
+            [this](bool isSuccessful) {
+                this->writeRootCaCertificatesCallback(isSuccessful);
+            }
+        );
+
+        return true;
+    }
+}
+
+void WebSocket::writeRootCaCertificatesCallback(bool isSuccessful)
+{
+    if (isSuccessful)
+    {
+        auto path = std::move(cocos2d::FileUtils::getInstance()->getWritablePath() + "root-ca");
+        isSuccessful = m_WebSocket.init(m_Delegate, "wss://gateway-ws.ap-northeast-1.gen2.gs2io.com", nullptr, path);
+    }
+
+    if (!isSuccessful)
+    {
+        onError(cocos2d::network::WebSocket::ErrorCode::CONNECTION_FAILURE);    // TODO?
+        onClose();
+    }
 }
 
 void WebSocket::close()

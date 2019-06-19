@@ -63,6 +63,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         network/Gs2Session.hpp
         network/HttpTask.hpp
         network/LoginResultModel.hpp
+        network/RootCaCertificates.hpp
         network/WebSocketSessionTask.hpp
         util/Base64.hpp
         util/DefaultAllocator.hpp
@@ -95,6 +96,7 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         network/Gs2WebSocketSessionTask.cpp
         network/Gs2Session.cpp
         network/HttpTask.cpp
+        network/RootCaCertificates.cpp
         network/WebSocket.cpp
         util/Base64.cpp
         util/DefaultAllocator.cpp
