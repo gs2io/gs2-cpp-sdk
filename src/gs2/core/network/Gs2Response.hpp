@@ -36,11 +36,6 @@ private:
     optional<Gs2ClientException> m_Gs2ClientException;
 
 protected:
-    const char* getMessage() const
-    {
-        return m_Message;
-    }
-
     bool importFrom(const json::JsonConstValue& jsonConstValue, Int32 statusCode);
 
 public:
@@ -49,6 +44,11 @@ public:
     {}
 
     virtual ~Gs2Response() = default;
+
+    const char* getMessage() const
+    {
+        return m_Message;
+    }
 
     optional<Gs2ClientException>& getGs2ClientException()
     {
