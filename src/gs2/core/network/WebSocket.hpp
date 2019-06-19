@@ -18,6 +18,7 @@
 #define GS2_CORE_NETWORK_WEBSOCKET_HPP_
 
 #include "../Gs2Object.hpp"
+#include "../external/optional/optional.hpp"
 #include "Gs2SessionTaskId.hpp"
 #include <network/WebSocket.h>
 
@@ -51,7 +52,7 @@ private:
     };
 
 private:
-    cocos2d::network::WebSocket m_WebSocket;
+    optional<cocos2d::network::WebSocket> m_WebSocket;
     Delegate m_Delegate;
 
     void writeRootCaCertificatesCallback(bool isSuccessful);
