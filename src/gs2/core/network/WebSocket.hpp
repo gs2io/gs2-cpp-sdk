@@ -21,6 +21,7 @@
 #include "../external/optional/optional.hpp"
 #include "Gs2SessionTaskId.hpp"
 #include <network/WebSocket.h>
+#include <mutex>
 
 GS2_START_OF_NAMESPACE
 
@@ -33,6 +34,15 @@ class Gs2WebSocketResponse;
 class WebSocket : public Gs2Object
 {
 private:
+    enum class State
+    {
+        Idle,
+        WritingFile,
+        Opening,
+        Cancelling,
+        Available,
+    };
+
     class Delegate : public cocos2d::network::WebSocket::Delegate
     {
     private:
@@ -52,6 +62,10 @@ private:
     };
 
 private:
+    std::mutex m_Mutex;
+
+    State m_State;
+
     optional<cocos2d::network::WebSocket> m_WebSocket;
     Delegate m_Delegate;
 

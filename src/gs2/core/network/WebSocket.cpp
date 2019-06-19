@@ -34,6 +34,18 @@ namespace detail {
 void WebSocket::Delegate::onOpen(cocos2d::network::WebSocket* pWebSocket)
 {
     GS2_NOT_USED(pWebSocket);
+
+    {
+        std::lock_guard<std::mutex> lock(m_WebSocket.m_Mutex);
+
+        if (m_WebSocket.m_State == State::Cancelling)
+        {
+            m_WebSocket.m_WebSocket->closeAsync();
+        }
+
+        m_WebSocket.m_State = State::Available;
+    }
+
     m_WebSocket.onOpen();
 }
 
@@ -46,6 +58,12 @@ void WebSocket::Delegate::onMessage(cocos2d::network::WebSocket* pWebSocket, con
 void WebSocket::Delegate::onClose(cocos2d::network::WebSocket* pWebSocket)
 {
     GS2_NOT_USED(pWebSocket);
+
+    {
+        std::lock_guard<std::mutex> lock(m_WebSocket.m_Mutex);
+        m_WebSocket.m_State = State::Idle;
+    }
+
     m_WebSocket.onClose();
 }
 
@@ -56,6 +74,7 @@ void WebSocket::Delegate::onError(cocos2d::network::WebSocket* pWebSocket, const
 }
 
 WebSocket::WebSocket() :
+    m_State(State::Idle),
     m_Delegate(*this)
 {
     // ping を定期的に送信する
@@ -77,13 +96,27 @@ WebSocket::~WebSocket()
 
 bool WebSocket::open()
 {
+    std::lock_guard<std::mutex> lock(m_Mutex);
+
+    if (m_State != State::Idle)
+    {
+        return false;
+    }
+
     m_WebSocket.emplace();
 
     auto path = std::move(cocos2d::FileUtils::getInstance()->getWritablePath() + "root-ca");
 
     if (cocos2d::FileUtils::getInstance()->isFileExist(path))
     {
-        return m_WebSocket->init(m_Delegate, "wss://gateway-ws.ap-northeast-1.gen2.gs2io.com", nullptr, path);
+        bool isSuccessful = m_WebSocket->init(m_Delegate, "wss://gateway-ws.ap-northeast-1.gen2.gs2io.com", nullptr, path);
+
+        if (isSuccessful)
+        {
+            m_State = State::Opening;
+        }
+
+        return isSuccessful;
     }
     else
     {
@@ -97,19 +130,32 @@ bool WebSocket::open()
             }
         );
 
+        m_State = State::WritingFile;
+
         return true;
     }
 }
 
 void WebSocket::writeRootCaCertificatesCallback(bool isSuccessful)
 {
+    std::lock_guard<std::mutex> lock(m_Mutex);
+
+    if (m_State == State::Cancelling)
+    {
+        isSuccessful = false;
+    }
+
     if (isSuccessful)
     {
         auto path = std::move(cocos2d::FileUtils::getInstance()->getWritablePath() + "root-ca");
         isSuccessful = m_WebSocket->init(m_Delegate, "wss://gateway-ws.ap-northeast-1.gen2.gs2io.com", nullptr, path);
     }
 
-    if (!isSuccessful)
+    if (isSuccessful)
+    {
+        m_State = State::Opening;
+    }
+    else
     {
         onError(cocos2d::network::WebSocket::ErrorCode::CONNECTION_FAILURE);    // TODO?
         onClose();
@@ -118,7 +164,25 @@ void WebSocket::writeRootCaCertificatesCallback(bool isSuccessful)
 
 void WebSocket::close()
 {
-    m_WebSocket->closeAsync();
+    std::lock_guard<std::mutex> lock(m_Mutex);
+
+    switch (m_State)
+    {
+    case State::Idle:
+        break;
+
+    case State::WritingFile:
+    case State::Opening:
+        m_State = State::Cancelling;
+        break;
+
+    case State::Cancelling:
+        break;
+
+    case State::Available:
+        m_WebSocket->closeAsync();
+        break;
+    }
 }
 
 void WebSocket::send(const gs2::Char message[])
