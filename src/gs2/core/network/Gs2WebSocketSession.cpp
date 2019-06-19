@@ -27,7 +27,7 @@ GS2_START_OF_NAMESPACE
 void Gs2WebSocketSession::WebSocket::onOpen()
 {
     // TODO: キャンセル対応
-    assert(m_Gs2WebSocketSession.m_State == State::Opening);
+    assert(m_Gs2WebSocketSession.m_State == Gs2WebSocketSession::State::Opening);
 
     auto& gs2Credential = m_Gs2WebSocketSession.getGs2Credential();     // 不変なのでロックの外で取り出してアクセスしてもよい
 
@@ -51,7 +51,7 @@ void Gs2WebSocketSession::WebSocket::onOpen()
         LoginTaskIdValue
     );
 
-    m_Gs2WebSocketSession.m_State = State::LoggingIn;
+    m_Gs2WebSocketSession.m_State = Gs2WebSocketSession::State::LoggingIn;
 
     send(loginMessageBuffer);
 }
@@ -60,18 +60,18 @@ void Gs2WebSocketSession::WebSocket::onMessage(detail::Gs2WebSocketResponse& gs2
 {
     switch (m_Gs2WebSocketSession.m_State)
     {
-    case State::Idle:
-    case State::Opening:
+    case Gs2WebSocketSession::State::Idle:
+    case Gs2WebSocketSession::State::Opening:
         // 来ない
         break;
 
-    case State::LoggingIn:
+    case Gs2WebSocketSession::State::LoggingIn:
         if (gs2WebSocketResponse.getGs2SessionTaskId() == LoginTaskIdValue)
         {
             if (gs2WebSocketResponse.getGs2ClientException())
             {
                 m_Gs2WebSocketSession.m_LastGs2ClientException = std::move(*gs2WebSocketResponse.getGs2ClientException());
-                m_Gs2WebSocketSession.m_State = State::LoginFailed;
+                m_Gs2WebSocketSession.m_State = Gs2WebSocketSession::State::LoginFailed;
                 close();
             }
             else
@@ -81,7 +81,7 @@ void Gs2WebSocketSession::WebSocket::onMessage(detail::Gs2WebSocketResponse& gs2
 
                 if (loginResultModel.accessToken)   // パース成功
                 {
-                    m_Gs2WebSocketSession.m_State = State::Available;
+                    m_Gs2WebSocketSession.m_State = Gs2WebSocketSession::State::Available;
                     m_Gs2WebSocketSession.connectCallback(&*loginResultModel.accessToken, nullptr);
                 }
                 else
@@ -90,7 +90,7 @@ void Gs2WebSocketSession::WebSocket::onMessage(detail::Gs2WebSocketResponse& gs2
                     Gs2ClientException gs2ClientException;
                     gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
                     m_Gs2WebSocketSession.m_LastGs2ClientException = std::move(gs2ClientException);
-                    m_Gs2WebSocketSession.m_State = State::LoginFailed;
+                    m_Gs2WebSocketSession.m_State = Gs2WebSocketSession::State::LoginFailed;
                     close();
                 }
             }
@@ -101,11 +101,11 @@ void Gs2WebSocketSession::WebSocket::onMessage(detail::Gs2WebSocketResponse& gs2
         }
         break;
 
-    case State::LoginFailed:
+    case Gs2WebSocketSession::State::LoginFailed:
         // ここでメッセージは届かないはず
         break;
 
-    case State::Available:
+    case Gs2WebSocketSession::State::Available:
         if (gs2WebSocketResponse.getGs2SessionTaskId() == detail::Gs2SessionTaskId::InvalidIdValue)
         {
             // API 応答以外のメッセージ
@@ -131,22 +131,22 @@ void Gs2WebSocketSession::WebSocket::onClose()
 {
     auto state = m_Gs2WebSocketSession.m_State;
 
-    m_Gs2WebSocketSession.m_State = State::Idle;
+    m_Gs2WebSocketSession.m_State = Gs2WebSocketSession::State::Idle;
 
     switch (state)
     {
-    case State::Idle:
+    case Gs2WebSocketSession::State::Idle:
         // 来ない
         break;
 
-    case State::Opening:
-    case State::LoggingIn:
-    case State::LoginFailed:
+    case Gs2WebSocketSession::State::Opening:
+    case Gs2WebSocketSession::State::LoggingIn:
+    case Gs2WebSocketSession::State::LoginFailed:
         // Gs2Session としては Connected になっていないので disconnectCallback ではなく connectCallback に失敗を伝える
         m_Gs2WebSocketSession.connectCallback(nullptr, &m_Gs2WebSocketSession.m_LastGs2ClientException);
         break;
 
-    case State::Available:
+    case Gs2WebSocketSession::State::Available:
         // 自発的な切断も外部要因による切断もここ
         Gs2ClientException gs2ClientException;
         gs2ClientException.setType(Gs2ClientException::UnknownException);  // TODO
@@ -159,25 +159,25 @@ void Gs2WebSocketSession::WebSocket::onError(gs2::Gs2ClientException& gs2ClientE
 {
     switch (m_Gs2WebSocketSession.m_State)
     {
-    case State::Idle:   // 来ない
+    case Gs2WebSocketSession::State::Idle:   // 来ない
         break;
 
-    case State::Opening:
+    case Gs2WebSocketSession::State::Opening:
         // この直後に onClose() が呼ばれる
         m_Gs2WebSocketSession.m_LastGs2ClientException = std::move(gs2ClientException);
         break;
 
-    case State::LoggingIn:
+    case Gs2WebSocketSession::State::LoggingIn:
         m_Gs2WebSocketSession.m_LastGs2ClientException = std::move(gs2ClientException);
-        m_Gs2WebSocketSession.m_State = State::LoginFailed;
+        m_Gs2WebSocketSession.m_State = Gs2WebSocketSession::State::LoginFailed;
         close();
         break;
 
-    case State::LoginFailed:
+    case Gs2WebSocketSession::State::LoginFailed:
         // 来ないはず
         break;
 
-    case State::Available:
+    case Gs2WebSocketSession::State::Available:
         // 実行中のタスクのどれが失敗したのかわからないので、全部失敗にする
         m_Gs2WebSocketSession.cancelTasksCallback(gs2ClientException);
         break;
