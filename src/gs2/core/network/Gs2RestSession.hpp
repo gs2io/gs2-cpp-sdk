@@ -54,7 +54,6 @@ private:
     void connectImpl() GS2_OVERRIDE;
     void cancelConnectImpl() GS2_OVERRIDE;
     bool disconnectImpl() GS2_OVERRIDE;
-    void prepareImpl(detail::Gs2SessionTask& gs2SessionTask) GS2_OVERRIDE;
 };
 
 GS2_END_OF_NAMESPACE

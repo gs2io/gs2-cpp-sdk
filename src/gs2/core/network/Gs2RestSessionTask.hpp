@@ -49,6 +49,7 @@ private:
 private:
     Gs2RestTask m_Gs2RestTask;
 
+    void prepareImpl() GS2_OVERRIDE;
     void executeImpl() GS2_OVERRIDE;
 
 public:

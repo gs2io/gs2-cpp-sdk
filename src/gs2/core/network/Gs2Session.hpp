@@ -138,7 +138,6 @@ private:
     virtual void connectImpl() = 0;
     virtual void cancelConnectImpl() {}
     virtual bool disconnectImpl() = 0;  // 中で disconnectCallback() を呼んだ場合は true を返すこと
-    virtual void prepareImpl(detail::Gs2SessionTask &gs2SessionTask) = 0;
 };
 
 

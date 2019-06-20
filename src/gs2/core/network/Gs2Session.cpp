@@ -303,13 +303,13 @@ void Gs2Session::execute(detail::Gs2SessionTask &gs2SessionTask)
     {
         gs2SessionTask.m_Gs2SessionTaskId = m_Gs2SessionIdTaskGenerator.issue();
 
-        prepareImpl(gs2SessionTask);
+        gs2SessionTask.prepareImpl();
 
         m_Gs2SessionTaskList.push(gs2SessionTask);
 
         keepCurrentState();
 
-        gs2SessionTask.executeImpl();   // TODO: 即失敗に対応する、いや onClose でリストから外されているから無視でいいかも？
+        gs2SessionTask.executeImpl();
     }
     else
     {

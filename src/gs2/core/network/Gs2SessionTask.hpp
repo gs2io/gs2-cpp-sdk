@@ -34,14 +34,27 @@ class Gs2SessionTask : public Gs2Object, public detail::IntrusiveListItem<Gs2Ses
 {
     friend gs2::Gs2Session;
 
-protected:
+private:
     Gs2Session& m_Gs2Session;
     Gs2SessionTaskId m_Gs2SessionTaskId;
+
+protected:
+    Gs2Session& getGs2Session()
+    {
+        return m_Gs2Session;
+    }
+
+    const Gs2SessionTaskId& getGs2SessionTaskId() const
+    {
+        return m_Gs2SessionTaskId;
+    }
 
 private:
     virtual void triggerUserCallback(Gs2Response& gs2Response) = 0;
 
-    virtual void executeImpl() = 0;     // Gs2Session から利用
+    // Gs2Session::execute() から利用
+    virtual void prepareImpl() = 0;     // ロックの内側から呼ばれるので m_Gs2Session のプライベートメンバに安全にアクセス可能
+    virtual void executeImpl() = 0;     // ロックの外側から呼ばれるので直接コールバックを呼び出し可能
 
 public:
     Gs2SessionTask(Gs2Session& gs2Session) :

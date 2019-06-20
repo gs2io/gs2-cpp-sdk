@@ -128,16 +128,4 @@ bool Gs2RestSession::disconnectImpl()
     return true;
 }
 
-void Gs2RestSession::prepareImpl(detail::Gs2SessionTask& gs2SessionTask)
-{
-    auto& gs2StandardHttpTaskBase = static_cast<detail::Gs2RestSessionTaskBase&>(gs2SessionTask);
-
-    auto headers = gs2StandardHttpTaskBase.getGs2HttpTask().getHttpRequest().getHeaders();
-
-    detail::HttpTask::addHeaderEntry(headers, "X-GS2-CLIENT-ID", getGs2Credential().getClientId());
-    detail::HttpTask::addHeaderEntry(headers, "X-GS2-PROJECT-TOKEN", *getProjectToken());
-
-    gs2StandardHttpTaskBase.getGs2HttpTask().getHttpRequest().setHeaders(headers);
-}
-
 GS2_END_OF_NAMESPACE
