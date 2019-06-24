@@ -19,6 +19,7 @@
 
 #include "../Gs2Object.hpp"
 #include "../util/IntrusiveList.hpp"
+#include "../util/StringHolder.hpp"
 #include "Gs2SessionTaskId.hpp"
 
 GS2_START_OF_NAMESPACE
@@ -48,6 +49,8 @@ protected:
     {
         return m_Gs2SessionTaskId;
     }
+
+    const optional<StringHolder>& getProjectToken() const;
 
 private:
     virtual void triggerUserCallback(Gs2Response& gs2Response) = 0;

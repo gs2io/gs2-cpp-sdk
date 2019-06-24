@@ -25,7 +25,7 @@ void Gs2RestSessionTaskBase::prepareImpl()
     auto headers = getGs2HttpTask().getHttpRequest().getHeaders();
 
     detail::HttpTask::addHeaderEntry(headers, "X-GS2-CLIENT-ID", getGs2Session().getGs2Credential().getClientId());
-    detail::HttpTask::addHeaderEntry(headers, "X-GS2-PROJECT-TOKEN", *getGs2Session().getProjectToken());
+    detail::HttpTask::addHeaderEntry(headers, "X-GS2-PROJECT-TOKEN", *getProjectToken());
 
     getGs2HttpTask().getHttpRequest().setHeaders(headers);
 }

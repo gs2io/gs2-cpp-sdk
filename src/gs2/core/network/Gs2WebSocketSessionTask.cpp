@@ -22,7 +22,7 @@ namespace detail {
 
 void Gs2WebSocketSessionTaskBase::prepareImpl()
 {
-    sendImpl(getGs2Session().getGs2Credential().getClientId(), *getGs2Session().getProjectToken(), getGs2SessionTaskId());
+    sendImpl(getGs2Session().getGs2Credential().getClientId(), *getProjectToken(), getGs2SessionTaskId());
 }
 
 void Gs2WebSocketSessionTaskBase::executeImpl()

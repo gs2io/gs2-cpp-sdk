@@ -21,6 +21,11 @@ GS2_START_OF_NAMESPACE
 
 namespace detail {
 
+const optional<StringHolder>& Gs2SessionTask::getProjectToken() const
+{
+    return m_Gs2Session.getProjectToken();
+}
+
 void Gs2SessionTask::callback(Gs2Response& gs2Response)
 {
     triggerUserCallback(gs2Response);

@@ -107,6 +107,11 @@ private:
     void notifyComplete(detail::Gs2SessionTask& gs2SessionTask);
 
 protected:
+    const optional<StringHolder>& getProjectToken() const
+    {
+        return m_ProjectToken;
+    }
+
     void connectCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException);
     void disconnectCallback(Gs2ClientException& gs2ClientException, bool isDisconnectInstant);
     void cancelTasksCallback(Gs2ClientException& gs2ClientException);
@@ -124,11 +129,6 @@ public:
     const BasicGs2Credential& getGs2Credential() const
     {
         return m_Gs2Credential;
-    }
-
-    const optional<StringHolder>& getProjectToken() const
-    {
-        return m_ProjectToken;
     }
 
     void connect(ConnectCallbackType callback);
