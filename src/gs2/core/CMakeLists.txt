@@ -92,6 +92,7 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         network/Gs2RestSessionTask.cpp
         network/Gs2Session.cpp
         network/Gs2SessionTask.cpp
+        network/Gs2SessionTaskId.cpp
         network/Gs2WebSocketResponse.cpp
         network/Gs2WebSocketSession.cpp
         network/Gs2WebSocketSessionTask.cpp

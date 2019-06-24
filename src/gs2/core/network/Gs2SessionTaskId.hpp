@@ -81,6 +81,9 @@ public:
     {
         return m_Value;
     }
+
+    int exportTo(char s[], size_t n) const;
+    bool importFrom(const char s[]);
 };
 
 inline bool operator==(const Gs2SessionTaskId& gs2SessionTaskId1, const Gs2SessionTaskId& gs2SessionTaskId2)

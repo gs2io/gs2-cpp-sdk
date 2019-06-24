@@ -27,12 +27,7 @@ void Gs2WebSocketResponse::MetaInfoModel::set(const Char name[], const json::Jso
     if (std::strcmp(name, "requestId") == 0) {
         if (jsonValue.IsString())
         {
-            char* pEnd;
-            long value = std::strtol(jsonValue.GetString(), &pEnd, 10);
-            if (*pEnd == '\0')
-            {
-                m_Gs2WebSocketResponse.m_Gs2SessionTaskId = static_cast<Gs2SessionTaskId::ValueType>(value);
-            }
+            m_Gs2WebSocketResponse.m_Gs2SessionTaskId.importFrom(jsonValue.GetString());
         }
     }
     else if (std::strcmp(name, "status") == 0)
