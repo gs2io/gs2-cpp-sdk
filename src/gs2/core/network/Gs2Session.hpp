@@ -102,14 +102,14 @@ private:
     void changeStateToDisconnecting();
     void keepCurrentState();
 
+    // Gs2SessionTask から利用
+    void execute(detail::Gs2SessionTask &gs2SessionTask);
+    void notifyComplete(detail::Gs2SessionTask& gs2SessionTask);
+
 protected:
     void connectCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException);
     void disconnectCallback(Gs2ClientException& gs2ClientException, bool isDisconnectInstant);
     void cancelTasksCallback(Gs2ClientException& gs2ClientException);
-
-    // Gs2SessionTask から利用
-    void execute(detail::Gs2SessionTask &gs2SessionTask);
-    void notifyComplete(detail::Gs2SessionTask& gs2SessionTask);
 
     detail::Gs2SessionTask* findGs2SessionTask(const detail::Gs2SessionTaskId& gs2SessionTaskId);
 
