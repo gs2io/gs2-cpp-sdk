@@ -82,7 +82,7 @@ void Gs2WebSocketSession::WebSocket::onMessage(detail::Gs2WebSocketResponse& gs2
                 if (loginResultModel.accessToken)   // パース成功
                 {
                     m_Gs2WebSocketSession.m_State = Gs2WebSocketSession::State::Available;
-                    m_Gs2WebSocketSession.connectCallback(&*loginResultModel.accessToken, nullptr);
+                    m_Gs2WebSocketSession.openCallback(&*loginResultModel.accessToken, nullptr);
                 }
                 else
                 {
@@ -142,15 +142,15 @@ void Gs2WebSocketSession::WebSocket::onClose()
     case Gs2WebSocketSession::State::Opening:
     case Gs2WebSocketSession::State::LoggingIn:
     case Gs2WebSocketSession::State::LoginFailed:
-        // Gs2Session としては Connected になっていないので disconnectCallback ではなく connectCallback に失敗を伝える
-        m_Gs2WebSocketSession.connectCallback(nullptr, &m_Gs2WebSocketSession.m_LastGs2ClientException);
+        // Gs2Session としては Available になっていないので closeCallback ではなく openCallback に失敗を伝える
+        m_Gs2WebSocketSession.openCallback(nullptr, &m_Gs2WebSocketSession.m_LastGs2ClientException);
         break;
 
     case Gs2WebSocketSession::State::Available:
         // 自発的な切断も外部要因による切断もここ
         Gs2ClientException gs2ClientException;
         gs2ClientException.setType(Gs2ClientException::UnknownException);  // TODO
-        m_Gs2WebSocketSession.disconnectCallback(gs2ClientException, false);
+        m_Gs2WebSocketSession.closeCallback(gs2ClientException, false);
         break;
     }
 }
@@ -184,7 +184,7 @@ void Gs2WebSocketSession::WebSocket::onError(gs2::Gs2ClientException& gs2ClientE
     }
 }
 
-void Gs2WebSocketSession::connectImpl()
+void Gs2WebSocketSession::openImpl()
 {
     assert(m_State == State::Idle);
 
@@ -193,12 +193,12 @@ void Gs2WebSocketSession::connectImpl()
     m_WebSocket.open();
 }
 
-void Gs2WebSocketSession::cancelConnectImpl()
+void Gs2WebSocketSession::cancelOpenImpl()
 {
     m_WebSocket.close();
 }
 
-bool Gs2WebSocketSession::disconnectImpl()
+bool Gs2WebSocketSession::closeImpl()
 {
     // コールバックスレッド以外からのステート変更は排他を保証できない
     // （Gs2Session と独立してロックを用意するとデッドロックしうる）ので、

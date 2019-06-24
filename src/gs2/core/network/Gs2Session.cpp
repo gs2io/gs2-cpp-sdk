@@ -26,21 +26,21 @@ Gs2Session::~Gs2Session()
 {
 }
 
-void Gs2Session::triggerConnectCallback(detail::IntrusiveList<ConnectCallbackHolder>& connectCallbackHolderList, AsyncResult<void>& result)
+void Gs2Session::triggerOpenCallback(detail::IntrusiveList<OpenCallbackHolder>& openCallbackHolderList, AsyncResult<void>& result)
 {
-    while (auto* pConnectCallbackHolder = connectCallbackHolderList.pop())
+    while (auto* pOpenCallbackHolder = openCallbackHolderList.pop())
     {
-        pConnectCallbackHolder->callback()(result);
-        delete pConnectCallbackHolder;
+        pOpenCallbackHolder->callback()(result);
+        delete pOpenCallbackHolder;
     }
 }
 
-void Gs2Session::triggerDisconnectCallback(detail::IntrusiveList<DisconnectCallbackHolder>& disconnectCallbackHolderList)
+void Gs2Session::triggerCloseCallback(detail::IntrusiveList<CloseCallbackHolder>& closeCallbackHolderList)
 {
-    while (auto* pDisconnectCallbackHolder = disconnectCallbackHolderList.pop())
+    while (auto* pCloseCallbackHolder = closeCallbackHolderList.pop())
     {
-        pDisconnectCallbackHolder->callback()();
-        delete pDisconnectCallbackHolder;
+        pCloseCallbackHolder->callback()();
+        delete pCloseCallbackHolder;
     }
 }
 
@@ -60,90 +60,90 @@ void Gs2Session::changeStateToIdle()
 {
     // 外部要因による切断がありうるので、どの状態からでも遷移しうる
 
-    assert(m_ConnectCallbackHolderList.isEmpty());      // すべてコールバックされ（るために取り出され）ているべき
-    assert(m_DisconnectCallbackHolderList.isEmpty());   // すべてコールバックされ（るために取り出され）ているべき
-    assert(m_Gs2SessionTaskList.isEmpty());             // Connected になる前に登録はできない
+    assert(m_OpenCallbackHolderList.isEmpty());     // すべてコールバックされ（るために取り出され）ているべき
+    assert(m_CloseCallbackHolderList.isEmpty());    // すべてコールバックされ（るために取り出され）ているべき
+    assert(m_Gs2SessionTaskList.isEmpty());         // Available になる前に登録はできない
 
     m_State = State::Idle;
 
     exitStateLock();
 }
 
-void Gs2Session::changeStateToConnecting()
+void Gs2Session::changeStateToOpening()
 {
-    assert(m_State == State::Idle || m_State == State::Disconnecting);
+    assert(m_State == State::Idle || m_State == State::Closing);
 
-    assert(!m_ConnectCallbackHolderList.isEmpty());     // connect() タスクが登録されているときのみ遷移する
-    assert(m_DisconnectCallbackHolderList.isEmpty());   // すべてコールバックされ（るために取り出され）ているべき
-    assert(m_Gs2SessionTaskList.isEmpty());             // Connected になる前に登録はできない
+    assert(!m_OpenCallbackHolderList.isEmpty());    // open() タスクが登録されているときのみ遷移する
+    assert(m_CloseCallbackHolderList.isEmpty());    // すべてコールバックされ（るために取り出され）ているべき
+    assert(m_Gs2SessionTaskList.isEmpty());         // Available になる前に登録はできない
 
-    m_State = State::Connecting;
+    m_State = State::Opening;
 
-    connectImpl();
+    openImpl();
 
     exitStateLock();
 }
 
-void Gs2Session::changeStateToCancellingConnect()
+void Gs2Session::changeStateToCancellingOpen()
 {
-    assert(m_State == State::Connecting);
+    assert(m_State == State::Opening);
 
-    assert(!m_ConnectCallbackHolderList.isEmpty());     // Connecting は connect() タスクが必ず存在する
-    assert(!m_DisconnectCallbackHolderList.isEmpty());  // 接続処理中の disconnect() によってのみ遷移する
-    assert(m_Gs2SessionTaskList.isEmpty());             // Connected になる前に登録はできない
+    assert(!m_OpenCallbackHolderList.isEmpty());    // Opening は open() タスクが必ず存在する
+    assert(!m_CloseCallbackHolderList.isEmpty());   // 接続処理中の close() によってのみ遷移する
+    assert(m_Gs2SessionTaskList.isEmpty());         // Available になる前に登録はできない
 
-    m_State = State::CancellingConnect;
+    m_State = State::CancellingOpen;
 
-    cancelConnectImpl();
+    cancelOpenImpl();
 
     exitStateLock();
 }
 
-void Gs2Session::changeStateToConnected(StringHolder&& projectToken)
+void Gs2Session::changeStateToAvailable(StringHolder&& projectToken)
 {
-    assert(m_State == State::Connecting);
+    assert(m_State == State::Opening);
 
-    assert(m_ConnectCallbackHolderList.isEmpty());      // すべてコールバックされ（るために取り出され）ているべき
-    assert(m_DisconnectCallbackHolderList.isEmpty());   // disconnect() が呼ばれている場合は Disconnecting に遷移しなければならない
-    assert(m_Gs2SessionTaskList.isEmpty());             // Connected になる前に登録はできない
+    assert(m_OpenCallbackHolderList.isEmpty());     // すべてコールバックされ（るために取り出され）ているべき
+    assert(m_CloseCallbackHolderList.isEmpty());    // close() が呼ばれている場合は Closing に遷移しなければならない
+    assert(m_Gs2SessionTaskList.isEmpty());         // Available になる前に登録はできない
 
     m_ProjectToken = std::move(projectToken);
 
-    m_State = State::Connected;
+    m_State = State::Available;
 
     exitStateLock();
 }
 
 void Gs2Session::changeStateToCancellingTasks()
 {
-    assert(m_State == State::Connected);
+    assert(m_State == State::Available);
 
-    assert(m_ConnectCallbackHolderList.isEmpty());      // Connected のあいだの connect() は即時返却される
-    // 外部要因による切断の場合に disconnect() を呼ばなくても遷移することがある
-    assert(!m_Gs2SessionTaskList.isEmpty());            // キャンセルしたいタスクがあるから遷移するのである
+    assert(m_OpenCallbackHolderList.isEmpty());     // Available のあいだの open() は即時返却される
+    // 外部要因による切断の場合に close() を呼ばなくても遷移することがある
+    assert(!m_Gs2SessionTaskList.isEmpty());        // キャンセルしたいタスクがあるから遷移するのである
 
     m_State = State::CancellingTasks;
 
     exitStateLock();
 }
 
-void Gs2Session::changeStateToDisconnecting()
+void Gs2Session::changeStateToClosing()
 {
-    assert(m_State == State::Connecting || m_State == State::CancellingConnect || m_State == State::Connected || m_State == State::CancellingTasks);
+    assert(m_State == State::Opening || m_State == State::CancellingOpen || m_State == State::Available || m_State == State::CancellingTasks);
 
-    // CancellingTasks のあいだには次の connect() が積まれることがある
-    // 外部要因による切断の場合に disconnect() を呼ばなくても遷移することがある
-    assert(m_Gs2SessionTaskList.isEmpty());             // タスクがなくなったときに遷移する
+    // CancellingTasks のあいだには次の open() が積まれることがある
+    // 外部要因による切断の場合に close() を呼ばなくても遷移することがある
+    assert(m_Gs2SessionTaskList.isEmpty());         // タスクがなくなったときに遷移する
 
     m_ProjectToken.reset();
 
-    m_State = State::Disconnecting;
+    m_State = State::Closing;
 
-    bool isDisconnectInstant = disconnectImpl();
+    bool isCloseInstant = closeImpl();
 
-    if (isDisconnectInstant)
+    if (isCloseInstant)
     {
-        // Idle か Connecting に遷移しているはずだけど、ロックから出てしまっているので検証はしない
+        // Idle か Opening に遷移しているはずだけど、ロックから出てしまっているので検証はしない
     }
     else
     {
@@ -156,26 +156,26 @@ void Gs2Session::keepCurrentState()
     exitStateLock();
 }
 
-void Gs2Session::connect(ConnectCallbackType callback)
+void Gs2Session::open(OpenCallbackType callback)
 {
     enterStateLock();
 
     switch (m_State)
     {
     case State::Idle:
-        m_ConnectCallbackHolderList.push(*new ConnectCallbackHolder(std::move(callback)));
-        changeStateToConnecting();
+        m_OpenCallbackHolderList.push(*new OpenCallbackHolder(std::move(callback)));
+        changeStateToOpening();
         break;
 
-    case State::Connecting:
-    case State::CancellingConnect:
+    case State::Opening:
+    case State::CancellingOpen:
     case State::CancellingTasks:    // 切断処理が終わってから実行される
-    case State::Disconnecting:      // 切断処理が終わってから実行される
-        m_ConnectCallbackHolderList.push(*new ConnectCallbackHolder(std::move(callback)));
+    case State::Closing:            // 切断処理が終わってから実行される
+        m_OpenCallbackHolderList.push(*new OpenCallbackHolder(std::move(callback)));
         keepCurrentState();
         break;
 
-    case State::Connected:
+    case State::Available:
         keepCurrentState();
         AsyncResult<void> result;
         callback(result);
@@ -183,7 +183,7 @@ void Gs2Session::connect(ConnectCallbackType callback)
     }
 }
 
-void Gs2Session::connectCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException)
+void Gs2Session::openCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException)
 {
     // 接続完了コールバック
 
@@ -195,27 +195,27 @@ void Gs2Session::connectCallback(StringHolder* pProjectToken, Gs2ClientException
 
         if (pProjectToken != nullptr)
         {
-            detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
+            detail::IntrusiveList<OpenCallbackHolder> openCallbackHolderList(std::move(m_OpenCallbackHolderList));
 
-            if (m_DisconnectCallbackHolderList.isEmpty())
+            if (m_CloseCallbackHolderList.isEmpty())
             {
-                changeStateToConnected(std::move(*pProjectToken));
+                changeStateToAvailable(std::move(*pProjectToken));
             }
             else
             {
-                changeStateToDisconnecting();
+                changeStateToClosing();
             }
 
             AsyncResult<void> result;
-            Gs2Session::triggerConnectCallback(connectCallbackHolderList, result);
+            Gs2Session::triggerOpenCallback(openCallbackHolderList, result);
         }
         else
         {
             // 応答からプロジェクトトークンが取得できなかった場合
             // ただし、ここには来ないように派生クラスを実装しなければならない
 
-            detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
-            detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_DisconnectCallbackHolderList));
+            detail::IntrusiveList<OpenCallbackHolder> openCallbackHolderList(std::move(m_OpenCallbackHolderList));
+            detail::IntrusiveList<CloseCallbackHolder> closeCallbackHolderList(std::move(m_CloseCallbackHolderList));
 
             changeStateToIdle();
 
@@ -223,26 +223,26 @@ void Gs2Session::connectCallback(StringHolder* pProjectToken, Gs2ClientException
             gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
 
             AsyncResult<void> result(gs2ClientException);
-            Gs2Session::triggerConnectCallback(connectCallbackHolderList, result);
-            Gs2Session::triggerDisconnectCallback(disconnectCallbackHolderList);
+            Gs2Session::triggerOpenCallback(openCallbackHolderList, result);
+            Gs2Session::triggerCloseCallback(closeCallbackHolderList);
         }
     }
     else
     {
         // ログイン処理がエラーになった場合
 
-        detail::IntrusiveList<ConnectCallbackHolder> connectCallbackHolderList(std::move(m_ConnectCallbackHolderList));
-        detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_DisconnectCallbackHolderList));
+        detail::IntrusiveList<OpenCallbackHolder> openCallbackHolderList(std::move(m_OpenCallbackHolderList));
+        detail::IntrusiveList<CloseCallbackHolder> closeCallbackHolderList(std::move(m_CloseCallbackHolderList));
 
         changeStateToIdle();
 
         AsyncResult<void> result(*pClientException);
-        Gs2Session::triggerConnectCallback(connectCallbackHolderList, result);
-        Gs2Session::triggerDisconnectCallback(disconnectCallbackHolderList);
+        Gs2Session::triggerOpenCallback(openCallbackHolderList, result);
+        Gs2Session::triggerCloseCallback(closeCallbackHolderList);
     }
 }
 
-void Gs2Session::disconnect(DisconnectCallbackType callback)
+void Gs2Session::close(CloseCallbackType callback)
 {
     enterStateLock();
 
@@ -255,18 +255,18 @@ void Gs2Session::disconnect(DisconnectCallbackType callback)
     }
     else
     {
-        m_DisconnectCallbackHolderList.push(*new DisconnectCallbackHolder(std::move(callback)));
+        m_CloseCallbackHolderList.push(*new CloseCallbackHolder(std::move(callback)));
 
         switch(m_State)
         {
-        case State::Connecting:
-            changeStateToCancellingConnect();
+        case State::Opening:
+            changeStateToCancellingOpen();
             break;
 
-        case State::Connected:
+        case State::Available:
             if (m_Gs2SessionTaskList.isEmpty())
             {
-                changeStateToDisconnecting();
+                changeStateToClosing();
             }
             else
             {
@@ -275,49 +275,49 @@ void Gs2Session::disconnect(DisconnectCallbackType callback)
             break;
 
         case State::Idle:   // ここには来ない
-        case State::CancellingConnect:
+        case State::CancellingOpen:
         case State::CancellingTasks:
-        case State::Disconnecting:
+        case State::Closing:
             keepCurrentState();
             break;
         }
     }
 }
 
-void Gs2Session::setOnDisconnect(DisconnectCallbackType callback)
+void Gs2Session::setOnClose(CloseCallbackType callback)
 {
     std::lock_guard<std::mutex> lock(m_Mutex);
 
-    m_OnDisconnect = callback;
+    m_OnClose = callback;
 }
 
-void Gs2Session::disconnectCallback(Gs2ClientException& gs2ClientException, bool isDisconnectInstant)
+void Gs2Session::closeCallback(Gs2ClientException& gs2ClientException, bool isCloseInstant)
 {
-    if (!isDisconnectInstant)
+    if (!isCloseInstant)
     {
         enterStateLock();
     }
 
-    auto onDisconnect = m_OnDisconnect;
+    auto onClose = m_OnClose;
     detail::IntrusiveList<detail::Gs2SessionTask> gs2SessionTaskList(std::move(m_Gs2SessionTaskList));
-    detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_DisconnectCallbackHolderList));
+    detail::IntrusiveList<CloseCallbackHolder> closeCallbackHolderList(std::move(m_CloseCallbackHolderList));
 
-    if (m_ConnectCallbackHolderList.isEmpty())
+    if (m_OpenCallbackHolderList.isEmpty())
     {
         changeStateToIdle();
     }
     else
     {
-        changeStateToConnecting();
+        changeStateToOpening();
     }
 
     Gs2Session::triggerCancelTasksCallback(gs2SessionTaskList, gs2ClientException);
 
-    if (onDisconnect)
+    if (onClose)
     {
-        onDisconnect();
+        onClose();
     }
-    Gs2Session::triggerDisconnectCallback(disconnectCallbackHolderList);
+    Gs2Session::triggerCloseCallback(closeCallbackHolderList);
 }
 
 void Gs2Session::cancelTasksCallback(Gs2ClientException& gs2ClientException)
@@ -335,7 +335,7 @@ void Gs2Session::execute(detail::Gs2SessionTask &gs2SessionTask)
 {
     enterStateLock();
 
-    if (m_State == State::Connected)
+    if (m_State == State::Available)
     {
         gs2SessionTask.m_Gs2SessionTaskId = m_Gs2SessionIdTaskGenerator.issue();
 
@@ -367,7 +367,7 @@ void Gs2Session::notifyComplete(detail::Gs2SessionTask& gs2SessionTask)
 
     if (m_State == State::CancellingTasks && m_Gs2SessionTaskList.isEmpty())
     {
-        changeStateToDisconnecting();
+        changeStateToClosing();
     }
     else
     {

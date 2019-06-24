@@ -80,9 +80,9 @@ public:
     ~Gs2WebSocketSession() GS2_OVERRIDE = default;
 
 private:
-    void connectImpl() GS2_OVERRIDE;
-    void cancelConnectImpl() GS2_OVERRIDE;
-    bool disconnectImpl() GS2_OVERRIDE;
+    void openImpl() GS2_OVERRIDE;
+    void cancelOpenImpl() GS2_OVERRIDE;
+    bool closeImpl() GS2_OVERRIDE;
 };
 
 GS2_END_OF_NAMESPACE

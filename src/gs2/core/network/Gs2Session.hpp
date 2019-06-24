@@ -39,17 +39,17 @@ class Gs2Session : public Gs2Object
     friend class detail::Gs2SessionTask;
 
 public:
-    typedef std::function<void(AsyncResult<void>&)> ConnectCallbackType;
-    typedef std::function<void()> DisconnectCallbackType;
+    typedef std::function<void(AsyncResult<void>&)> OpenCallbackType;
+    typedef std::function<void()> CloseCallbackType;
 
 private:
     enum class State {
         Idle,
-        Connecting,
-        CancellingConnect,
-        Connected,
+        Opening,
+        CancellingOpen,
+        Available,
         CancellingTasks,
-        Disconnecting,
+        Closing,
     };
 
     template <typename T>
@@ -71,8 +71,8 @@ private:
         }
     };
 
-    typedef CallbackHolder<ConnectCallbackType> ConnectCallbackHolder;
-    typedef CallbackHolder<DisconnectCallbackType> DisconnectCallbackHolder;
+    typedef CallbackHolder<OpenCallbackType> OpenCallbackHolder;
+    typedef CallbackHolder<CloseCallbackType> CloseCallbackHolder;
 
 private:
     mutable std::mutex m_Mutex;
@@ -84,27 +84,27 @@ private:
 
     optional<StringHolder> m_ProjectToken;
 
-    detail::IntrusiveList<ConnectCallbackHolder> m_ConnectCallbackHolderList;
-    detail::IntrusiveList<DisconnectCallbackHolder> m_DisconnectCallbackHolderList;
+    detail::IntrusiveList<OpenCallbackHolder> m_OpenCallbackHolderList;
+    detail::IntrusiveList<CloseCallbackHolder> m_CloseCallbackHolderList;
     detail::IntrusiveList<detail::Gs2SessionTask> m_Gs2SessionTaskList;
 
-    DisconnectCallbackType m_OnDisconnect;
+    CloseCallbackType m_OnClose;
 
     detail::Gs2SessionTaskId::Generator m_Gs2SessionIdTaskGenerator;
 
-    static void triggerConnectCallback(detail::IntrusiveList<ConnectCallbackHolder>& connectCallbackHolderList, AsyncResult<void>& result);
-    static void triggerDisconnectCallback(detail::IntrusiveList<DisconnectCallbackHolder>& disconnectCallbackHolderList);
+    static void triggerOpenCallback(detail::IntrusiveList<OpenCallbackHolder>& openCallbackHolderList, AsyncResult<void>& result);
+    static void triggerCloseCallback(detail::IntrusiveList<CloseCallbackHolder>& closeCallbackHolderList);
     static void triggerCancelTasksCallback(detail::IntrusiveList<detail::Gs2SessionTask>& gs2SessionTaskList, Gs2ClientException& gs2ClientException);
 
     inline void enterStateLock() { m_Mutex.lock(); }
     inline void exitStateLock() { m_Mutex.unlock(); };
 
     void changeStateToIdle();
-    void changeStateToConnecting();
-    void changeStateToCancellingConnect();
-    void changeStateToConnected(StringHolder&& projectToken);
+    void changeStateToOpening();
+    void changeStateToCancellingOpen();
+    void changeStateToAvailable(StringHolder&& projectToken);
     void changeStateToCancellingTasks();
-    void changeStateToDisconnecting();
+    void changeStateToClosing();
     void keepCurrentState();
 
     // Gs2SessionTask から利用
@@ -117,8 +117,8 @@ protected:
         return m_ProjectToken;
     }
 
-    void connectCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException);
-    void disconnectCallback(Gs2ClientException& gs2ClientException, bool isDisconnectInstant);
+    void openCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException);
+    void closeCallback(Gs2ClientException& gs2ClientException, bool isCloseInstant);
     void cancelTasksCallback(Gs2ClientException& gs2ClientException);
 
     detail::Gs2SessionTask* findGs2SessionTask(const detail::Gs2SessionTaskId& gs2SessionTaskId);
@@ -154,17 +154,17 @@ public:
         return m_Region;
     }
 
-    void connect(ConnectCallbackType callback);
+    void open(OpenCallbackType callback);
 
-    void disconnect(DisconnectCallbackType callback);
+    void close(CloseCallbackType callback);
 
-    void setOnDisconnect(DisconnectCallbackType callback);
+    void setOnClose(CloseCallbackType callback);
 
 private:
     // 以下の関数は m_Mutex のロック内から呼ばれます
-    virtual void connectImpl() = 0;
-    virtual void cancelConnectImpl() {}
-    virtual bool disconnectImpl() = 0;  // 中で disconnectCallback() を呼んだ場合は true を返すこと
+    virtual void openImpl() = 0;
+    virtual void cancelOpenImpl() {}
+    virtual bool closeImpl() = 0;   // 中で closeCallback() を呼んだ場合は true を返すこと
 };
 
 
