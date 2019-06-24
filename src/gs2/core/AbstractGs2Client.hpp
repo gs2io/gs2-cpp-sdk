@@ -18,7 +18,6 @@
 #define GS2_CORE_ABSTRACTGS2CLIENT_HPP_
 
 #include "Gs2Object.hpp"
-#include "model/Region.hpp"
 #include <string>
 
 namespace cocos2d { namespace network {
@@ -37,35 +36,9 @@ class AbstractGs2ClientBase : public Gs2Object
 private:
     /** 認証情報 */
     Gs2Session& m_Gs2Session;
-    /** アクセス先リージョン */
-    Region m_Region;
 
 public:
     explicit AbstractGs2ClientBase(Gs2Session& gs2Session);
-
-    AbstractGs2ClientBase(Gs2Session& gs2Session, const Region& region);
-
-    AbstractGs2ClientBase(Gs2Session& gs2Session, const Char region[]);
-
-    /**
-     * アクセス先リージョンを取得
-     *
-     * @return アクセス先リージョン
-     */
-    const Region& getRegion() const
-    {
-        return m_Region;
-    }
-
-    /**
-     * アクセス先リージョンを設定
-     *
-     * @param region アクセス先リージョン
-     */
-    void setRegion(Region region)
-    {
-        m_Region = region;
-    }
 
     virtual const Char* getEndPoint() const = 0;
 

@@ -21,6 +21,7 @@
 #include "../AsyncResult.hpp"
 #include "../external/optional/optional.hpp"
 #include "../model/BasicGs2Credential.hpp"
+#include "../model/Region.hpp"
 #include "../util/IntrusiveList.hpp"
 #include "../util/StringHolder.hpp"
 #include "Gs2SessionTaskId.hpp"
@@ -79,6 +80,8 @@ private:
     State m_State;
 
     const BasicGs2Credential& m_Gs2Credential;
+    Region m_Region;
+
     optional<StringHolder> m_ProjectToken;
 
     detail::IntrusiveList<ConnectCallbackHolder> m_ConnectCallbackHolderList;
@@ -123,7 +126,20 @@ protected:
 public:
     explicit Gs2Session(const BasicGs2Credential& gs2Credential) :
         m_State(State::Idle),
-        m_Gs2Credential(gs2Credential)
+        m_Gs2Credential(gs2Credential),
+        m_Region(Region::AP_NORTHEAST_1)
+    {}
+
+    Gs2Session(const BasicGs2Credential& gs2Credential, const Region& region) :
+        m_State(State::Idle),
+        m_Gs2Credential(gs2Credential),
+        m_Region(region)
+    {}
+
+    Gs2Session(const BasicGs2Credential& gs2Credential, const Char region[]) :
+        m_State(State::Idle),
+        m_Gs2Credential(gs2Credential),
+        m_Region(region)
     {}
 
     virtual ~Gs2Session();
@@ -131,6 +147,11 @@ public:
     const BasicGs2Credential& getGs2Credential() const
     {
         return m_Gs2Credential;
+    }
+
+    const Region& getRegion() const
+    {
+        return m_Region;
     }
 
     void connect(ConnectCallbackType callback);

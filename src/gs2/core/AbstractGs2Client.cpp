@@ -26,20 +26,7 @@
 GS2_START_OF_NAMESPACE
 
 AbstractGs2ClientBase::AbstractGs2ClientBase(Gs2Session& gs2Session) :
-    m_Gs2Session(gs2Session),
-    m_Region(Region::AP_NORTHEAST_1)
-{
-}
-
-AbstractGs2ClientBase::AbstractGs2ClientBase(Gs2Session& gs2Session, const Region& region) :
-    m_Gs2Session(gs2Session),
-    m_Region(region)
-{
-}
-
-AbstractGs2ClientBase::AbstractGs2ClientBase(Gs2Session& gs2Session, const Char region[]) :
-    m_Gs2Session(gs2Session),
-    m_Region(region)
+    m_Gs2Session(gs2Session)
 {
 }
 
@@ -47,7 +34,7 @@ void AbstractGs2ClientBase::setUrl(::cocos2d::network::HttpRequest& httpRequest,
 {
     detail::StringVariable urlString(url);
     urlString.replace("{service}", getEndPoint());
-    urlString.replace("{region}", m_Region.getName());
+    urlString.replace("{region}", m_Gs2Session.getRegion().getName());
 
     httpRequest.setUrl(urlString.c_str());
 }
