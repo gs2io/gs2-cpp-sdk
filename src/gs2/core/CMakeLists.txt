@@ -53,14 +53,14 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/StampTask.hpp
         network/Gs2Response.hpp
         network/Gs2RestResponse.hpp
-        network/Gs2SessionTask.hpp
-        network/Gs2SessionTaskId.hpp
         network/Gs2RestSession.hpp
         network/Gs2RestSessionTask.hpp
+        network/Gs2Session.hpp
+        network/Gs2SessionTask.hpp
+        network/Gs2SessionTaskId.hpp
         network/Gs2WebSocketResponse.hpp
         network/Gs2WebSocketSession.hpp
         network/Gs2WebSocketSessionTask.hpp
-        network/Gs2Session.hpp
         network/HttpTask.hpp
         network/LoginResultModel.hpp
         network/RootCaCertificates.hpp
@@ -88,13 +88,13 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         model/Region.cpp
         network/Gs2Response.cpp
         network/Gs2RestResponse.cpp
-        network/Gs2SessionTask.cpp
         network/Gs2RestSession.cpp
         network/Gs2RestSessionTask.cpp
+        network/Gs2Session.cpp
+        network/Gs2SessionTask.cpp
         network/Gs2WebSocketResponse.cpp
         network/Gs2WebSocketSession.cpp
         network/Gs2WebSocketSessionTask.cpp
-        network/Gs2Session.cpp
         network/HttpTask.cpp
         network/RootCaCertificates.cpp
         network/WebSocket.cpp
