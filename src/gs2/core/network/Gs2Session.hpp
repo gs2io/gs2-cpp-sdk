@@ -85,6 +85,8 @@ private:
     detail::IntrusiveList<DisconnectCallbackHolder> m_DisconnectCallbackHolderList;
     detail::IntrusiveList<detail::Gs2SessionTask> m_Gs2SessionTaskList;
 
+    DisconnectCallbackType m_OnDisconnect;
+
     detail::Gs2SessionTaskId::Generator m_Gs2SessionIdTaskGenerator;
 
     static void triggerConnectCallback(detail::IntrusiveList<ConnectCallbackHolder>& connectCallbackHolderList, AsyncResult<void>& result);
@@ -134,6 +136,8 @@ public:
     void connect(ConnectCallbackType callback);
 
     void disconnect(DisconnectCallbackType callback);
+
+    void setOnDisconnect(DisconnectCallbackType callback);
 
 private:
     // 以下の関数は m_Mutex のロック内から呼ばれます

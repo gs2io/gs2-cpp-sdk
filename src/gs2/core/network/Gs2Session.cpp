@@ -286,6 +286,13 @@ void Gs2Session::disconnect(DisconnectCallbackType callback)
     }
 }
 
+void Gs2Session::setOnDisconnect(DisconnectCallbackType callback)
+{
+    std::lock_guard<std::mutex> lock(m_Mutex);
+
+    m_OnDisconnect = callback;
+}
+
 void Gs2Session::disconnectCallback(Gs2ClientException& gs2ClientException, bool isDisconnectInstant)
 {
     if (!isDisconnectInstant)
@@ -293,6 +300,7 @@ void Gs2Session::disconnectCallback(Gs2ClientException& gs2ClientException, bool
         enterStateLock();
     }
 
+    auto onDisconnect = m_OnDisconnect;
     detail::IntrusiveList<detail::Gs2SessionTask> gs2SessionTaskList(std::move(m_Gs2SessionTaskList));
     detail::IntrusiveList<DisconnectCallbackHolder> disconnectCallbackHolderList(std::move(m_DisconnectCallbackHolderList));
 
@@ -306,6 +314,11 @@ void Gs2Session::disconnectCallback(Gs2ClientException& gs2ClientException, bool
     }
 
     Gs2Session::triggerCancelTasksCallback(gs2SessionTaskList, gs2ClientException);
+
+    if (onDisconnect)
+    {
+        onDisconnect();
+    }
     Gs2Session::triggerDisconnectCallback(disconnectCallbackHolderList);
 }
 
