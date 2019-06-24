@@ -24,8 +24,6 @@ GS2_START_OF_NAMESPACE
 
 Gs2Session::~Gs2Session()
 {
-    // disconnect() が複数のコールバックを叩き終わらないうちに破棄されないように、1回ロックへ入る
-    std::lock_guard<std::mutex> lock(m_Mutex);
 }
 
 void Gs2Session::triggerConnectCallback(detail::IntrusiveList<ConnectCallbackHolder>& connectCallbackHolderList, AsyncResult<void>& result)
