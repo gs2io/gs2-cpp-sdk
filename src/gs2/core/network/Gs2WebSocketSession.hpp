@@ -77,6 +77,18 @@ public:
         m_WebSocket(*this)
     {}
 
+    Gs2WebSocketSession(const BasicGs2Credential& gs2Credential, const Region& region) :
+        Gs2Session(gs2Credential, region),
+        m_State(State::Idle),
+        m_WebSocket(*this)
+    {}
+
+    Gs2WebSocketSession(const BasicGs2Credential& gs2Credential, const Char region[]) :
+        Gs2Session(gs2Credential, region),
+        m_State(State::Idle),
+        m_WebSocket(*this)
+    {}
+
     ~Gs2WebSocketSession() GS2_OVERRIDE = default;
 
 private:

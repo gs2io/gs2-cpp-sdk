@@ -48,6 +48,16 @@ public:
         m_IsOpenCancelled(false)
     {}
 
+    Gs2RestSession(const BasicGs2Credential& gs2Credential, const Region& region) :
+        Gs2Session(gs2Credential, region),
+        m_IsOpenCancelled(false)
+    {}
+
+    Gs2RestSession(const BasicGs2Credential& gs2Credential, const Char region[]) :
+        Gs2Session(gs2Credential, region),
+        m_IsOpenCancelled(false)
+    {}
+
     ~Gs2RestSession() GS2_OVERRIDE = default;
 
 private:
