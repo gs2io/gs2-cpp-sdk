@@ -14,6 +14,7 @@
  * permissions and limitations under the License.
  */
 
+#include <gs2/core/util/StringVariable.hpp>
 #include "Gs2RestSession.hpp"
 #include "../json/JsonWriter.hpp"
 #include "../json/JsonParser.hpp"
@@ -21,6 +22,8 @@
 #include "LoginResultModel.hpp"
 
 GS2_START_OF_NAMESPACE
+
+const char Gs2RestSession::EndpointHost[] = "https://{service}.{region}.gen2.gs2io.com";
 
 Gs2RestSession::Gs2LoginTask::Gs2LoginTask(Gs2RestSession& gs2RestSession) :
     Gs2HttpTask(),
@@ -39,7 +42,11 @@ Gs2RestSession::Gs2LoginTask::Gs2LoginTask(Gs2RestSession& gs2RestSession) :
     auto bodySize = strlen(body);
     getHttpRequest().setRequestData(body, bodySize);
 
-    getHttpRequest().setUrl("https://asia-northeast1-gs2-on-gcp.cloudfunctions.net/identifier-handler?handler=gs2_identifier%2Fhandler%2FProjectTokenFunctionHandler.login");   // TODO
+    detail::StringVariable url(Gs2RestSession::EndpointHost);
+    url.replace("{service}", "identifier");
+    url.replace("{region}", gs2RestSession.getRegion().getName());
+    url += "/projectToken/login";
+    getHttpRequest().setUrl(url.c_str());
     std::vector<std::string> headerEntries;
     headerEntries.emplace_back("Content-Type: application/json");
     getHttpRequest().setHeaders(headerEntries);
