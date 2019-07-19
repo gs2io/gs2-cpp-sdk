@@ -48,7 +48,7 @@ public:
     explicit StringVariable(Int64 number)
     {
         char buffer[32];
-        std::sprintf(buffer, "%ld", number);
+        std::sprintf(buffer, "%lld", number);
         assign(buffer);
     }
 
