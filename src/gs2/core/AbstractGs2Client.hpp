@@ -20,16 +20,9 @@
 #include "Gs2Object.hpp"
 #include <string>
 
-namespace cocos2d { namespace network {
-class HttpClient;
-class HttpRequest;
-class HttpResponse;
-}}
-
 GS2_START_OF_NAMESPACE
 
 class Gs2Session;
-class Gs2BasicRequest;
 
 class AbstractGs2ClientBase : public Gs2Object
 {
@@ -40,17 +33,7 @@ private:
 public:
     explicit AbstractGs2ClientBase(Gs2Session& gs2Session);
 
-    virtual const Char* getEndPoint() const = 0;
-
 protected:
-    /**
-     * HTTPリクエストにURLを設定
-     *
-     * @param httpRequest HTTPリクエスト
-     * @param url URLパターン
-     */
-    void setUrl(::cocos2d::network::HttpRequest& httpRequest, const Char url[]) const;
-
     Gs2Session& getGs2Session()
     {
         return m_Gs2Session;

@@ -15,28 +15,12 @@
  */
 
 #include "AbstractGs2Client.hpp"
-#include "AsyncResult.hpp"
-#include "control/Gs2BasicRequest.hpp"
-#include "model/IGs2Credential.hpp"
-#include "network/Gs2Session.hpp"
-#include "util/StringVariable.hpp"
-#include <string>
-#include <network/HttpRequest.h>
 
 GS2_START_OF_NAMESPACE
 
 AbstractGs2ClientBase::AbstractGs2ClientBase(Gs2Session& gs2Session) :
     m_Gs2Session(gs2Session)
 {
-}
-
-void AbstractGs2ClientBase::setUrl(::cocos2d::network::HttpRequest& httpRequest, const Char url[]) const
-{
-    detail::StringVariable urlString(url);
-    urlString.replace("{service}", getEndPoint());
-    urlString.replace("{region}", m_Gs2Session.getRegion().getName());
-
-    httpRequest.setUrl(urlString.c_str());
 }
 
 GS2_END_OF_NAMESPACE
