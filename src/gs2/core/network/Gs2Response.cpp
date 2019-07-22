@@ -62,10 +62,10 @@ bool Gs2Response::importFrom(const json::JsonConstValue& jsonConstValue, Int32 s
 
         Gs2ClientException::Type type;
         switch(statusCode) {
-            case -1: type = Gs2ClientException::UnreachableException; break;
+            case -1: type = Gs2ClientException::NoInternetConnectionException; break;
             case 400: type = Gs2ClientException::BadRequestException; break;
             case 401: type = Gs2ClientException::UnauthorizedException; break;
-            case 402: type = Gs2ClientException::QuotaExceedException; break;
+            case 402: type = Gs2ClientException::QuotaLimitExceededException; break;
             case 404: type = Gs2ClientException::NotFoundException; break;
             case 409: type = Gs2ClientException::ConflictException; break;
             case 500: type = Gs2ClientException::InternalServerErrorException; break;

@@ -31,11 +31,11 @@ public:
     enum Type {
         UnknownException,
 
-        UnreachableException,
+        NoInternetConnectionException,
 
         BadRequestException,
         UnauthorizedException,
-        QuotaExceedException,
+        QuotaLimitExceededException,
         NotFoundException,
         ConflictException,
         InternalServerErrorException,
