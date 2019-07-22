@@ -21,6 +21,7 @@
 #include "StandardAllocator.hpp"
 #include "StringHolder.hpp"
 #include <vector>
+#include <utility>
 
 GS2_START_OF_NAMESPACE
 
@@ -284,7 +285,7 @@ inline Int32 getCountOfListElements(const List<T>& list)
 template<typename T>
 inline void addToList(List<T>& list, T&& value)
 {
-	list += std::move(value);
+	list += std::forward<T>(value);
 }
 
 }
