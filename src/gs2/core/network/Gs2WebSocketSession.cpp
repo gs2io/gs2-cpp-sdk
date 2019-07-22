@@ -88,7 +88,7 @@ void Gs2WebSocketSession::WebSocket::onMessage(detail::Gs2WebSocketResponse& gs2
                 {
                     // 「正常に」エラー応答がパースされた場合もこちら
                     Gs2ClientException gs2ClientException;
-                    gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
+                    gs2ClientException.setType(Gs2ClientException::SessionNotOpenException);   // TODO
                     m_Gs2WebSocketSession.m_LastGs2ClientException = std::move(gs2ClientException);
                     m_Gs2WebSocketSession.m_State = Gs2WebSocketSession::State::LoginFailed;
                     close();
@@ -149,7 +149,7 @@ void Gs2WebSocketSession::WebSocket::onClose()
     case Gs2WebSocketSession::State::Available:
         // 自発的な切断も外部要因による切断もここ
         Gs2ClientException gs2ClientException;
-        gs2ClientException.setType(Gs2ClientException::UnknownException);  // TODO
+        gs2ClientException.setType(Gs2ClientException::SessionNotOpenException);  // TODO
         m_Gs2WebSocketSession.closeCallback(gs2ClientException, false);
         break;
     }

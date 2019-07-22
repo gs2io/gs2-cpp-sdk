@@ -354,7 +354,7 @@ void Gs2Session::execute(detail::Gs2SessionTask &gs2SessionTask)
         detail::Gs2ClientErrorResponse gs2ClientErrorResponse;
         auto& gs2ClientException = gs2ClientErrorResponse.getGs2ClientException();
         gs2ClientException.emplace();
-        gs2ClientException->setType(Gs2ClientException::UnknownException);   // TODO
+        gs2ClientException->setType(Gs2ClientException::SessionNotOpenException);
         gs2SessionTask.callback(gs2ClientErrorResponse);
     }
 }

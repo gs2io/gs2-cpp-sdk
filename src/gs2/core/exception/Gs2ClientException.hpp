@@ -31,6 +31,7 @@ public:
     enum Type {
         UnknownException,
 
+        SessionNotOpenException,
         NoInternetConnectionException,
 
         BadRequestException,

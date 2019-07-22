@@ -214,7 +214,7 @@ void Gs2WebSocket::onError(const cocos2d::network::WebSocket::ErrorCode& errorCo
     case cocos2d::network::WebSocket::ErrorCode::CONNECTION_FAILURE:
     case cocos2d::network::WebSocket::ErrorCode::TIME_OUT:
     case cocos2d::network::WebSocket::ErrorCode::UNKNOWN:
-        type = Gs2ClientException::UnknownException;
+        type = Gs2ClientException::SessionNotOpenException;
         break;
     }
 
