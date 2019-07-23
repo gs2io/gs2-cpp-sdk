@@ -28,7 +28,7 @@
 namespace gs2 { namespace distributor {
 
 /**
- * ディストリビューターマスターJSON
+ * 現在有効な配信設定
  *
  * @author Game Server Services, Inc.
  *
@@ -41,8 +41,8 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ディストリビュータ名 */
-        optional<StringHolder> distributorName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** マスターデータ */
         optional<StringHolder> settings;
 
@@ -51,13 +51,13 @@ private:
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            distributorName(data.distributorName),
+            namespaceName(data.namespaceName),
             settings(data.settings)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            distributorName(std::move(data.distributorName)),
+            namespaceName(std::move(data.namespaceName)),
             settings(std::move(data.settings))
         {}
 
@@ -69,10 +69,10 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "distributorName") == 0) {
+            if (std::strcmp(name, "namespaceName") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->distributorName.emplace(jsonValue.GetString());
+                    this->namespaceName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "settings") == 0) {
@@ -162,33 +162,33 @@ public:
         return this;
     }
     /**
-     * ディストリビュータ名を取得
+     * ネームスペース名を取得
      *
-     * @return ディストリビュータ名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getDistributorName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().distributorName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * ディストリビュータ名を設定
+     * ネームスペース名を設定
      *
-     * @param distributorName ディストリビュータ名
+     * @param namespaceName ネームスペース名
      */
-    void setDistributorName(const Char* distributorName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().distributorName.emplace(distributorName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * ディストリビュータ名を設定
+     * ネームスペース名を設定
      *
-     * @param distributorName ディストリビュータ名
+     * @param namespaceName ネームスペース名
      */
-    CurrentDistributorMaster& withDistributorName(const Char* distributorName)
+    CurrentDistributorMaster& withNamespaceName(const Char* namespaceName)
     {
-        setDistributorName(distributorName);
+        setNamespaceName(namespaceName);
         return *this;
     }
 
@@ -238,7 +238,7 @@ bool operator!=(const CurrentDistributorMaster& lhs, const CurrentDistributorMas
         {
             return true;
         }
-        if (lhs.m_pData->distributorName != lhr.m_pData->distributorName)
+        if (lhs.m_pData->namespaceName != lhr.m_pData->namespaceName)
         {
             return true;
         }

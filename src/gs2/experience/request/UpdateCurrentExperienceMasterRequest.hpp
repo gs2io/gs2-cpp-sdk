@@ -28,7 +28,7 @@ namespace gs2 { namespace experience
 {
 
 /**
- * 現在有効な経験値マスターJSONを更新します のリクエストモデル
+ * 現在有効な現在有効な経験値設定を更新します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,8 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** 経験値名 */
-        optional<StringHolder> experienceName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** マスターデータ */
         optional<StringHolder> settings;
 
@@ -51,13 +51,13 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            experienceName(data.experienceName),
+            namespaceName(data.namespaceName),
             settings(data.settings)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            experienceName(std::move(data.experienceName)),
+            namespaceName(std::move(data.namespaceName)),
             settings(std::move(data.settings))
         {}
 
@@ -150,33 +150,33 @@ public:
         return this;
     }
     /**
-     * 経験値名を取得
+     * ネームスペース名を取得
      *
-     * @return 経験値名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getExperienceName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().experienceName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * 経験値名を設定
+     * ネームスペース名を設定
      *
-     * @param experienceName 経験値名
+     * @param namespaceName ネームスペース名
      */
-    void setExperienceName(const Char* experienceName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().experienceName.emplace(experienceName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * 経験値名を設定
+     * ネームスペース名を設定
      *
-     * @param experienceName 経験値名
+     * @param namespaceName ネームスペース名
      */
-    UpdateCurrentExperienceMasterRequest& withExperienceName(const Char* experienceName)
+    UpdateCurrentExperienceMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().experienceName.emplace(experienceName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

@@ -28,7 +28,7 @@
 namespace gs2 { namespace schedule {
 
 /**
- * イベントマスターJSON
+ * 現在有効なイベントスケジュールマスター
  *
  * @author Game Server Services, Inc.
  *
@@ -41,8 +41,8 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** スケジュール名 */
-        optional<StringHolder> scheduleName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** マスターデータ */
         optional<StringHolder> settings;
 
@@ -51,13 +51,13 @@ private:
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            scheduleName(data.scheduleName),
+            namespaceName(data.namespaceName),
             settings(data.settings)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            scheduleName(std::move(data.scheduleName)),
+            namespaceName(std::move(data.namespaceName)),
             settings(std::move(data.settings))
         {}
 
@@ -69,10 +69,10 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "scheduleName") == 0) {
+            if (std::strcmp(name, "namespaceName") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->scheduleName.emplace(jsonValue.GetString());
+                    this->namespaceName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "settings") == 0) {
@@ -162,33 +162,33 @@ public:
         return this;
     }
     /**
-     * スケジュール名を取得
+     * ネームスペース名を取得
      *
-     * @return スケジュール名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getScheduleName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().scheduleName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * スケジュール名を設定
+     * ネームスペース名を設定
      *
-     * @param scheduleName スケジュール名
+     * @param namespaceName ネームスペース名
      */
-    void setScheduleName(const Char* scheduleName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().scheduleName.emplace(scheduleName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * スケジュール名を設定
+     * ネームスペース名を設定
      *
-     * @param scheduleName スケジュール名
+     * @param namespaceName ネームスペース名
      */
-    CurrentEventMaster& withScheduleName(const Char* scheduleName)
+    CurrentEventMaster& withNamespaceName(const Char* namespaceName)
     {
-        setScheduleName(scheduleName);
+        setNamespaceName(namespaceName);
         return *this;
     }
 
@@ -238,7 +238,7 @@ bool operator!=(const CurrentEventMaster& lhs, const CurrentEventMaster& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->scheduleName != lhr.m_pData->scheduleName)
+        if (lhs.m_pData->namespaceName != lhr.m_pData->namespaceName)
         {
             return true;
         }

@@ -28,7 +28,7 @@ namespace gs2 { namespace schedule
 {
 
 /**
- * イベントを取得 のリクエストモデル
+ * イベントマスターを取得 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,9 +41,9 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** スケジュール名 */
-        optional<StringHolder> scheduleName;
-        /** ディストリビューターの種類名 */
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
+        /** イベントの種類名 */
         optional<StringHolder> eventName;
 
         Data()
@@ -51,13 +51,13 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            scheduleName(data.scheduleName),
+            namespaceName(data.namespaceName),
             eventName(data.eventName)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            scheduleName(std::move(data.scheduleName)),
+            namespaceName(std::move(data.namespaceName)),
             eventName(std::move(data.eventName))
         {}
 
@@ -150,40 +150,40 @@ public:
         return this;
     }
     /**
-     * スケジュール名を取得
+     * ネームスペース名を取得
      *
-     * @return スケジュール名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getScheduleName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().scheduleName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * スケジュール名を設定
+     * ネームスペース名を設定
      *
-     * @param scheduleName スケジュール名
+     * @param namespaceName ネームスペース名
      */
-    void setScheduleName(const Char* scheduleName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().scheduleName.emplace(scheduleName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * スケジュール名を設定
+     * ネームスペース名を設定
      *
-     * @param scheduleName スケジュール名
+     * @param namespaceName ネームスペース名
      */
-    GetEventMasterRequest& withScheduleName(const Char* scheduleName)
+    GetEventMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().scheduleName.emplace(scheduleName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
     /**
-     * ディストリビューターの種類名を取得
+     * イベントの種類名を取得
      *
-     * @return ディストリビューターの種類名
+     * @return イベントの種類名
      */
     const optional<StringHolder>& getEventName() const
     {
@@ -191,9 +191,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を設定
+     * イベントの種類名を設定
      *
-     * @param eventName ディストリビューターの種類名
+     * @param eventName イベントの種類名
      */
     void setEventName(const Char* eventName)
     {
@@ -201,9 +201,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を設定
+     * イベントの種類名を設定
      *
-     * @param eventName ディストリビューターの種類名
+     * @param eventName イベントの種類名
      */
     GetEventMasterRequest& withEventName(const Char* eventName)
     {

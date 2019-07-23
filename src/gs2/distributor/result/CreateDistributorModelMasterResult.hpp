@@ -29,7 +29,7 @@ namespace gs2 { namespace distributor
 {
 
 /**
- * ディストリビュータの種類を新規作成 のレスポンスモデル
+ * 配信設定マスターを新規作成 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 作成したディストリビュータの種類 */
+        /** 作成した配信設定マスター */
         optional<DistributorModelMaster> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * 作成したディストリビュータの種類を取得
+     * 作成した配信設定マスターを取得
      *
-     * @return 作成したディストリビュータの種類
+     * @return 作成した配信設定マスター
      */
     const optional<DistributorModelMaster>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * 作成したディストリビュータの種類を設定
+     * 作成した配信設定マスターを設定
      *
-     * @param item 作成したディストリビュータの種類
+     * @param item 作成した配信設定マスター
      */
     void setItem(const DistributorModelMaster& item)
     {

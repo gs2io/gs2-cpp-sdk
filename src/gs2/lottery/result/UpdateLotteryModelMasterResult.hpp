@@ -29,7 +29,7 @@ namespace gs2 { namespace lottery
 {
 
 /**
- * 抽選の種類を更新 のレスポンスモデル
+ * 抽選の種類マスターを更新 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 更新した抽選の種類 */
+        /** 更新した抽選の種類マスター */
         optional<LotteryModelMaster> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * 更新した抽選の種類を取得
+     * 更新した抽選の種類マスターを取得
      *
-     * @return 更新した抽選の種類
+     * @return 更新した抽選の種類マスター
      */
     const optional<LotteryModelMaster>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * 更新した抽選の種類を設定
+     * 更新した抽選の種類マスターを設定
      *
-     * @param item 更新した抽選の種類
+     * @param item 更新した抽選の種類マスター
      */
     void setItem(const LotteryModelMaster& item)
     {

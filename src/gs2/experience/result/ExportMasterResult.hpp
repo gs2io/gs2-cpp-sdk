@@ -29,7 +29,7 @@ namespace gs2 { namespace experience
 {
 
 /**
- * 経験値マスターJSONのマスターデータをエクスポートします のレスポンスモデル
+ * 現在有効な経験値設定のマスターデータをエクスポートします のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 経験値マスターJSON */
+        /** 現在有効な経験値設定 */
         optional<CurrentExperienceMaster> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * 経験値マスターJSONを取得
+     * 現在有効な経験値設定を取得
      *
-     * @return 経験値マスターJSON
+     * @return 現在有効な経験値設定
      */
     const optional<CurrentExperienceMaster>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * 経験値マスターJSONを設定
+     * 現在有効な経験値設定を設定
      *
-     * @param item 経験値マスターJSON
+     * @param item 現在有効な経験値設定
      */
     void setItem(const CurrentExperienceMaster& item)
     {

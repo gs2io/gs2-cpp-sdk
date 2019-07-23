@@ -28,7 +28,7 @@
 namespace gs2 { namespace experience {
 
 /**
- * ランクアップ閾値
+ * ランクアップ閾値マスター
  *
  * @author Game Server Services, Inc.
  *
@@ -41,20 +41,20 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ランクアップ閾値 のGRN */
+        /** ランクアップ閾値マスター */
         optional<StringHolder> thresholdId;
         /** ランクアップ閾値名 */
         optional<StringHolder> name;
-        /** ランクアップ閾値の説明 */
+        /** ランクアップ閾値マスターの説明 */
         optional<StringHolder> description;
         /** ランクアップ閾値のメタデータ */
         optional<StringHolder> metadata;
         /** ランクアップ経験値閾値リスト */
         optional<List<Int64>> values;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
         /** 最終更新日時 */
-        optional<Int64> updateAt;
+        optional<Int64> updatedAt;
 
         Data()
         {}
@@ -66,8 +66,8 @@ private:
             description(data.description),
             metadata(data.metadata),
             values(data.values),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
@@ -77,8 +77,8 @@ private:
             description(std::move(data.description)),
             metadata(std::move(data.metadata)),
             values(std::move(data.values)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -126,16 +126,16 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
+            else if (std::strcmp(name, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt64();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -219,9 +219,9 @@ public:
         return this;
     }
     /**
-     * ランクアップ閾値 のGRNを取得
+     * ランクアップ閾値マスターを取得
      *
-     * @return ランクアップ閾値 のGRN
+     * @return ランクアップ閾値マスター
      */
     const optional<StringHolder>& getThresholdId() const
     {
@@ -229,9 +229,9 @@ public:
     }
 
     /**
-     * ランクアップ閾値 のGRNを設定
+     * ランクアップ閾値マスターを設定
      *
-     * @param thresholdId ランクアップ閾値 のGRN
+     * @param thresholdId ランクアップ閾値マスター
      */
     void setThresholdId(const Char* thresholdId)
     {
@@ -239,9 +239,9 @@ public:
     }
 
     /**
-     * ランクアップ閾値 のGRNを設定
+     * ランクアップ閾値マスターを設定
      *
-     * @param thresholdId ランクアップ閾値 のGRN
+     * @param thresholdId ランクアップ閾値マスター
      */
     ThresholdMaster& withThresholdId(const Char* thresholdId)
     {
@@ -281,9 +281,9 @@ public:
     }
 
     /**
-     * ランクアップ閾値の説明を取得
+     * ランクアップ閾値マスターの説明を取得
      *
-     * @return ランクアップ閾値の説明
+     * @return ランクアップ閾値マスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -291,9 +291,9 @@ public:
     }
 
     /**
-     * ランクアップ閾値の説明を設定
+     * ランクアップ閾値マスターの説明を設定
      *
-     * @param description ランクアップ閾値の説明
+     * @param description ランクアップ閾値マスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -301,9 +301,9 @@ public:
     }
 
     /**
-     * ランクアップ閾値の説明を設定
+     * ランクアップ閾値マスターの説明を設定
      *
-     * @param description ランクアップ閾値の説明
+     * @param description ランクアップ閾値マスターの説明
      */
     ThresholdMaster& withDescription(const Char* description)
     {
@@ -378,29 +378,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    ThresholdMaster& withCreateAt(Int64 createAt)
+    ThresholdMaster& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -409,29 +409,29 @@ public:
      *
      * @return 最終更新日時
      */
-    const optional<Int64>& getUpdateAt() const
+    const optional<Int64>& getUpdatedAt() const
     {
-        return ensureData().updateAt;
+        return ensureData().updatedAt;
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    void setUpdateAt(Int64 updateAt)
+    void setUpdatedAt(Int64 updatedAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        ensureData().updatedAt.emplace(updatedAt);
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    ThresholdMaster& withUpdateAt(Int64 updateAt)
+    ThresholdMaster& withUpdatedAt(Int64 updatedAt)
     {
-        setUpdateAt(updateAt);
+        setUpdatedAt(updatedAt);
         return *this;
     }
 
@@ -470,11 +470,11 @@ bool operator!=(const ThresholdMaster& lhs, const ThresholdMaster& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }
-        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

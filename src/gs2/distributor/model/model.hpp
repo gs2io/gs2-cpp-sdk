@@ -18,11 +18,10 @@
 #define GS2_DISTRIBUTOR_MODEL_MODEL_HPP_
 
 #include <gs2/core/common.hpp>
-#include "Distributor.hpp"
+#include "Namespace.hpp"
 #include "DistributorModelMaster.hpp"
 #include "DistributorModel.hpp"
 #include "CurrentDistributorMaster.hpp"
-#include "Distribute.hpp"
 #include "ResponseCache.hpp"
 #include "DistributeResource.hpp"
 

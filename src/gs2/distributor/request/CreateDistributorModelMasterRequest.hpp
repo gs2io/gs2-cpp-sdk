@@ -28,7 +28,7 @@ namespace gs2 { namespace distributor
 {
 
 /**
- * ディストリビュータの種類を新規作成 のリクエストモデル
+ * 配信設定マスターを新規作成 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,18 +41,18 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** ディストリビュータ名 */
-        optional<StringHolder> distributorName;
-        /** ディストリビューターの種類名 */
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
+        /** 配信設定名 */
         optional<StringHolder> name;
-        /** ディストリビュータの種類の説明 */
+        /** 配信設定マスターの説明 */
         optional<StringHolder> description;
-        /** ディストリビューターの種類のメタデータ */
+        /** 配信設定のメタデータ */
         optional<StringHolder> metadata;
-        /** 所持品の配布処理の権限判定に使用する ユーザー のGRN */
+        /** 所持品の配布処理の権限判定に使用する ユーザ のGRN */
         optional<StringHolder> assumeUserId;
-        /** 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN */
-        optional<StringHolder> inboxId;
+        /** 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN */
+        optional<StringHolder> inboxNamespaceId;
         /** ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト */
         optional<List<StringHolder>> whiteListTargetIds;
 
@@ -61,23 +61,23 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            distributorName(data.distributorName),
+            namespaceName(data.namespaceName),
             name(data.name),
             description(data.description),
             metadata(data.metadata),
             assumeUserId(data.assumeUserId),
-            inboxId(data.inboxId),
+            inboxNamespaceId(data.inboxNamespaceId),
             whiteListTargetIds(data.whiteListTargetIds)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            distributorName(std::move(data.distributorName)),
+            namespaceName(std::move(data.namespaceName)),
             name(std::move(data.name)),
             description(std::move(data.description)),
             metadata(std::move(data.metadata)),
             assumeUserId(std::move(data.assumeUserId)),
-            inboxId(std::move(data.inboxId)),
+            inboxNamespaceId(std::move(data.inboxNamespaceId)),
             whiteListTargetIds(std::move(data.whiteListTargetIds))
         {}
 
@@ -170,40 +170,40 @@ public:
         return this;
     }
     /**
-     * ディストリビュータ名を取得
+     * ネームスペース名を取得
      *
-     * @return ディストリビュータ名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getDistributorName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().distributorName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * ディストリビュータ名を設定
+     * ネームスペース名を設定
      *
-     * @param distributorName ディストリビュータ名
+     * @param namespaceName ネームスペース名
      */
-    void setDistributorName(const Char* distributorName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().distributorName.emplace(distributorName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * ディストリビュータ名を設定
+     * ネームスペース名を設定
      *
-     * @param distributorName ディストリビュータ名
+     * @param namespaceName ネームスペース名
      */
-    CreateDistributorModelMasterRequest& withDistributorName(const Char* distributorName)
+    CreateDistributorModelMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().distributorName.emplace(distributorName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
     /**
-     * ディストリビューターの種類名を取得
+     * 配信設定名を取得
      *
-     * @return ディストリビューターの種類名
+     * @return 配信設定名
      */
     const optional<StringHolder>& getName() const
     {
@@ -211,9 +211,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を設定
+     * 配信設定名を設定
      *
-     * @param name ディストリビューターの種類名
+     * @param name 配信設定名
      */
     void setName(const Char* name)
     {
@@ -221,9 +221,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を設定
+     * 配信設定名を設定
      *
-     * @param name ディストリビューターの種類名
+     * @param name 配信設定名
      */
     CreateDistributorModelMasterRequest& withName(const Char* name)
     {
@@ -232,9 +232,9 @@ public:
     }
 
     /**
-     * ディストリビュータの種類の説明を取得
+     * 配信設定マスターの説明を取得
      *
-     * @return ディストリビュータの種類の説明
+     * @return 配信設定マスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -242,9 +242,9 @@ public:
     }
 
     /**
-     * ディストリビュータの種類の説明を設定
+     * 配信設定マスターの説明を設定
      *
-     * @param description ディストリビュータの種類の説明
+     * @param description 配信設定マスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -252,9 +252,9 @@ public:
     }
 
     /**
-     * ディストリビュータの種類の説明を設定
+     * 配信設定マスターの説明を設定
      *
-     * @param description ディストリビュータの種類の説明
+     * @param description 配信設定マスターの説明
      */
     CreateDistributorModelMasterRequest& withDescription(const Char* description)
     {
@@ -263,9 +263,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを取得
+     * 配信設定のメタデータを取得
      *
-     * @return ディストリビューターの種類のメタデータ
+     * @return 配信設定のメタデータ
      */
     const optional<StringHolder>& getMetadata() const
     {
@@ -273,9 +273,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを設定
+     * 配信設定のメタデータを設定
      *
-     * @param metadata ディストリビューターの種類のメタデータ
+     * @param metadata 配信設定のメタデータ
      */
     void setMetadata(const Char* metadata)
     {
@@ -283,9 +283,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを設定
+     * 配信設定のメタデータを設定
      *
-     * @param metadata ディストリビューターの種類のメタデータ
+     * @param metadata 配信設定のメタデータ
      */
     CreateDistributorModelMasterRequest& withMetadata(const Char* metadata)
     {
@@ -294,9 +294,9 @@ public:
     }
 
     /**
-     * 所持品の配布処理の権限判定に使用する ユーザー のGRNを取得
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを取得
      *
-     * @return 所持品の配布処理の権限判定に使用する ユーザー のGRN
+     * @return 所持品の配布処理の権限判定に使用する ユーザ のGRN
      */
     const optional<StringHolder>& getAssumeUserId() const
     {
@@ -304,9 +304,9 @@ public:
     }
 
     /**
-     * 所持品の配布処理の権限判定に使用する ユーザー のGRNを設定
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
      *
-     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザー のGRN
+     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
      */
     void setAssumeUserId(const Char* assumeUserId)
     {
@@ -314,9 +314,9 @@ public:
     }
 
     /**
-     * 所持品の配布処理の権限判定に使用する ユーザー のGRNを設定
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
      *
-     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザー のGRN
+     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
      */
     CreateDistributorModelMasterRequest& withAssumeUserId(const Char* assumeUserId)
     {
@@ -325,33 +325,33 @@ public:
     }
 
     /**
-     * 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRNを取得
+     * 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRNを取得
      *
-     * @return 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN
+     * @return 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
      */
-    const optional<StringHolder>& getInboxId() const
+    const optional<StringHolder>& getInboxNamespaceId() const
     {
-        return ensureData().inboxId;
+        return ensureData().inboxNamespaceId;
     }
 
     /**
-     * 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRNを設定
+     * 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRNを設定
      *
-     * @param inboxId 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN
+     * @param inboxNamespaceId 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
      */
-    void setInboxId(const Char* inboxId)
+    void setInboxNamespaceId(const Char* inboxNamespaceId)
     {
-        ensureData().inboxId.emplace(inboxId);
+        ensureData().inboxNamespaceId.emplace(inboxNamespaceId);
     }
 
     /**
-     * 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRNを設定
+     * 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRNを設定
      *
-     * @param inboxId 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN
+     * @param inboxNamespaceId 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
      */
-    CreateDistributorModelMasterRequest& withInboxId(const Char* inboxId)
+    CreateDistributorModelMasterRequest& withInboxNamespaceId(const Char* inboxNamespaceId)
     {
-        ensureData().inboxId.emplace(inboxId);
+        ensureData().inboxNamespaceId.emplace(inboxNamespaceId);
         return *this;
     }
 

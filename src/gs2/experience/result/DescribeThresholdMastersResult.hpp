@@ -29,7 +29,7 @@ namespace gs2 { namespace experience
 {
 
 /**
- * ランクアップ閾値の一覧を取得 のレスポンスモデル
+ * ランクアップ閾値マスターの一覧を取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ランクアップ閾値のリスト */
+        /** ランクアップ閾値マスターのリスト */
         optional<List<ThresholdMaster>> items;
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
@@ -166,9 +166,9 @@ public:
         return this;
     }
     /**
-     * ランクアップ閾値のリストを取得
+     * ランクアップ閾値マスターのリストを取得
      *
-     * @return ランクアップ閾値のリスト
+     * @return ランクアップ閾値マスターのリスト
      */
     const optional<List<ThresholdMaster>>& getItems() const
     {
@@ -176,9 +176,9 @@ public:
     }
 
     /**
-     * ランクアップ閾値のリストを設定
+     * ランクアップ閾値マスターのリストを設定
      *
-     * @param items ランクアップ閾値のリスト
+     * @param items ランクアップ閾値マスターのリスト
      */
     void setItems(const List<ThresholdMaster>& items)
     {

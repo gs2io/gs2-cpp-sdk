@@ -39,10 +39,10 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** ディストリビュータ名 */
-        optional<StringHolder> distributorName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** ディストリビューターの種類名 */
-        optional<StringHolder> distributorModelName;
+        optional<StringHolder> distributorName;
         /** 加算するリソース */
         optional<DistributeResource> distributeResource;
         /** 重複実行回避機能に使用するID */
@@ -53,16 +53,16 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            namespaceName(data.namespaceName),
             distributorName(data.distributorName),
-            distributorModelName(data.distributorModelName),
             distributeResource(data.distributeResource),
             duplicationAvoider(data.duplicationAvoider)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            namespaceName(std::move(data.namespaceName)),
             distributorName(std::move(data.distributorName)),
-            distributorModelName(std::move(data.distributorModelName)),
             distributeResource(std::move(data.distributeResource)),
             duplicationAvoider(std::move(data.duplicationAvoider))
         {}
@@ -156,33 +156,33 @@ public:
         return this;
     }
     /**
-     * ディストリビュータ名を取得
+     * ネームスペース名を取得
      *
-     * @return ディストリビュータ名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getDistributorName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().distributorName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * ディストリビュータ名を設定
+     * ネームスペース名を設定
      *
-     * @param distributorName ディストリビュータ名
+     * @param namespaceName ネームスペース名
      */
-    void setDistributorName(const Char* distributorName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().distributorName.emplace(distributorName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * ディストリビュータ名を設定
+     * ネームスペース名を設定
      *
-     * @param distributorName ディストリビュータ名
+     * @param namespaceName ネームスペース名
      */
-    DistributeRequest& withDistributorName(const Char* distributorName)
+    DistributeRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().distributorName.emplace(distributorName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -191,29 +191,29 @@ public:
      *
      * @return ディストリビューターの種類名
      */
-    const optional<StringHolder>& getDistributorModelName() const
+    const optional<StringHolder>& getDistributorName() const
     {
-        return ensureData().distributorModelName;
+        return ensureData().distributorName;
     }
 
     /**
      * ディストリビューターの種類名を設定
      *
-     * @param distributorModelName ディストリビューターの種類名
+     * @param distributorName ディストリビューターの種類名
      */
-    void setDistributorModelName(const Char* distributorModelName)
+    void setDistributorName(const Char* distributorName)
     {
-        ensureData().distributorModelName.emplace(distributorModelName);
+        ensureData().distributorName.emplace(distributorName);
     }
 
     /**
      * ディストリビューターの種類名を設定
      *
-     * @param distributorModelName ディストリビューターの種類名
+     * @param distributorName ディストリビューターの種類名
      */
-    DistributeRequest& withDistributorModelName(const Char* distributorModelName)
+    DistributeRequest& withDistributorName(const Char* distributorName)
     {
-        ensureData().distributorModelName.emplace(distributorModelName);
+        ensureData().distributorName.emplace(distributorName);
         return *this;
     }
 

@@ -29,7 +29,7 @@ namespace gs2 { namespace inventory
 {
 
 /**
- * キャパシティサイズを加算 のレスポンスモデル
+ * スタンプシートでキャパシティサイズを加算 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */

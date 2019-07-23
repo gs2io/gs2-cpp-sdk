@@ -41,11 +41,11 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** イベント のGRN */
+        /** イベントマスター */
         optional<StringHolder> eventId;
-        /** ディストリビューターの種類名 */
+        /** イベントの種類名 */
         optional<StringHolder> name;
-        /** ディストリビューターの種類のメタデータ */
+        /** イベントの種類のメタデータ */
         optional<StringHolder> metadata;
         /** イベント期間の種類 */
         optional<StringHolder> scheduleType;
@@ -222,9 +222,9 @@ public:
         return this;
     }
     /**
-     * イベント のGRNを取得
+     * イベントマスターを取得
      *
-     * @return イベント のGRN
+     * @return イベントマスター
      */
     const optional<StringHolder>& getEventId() const
     {
@@ -232,9 +232,9 @@ public:
     }
 
     /**
-     * イベント のGRNを設定
+     * イベントマスターを設定
      *
-     * @param eventId イベント のGRN
+     * @param eventId イベントマスター
      */
     void setEventId(const Char* eventId)
     {
@@ -242,9 +242,9 @@ public:
     }
 
     /**
-     * イベント のGRNを設定
+     * イベントマスターを設定
      *
-     * @param eventId イベント のGRN
+     * @param eventId イベントマスター
      */
     Event& withEventId(const Char* eventId)
     {
@@ -253,9 +253,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を取得
+     * イベントの種類名を取得
      *
-     * @return ディストリビューターの種類名
+     * @return イベントの種類名
      */
     const optional<StringHolder>& getName() const
     {
@@ -263,9 +263,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を設定
+     * イベントの種類名を設定
      *
-     * @param name ディストリビューターの種類名
+     * @param name イベントの種類名
      */
     void setName(const Char* name)
     {
@@ -273,9 +273,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を設定
+     * イベントの種類名を設定
      *
-     * @param name ディストリビューターの種類名
+     * @param name イベントの種類名
      */
     Event& withName(const Char* name)
     {
@@ -284,9 +284,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを取得
+     * イベントの種類のメタデータを取得
      *
-     * @return ディストリビューターの種類のメタデータ
+     * @return イベントの種類のメタデータ
      */
     const optional<StringHolder>& getMetadata() const
     {
@@ -294,9 +294,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを設定
+     * イベントの種類のメタデータを設定
      *
-     * @param metadata ディストリビューターの種類のメタデータ
+     * @param metadata イベントの種類のメタデータ
      */
     void setMetadata(const Char* metadata)
     {
@@ -304,9 +304,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを設定
+     * イベントの種類のメタデータを設定
      *
-     * @param metadata ディストリビューターの種類のメタデータ
+     * @param metadata イベントの種類のメタデータ
      */
     Event& withMetadata(const Char* metadata)
     {

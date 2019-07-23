@@ -41,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** スクリプト名 */
         optional<StringHolder> name;
         /** 説明文 */
@@ -53,6 +55,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            namespaceName(data.namespaceName),
             name(data.name),
             description(data.description),
             script(data.script)
@@ -60,6 +63,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            namespaceName(std::move(data.namespaceName)),
             name(std::move(data.name)),
             description(std::move(data.description)),
             script(std::move(data.script))
@@ -153,6 +157,37 @@ public:
     {
         return this;
     }
+    /**
+     * ネームスペース名を取得
+     *
+     * @return ネームスペース名
+     */
+    const optional<StringHolder>& getNamespaceName() const
+    {
+        return ensureData().namespaceName;
+    }
+
+    /**
+     * ネームスペース名を設定
+     *
+     * @param namespaceName ネームスペース名
+     */
+    void setNamespaceName(const Char* namespaceName)
+    {
+        ensureData().namespaceName.emplace(namespaceName);
+    }
+
+    /**
+     * ネームスペース名を設定
+     *
+     * @param namespaceName ネームスペース名
+     */
+    CreateScriptRequest& withNamespaceName(const Char* namespaceName)
+    {
+        ensureData().namespaceName.emplace(namespaceName);
+        return *this;
+    }
+
     /**
      * スクリプト名を取得
      *

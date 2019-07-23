@@ -28,7 +28,7 @@ namespace gs2 { namespace experience
 {
 
 /**
- * 経験値の種類を新規作成 のリクエストモデル
+ * 経験値の種類マスターを新規作成 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,11 +41,11 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** 経験値名 */
-        optional<StringHolder> experienceName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** 経験値の種類名 */
         optional<StringHolder> name;
-        /** 経験値の種類の説明 */
+        /** 経験値の種類マスターの説明 */
         optional<StringHolder> description;
         /** 経験値の種類のメタデータ */
         optional<StringHolder> metadata;
@@ -55,7 +55,7 @@ private:
         optional<Int64> defaultRankCap;
         /** ランクキャップの最大値 */
         optional<Int64> maxRankCap;
-        /** ランク計算に用いるランクアップ閾値 のGRN */
+        /** ランク計算に用いる */
         optional<StringHolder> rankThresholdId;
 
         Data()
@@ -63,7 +63,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            experienceName(data.experienceName),
+            namespaceName(data.namespaceName),
             name(data.name),
             description(data.description),
             metadata(data.metadata),
@@ -75,7 +75,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            experienceName(std::move(data.experienceName)),
+            namespaceName(std::move(data.namespaceName)),
             name(std::move(data.name)),
             description(std::move(data.description)),
             metadata(std::move(data.metadata)),
@@ -174,33 +174,33 @@ public:
         return this;
     }
     /**
-     * 経験値名を取得
+     * ネームスペース名を取得
      *
-     * @return 経験値名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getExperienceName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().experienceName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * 経験値名を設定
+     * ネームスペース名を設定
      *
-     * @param experienceName 経験値名
+     * @param namespaceName ネームスペース名
      */
-    void setExperienceName(const Char* experienceName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().experienceName.emplace(experienceName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * 経験値名を設定
+     * ネームスペース名を設定
      *
-     * @param experienceName 経験値名
+     * @param namespaceName ネームスペース名
      */
-    CreateExperienceModelMasterRequest& withExperienceName(const Char* experienceName)
+    CreateExperienceModelMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().experienceName.emplace(experienceName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -236,9 +236,9 @@ public:
     }
 
     /**
-     * 経験値の種類の説明を取得
+     * 経験値の種類マスターの説明を取得
      *
-     * @return 経験値の種類の説明
+     * @return 経験値の種類マスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -246,9 +246,9 @@ public:
     }
 
     /**
-     * 経験値の種類の説明を設定
+     * 経験値の種類マスターの説明を設定
      *
-     * @param description 経験値の種類の説明
+     * @param description 経験値の種類マスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -256,9 +256,9 @@ public:
     }
 
     /**
-     * 経験値の種類の説明を設定
+     * 経験値の種類マスターの説明を設定
      *
-     * @param description 経験値の種類の説明
+     * @param description 経験値の種類マスターの説明
      */
     CreateExperienceModelMasterRequest& withDescription(const Char* description)
     {
@@ -391,9 +391,9 @@ public:
     }
 
     /**
-     * ランク計算に用いるランクアップ閾値 のGRNを取得
+     * ランク計算に用いるを取得
      *
-     * @return ランク計算に用いるランクアップ閾値 のGRN
+     * @return ランク計算に用いる
      */
     const optional<StringHolder>& getRankThresholdId() const
     {
@@ -401,9 +401,9 @@ public:
     }
 
     /**
-     * ランク計算に用いるランクアップ閾値 のGRNを設定
+     * ランク計算に用いるを設定
      *
-     * @param rankThresholdId ランク計算に用いるランクアップ閾値 のGRN
+     * @param rankThresholdId ランク計算に用いる
      */
     void setRankThresholdId(const Char* rankThresholdId)
     {
@@ -411,9 +411,9 @@ public:
     }
 
     /**
-     * ランク計算に用いるランクアップ閾値 のGRNを設定
+     * ランク計算に用いるを設定
      *
-     * @param rankThresholdId ランク計算に用いるランクアップ閾値 のGRN
+     * @param rankThresholdId ランク計算に用いる
      */
     CreateExperienceModelMasterRequest& withRankThresholdId(const Char* rankThresholdId)
     {

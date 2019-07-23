@@ -41,7 +41,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** メッセージ のGRN */
+        /** メッセージ */
         optional<StringHolder> messageId;
         /** メッセージID */
         optional<StringHolder> name;
@@ -232,9 +232,9 @@ public:
         return this;
     }
     /**
-     * メッセージ のGRNを取得
+     * メッセージを取得
      *
-     * @return メッセージ のGRN
+     * @return メッセージ
      */
     const optional<StringHolder>& getMessageId() const
     {
@@ -242,9 +242,9 @@ public:
     }
 
     /**
-     * メッセージ のGRNを設定
+     * メッセージを設定
      *
-     * @param messageId メッセージ のGRN
+     * @param messageId メッセージ
      */
     void setMessageId(const Char* messageId)
     {
@@ -252,9 +252,9 @@ public:
     }
 
     /**
-     * メッセージ のGRNを設定
+     * メッセージを設定
      *
-     * @param messageId メッセージ のGRN
+     * @param messageId メッセージ
      */
     Message& withMessageId(const Char* messageId)
     {

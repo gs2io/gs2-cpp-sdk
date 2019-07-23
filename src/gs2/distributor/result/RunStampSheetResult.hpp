@@ -29,7 +29,7 @@ namespace gs2 { namespace distributor
 {
 
 /**
- * 所持品を配布する のレスポンスモデル
+ * スタンプシートの完了を報告する のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */

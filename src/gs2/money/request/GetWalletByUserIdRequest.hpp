@@ -28,7 +28,7 @@ namespace gs2 { namespace money
 {
 
 /**
- * ユーザーIDを指定してウォレットの概要を取得します のリクエストモデル
+ * ユーザーIDを指定してウォレットを取得します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,11 +41,11 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** 課金通貨の名前 */
-        optional<StringHolder> moneyName;
+        /** ネームスペースの名前 */
+        optional<StringHolder> namespaceName;
         /** ユーザーID */
         optional<StringHolder> userId;
-        /** None */
+        /** スロット番号 */
         optional<Int32> slot;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
@@ -55,7 +55,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            moneyName(data.moneyName),
+            namespaceName(data.namespaceName),
             userId(data.userId),
             slot(data.slot),
             duplicationAvoider(data.duplicationAvoider)
@@ -63,7 +63,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            moneyName(std::move(data.moneyName)),
+            namespaceName(std::move(data.namespaceName)),
             userId(std::move(data.userId)),
             slot(std::move(data.slot)),
             duplicationAvoider(std::move(data.duplicationAvoider))
@@ -158,33 +158,33 @@ public:
         return this;
     }
     /**
-     * 課金通貨の名前を取得
+     * ネームスペースの名前を取得
      *
-     * @return 課金通貨の名前
+     * @return ネームスペースの名前
      */
-    const optional<StringHolder>& getMoneyName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().moneyName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * 課金通貨の名前を設定
+     * ネームスペースの名前を設定
      *
-     * @param moneyName 課金通貨の名前
+     * @param namespaceName ネームスペースの名前
      */
-    void setMoneyName(const Char* moneyName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().moneyName.emplace(moneyName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * 課金通貨の名前を設定
+     * ネームスペースの名前を設定
      *
-     * @param moneyName 課金通貨の名前
+     * @param namespaceName ネームスペースの名前
      */
-    GetWalletByUserIdRequest& withMoneyName(const Char* moneyName)
+    GetWalletByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().moneyName.emplace(moneyName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -220,9 +220,9 @@ public:
     }
 
     /**
-     * Noneを取得
+     * スロット番号を取得
      *
-     * @return None
+     * @return スロット番号
      */
     const optional<Int32>& getSlot() const
     {
@@ -230,9 +230,9 @@ public:
     }
 
     /**
-     * Noneを設定
+     * スロット番号を設定
      *
-     * @param slot None
+     * @param slot スロット番号
      */
     void setSlot(Int32 slot)
     {
@@ -240,9 +240,9 @@ public:
     }
 
     /**
-     * Noneを設定
+     * スロット番号を設定
      *
-     * @param slot None
+     * @param slot スロット番号
      */
     GetWalletByUserIdRequest& withSlot(Int32 slot)
     {

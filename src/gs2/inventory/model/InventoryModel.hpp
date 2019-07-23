@@ -29,7 +29,7 @@
 namespace gs2 { namespace inventory {
 
 /**
- * インベントリマスター
+ * インベントリモデル
  *
  * @author Game Server Services, Inc.
  *
@@ -42,7 +42,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** インベントリマスター のGRN */
+        /** インベントリモデルマスター */
         optional<StringHolder> inventoryModelId;
         /** インベントリの種類名 */
         optional<StringHolder> name;
@@ -209,9 +209,9 @@ public:
         return this;
     }
     /**
-     * インベントリマスター のGRNを取得
+     * インベントリモデルマスターを取得
      *
-     * @return インベントリマスター のGRN
+     * @return インベントリモデルマスター
      */
     const optional<StringHolder>& getInventoryModelId() const
     {
@@ -219,9 +219,9 @@ public:
     }
 
     /**
-     * インベントリマスター のGRNを設定
+     * インベントリモデルマスターを設定
      *
-     * @param inventoryModelId インベントリマスター のGRN
+     * @param inventoryModelId インベントリモデルマスター
      */
     void setInventoryModelId(const Char* inventoryModelId)
     {
@@ -229,9 +229,9 @@ public:
     }
 
     /**
-     * インベントリマスター のGRNを設定
+     * インベントリモデルマスターを設定
      *
-     * @param inventoryModelId インベントリマスター のGRN
+     * @param inventoryModelId インベントリモデルマスター
      */
     InventoryModel& withInventoryModelId(const Char* inventoryModelId)
     {

@@ -39,11 +39,11 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** カテゴリ名 */
-        optional<StringHolder> categoryName;
+        /** カテゴリー名 */
+        optional<StringHolder> namespaceName;
         /** プロパティID */
         optional<StringHolder> propertyId;
-        /** ロックを取得したトランザクションID */
+        /** ロックを取得するトランザクションID */
         optional<StringHolder> transactionId;
         /** ロックを取得する期限（秒） */
         optional<Int64> ttl;
@@ -55,7 +55,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            categoryName(data.categoryName),
+            namespaceName(data.namespaceName),
             propertyId(data.propertyId),
             transactionId(data.transactionId),
             ttl(data.ttl),
@@ -64,7 +64,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            categoryName(std::move(data.categoryName)),
+            namespaceName(std::move(data.namespaceName)),
             propertyId(std::move(data.propertyId)),
             transactionId(std::move(data.transactionId)),
             ttl(std::move(data.ttl)),
@@ -160,33 +160,33 @@ public:
         return this;
     }
     /**
-     * カテゴリ名を取得
+     * カテゴリー名を取得
      *
-     * @return カテゴリ名
+     * @return カテゴリー名
      */
-    const optional<StringHolder>& getCategoryName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().categoryName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * カテゴリ名を設定
+     * カテゴリー名を設定
      *
-     * @param categoryName カテゴリ名
+     * @param namespaceName カテゴリー名
      */
-    void setCategoryName(const Char* categoryName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().categoryName.emplace(categoryName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * カテゴリ名を設定
+     * カテゴリー名を設定
      *
-     * @param categoryName カテゴリ名
+     * @param namespaceName カテゴリー名
      */
-    LockRequest& withCategoryName(const Char* categoryName)
+    LockRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().categoryName.emplace(categoryName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -222,9 +222,9 @@ public:
     }
 
     /**
-     * ロックを取得したトランザクションIDを取得
+     * ロックを取得するトランザクションIDを取得
      *
-     * @return ロックを取得したトランザクションID
+     * @return ロックを取得するトランザクションID
      */
     const optional<StringHolder>& getTransactionId() const
     {
@@ -232,9 +232,9 @@ public:
     }
 
     /**
-     * ロックを取得したトランザクションIDを設定
+     * ロックを取得するトランザクションIDを設定
      *
-     * @param transactionId ロックを取得したトランザクションID
+     * @param transactionId ロックを取得するトランザクションID
      */
     void setTransactionId(const Char* transactionId)
     {
@@ -242,9 +242,9 @@ public:
     }
 
     /**
-     * ロックを取得したトランザクションIDを設定
+     * ロックを取得するトランザクションIDを設定
      *
-     * @param transactionId ロックを取得したトランザクションID
+     * @param transactionId ロックを取得するトランザクションID
      */
     LockRequest& withTransactionId(const Char* transactionId)
     {

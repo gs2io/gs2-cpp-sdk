@@ -28,7 +28,7 @@ namespace gs2 { namespace lottery
 {
 
 /**
- * 景品の排出確率テーブルの一覧を取得 のリクエストモデル
+ * 排出確率テーブルマスターの一覧を取得 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,8 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** グループ名 */
-        optional<StringHolder> groupName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** データの取得を開始する位置を指定するトークン */
         optional<StringHolder> pageToken;
         /** データの取得件数 */
@@ -53,14 +53,14 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            groupName(data.groupName),
+            namespaceName(data.namespaceName),
             pageToken(data.pageToken),
             limit(data.limit)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            groupName(std::move(data.groupName)),
+            namespaceName(std::move(data.namespaceName)),
             pageToken(std::move(data.pageToken)),
             limit(std::move(data.limit))
         {}
@@ -154,33 +154,33 @@ public:
         return this;
     }
     /**
-     * グループ名を取得
+     * ネームスペース名を取得
      *
-     * @return グループ名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGroupName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().groupName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    void setGroupName(const Char* groupName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    DescribePrizeTableMastersRequest& withGroupName(const Char* groupName)
+    DescribePrizeTableMastersRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

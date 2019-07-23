@@ -41,7 +41,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** スタミナモデルマスター のGRN */
+        /** スタミナモデルマスター */
         optional<StringHolder> staminaModelId;
         /** スタミナの種類名 */
         optional<StringHolder> name;
@@ -49,7 +49,7 @@ private:
         optional<StringHolder> metadata;
         /** スタミナモデルマスターの説明 */
         optional<StringHolder> description;
-        /** スタミナを回復する速度(秒) */
+        /** スタミナを回復する速度(分) */
         optional<Int32> recoverIntervalMinutes;
         /** 時間経過後に回復する量 */
         optional<Int32> recoverValue;
@@ -59,14 +59,12 @@ private:
         optional<Bool> isOverflow;
         /** 溢れた状況での最大値 */
         optional<Int32> maxCapacity;
-        /** GS2-Experience と連携してスタミナの最大値を決定するか */
-        optional<Bool> isCollaborateGs2Experience;
-        /** GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRN */
+        /** GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRN */
         optional<StringHolder> maxStaminaTableId;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
         /** 最終更新日時 */
-        optional<Int64> updateAt;
+        optional<Int64> updatedAt;
 
         Data()
         {}
@@ -82,10 +80,9 @@ private:
             initialCapacity(data.initialCapacity),
             isOverflow(data.isOverflow),
             maxCapacity(data.maxCapacity),
-            isCollaborateGs2Experience(data.isCollaborateGs2Experience),
             maxStaminaTableId(data.maxStaminaTableId),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
@@ -99,10 +96,9 @@ private:
             initialCapacity(std::move(data.initialCapacity)),
             isOverflow(std::move(data.isOverflow)),
             maxCapacity(std::move(data.maxCapacity)),
-            isCollaborateGs2Experience(std::move(data.isCollaborateGs2Experience)),
             maxStaminaTableId(std::move(data.maxStaminaTableId)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -167,28 +163,22 @@ private:
                     this->maxCapacity = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "isCollaborateGs2Experience") == 0) {
-                if (jsonValue.IsBool())
-                {
-                    this->isCollaborateGs2Experience = jsonValue.GetBool();
-                }
-            }
             else if (std::strcmp(name, "maxStaminaTableId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->maxStaminaTableId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
+            else if (std::strcmp(name, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt64();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -272,9 +262,9 @@ public:
         return this;
     }
     /**
-     * スタミナモデルマスター のGRNを取得
+     * スタミナモデルマスターを取得
      *
-     * @return スタミナモデルマスター のGRN
+     * @return スタミナモデルマスター
      */
     const optional<StringHolder>& getStaminaModelId() const
     {
@@ -282,9 +272,9 @@ public:
     }
 
     /**
-     * スタミナモデルマスター のGRNを設定
+     * スタミナモデルマスターを設定
      *
-     * @param staminaModelId スタミナモデルマスター のGRN
+     * @param staminaModelId スタミナモデルマスター
      */
     void setStaminaModelId(const Char* staminaModelId)
     {
@@ -292,9 +282,9 @@ public:
     }
 
     /**
-     * スタミナモデルマスター のGRNを設定
+     * スタミナモデルマスターを設定
      *
-     * @param staminaModelId スタミナモデルマスター のGRN
+     * @param staminaModelId スタミナモデルマスター
      */
     StaminaModelMaster& withStaminaModelId(const Char* staminaModelId)
     {
@@ -396,9 +386,9 @@ public:
     }
 
     /**
-     * スタミナを回復する速度(秒)を取得
+     * スタミナを回復する速度(分)を取得
      *
-     * @return スタミナを回復する速度(秒)
+     * @return スタミナを回復する速度(分)
      */
     const optional<Int32>& getRecoverIntervalMinutes() const
     {
@@ -406,9 +396,9 @@ public:
     }
 
     /**
-     * スタミナを回復する速度(秒)を設定
+     * スタミナを回復する速度(分)を設定
      *
-     * @param recoverIntervalMinutes スタミナを回復する速度(秒)
+     * @param recoverIntervalMinutes スタミナを回復する速度(分)
      */
     void setRecoverIntervalMinutes(Int32 recoverIntervalMinutes)
     {
@@ -416,9 +406,9 @@ public:
     }
 
     /**
-     * スタミナを回復する速度(秒)を設定
+     * スタミナを回復する速度(分)を設定
      *
-     * @param recoverIntervalMinutes スタミナを回復する速度(秒)
+     * @param recoverIntervalMinutes スタミナを回復する速度(分)
      */
     StaminaModelMaster& withRecoverIntervalMinutes(Int32 recoverIntervalMinutes)
     {
@@ -551,40 +541,9 @@ public:
     }
 
     /**
-     * GS2-Experience と連携してスタミナの最大値を決定するかを取得
+     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRNを取得
      *
-     * @return GS2-Experience と連携してスタミナの最大値を決定するか
-     */
-    const optional<Bool>& getIsCollaborateGs2Experience() const
-    {
-        return ensureData().isCollaborateGs2Experience;
-    }
-
-    /**
-     * GS2-Experience と連携してスタミナの最大値を決定するかを設定
-     *
-     * @param isCollaborateGs2Experience GS2-Experience と連携してスタミナの最大値を決定するか
-     */
-    void setIsCollaborateGs2Experience(Bool isCollaborateGs2Experience)
-    {
-        ensureData().isCollaborateGs2Experience.emplace(isCollaborateGs2Experience);
-    }
-
-    /**
-     * GS2-Experience と連携してスタミナの最大値を決定するかを設定
-     *
-     * @param isCollaborateGs2Experience GS2-Experience と連携してスタミナの最大値を決定するか
-     */
-    StaminaModelMaster& withIsCollaborateGs2Experience(Bool isCollaborateGs2Experience)
-    {
-        setIsCollaborateGs2Experience(isCollaborateGs2Experience);
-        return *this;
-    }
-
-    /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRNを取得
-     *
-     * @return GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRN
+     * @return GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRN
      */
     const optional<StringHolder>& getMaxStaminaTableId() const
     {
@@ -592,9 +551,9 @@ public:
     }
 
     /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRNを設定
+     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRNを設定
      *
-     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRN
+     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRN
      */
     void setMaxStaminaTableId(const Char* maxStaminaTableId)
     {
@@ -602,9 +561,9 @@ public:
     }
 
     /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRNを設定
+     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRNを設定
      *
-     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRN
+     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRN
      */
     StaminaModelMaster& withMaxStaminaTableId(const Char* maxStaminaTableId)
     {
@@ -617,29 +576,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    StaminaModelMaster& withCreateAt(Int64 createAt)
+    StaminaModelMaster& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -648,29 +607,29 @@ public:
      *
      * @return 最終更新日時
      */
-    const optional<Int64>& getUpdateAt() const
+    const optional<Int64>& getUpdatedAt() const
     {
-        return ensureData().updateAt;
+        return ensureData().updatedAt;
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    void setUpdateAt(Int64 updateAt)
+    void setUpdatedAt(Int64 updatedAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        ensureData().updatedAt.emplace(updatedAt);
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    StaminaModelMaster& withUpdateAt(Int64 updateAt)
+    StaminaModelMaster& withUpdatedAt(Int64 updatedAt)
     {
-        setUpdateAt(updateAt);
+        setUpdatedAt(updatedAt);
         return *this;
     }
 
@@ -725,19 +684,15 @@ bool operator!=(const StaminaModelMaster& lhs, const StaminaModelMaster& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->isCollaborateGs2Experience != lhr.m_pData->isCollaborateGs2Experience)
-        {
-            return true;
-        }
         if (lhs.m_pData->maxStaminaTableId != lhr.m_pData->maxStaminaTableId)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }
-        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

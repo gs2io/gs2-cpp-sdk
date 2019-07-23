@@ -29,7 +29,7 @@ namespace gs2 { namespace inventory
 {
 
 /**
- * アイテムセットの一覧を取得 のレスポンスモデル
+ * 有効期限ごとのアイテム所持数量の一覧を取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** アイテムセットのリスト */
+        /** 有効期限ごとのアイテム所持数量のリスト */
         optional<List<ItemSet>> items;
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
@@ -166,9 +166,9 @@ public:
         return this;
     }
     /**
-     * アイテムセットのリストを取得
+     * 有効期限ごとのアイテム所持数量のリストを取得
      *
-     * @return アイテムセットのリスト
+     * @return 有効期限ごとのアイテム所持数量のリスト
      */
     const optional<List<ItemSet>>& getItems() const
     {
@@ -176,9 +176,9 @@ public:
     }
 
     /**
-     * アイテムセットのリストを設定
+     * 有効期限ごとのアイテム所持数量のリストを設定
      *
-     * @param items アイテムセットのリスト
+     * @param items 有効期限ごとのアイテム所持数量のリスト
      */
     void setItems(const List<ItemSet>& items)
     {

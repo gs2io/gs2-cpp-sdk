@@ -29,7 +29,7 @@ namespace gs2 { namespace distributor
 {
 
 /**
- * 現在有効なディストリビューターマスターJSONを取得します のレスポンスモデル
+ * 現在有効な現在有効な配信設定を取得します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 現在有効なディストリビューターマスターJSON */
+        /** 現在有効な現在有効な配信設定 */
         optional<CurrentDistributorMaster> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * 現在有効なディストリビューターマスターJSONを取得
+     * 現在有効な現在有効な配信設定を取得
      *
-     * @return 現在有効なディストリビューターマスターJSON
+     * @return 現在有効な現在有効な配信設定
      */
     const optional<CurrentDistributorMaster>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * 現在有効なディストリビューターマスターJSONを設定
+     * 現在有効な現在有効な配信設定を設定
      *
-     * @param item 現在有効なディストリビューターマスターJSON
+     * @param item 現在有効な現在有効な配信設定
      */
     void setItem(const CurrentDistributorMaster& item)
     {

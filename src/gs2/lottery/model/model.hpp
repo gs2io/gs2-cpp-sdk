@@ -18,20 +18,20 @@
 #define GS2_LOTTERY_MODEL_MODEL_HPP_
 
 #include <gs2/core/common.hpp>
-#include "Group.hpp"
+#include "Namespace.hpp"
 #include "LotteryModelMaster.hpp"
 #include "PrizeTableMaster.hpp"
 #include "Box.hpp"
 #include "LotteryModel.hpp"
 #include "PrizeTable.hpp"
-#include "Lottery.hpp"
 #include "Probability.hpp"
 #include "CurrentLotteryMaster.hpp"
 #include "ResponseCache.hpp"
-#include "PrizeMaster.hpp"
 #include "Prize.hpp"
+#include "AcquireAction.hpp"
 #include "DrawnPrize.hpp"
 #include "BoxItem.hpp"
 #include "BoxItems.hpp"
+#include "Config.hpp"
 
 #endif //GS2_LOTTERY_MODEL_MODEL_HPP_

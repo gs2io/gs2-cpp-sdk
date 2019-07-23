@@ -41,7 +41,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 引き継ぎ設定 のGRN */
+        /** 引き継ぎ設定 */
         optional<StringHolder> takeOverId;
         /** ユーザーID */
         optional<StringHolder> userId;
@@ -49,8 +49,10 @@ private:
         optional<Int32> type;
         /** 引き継ぎ用ユーザーID */
         optional<StringHolder> userIdentifier;
+        /** パスワード */
+        optional<StringHolder> password;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
 
         Data()
         {}
@@ -61,7 +63,8 @@ private:
             userId(data.userId),
             type(data.type),
             userIdentifier(data.userIdentifier),
-            createAt(data.createAt)
+            password(data.password),
+            createdAt(data.createdAt)
         {}
 
         Data(Data&& data) :
@@ -70,7 +73,8 @@ private:
             userId(std::move(data.userId)),
             type(std::move(data.type)),
             userIdentifier(std::move(data.userIdentifier)),
-            createAt(std::move(data.createAt))
+            password(std::move(data.password)),
+            createdAt(std::move(data.createdAt))
         {}
 
         ~Data() = default;
@@ -105,10 +109,16 @@ private:
                     this->userIdentifier.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "password") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->password.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -192,9 +202,9 @@ public:
         return this;
     }
     /**
-     * 引き継ぎ設定 のGRNを取得
+     * 引き継ぎ設定を取得
      *
-     * @return 引き継ぎ設定 のGRN
+     * @return 引き継ぎ設定
      */
     const optional<StringHolder>& getTakeOverId() const
     {
@@ -202,9 +212,9 @@ public:
     }
 
     /**
-     * 引き継ぎ設定 のGRNを設定
+     * 引き継ぎ設定を設定
      *
-     * @param takeOverId 引き継ぎ設定 のGRN
+     * @param takeOverId 引き継ぎ設定
      */
     void setTakeOverId(const Char* takeOverId)
     {
@@ -212,9 +222,9 @@ public:
     }
 
     /**
-     * 引き継ぎ設定 のGRNを設定
+     * 引き継ぎ設定を設定
      *
-     * @param takeOverId 引き継ぎ設定 のGRN
+     * @param takeOverId 引き継ぎ設定
      */
     TakeOver& withTakeOverId(const Char* takeOverId)
     {
@@ -316,33 +326,64 @@ public:
     }
 
     /**
+     * パスワードを取得
+     *
+     * @return パスワード
+     */
+    const optional<StringHolder>& getPassword() const
+    {
+        return ensureData().password;
+    }
+
+    /**
+     * パスワードを設定
+     *
+     * @param password パスワード
+     */
+    void setPassword(const Char* password)
+    {
+        ensureData().password.emplace(password);
+    }
+
+    /**
+     * パスワードを設定
+     *
+     * @param password パスワード
+     */
+    TakeOver& withPassword(const Char* password)
+    {
+        setPassword(password);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    TakeOver& withCreateAt(Int64 createAt)
+    TakeOver& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -377,7 +418,11 @@ bool operator!=(const TakeOver& lhs, const TakeOver& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->password != lhr.m_pData->password)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }

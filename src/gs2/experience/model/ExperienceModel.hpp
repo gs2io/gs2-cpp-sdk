@@ -29,7 +29,7 @@
 namespace gs2 { namespace experience {
 
 /**
- * 経験値の種類
+ * 経験値・ランクアップ閾値モデル
  *
  * @author Game Server Services, Inc.
  *
@@ -42,7 +42,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 経験値の種類 のGRN */
+        /** 経験値の種類マスター */
         optional<StringHolder> experienceModelId;
         /** 経験値の種類名 */
         optional<StringHolder> name;
@@ -215,9 +215,9 @@ public:
         return this;
     }
     /**
-     * 経験値の種類 のGRNを取得
+     * 経験値の種類マスターを取得
      *
-     * @return 経験値の種類 のGRN
+     * @return 経験値の種類マスター
      */
     const optional<StringHolder>& getExperienceModelId() const
     {
@@ -225,9 +225,9 @@ public:
     }
 
     /**
-     * 経験値の種類 のGRNを設定
+     * 経験値の種類マスターを設定
      *
-     * @param experienceModelId 経験値の種類 のGRN
+     * @param experienceModelId 経験値の種類マスター
      */
     void setExperienceModelId(const Char* experienceModelId)
     {
@@ -235,9 +235,9 @@ public:
     }
 
     /**
-     * 経験値の種類 のGRNを設定
+     * 経験値の種類マスターを設定
      *
-     * @param experienceModelId 経験値の種類 のGRN
+     * @param experienceModelId 経験値の種類マスター
      */
     ExperienceModel& withExperienceModelId(const Char* experienceModelId)
     {

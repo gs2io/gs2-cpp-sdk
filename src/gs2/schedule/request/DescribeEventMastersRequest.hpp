@@ -28,7 +28,7 @@ namespace gs2 { namespace schedule
 {
 
 /**
- * イベントの一覧を取得 のリクエストモデル
+ * イベントマスターの一覧を取得 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,8 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** スケジュール名 */
-        optional<StringHolder> scheduleName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** データの取得を開始する位置を指定するトークン */
         optional<StringHolder> pageToken;
         /** データの取得件数 */
@@ -53,14 +53,14 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            scheduleName(data.scheduleName),
+            namespaceName(data.namespaceName),
             pageToken(data.pageToken),
             limit(data.limit)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            scheduleName(std::move(data.scheduleName)),
+            namespaceName(std::move(data.namespaceName)),
             pageToken(std::move(data.pageToken)),
             limit(std::move(data.limit))
         {}
@@ -154,33 +154,33 @@ public:
         return this;
     }
     /**
-     * スケジュール名を取得
+     * ネームスペース名を取得
      *
-     * @return スケジュール名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getScheduleName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().scheduleName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * スケジュール名を設定
+     * ネームスペース名を設定
      *
-     * @param scheduleName スケジュール名
+     * @param namespaceName ネームスペース名
      */
-    void setScheduleName(const Char* scheduleName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().scheduleName.emplace(scheduleName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * スケジュール名を設定
+     * ネームスペース名を設定
      *
-     * @param scheduleName スケジュール名
+     * @param namespaceName ネームスペース名
      */
-    DescribeEventMastersRequest& withScheduleName(const Char* scheduleName)
+    DescribeEventMastersRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().scheduleName.emplace(scheduleName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

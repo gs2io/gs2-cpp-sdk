@@ -41,10 +41,10 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** インベントリ のGRN */
+        /** インベントリ */
         optional<StringHolder> inventoryId;
         /** インベントリモデル名 */
-        optional<StringHolder> inventoryModelName;
+        optional<StringHolder> inventoryName;
         /** ユーザーID */
         optional<StringHolder> userId;
         /** 現在のインベントリのキャパシティ使用量 */
@@ -52,9 +52,9 @@ private:
         /** 現在のインベントリの最大キャパシティ */
         optional<Int32> currentInventoryMaxCapacity;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
         /** 最終更新日時 */
-        optional<Int64> updateAt;
+        optional<Int64> updatedAt;
 
         Data()
         {}
@@ -62,23 +62,23 @@ private:
         Data(const Data& data) :
             detail::json::IModel(data),
             inventoryId(data.inventoryId),
-            inventoryModelName(data.inventoryModelName),
+            inventoryName(data.inventoryName),
             userId(data.userId),
             currentInventoryCapacityUsage(data.currentInventoryCapacityUsage),
             currentInventoryMaxCapacity(data.currentInventoryMaxCapacity),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
             inventoryId(std::move(data.inventoryId)),
-            inventoryModelName(std::move(data.inventoryModelName)),
+            inventoryName(std::move(data.inventoryName)),
             userId(std::move(data.userId)),
             currentInventoryCapacityUsage(std::move(data.currentInventoryCapacityUsage)),
             currentInventoryMaxCapacity(std::move(data.currentInventoryMaxCapacity)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -95,10 +95,10 @@ private:
                     this->inventoryId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "inventoryModelName") == 0) {
+            else if (std::strcmp(name, "inventoryName") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->inventoryModelName.emplace(jsonValue.GetString());
+                    this->inventoryName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "userId") == 0) {
@@ -119,16 +119,16 @@ private:
                     this->currentInventoryMaxCapacity = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
+            else if (std::strcmp(name, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt64();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -212,9 +212,9 @@ public:
         return this;
     }
     /**
-     * インベントリ のGRNを取得
+     * インベントリを取得
      *
-     * @return インベントリ のGRN
+     * @return インベントリ
      */
     const optional<StringHolder>& getInventoryId() const
     {
@@ -222,9 +222,9 @@ public:
     }
 
     /**
-     * インベントリ のGRNを設定
+     * インベントリを設定
      *
-     * @param inventoryId インベントリ のGRN
+     * @param inventoryId インベントリ
      */
     void setInventoryId(const Char* inventoryId)
     {
@@ -232,9 +232,9 @@ public:
     }
 
     /**
-     * インベントリ のGRNを設定
+     * インベントリを設定
      *
-     * @param inventoryId インベントリ のGRN
+     * @param inventoryId インベントリ
      */
     Inventory& withInventoryId(const Char* inventoryId)
     {
@@ -247,29 +247,29 @@ public:
      *
      * @return インベントリモデル名
      */
-    const optional<StringHolder>& getInventoryModelName() const
+    const optional<StringHolder>& getInventoryName() const
     {
-        return ensureData().inventoryModelName;
+        return ensureData().inventoryName;
     }
 
     /**
      * インベントリモデル名を設定
      *
-     * @param inventoryModelName インベントリモデル名
+     * @param inventoryName インベントリモデル名
      */
-    void setInventoryModelName(const Char* inventoryModelName)
+    void setInventoryName(const Char* inventoryName)
     {
-        ensureData().inventoryModelName.emplace(inventoryModelName);
+        ensureData().inventoryName.emplace(inventoryName);
     }
 
     /**
      * インベントリモデル名を設定
      *
-     * @param inventoryModelName インベントリモデル名
+     * @param inventoryName インベントリモデル名
      */
-    Inventory& withInventoryModelName(const Char* inventoryModelName)
+    Inventory& withInventoryName(const Char* inventoryName)
     {
-        setInventoryModelName(inventoryModelName);
+        setInventoryName(inventoryName);
         return *this;
     }
 
@@ -371,29 +371,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    Inventory& withCreateAt(Int64 createAt)
+    Inventory& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -402,29 +402,29 @@ public:
      *
      * @return 最終更新日時
      */
-    const optional<Int64>& getUpdateAt() const
+    const optional<Int64>& getUpdatedAt() const
     {
-        return ensureData().updateAt;
+        return ensureData().updatedAt;
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    void setUpdateAt(Int64 updateAt)
+    void setUpdatedAt(Int64 updatedAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        ensureData().updatedAt.emplace(updatedAt);
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    Inventory& withUpdateAt(Int64 updateAt)
+    Inventory& withUpdatedAt(Int64 updatedAt)
     {
-        setUpdateAt(updateAt);
+        setUpdatedAt(updatedAt);
         return *this;
     }
 
@@ -447,7 +447,7 @@ bool operator!=(const Inventory& lhs, const Inventory& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->inventoryModelName != lhr.m_pData->inventoryModelName)
+        if (lhs.m_pData->inventoryName != lhr.m_pData->inventoryName)
         {
             return true;
         }
@@ -463,11 +463,11 @@ bool operator!=(const Inventory& lhs, const Inventory& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }
-        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

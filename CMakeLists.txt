@@ -41,4 +41,4 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 add_subdirectory(src/gs2/core)
-add_subdirectory(src/gs2/inGamePushNotification)
+#add_subdirectory(src/gs2/inGamePushNotification)

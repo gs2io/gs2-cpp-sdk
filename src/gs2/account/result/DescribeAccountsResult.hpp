@@ -29,7 +29,7 @@ namespace gs2 { namespace account
 {
 
 /**
- * アカウントの一覧を取得 のレスポンスモデル
+ * ゲームプレイヤーアカウントの一覧を取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** アカウントのリスト */
+        /** ゲームプレイヤーアカウントのリスト */
         optional<List<Account>> items;
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
@@ -166,9 +166,9 @@ public:
         return this;
     }
     /**
-     * アカウントのリストを取得
+     * ゲームプレイヤーアカウントのリストを取得
      *
-     * @return アカウントのリスト
+     * @return ゲームプレイヤーアカウントのリスト
      */
     const optional<List<Account>>& getItems() const
     {
@@ -176,9 +176,9 @@ public:
     }
 
     /**
-     * アカウントのリストを設定
+     * ゲームプレイヤーアカウントのリストを設定
      *
-     * @param items アカウントのリスト
+     * @param items ゲームプレイヤーアカウントのリスト
      */
     void setItems(const List<Account>& items)
     {

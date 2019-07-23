@@ -28,7 +28,7 @@ namespace gs2 { namespace account
 {
 
 /**
- * アカウントを認証 のリクエストモデル
+ * ゲームプレイヤーアカウントを認証 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,8 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** ゲーム名 */
-        optional<StringHolder> gameName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** アカウントID */
         optional<StringHolder> userId;
         /** 認証トークンの暗号化に使用する暗号鍵 のGRN */
@@ -57,7 +57,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            gameName(data.gameName),
+            namespaceName(data.namespaceName),
             userId(data.userId),
             keyId(data.keyId),
             password(data.password),
@@ -66,7 +66,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            gameName(std::move(data.gameName)),
+            namespaceName(std::move(data.namespaceName)),
             userId(std::move(data.userId)),
             keyId(std::move(data.keyId)),
             password(std::move(data.password)),
@@ -162,33 +162,33 @@ public:
         return this;
     }
     /**
-     * ゲーム名を取得
+     * ネームスペース名を取得
      *
-     * @return ゲーム名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGameName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().gameName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param gameName ゲーム名
+     * @param namespaceName ネームスペース名
      */
-    void setGameName(const Char* gameName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().gameName.emplace(gameName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param gameName ゲーム名
+     * @param namespaceName ネームスペース名
      */
-    AuthenticationRequest& withGameName(const Char* gameName)
+    AuthenticationRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().gameName.emplace(gameName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

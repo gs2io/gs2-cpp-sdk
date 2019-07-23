@@ -29,7 +29,7 @@ namespace gs2 { namespace inbox
 {
 
 /**
- * メッセージを削除 のレスポンスモデル
+ * ユーザーIDを指定してメッセージを開封 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */

@@ -41,15 +41,15 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** カテゴリ名 */
-        optional<StringHolder> categoryName;
-        /** インベントリモデル名 */
-        optional<StringHolder> inventoryModelName;
-        /** アイテムモデルの種類名 */
-        optional<StringHolder> itemModelName;
+        /** カテゴリー名 */
+        optional<StringHolder> namespaceName;
+        /** インベントリの種類名 */
+        optional<StringHolder> inventoryName;
+        /** アイテムマスターの名前 */
+        optional<StringHolder> itemName;
         /** ユーザーID */
         optional<StringHolder> userId;
-        /** 所持数量 */
+        /** 入手する量 */
         optional<Int64> acquireCount;
         /** 有効期限 */
         optional<Int64> expiresAt;
@@ -61,9 +61,9 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            categoryName(data.categoryName),
-            inventoryModelName(data.inventoryModelName),
-            itemModelName(data.itemModelName),
+            namespaceName(data.namespaceName),
+            inventoryName(data.inventoryName),
+            itemName(data.itemName),
             userId(data.userId),
             acquireCount(data.acquireCount),
             expiresAt(data.expiresAt),
@@ -72,9 +72,9 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            categoryName(std::move(data.categoryName)),
-            inventoryModelName(std::move(data.inventoryModelName)),
-            itemModelName(std::move(data.itemModelName)),
+            namespaceName(std::move(data.namespaceName)),
+            inventoryName(std::move(data.inventoryName)),
+            itemName(std::move(data.itemName)),
             userId(std::move(data.userId)),
             acquireCount(std::move(data.acquireCount)),
             expiresAt(std::move(data.expiresAt)),
@@ -170,95 +170,95 @@ public:
         return this;
     }
     /**
-     * カテゴリ名を取得
+     * カテゴリー名を取得
      *
-     * @return カテゴリ名
+     * @return カテゴリー名
      */
-    const optional<StringHolder>& getCategoryName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().categoryName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * カテゴリ名を設定
+     * カテゴリー名を設定
      *
-     * @param categoryName カテゴリ名
+     * @param namespaceName カテゴリー名
      */
-    void setCategoryName(const Char* categoryName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().categoryName.emplace(categoryName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * カテゴリ名を設定
+     * カテゴリー名を設定
      *
-     * @param categoryName カテゴリ名
+     * @param namespaceName カテゴリー名
      */
-    AcquireItemSetByUserIdRequest& withCategoryName(const Char* categoryName)
+    AcquireItemSetByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().categoryName.emplace(categoryName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
     /**
-     * インベントリモデル名を取得
+     * インベントリの種類名を取得
      *
-     * @return インベントリモデル名
+     * @return インベントリの種類名
      */
-    const optional<StringHolder>& getInventoryModelName() const
+    const optional<StringHolder>& getInventoryName() const
     {
-        return ensureData().inventoryModelName;
+        return ensureData().inventoryName;
     }
 
     /**
-     * インベントリモデル名を設定
+     * インベントリの種類名を設定
      *
-     * @param inventoryModelName インベントリモデル名
+     * @param inventoryName インベントリの種類名
      */
-    void setInventoryModelName(const Char* inventoryModelName)
+    void setInventoryName(const Char* inventoryName)
     {
-        ensureData().inventoryModelName.emplace(inventoryModelName);
+        ensureData().inventoryName.emplace(inventoryName);
     }
 
     /**
-     * インベントリモデル名を設定
+     * インベントリの種類名を設定
      *
-     * @param inventoryModelName インベントリモデル名
+     * @param inventoryName インベントリの種類名
      */
-    AcquireItemSetByUserIdRequest& withInventoryModelName(const Char* inventoryModelName)
+    AcquireItemSetByUserIdRequest& withInventoryName(const Char* inventoryName)
     {
-        ensureData().inventoryModelName.emplace(inventoryModelName);
+        ensureData().inventoryName.emplace(inventoryName);
         return *this;
     }
 
     /**
-     * アイテムモデルの種類名を取得
+     * アイテムマスターの名前を取得
      *
-     * @return アイテムモデルの種類名
+     * @return アイテムマスターの名前
      */
-    const optional<StringHolder>& getItemModelName() const
+    const optional<StringHolder>& getItemName() const
     {
-        return ensureData().itemModelName;
+        return ensureData().itemName;
     }
 
     /**
-     * アイテムモデルの種類名を設定
+     * アイテムマスターの名前を設定
      *
-     * @param itemModelName アイテムモデルの種類名
+     * @param itemName アイテムマスターの名前
      */
-    void setItemModelName(const Char* itemModelName)
+    void setItemName(const Char* itemName)
     {
-        ensureData().itemModelName.emplace(itemModelName);
+        ensureData().itemName.emplace(itemName);
     }
 
     /**
-     * アイテムモデルの種類名を設定
+     * アイテムマスターの名前を設定
      *
-     * @param itemModelName アイテムモデルの種類名
+     * @param itemName アイテムマスターの名前
      */
-    AcquireItemSetByUserIdRequest& withItemModelName(const Char* itemModelName)
+    AcquireItemSetByUserIdRequest& withItemName(const Char* itemName)
     {
-        ensureData().itemModelName.emplace(itemModelName);
+        ensureData().itemName.emplace(itemName);
         return *this;
     }
 
@@ -294,9 +294,9 @@ public:
     }
 
     /**
-     * 所持数量を取得
+     * 入手する量を取得
      *
-     * @return 所持数量
+     * @return 入手する量
      */
     const optional<Int64>& getAcquireCount() const
     {
@@ -304,9 +304,9 @@ public:
     }
 
     /**
-     * 所持数量を設定
+     * 入手する量を設定
      *
-     * @param acquireCount 所持数量
+     * @param acquireCount 入手する量
      */
     void setAcquireCount(Int64 acquireCount)
     {
@@ -314,9 +314,9 @@ public:
     }
 
     /**
-     * 所持数量を設定
+     * 入手する量を設定
      *
-     * @param acquireCount 所持数量
+     * @param acquireCount 入手する量
      */
     AcquireItemSetByUserIdRequest& withAcquireCount(Int64 acquireCount)
     {

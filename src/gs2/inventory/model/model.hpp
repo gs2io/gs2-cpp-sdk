@@ -18,7 +18,7 @@
 #define GS2_INVENTORY_MODEL_MODEL_HPP_
 
 #include <gs2/core/common.hpp>
-#include "Category.hpp"
+#include "Namespace.hpp"
 #include "InventoryModelMaster.hpp"
 #include "InventoryModel.hpp"
 #include "ItemModelMaster.hpp"

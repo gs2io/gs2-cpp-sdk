@@ -28,7 +28,7 @@
 namespace gs2 { namespace schedule {
 
 /**
- * イベント
+ * イベントマスター
  *
  * @author Game Server Services, Inc.
  *
@@ -41,13 +41,13 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** イベント のGRN */
+        /** イベントマスター */
         optional<StringHolder> eventId;
-        /** ディストリビューターの種類名 */
+        /** イベントの種類名 */
         optional<StringHolder> name;
-        /** イベントの説明 */
+        /** イベントマスターの説明 */
         optional<StringHolder> description;
-        /** ディストリビューターの種類のメタデータ */
+        /** イベントの種類のメタデータ */
         optional<StringHolder> metadata;
         /** イベント期間の種類 */
         optional<StringHolder> scheduleType;
@@ -55,14 +55,14 @@ private:
         optional<Int64> absoluteBegin;
         /** イベントの終了日時 */
         optional<Int64> absoluteEnd;
-        /** イベントの開始トリガー */
+        /** イベントの開始トリガー名 */
         optional<StringHolder> relativeTriggerName;
         /** イベントの開催期間(秒) */
         optional<Int32> relativeDuration;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
         /** 最終更新日時 */
-        optional<Int64> updateAt;
+        optional<Int64> updatedAt;
 
         Data()
         {}
@@ -78,8 +78,8 @@ private:
             absoluteEnd(data.absoluteEnd),
             relativeTriggerName(data.relativeTriggerName),
             relativeDuration(data.relativeDuration),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
@@ -93,8 +93,8 @@ private:
             absoluteEnd(std::move(data.absoluteEnd)),
             relativeTriggerName(std::move(data.relativeTriggerName)),
             relativeDuration(std::move(data.relativeDuration)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -159,16 +159,16 @@ private:
                     this->relativeDuration = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
+            else if (std::strcmp(name, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt64();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -252,9 +252,9 @@ public:
         return this;
     }
     /**
-     * イベント のGRNを取得
+     * イベントマスターを取得
      *
-     * @return イベント のGRN
+     * @return イベントマスター
      */
     const optional<StringHolder>& getEventId() const
     {
@@ -262,9 +262,9 @@ public:
     }
 
     /**
-     * イベント のGRNを設定
+     * イベントマスターを設定
      *
-     * @param eventId イベント のGRN
+     * @param eventId イベントマスター
      */
     void setEventId(const Char* eventId)
     {
@@ -272,9 +272,9 @@ public:
     }
 
     /**
-     * イベント のGRNを設定
+     * イベントマスターを設定
      *
-     * @param eventId イベント のGRN
+     * @param eventId イベントマスター
      */
     EventMaster& withEventId(const Char* eventId)
     {
@@ -283,9 +283,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を取得
+     * イベントの種類名を取得
      *
-     * @return ディストリビューターの種類名
+     * @return イベントの種類名
      */
     const optional<StringHolder>& getName() const
     {
@@ -293,9 +293,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を設定
+     * イベントの種類名を設定
      *
-     * @param name ディストリビューターの種類名
+     * @param name イベントの種類名
      */
     void setName(const Char* name)
     {
@@ -303,9 +303,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を設定
+     * イベントの種類名を設定
      *
-     * @param name ディストリビューターの種類名
+     * @param name イベントの種類名
      */
     EventMaster& withName(const Char* name)
     {
@@ -314,9 +314,9 @@ public:
     }
 
     /**
-     * イベントの説明を取得
+     * イベントマスターの説明を取得
      *
-     * @return イベントの説明
+     * @return イベントマスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -324,9 +324,9 @@ public:
     }
 
     /**
-     * イベントの説明を設定
+     * イベントマスターの説明を設定
      *
-     * @param description イベントの説明
+     * @param description イベントマスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -334,9 +334,9 @@ public:
     }
 
     /**
-     * イベントの説明を設定
+     * イベントマスターの説明を設定
      *
-     * @param description イベントの説明
+     * @param description イベントマスターの説明
      */
     EventMaster& withDescription(const Char* description)
     {
@@ -345,9 +345,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを取得
+     * イベントの種類のメタデータを取得
      *
-     * @return ディストリビューターの種類のメタデータ
+     * @return イベントの種類のメタデータ
      */
     const optional<StringHolder>& getMetadata() const
     {
@@ -355,9 +355,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを設定
+     * イベントの種類のメタデータを設定
      *
-     * @param metadata ディストリビューターの種類のメタデータ
+     * @param metadata イベントの種類のメタデータ
      */
     void setMetadata(const Char* metadata)
     {
@@ -365,9 +365,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを設定
+     * イベントの種類のメタデータを設定
      *
-     * @param metadata ディストリビューターの種類のメタデータ
+     * @param metadata イベントの種類のメタデータ
      */
     EventMaster& withMetadata(const Char* metadata)
     {
@@ -469,9 +469,9 @@ public:
     }
 
     /**
-     * イベントの開始トリガーを取得
+     * イベントの開始トリガー名を取得
      *
-     * @return イベントの開始トリガー
+     * @return イベントの開始トリガー名
      */
     const optional<StringHolder>& getRelativeTriggerName() const
     {
@@ -479,9 +479,9 @@ public:
     }
 
     /**
-     * イベントの開始トリガーを設定
+     * イベントの開始トリガー名を設定
      *
-     * @param relativeTriggerName イベントの開始トリガー
+     * @param relativeTriggerName イベントの開始トリガー名
      */
     void setRelativeTriggerName(const Char* relativeTriggerName)
     {
@@ -489,9 +489,9 @@ public:
     }
 
     /**
-     * イベントの開始トリガーを設定
+     * イベントの開始トリガー名を設定
      *
-     * @param relativeTriggerName イベントの開始トリガー
+     * @param relativeTriggerName イベントの開始トリガー名
      */
     EventMaster& withRelativeTriggerName(const Char* relativeTriggerName)
     {
@@ -535,29 +535,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    EventMaster& withCreateAt(Int64 createAt)
+    EventMaster& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -566,29 +566,29 @@ public:
      *
      * @return 最終更新日時
      */
-    const optional<Int64>& getUpdateAt() const
+    const optional<Int64>& getUpdatedAt() const
     {
-        return ensureData().updateAt;
+        return ensureData().updatedAt;
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    void setUpdateAt(Int64 updateAt)
+    void setUpdatedAt(Int64 updatedAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        ensureData().updatedAt.emplace(updatedAt);
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    EventMaster& withUpdateAt(Int64 updateAt)
+    EventMaster& withUpdatedAt(Int64 updatedAt)
     {
-        setUpdateAt(updateAt);
+        setUpdatedAt(updatedAt);
         return *this;
     }
 
@@ -643,11 +643,11 @@ bool operator!=(const EventMaster& lhs, const EventMaster& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }
-        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

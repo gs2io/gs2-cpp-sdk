@@ -29,7 +29,7 @@ namespace gs2 { namespace stamina
 {
 
 /**
- * スタミナモデルマスターの一覧を取得 のレスポンスモデル
+ * スタミナモデルの一覧を取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** スタミナモデルマスターのリスト */
+        /** スタミナモデルのリスト */
         optional<List<StaminaModel>> items;
 
         Data()
@@ -156,9 +156,9 @@ public:
         return this;
     }
     /**
-     * スタミナモデルマスターのリストを取得
+     * スタミナモデルのリストを取得
      *
-     * @return スタミナモデルマスターのリスト
+     * @return スタミナモデルのリスト
      */
     const optional<List<StaminaModel>>& getItems() const
     {
@@ -166,9 +166,9 @@ public:
     }
 
     /**
-     * スタミナモデルマスターのリストを設定
+     * スタミナモデルのリストを設定
      *
-     * @param items スタミナモデルマスターのリスト
+     * @param items スタミナモデルのリスト
      */
     void setItems(const List<StaminaModel>& items)
     {

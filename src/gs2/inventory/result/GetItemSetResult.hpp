@@ -29,7 +29,7 @@ namespace gs2 { namespace inventory
 {
 
 /**
- * アイテムセットを取得 のレスポンスモデル
+ * 有効期限ごとのアイテム所持数量を取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,7 +41,7 @@ private:
     public:
         /** 有効期限毎の{model_name} */
         optional<List<ItemSet>> items;
-        /** アイテムマスター */
+        /** アイテムモデル */
         optional<ItemModel> itemModel;
         /** インベントリ */
         optional<Inventory> inventory;
@@ -200,9 +200,9 @@ public:
     }
 
     /**
-     * アイテムマスターを取得
+     * アイテムモデルを取得
      *
-     * @return アイテムマスター
+     * @return アイテムモデル
      */
     const optional<ItemModel>& getItemModel() const
     {
@@ -210,9 +210,9 @@ public:
     }
 
     /**
-     * アイテムマスターを設定
+     * アイテムモデルを設定
      *
-     * @param itemModel アイテムマスター
+     * @param itemModel アイテムモデル
      */
     void setItemModel(const ItemModel& itemModel)
     {

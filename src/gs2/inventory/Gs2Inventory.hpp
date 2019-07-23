@@ -19,7 +19,8 @@
 
 #include <gs2/core/common.hpp>
 #include "model/model.hpp"
-#include "Gs2InventoryClient.hpp"
+#include "Gs2InventoryRestClient.hpp"
+#include "Gs2InventoryWebSocketClient.hpp"
 #include "Gs2InventoryConst.hpp"
 
 #endif //GS2_INVENTORY_HPP_

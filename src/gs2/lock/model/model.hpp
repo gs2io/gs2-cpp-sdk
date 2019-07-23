@@ -18,7 +18,7 @@
 #define GS2_LOCK_MODEL_MODEL_HPP_
 
 #include <gs2/core/common.hpp>
-#include "Category.hpp"
+#include "Namespace.hpp"
 #include "Mutex.hpp"
 #include "ResponseCache.hpp"
 

@@ -28,7 +28,7 @@
 namespace gs2 { namespace inventory {
 
 /**
- * アイテムマスター
+ * アイテムモデルマスター
  *
  * @author Game Server Services, Inc.
  *
@@ -41,13 +41,13 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** アイテムマスター のGRN */
+        /** アイテムモデルマスター */
         optional<StringHolder> itemModelId;
-        /** インベントリの種類名 */
-        optional<StringHolder> inventoryModelName;
+        /** アイテムの種類名 */
+        optional<StringHolder> inventoryName;
         /** アイテムモデルの種類名 */
         optional<StringHolder> name;
-        /** アイテムマスターの説明 */
+        /** アイテムモデルマスターの説明 */
         optional<StringHolder> description;
         /** アイテムモデルの種類のメタデータ */
         optional<StringHolder> metadata;
@@ -56,9 +56,9 @@ private:
         /** 表示順番 */
         optional<Int32> sortValue;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
         /** 最終更新日時 */
-        optional<Int64> updateAt;
+        optional<Int64> updatedAt;
 
         Data()
         {}
@@ -66,27 +66,27 @@ private:
         Data(const Data& data) :
             detail::json::IModel(data),
             itemModelId(data.itemModelId),
-            inventoryModelName(data.inventoryModelName),
+            inventoryName(data.inventoryName),
             name(data.name),
             description(data.description),
             metadata(data.metadata),
             maxCount(data.maxCount),
             sortValue(data.sortValue),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
             itemModelId(std::move(data.itemModelId)),
-            inventoryModelName(std::move(data.inventoryModelName)),
+            inventoryName(std::move(data.inventoryName)),
             name(std::move(data.name)),
             description(std::move(data.description)),
             metadata(std::move(data.metadata)),
             maxCount(std::move(data.maxCount)),
             sortValue(std::move(data.sortValue)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -103,10 +103,10 @@ private:
                     this->itemModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "inventoryModelName") == 0) {
+            else if (std::strcmp(name, "inventoryName") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->inventoryModelName.emplace(jsonValue.GetString());
+                    this->inventoryName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "name") == 0) {
@@ -139,16 +139,16 @@ private:
                     this->sortValue = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
+            else if (std::strcmp(name, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt64();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -232,9 +232,9 @@ public:
         return this;
     }
     /**
-     * アイテムマスター のGRNを取得
+     * アイテムモデルマスターを取得
      *
-     * @return アイテムマスター のGRN
+     * @return アイテムモデルマスター
      */
     const optional<StringHolder>& getItemModelId() const
     {
@@ -242,9 +242,9 @@ public:
     }
 
     /**
-     * アイテムマスター のGRNを設定
+     * アイテムモデルマスターを設定
      *
-     * @param itemModelId アイテムマスター のGRN
+     * @param itemModelId アイテムモデルマスター
      */
     void setItemModelId(const Char* itemModelId)
     {
@@ -252,9 +252,9 @@ public:
     }
 
     /**
-     * アイテムマスター のGRNを設定
+     * アイテムモデルマスターを設定
      *
-     * @param itemModelId アイテムマスター のGRN
+     * @param itemModelId アイテムモデルマスター
      */
     ItemModelMaster& withItemModelId(const Char* itemModelId)
     {
@@ -263,33 +263,33 @@ public:
     }
 
     /**
-     * インベントリの種類名を取得
+     * アイテムの種類名を取得
      *
-     * @return インベントリの種類名
+     * @return アイテムの種類名
      */
-    const optional<StringHolder>& getInventoryModelName() const
+    const optional<StringHolder>& getInventoryName() const
     {
-        return ensureData().inventoryModelName;
+        return ensureData().inventoryName;
     }
 
     /**
-     * インベントリの種類名を設定
+     * アイテムの種類名を設定
      *
-     * @param inventoryModelName インベントリの種類名
+     * @param inventoryName アイテムの種類名
      */
-    void setInventoryModelName(const Char* inventoryModelName)
+    void setInventoryName(const Char* inventoryName)
     {
-        ensureData().inventoryModelName.emplace(inventoryModelName);
+        ensureData().inventoryName.emplace(inventoryName);
     }
 
     /**
-     * インベントリの種類名を設定
+     * アイテムの種類名を設定
      *
-     * @param inventoryModelName インベントリの種類名
+     * @param inventoryName アイテムの種類名
      */
-    ItemModelMaster& withInventoryModelName(const Char* inventoryModelName)
+    ItemModelMaster& withInventoryName(const Char* inventoryName)
     {
-        setInventoryModelName(inventoryModelName);
+        setInventoryName(inventoryName);
         return *this;
     }
 
@@ -325,9 +325,9 @@ public:
     }
 
     /**
-     * アイテムマスターの説明を取得
+     * アイテムモデルマスターの説明を取得
      *
-     * @return アイテムマスターの説明
+     * @return アイテムモデルマスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -335,9 +335,9 @@ public:
     }
 
     /**
-     * アイテムマスターの説明を設定
+     * アイテムモデルマスターの説明を設定
      *
-     * @param description アイテムマスターの説明
+     * @param description アイテムモデルマスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -345,9 +345,9 @@ public:
     }
 
     /**
-     * アイテムマスターの説明を設定
+     * アイテムモデルマスターの説明を設定
      *
-     * @param description アイテムマスターの説明
+     * @param description アイテムモデルマスターの説明
      */
     ItemModelMaster& withDescription(const Char* description)
     {
@@ -453,29 +453,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    ItemModelMaster& withCreateAt(Int64 createAt)
+    ItemModelMaster& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -484,29 +484,29 @@ public:
      *
      * @return 最終更新日時
      */
-    const optional<Int64>& getUpdateAt() const
+    const optional<Int64>& getUpdatedAt() const
     {
-        return ensureData().updateAt;
+        return ensureData().updatedAt;
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    void setUpdateAt(Int64 updateAt)
+    void setUpdatedAt(Int64 updatedAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        ensureData().updatedAt.emplace(updatedAt);
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    ItemModelMaster& withUpdateAt(Int64 updateAt)
+    ItemModelMaster& withUpdatedAt(Int64 updatedAt)
     {
-        setUpdateAt(updateAt);
+        setUpdatedAt(updatedAt);
         return *this;
     }
 
@@ -529,7 +529,7 @@ bool operator!=(const ItemModelMaster& lhs, const ItemModelMaster& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->inventoryModelName != lhr.m_pData->inventoryModelName)
+        if (lhs.m_pData->inventoryName != lhr.m_pData->inventoryName)
         {
             return true;
         }
@@ -553,11 +553,11 @@ bool operator!=(const ItemModelMaster& lhs, const ItemModelMaster& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }
-        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

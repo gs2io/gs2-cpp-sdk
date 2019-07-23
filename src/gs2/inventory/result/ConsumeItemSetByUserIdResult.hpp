@@ -39,9 +39,9 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 消費後のアイテムセットのリスト */
+        /** 消費後の有効期限ごとのアイテム所持数量のリスト */
         optional<List<ItemSet>> items;
-        /** アイテムマスター */
+        /** アイテムモデル */
         optional<ItemModel> itemModel;
         /** インベントリ */
         optional<Inventory> inventory;
@@ -180,9 +180,9 @@ public:
         return this;
     }
     /**
-     * 消費後のアイテムセットのリストを取得
+     * 消費後の有効期限ごとのアイテム所持数量のリストを取得
      *
-     * @return 消費後のアイテムセットのリスト
+     * @return 消費後の有効期限ごとのアイテム所持数量のリスト
      */
     const optional<List<ItemSet>>& getItems() const
     {
@@ -190,9 +190,9 @@ public:
     }
 
     /**
-     * 消費後のアイテムセットのリストを設定
+     * 消費後の有効期限ごとのアイテム所持数量のリストを設定
      *
-     * @param items 消費後のアイテムセットのリスト
+     * @param items 消費後の有効期限ごとのアイテム所持数量のリスト
      */
     void setItems(const List<ItemSet>& items)
     {
@@ -200,9 +200,9 @@ public:
     }
 
     /**
-     * アイテムマスターを取得
+     * アイテムモデルを取得
      *
-     * @return アイテムマスター
+     * @return アイテムモデル
      */
     const optional<ItemModel>& getItemModel() const
     {
@@ -210,9 +210,9 @@ public:
     }
 
     /**
-     * アイテムマスターを設定
+     * アイテムモデルを設定
      *
-     * @param itemModel アイテムマスター
+     * @param itemModel アイテムモデル
      */
     void setItemModel(const ItemModel& itemModel)
     {

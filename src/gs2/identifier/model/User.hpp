@@ -28,7 +28,7 @@
 namespace gs2 { namespace identifier {
 
 /**
- * ユーザー
+ * ユーザ
  *
  * @author Game Server Services, Inc.
  *
@@ -41,18 +41,18 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザー のGRN */
+        /** ユーザ */
         optional<StringHolder> userId;
         /** オーナーID */
         optional<StringHolder> ownerId;
         /** ユーザー名 */
         optional<StringHolder> name;
-        /** ユーザーの説明 */
+        /** ユーザの説明 */
         optional<StringHolder> description;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
         /** 最終更新日時 */
-        optional<Int64> updateAt;
+        optional<Int64> updatedAt;
 
         Data()
         {}
@@ -63,8 +63,8 @@ private:
             ownerId(data.ownerId),
             name(data.name),
             description(data.description),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
@@ -73,8 +73,8 @@ private:
             ownerId(std::move(data.ownerId)),
             name(std::move(data.name)),
             description(std::move(data.description)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -109,16 +109,16 @@ private:
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
+            else if (std::strcmp(name, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt64();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -202,9 +202,9 @@ public:
         return this;
     }
     /**
-     * ユーザー のGRNを取得
+     * ユーザを取得
      *
-     * @return ユーザー のGRN
+     * @return ユーザ
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -212,9 +212,9 @@ public:
     }
 
     /**
-     * ユーザー のGRNを設定
+     * ユーザを設定
      *
-     * @param userId ユーザー のGRN
+     * @param userId ユーザ
      */
     void setUserId(const Char* userId)
     {
@@ -222,9 +222,9 @@ public:
     }
 
     /**
-     * ユーザー のGRNを設定
+     * ユーザを設定
      *
-     * @param userId ユーザー のGRN
+     * @param userId ユーザ
      */
     User& withUserId(const Char* userId)
     {
@@ -295,9 +295,9 @@ public:
     }
 
     /**
-     * ユーザーの説明を取得
+     * ユーザの説明を取得
      *
-     * @return ユーザーの説明
+     * @return ユーザの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -305,9 +305,9 @@ public:
     }
 
     /**
-     * ユーザーの説明を設定
+     * ユーザの説明を設定
      *
-     * @param description ユーザーの説明
+     * @param description ユーザの説明
      */
     void setDescription(const Char* description)
     {
@@ -315,9 +315,9 @@ public:
     }
 
     /**
-     * ユーザーの説明を設定
+     * ユーザの説明を設定
      *
-     * @param description ユーザーの説明
+     * @param description ユーザの説明
      */
     User& withDescription(const Char* description)
     {
@@ -330,29 +330,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    User& withCreateAt(Int64 createAt)
+    User& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -361,29 +361,29 @@ public:
      *
      * @return 最終更新日時
      */
-    const optional<Int64>& getUpdateAt() const
+    const optional<Int64>& getUpdatedAt() const
     {
-        return ensureData().updateAt;
+        return ensureData().updatedAt;
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    void setUpdateAt(Int64 updateAt)
+    void setUpdatedAt(Int64 updatedAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        ensureData().updatedAt.emplace(updatedAt);
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    User& withUpdateAt(Int64 updateAt)
+    User& withUpdatedAt(Int64 updatedAt)
     {
-        setUpdateAt(updateAt);
+        setUpdatedAt(updatedAt);
         return *this;
     }
 
@@ -418,11 +418,11 @@ bool operator!=(const User& lhs, const User& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }
-        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

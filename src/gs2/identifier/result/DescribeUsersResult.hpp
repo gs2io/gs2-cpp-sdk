@@ -29,7 +29,7 @@ namespace gs2 { namespace identifier
 {
 
 /**
- * ユーザーの一覧を取得します のレスポンスモデル
+ * ユーザの一覧を取得します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザーのリスト */
+        /** ユーザのリスト */
         optional<List<User>> items;
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
@@ -166,9 +166,9 @@ public:
         return this;
     }
     /**
-     * ユーザーのリストを取得
+     * ユーザのリストを取得
      *
-     * @return ユーザーのリスト
+     * @return ユーザのリスト
      */
     const optional<List<User>>& getItems() const
     {
@@ -176,9 +176,9 @@ public:
     }
 
     /**
-     * ユーザーのリストを設定
+     * ユーザのリストを設定
      *
-     * @param items ユーザーのリスト
+     * @param items ユーザのリスト
      */
     void setItems(const List<User>& items)
     {

@@ -41,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** データの取得を開始する位置を指定するトークン */
         optional<StringHolder> pageToken;
         /** データの取得件数 */
@@ -51,12 +53,14 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            namespaceName(data.namespaceName),
             pageToken(data.pageToken),
             limit(data.limit)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            namespaceName(std::move(data.namespaceName)),
             pageToken(std::move(data.pageToken)),
             limit(std::move(data.limit))
         {}
@@ -149,6 +153,37 @@ public:
     {
         return this;
     }
+    /**
+     * ネームスペース名を取得
+     *
+     * @return ネームスペース名
+     */
+    const optional<StringHolder>& getNamespaceName() const
+    {
+        return ensureData().namespaceName;
+    }
+
+    /**
+     * ネームスペース名を設定
+     *
+     * @param namespaceName ネームスペース名
+     */
+    void setNamespaceName(const Char* namespaceName)
+    {
+        ensureData().namespaceName.emplace(namespaceName);
+    }
+
+    /**
+     * ネームスペース名を設定
+     *
+     * @param namespaceName ネームスペース名
+     */
+    DescribeKeysRequest& withNamespaceName(const Char* namespaceName)
+    {
+        ensureData().namespaceName.emplace(namespaceName);
+        return *this;
+    }
+
     /**
      * データの取得を開始する位置を指定するトークンを取得
      *

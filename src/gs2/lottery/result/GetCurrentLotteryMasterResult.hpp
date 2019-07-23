@@ -29,7 +29,7 @@ namespace gs2 { namespace lottery
 {
 
 /**
- * 現在有効な抽選マスターJSONを取得します のレスポンスモデル
+ * 現在有効な現在有効な抽選設定を取得します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 現在有効な抽選マスターJSON */
+        /** 現在有効な現在有効な抽選設定 */
         optional<CurrentLotteryMaster> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * 現在有効な抽選マスターJSONを取得
+     * 現在有効な現在有効な抽選設定を取得
      *
-     * @return 現在有効な抽選マスターJSON
+     * @return 現在有効な現在有効な抽選設定
      */
     const optional<CurrentLotteryMaster>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * 現在有効な抽選マスターJSONを設定
+     * 現在有効な現在有効な抽選設定を設定
      *
-     * @param item 現在有効な抽選マスターJSON
+     * @param item 現在有効な現在有効な抽選設定
      */
     void setItem(const CurrentLotteryMaster& item)
     {

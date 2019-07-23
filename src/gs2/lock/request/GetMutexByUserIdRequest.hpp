@@ -28,7 +28,7 @@ namespace gs2 { namespace lock
 {
 
 /**
- * ミューテックスを取得 のリクエストモデル
+ * ユーザIDを指定してミューテックスを取得 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,8 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** カテゴリ名 */
-        optional<StringHolder> categoryName;
+        /** カテゴリー名 */
+        optional<StringHolder> namespaceName;
         /** プロパティID */
         optional<StringHolder> propertyId;
         /** ユーザーID */
@@ -55,7 +55,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            categoryName(data.categoryName),
+            namespaceName(data.namespaceName),
             propertyId(data.propertyId),
             userId(data.userId),
             duplicationAvoider(data.duplicationAvoider)
@@ -63,7 +63,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            categoryName(std::move(data.categoryName)),
+            namespaceName(std::move(data.namespaceName)),
             propertyId(std::move(data.propertyId)),
             userId(std::move(data.userId)),
             duplicationAvoider(std::move(data.duplicationAvoider))
@@ -158,33 +158,33 @@ public:
         return this;
     }
     /**
-     * カテゴリ名を取得
+     * カテゴリー名を取得
      *
-     * @return カテゴリ名
+     * @return カテゴリー名
      */
-    const optional<StringHolder>& getCategoryName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().categoryName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * カテゴリ名を設定
+     * カテゴリー名を設定
      *
-     * @param categoryName カテゴリ名
+     * @param namespaceName カテゴリー名
      */
-    void setCategoryName(const Char* categoryName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().categoryName.emplace(categoryName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * カテゴリ名を設定
+     * カテゴリー名を設定
      *
-     * @param categoryName カテゴリ名
+     * @param namespaceName カテゴリー名
      */
-    GetMutexByUserIdRequest& withCategoryName(const Char* categoryName)
+    GetMutexByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().categoryName.emplace(categoryName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

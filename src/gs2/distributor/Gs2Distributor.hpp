@@ -19,7 +19,8 @@
 
 #include <gs2/core/common.hpp>
 #include "model/model.hpp"
-#include "Gs2DistributorClient.hpp"
+#include "Gs2DistributorRestClient.hpp"
+#include "Gs2DistributorWebSocketClient.hpp"
 #include "Gs2DistributorConst.hpp"
 
 #endif //GS2_DISTRIBUTOR_HPP_

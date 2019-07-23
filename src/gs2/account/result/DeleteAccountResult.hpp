@@ -29,7 +29,7 @@ namespace gs2 { namespace account
 {
 
 /**
- * アカウントを削除 のレスポンスモデル
+ * ゲームプレイヤーアカウントを削除 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */

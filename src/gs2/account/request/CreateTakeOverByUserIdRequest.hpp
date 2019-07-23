@@ -41,8 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** ゲーム名 */
-        optional<StringHolder> gameName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** ユーザーID */
         optional<StringHolder> userId;
         /** スロット番号 */
@@ -59,7 +59,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            gameName(data.gameName),
+            namespaceName(data.namespaceName),
             userId(data.userId),
             type(data.type),
             userIdentifier(data.userIdentifier),
@@ -69,7 +69,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            gameName(std::move(data.gameName)),
+            namespaceName(std::move(data.namespaceName)),
             userId(std::move(data.userId)),
             type(std::move(data.type)),
             userIdentifier(std::move(data.userIdentifier)),
@@ -166,33 +166,33 @@ public:
         return this;
     }
     /**
-     * ゲーム名を取得
+     * ネームスペース名を取得
      *
-     * @return ゲーム名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGameName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().gameName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param gameName ゲーム名
+     * @param namespaceName ネームスペース名
      */
-    void setGameName(const Char* gameName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().gameName.emplace(gameName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param gameName ゲーム名
+     * @param namespaceName ネームスペース名
      */
-    CreateTakeOverByUserIdRequest& withGameName(const Char* gameName)
+    CreateTakeOverByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().gameName.emplace(gameName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

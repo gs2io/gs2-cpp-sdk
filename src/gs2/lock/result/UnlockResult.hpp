@@ -29,7 +29,7 @@ namespace gs2 { namespace lock
 {
 
 /**
- * ミューテックスを取得 のレスポンスモデル
+ * ミューテックスを解放 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */

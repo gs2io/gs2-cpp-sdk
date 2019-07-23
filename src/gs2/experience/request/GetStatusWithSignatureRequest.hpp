@@ -39,10 +39,10 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** 経験値名 */
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
+        /** 経験値の種類の名前 */
         optional<StringHolder> experienceName;
-        /** 経験値の種類名 */
-        optional<StringHolder> experienceModelName;
         /** プロパティID */
         optional<StringHolder> propertyId;
         /** 署名の作成に使用する 暗号鍵 のGRN */
@@ -55,8 +55,8 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            namespaceName(data.namespaceName),
             experienceName(data.experienceName),
-            experienceModelName(data.experienceModelName),
             propertyId(data.propertyId),
             keyId(data.keyId),
             duplicationAvoider(data.duplicationAvoider)
@@ -64,8 +64,8 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            namespaceName(std::move(data.namespaceName)),
             experienceName(std::move(data.experienceName)),
-            experienceModelName(std::move(data.experienceModelName)),
             propertyId(std::move(data.propertyId)),
             keyId(std::move(data.keyId)),
             duplicationAvoider(std::move(data.duplicationAvoider))
@@ -160,9 +160,40 @@ public:
         return this;
     }
     /**
-     * 経験値名を取得
+     * ネームスペース名を取得
      *
-     * @return 経験値名
+     * @return ネームスペース名
+     */
+    const optional<StringHolder>& getNamespaceName() const
+    {
+        return ensureData().namespaceName;
+    }
+
+    /**
+     * ネームスペース名を設定
+     *
+     * @param namespaceName ネームスペース名
+     */
+    void setNamespaceName(const Char* namespaceName)
+    {
+        ensureData().namespaceName.emplace(namespaceName);
+    }
+
+    /**
+     * ネームスペース名を設定
+     *
+     * @param namespaceName ネームスペース名
+     */
+    GetStatusWithSignatureRequest& withNamespaceName(const Char* namespaceName)
+    {
+        ensureData().namespaceName.emplace(namespaceName);
+        return *this;
+    }
+
+    /**
+     * 経験値の種類の名前を取得
+     *
+     * @return 経験値の種類の名前
      */
     const optional<StringHolder>& getExperienceName() const
     {
@@ -170,9 +201,9 @@ public:
     }
 
     /**
-     * 経験値名を設定
+     * 経験値の種類の名前を設定
      *
-     * @param experienceName 経験値名
+     * @param experienceName 経験値の種類の名前
      */
     void setExperienceName(const Char* experienceName)
     {
@@ -180,44 +211,13 @@ public:
     }
 
     /**
-     * 経験値名を設定
+     * 経験値の種類の名前を設定
      *
-     * @param experienceName 経験値名
+     * @param experienceName 経験値の種類の名前
      */
     GetStatusWithSignatureRequest& withExperienceName(const Char* experienceName)
     {
         ensureData().experienceName.emplace(experienceName);
-        return *this;
-    }
-
-    /**
-     * 経験値の種類名を取得
-     *
-     * @return 経験値の種類名
-     */
-    const optional<StringHolder>& getExperienceModelName() const
-    {
-        return ensureData().experienceModelName;
-    }
-
-    /**
-     * 経験値の種類名を設定
-     *
-     * @param experienceModelName 経験値の種類名
-     */
-    void setExperienceModelName(const Char* experienceModelName)
-    {
-        ensureData().experienceModelName.emplace(experienceModelName);
-    }
-
-    /**
-     * 経験値の種類名を設定
-     *
-     * @param experienceModelName 経験値の種類名
-     */
-    GetStatusWithSignatureRequest& withExperienceModelName(const Char* experienceModelName)
-    {
-        ensureData().experienceModelName.emplace(experienceModelName);
         return *this;
     }
 

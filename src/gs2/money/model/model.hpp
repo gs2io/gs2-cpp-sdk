@@ -18,9 +18,9 @@
 #define GS2_MONEY_MODEL_MODEL_HPP_
 
 #include <gs2/core/common.hpp>
-#include "Money.hpp"
-#include "Summary.hpp"
+#include "Namespace.hpp"
 #include "Wallet.hpp"
+#include "WalletDetail.hpp"
 #include "Receipt.hpp"
 #include "ResponseCache.hpp"
 

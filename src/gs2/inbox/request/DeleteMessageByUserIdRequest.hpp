@@ -28,7 +28,7 @@ namespace gs2 { namespace inbox
 {
 
 /**
- * メッセージを削除 のリクエストモデル
+ * ユーザーIDを指定してメッセージを削除 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -42,7 +42,7 @@ private:
     {
     public:
         /** プレゼントボックス名 */
-        optional<StringHolder> inboxName;
+        optional<StringHolder> namespaceName;
         /** ユーザーID */
         optional<StringHolder> userId;
         /** メッセージID */
@@ -55,7 +55,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            inboxName(data.inboxName),
+            namespaceName(data.namespaceName),
             userId(data.userId),
             messageName(data.messageName),
             duplicationAvoider(data.duplicationAvoider)
@@ -63,7 +63,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            inboxName(std::move(data.inboxName)),
+            namespaceName(std::move(data.namespaceName)),
             userId(std::move(data.userId)),
             messageName(std::move(data.messageName)),
             duplicationAvoider(std::move(data.duplicationAvoider))
@@ -162,29 +162,29 @@ public:
      *
      * @return プレゼントボックス名
      */
-    const optional<StringHolder>& getInboxName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().inboxName;
+        return ensureData().namespaceName;
     }
 
     /**
      * プレゼントボックス名を設定
      *
-     * @param inboxName プレゼントボックス名
+     * @param namespaceName プレゼントボックス名
      */
-    void setInboxName(const Char* inboxName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().inboxName.emplace(inboxName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
      * プレゼントボックス名を設定
      *
-     * @param inboxName プレゼントボックス名
+     * @param namespaceName プレゼントボックス名
      */
-    DeleteMessageByUserIdRequest& withInboxName(const Char* inboxName)
+    DeleteMessageByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().inboxName.emplace(inboxName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

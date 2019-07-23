@@ -29,7 +29,7 @@ namespace gs2 { namespace lottery
 {
 
 /**
- * 排出済みの景品情報を取得 のレスポンスモデル
+ * ユーザIDを指定してボックスを取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 排出済みの景品情報 */
+        /** ボックスから取り出したアイテムのリスト */
         optional<BoxItems> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * 排出済みの景品情報を取得
+     * ボックスから取り出したアイテムのリストを取得
      *
-     * @return 排出済みの景品情報
+     * @return ボックスから取り出したアイテムのリスト
      */
     const optional<BoxItems>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * 排出済みの景品情報を設定
+     * ボックスから取り出したアイテムのリストを設定
      *
-     * @param item 排出済みの景品情報
+     * @param item ボックスから取り出したアイテムのリスト
      */
     void setItem(const BoxItems& item)
     {

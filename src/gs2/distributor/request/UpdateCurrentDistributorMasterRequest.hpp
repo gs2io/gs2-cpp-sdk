@@ -28,7 +28,7 @@ namespace gs2 { namespace distributor
 {
 
 /**
- * 現在有効なディストリビューターマスターJSONを更新します のリクエストモデル
+ * 現在有効な現在有効な配信設定を更新します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,8 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** ディストリビュータ名 */
-        optional<StringHolder> distributorName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** マスターデータ */
         optional<StringHolder> settings;
 
@@ -51,13 +51,13 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            distributorName(data.distributorName),
+            namespaceName(data.namespaceName),
             settings(data.settings)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            distributorName(std::move(data.distributorName)),
+            namespaceName(std::move(data.namespaceName)),
             settings(std::move(data.settings))
         {}
 
@@ -150,33 +150,33 @@ public:
         return this;
     }
     /**
-     * ディストリビュータ名を取得
+     * ネームスペース名を取得
      *
-     * @return ディストリビュータ名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getDistributorName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().distributorName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * ディストリビュータ名を設定
+     * ネームスペース名を設定
      *
-     * @param distributorName ディストリビュータ名
+     * @param namespaceName ネームスペース名
      */
-    void setDistributorName(const Char* distributorName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().distributorName.emplace(distributorName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * ディストリビュータ名を設定
+     * ネームスペース名を設定
      *
-     * @param distributorName ディストリビュータ名
+     * @param namespaceName ネームスペース名
      */
-    UpdateCurrentDistributorMasterRequest& withDistributorName(const Char* distributorName)
+    UpdateCurrentDistributorMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().distributorName.emplace(distributorName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

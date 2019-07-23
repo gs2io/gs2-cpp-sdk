@@ -29,7 +29,7 @@ namespace gs2 { namespace money
 {
 
 /**
- * ウォレットの概要から残高を消費します のレスポンスモデル
+ * ウォレットから残高を消費します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,10 +39,10 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 消費後のウォレットの概要 */
-        optional<Summary> item;
-        /** スタンプシートの進捗を記録したコンテキスト */
-        optional<StringHolder> contextStack;
+        /** 消費後のウォレット */
+        optional<Wallet> item;
+        /** スタンプタスクの実行結果を記録したコンテキスト */
+        optional<StringHolder> newContextStack;
 
         Data()
         {}
@@ -50,13 +50,13 @@ private:
         Data(const Data& data) :
             detail::json::IModel(data),
             item(data.item),
-            contextStack(data.contextStack)
+            newContextStack(data.newContextStack)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
             item(std::move(data.item)),
-            contextStack(std::move(data.contextStack))
+            newContextStack(std::move(data.newContextStack))
         {}
 
         virtual ~Data() = default;
@@ -75,10 +75,10 @@ private:
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name, "contextStack") == 0) {
+            else if (std::strcmp(name, "newContextStack") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->contextStack.emplace(jsonValue.GetString());
+                    this->newContextStack.emplace(jsonValue.GetString());
                 }
             }
         }
@@ -162,43 +162,43 @@ public:
         return this;
     }
     /**
-     * 消費後のウォレットの概要を取得
+     * 消費後のウォレットを取得
      *
-     * @return 消費後のウォレットの概要
+     * @return 消費後のウォレット
      */
-    const optional<Summary>& getItem() const
+    const optional<Wallet>& getItem() const
     {
         return ensureData().item;
     }
 
     /**
-     * 消費後のウォレットの概要を設定
+     * 消費後のウォレットを設定
      *
-     * @param item 消費後のウォレットの概要
+     * @param item 消費後のウォレット
      */
-    void setItem(const Summary& item)
+    void setItem(const Wallet& item)
     {
         ensureData().item.emplace(item);
     }
 
     /**
-     * スタンプシートの進捗を記録したコンテキストを取得
+     * スタンプタスクの実行結果を記録したコンテキストを取得
      *
-     * @return スタンプシートの進捗を記録したコンテキスト
+     * @return スタンプタスクの実行結果を記録したコンテキスト
      */
-    const optional<StringHolder>& getContextStack() const
+    const optional<StringHolder>& getNewContextStack() const
     {
-        return ensureData().contextStack;
+        return ensureData().newContextStack;
     }
 
     /**
-     * スタンプシートの進捗を記録したコンテキストを設定
+     * スタンプタスクの実行結果を記録したコンテキストを設定
      *
-     * @param contextStack スタンプシートの進捗を記録したコンテキスト
+     * @param newContextStack スタンプタスクの実行結果を記録したコンテキスト
      */
-    void setContextStack(const Char* contextStack)
+    void setNewContextStack(const Char* newContextStack)
     {
-        ensureData().contextStack.emplace(contextStack);
+        ensureData().newContextStack.emplace(newContextStack);
     }
 
 

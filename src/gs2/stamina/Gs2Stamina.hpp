@@ -19,7 +19,8 @@
 
 #include <gs2/core/common.hpp>
 #include "model/model.hpp"
-#include "Gs2StaminaClient.hpp"
+#include "Gs2StaminaRestClient.hpp"
+#include "Gs2StaminaWebSocketClient.hpp"
 #include "Gs2StaminaConst.hpp"
 
 #endif //GS2_STAMINA_HPP_

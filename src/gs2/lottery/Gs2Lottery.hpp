@@ -19,7 +19,8 @@
 
 #include <gs2/core/common.hpp>
 #include "model/model.hpp"
-#include "Gs2LotteryClient.hpp"
+#include "Gs2LotteryRestClient.hpp"
+#include "Gs2LotteryWebSocketClient.hpp"
 #include "Gs2LotteryConst.hpp"
 
 #endif //GS2_LOTTERY_HPP_

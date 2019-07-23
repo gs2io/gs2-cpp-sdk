@@ -28,7 +28,7 @@
 namespace gs2 { namespace stamina {
 
 /**
- * スタミナ最大値テーブル
+ * スタミナの最大値テーブルマスター
  *
  * @author Game Server Services, Inc.
  *
@@ -41,15 +41,15 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** スタミナ最大値テーブル のGRN */
+        /** スタミナの最大値テーブルマスター */
         optional<StringHolder> maxStaminaTableId;
         /** 最大スタミナ値テーブル名 */
         optional<StringHolder> name;
         /** 最大スタミナ値テーブルのメタデータ */
         optional<StringHolder> metadata;
-        /** スタミナ最大値テーブルの説明 */
+        /** スタミナの最大値テーブルマスターの説明 */
         optional<StringHolder> description;
-        /** 経験値の種類 のGRN */
+        /** 経験値の種類マスター のGRN */
         optional<StringHolder> experienceModelId;
         /** ランク毎のスタミナの最大値テーブル */
         optional<List<Int32>> values;
@@ -209,9 +209,9 @@ public:
         return this;
     }
     /**
-     * スタミナ最大値テーブル のGRNを取得
+     * スタミナの最大値テーブルマスターを取得
      *
-     * @return スタミナ最大値テーブル のGRN
+     * @return スタミナの最大値テーブルマスター
      */
     const optional<StringHolder>& getMaxStaminaTableId() const
     {
@@ -219,9 +219,9 @@ public:
     }
 
     /**
-     * スタミナ最大値テーブル のGRNを設定
+     * スタミナの最大値テーブルマスターを設定
      *
-     * @param maxStaminaTableId スタミナ最大値テーブル のGRN
+     * @param maxStaminaTableId スタミナの最大値テーブルマスター
      */
     void setMaxStaminaTableId(const Char* maxStaminaTableId)
     {
@@ -229,9 +229,9 @@ public:
     }
 
     /**
-     * スタミナ最大値テーブル のGRNを設定
+     * スタミナの最大値テーブルマスターを設定
      *
-     * @param maxStaminaTableId スタミナ最大値テーブル のGRN
+     * @param maxStaminaTableId スタミナの最大値テーブルマスター
      */
     MaxStaminaTableMaster& withMaxStaminaTableId(const Char* maxStaminaTableId)
     {
@@ -302,9 +302,9 @@ public:
     }
 
     /**
-     * スタミナ最大値テーブルの説明を取得
+     * スタミナの最大値テーブルマスターの説明を取得
      *
-     * @return スタミナ最大値テーブルの説明
+     * @return スタミナの最大値テーブルマスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -312,9 +312,9 @@ public:
     }
 
     /**
-     * スタミナ最大値テーブルの説明を設定
+     * スタミナの最大値テーブルマスターの説明を設定
      *
-     * @param description スタミナ最大値テーブルの説明
+     * @param description スタミナの最大値テーブルマスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -322,9 +322,9 @@ public:
     }
 
     /**
-     * スタミナ最大値テーブルの説明を設定
+     * スタミナの最大値テーブルマスターの説明を設定
      *
-     * @param description スタミナ最大値テーブルの説明
+     * @param description スタミナの最大値テーブルマスターの説明
      */
     MaxStaminaTableMaster& withDescription(const Char* description)
     {
@@ -333,9 +333,9 @@ public:
     }
 
     /**
-     * 経験値の種類 のGRNを取得
+     * 経験値の種類マスター のGRNを取得
      *
-     * @return 経験値の種類 のGRN
+     * @return 経験値の種類マスター のGRN
      */
     const optional<StringHolder>& getExperienceModelId() const
     {
@@ -343,9 +343,9 @@ public:
     }
 
     /**
-     * 経験値の種類 のGRNを設定
+     * 経験値の種類マスター のGRNを設定
      *
-     * @param experienceModelId 経験値の種類 のGRN
+     * @param experienceModelId 経験値の種類マスター のGRN
      */
     void setExperienceModelId(const Char* experienceModelId)
     {
@@ -353,9 +353,9 @@ public:
     }
 
     /**
-     * 経験値の種類 のGRNを設定
+     * 経験値の種類マスター のGRNを設定
      *
-     * @param experienceModelId 経験値の種類 のGRN
+     * @param experienceModelId 経験値の種類マスター のGRN
      */
     MaxStaminaTableMaster& withExperienceModelId(const Char* experienceModelId)
     {

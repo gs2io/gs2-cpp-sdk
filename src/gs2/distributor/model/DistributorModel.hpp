@@ -28,7 +28,7 @@
 namespace gs2 { namespace distributor {
 
 /**
- * ディストリビュータの種類
+ * 配信設定
  *
  * @author Game Server Services, Inc.
  *
@@ -41,16 +41,16 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ディストリビュータの種類 のGRN */
+        /** 配信設定 */
         optional<StringHolder> distributorModelId;
         /** ディストリビューターの種類名 */
         optional<StringHolder> name;
         /** ディストリビューターの種類のメタデータ */
         optional<StringHolder> metadata;
-        /** 所持品の配布処理の権限判定に使用する ユーザー のGRN */
+        /** 所持品の配布処理の権限判定に使用する ユーザ のGRN */
         optional<StringHolder> assumeUserId;
-        /** 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN */
-        optional<StringHolder> inboxId;
+        /** 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN */
+        optional<StringHolder> inboxNamespaceId;
         /** ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト */
         optional<List<StringHolder>> whiteListTargetIds;
 
@@ -63,7 +63,7 @@ private:
             name(data.name),
             metadata(data.metadata),
             assumeUserId(data.assumeUserId),
-            inboxId(data.inboxId),
+            inboxNamespaceId(data.inboxNamespaceId),
             whiteListTargetIds(data.whiteListTargetIds)
         {}
 
@@ -73,7 +73,7 @@ private:
             name(std::move(data.name)),
             metadata(std::move(data.metadata)),
             assumeUserId(std::move(data.assumeUserId)),
-            inboxId(std::move(data.inboxId)),
+            inboxNamespaceId(std::move(data.inboxNamespaceId)),
             whiteListTargetIds(std::move(data.whiteListTargetIds))
         {}
 
@@ -109,10 +109,10 @@ private:
                     this->assumeUserId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "inboxId") == 0) {
+            else if (std::strcmp(name, "inboxNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->inboxId.emplace(jsonValue.GetString());
+                    this->inboxNamespaceId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "whiteListTargetIds") == 0) {
@@ -211,9 +211,9 @@ public:
         return this;
     }
     /**
-     * ディストリビュータの種類 のGRNを取得
+     * 配信設定を取得
      *
-     * @return ディストリビュータの種類 のGRN
+     * @return 配信設定
      */
     const optional<StringHolder>& getDistributorModelId() const
     {
@@ -221,9 +221,9 @@ public:
     }
 
     /**
-     * ディストリビュータの種類 のGRNを設定
+     * 配信設定を設定
      *
-     * @param distributorModelId ディストリビュータの種類 のGRN
+     * @param distributorModelId 配信設定
      */
     void setDistributorModelId(const Char* distributorModelId)
     {
@@ -231,9 +231,9 @@ public:
     }
 
     /**
-     * ディストリビュータの種類 のGRNを設定
+     * 配信設定を設定
      *
-     * @param distributorModelId ディストリビュータの種類 のGRN
+     * @param distributorModelId 配信設定
      */
     DistributorModel& withDistributorModelId(const Char* distributorModelId)
     {
@@ -304,9 +304,9 @@ public:
     }
 
     /**
-     * 所持品の配布処理の権限判定に使用する ユーザー のGRNを取得
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを取得
      *
-     * @return 所持品の配布処理の権限判定に使用する ユーザー のGRN
+     * @return 所持品の配布処理の権限判定に使用する ユーザ のGRN
      */
     const optional<StringHolder>& getAssumeUserId() const
     {
@@ -314,9 +314,9 @@ public:
     }
 
     /**
-     * 所持品の配布処理の権限判定に使用する ユーザー のGRNを設定
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
      *
-     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザー のGRN
+     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
      */
     void setAssumeUserId(const Char* assumeUserId)
     {
@@ -324,9 +324,9 @@ public:
     }
 
     /**
-     * 所持品の配布処理の権限判定に使用する ユーザー のGRNを設定
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
      *
-     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザー のGRN
+     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
      */
     DistributorModel& withAssumeUserId(const Char* assumeUserId)
     {
@@ -335,33 +335,33 @@ public:
     }
 
     /**
-     * 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRNを取得
+     * 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRNを取得
      *
-     * @return 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN
+     * @return 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
      */
-    const optional<StringHolder>& getInboxId() const
+    const optional<StringHolder>& getInboxNamespaceId() const
     {
-        return ensureData().inboxId;
+        return ensureData().inboxNamespaceId;
     }
 
     /**
-     * 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRNを設定
+     * 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRNを設定
      *
-     * @param inboxId 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN
+     * @param inboxNamespaceId 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
      */
-    void setInboxId(const Char* inboxId)
+    void setInboxNamespaceId(const Char* inboxNamespaceId)
     {
-        ensureData().inboxId.emplace(inboxId);
+        ensureData().inboxNamespaceId.emplace(inboxNamespaceId);
     }
 
     /**
-     * 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRNを設定
+     * 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRNを設定
      *
-     * @param inboxId 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN
+     * @param inboxNamespaceId 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
      */
-    DistributorModel& withInboxId(const Char* inboxId)
+    DistributorModel& withInboxNamespaceId(const Char* inboxNamespaceId)
     {
-        setInboxId(inboxId);
+        setInboxNamespaceId(inboxNamespaceId);
         return *this;
     }
 
@@ -427,7 +427,7 @@ bool operator!=(const DistributorModel& lhs, const DistributorModel& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->inboxId != lhr.m_pData->inboxId)
+        if (lhs.m_pData->inboxNamespaceId != lhr.m_pData->inboxNamespaceId)
         {
             return true;
         }

@@ -28,7 +28,7 @@
 namespace gs2 { namespace stamina {
 
 /**
- * スタミナマスターJSON
+ * 現在有効なスタミナマスター
  *
  * @author Game Server Services, Inc.
  *
@@ -41,8 +41,8 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** スタミナの種類名 */
-        optional<StringHolder> groupName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** マスターデータ */
         optional<StringHolder> settings;
 
@@ -51,13 +51,13 @@ private:
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            groupName(data.groupName),
+            namespaceName(data.namespaceName),
             settings(data.settings)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            groupName(std::move(data.groupName)),
+            namespaceName(std::move(data.namespaceName)),
             settings(std::move(data.settings))
         {}
 
@@ -69,10 +69,10 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "groupName") == 0) {
+            if (std::strcmp(name, "namespaceName") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->groupName.emplace(jsonValue.GetString());
+                    this->namespaceName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "settings") == 0) {
@@ -162,33 +162,33 @@ public:
         return this;
     }
     /**
-     * スタミナの種類名を取得
+     * ネームスペース名を取得
      *
-     * @return スタミナの種類名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGroupName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().groupName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * スタミナの種類名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName スタミナの種類名
+     * @param namespaceName ネームスペース名
      */
-    void setGroupName(const Char* groupName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * スタミナの種類名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName スタミナの種類名
+     * @param namespaceName ネームスペース名
      */
-    CurrentStaminaMaster& withGroupName(const Char* groupName)
+    CurrentStaminaMaster& withNamespaceName(const Char* namespaceName)
     {
-        setGroupName(groupName);
+        setNamespaceName(namespaceName);
         return *this;
     }
 
@@ -238,7 +238,7 @@ bool operator!=(const CurrentStaminaMaster& lhs, const CurrentStaminaMaster& lhr
         {
             return true;
         }
-        if (lhs.m_pData->groupName != lhr.m_pData->groupName)
+        if (lhs.m_pData->namespaceName != lhr.m_pData->namespaceName)
         {
             return true;
         }

@@ -41,15 +41,15 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** 経験値名 */
-        optional<StringHolder> experienceName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** ユーザーID */
         optional<StringHolder> userId;
-        /** 経験値の種類名 */
-        optional<StringHolder> experienceModelName;
+        /** 経験値の種類の名前 */
+        optional<StringHolder> experienceName;
         /** プロパティID */
         optional<StringHolder> propertyId;
-        /** 累計獲得経験値 */
+        /** 加算する経験値量 */
         optional<Int64> experienceValue;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
@@ -59,9 +59,9 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            experienceName(data.experienceName),
+            namespaceName(data.namespaceName),
             userId(data.userId),
-            experienceModelName(data.experienceModelName),
+            experienceName(data.experienceName),
             propertyId(data.propertyId),
             experienceValue(data.experienceValue),
             duplicationAvoider(data.duplicationAvoider)
@@ -69,9 +69,9 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            experienceName(std::move(data.experienceName)),
+            namespaceName(std::move(data.namespaceName)),
             userId(std::move(data.userId)),
-            experienceModelName(std::move(data.experienceModelName)),
+            experienceName(std::move(data.experienceName)),
             propertyId(std::move(data.propertyId)),
             experienceValue(std::move(data.experienceValue)),
             duplicationAvoider(std::move(data.duplicationAvoider))
@@ -166,33 +166,33 @@ public:
         return this;
     }
     /**
-     * 経験値名を取得
+     * ネームスペース名を取得
      *
-     * @return 経験値名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getExperienceName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().experienceName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * 経験値名を設定
+     * ネームスペース名を設定
      *
-     * @param experienceName 経験値名
+     * @param namespaceName ネームスペース名
      */
-    void setExperienceName(const Char* experienceName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().experienceName.emplace(experienceName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * 経験値名を設定
+     * ネームスペース名を設定
      *
-     * @param experienceName 経験値名
+     * @param namespaceName ネームスペース名
      */
-    AddExperienceByUserIdRequest& withExperienceName(const Char* experienceName)
+    AddExperienceByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().experienceName.emplace(experienceName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -228,33 +228,33 @@ public:
     }
 
     /**
-     * 経験値の種類名を取得
+     * 経験値の種類の名前を取得
      *
-     * @return 経験値の種類名
+     * @return 経験値の種類の名前
      */
-    const optional<StringHolder>& getExperienceModelName() const
+    const optional<StringHolder>& getExperienceName() const
     {
-        return ensureData().experienceModelName;
+        return ensureData().experienceName;
     }
 
     /**
-     * 経験値の種類名を設定
+     * 経験値の種類の名前を設定
      *
-     * @param experienceModelName 経験値の種類名
+     * @param experienceName 経験値の種類の名前
      */
-    void setExperienceModelName(const Char* experienceModelName)
+    void setExperienceName(const Char* experienceName)
     {
-        ensureData().experienceModelName.emplace(experienceModelName);
+        ensureData().experienceName.emplace(experienceName);
     }
 
     /**
-     * 経験値の種類名を設定
+     * 経験値の種類の名前を設定
      *
-     * @param experienceModelName 経験値の種類名
+     * @param experienceName 経験値の種類の名前
      */
-    AddExperienceByUserIdRequest& withExperienceModelName(const Char* experienceModelName)
+    AddExperienceByUserIdRequest& withExperienceName(const Char* experienceName)
     {
-        ensureData().experienceModelName.emplace(experienceModelName);
+        ensureData().experienceName.emplace(experienceName);
         return *this;
     }
 
@@ -290,9 +290,9 @@ public:
     }
 
     /**
-     * 累計獲得経験値を取得
+     * 加算する経験値量を取得
      *
-     * @return 累計獲得経験値
+     * @return 加算する経験値量
      */
     const optional<Int64>& getExperienceValue() const
     {
@@ -300,9 +300,9 @@ public:
     }
 
     /**
-     * 累計獲得経験値を設定
+     * 加算する経験値量を設定
      *
-     * @param experienceValue 累計獲得経験値
+     * @param experienceValue 加算する経験値量
      */
     void setExperienceValue(Int64 experienceValue)
     {
@@ -310,9 +310,9 @@ public:
     }
 
     /**
-     * 累計獲得経験値を設定
+     * 加算する経験値量を設定
      *
-     * @param experienceValue 累計獲得経験値
+     * @param experienceValue 加算する経験値量
      */
     AddExperienceByUserIdRequest& withExperienceValue(Int64 experienceValue)
     {

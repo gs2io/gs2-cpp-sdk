@@ -41,8 +41,8 @@ private:
     public:
         /** 処理した DistributeResource */
         optional<DistributeResource> distributeResource;
-        /** 溢れたときに転送する プレゼントボックス のGRN */
-        optional<StringHolder> inboxId;
+        /** 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN */
+        optional<StringHolder> inboxNamespaceId;
         /** レスポンス内容 */
         optional<StringHolder> result;
 
@@ -52,14 +52,14 @@ private:
         Data(const Data& data) :
             detail::json::IModel(data),
             distributeResource(data.distributeResource),
-            inboxId(data.inboxId),
+            inboxNamespaceId(data.inboxNamespaceId),
             result(data.result)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
             distributeResource(std::move(data.distributeResource)),
-            inboxId(std::move(data.inboxId)),
+            inboxNamespaceId(std::move(data.inboxNamespaceId)),
             result(std::move(data.result))
         {}
 
@@ -79,10 +79,10 @@ private:
                     detail::json::JsonParser::parse(&this->distributeResource->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name, "inboxId") == 0) {
+            else if (std::strcmp(name, "inboxNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->inboxId.emplace(jsonValue.GetString());
+                    this->inboxNamespaceId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "result") == 0) {
@@ -192,23 +192,23 @@ public:
     }
 
     /**
-     * 溢れたときに転送する プレゼントボックス のGRNを取得
+     * 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRNを取得
      *
-     * @return 溢れたときに転送する プレゼントボックス のGRN
+     * @return 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
      */
-    const optional<StringHolder>& getInboxId() const
+    const optional<StringHolder>& getInboxNamespaceId() const
     {
-        return ensureData().inboxId;
+        return ensureData().inboxNamespaceId;
     }
 
     /**
-     * 溢れたときに転送する プレゼントボックス のGRNを設定
+     * 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRNを設定
      *
-     * @param inboxId 溢れたときに転送する プレゼントボックス のGRN
+     * @param inboxNamespaceId 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
      */
-    void setInboxId(const Char* inboxId)
+    void setInboxNamespaceId(const Char* inboxNamespaceId)
     {
-        ensureData().inboxId.emplace(inboxId);
+        ensureData().inboxNamespaceId.emplace(inboxNamespaceId);
     }
 
     /**

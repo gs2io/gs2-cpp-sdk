@@ -29,7 +29,7 @@ namespace gs2 { namespace schedule
 {
 
 /**
- * トリガーの一覧を取得 のレスポンスモデル
+ * ユーザIDを指定してトリガーの一覧を取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */

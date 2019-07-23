@@ -28,7 +28,7 @@ namespace gs2 { namespace distributor
 {
 
 /**
- * ディストリビュータの種類の一覧を取得 のリクエストモデル
+ * 配信設定マスターの一覧を取得 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,8 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** ディストリビュータ名 */
-        optional<StringHolder> distributorName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** データの取得を開始する位置を指定するトークン */
         optional<StringHolder> pageToken;
         /** データの取得件数 */
@@ -53,14 +53,14 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            distributorName(data.distributorName),
+            namespaceName(data.namespaceName),
             pageToken(data.pageToken),
             limit(data.limit)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            distributorName(std::move(data.distributorName)),
+            namespaceName(std::move(data.namespaceName)),
             pageToken(std::move(data.pageToken)),
             limit(std::move(data.limit))
         {}
@@ -154,33 +154,33 @@ public:
         return this;
     }
     /**
-     * ディストリビュータ名を取得
+     * ネームスペース名を取得
      *
-     * @return ディストリビュータ名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getDistributorName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().distributorName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * ディストリビュータ名を設定
+     * ネームスペース名を設定
      *
-     * @param distributorName ディストリビュータ名
+     * @param namespaceName ネームスペース名
      */
-    void setDistributorName(const Char* distributorName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().distributorName.emplace(distributorName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * ディストリビュータ名を設定
+     * ネームスペース名を設定
      *
-     * @param distributorName ディストリビュータ名
+     * @param namespaceName ネームスペース名
      */
-    DescribeDistributorModelMastersRequest& withDistributorName(const Char* distributorName)
+    DescribeDistributorModelMastersRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().distributorName.emplace(distributorName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

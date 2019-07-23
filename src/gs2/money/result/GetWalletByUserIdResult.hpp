@@ -29,7 +29,7 @@ namespace gs2 { namespace money
 {
 
 /**
- * ユーザーIDを指定してウォレットの概要を取得します のレスポンスモデル
+ * ユーザーIDを指定してウォレットを取得します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,8 +39,8 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ウォレットの概要 */
-        optional<Summary> item;
+        /** ウォレット */
+        optional<Wallet> item;
 
         Data()
         {}
@@ -152,21 +152,21 @@ public:
         return this;
     }
     /**
-     * ウォレットの概要を取得
+     * ウォレットを取得
      *
-     * @return ウォレットの概要
+     * @return ウォレット
      */
-    const optional<Summary>& getItem() const
+    const optional<Wallet>& getItem() const
     {
         return ensureData().item;
     }
 
     /**
-     * ウォレットの概要を設定
+     * ウォレットを設定
      *
-     * @param item ウォレットの概要
+     * @param item ウォレット
      */
-    void setItem(const Summary& item)
+    void setItem(const Wallet& item)
     {
         ensureData().item.emplace(item);
     }

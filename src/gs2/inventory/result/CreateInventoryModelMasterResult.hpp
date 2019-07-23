@@ -29,7 +29,7 @@ namespace gs2 { namespace inventory
 {
 
 /**
- * インベントリマスターを新規作成 のレスポンスモデル
+ * インベントリモデルマスターを新規作成 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 作成したインベントリマスター */
+        /** 作成したインベントリモデルマスター */
         optional<InventoryModelMaster> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * 作成したインベントリマスターを取得
+     * 作成したインベントリモデルマスターを取得
      *
-     * @return 作成したインベントリマスター
+     * @return 作成したインベントリモデルマスター
      */
     const optional<InventoryModelMaster>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * 作成したインベントリマスターを設定
+     * 作成したインベントリモデルマスターを設定
      *
-     * @param item 作成したインベントリマスター
+     * @param item 作成したインベントリモデルマスター
      */
     void setItem(const InventoryModelMaster& item)
     {

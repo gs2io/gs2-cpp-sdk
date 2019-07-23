@@ -28,7 +28,7 @@ namespace gs2 { namespace lottery
 {
 
 /**
- * 抽選の種類を新規作成 のリクエストモデル
+ * 抽選の種類マスターを新規作成 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,11 +41,11 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** グループ名 */
-        optional<StringHolder> groupName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** 抽選モデルの種類名 */
         optional<StringHolder> name;
-        /** 抽選の種類の説明 */
+        /** 抽選の種類マスターの説明 */
         optional<StringHolder> description;
         /** 抽選モデルの種類のメタデータ */
         optional<StringHolder> metadata;
@@ -65,7 +65,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            groupName(data.groupName),
+            namespaceName(data.namespaceName),
             name(data.name),
             description(data.description),
             metadata(data.metadata),
@@ -78,7 +78,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            groupName(std::move(data.groupName)),
+            namespaceName(std::move(data.namespaceName)),
             name(std::move(data.name)),
             description(std::move(data.description)),
             metadata(std::move(data.metadata)),
@@ -178,33 +178,33 @@ public:
         return this;
     }
     /**
-     * グループ名を取得
+     * ネームスペース名を取得
      *
-     * @return グループ名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGroupName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().groupName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    void setGroupName(const Char* groupName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    CreateLotteryModelMasterRequest& withGroupName(const Char* groupName)
+    CreateLotteryModelMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -240,9 +240,9 @@ public:
     }
 
     /**
-     * 抽選の種類の説明を取得
+     * 抽選の種類マスターの説明を取得
      *
-     * @return 抽選の種類の説明
+     * @return 抽選の種類マスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -250,9 +250,9 @@ public:
     }
 
     /**
-     * 抽選の種類の説明を設定
+     * 抽選の種類マスターの説明を設定
      *
-     * @param description 抽選の種類の説明
+     * @param description 抽選の種類マスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -260,9 +260,9 @@ public:
     }
 
     /**
-     * 抽選の種類の説明を設定
+     * 抽選の種類マスターの説明を設定
      *
-     * @param description 抽選の種類の説明
+     * @param description 抽選の種類マスターの説明
      */
     CreateLotteryModelMasterRequest& withDescription(const Char* description)
     {

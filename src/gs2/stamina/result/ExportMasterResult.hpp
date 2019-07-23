@@ -29,7 +29,7 @@ namespace gs2 { namespace stamina
 {
 
 /**
- * スタミナマスターJSONのマスターデータをエクスポートします のレスポンスモデル
+ * 現在有効なスタミナマスターのマスターデータをエクスポートします のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** スタミナマスターJSON */
+        /** 現在有効なスタミナマスター */
         optional<CurrentStaminaMaster> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * スタミナマスターJSONを取得
+     * 現在有効なスタミナマスターを取得
      *
-     * @return スタミナマスターJSON
+     * @return 現在有効なスタミナマスター
      */
     const optional<CurrentStaminaMaster>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * スタミナマスターJSONを設定
+     * 現在有効なスタミナマスターを設定
      *
-     * @param item スタミナマスターJSON
+     * @param item 現在有効なスタミナマスター
      */
     void setItem(const CurrentStaminaMaster& item)
     {

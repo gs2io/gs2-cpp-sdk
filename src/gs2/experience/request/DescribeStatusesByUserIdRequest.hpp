@@ -41,10 +41,10 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** 経験値名 */
-        optional<StringHolder> experienceName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** 経験値の種類名 */
-        optional<StringHolder> experienceModelName;
+        optional<StringHolder> experienceName;
         /** ユーザーID */
         optional<StringHolder> userId;
         /** データの取得を開始する位置を指定するトークン */
@@ -59,8 +59,8 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            namespaceName(data.namespaceName),
             experienceName(data.experienceName),
-            experienceModelName(data.experienceModelName),
             userId(data.userId),
             pageToken(data.pageToken),
             limit(data.limit),
@@ -69,8 +69,8 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            namespaceName(std::move(data.namespaceName)),
             experienceName(std::move(data.experienceName)),
-            experienceModelName(std::move(data.experienceModelName)),
             userId(std::move(data.userId)),
             pageToken(std::move(data.pageToken)),
             limit(std::move(data.limit)),
@@ -166,33 +166,33 @@ public:
         return this;
     }
     /**
-     * 経験値名を取得
+     * ネームスペース名を取得
      *
-     * @return 経験値名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getExperienceName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().experienceName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * 経験値名を設定
+     * ネームスペース名を設定
      *
-     * @param experienceName 経験値名
+     * @param namespaceName ネームスペース名
      */
-    void setExperienceName(const Char* experienceName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().experienceName.emplace(experienceName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * 経験値名を設定
+     * ネームスペース名を設定
      *
-     * @param experienceName 経験値名
+     * @param namespaceName ネームスペース名
      */
-    DescribeStatusesByUserIdRequest& withExperienceName(const Char* experienceName)
+    DescribeStatusesByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().experienceName.emplace(experienceName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -201,29 +201,29 @@ public:
      *
      * @return 経験値の種類名
      */
-    const optional<StringHolder>& getExperienceModelName() const
+    const optional<StringHolder>& getExperienceName() const
     {
-        return ensureData().experienceModelName;
+        return ensureData().experienceName;
     }
 
     /**
      * 経験値の種類名を設定
      *
-     * @param experienceModelName 経験値の種類名
+     * @param experienceName 経験値の種類名
      */
-    void setExperienceModelName(const Char* experienceModelName)
+    void setExperienceName(const Char* experienceName)
     {
-        ensureData().experienceModelName.emplace(experienceModelName);
+        ensureData().experienceName.emplace(experienceName);
     }
 
     /**
      * 経験値の種類名を設定
      *
-     * @param experienceModelName 経験値の種類名
+     * @param experienceName 経験値の種類名
      */
-    DescribeStatusesByUserIdRequest& withExperienceModelName(const Char* experienceModelName)
+    DescribeStatusesByUserIdRequest& withExperienceName(const Char* experienceName)
     {
-        ensureData().experienceModelName.emplace(experienceModelName);
+        ensureData().experienceName.emplace(experienceName);
         return *this;
     }
 

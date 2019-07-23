@@ -29,7 +29,7 @@ namespace gs2 { namespace money
 {
 
 /**
- * ウォレットの概要一覧を取得します のレスポンスモデル
+ * ウォレット一覧を取得します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,8 +39,8 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ウォレットの概要のリスト */
-        optional<List<Summary>> items;
+        /** ウォレットのリスト */
+        optional<List<Wallet>> items;
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
 
@@ -73,7 +73,7 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->items.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        Summary item;
+                        Wallet item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
                         detail::addToList(*this->items, std::move(item));
                     }
@@ -166,21 +166,21 @@ public:
         return this;
     }
     /**
-     * ウォレットの概要のリストを取得
+     * ウォレットのリストを取得
      *
-     * @return ウォレットの概要のリスト
+     * @return ウォレットのリスト
      */
-    const optional<List<Summary>>& getItems() const
+    const optional<List<Wallet>>& getItems() const
     {
         return ensureData().items;
     }
 
     /**
-     * ウォレットの概要のリストを設定
+     * ウォレットのリストを設定
      *
-     * @param items ウォレットの概要のリスト
+     * @param items ウォレットのリスト
      */
-    void setItems(const List<Summary>& items)
+    void setItems(const List<Wallet>& items)
     {
         ensureData().items.emplace(items);
     }

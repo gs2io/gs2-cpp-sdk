@@ -18,7 +18,7 @@
 #define GS2_EXPERIENCE_MODEL_MODEL_HPP_
 
 #include <gs2/core/common.hpp>
-#include "Experience.hpp"
+#include "Namespace.hpp"
 #include "ExperienceModelMaster.hpp"
 #include "ExperienceModel.hpp"
 #include "ThresholdMaster.hpp"
@@ -26,6 +26,5 @@
 #include "CurrentExperienceMaster.hpp"
 #include "Status.hpp"
 #include "ResponseCache.hpp"
-#include "Property.hpp"
 
 #endif //GS2_EXPERIENCE_MODEL_MODEL_HPP_

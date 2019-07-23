@@ -41,7 +41,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** アクション */
+        /** スタンプシートで実行するアクションの種類 */
         optional<StringHolder> action;
         /** 加算リクエストのJSON */
         optional<StringHolder> request;
@@ -162,9 +162,9 @@ public:
         return this;
     }
     /**
-     * アクションを取得
+     * スタンプシートで実行するアクションの種類を取得
      *
-     * @return アクション
+     * @return スタンプシートで実行するアクションの種類
      */
     const optional<StringHolder>& getAction() const
     {
@@ -172,9 +172,9 @@ public:
     }
 
     /**
-     * アクションを設定
+     * スタンプシートで実行するアクションの種類を設定
      *
-     * @param action アクション
+     * @param action スタンプシートで実行するアクションの種類
      */
     void setAction(const Char* action)
     {
@@ -182,9 +182,9 @@ public:
     }
 
     /**
-     * アクションを設定
+     * スタンプシートで実行するアクションの種類を設定
      *
-     * @param action アクション
+     * @param action スタンプシートで実行するアクションの種類
      */
     DistributeResource& withAction(const Char* action)
     {

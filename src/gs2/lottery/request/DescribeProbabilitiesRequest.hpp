@@ -17,12 +17,10 @@
 #ifndef GS2_LOTTERY_CONTROL_DESCRIBEPROBABILITIESREQUEST_HPP_
 #define GS2_LOTTERY_CONTROL_DESCRIBEPROBABILITIESREQUEST_HPP_
 
-#include <gs2/core/control/Gs2BasicRequest.hpp>
-#include <gs2/core/util/List.hpp>
+#include <gs2/core/control/Gs2UserRequest.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2LotteryConst.hpp"
-#include "../model/model.hpp"
 
 namespace gs2 { namespace lottery
 {
@@ -32,7 +30,7 @@ namespace gs2 { namespace lottery
  *
  * @author Game Server Services, Inc.
  */
-class DescribeProbabilitiesRequest : public Gs2BasicRequest, public Gs2Lottery
+class DescribeProbabilitiesRequest : public Gs2UserRequest, public Gs2Lottery
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -41,24 +39,28 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** グループ名 */
-        optional<StringHolder> groupName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** 抽選モデルの種類名 */
-        optional<StringHolder> lotteryModelName;
+        optional<StringHolder> lotteryName;
+        /** 重複実行回避機能に使用するID */
+        optional<StringHolder> duplicationAvoider;
 
         Data()
         {}
 
         Data(const Data& data) :
             Gs2Object(data),
-            groupName(data.groupName),
-            lotteryModelName(data.lotteryModelName)
+            namespaceName(data.namespaceName),
+            lotteryName(data.lotteryName),
+            duplicationAvoider(data.duplicationAvoider)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            groupName(std::move(data.groupName)),
-            lotteryModelName(std::move(data.lotteryModelName))
+            namespaceName(std::move(data.namespaceName)),
+            lotteryName(std::move(data.lotteryName)),
+            duplicationAvoider(std::move(data.duplicationAvoider))
         {}
 
         ~Data() = default;
@@ -90,13 +92,13 @@ public:
     {}
 
     DescribeProbabilitiesRequest(const DescribeProbabilitiesRequest& obj) :
-        Gs2BasicRequest(obj),
+        Gs2UserRequest(obj),
         Gs2Lottery(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     DescribeProbabilitiesRequest(DescribeProbabilitiesRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
+        Gs2UserRequest(std::move(obj)),
         Gs2Lottery(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -113,7 +115,7 @@ public:
 
     DescribeProbabilitiesRequest& operator=(const DescribeProbabilitiesRequest& describeProbabilitiesRequest)
     {
-        Gs2BasicRequest::operator=(describeProbabilitiesRequest);
+        Gs2UserRequest::operator=(describeProbabilitiesRequest);
         Gs2Lottery::operator=(describeProbabilitiesRequest);
 
         if (m_pData != nullptr)
@@ -127,7 +129,7 @@ public:
 
     DescribeProbabilitiesRequest& operator=(DescribeProbabilitiesRequest&& describeProbabilitiesRequest)
     {
-        Gs2BasicRequest::operator=(std::move(describeProbabilitiesRequest));
+        Gs2UserRequest::operator=(std::move(describeProbabilitiesRequest));
         Gs2Lottery::operator=(std::move(describeProbabilitiesRequest));
 
         if (m_pData != nullptr)
@@ -150,33 +152,33 @@ public:
         return this;
     }
     /**
-     * グループ名を取得
+     * ネームスペース名を取得
      *
-     * @return グループ名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGroupName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().groupName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    void setGroupName(const Char* groupName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    DescribeProbabilitiesRequest& withGroupName(const Char* groupName)
+    DescribeProbabilitiesRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -185,29 +187,60 @@ public:
      *
      * @return 抽選モデルの種類名
      */
-    const optional<StringHolder>& getLotteryModelName() const
+    const optional<StringHolder>& getLotteryName() const
     {
-        return ensureData().lotteryModelName;
+        return ensureData().lotteryName;
     }
 
     /**
      * 抽選モデルの種類名を設定
      *
-     * @param lotteryModelName 抽選モデルの種類名
+     * @param lotteryName 抽選モデルの種類名
      */
-    void setLotteryModelName(const Char* lotteryModelName)
+    void setLotteryName(const Char* lotteryName)
     {
-        ensureData().lotteryModelName.emplace(lotteryModelName);
+        ensureData().lotteryName.emplace(lotteryName);
     }
 
     /**
      * 抽選モデルの種類名を設定
      *
-     * @param lotteryModelName 抽選モデルの種類名
+     * @param lotteryName 抽選モデルの種類名
      */
-    DescribeProbabilitiesRequest& withLotteryModelName(const Char* lotteryModelName)
+    DescribeProbabilitiesRequest& withLotteryName(const Char* lotteryName)
     {
-        ensureData().lotteryModelName.emplace(lotteryModelName);
+        ensureData().lotteryName.emplace(lotteryName);
+        return *this;
+    }
+
+    /**
+     * 重複実行回避機能に使用するIDを取得
+     *
+     * @return 重複実行回避機能に使用するID
+     */
+    const optional<StringHolder>& getDuplicationAvoider() const
+    {
+        return ensureData().duplicationAvoider;
+    }
+
+    /**
+     * 重複実行回避機能に使用するIDを設定
+     *
+     * @param duplicationAvoider 重複実行回避機能に使用するID
+     */
+    void setDuplicationAvoider(const Char* duplicationAvoider)
+    {
+        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+    }
+
+    /**
+     * 重複実行回避機能に使用するIDを設定
+     *
+     * @param duplicationAvoider 重複実行回避機能に使用するID
+     */
+    DescribeProbabilitiesRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    {
+        ensureData().duplicationAvoider.emplace(duplicationAvoider);
         return *this;
     }
 
@@ -256,6 +289,17 @@ public:
     DescribeProbabilitiesRequest& withRequestId(const Char* gs2RequestId)
     {
         setRequestId(gs2RequestId);
+        return *this;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    DescribeProbabilitiesRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
         return *this;
     }
 

@@ -28,7 +28,7 @@ namespace gs2 { namespace inventory
 {
 
 /**
- * インベントリのアイテムを消費 のリクエストモデル
+ * スタンプシートでインベントリのアイテムを消費 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

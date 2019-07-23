@@ -28,7 +28,7 @@ namespace gs2 { namespace inventory
 {
 
 /**
- * アイテムセットを取得 のリクエストモデル
+ * 有効期限ごとのアイテム所持数量を取得 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,14 +41,14 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** カテゴリ名 */
-        optional<StringHolder> categoryName;
-        /** インベントリモデル名 */
-        optional<StringHolder> inventoryModelName;
-        /** アイテムモデルの種類名 */
-        optional<StringHolder> itemModelName;
+        /** カテゴリー名 */
+        optional<StringHolder> namespaceName;
+        /** インベントリの名前 */
+        optional<StringHolder> inventoryName;
         /** ユーザーID */
         optional<StringHolder> userId;
+        /** アイテムマスターの名前 */
+        optional<StringHolder> itemName;
         /** 有効期限 */
         optional<Int64> expiresAt;
         /** 重複実行回避機能に使用するID */
@@ -59,20 +59,20 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            categoryName(data.categoryName),
-            inventoryModelName(data.inventoryModelName),
-            itemModelName(data.itemModelName),
+            namespaceName(data.namespaceName),
+            inventoryName(data.inventoryName),
             userId(data.userId),
+            itemName(data.itemName),
             expiresAt(data.expiresAt),
             duplicationAvoider(data.duplicationAvoider)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            categoryName(std::move(data.categoryName)),
-            inventoryModelName(std::move(data.inventoryModelName)),
-            itemModelName(std::move(data.itemModelName)),
+            namespaceName(std::move(data.namespaceName)),
+            inventoryName(std::move(data.inventoryName)),
             userId(std::move(data.userId)),
+            itemName(std::move(data.itemName)),
             expiresAt(std::move(data.expiresAt)),
             duplicationAvoider(std::move(data.duplicationAvoider))
         {}
@@ -166,95 +166,64 @@ public:
         return this;
     }
     /**
-     * カテゴリ名を取得
+     * カテゴリー名を取得
      *
-     * @return カテゴリ名
+     * @return カテゴリー名
      */
-    const optional<StringHolder>& getCategoryName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().categoryName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * カテゴリ名を設定
+     * カテゴリー名を設定
      *
-     * @param categoryName カテゴリ名
+     * @param namespaceName カテゴリー名
      */
-    void setCategoryName(const Char* categoryName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().categoryName.emplace(categoryName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * カテゴリ名を設定
+     * カテゴリー名を設定
      *
-     * @param categoryName カテゴリ名
+     * @param namespaceName カテゴリー名
      */
-    GetItemSetByUserIdRequest& withCategoryName(const Char* categoryName)
+    GetItemSetByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().categoryName.emplace(categoryName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
     /**
-     * インベントリモデル名を取得
+     * インベントリの名前を取得
      *
-     * @return インベントリモデル名
+     * @return インベントリの名前
      */
-    const optional<StringHolder>& getInventoryModelName() const
+    const optional<StringHolder>& getInventoryName() const
     {
-        return ensureData().inventoryModelName;
+        return ensureData().inventoryName;
     }
 
     /**
-     * インベントリモデル名を設定
+     * インベントリの名前を設定
      *
-     * @param inventoryModelName インベントリモデル名
+     * @param inventoryName インベントリの名前
      */
-    void setInventoryModelName(const Char* inventoryModelName)
+    void setInventoryName(const Char* inventoryName)
     {
-        ensureData().inventoryModelName.emplace(inventoryModelName);
+        ensureData().inventoryName.emplace(inventoryName);
     }
 
     /**
-     * インベントリモデル名を設定
+     * インベントリの名前を設定
      *
-     * @param inventoryModelName インベントリモデル名
+     * @param inventoryName インベントリの名前
      */
-    GetItemSetByUserIdRequest& withInventoryModelName(const Char* inventoryModelName)
+    GetItemSetByUserIdRequest& withInventoryName(const Char* inventoryName)
     {
-        ensureData().inventoryModelName.emplace(inventoryModelName);
-        return *this;
-    }
-
-    /**
-     * アイテムモデルの種類名を取得
-     *
-     * @return アイテムモデルの種類名
-     */
-    const optional<StringHolder>& getItemModelName() const
-    {
-        return ensureData().itemModelName;
-    }
-
-    /**
-     * アイテムモデルの種類名を設定
-     *
-     * @param itemModelName アイテムモデルの種類名
-     */
-    void setItemModelName(const Char* itemModelName)
-    {
-        ensureData().itemModelName.emplace(itemModelName);
-    }
-
-    /**
-     * アイテムモデルの種類名を設定
-     *
-     * @param itemModelName アイテムモデルの種類名
-     */
-    GetItemSetByUserIdRequest& withItemModelName(const Char* itemModelName)
-    {
-        ensureData().itemModelName.emplace(itemModelName);
+        ensureData().inventoryName.emplace(inventoryName);
         return *this;
     }
 
@@ -286,6 +255,37 @@ public:
     GetItemSetByUserIdRequest& withUserId(const Char* userId)
     {
         ensureData().userId.emplace(userId);
+        return *this;
+    }
+
+    /**
+     * アイテムマスターの名前を取得
+     *
+     * @return アイテムマスターの名前
+     */
+    const optional<StringHolder>& getItemName() const
+    {
+        return ensureData().itemName;
+    }
+
+    /**
+     * アイテムマスターの名前を設定
+     *
+     * @param itemName アイテムマスターの名前
+     */
+    void setItemName(const Char* itemName)
+    {
+        ensureData().itemName.emplace(itemName);
+    }
+
+    /**
+     * アイテムマスターの名前を設定
+     *
+     * @param itemName アイテムマスターの名前
+     */
+    GetItemSetByUserIdRequest& withItemName(const Char* itemName)
+    {
+        ensureData().itemName.emplace(itemName);
         return *this;
     }
 

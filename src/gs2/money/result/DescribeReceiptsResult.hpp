@@ -29,7 +29,7 @@ namespace gs2 { namespace money
 {
 
 /**
- * レシートの一覧を取得します のレスポンスモデル
+ * レシートの一覧を取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */

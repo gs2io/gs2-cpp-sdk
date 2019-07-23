@@ -42,7 +42,7 @@ private:
     {
     public:
         /** プレゼントボックス名 */
-        optional<StringHolder> inboxName;
+        optional<StringHolder> namespaceName;
         /** ユーザーID */
         optional<StringHolder> userId;
         /** データの取得を開始する位置を指定するトークン */
@@ -57,7 +57,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            inboxName(data.inboxName),
+            namespaceName(data.namespaceName),
             userId(data.userId),
             pageToken(data.pageToken),
             limit(data.limit),
@@ -66,7 +66,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            inboxName(std::move(data.inboxName)),
+            namespaceName(std::move(data.namespaceName)),
             userId(std::move(data.userId)),
             pageToken(std::move(data.pageToken)),
             limit(std::move(data.limit)),
@@ -166,29 +166,29 @@ public:
      *
      * @return プレゼントボックス名
      */
-    const optional<StringHolder>& getInboxName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().inboxName;
+        return ensureData().namespaceName;
     }
 
     /**
      * プレゼントボックス名を設定
      *
-     * @param inboxName プレゼントボックス名
+     * @param namespaceName プレゼントボックス名
      */
-    void setInboxName(const Char* inboxName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().inboxName.emplace(inboxName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
      * プレゼントボックス名を設定
      *
-     * @param inboxName プレゼントボックス名
+     * @param namespaceName プレゼントボックス名
      */
-    DescribeMessagesByUserIdRequest& withInboxName(const Char* inboxName)
+    DescribeMessagesByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().inboxName.emplace(inboxName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

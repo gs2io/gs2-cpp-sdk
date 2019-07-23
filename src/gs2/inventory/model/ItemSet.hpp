@@ -28,7 +28,7 @@
 namespace gs2 { namespace inventory {
 
 /**
- * アイテムセット
+ * 有効期限ごとのアイテム所持数量
  *
  * @author Game Server Services, Inc.
  *
@@ -41,14 +41,14 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** アイテムセット のGRN */
+        /** 有効期限ごとのアイテム所持数量 */
         optional<StringHolder> itemSetId;
-        /** インベントリモデル名 */
-        optional<StringHolder> inventoryModelName;
+        /** インベントリの名前 */
+        optional<StringHolder> inventoryName;
         /** ユーザーID */
         optional<StringHolder> userId;
-        /** アイテムモデルの種類名 */
-        optional<StringHolder> itemModelName;
+        /** アイテムマスターの名前 */
+        optional<StringHolder> itemName;
         /** 所持数量 */
         optional<Int64> count;
         /** 表示順番 */
@@ -56,9 +56,9 @@ private:
         /** 有効期限 */
         optional<Int64> expiresAt;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
         /** 最終更新日時 */
-        optional<Int64> updateAt;
+        optional<Int64> updatedAt;
 
         Data()
         {}
@@ -66,27 +66,27 @@ private:
         Data(const Data& data) :
             detail::json::IModel(data),
             itemSetId(data.itemSetId),
-            inventoryModelName(data.inventoryModelName),
+            inventoryName(data.inventoryName),
             userId(data.userId),
-            itemModelName(data.itemModelName),
+            itemName(data.itemName),
             count(data.count),
             sortValue(data.sortValue),
             expiresAt(data.expiresAt),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
             itemSetId(std::move(data.itemSetId)),
-            inventoryModelName(std::move(data.inventoryModelName)),
+            inventoryName(std::move(data.inventoryName)),
             userId(std::move(data.userId)),
-            itemModelName(std::move(data.itemModelName)),
+            itemName(std::move(data.itemName)),
             count(std::move(data.count)),
             sortValue(std::move(data.sortValue)),
             expiresAt(std::move(data.expiresAt)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -103,10 +103,10 @@ private:
                     this->itemSetId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "inventoryModelName") == 0) {
+            else if (std::strcmp(name, "inventoryName") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->inventoryModelName.emplace(jsonValue.GetString());
+                    this->inventoryName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "userId") == 0) {
@@ -115,10 +115,10 @@ private:
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "itemModelName") == 0) {
+            else if (std::strcmp(name, "itemName") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->itemModelName.emplace(jsonValue.GetString());
+                    this->itemName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "count") == 0) {
@@ -139,16 +139,16 @@ private:
                     this->expiresAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
+            else if (std::strcmp(name, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt64();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -232,9 +232,9 @@ public:
         return this;
     }
     /**
-     * アイテムセット のGRNを取得
+     * 有効期限ごとのアイテム所持数量を取得
      *
-     * @return アイテムセット のGRN
+     * @return 有効期限ごとのアイテム所持数量
      */
     const optional<StringHolder>& getItemSetId() const
     {
@@ -242,9 +242,9 @@ public:
     }
 
     /**
-     * アイテムセット のGRNを設定
+     * 有効期限ごとのアイテム所持数量を設定
      *
-     * @param itemSetId アイテムセット のGRN
+     * @param itemSetId 有効期限ごとのアイテム所持数量
      */
     void setItemSetId(const Char* itemSetId)
     {
@@ -252,9 +252,9 @@ public:
     }
 
     /**
-     * アイテムセット のGRNを設定
+     * 有効期限ごとのアイテム所持数量を設定
      *
-     * @param itemSetId アイテムセット のGRN
+     * @param itemSetId 有効期限ごとのアイテム所持数量
      */
     ItemSet& withItemSetId(const Char* itemSetId)
     {
@@ -263,33 +263,33 @@ public:
     }
 
     /**
-     * インベントリモデル名を取得
+     * インベントリの名前を取得
      *
-     * @return インベントリモデル名
+     * @return インベントリの名前
      */
-    const optional<StringHolder>& getInventoryModelName() const
+    const optional<StringHolder>& getInventoryName() const
     {
-        return ensureData().inventoryModelName;
+        return ensureData().inventoryName;
     }
 
     /**
-     * インベントリモデル名を設定
+     * インベントリの名前を設定
      *
-     * @param inventoryModelName インベントリモデル名
+     * @param inventoryName インベントリの名前
      */
-    void setInventoryModelName(const Char* inventoryModelName)
+    void setInventoryName(const Char* inventoryName)
     {
-        ensureData().inventoryModelName.emplace(inventoryModelName);
+        ensureData().inventoryName.emplace(inventoryName);
     }
 
     /**
-     * インベントリモデル名を設定
+     * インベントリの名前を設定
      *
-     * @param inventoryModelName インベントリモデル名
+     * @param inventoryName インベントリの名前
      */
-    ItemSet& withInventoryModelName(const Char* inventoryModelName)
+    ItemSet& withInventoryName(const Char* inventoryName)
     {
-        setInventoryModelName(inventoryModelName);
+        setInventoryName(inventoryName);
         return *this;
     }
 
@@ -325,33 +325,33 @@ public:
     }
 
     /**
-     * アイテムモデルの種類名を取得
+     * アイテムマスターの名前を取得
      *
-     * @return アイテムモデルの種類名
+     * @return アイテムマスターの名前
      */
-    const optional<StringHolder>& getItemModelName() const
+    const optional<StringHolder>& getItemName() const
     {
-        return ensureData().itemModelName;
+        return ensureData().itemName;
     }
 
     /**
-     * アイテムモデルの種類名を設定
+     * アイテムマスターの名前を設定
      *
-     * @param itemModelName アイテムモデルの種類名
+     * @param itemName アイテムマスターの名前
      */
-    void setItemModelName(const Char* itemModelName)
+    void setItemName(const Char* itemName)
     {
-        ensureData().itemModelName.emplace(itemModelName);
+        ensureData().itemName.emplace(itemName);
     }
 
     /**
-     * アイテムモデルの種類名を設定
+     * アイテムマスターの名前を設定
      *
-     * @param itemModelName アイテムモデルの種類名
+     * @param itemName アイテムマスターの名前
      */
-    ItemSet& withItemModelName(const Char* itemModelName)
+    ItemSet& withItemName(const Char* itemName)
     {
-        setItemModelName(itemModelName);
+        setItemName(itemName);
         return *this;
     }
 
@@ -453,29 +453,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    ItemSet& withCreateAt(Int64 createAt)
+    ItemSet& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -484,29 +484,29 @@ public:
      *
      * @return 最終更新日時
      */
-    const optional<Int64>& getUpdateAt() const
+    const optional<Int64>& getUpdatedAt() const
     {
-        return ensureData().updateAt;
+        return ensureData().updatedAt;
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    void setUpdateAt(Int64 updateAt)
+    void setUpdatedAt(Int64 updatedAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        ensureData().updatedAt.emplace(updatedAt);
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    ItemSet& withUpdateAt(Int64 updateAt)
+    ItemSet& withUpdatedAt(Int64 updatedAt)
     {
-        setUpdateAt(updateAt);
+        setUpdatedAt(updatedAt);
         return *this;
     }
 
@@ -529,7 +529,7 @@ bool operator!=(const ItemSet& lhs, const ItemSet& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->inventoryModelName != lhr.m_pData->inventoryModelName)
+        if (lhs.m_pData->inventoryName != lhr.m_pData->inventoryName)
         {
             return true;
         }
@@ -537,7 +537,7 @@ bool operator!=(const ItemSet& lhs, const ItemSet& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->itemModelName != lhr.m_pData->itemModelName)
+        if (lhs.m_pData->itemName != lhr.m_pData->itemName)
         {
             return true;
         }
@@ -553,11 +553,11 @@ bool operator!=(const ItemSet& lhs, const ItemSet& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }
-        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

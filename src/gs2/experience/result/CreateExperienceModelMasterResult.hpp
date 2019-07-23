@@ -29,7 +29,7 @@ namespace gs2 { namespace experience
 {
 
 /**
- * 経験値の種類を新規作成 のレスポンスモデル
+ * 経験値の種類マスターを新規作成 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 作成した経験値の種類 */
+        /** 作成した経験値の種類マスター */
         optional<ExperienceModelMaster> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * 作成した経験値の種類を取得
+     * 作成した経験値の種類マスターを取得
      *
-     * @return 作成した経験値の種類
+     * @return 作成した経験値の種類マスター
      */
     const optional<ExperienceModelMaster>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * 作成した経験値の種類を設定
+     * 作成した経験値の種類マスターを設定
      *
-     * @param item 作成した経験値の種類
+     * @param item 作成した経験値の種類マスター
      */
     void setItem(const ExperienceModelMaster& item)
     {

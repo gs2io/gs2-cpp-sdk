@@ -28,7 +28,7 @@ namespace gs2 { namespace money
 {
 
 /**
- * ウォレットの概要から残高を消費します のリクエストモデル
+ * ウォレットから残高を消費します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

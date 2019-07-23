@@ -28,7 +28,7 @@
 namespace gs2 { namespace inventory {
 
 /**
- * カテゴリマスターJSON
+ * 現在有効な所持品マスター
  *
  * @author Game Server Services, Inc.
  *
@@ -41,8 +41,8 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** カテゴリ名 */
-        optional<StringHolder> categoryName;
+        /** カテゴリー名 */
+        optional<StringHolder> namespaceName;
         /** マスターデータ */
         optional<StringHolder> settings;
 
@@ -51,13 +51,13 @@ private:
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            categoryName(data.categoryName),
+            namespaceName(data.namespaceName),
             settings(data.settings)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            categoryName(std::move(data.categoryName)),
+            namespaceName(std::move(data.namespaceName)),
             settings(std::move(data.settings))
         {}
 
@@ -69,10 +69,10 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "categoryName") == 0) {
+            if (std::strcmp(name, "namespaceName") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->categoryName.emplace(jsonValue.GetString());
+                    this->namespaceName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "settings") == 0) {
@@ -162,33 +162,33 @@ public:
         return this;
     }
     /**
-     * カテゴリ名を取得
+     * カテゴリー名を取得
      *
-     * @return カテゴリ名
+     * @return カテゴリー名
      */
-    const optional<StringHolder>& getCategoryName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().categoryName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * カテゴリ名を設定
+     * カテゴリー名を設定
      *
-     * @param categoryName カテゴリ名
+     * @param namespaceName カテゴリー名
      */
-    void setCategoryName(const Char* categoryName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().categoryName.emplace(categoryName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * カテゴリ名を設定
+     * カテゴリー名を設定
      *
-     * @param categoryName カテゴリ名
+     * @param namespaceName カテゴリー名
      */
-    CurrentItemModelMaster& withCategoryName(const Char* categoryName)
+    CurrentItemModelMaster& withNamespaceName(const Char* namespaceName)
     {
-        setCategoryName(categoryName);
+        setNamespaceName(namespaceName);
         return *this;
     }
 
@@ -238,7 +238,7 @@ bool operator!=(const CurrentItemModelMaster& lhs, const CurrentItemModelMaster&
         {
             return true;
         }
-        if (lhs.m_pData->categoryName != lhr.m_pData->categoryName)
+        if (lhs.m_pData->namespaceName != lhr.m_pData->namespaceName)
         {
             return true;
         }

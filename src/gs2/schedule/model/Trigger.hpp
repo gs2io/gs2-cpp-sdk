@@ -41,15 +41,15 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** トリガー のGRN */
+        /** トリガー */
         optional<StringHolder> triggerId;
         /** トリガーの名前 */
         optional<StringHolder> name;
         /** ユーザーID */
         optional<StringHolder> userId;
         /** 作成日時 */
-        optional<Int64> createAt;
-        /** None */
+        optional<Int64> createdAt;
+        /** トリガーの有効期限 */
         optional<Int64> expiresAt;
 
         Data()
@@ -60,7 +60,7 @@ private:
             triggerId(data.triggerId),
             name(data.name),
             userId(data.userId),
-            createAt(data.createAt),
+            createdAt(data.createdAt),
             expiresAt(data.expiresAt)
         {}
 
@@ -69,7 +69,7 @@ private:
             triggerId(std::move(data.triggerId)),
             name(std::move(data.name)),
             userId(std::move(data.userId)),
-            createAt(std::move(data.createAt)),
+            createdAt(std::move(data.createdAt)),
             expiresAt(std::move(data.expiresAt))
         {}
 
@@ -99,10 +99,10 @@ private:
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
             else if (std::strcmp(name, "expiresAt") == 0) {
@@ -192,9 +192,9 @@ public:
         return this;
     }
     /**
-     * トリガー のGRNを取得
+     * トリガーを取得
      *
-     * @return トリガー のGRN
+     * @return トリガー
      */
     const optional<StringHolder>& getTriggerId() const
     {
@@ -202,9 +202,9 @@ public:
     }
 
     /**
-     * トリガー のGRNを設定
+     * トリガーを設定
      *
-     * @param triggerId トリガー のGRN
+     * @param triggerId トリガー
      */
     void setTriggerId(const Char* triggerId)
     {
@@ -212,9 +212,9 @@ public:
     }
 
     /**
-     * トリガー のGRNを設定
+     * トリガーを設定
      *
-     * @param triggerId トリガー のGRN
+     * @param triggerId トリガー
      */
     Trigger& withTriggerId(const Char* triggerId)
     {
@@ -289,36 +289,36 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    Trigger& withCreateAt(Int64 createAt)
+    Trigger& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
     /**
-     * Noneを取得
+     * トリガーの有効期限を取得
      *
-     * @return None
+     * @return トリガーの有効期限
      */
     const optional<Int64>& getExpiresAt() const
     {
@@ -326,9 +326,9 @@ public:
     }
 
     /**
-     * Noneを設定
+     * トリガーの有効期限を設定
      *
-     * @param expiresAt None
+     * @param expiresAt トリガーの有効期限
      */
     void setExpiresAt(Int64 expiresAt)
     {
@@ -336,9 +336,9 @@ public:
     }
 
     /**
-     * Noneを設定
+     * トリガーの有効期限を設定
      *
-     * @param expiresAt None
+     * @param expiresAt トリガーの有効期限
      */
     Trigger& withExpiresAt(Int64 expiresAt)
     {
@@ -373,7 +373,7 @@ bool operator!=(const Trigger& lhs, const Trigger& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }

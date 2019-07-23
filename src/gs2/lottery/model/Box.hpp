@@ -28,7 +28,7 @@
 namespace gs2 { namespace lottery {
 
 /**
- * 排出済みの景品情報
+ * ボックス
  *
  * @author Game Server Services, Inc.
  *
@@ -41,18 +41,18 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 排出済みの景品情報 のGRN */
+        /** ボックス */
         optional<StringHolder> boxId;
-        /** 景品テーブル名 */
+        /** 排出確率テーブル名 */
         optional<StringHolder> prizeTableName;
         /** ユーザーID */
         optional<StringHolder> userId;
         /** 排出済み景品のインデックスのリスト */
         optional<List<Int32>> drawnIndexes;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
         /** 最終更新日時 */
-        optional<Int64> updateAt;
+        optional<Int64> updatedAt;
 
         Data()
         {}
@@ -63,8 +63,8 @@ private:
             prizeTableName(data.prizeTableName),
             userId(data.userId),
             drawnIndexes(data.drawnIndexes),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
@@ -73,8 +73,8 @@ private:
             prizeTableName(std::move(data.prizeTableName)),
             userId(std::move(data.userId)),
             drawnIndexes(std::move(data.drawnIndexes)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -116,16 +116,16 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
+            else if (std::strcmp(name, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt64();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -209,9 +209,9 @@ public:
         return this;
     }
     /**
-     * 排出済みの景品情報 のGRNを取得
+     * ボックスを取得
      *
-     * @return 排出済みの景品情報 のGRN
+     * @return ボックス
      */
     const optional<StringHolder>& getBoxId() const
     {
@@ -219,9 +219,9 @@ public:
     }
 
     /**
-     * 排出済みの景品情報 のGRNを設定
+     * ボックスを設定
      *
-     * @param boxId 排出済みの景品情報 のGRN
+     * @param boxId ボックス
      */
     void setBoxId(const Char* boxId)
     {
@@ -229,9 +229,9 @@ public:
     }
 
     /**
-     * 排出済みの景品情報 のGRNを設定
+     * ボックスを設定
      *
-     * @param boxId 排出済みの景品情報 のGRN
+     * @param boxId ボックス
      */
     Box& withBoxId(const Char* boxId)
     {
@@ -240,9 +240,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を取得
+     * 排出確率テーブル名を取得
      *
-     * @return 景品テーブル名
+     * @return 排出確率テーブル名
      */
     const optional<StringHolder>& getPrizeTableName() const
     {
@@ -250,9 +250,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を設定
+     * 排出確率テーブル名を設定
      *
-     * @param prizeTableName 景品テーブル名
+     * @param prizeTableName 排出確率テーブル名
      */
     void setPrizeTableName(const Char* prizeTableName)
     {
@@ -260,9 +260,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を設定
+     * 排出確率テーブル名を設定
      *
-     * @param prizeTableName 景品テーブル名
+     * @param prizeTableName 排出確率テーブル名
      */
     Box& withPrizeTableName(const Char* prizeTableName)
     {
@@ -337,29 +337,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    Box& withCreateAt(Int64 createAt)
+    Box& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -368,29 +368,29 @@ public:
      *
      * @return 最終更新日時
      */
-    const optional<Int64>& getUpdateAt() const
+    const optional<Int64>& getUpdatedAt() const
     {
-        return ensureData().updateAt;
+        return ensureData().updatedAt;
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    void setUpdateAt(Int64 updateAt)
+    void setUpdatedAt(Int64 updatedAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        ensureData().updatedAt.emplace(updatedAt);
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    Box& withUpdateAt(Int64 updateAt)
+    Box& withUpdatedAt(Int64 updatedAt)
     {
-        setUpdateAt(updateAt);
+        setUpdatedAt(updatedAt);
         return *this;
     }
 
@@ -425,11 +425,11 @@ bool operator!=(const Box& lhs, const Box& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }
-        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

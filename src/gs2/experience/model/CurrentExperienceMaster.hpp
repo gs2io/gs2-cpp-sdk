@@ -28,7 +28,7 @@
 namespace gs2 { namespace experience {
 
 /**
- * 経験値マスターJSON
+ * 現在有効な経験値設定
  *
  * @author Game Server Services, Inc.
  *
@@ -41,8 +41,8 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 経験値名 */
-        optional<StringHolder> experienceName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** マスターデータ */
         optional<StringHolder> settings;
 
@@ -51,13 +51,13 @@ private:
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            experienceName(data.experienceName),
+            namespaceName(data.namespaceName),
             settings(data.settings)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            experienceName(std::move(data.experienceName)),
+            namespaceName(std::move(data.namespaceName)),
             settings(std::move(data.settings))
         {}
 
@@ -69,10 +69,10 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "experienceName") == 0) {
+            if (std::strcmp(name, "namespaceName") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->experienceName.emplace(jsonValue.GetString());
+                    this->namespaceName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "settings") == 0) {
@@ -162,33 +162,33 @@ public:
         return this;
     }
     /**
-     * 経験値名を取得
+     * ネームスペース名を取得
      *
-     * @return 経験値名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getExperienceName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().experienceName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * 経験値名を設定
+     * ネームスペース名を設定
      *
-     * @param experienceName 経験値名
+     * @param namespaceName ネームスペース名
      */
-    void setExperienceName(const Char* experienceName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().experienceName.emplace(experienceName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * 経験値名を設定
+     * ネームスペース名を設定
      *
-     * @param experienceName 経験値名
+     * @param namespaceName ネームスペース名
      */
-    CurrentExperienceMaster& withExperienceName(const Char* experienceName)
+    CurrentExperienceMaster& withNamespaceName(const Char* namespaceName)
     {
-        setExperienceName(experienceName);
+        setNamespaceName(namespaceName);
         return *this;
     }
 
@@ -238,7 +238,7 @@ bool operator!=(const CurrentExperienceMaster& lhs, const CurrentExperienceMaste
         {
             return true;
         }
-        if (lhs.m_pData->experienceName != lhr.m_pData->experienceName)
+        if (lhs.m_pData->namespaceName != lhr.m_pData->namespaceName)
         {
             return true;
         }

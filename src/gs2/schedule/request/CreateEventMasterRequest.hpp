@@ -28,7 +28,7 @@ namespace gs2 { namespace schedule
 {
 
 /**
- * イベントを新規作成 のリクエストモデル
+ * イベントマスターを新規作成 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,13 +41,13 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** スケジュール名 */
-        optional<StringHolder> scheduleName;
-        /** ディストリビューターの種類名 */
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
+        /** イベントの種類名 */
         optional<StringHolder> name;
-        /** イベントの説明 */
+        /** イベントマスターの説明 */
         optional<StringHolder> description;
-        /** ディストリビューターの種類のメタデータ */
+        /** イベントの種類のメタデータ */
         optional<StringHolder> metadata;
         /** イベント期間の種類 */
         optional<StringHolder> scheduleType;
@@ -55,7 +55,7 @@ private:
         optional<Int64> absoluteBegin;
         /** イベントの終了日時 */
         optional<Int64> absoluteEnd;
-        /** イベントの開始トリガー */
+        /** イベントの開始トリガー名 */
         optional<StringHolder> relativeTriggerName;
         /** イベントの開催期間(秒) */
         optional<Int32> relativeDuration;
@@ -65,7 +65,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            scheduleName(data.scheduleName),
+            namespaceName(data.namespaceName),
             name(data.name),
             description(data.description),
             metadata(data.metadata),
@@ -78,7 +78,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            scheduleName(std::move(data.scheduleName)),
+            namespaceName(std::move(data.namespaceName)),
             name(std::move(data.name)),
             description(std::move(data.description)),
             metadata(std::move(data.metadata)),
@@ -178,40 +178,40 @@ public:
         return this;
     }
     /**
-     * スケジュール名を取得
+     * ネームスペース名を取得
      *
-     * @return スケジュール名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getScheduleName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().scheduleName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * スケジュール名を設定
+     * ネームスペース名を設定
      *
-     * @param scheduleName スケジュール名
+     * @param namespaceName ネームスペース名
      */
-    void setScheduleName(const Char* scheduleName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().scheduleName.emplace(scheduleName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * スケジュール名を設定
+     * ネームスペース名を設定
      *
-     * @param scheduleName スケジュール名
+     * @param namespaceName ネームスペース名
      */
-    CreateEventMasterRequest& withScheduleName(const Char* scheduleName)
+    CreateEventMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().scheduleName.emplace(scheduleName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
     /**
-     * ディストリビューターの種類名を取得
+     * イベントの種類名を取得
      *
-     * @return ディストリビューターの種類名
+     * @return イベントの種類名
      */
     const optional<StringHolder>& getName() const
     {
@@ -219,9 +219,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を設定
+     * イベントの種類名を設定
      *
-     * @param name ディストリビューターの種類名
+     * @param name イベントの種類名
      */
     void setName(const Char* name)
     {
@@ -229,9 +229,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を設定
+     * イベントの種類名を設定
      *
-     * @param name ディストリビューターの種類名
+     * @param name イベントの種類名
      */
     CreateEventMasterRequest& withName(const Char* name)
     {
@@ -240,9 +240,9 @@ public:
     }
 
     /**
-     * イベントの説明を取得
+     * イベントマスターの説明を取得
      *
-     * @return イベントの説明
+     * @return イベントマスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -250,9 +250,9 @@ public:
     }
 
     /**
-     * イベントの説明を設定
+     * イベントマスターの説明を設定
      *
-     * @param description イベントの説明
+     * @param description イベントマスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -260,9 +260,9 @@ public:
     }
 
     /**
-     * イベントの説明を設定
+     * イベントマスターの説明を設定
      *
-     * @param description イベントの説明
+     * @param description イベントマスターの説明
      */
     CreateEventMasterRequest& withDescription(const Char* description)
     {
@@ -271,9 +271,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを取得
+     * イベントの種類のメタデータを取得
      *
-     * @return ディストリビューターの種類のメタデータ
+     * @return イベントの種類のメタデータ
      */
     const optional<StringHolder>& getMetadata() const
     {
@@ -281,9 +281,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを設定
+     * イベントの種類のメタデータを設定
      *
-     * @param metadata ディストリビューターの種類のメタデータ
+     * @param metadata イベントの種類のメタデータ
      */
     void setMetadata(const Char* metadata)
     {
@@ -291,9 +291,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを設定
+     * イベントの種類のメタデータを設定
      *
-     * @param metadata ディストリビューターの種類のメタデータ
+     * @param metadata イベントの種類のメタデータ
      */
     CreateEventMasterRequest& withMetadata(const Char* metadata)
     {
@@ -395,9 +395,9 @@ public:
     }
 
     /**
-     * イベントの開始トリガーを取得
+     * イベントの開始トリガー名を取得
      *
-     * @return イベントの開始トリガー
+     * @return イベントの開始トリガー名
      */
     const optional<StringHolder>& getRelativeTriggerName() const
     {
@@ -405,9 +405,9 @@ public:
     }
 
     /**
-     * イベントの開始トリガーを設定
+     * イベントの開始トリガー名を設定
      *
-     * @param relativeTriggerName イベントの開始トリガー
+     * @param relativeTriggerName イベントの開始トリガー名
      */
     void setRelativeTriggerName(const Char* relativeTriggerName)
     {
@@ -415,9 +415,9 @@ public:
     }
 
     /**
-     * イベントの開始トリガーを設定
+     * イベントの開始トリガー名を設定
      *
-     * @param relativeTriggerName イベントの開始トリガー
+     * @param relativeTriggerName イベントの開始トリガー名
      */
     CreateEventMasterRequest& withRelativeTriggerName(const Char* relativeTriggerName)
     {

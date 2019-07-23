@@ -28,7 +28,7 @@ namespace gs2 { namespace schedule
 {
 
 /**
- * イベントマスターJSONのマスターデータをエクスポートします のリクエストモデル
+ * 現在有効なイベントスケジュールマスターのマスターデータをエクスポートします のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,20 +41,20 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** スケジュール名 */
-        optional<StringHolder> scheduleName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
 
         Data()
         {}
 
         Data(const Data& data) :
             Gs2Object(data),
-            scheduleName(data.scheduleName)
+            namespaceName(data.namespaceName)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            scheduleName(std::move(data.scheduleName))
+            namespaceName(std::move(data.namespaceName))
         {}
 
         ~Data() = default;
@@ -146,33 +146,33 @@ public:
         return this;
     }
     /**
-     * スケジュール名を取得
+     * ネームスペース名を取得
      *
-     * @return スケジュール名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getScheduleName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().scheduleName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * スケジュール名を設定
+     * ネームスペース名を設定
      *
-     * @param scheduleName スケジュール名
+     * @param namespaceName ネームスペース名
      */
-    void setScheduleName(const Char* scheduleName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().scheduleName.emplace(scheduleName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * スケジュール名を設定
+     * ネームスペース名を設定
      *
-     * @param scheduleName スケジュール名
+     * @param namespaceName ネームスペース名
      */
-    ExportMasterRequest& withScheduleName(const Char* scheduleName)
+    ExportMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().scheduleName.emplace(scheduleName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

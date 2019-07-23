@@ -41,7 +41,9 @@ private:
     public:
         /** 抽選結果の景品リスト */
         optional<List<DrawnPrize>> items;
-        /** 排出済みの景品情報 */
+        /** 排出された景品を入手するスタンプシート */
+        optional<StringHolder> stampSheet;
+        /** ボックスから取り出したアイテムのリスト */
         optional<BoxItems> boxItems;
 
         Data()
@@ -50,12 +52,14 @@ private:
         Data(const Data& data) :
             detail::json::IModel(data),
             items(data.items),
+            stampSheet(data.stampSheet),
             boxItems(data.boxItems)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
             items(std::move(data.items)),
+            stampSheet(std::move(data.stampSheet)),
             boxItems(std::move(data.boxItems))
         {}
 
@@ -77,6 +81,12 @@ private:
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
                         detail::addToList(*this->items, std::move(item));
                     }
+                }
+            }
+            else if (std::strcmp(name, "stampSheet") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->stampSheet.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "boxItems") == 0) {
@@ -188,9 +198,29 @@ public:
     }
 
     /**
-     * 排出済みの景品情報を取得
+     * 排出された景品を入手するスタンプシートを取得
      *
-     * @return 排出済みの景品情報
+     * @return 排出された景品を入手するスタンプシート
+     */
+    const optional<StringHolder>& getStampSheet() const
+    {
+        return ensureData().stampSheet;
+    }
+
+    /**
+     * 排出された景品を入手するスタンプシートを設定
+     *
+     * @param stampSheet 排出された景品を入手するスタンプシート
+     */
+    void setStampSheet(const Char* stampSheet)
+    {
+        ensureData().stampSheet.emplace(stampSheet);
+    }
+
+    /**
+     * ボックスから取り出したアイテムのリストを取得
+     *
+     * @return ボックスから取り出したアイテムのリスト
      */
     const optional<BoxItems>& getBoxItems() const
     {
@@ -198,9 +228,9 @@ public:
     }
 
     /**
-     * 排出済みの景品情報を設定
+     * ボックスから取り出したアイテムのリストを設定
      *
-     * @param boxItems 排出済みの景品情報
+     * @param boxItems ボックスから取り出したアイテムのリスト
      */
     void setBoxItems(const BoxItems& boxItems)
     {

@@ -19,7 +19,8 @@
 
 #include <gs2/core/common.hpp>
 #include "model/model.hpp"
-#include "Gs2ExperienceClient.hpp"
+#include "Gs2ExperienceRestClient.hpp"
+#include "Gs2ExperienceWebSocketClient.hpp"
 #include "Gs2ExperienceConst.hpp"
 
 #endif //GS2_EXPERIENCE_HPP_

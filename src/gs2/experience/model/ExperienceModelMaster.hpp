@@ -28,7 +28,7 @@
 namespace gs2 { namespace experience {
 
 /**
- * 経験値の種類
+ * 経験値の種類マスター
  *
  * @author Game Server Services, Inc.
  *
@@ -41,11 +41,11 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 経験値の種類 のGRN */
+        /** 経験値の種類マスター */
         optional<StringHolder> experienceModelId;
         /** 経験値の種類名 */
         optional<StringHolder> name;
-        /** 経験値の種類の説明 */
+        /** 経験値の種類マスターの説明 */
         optional<StringHolder> description;
         /** 経験値の種類のメタデータ */
         optional<StringHolder> metadata;
@@ -55,12 +55,12 @@ private:
         optional<Int64> defaultRankCap;
         /** ランクキャップの最大値 */
         optional<Int64> maxRankCap;
-        /** ランク計算に用いるランクアップ閾値 のGRN */
+        /** ランク計算に用いる */
         optional<StringHolder> rankThresholdId;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
         /** 最終更新日時 */
-        optional<Int64> updateAt;
+        optional<Int64> updatedAt;
 
         Data()
         {}
@@ -75,8 +75,8 @@ private:
             defaultRankCap(data.defaultRankCap),
             maxRankCap(data.maxRankCap),
             rankThresholdId(data.rankThresholdId),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
@@ -89,8 +89,8 @@ private:
             defaultRankCap(std::move(data.defaultRankCap)),
             maxRankCap(std::move(data.maxRankCap)),
             rankThresholdId(std::move(data.rankThresholdId)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -149,16 +149,16 @@ private:
                     this->rankThresholdId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
+            else if (std::strcmp(name, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt64();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -242,9 +242,9 @@ public:
         return this;
     }
     /**
-     * 経験値の種類 のGRNを取得
+     * 経験値の種類マスターを取得
      *
-     * @return 経験値の種類 のGRN
+     * @return 経験値の種類マスター
      */
     const optional<StringHolder>& getExperienceModelId() const
     {
@@ -252,9 +252,9 @@ public:
     }
 
     /**
-     * 経験値の種類 のGRNを設定
+     * 経験値の種類マスターを設定
      *
-     * @param experienceModelId 経験値の種類 のGRN
+     * @param experienceModelId 経験値の種類マスター
      */
     void setExperienceModelId(const Char* experienceModelId)
     {
@@ -262,9 +262,9 @@ public:
     }
 
     /**
-     * 経験値の種類 のGRNを設定
+     * 経験値の種類マスターを設定
      *
-     * @param experienceModelId 経験値の種類 のGRN
+     * @param experienceModelId 経験値の種類マスター
      */
     ExperienceModelMaster& withExperienceModelId(const Char* experienceModelId)
     {
@@ -304,9 +304,9 @@ public:
     }
 
     /**
-     * 経験値の種類の説明を取得
+     * 経験値の種類マスターの説明を取得
      *
-     * @return 経験値の種類の説明
+     * @return 経験値の種類マスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -314,9 +314,9 @@ public:
     }
 
     /**
-     * 経験値の種類の説明を設定
+     * 経験値の種類マスターの説明を設定
      *
-     * @param description 経験値の種類の説明
+     * @param description 経験値の種類マスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -324,9 +324,9 @@ public:
     }
 
     /**
-     * 経験値の種類の説明を設定
+     * 経験値の種類マスターの説明を設定
      *
-     * @param description 経験値の種類の説明
+     * @param description 経験値の種類マスターの説明
      */
     ExperienceModelMaster& withDescription(const Char* description)
     {
@@ -459,9 +459,9 @@ public:
     }
 
     /**
-     * ランク計算に用いるランクアップ閾値 のGRNを取得
+     * ランク計算に用いるを取得
      *
-     * @return ランク計算に用いるランクアップ閾値 のGRN
+     * @return ランク計算に用いる
      */
     const optional<StringHolder>& getRankThresholdId() const
     {
@@ -469,9 +469,9 @@ public:
     }
 
     /**
-     * ランク計算に用いるランクアップ閾値 のGRNを設定
+     * ランク計算に用いるを設定
      *
-     * @param rankThresholdId ランク計算に用いるランクアップ閾値 のGRN
+     * @param rankThresholdId ランク計算に用いる
      */
     void setRankThresholdId(const Char* rankThresholdId)
     {
@@ -479,9 +479,9 @@ public:
     }
 
     /**
-     * ランク計算に用いるランクアップ閾値 のGRNを設定
+     * ランク計算に用いるを設定
      *
-     * @param rankThresholdId ランク計算に用いるランクアップ閾値 のGRN
+     * @param rankThresholdId ランク計算に用いる
      */
     ExperienceModelMaster& withRankThresholdId(const Char* rankThresholdId)
     {
@@ -494,29 +494,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    ExperienceModelMaster& withCreateAt(Int64 createAt)
+    ExperienceModelMaster& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -525,29 +525,29 @@ public:
      *
      * @return 最終更新日時
      */
-    const optional<Int64>& getUpdateAt() const
+    const optional<Int64>& getUpdatedAt() const
     {
-        return ensureData().updateAt;
+        return ensureData().updatedAt;
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    void setUpdateAt(Int64 updateAt)
+    void setUpdatedAt(Int64 updatedAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        ensureData().updatedAt.emplace(updatedAt);
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    ExperienceModelMaster& withUpdateAt(Int64 updateAt)
+    ExperienceModelMaster& withUpdatedAt(Int64 updatedAt)
     {
-        setUpdateAt(updateAt);
+        setUpdatedAt(updatedAt);
         return *this;
     }
 
@@ -598,11 +598,11 @@ bool operator!=(const ExperienceModelMaster& lhs, const ExperienceModelMaster& l
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }
-        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

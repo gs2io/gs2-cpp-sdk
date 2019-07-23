@@ -29,7 +29,7 @@ namespace gs2 { namespace stamina
 {
 
 /**
- * スタミナの最大値を更新 のレスポンスモデル
+ * ユーザIDを指定してスタミナの最大値を更新 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */

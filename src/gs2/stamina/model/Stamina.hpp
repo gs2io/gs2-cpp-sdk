@@ -41,10 +41,10 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** スタミナ のGRN */
+        /** スタミナ */
         optional<StringHolder> staminaId;
-        /** スタミナの種類名 */
-        optional<StringHolder> staminaModelName;
+        /** スタミナモデルの名前 */
+        optional<StringHolder> staminaName;
         /** ユーザーID */
         optional<StringHolder> userId;
         /** 最終更新時におけるスタミナ値 */
@@ -53,6 +53,8 @@ private:
         optional<Int32> maxValue;
         /** スタミナの最大値を超えて格納されているスタミナ値 */
         optional<Int32> overflowValue;
+        /** 次回スタミナが回復する時間 */
+        optional<Int64> nextRecoverAt;
         /** 作成日時 */
         optional<Int64> lastRecoveredAt;
         /** 作成日時 */
@@ -66,11 +68,12 @@ private:
         Data(const Data& data) :
             detail::json::IModel(data),
             staminaId(data.staminaId),
-            staminaModelName(data.staminaModelName),
+            staminaName(data.staminaName),
             userId(data.userId),
             value(data.value),
             maxValue(data.maxValue),
             overflowValue(data.overflowValue),
+            nextRecoverAt(data.nextRecoverAt),
             lastRecoveredAt(data.lastRecoveredAt),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
@@ -79,11 +82,12 @@ private:
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
             staminaId(std::move(data.staminaId)),
-            staminaModelName(std::move(data.staminaModelName)),
+            staminaName(std::move(data.staminaName)),
             userId(std::move(data.userId)),
             value(std::move(data.value)),
             maxValue(std::move(data.maxValue)),
             overflowValue(std::move(data.overflowValue)),
+            nextRecoverAt(std::move(data.nextRecoverAt)),
             lastRecoveredAt(std::move(data.lastRecoveredAt)),
             createdAt(std::move(data.createdAt)),
             updatedAt(std::move(data.updatedAt))
@@ -103,10 +107,10 @@ private:
                     this->staminaId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "staminaModelName") == 0) {
+            else if (std::strcmp(name, "staminaName") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->staminaModelName.emplace(jsonValue.GetString());
+                    this->staminaName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "userId") == 0) {
@@ -131,6 +135,12 @@ private:
                 if (jsonValue.IsInt())
                 {
                     this->overflowValue = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name, "nextRecoverAt") == 0) {
+                if (jsonValue.IsInt64())
+                {
+                    this->nextRecoverAt = jsonValue.GetInt64();
                 }
             }
             else if (std::strcmp(name, "lastRecoveredAt") == 0) {
@@ -232,9 +242,9 @@ public:
         return this;
     }
     /**
-     * スタミナ のGRNを取得
+     * スタミナを取得
      *
-     * @return スタミナ のGRN
+     * @return スタミナ
      */
     const optional<StringHolder>& getStaminaId() const
     {
@@ -242,9 +252,9 @@ public:
     }
 
     /**
-     * スタミナ のGRNを設定
+     * スタミナを設定
      *
-     * @param staminaId スタミナ のGRN
+     * @param staminaId スタミナ
      */
     void setStaminaId(const Char* staminaId)
     {
@@ -252,9 +262,9 @@ public:
     }
 
     /**
-     * スタミナ のGRNを設定
+     * スタミナを設定
      *
-     * @param staminaId スタミナ のGRN
+     * @param staminaId スタミナ
      */
     Stamina& withStaminaId(const Char* staminaId)
     {
@@ -263,33 +273,33 @@ public:
     }
 
     /**
-     * スタミナの種類名を取得
+     * スタミナモデルの名前を取得
      *
-     * @return スタミナの種類名
+     * @return スタミナモデルの名前
      */
-    const optional<StringHolder>& getStaminaModelName() const
+    const optional<StringHolder>& getStaminaName() const
     {
-        return ensureData().staminaModelName;
+        return ensureData().staminaName;
     }
 
     /**
-     * スタミナの種類名を設定
+     * スタミナモデルの名前を設定
      *
-     * @param staminaModelName スタミナの種類名
+     * @param staminaName スタミナモデルの名前
      */
-    void setStaminaModelName(const Char* staminaModelName)
+    void setStaminaName(const Char* staminaName)
     {
-        ensureData().staminaModelName.emplace(staminaModelName);
+        ensureData().staminaName.emplace(staminaName);
     }
 
     /**
-     * スタミナの種類名を設定
+     * スタミナモデルの名前を設定
      *
-     * @param staminaModelName スタミナの種類名
+     * @param staminaName スタミナモデルの名前
      */
-    Stamina& withStaminaModelName(const Char* staminaModelName)
+    Stamina& withStaminaName(const Char* staminaName)
     {
-        setStaminaModelName(staminaModelName);
+        setStaminaName(staminaName);
         return *this;
     }
 
@@ -418,6 +428,37 @@ public:
     }
 
     /**
+     * 次回スタミナが回復する時間を取得
+     *
+     * @return 次回スタミナが回復する時間
+     */
+    const optional<Int64>& getNextRecoverAt() const
+    {
+        return ensureData().nextRecoverAt;
+    }
+
+    /**
+     * 次回スタミナが回復する時間を設定
+     *
+     * @param nextRecoverAt 次回スタミナが回復する時間
+     */
+    void setNextRecoverAt(Int64 nextRecoverAt)
+    {
+        ensureData().nextRecoverAt.emplace(nextRecoverAt);
+    }
+
+    /**
+     * 次回スタミナが回復する時間を設定
+     *
+     * @param nextRecoverAt 次回スタミナが回復する時間
+     */
+    Stamina& withNextRecoverAt(Int64 nextRecoverAt)
+    {
+        setNextRecoverAt(nextRecoverAt);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -529,7 +570,7 @@ bool operator!=(const Stamina& lhs, const Stamina& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->staminaModelName != lhr.m_pData->staminaModelName)
+        if (lhs.m_pData->staminaName != lhr.m_pData->staminaName)
         {
             return true;
         }
@@ -546,6 +587,10 @@ bool operator!=(const Stamina& lhs, const Stamina& lhr)
             return true;
         }
         if (lhs.m_pData->overflowValue != lhr.m_pData->overflowValue)
+        {
+            return true;
+        }
+        if (lhs.m_pData->nextRecoverAt != lhr.m_pData->nextRecoverAt)
         {
             return true;
         }

@@ -41,15 +41,15 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** スタミナの種類名 */
-        optional<StringHolder> groupName;
-        /** スタミナの種類名 */
-        optional<StringHolder> staminaModelName;
+        optional<StringHolder> staminaName;
         /** スタミナモデルマスターの説明 */
         optional<StringHolder> description;
         /** スタミナの種類のメタデータ */
         optional<StringHolder> metadata;
-        /** スタミナを回復する速度(秒) */
+        /** スタミナを回復する速度(分) */
         optional<Int32> recoverIntervalMinutes;
         /** 時間経過後に回復する量 */
         optional<Int32> recoverValue;
@@ -59,9 +59,7 @@ private:
         optional<Bool> isOverflow;
         /** 溢れた状況での最大値 */
         optional<Int32> maxCapacity;
-        /** GS2-Experience と連携してスタミナの最大値を決定するか */
-        optional<Bool> isCollaborateGs2Experience;
-        /** GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRN */
+        /** GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRN */
         optional<StringHolder> maxStaminaTableId;
 
         Data()
@@ -69,8 +67,8 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            groupName(data.groupName),
-            staminaModelName(data.staminaModelName),
+            namespaceName(data.namespaceName),
+            staminaName(data.staminaName),
             description(data.description),
             metadata(data.metadata),
             recoverIntervalMinutes(data.recoverIntervalMinutes),
@@ -78,14 +76,13 @@ private:
             initialCapacity(data.initialCapacity),
             isOverflow(data.isOverflow),
             maxCapacity(data.maxCapacity),
-            isCollaborateGs2Experience(data.isCollaborateGs2Experience),
             maxStaminaTableId(data.maxStaminaTableId)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            groupName(std::move(data.groupName)),
-            staminaModelName(std::move(data.staminaModelName)),
+            namespaceName(std::move(data.namespaceName)),
+            staminaName(std::move(data.staminaName)),
             description(std::move(data.description)),
             metadata(std::move(data.metadata)),
             recoverIntervalMinutes(std::move(data.recoverIntervalMinutes)),
@@ -93,7 +90,6 @@ private:
             initialCapacity(std::move(data.initialCapacity)),
             isOverflow(std::move(data.isOverflow)),
             maxCapacity(std::move(data.maxCapacity)),
-            isCollaborateGs2Experience(std::move(data.isCollaborateGs2Experience)),
             maxStaminaTableId(std::move(data.maxStaminaTableId))
         {}
 
@@ -186,33 +182,33 @@ public:
         return this;
     }
     /**
-     * スタミナの種類名を取得
+     * ネームスペース名を取得
      *
-     * @return スタミナの種類名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGroupName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().groupName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * スタミナの種類名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName スタミナの種類名
+     * @param namespaceName ネームスペース名
      */
-    void setGroupName(const Char* groupName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * スタミナの種類名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName スタミナの種類名
+     * @param namespaceName ネームスペース名
      */
-    UpdateStaminaModelMasterRequest& withGroupName(const Char* groupName)
+    UpdateStaminaModelMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -221,29 +217,29 @@ public:
      *
      * @return スタミナの種類名
      */
-    const optional<StringHolder>& getStaminaModelName() const
+    const optional<StringHolder>& getStaminaName() const
     {
-        return ensureData().staminaModelName;
+        return ensureData().staminaName;
     }
 
     /**
      * スタミナの種類名を設定
      *
-     * @param staminaModelName スタミナの種類名
+     * @param staminaName スタミナの種類名
      */
-    void setStaminaModelName(const Char* staminaModelName)
+    void setStaminaName(const Char* staminaName)
     {
-        ensureData().staminaModelName.emplace(staminaModelName);
+        ensureData().staminaName.emplace(staminaName);
     }
 
     /**
      * スタミナの種類名を設定
      *
-     * @param staminaModelName スタミナの種類名
+     * @param staminaName スタミナの種類名
      */
-    UpdateStaminaModelMasterRequest& withStaminaModelName(const Char* staminaModelName)
+    UpdateStaminaModelMasterRequest& withStaminaName(const Char* staminaName)
     {
-        ensureData().staminaModelName.emplace(staminaModelName);
+        ensureData().staminaName.emplace(staminaName);
         return *this;
     }
 
@@ -310,9 +306,9 @@ public:
     }
 
     /**
-     * スタミナを回復する速度(秒)を取得
+     * スタミナを回復する速度(分)を取得
      *
-     * @return スタミナを回復する速度(秒)
+     * @return スタミナを回復する速度(分)
      */
     const optional<Int32>& getRecoverIntervalMinutes() const
     {
@@ -320,9 +316,9 @@ public:
     }
 
     /**
-     * スタミナを回復する速度(秒)を設定
+     * スタミナを回復する速度(分)を設定
      *
-     * @param recoverIntervalMinutes スタミナを回復する速度(秒)
+     * @param recoverIntervalMinutes スタミナを回復する速度(分)
      */
     void setRecoverIntervalMinutes(Int32 recoverIntervalMinutes)
     {
@@ -330,9 +326,9 @@ public:
     }
 
     /**
-     * スタミナを回復する速度(秒)を設定
+     * スタミナを回復する速度(分)を設定
      *
-     * @param recoverIntervalMinutes スタミナを回復する速度(秒)
+     * @param recoverIntervalMinutes スタミナを回復する速度(分)
      */
     UpdateStaminaModelMasterRequest& withRecoverIntervalMinutes(Int32 recoverIntervalMinutes)
     {
@@ -465,40 +461,9 @@ public:
     }
 
     /**
-     * GS2-Experience と連携してスタミナの最大値を決定するかを取得
+     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRNを取得
      *
-     * @return GS2-Experience と連携してスタミナの最大値を決定するか
-     */
-    const optional<Bool>& getIsCollaborateGs2Experience() const
-    {
-        return ensureData().isCollaborateGs2Experience;
-    }
-
-    /**
-     * GS2-Experience と連携してスタミナの最大値を決定するかを設定
-     *
-     * @param isCollaborateGs2Experience GS2-Experience と連携してスタミナの最大値を決定するか
-     */
-    void setIsCollaborateGs2Experience(Bool isCollaborateGs2Experience)
-    {
-        ensureData().isCollaborateGs2Experience.emplace(isCollaborateGs2Experience);
-    }
-
-    /**
-     * GS2-Experience と連携してスタミナの最大値を決定するかを設定
-     *
-     * @param isCollaborateGs2Experience GS2-Experience と連携してスタミナの最大値を決定するか
-     */
-    UpdateStaminaModelMasterRequest& withIsCollaborateGs2Experience(Bool isCollaborateGs2Experience)
-    {
-        ensureData().isCollaborateGs2Experience.emplace(isCollaborateGs2Experience);
-        return *this;
-    }
-
-    /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRNを取得
-     *
-     * @return GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRN
+     * @return GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRN
      */
     const optional<StringHolder>& getMaxStaminaTableId() const
     {
@@ -506,9 +471,9 @@ public:
     }
 
     /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRNを設定
+     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRNを設定
      *
-     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRN
+     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRN
      */
     void setMaxStaminaTableId(const Char* maxStaminaTableId)
     {
@@ -516,9 +481,9 @@ public:
     }
 
     /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRNを設定
+     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRNを設定
      *
-     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル のGRN
+     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRN
      */
     UpdateStaminaModelMasterRequest& withMaxStaminaTableId(const Char* maxStaminaTableId)
     {

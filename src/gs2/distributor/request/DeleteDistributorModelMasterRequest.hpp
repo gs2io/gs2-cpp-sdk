@@ -28,7 +28,7 @@ namespace gs2 { namespace distributor
 {
 
 /**
- * ディストリビュータの種類を削除 のリクエストモデル
+ * 配信設定マスターを削除 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,24 +41,24 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** ディストリビュータ名 */
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
+        /** 配信設定名 */
         optional<StringHolder> distributorName;
-        /** ディストリビューターの種類名 */
-        optional<StringHolder> distributorModelName;
 
         Data()
         {}
 
         Data(const Data& data) :
             Gs2Object(data),
-            distributorName(data.distributorName),
-            distributorModelName(data.distributorModelName)
+            namespaceName(data.namespaceName),
+            distributorName(data.distributorName)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            distributorName(std::move(data.distributorName)),
-            distributorModelName(std::move(data.distributorModelName))
+            namespaceName(std::move(data.namespaceName)),
+            distributorName(std::move(data.distributorName))
         {}
 
         ~Data() = default;
@@ -150,9 +150,40 @@ public:
         return this;
     }
     /**
-     * ディストリビュータ名を取得
+     * ネームスペース名を取得
      *
-     * @return ディストリビュータ名
+     * @return ネームスペース名
+     */
+    const optional<StringHolder>& getNamespaceName() const
+    {
+        return ensureData().namespaceName;
+    }
+
+    /**
+     * ネームスペース名を設定
+     *
+     * @param namespaceName ネームスペース名
+     */
+    void setNamespaceName(const Char* namespaceName)
+    {
+        ensureData().namespaceName.emplace(namespaceName);
+    }
+
+    /**
+     * ネームスペース名を設定
+     *
+     * @param namespaceName ネームスペース名
+     */
+    DeleteDistributorModelMasterRequest& withNamespaceName(const Char* namespaceName)
+    {
+        ensureData().namespaceName.emplace(namespaceName);
+        return *this;
+    }
+
+    /**
+     * 配信設定名を取得
+     *
+     * @return 配信設定名
      */
     const optional<StringHolder>& getDistributorName() const
     {
@@ -160,9 +191,9 @@ public:
     }
 
     /**
-     * ディストリビュータ名を設定
+     * 配信設定名を設定
      *
-     * @param distributorName ディストリビュータ名
+     * @param distributorName 配信設定名
      */
     void setDistributorName(const Char* distributorName)
     {
@@ -170,44 +201,13 @@ public:
     }
 
     /**
-     * ディストリビュータ名を設定
+     * 配信設定名を設定
      *
-     * @param distributorName ディストリビュータ名
+     * @param distributorName 配信設定名
      */
     DeleteDistributorModelMasterRequest& withDistributorName(const Char* distributorName)
     {
         ensureData().distributorName.emplace(distributorName);
-        return *this;
-    }
-
-    /**
-     * ディストリビューターの種類名を取得
-     *
-     * @return ディストリビューターの種類名
-     */
-    const optional<StringHolder>& getDistributorModelName() const
-    {
-        return ensureData().distributorModelName;
-    }
-
-    /**
-     * ディストリビューターの種類名を設定
-     *
-     * @param distributorModelName ディストリビューターの種類名
-     */
-    void setDistributorModelName(const Char* distributorModelName)
-    {
-        ensureData().distributorModelName.emplace(distributorModelName);
-    }
-
-    /**
-     * ディストリビューターの種類名を設定
-     *
-     * @param distributorModelName ディストリビューターの種類名
-     */
-    DeleteDistributorModelMasterRequest& withDistributorModelName(const Char* distributorModelName)
-    {
-        ensureData().distributorModelName.emplace(distributorModelName);
         return *this;
     }
 

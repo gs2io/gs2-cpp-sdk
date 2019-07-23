@@ -28,7 +28,7 @@ namespace gs2 { namespace lottery
 {
 
 /**
- * 景品の排出確率テーブルを更新 のリクエストモデル
+ * 排出確率テーブルマスターを更新 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,23 +41,23 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** グループ名 */
-        optional<StringHolder> groupName;
-        /** 景品テーブル名 */
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
+        /** 排出確率テーブル名 */
         optional<StringHolder> prizeTableName;
-        /** 景品の排出確率テーブルの説明 */
+        /** 排出確率テーブルマスターの説明 */
         optional<StringHolder> description;
-        /** 景品テーブルのメタデータ */
+        /** 排出確率テーブルのメタデータ */
         optional<StringHolder> metadata;
         /** 景品リスト */
-        optional<List<PrizeMaster>> prizes;
+        optional<List<Prize>> prizes;
 
         Data()
         {}
 
         Data(const Data& data) :
             Gs2Object(data),
-            groupName(data.groupName),
+            namespaceName(data.namespaceName),
             prizeTableName(data.prizeTableName),
             description(data.description),
             metadata(data.metadata),
@@ -66,7 +66,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            groupName(std::move(data.groupName)),
+            namespaceName(std::move(data.namespaceName)),
             prizeTableName(std::move(data.prizeTableName)),
             description(std::move(data.description)),
             metadata(std::move(data.metadata)),
@@ -162,40 +162,40 @@ public:
         return this;
     }
     /**
-     * グループ名を取得
+     * ネームスペース名を取得
      *
-     * @return グループ名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGroupName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().groupName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    void setGroupName(const Char* groupName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    UpdatePrizeTableMasterRequest& withGroupName(const Char* groupName)
+    UpdatePrizeTableMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
     /**
-     * 景品テーブル名を取得
+     * 排出確率テーブル名を取得
      *
-     * @return 景品テーブル名
+     * @return 排出確率テーブル名
      */
     const optional<StringHolder>& getPrizeTableName() const
     {
@@ -203,9 +203,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を設定
+     * 排出確率テーブル名を設定
      *
-     * @param prizeTableName 景品テーブル名
+     * @param prizeTableName 排出確率テーブル名
      */
     void setPrizeTableName(const Char* prizeTableName)
     {
@@ -213,9 +213,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を設定
+     * 排出確率テーブル名を設定
      *
-     * @param prizeTableName 景品テーブル名
+     * @param prizeTableName 排出確率テーブル名
      */
     UpdatePrizeTableMasterRequest& withPrizeTableName(const Char* prizeTableName)
     {
@@ -224,9 +224,9 @@ public:
     }
 
     /**
-     * 景品の排出確率テーブルの説明を取得
+     * 排出確率テーブルマスターの説明を取得
      *
-     * @return 景品の排出確率テーブルの説明
+     * @return 排出確率テーブルマスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -234,9 +234,9 @@ public:
     }
 
     /**
-     * 景品の排出確率テーブルの説明を設定
+     * 排出確率テーブルマスターの説明を設定
      *
-     * @param description 景品の排出確率テーブルの説明
+     * @param description 排出確率テーブルマスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -244,9 +244,9 @@ public:
     }
 
     /**
-     * 景品の排出確率テーブルの説明を設定
+     * 排出確率テーブルマスターの説明を設定
      *
-     * @param description 景品の排出確率テーブルの説明
+     * @param description 排出確率テーブルマスターの説明
      */
     UpdatePrizeTableMasterRequest& withDescription(const Char* description)
     {
@@ -255,9 +255,9 @@ public:
     }
 
     /**
-     * 景品テーブルのメタデータを取得
+     * 排出確率テーブルのメタデータを取得
      *
-     * @return 景品テーブルのメタデータ
+     * @return 排出確率テーブルのメタデータ
      */
     const optional<StringHolder>& getMetadata() const
     {
@@ -265,9 +265,9 @@ public:
     }
 
     /**
-     * 景品テーブルのメタデータを設定
+     * 排出確率テーブルのメタデータを設定
      *
-     * @param metadata 景品テーブルのメタデータ
+     * @param metadata 排出確率テーブルのメタデータ
      */
     void setMetadata(const Char* metadata)
     {
@@ -275,9 +275,9 @@ public:
     }
 
     /**
-     * 景品テーブルのメタデータを設定
+     * 排出確率テーブルのメタデータを設定
      *
-     * @param metadata 景品テーブルのメタデータ
+     * @param metadata 排出確率テーブルのメタデータ
      */
     UpdatePrizeTableMasterRequest& withMetadata(const Char* metadata)
     {
@@ -290,7 +290,7 @@ public:
      *
      * @return 景品リスト
      */
-    const optional<List<PrizeMaster>>& getPrizes() const
+    const optional<List<Prize>>& getPrizes() const
     {
         return ensureData().prizes;
     }
@@ -300,7 +300,7 @@ public:
      *
      * @param prizes 景品リスト
      */
-    void setPrizes(const List<PrizeMaster>& prizes)
+    void setPrizes(const List<Prize>& prizes)
     {
         ensureData().prizes.emplace(prizes);
     }
@@ -310,7 +310,7 @@ public:
      *
      * @param prizes 景品リスト
      */
-    UpdatePrizeTableMasterRequest& withPrizes(const List<PrizeMaster>& prizes)
+    UpdatePrizeTableMasterRequest& withPrizes(const List<Prize>& prizes)
     {
         ensureData().prizes.emplace(prizes);
         return *this;

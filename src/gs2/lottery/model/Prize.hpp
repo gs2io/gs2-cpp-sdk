@@ -23,6 +23,7 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "AcquireAction.hpp"
 #include <cstring>
 
 namespace gs2 { namespace lottery {
@@ -43,9 +44,9 @@ private:
     public:
         /** 景品の種類 */
         optional<StringHolder> type;
-        /** プロパティID */
-        optional<StringHolder> propertyId;
-        /** 景品テーブル名 */
+        /** 景品の入手アクションリスト */
+        optional<List<AcquireAction>> acquireActions;
+        /** 排出確率テーブルの名前 */
         optional<StringHolder> prizeTableName;
         /** 排出重み */
         optional<Int32> weight;
@@ -56,7 +57,7 @@ private:
         Data(const Data& data) :
             detail::json::IModel(data),
             type(data.type),
-            propertyId(data.propertyId),
+            acquireActions(data.acquireActions),
             prizeTableName(data.prizeTableName),
             weight(data.weight)
         {}
@@ -64,7 +65,7 @@ private:
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
             type(std::move(data.type)),
-            propertyId(std::move(data.propertyId)),
+            acquireActions(std::move(data.acquireActions)),
             prizeTableName(std::move(data.prizeTableName)),
             weight(std::move(data.weight))
         {}
@@ -83,10 +84,16 @@ private:
                     this->type.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "propertyId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name, "acquireActions") == 0) {
+                if (jsonValue.IsArray())
                 {
-                    this->propertyId.emplace(jsonValue.GetString());
+                    const auto& array = jsonValue.GetArray();
+                    this->acquireActions.emplace();
+                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
+                        AcquireAction item;
+                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
+                        detail::addToList(*this->acquireActions, std::move(item));
+                    }
                 }
             }
             else if (std::strcmp(name, "prizeTableName") == 0) {
@@ -213,40 +220,40 @@ public:
     }
 
     /**
-     * プロパティIDを取得
+     * 景品の入手アクションリストを取得
      *
-     * @return プロパティID
+     * @return 景品の入手アクションリスト
      */
-    const optional<StringHolder>& getPropertyId() const
+    const optional<List<AcquireAction>>& getAcquireActions() const
     {
-        return ensureData().propertyId;
+        return ensureData().acquireActions;
     }
 
     /**
-     * プロパティIDを設定
+     * 景品の入手アクションリストを設定
      *
-     * @param propertyId プロパティID
+     * @param acquireActions 景品の入手アクションリスト
      */
-    void setPropertyId(const Char* propertyId)
+    void setAcquireActions(const List<AcquireAction>& acquireActions)
     {
-        ensureData().propertyId.emplace(propertyId);
+        ensureData().acquireActions.emplace(acquireActions);
     }
 
     /**
-     * プロパティIDを設定
+     * 景品の入手アクションリストを設定
      *
-     * @param propertyId プロパティID
+     * @param acquireActions 景品の入手アクションリスト
      */
-    Prize& withPropertyId(const Char* propertyId)
+    Prize& withAcquireActions(const List<AcquireAction>& acquireActions)
     {
-        setPropertyId(propertyId);
+        setAcquireActions(acquireActions);
         return *this;
     }
 
     /**
-     * 景品テーブル名を取得
+     * 排出確率テーブルの名前を取得
      *
-     * @return 景品テーブル名
+     * @return 排出確率テーブルの名前
      */
     const optional<StringHolder>& getPrizeTableName() const
     {
@@ -254,9 +261,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を設定
+     * 排出確率テーブルの名前を設定
      *
-     * @param prizeTableName 景品テーブル名
+     * @param prizeTableName 排出確率テーブルの名前
      */
     void setPrizeTableName(const Char* prizeTableName)
     {
@@ -264,9 +271,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を設定
+     * 排出確率テーブルの名前を設定
      *
-     * @param prizeTableName 景品テーブル名
+     * @param prizeTableName 排出確率テーブルの名前
      */
     Prize& withPrizeTableName(const Char* prizeTableName)
     {
@@ -324,7 +331,7 @@ bool operator!=(const Prize& lhs, const Prize& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->propertyId != lhr.m_pData->propertyId)
+        if (lhs.m_pData->acquireActions != lhr.m_pData->acquireActions)
         {
             return true;
         }

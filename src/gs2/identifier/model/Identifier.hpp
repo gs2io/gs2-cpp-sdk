@@ -28,7 +28,7 @@
 namespace gs2 { namespace identifier {
 
 /**
- * GSI
+ * クレデンシャル
  *
  * @author Game Server Services, Inc.
  *
@@ -47,8 +47,10 @@ private:
         optional<StringHolder> clientId;
         /** ユーザー名 */
         optional<StringHolder> userName;
+        /** クライアントシークレット */
+        optional<StringHolder> clientSecret;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
 
         Data()
         {}
@@ -58,7 +60,8 @@ private:
             ownerId(data.ownerId),
             clientId(data.clientId),
             userName(data.userName),
-            createAt(data.createAt)
+            clientSecret(data.clientSecret),
+            createdAt(data.createdAt)
         {}
 
         Data(Data&& data) :
@@ -66,7 +69,8 @@ private:
             ownerId(std::move(data.ownerId)),
             clientId(std::move(data.clientId)),
             userName(std::move(data.userName)),
-            createAt(std::move(data.createAt))
+            clientSecret(std::move(data.clientSecret)),
+            createdAt(std::move(data.createdAt))
         {}
 
         ~Data() = default;
@@ -95,10 +99,16 @@ private:
                     this->userName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "clientSecret") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->clientSecret.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -275,33 +285,64 @@ public:
     }
 
     /**
+     * クライアントシークレットを取得
+     *
+     * @return クライアントシークレット
+     */
+    const optional<StringHolder>& getClientSecret() const
+    {
+        return ensureData().clientSecret;
+    }
+
+    /**
+     * クライアントシークレットを設定
+     *
+     * @param clientSecret クライアントシークレット
+     */
+    void setClientSecret(const Char* clientSecret)
+    {
+        ensureData().clientSecret.emplace(clientSecret);
+    }
+
+    /**
+     * クライアントシークレットを設定
+     *
+     * @param clientSecret クライアントシークレット
+     */
+    Identifier& withClientSecret(const Char* clientSecret)
+    {
+        setClientSecret(clientSecret);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    Identifier& withCreateAt(Int64 createAt)
+    Identifier& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -332,7 +373,11 @@ bool operator!=(const Identifier& lhs, const Identifier& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->clientSecret != lhr.m_pData->clientSecret)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }

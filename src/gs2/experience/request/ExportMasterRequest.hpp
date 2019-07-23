@@ -28,7 +28,7 @@ namespace gs2 { namespace experience
 {
 
 /**
- * 経験値マスターJSONのマスターデータをエクスポートします のリクエストモデル
+ * 現在有効な経験値設定のマスターデータをエクスポートします のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,20 +41,20 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** 経験値名 */
-        optional<StringHolder> experienceName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
 
         Data()
         {}
 
         Data(const Data& data) :
             Gs2Object(data),
-            experienceName(data.experienceName)
+            namespaceName(data.namespaceName)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            experienceName(std::move(data.experienceName))
+            namespaceName(std::move(data.namespaceName))
         {}
 
         ~Data() = default;
@@ -146,33 +146,33 @@ public:
         return this;
     }
     /**
-     * 経験値名を取得
+     * ネームスペース名を取得
      *
-     * @return 経験値名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getExperienceName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().experienceName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * 経験値名を設定
+     * ネームスペース名を設定
      *
-     * @param experienceName 経験値名
+     * @param namespaceName ネームスペース名
      */
-    void setExperienceName(const Char* experienceName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().experienceName.emplace(experienceName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * 経験値名を設定
+     * ネームスペース名を設定
      *
-     * @param experienceName 経験値名
+     * @param namespaceName ネームスペース名
      */
-    ExportMasterRequest& withExperienceName(const Char* experienceName)
+    ExportMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().experienceName.emplace(experienceName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

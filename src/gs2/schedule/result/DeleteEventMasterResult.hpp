@@ -29,7 +29,7 @@ namespace gs2 { namespace schedule
 {
 
 /**
- * イベントを削除 のレスポンスモデル
+ * イベントマスターを削除 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 削除したイベント */
+        /** 削除したイベントマスター */
         optional<EventMaster> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * 削除したイベントを取得
+     * 削除したイベントマスターを取得
      *
-     * @return 削除したイベント
+     * @return 削除したイベントマスター
      */
     const optional<EventMaster>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * 削除したイベントを設定
+     * 削除したイベントマスターを設定
      *
-     * @param item 削除したイベント
+     * @param item 削除したイベントマスター
      */
     void setItem(const EventMaster& item)
     {

@@ -41,7 +41,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 抽選の種類 のGRN */
+        /** 抽選の種類マスター */
         optional<StringHolder> lotteryModelId;
         /** 抽選モデルの種類名 */
         optional<StringHolder> name;
@@ -222,9 +222,9 @@ public:
         return this;
     }
     /**
-     * 抽選の種類 のGRNを取得
+     * 抽選の種類マスターを取得
      *
-     * @return 抽選の種類 のGRN
+     * @return 抽選の種類マスター
      */
     const optional<StringHolder>& getLotteryModelId() const
     {
@@ -232,9 +232,9 @@ public:
     }
 
     /**
-     * 抽選の種類 のGRNを設定
+     * 抽選の種類マスターを設定
      *
-     * @param lotteryModelId 抽選の種類 のGRN
+     * @param lotteryModelId 抽選の種類マスター
      */
     void setLotteryModelId(const Char* lotteryModelId)
     {
@@ -242,9 +242,9 @@ public:
     }
 
     /**
-     * 抽選の種類 のGRNを設定
+     * 抽選の種類マスターを設定
      *
-     * @param lotteryModelId 抽選の種類 のGRN
+     * @param lotteryModelId 抽選の種類マスター
      */
     LotteryModel& withLotteryModelId(const Char* lotteryModelId)
     {

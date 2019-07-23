@@ -28,7 +28,7 @@
 namespace gs2 { namespace money {
 
 /**
- * ウォレットの詳細
+ * ウォレット
  *
  * @author Game Server Services, Inc.
  *
@@ -41,20 +41,20 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ウォレットの詳細 のGRN */
+        /** ウォレット */
         optional<StringHolder> walletId;
         /** ユーザーID */
         optional<StringHolder> userId;
-        /** None */
+        /** スロット番号 */
         optional<Int32> slot;
-        /** 単価 */
-        optional<Float> price;
-        /** 所持量 */
-        optional<Int32> count;
+        /** 有償課金通貨所持量 */
+        optional<Int32> paid;
+        /** 無償課金通貨所持量 */
+        optional<Int32> free;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
         /** 最終更新日時 */
-        optional<Int64> updateAt;
+        optional<Int64> updatedAt;
 
         Data()
         {}
@@ -64,10 +64,10 @@ private:
             walletId(data.walletId),
             userId(data.userId),
             slot(data.slot),
-            price(data.price),
-            count(data.count),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
+            paid(data.paid),
+            free(data.free),
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
@@ -75,10 +75,10 @@ private:
             walletId(std::move(data.walletId)),
             userId(std::move(data.userId)),
             slot(std::move(data.slot)),
-            price(std::move(data.price)),
-            count(std::move(data.count)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
+            paid(std::move(data.paid)),
+            free(std::move(data.free)),
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -107,28 +107,28 @@ private:
                     this->slot = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "price") == 0) {
-                if (jsonValue.IsFloat())
-                {
-                    this->price = jsonValue.GetFloat();
-                }
-            }
-            else if (std::strcmp(name, "count") == 0) {
+            else if (std::strcmp(name, "paid") == 0) {
                 if (jsonValue.IsInt())
                 {
-                    this->count = jsonValue.GetInt();
+                    this->paid = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt64())
+            else if (std::strcmp(name, "free") == 0) {
+                if (jsonValue.IsInt())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->free = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name, "updatedAt") == 0) {
+                if (jsonValue.IsInt64())
+                {
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -212,9 +212,9 @@ public:
         return this;
     }
     /**
-     * ウォレットの詳細 のGRNを取得
+     * ウォレットを取得
      *
-     * @return ウォレットの詳細 のGRN
+     * @return ウォレット
      */
     const optional<StringHolder>& getWalletId() const
     {
@@ -222,9 +222,9 @@ public:
     }
 
     /**
-     * ウォレットの詳細 のGRNを設定
+     * ウォレットを設定
      *
-     * @param walletId ウォレットの詳細 のGRN
+     * @param walletId ウォレット
      */
     void setWalletId(const Char* walletId)
     {
@@ -232,9 +232,9 @@ public:
     }
 
     /**
-     * ウォレットの詳細 のGRNを設定
+     * ウォレットを設定
      *
-     * @param walletId ウォレットの詳細 のGRN
+     * @param walletId ウォレット
      */
     Wallet& withWalletId(const Char* walletId)
     {
@@ -274,9 +274,9 @@ public:
     }
 
     /**
-     * Noneを取得
+     * スロット番号を取得
      *
-     * @return None
+     * @return スロット番号
      */
     const optional<Int32>& getSlot() const
     {
@@ -284,9 +284,9 @@ public:
     }
 
     /**
-     * Noneを設定
+     * スロット番号を設定
      *
-     * @param slot None
+     * @param slot スロット番号
      */
     void setSlot(Int32 slot)
     {
@@ -294,9 +294,9 @@ public:
     }
 
     /**
-     * Noneを設定
+     * スロット番号を設定
      *
-     * @param slot None
+     * @param slot スロット番号
      */
     Wallet& withSlot(Int32 slot)
     {
@@ -305,64 +305,64 @@ public:
     }
 
     /**
-     * 単価を取得
+     * 有償課金通貨所持量を取得
      *
-     * @return 単価
+     * @return 有償課金通貨所持量
      */
-    const optional<Float>& getPrice() const
+    const optional<Int32>& getPaid() const
     {
-        return ensureData().price;
+        return ensureData().paid;
     }
 
     /**
-     * 単価を設定
+     * 有償課金通貨所持量を設定
      *
-     * @param price 単価
+     * @param paid 有償課金通貨所持量
      */
-    void setPrice(Float price)
+    void setPaid(Int32 paid)
     {
-        ensureData().price.emplace(price);
+        ensureData().paid.emplace(paid);
     }
 
     /**
-     * 単価を設定
+     * 有償課金通貨所持量を設定
      *
-     * @param price 単価
+     * @param paid 有償課金通貨所持量
      */
-    Wallet& withPrice(Float price)
+    Wallet& withPaid(Int32 paid)
     {
-        setPrice(price);
+        setPaid(paid);
         return *this;
     }
 
     /**
-     * 所持量を取得
+     * 無償課金通貨所持量を取得
      *
-     * @return 所持量
+     * @return 無償課金通貨所持量
      */
-    const optional<Int32>& getCount() const
+    const optional<Int32>& getFree() const
     {
-        return ensureData().count;
+        return ensureData().free;
     }
 
     /**
-     * 所持量を設定
+     * 無償課金通貨所持量を設定
      *
-     * @param count 所持量
+     * @param free 無償課金通貨所持量
      */
-    void setCount(Int32 count)
+    void setFree(Int32 free)
     {
-        ensureData().count.emplace(count);
+        ensureData().free.emplace(free);
     }
 
     /**
-     * 所持量を設定
+     * 無償課金通貨所持量を設定
      *
-     * @param count 所持量
+     * @param free 無償課金通貨所持量
      */
-    Wallet& withCount(Int32 count)
+    Wallet& withFree(Int32 free)
     {
-        setCount(count);
+        setFree(free);
         return *this;
     }
 
@@ -371,29 +371,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    Wallet& withCreateAt(Int64 createAt)
+    Wallet& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -402,29 +402,29 @@ public:
      *
      * @return 最終更新日時
      */
-    const optional<Int64>& getUpdateAt() const
+    const optional<Int64>& getUpdatedAt() const
     {
-        return ensureData().updateAt;
+        return ensureData().updatedAt;
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    void setUpdateAt(Int64 updateAt)
+    void setUpdatedAt(Int64 updatedAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        ensureData().updatedAt.emplace(updatedAt);
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    Wallet& withUpdateAt(Int64 updateAt)
+    Wallet& withUpdatedAt(Int64 updatedAt)
     {
-        setUpdateAt(updateAt);
+        setUpdatedAt(updatedAt);
         return *this;
     }
 
@@ -455,19 +455,19 @@ bool operator!=(const Wallet& lhs, const Wallet& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->price != lhr.m_pData->price)
+        if (lhs.m_pData->paid != lhr.m_pData->paid)
         {
             return true;
         }
-        if (lhs.m_pData->count != lhr.m_pData->count)
+        if (lhs.m_pData->free != lhr.m_pData->free)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }
-        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

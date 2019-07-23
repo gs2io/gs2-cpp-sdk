@@ -28,7 +28,7 @@ namespace gs2 { namespace identifier
 {
 
 /**
- * ユーザーを更新します のリクエストモデル
+ * ユーザを更新します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -43,7 +43,7 @@ private:
     public:
         /** ユーザー名 */
         optional<StringHolder> userName;
-        /** ユーザーの説明 */
+        /** ユーザの説明 */
         optional<StringHolder> description;
 
         Data()
@@ -181,9 +181,9 @@ public:
     }
 
     /**
-     * ユーザーの説明を取得
+     * ユーザの説明を取得
      *
-     * @return ユーザーの説明
+     * @return ユーザの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -191,9 +191,9 @@ public:
     }
 
     /**
-     * ユーザーの説明を設定
+     * ユーザの説明を設定
      *
-     * @param description ユーザーの説明
+     * @param description ユーザの説明
      */
     void setDescription(const Char* description)
     {
@@ -201,9 +201,9 @@ public:
     }
 
     /**
-     * ユーザーの説明を設定
+     * ユーザの説明を設定
      *
-     * @param description ユーザーの説明
+     * @param description ユーザの説明
      */
     UpdateUserRequest& withDescription(const Char* description)
     {

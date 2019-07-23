@@ -28,7 +28,7 @@ namespace gs2 { namespace stamina
 {
 
 /**
- * スタミナ最大値テーブルを更新 のリクエストモデル
+ * スタミナの最大値テーブルマスターを更新 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,15 +41,15 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** スタミナの種類名 */
-        optional<StringHolder> groupName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** 最大スタミナ値テーブル名 */
         optional<StringHolder> maxStaminaTableName;
-        /** スタミナ最大値テーブルの説明 */
+        /** スタミナの最大値テーブルマスターの説明 */
         optional<StringHolder> description;
         /** 最大スタミナ値テーブルのメタデータ */
         optional<StringHolder> metadata;
-        /** 経験値の種類 のGRN */
+        /** 経験値の種類マスター のGRN */
         optional<StringHolder> experienceModelId;
         /** ランク毎のスタミナの最大値テーブル */
         optional<List<Int32>> values;
@@ -59,7 +59,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            groupName(data.groupName),
+            namespaceName(data.namespaceName),
             maxStaminaTableName(data.maxStaminaTableName),
             description(data.description),
             metadata(data.metadata),
@@ -69,7 +69,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            groupName(std::move(data.groupName)),
+            namespaceName(std::move(data.namespaceName)),
             maxStaminaTableName(std::move(data.maxStaminaTableName)),
             description(std::move(data.description)),
             metadata(std::move(data.metadata)),
@@ -166,33 +166,33 @@ public:
         return this;
     }
     /**
-     * スタミナの種類名を取得
+     * ネームスペース名を取得
      *
-     * @return スタミナの種類名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGroupName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().groupName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * スタミナの種類名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName スタミナの種類名
+     * @param namespaceName ネームスペース名
      */
-    void setGroupName(const Char* groupName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * スタミナの種類名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName スタミナの種類名
+     * @param namespaceName ネームスペース名
      */
-    UpdateMaxStaminaTableMasterRequest& withGroupName(const Char* groupName)
+    UpdateMaxStaminaTableMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -228,9 +228,9 @@ public:
     }
 
     /**
-     * スタミナ最大値テーブルの説明を取得
+     * スタミナの最大値テーブルマスターの説明を取得
      *
-     * @return スタミナ最大値テーブルの説明
+     * @return スタミナの最大値テーブルマスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -238,9 +238,9 @@ public:
     }
 
     /**
-     * スタミナ最大値テーブルの説明を設定
+     * スタミナの最大値テーブルマスターの説明を設定
      *
-     * @param description スタミナ最大値テーブルの説明
+     * @param description スタミナの最大値テーブルマスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -248,9 +248,9 @@ public:
     }
 
     /**
-     * スタミナ最大値テーブルの説明を設定
+     * スタミナの最大値テーブルマスターの説明を設定
      *
-     * @param description スタミナ最大値テーブルの説明
+     * @param description スタミナの最大値テーブルマスターの説明
      */
     UpdateMaxStaminaTableMasterRequest& withDescription(const Char* description)
     {
@@ -290,9 +290,9 @@ public:
     }
 
     /**
-     * 経験値の種類 のGRNを取得
+     * 経験値の種類マスター のGRNを取得
      *
-     * @return 経験値の種類 のGRN
+     * @return 経験値の種類マスター のGRN
      */
     const optional<StringHolder>& getExperienceModelId() const
     {
@@ -300,9 +300,9 @@ public:
     }
 
     /**
-     * 経験値の種類 のGRNを設定
+     * 経験値の種類マスター のGRNを設定
      *
-     * @param experienceModelId 経験値の種類 のGRN
+     * @param experienceModelId 経験値の種類マスター のGRN
      */
     void setExperienceModelId(const Char* experienceModelId)
     {
@@ -310,9 +310,9 @@ public:
     }
 
     /**
-     * 経験値の種類 のGRNを設定
+     * 経験値の種類マスター のGRNを設定
      *
-     * @param experienceModelId 経験値の種類 のGRN
+     * @param experienceModelId 経験値の種類マスター のGRN
      */
     UpdateMaxStaminaTableMasterRequest& withExperienceModelId(const Char* experienceModelId)
     {

@@ -41,24 +41,24 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ステータス のGRN */
+        /** ステータス */
         optional<StringHolder> statusId;
-        /** 経験値の種類名 */
-        optional<StringHolder> experienceModelName;
+        /** 経験値の種類の名前 */
+        optional<StringHolder> experienceName;
         /** ユーザーID */
         optional<StringHolder> userId;
         /** プロパティID */
         optional<StringHolder> propertyId;
         /** 累計獲得経験値 */
         optional<Int64> experienceValue;
-        /** 累計獲得経験値 */
+        /** 現在のランク */
         optional<Int64> rankValue;
         /** 現在のランクキャップ */
         optional<Int64> rankCapValue;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
         /** 最終更新日時 */
-        optional<Int64> updateAt;
+        optional<Int64> updatedAt;
 
         Data()
         {}
@@ -66,27 +66,27 @@ private:
         Data(const Data& data) :
             detail::json::IModel(data),
             statusId(data.statusId),
-            experienceModelName(data.experienceModelName),
+            experienceName(data.experienceName),
             userId(data.userId),
             propertyId(data.propertyId),
             experienceValue(data.experienceValue),
             rankValue(data.rankValue),
             rankCapValue(data.rankCapValue),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
             statusId(std::move(data.statusId)),
-            experienceModelName(std::move(data.experienceModelName)),
+            experienceName(std::move(data.experienceName)),
             userId(std::move(data.userId)),
             propertyId(std::move(data.propertyId)),
             experienceValue(std::move(data.experienceValue)),
             rankValue(std::move(data.rankValue)),
             rankCapValue(std::move(data.rankCapValue)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -103,10 +103,10 @@ private:
                     this->statusId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "experienceModelName") == 0) {
+            else if (std::strcmp(name, "experienceName") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->experienceModelName.emplace(jsonValue.GetString());
+                    this->experienceName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "userId") == 0) {
@@ -139,16 +139,16 @@ private:
                     this->rankCapValue = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
+            else if (std::strcmp(name, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt64();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -232,9 +232,9 @@ public:
         return this;
     }
     /**
-     * ステータス のGRNを取得
+     * ステータスを取得
      *
-     * @return ステータス のGRN
+     * @return ステータス
      */
     const optional<StringHolder>& getStatusId() const
     {
@@ -242,9 +242,9 @@ public:
     }
 
     /**
-     * ステータス のGRNを設定
+     * ステータスを設定
      *
-     * @param statusId ステータス のGRN
+     * @param statusId ステータス
      */
     void setStatusId(const Char* statusId)
     {
@@ -252,9 +252,9 @@ public:
     }
 
     /**
-     * ステータス のGRNを設定
+     * ステータスを設定
      *
-     * @param statusId ステータス のGRN
+     * @param statusId ステータス
      */
     Status& withStatusId(const Char* statusId)
     {
@@ -263,33 +263,33 @@ public:
     }
 
     /**
-     * 経験値の種類名を取得
+     * 経験値の種類の名前を取得
      *
-     * @return 経験値の種類名
+     * @return 経験値の種類の名前
      */
-    const optional<StringHolder>& getExperienceModelName() const
+    const optional<StringHolder>& getExperienceName() const
     {
-        return ensureData().experienceModelName;
+        return ensureData().experienceName;
     }
 
     /**
-     * 経験値の種類名を設定
+     * 経験値の種類の名前を設定
      *
-     * @param experienceModelName 経験値の種類名
+     * @param experienceName 経験値の種類の名前
      */
-    void setExperienceModelName(const Char* experienceModelName)
+    void setExperienceName(const Char* experienceName)
     {
-        ensureData().experienceModelName.emplace(experienceModelName);
+        ensureData().experienceName.emplace(experienceName);
     }
 
     /**
-     * 経験値の種類名を設定
+     * 経験値の種類の名前を設定
      *
-     * @param experienceModelName 経験値の種類名
+     * @param experienceName 経験値の種類の名前
      */
-    Status& withExperienceModelName(const Char* experienceModelName)
+    Status& withExperienceName(const Char* experienceName)
     {
-        setExperienceModelName(experienceModelName);
+        setExperienceName(experienceName);
         return *this;
     }
 
@@ -387,9 +387,9 @@ public:
     }
 
     /**
-     * 累計獲得経験値を取得
+     * 現在のランクを取得
      *
-     * @return 累計獲得経験値
+     * @return 現在のランク
      */
     const optional<Int64>& getRankValue() const
     {
@@ -397,9 +397,9 @@ public:
     }
 
     /**
-     * 累計獲得経験値を設定
+     * 現在のランクを設定
      *
-     * @param rankValue 累計獲得経験値
+     * @param rankValue 現在のランク
      */
     void setRankValue(Int64 rankValue)
     {
@@ -407,9 +407,9 @@ public:
     }
 
     /**
-     * 累計獲得経験値を設定
+     * 現在のランクを設定
      *
-     * @param rankValue 累計獲得経験値
+     * @param rankValue 現在のランク
      */
     Status& withRankValue(Int64 rankValue)
     {
@@ -453,29 +453,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    Status& withCreateAt(Int64 createAt)
+    Status& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -484,29 +484,29 @@ public:
      *
      * @return 最終更新日時
      */
-    const optional<Int64>& getUpdateAt() const
+    const optional<Int64>& getUpdatedAt() const
     {
-        return ensureData().updateAt;
+        return ensureData().updatedAt;
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    void setUpdateAt(Int64 updateAt)
+    void setUpdatedAt(Int64 updatedAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        ensureData().updatedAt.emplace(updatedAt);
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    Status& withUpdateAt(Int64 updateAt)
+    Status& withUpdatedAt(Int64 updatedAt)
     {
-        setUpdateAt(updateAt);
+        setUpdatedAt(updatedAt);
         return *this;
     }
 
@@ -529,7 +529,7 @@ bool operator!=(const Status& lhs, const Status& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->experienceModelName != lhr.m_pData->experienceModelName)
+        if (lhs.m_pData->experienceName != lhr.m_pData->experienceName)
         {
             return true;
         }
@@ -553,11 +553,11 @@ bool operator!=(const Status& lhs, const Status& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }
-        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

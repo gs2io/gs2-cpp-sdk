@@ -39,12 +39,10 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** ゲーム名 */
-        optional<StringHolder> gameName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** スロット番号 */
         optional<Int32> type;
-        /** 引き継ぎ用ユーザーID */
-        optional<StringHolder> userIdentifier;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -53,17 +51,15 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            gameName(data.gameName),
+            namespaceName(data.namespaceName),
             type(data.type),
-            userIdentifier(data.userIdentifier),
             duplicationAvoider(data.duplicationAvoider)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            gameName(std::move(data.gameName)),
+            namespaceName(std::move(data.namespaceName)),
             type(std::move(data.type)),
-            userIdentifier(std::move(data.userIdentifier)),
             duplicationAvoider(std::move(data.duplicationAvoider))
         {}
 
@@ -156,33 +152,33 @@ public:
         return this;
     }
     /**
-     * ゲーム名を取得
+     * ネームスペース名を取得
      *
-     * @return ゲーム名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGameName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().gameName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param gameName ゲーム名
+     * @param namespaceName ネームスペース名
      */
-    void setGameName(const Char* gameName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().gameName.emplace(gameName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param gameName ゲーム名
+     * @param namespaceName ネームスペース名
      */
-    GetTakeOverRequest& withGameName(const Char* gameName)
+    GetTakeOverRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().gameName.emplace(gameName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -214,37 +210,6 @@ public:
     GetTakeOverRequest& withType(Int32 type)
     {
         ensureData().type.emplace(type);
-        return *this;
-    }
-
-    /**
-     * 引き継ぎ用ユーザーIDを取得
-     *
-     * @return 引き継ぎ用ユーザーID
-     */
-    const optional<StringHolder>& getUserIdentifier() const
-    {
-        return ensureData().userIdentifier;
-    }
-
-    /**
-     * 引き継ぎ用ユーザーIDを設定
-     *
-     * @param userIdentifier 引き継ぎ用ユーザーID
-     */
-    void setUserIdentifier(const Char* userIdentifier)
-    {
-        ensureData().userIdentifier.emplace(userIdentifier);
-    }
-
-    /**
-     * 引き継ぎ用ユーザーIDを設定
-     *
-     * @param userIdentifier 引き継ぎ用ユーザーID
-     */
-    GetTakeOverRequest& withUserIdentifier(const Char* userIdentifier)
-    {
-        ensureData().userIdentifier.emplace(userIdentifier);
         return *this;
     }
 

@@ -26,7 +26,7 @@ namespace gs2 { namespace lottery
 {
 
 /**
- * 排出済みの景品情報の一覧を取得 のリクエストモデル
+ * ボックスの一覧を取得 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,10 +39,8 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** グループ名 */
-        optional<StringHolder> groupName;
-        /** 抽選モデルの種類名 */
-        optional<StringHolder> lotteryModelName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** データの取得を開始する位置を指定するトークン */
         optional<StringHolder> pageToken;
         /** データの取得件数 */
@@ -55,8 +53,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            groupName(data.groupName),
-            lotteryModelName(data.lotteryModelName),
+            namespaceName(data.namespaceName),
             pageToken(data.pageToken),
             limit(data.limit),
             duplicationAvoider(data.duplicationAvoider)
@@ -64,8 +61,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            groupName(std::move(data.groupName)),
-            lotteryModelName(std::move(data.lotteryModelName)),
+            namespaceName(std::move(data.namespaceName)),
             pageToken(std::move(data.pageToken)),
             limit(std::move(data.limit)),
             duplicationAvoider(std::move(data.duplicationAvoider))
@@ -160,64 +156,33 @@ public:
         return this;
     }
     /**
-     * グループ名を取得
+     * ネームスペース名を取得
      *
-     * @return グループ名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGroupName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().groupName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    void setGroupName(const Char* groupName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    DescribeBoxesRequest& withGroupName(const Char* groupName)
+    DescribeBoxesRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
-        return *this;
-    }
-
-    /**
-     * 抽選モデルの種類名を取得
-     *
-     * @return 抽選モデルの種類名
-     */
-    const optional<StringHolder>& getLotteryModelName() const
-    {
-        return ensureData().lotteryModelName;
-    }
-
-    /**
-     * 抽選モデルの種類名を設定
-     *
-     * @param lotteryModelName 抽選モデルの種類名
-     */
-    void setLotteryModelName(const Char* lotteryModelName)
-    {
-        ensureData().lotteryModelName.emplace(lotteryModelName);
-    }
-
-    /**
-     * 抽選モデルの種類名を設定
-     *
-     * @param lotteryModelName 抽選モデルの種類名
-     */
-    DescribeBoxesRequest& withLotteryModelName(const Char* lotteryModelName)
-    {
-        ensureData().lotteryModelName.emplace(lotteryModelName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

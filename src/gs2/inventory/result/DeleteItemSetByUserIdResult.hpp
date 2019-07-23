@@ -29,7 +29,7 @@ namespace gs2 { namespace inventory
 {
 
 /**
- * アイテムセットを削除 のレスポンスモデル
+ * 有効期限ごとのアイテム所持数量を削除 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,9 +39,9 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 削除したアイテムセットのリスト */
+        /** 削除した有効期限ごとのアイテム所持数量のリスト */
         optional<List<ItemSet>> items;
-        /** アイテムマスター */
+        /** アイテムモデル */
         optional<ItemModel> itemModel;
         /** インベントリ */
         optional<Inventory> inventory;
@@ -180,9 +180,9 @@ public:
         return this;
     }
     /**
-     * 削除したアイテムセットのリストを取得
+     * 削除した有効期限ごとのアイテム所持数量のリストを取得
      *
-     * @return 削除したアイテムセットのリスト
+     * @return 削除した有効期限ごとのアイテム所持数量のリスト
      */
     const optional<List<ItemSet>>& getItems() const
     {
@@ -190,9 +190,9 @@ public:
     }
 
     /**
-     * 削除したアイテムセットのリストを設定
+     * 削除した有効期限ごとのアイテム所持数量のリストを設定
      *
-     * @param items 削除したアイテムセットのリスト
+     * @param items 削除した有効期限ごとのアイテム所持数量のリスト
      */
     void setItems(const List<ItemSet>& items)
     {
@@ -200,9 +200,9 @@ public:
     }
 
     /**
-     * アイテムマスターを取得
+     * アイテムモデルを取得
      *
-     * @return アイテムマスター
+     * @return アイテムモデル
      */
     const optional<ItemModel>& getItemModel() const
     {
@@ -210,9 +210,9 @@ public:
     }
 
     /**
-     * アイテムマスターを設定
+     * アイテムモデルを設定
      *
-     * @param itemModel アイテムマスター
+     * @param itemModel アイテムモデル
      */
     void setItemModel(const ItemModel& itemModel)
     {

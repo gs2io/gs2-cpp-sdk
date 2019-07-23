@@ -29,7 +29,7 @@
 namespace gs2 { namespace lottery {
 
 /**
- * 排出済みの景品情報
+ * ボックスから取り出したアイテムのリスト
  *
  * @author Game Server Services, Inc.
  *
@@ -42,13 +42,13 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 排出済みの景品情報 のGRN */
+        /** ボックス */
         optional<StringHolder> boxId;
-        /** 景品テーブル名 */
+        /** 排出確率テーブル名 */
         optional<StringHolder> prizeTableName;
         /** ユーザーID */
         optional<StringHolder> userId;
-        /** 排出済みの景品情報のリスト */
+        /** ボックスから取り出したアイテムのリスト */
         optional<List<BoxItem>> items;
 
         Data()
@@ -189,9 +189,9 @@ public:
         return this;
     }
     /**
-     * 排出済みの景品情報 のGRNを取得
+     * ボックスを取得
      *
-     * @return 排出済みの景品情報 のGRN
+     * @return ボックス
      */
     const optional<StringHolder>& getBoxId() const
     {
@@ -199,9 +199,9 @@ public:
     }
 
     /**
-     * 排出済みの景品情報 のGRNを設定
+     * ボックスを設定
      *
-     * @param boxId 排出済みの景品情報 のGRN
+     * @param boxId ボックス
      */
     void setBoxId(const Char* boxId)
     {
@@ -209,9 +209,9 @@ public:
     }
 
     /**
-     * 排出済みの景品情報 のGRNを設定
+     * ボックスを設定
      *
-     * @param boxId 排出済みの景品情報 のGRN
+     * @param boxId ボックス
      */
     BoxItems& withBoxId(const Char* boxId)
     {
@@ -220,9 +220,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を取得
+     * 排出確率テーブル名を取得
      *
-     * @return 景品テーブル名
+     * @return 排出確率テーブル名
      */
     const optional<StringHolder>& getPrizeTableName() const
     {
@@ -230,9 +230,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を設定
+     * 排出確率テーブル名を設定
      *
-     * @param prizeTableName 景品テーブル名
+     * @param prizeTableName 排出確率テーブル名
      */
     void setPrizeTableName(const Char* prizeTableName)
     {
@@ -240,9 +240,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を設定
+     * 排出確率テーブル名を設定
      *
-     * @param prizeTableName 景品テーブル名
+     * @param prizeTableName 排出確率テーブル名
      */
     BoxItems& withPrizeTableName(const Char* prizeTableName)
     {
@@ -282,9 +282,9 @@ public:
     }
 
     /**
-     * 排出済みの景品情報のリストを取得
+     * ボックスから取り出したアイテムのリストを取得
      *
-     * @return 排出済みの景品情報のリスト
+     * @return ボックスから取り出したアイテムのリスト
      */
     const optional<List<BoxItem>>& getItems() const
     {
@@ -292,9 +292,9 @@ public:
     }
 
     /**
-     * 排出済みの景品情報のリストを設定
+     * ボックスから取り出したアイテムのリストを設定
      *
-     * @param items 排出済みの景品情報のリスト
+     * @param items ボックスから取り出したアイテムのリスト
      */
     void setItems(const List<BoxItem>& items)
     {
@@ -302,9 +302,9 @@ public:
     }
 
     /**
-     * 排出済みの景品情報のリストを設定
+     * ボックスから取り出したアイテムのリストを設定
      *
-     * @param items 排出済みの景品情報のリスト
+     * @param items ボックスから取り出したアイテムのリスト
      */
     BoxItems& withItems(const List<BoxItem>& items)
     {

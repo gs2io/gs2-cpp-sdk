@@ -29,7 +29,7 @@ namespace gs2 { namespace identifier
 {
 
 /**
- * GSIを新規作成します のレスポンスモデル
+ * クレデンシャルを新規作成します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,20 +39,24 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 作成したGSI */
-        optional<FullIdentifier> item;
+        /** 作成したクレデンシャル */
+        optional<Identifier> item;
+        /** クライアントシークレット */
+        optional<StringHolder> clientSecret;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            item(data.item)
+            item(data.item),
+            clientSecret(data.clientSecret)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
+            item(std::move(data.item)),
+            clientSecret(std::move(data.clientSecret))
         {}
 
         virtual ~Data() = default;
@@ -69,6 +73,12 @@ private:
                     const auto& jsonObject = jsonValue.GetObject();
                     this->item.emplace();
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
+                }
+            }
+            else if (std::strcmp(name, "clientSecret") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->clientSecret.emplace(jsonValue.GetString());
                 }
             }
         }
@@ -152,23 +162,43 @@ public:
         return this;
     }
     /**
-     * 作成したGSIを取得
+     * 作成したクレデンシャルを取得
      *
-     * @return 作成したGSI
+     * @return 作成したクレデンシャル
      */
-    const optional<FullIdentifier>& getItem() const
+    const optional<Identifier>& getItem() const
     {
         return ensureData().item;
     }
 
     /**
-     * 作成したGSIを設定
+     * 作成したクレデンシャルを設定
      *
-     * @param item 作成したGSI
+     * @param item 作成したクレデンシャル
      */
-    void setItem(const FullIdentifier& item)
+    void setItem(const Identifier& item)
     {
         ensureData().item.emplace(item);
+    }
+
+    /**
+     * クライアントシークレットを取得
+     *
+     * @return クライアントシークレット
+     */
+    const optional<StringHolder>& getClientSecret() const
+    {
+        return ensureData().clientSecret;
+    }
+
+    /**
+     * クライアントシークレットを設定
+     *
+     * @param clientSecret クライアントシークレット
+     */
+    void setClientSecret(const Char* clientSecret)
+    {
+        ensureData().clientSecret.emplace(clientSecret);
     }
 
 

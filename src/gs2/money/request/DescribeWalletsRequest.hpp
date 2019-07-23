@@ -17,22 +17,20 @@
 #ifndef GS2_MONEY_CONTROL_DESCRIBEWALLETSREQUEST_HPP_
 #define GS2_MONEY_CONTROL_DESCRIBEWALLETSREQUEST_HPP_
 
-#include <gs2/core/control/Gs2BasicRequest.hpp>
-#include <gs2/core/util/List.hpp>
+#include <gs2/core/control/Gs2UserRequest.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2MoneyConst.hpp"
-#include "../model/model.hpp"
 
 namespace gs2 { namespace money
 {
 
 /**
- * ウォレットの概要一覧を取得します のリクエストモデル
+ * ウォレット一覧を取得します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
-class DescribeWalletsRequest : public Gs2BasicRequest, public Gs2Money
+class DescribeWalletsRequest : public Gs2UserRequest, public Gs2Money
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -41,10 +39,8 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** 課金通貨の名前 */
-        optional<StringHolder> moneyName;
-        /** ユーザーID */
-        optional<StringHolder> userId;
+        /** ネームスペースの名前 */
+        optional<StringHolder> namespaceName;
         /** データの取得を開始する位置を指定するトークン */
         optional<StringHolder> pageToken;
         /** データの取得件数 */
@@ -57,8 +53,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            moneyName(data.moneyName),
-            userId(data.userId),
+            namespaceName(data.namespaceName),
             pageToken(data.pageToken),
             limit(data.limit),
             duplicationAvoider(data.duplicationAvoider)
@@ -66,8 +61,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            moneyName(std::move(data.moneyName)),
-            userId(std::move(data.userId)),
+            namespaceName(std::move(data.namespaceName)),
             pageToken(std::move(data.pageToken)),
             limit(std::move(data.limit)),
             duplicationAvoider(std::move(data.duplicationAvoider))
@@ -102,13 +96,13 @@ public:
     {}
 
     DescribeWalletsRequest(const DescribeWalletsRequest& obj) :
-        Gs2BasicRequest(obj),
+        Gs2UserRequest(obj),
         Gs2Money(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     DescribeWalletsRequest(DescribeWalletsRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
+        Gs2UserRequest(std::move(obj)),
         Gs2Money(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -125,7 +119,7 @@ public:
 
     DescribeWalletsRequest& operator=(const DescribeWalletsRequest& describeWalletsRequest)
     {
-        Gs2BasicRequest::operator=(describeWalletsRequest);
+        Gs2UserRequest::operator=(describeWalletsRequest);
         Gs2Money::operator=(describeWalletsRequest);
 
         if (m_pData != nullptr)
@@ -139,7 +133,7 @@ public:
 
     DescribeWalletsRequest& operator=(DescribeWalletsRequest&& describeWalletsRequest)
     {
-        Gs2BasicRequest::operator=(std::move(describeWalletsRequest));
+        Gs2UserRequest::operator=(std::move(describeWalletsRequest));
         Gs2Money::operator=(std::move(describeWalletsRequest));
 
         if (m_pData != nullptr)
@@ -162,64 +156,33 @@ public:
         return this;
     }
     /**
-     * 課金通貨の名前を取得
+     * ネームスペースの名前を取得
      *
-     * @return 課金通貨の名前
+     * @return ネームスペースの名前
      */
-    const optional<StringHolder>& getMoneyName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().moneyName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * 課金通貨の名前を設定
+     * ネームスペースの名前を設定
      *
-     * @param moneyName 課金通貨の名前
+     * @param namespaceName ネームスペースの名前
      */
-    void setMoneyName(const Char* moneyName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().moneyName.emplace(moneyName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * 課金通貨の名前を設定
+     * ネームスペースの名前を設定
      *
-     * @param moneyName 課金通貨の名前
+     * @param namespaceName ネームスペースの名前
      */
-    DescribeWalletsRequest& withMoneyName(const Char* moneyName)
+    DescribeWalletsRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().moneyName.emplace(moneyName);
-        return *this;
-    }
-
-    /**
-     * ユーザーIDを取得
-     *
-     * @return ユーザーID
-     */
-    const optional<StringHolder>& getUserId() const
-    {
-        return ensureData().userId;
-    }
-
-    /**
-     * ユーザーIDを設定
-     *
-     * @param userId ユーザーID
-     */
-    void setUserId(const Char* userId)
-    {
-        ensureData().userId.emplace(userId);
-    }
-
-    /**
-     * ユーザーIDを設定
-     *
-     * @param userId ユーザーID
-     */
-    DescribeWalletsRequest& withUserId(const Char* userId)
-    {
-        ensureData().userId.emplace(userId);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -361,6 +324,17 @@ public:
     DescribeWalletsRequest& withRequestId(const Char* gs2RequestId)
     {
         setRequestId(gs2RequestId);
+        return *this;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    DescribeWalletsRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
         return *this;
     }
 

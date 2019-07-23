@@ -28,7 +28,7 @@
 namespace gs2 { namespace distributor {
 
 /**
- * ディストリビュータの種類
+ * 配信設定マスター
  *
  * @author Game Server Services, Inc.
  *
@@ -41,24 +41,24 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ディストリビュータの種類 のGRN */
+        /** 配信設定マスター */
         optional<StringHolder> distributorModelId;
-        /** ディストリビューターの種類名 */
+        /** 配信設定名 */
         optional<StringHolder> name;
-        /** ディストリビュータの種類の説明 */
+        /** 配信設定マスターの説明 */
         optional<StringHolder> description;
-        /** ディストリビューターの種類のメタデータ */
+        /** 配信設定のメタデータ */
         optional<StringHolder> metadata;
-        /** 所持品の配布処理の権限判定に使用する ユーザー のGRN */
+        /** 所持品の配布処理の権限判定に使用する ユーザ のGRN */
         optional<StringHolder> assumeUserId;
-        /** 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN */
-        optional<StringHolder> inboxId;
+        /** 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN */
+        optional<StringHolder> inboxNamespaceId;
         /** ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト */
         optional<List<StringHolder>> whiteListTargetIds;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
         /** 最終更新日時 */
-        optional<Int64> updateAt;
+        optional<Int64> updatedAt;
 
         Data()
         {}
@@ -70,10 +70,10 @@ private:
             description(data.description),
             metadata(data.metadata),
             assumeUserId(data.assumeUserId),
-            inboxId(data.inboxId),
+            inboxNamespaceId(data.inboxNamespaceId),
             whiteListTargetIds(data.whiteListTargetIds),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
@@ -83,10 +83,10 @@ private:
             description(std::move(data.description)),
             metadata(std::move(data.metadata)),
             assumeUserId(std::move(data.assumeUserId)),
-            inboxId(std::move(data.inboxId)),
+            inboxNamespaceId(std::move(data.inboxNamespaceId)),
             whiteListTargetIds(std::move(data.whiteListTargetIds)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -127,10 +127,10 @@ private:
                     this->assumeUserId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "inboxId") == 0) {
+            else if (std::strcmp(name, "inboxNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->inboxId.emplace(jsonValue.GetString());
+                    this->inboxNamespaceId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "whiteListTargetIds") == 0) {
@@ -148,16 +148,16 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
+            else if (std::strcmp(name, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt64();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -241,9 +241,9 @@ public:
         return this;
     }
     /**
-     * ディストリビュータの種類 のGRNを取得
+     * 配信設定マスターを取得
      *
-     * @return ディストリビュータの種類 のGRN
+     * @return 配信設定マスター
      */
     const optional<StringHolder>& getDistributorModelId() const
     {
@@ -251,9 +251,9 @@ public:
     }
 
     /**
-     * ディストリビュータの種類 のGRNを設定
+     * 配信設定マスターを設定
      *
-     * @param distributorModelId ディストリビュータの種類 のGRN
+     * @param distributorModelId 配信設定マスター
      */
     void setDistributorModelId(const Char* distributorModelId)
     {
@@ -261,9 +261,9 @@ public:
     }
 
     /**
-     * ディストリビュータの種類 のGRNを設定
+     * 配信設定マスターを設定
      *
-     * @param distributorModelId ディストリビュータの種類 のGRN
+     * @param distributorModelId 配信設定マスター
      */
     DistributorModelMaster& withDistributorModelId(const Char* distributorModelId)
     {
@@ -272,9 +272,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を取得
+     * 配信設定名を取得
      *
-     * @return ディストリビューターの種類名
+     * @return 配信設定名
      */
     const optional<StringHolder>& getName() const
     {
@@ -282,9 +282,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を設定
+     * 配信設定名を設定
      *
-     * @param name ディストリビューターの種類名
+     * @param name 配信設定名
      */
     void setName(const Char* name)
     {
@@ -292,9 +292,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類名を設定
+     * 配信設定名を設定
      *
-     * @param name ディストリビューターの種類名
+     * @param name 配信設定名
      */
     DistributorModelMaster& withName(const Char* name)
     {
@@ -303,9 +303,9 @@ public:
     }
 
     /**
-     * ディストリビュータの種類の説明を取得
+     * 配信設定マスターの説明を取得
      *
-     * @return ディストリビュータの種類の説明
+     * @return 配信設定マスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -313,9 +313,9 @@ public:
     }
 
     /**
-     * ディストリビュータの種類の説明を設定
+     * 配信設定マスターの説明を設定
      *
-     * @param description ディストリビュータの種類の説明
+     * @param description 配信設定マスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -323,9 +323,9 @@ public:
     }
 
     /**
-     * ディストリビュータの種類の説明を設定
+     * 配信設定マスターの説明を設定
      *
-     * @param description ディストリビュータの種類の説明
+     * @param description 配信設定マスターの説明
      */
     DistributorModelMaster& withDescription(const Char* description)
     {
@@ -334,9 +334,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを取得
+     * 配信設定のメタデータを取得
      *
-     * @return ディストリビューターの種類のメタデータ
+     * @return 配信設定のメタデータ
      */
     const optional<StringHolder>& getMetadata() const
     {
@@ -344,9 +344,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを設定
+     * 配信設定のメタデータを設定
      *
-     * @param metadata ディストリビューターの種類のメタデータ
+     * @param metadata 配信設定のメタデータ
      */
     void setMetadata(const Char* metadata)
     {
@@ -354,9 +354,9 @@ public:
     }
 
     /**
-     * ディストリビューターの種類のメタデータを設定
+     * 配信設定のメタデータを設定
      *
-     * @param metadata ディストリビューターの種類のメタデータ
+     * @param metadata 配信設定のメタデータ
      */
     DistributorModelMaster& withMetadata(const Char* metadata)
     {
@@ -365,9 +365,9 @@ public:
     }
 
     /**
-     * 所持品の配布処理の権限判定に使用する ユーザー のGRNを取得
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを取得
      *
-     * @return 所持品の配布処理の権限判定に使用する ユーザー のGRN
+     * @return 所持品の配布処理の権限判定に使用する ユーザ のGRN
      */
     const optional<StringHolder>& getAssumeUserId() const
     {
@@ -375,9 +375,9 @@ public:
     }
 
     /**
-     * 所持品の配布処理の権限判定に使用する ユーザー のGRNを設定
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
      *
-     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザー のGRN
+     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
      */
     void setAssumeUserId(const Char* assumeUserId)
     {
@@ -385,9 +385,9 @@ public:
     }
 
     /**
-     * 所持品の配布処理の権限判定に使用する ユーザー のGRNを設定
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
      *
-     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザー のGRN
+     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
      */
     DistributorModelMaster& withAssumeUserId(const Char* assumeUserId)
     {
@@ -396,33 +396,33 @@ public:
     }
 
     /**
-     * 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRNを取得
+     * 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRNを取得
      *
-     * @return 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN
+     * @return 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
      */
-    const optional<StringHolder>& getInboxId() const
+    const optional<StringHolder>& getInboxNamespaceId() const
     {
-        return ensureData().inboxId;
+        return ensureData().inboxNamespaceId;
     }
 
     /**
-     * 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRNを設定
+     * 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRNを設定
      *
-     * @param inboxId 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN
+     * @param inboxNamespaceId 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
      */
-    void setInboxId(const Char* inboxId)
+    void setInboxNamespaceId(const Char* inboxNamespaceId)
     {
-        ensureData().inboxId.emplace(inboxId);
+        ensureData().inboxNamespaceId.emplace(inboxNamespaceId);
     }
 
     /**
-     * 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRNを設定
+     * 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRNを設定
      *
-     * @param inboxId 所持品がキャパシティをオーバーしたときに転送する プレゼントボックス のGRN
+     * @param inboxNamespaceId 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
      */
-    DistributorModelMaster& withInboxId(const Char* inboxId)
+    DistributorModelMaster& withInboxNamespaceId(const Char* inboxNamespaceId)
     {
-        setInboxId(inboxId);
+        setInboxNamespaceId(inboxNamespaceId);
         return *this;
     }
 
@@ -462,29 +462,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    DistributorModelMaster& withCreateAt(Int64 createAt)
+    DistributorModelMaster& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -493,29 +493,29 @@ public:
      *
      * @return 最終更新日時
      */
-    const optional<Int64>& getUpdateAt() const
+    const optional<Int64>& getUpdatedAt() const
     {
-        return ensureData().updateAt;
+        return ensureData().updatedAt;
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    void setUpdateAt(Int64 updateAt)
+    void setUpdatedAt(Int64 updatedAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        ensureData().updatedAt.emplace(updatedAt);
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    DistributorModelMaster& withUpdateAt(Int64 updateAt)
+    DistributorModelMaster& withUpdatedAt(Int64 updatedAt)
     {
-        setUpdateAt(updateAt);
+        setUpdatedAt(updatedAt);
         return *this;
     }
 
@@ -554,7 +554,7 @@ bool operator!=(const DistributorModelMaster& lhs, const DistributorModelMaster&
         {
             return true;
         }
-        if (lhs.m_pData->inboxId != lhr.m_pData->inboxId)
+        if (lhs.m_pData->inboxNamespaceId != lhr.m_pData->inboxNamespaceId)
         {
             return true;
         }
@@ -562,11 +562,11 @@ bool operator!=(const DistributorModelMaster& lhs, const DistributorModelMaster&
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }
-        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

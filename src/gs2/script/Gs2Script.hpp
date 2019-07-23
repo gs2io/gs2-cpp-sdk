@@ -19,7 +19,8 @@
 
 #include <gs2/core/common.hpp>
 #include "model/model.hpp"
-#include "Gs2ScriptClient.hpp"
+#include "Gs2ScriptRestClient.hpp"
+#include "Gs2ScriptWebSocketClient.hpp"
 #include "Gs2ScriptConst.hpp"
 
 #endif //GS2_SCRIPT_HPP_

@@ -28,7 +28,7 @@ namespace gs2 { namespace lottery
 {
 
 /**
- * 抽選の種類を更新 のリクエストモデル
+ * 抽選の種類マスターを更新 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,11 +41,11 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** グループ名 */
-        optional<StringHolder> groupName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** 抽選モデルの種類名 */
-        optional<StringHolder> lotteryModelName;
-        /** 抽選の種類の説明 */
+        optional<StringHolder> lotteryName;
+        /** 抽選の種類マスターの説明 */
         optional<StringHolder> description;
         /** 抽選モデルの種類のメタデータ */
         optional<StringHolder> metadata;
@@ -65,8 +65,8 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            groupName(data.groupName),
-            lotteryModelName(data.lotteryModelName),
+            namespaceName(data.namespaceName),
+            lotteryName(data.lotteryName),
             description(data.description),
             metadata(data.metadata),
             mode(data.mode),
@@ -78,8 +78,8 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            groupName(std::move(data.groupName)),
-            lotteryModelName(std::move(data.lotteryModelName)),
+            namespaceName(std::move(data.namespaceName)),
+            lotteryName(std::move(data.lotteryName)),
             description(std::move(data.description)),
             metadata(std::move(data.metadata)),
             mode(std::move(data.mode)),
@@ -178,33 +178,33 @@ public:
         return this;
     }
     /**
-     * グループ名を取得
+     * ネームスペース名を取得
      *
-     * @return グループ名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGroupName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().groupName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    void setGroupName(const Char* groupName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    UpdateLotteryModelMasterRequest& withGroupName(const Char* groupName)
+    UpdateLotteryModelMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -213,36 +213,36 @@ public:
      *
      * @return 抽選モデルの種類名
      */
-    const optional<StringHolder>& getLotteryModelName() const
+    const optional<StringHolder>& getLotteryName() const
     {
-        return ensureData().lotteryModelName;
+        return ensureData().lotteryName;
     }
 
     /**
      * 抽選モデルの種類名を設定
      *
-     * @param lotteryModelName 抽選モデルの種類名
+     * @param lotteryName 抽選モデルの種類名
      */
-    void setLotteryModelName(const Char* lotteryModelName)
+    void setLotteryName(const Char* lotteryName)
     {
-        ensureData().lotteryModelName.emplace(lotteryModelName);
+        ensureData().lotteryName.emplace(lotteryName);
     }
 
     /**
      * 抽選モデルの種類名を設定
      *
-     * @param lotteryModelName 抽選モデルの種類名
+     * @param lotteryName 抽選モデルの種類名
      */
-    UpdateLotteryModelMasterRequest& withLotteryModelName(const Char* lotteryModelName)
+    UpdateLotteryModelMasterRequest& withLotteryName(const Char* lotteryName)
     {
-        ensureData().lotteryModelName.emplace(lotteryModelName);
+        ensureData().lotteryName.emplace(lotteryName);
         return *this;
     }
 
     /**
-     * 抽選の種類の説明を取得
+     * 抽選の種類マスターの説明を取得
      *
-     * @return 抽選の種類の説明
+     * @return 抽選の種類マスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -250,9 +250,9 @@ public:
     }
 
     /**
-     * 抽選の種類の説明を設定
+     * 抽選の種類マスターの説明を設定
      *
-     * @param description 抽選の種類の説明
+     * @param description 抽選の種類マスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -260,9 +260,9 @@ public:
     }
 
     /**
-     * 抽選の種類の説明を設定
+     * 抽選の種類マスターの説明を設定
      *
-     * @param description 抽選の種類の説明
+     * @param description 抽選の種類マスターの説明
      */
     UpdateLotteryModelMasterRequest& withDescription(const Char* description)
     {

@@ -29,7 +29,7 @@ namespace gs2 { namespace identifier
 {
 
 /**
- * ユーザーを更新します のレスポンスモデル
+ * ユーザを更新します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 更新後のユーザー */
+        /** 更新後のユーザ */
         optional<User> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * 更新後のユーザーを取得
+     * 更新後のユーザを取得
      *
-     * @return 更新後のユーザー
+     * @return 更新後のユーザ
      */
     const optional<User>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * 更新後のユーザーを設定
+     * 更新後のユーザを設定
      *
-     * @param item 更新後のユーザー
+     * @param item 更新後のユーザ
      */
     void setItem(const User& item)
     {

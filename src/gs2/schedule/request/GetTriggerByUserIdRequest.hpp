@@ -28,7 +28,7 @@ namespace gs2 { namespace schedule
 {
 
 /**
- * トリガーを取得 のリクエストモデル
+ * ユーザIDを指定してトリガーを取得 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,8 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** スケジュール名 */
-        optional<StringHolder> scheduleName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** ユーザーID */
         optional<StringHolder> userId;
         /** トリガーの名前 */
@@ -55,7 +55,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            scheduleName(data.scheduleName),
+            namespaceName(data.namespaceName),
             userId(data.userId),
             triggerName(data.triggerName),
             duplicationAvoider(data.duplicationAvoider)
@@ -63,7 +63,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            scheduleName(std::move(data.scheduleName)),
+            namespaceName(std::move(data.namespaceName)),
             userId(std::move(data.userId)),
             triggerName(std::move(data.triggerName)),
             duplicationAvoider(std::move(data.duplicationAvoider))
@@ -158,33 +158,33 @@ public:
         return this;
     }
     /**
-     * スケジュール名を取得
+     * ネームスペース名を取得
      *
-     * @return スケジュール名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getScheduleName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().scheduleName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * スケジュール名を設定
+     * ネームスペース名を設定
      *
-     * @param scheduleName スケジュール名
+     * @param namespaceName ネームスペース名
      */
-    void setScheduleName(const Char* scheduleName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().scheduleName.emplace(scheduleName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * スケジュール名を設定
+     * ネームスペース名を設定
      *
-     * @param scheduleName スケジュール名
+     * @param namespaceName ネームスペース名
      */
-    GetTriggerByUserIdRequest& withScheduleName(const Char* scheduleName)
+    GetTriggerByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().scheduleName.emplace(scheduleName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

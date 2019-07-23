@@ -29,7 +29,7 @@ namespace gs2 { namespace identifier
 {
 
 /**
- * GSIを取得します のレスポンスモデル
+ * クレデンシャルを取得します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** GSI */
+        /** クレデンシャル */
         optional<Identifier> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * GSIを取得
+     * クレデンシャルを取得
      *
-     * @return GSI
+     * @return クレデンシャル
      */
     const optional<Identifier>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * GSIを設定
+     * クレデンシャルを設定
      *
-     * @param item GSI
+     * @param item クレデンシャル
      */
     void setItem(const Identifier& item)
     {

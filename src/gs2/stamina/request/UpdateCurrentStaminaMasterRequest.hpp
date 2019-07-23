@@ -28,7 +28,7 @@ namespace gs2 { namespace stamina
 {
 
 /**
- * 現在有効なスタミナマスターJSONを更新します のリクエストモデル
+ * 現在有効な現在有効なスタミナマスターを更新します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,8 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** スタミナの種類名 */
-        optional<StringHolder> groupName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** マスターデータ */
         optional<StringHolder> settings;
 
@@ -51,13 +51,13 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            groupName(data.groupName),
+            namespaceName(data.namespaceName),
             settings(data.settings)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            groupName(std::move(data.groupName)),
+            namespaceName(std::move(data.namespaceName)),
             settings(std::move(data.settings))
         {}
 
@@ -150,33 +150,33 @@ public:
         return this;
     }
     /**
-     * スタミナの種類名を取得
+     * ネームスペース名を取得
      *
-     * @return スタミナの種類名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGroupName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().groupName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * スタミナの種類名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName スタミナの種類名
+     * @param namespaceName ネームスペース名
      */
-    void setGroupName(const Char* groupName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * スタミナの種類名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName スタミナの種類名
+     * @param namespaceName ネームスペース名
      */
-    UpdateCurrentStaminaMasterRequest& withGroupName(const Char* groupName)
+    UpdateCurrentStaminaMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

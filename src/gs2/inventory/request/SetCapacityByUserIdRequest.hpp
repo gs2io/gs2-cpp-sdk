@@ -41,12 +41,12 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** カテゴリ名 */
-        optional<StringHolder> categoryName;
+        /** カテゴリー名 */
+        optional<StringHolder> namespaceName;
+        /** インベントリモデル名 */
+        optional<StringHolder> inventoryName;
         /** ユーザーID */
         optional<StringHolder> userId;
-        /** インベントリモデル名 */
-        optional<StringHolder> inventoryModelName;
         /** 現在のインベントリの最大キャパシティ */
         optional<Int32> newCapacityValue;
         /** 重複実行回避機能に使用するID */
@@ -57,18 +57,18 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            categoryName(data.categoryName),
+            namespaceName(data.namespaceName),
+            inventoryName(data.inventoryName),
             userId(data.userId),
-            inventoryModelName(data.inventoryModelName),
             newCapacityValue(data.newCapacityValue),
             duplicationAvoider(data.duplicationAvoider)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            categoryName(std::move(data.categoryName)),
+            namespaceName(std::move(data.namespaceName)),
+            inventoryName(std::move(data.inventoryName)),
             userId(std::move(data.userId)),
-            inventoryModelName(std::move(data.inventoryModelName)),
             newCapacityValue(std::move(data.newCapacityValue)),
             duplicationAvoider(std::move(data.duplicationAvoider))
         {}
@@ -162,33 +162,64 @@ public:
         return this;
     }
     /**
-     * カテゴリ名を取得
+     * カテゴリー名を取得
      *
-     * @return カテゴリ名
+     * @return カテゴリー名
      */
-    const optional<StringHolder>& getCategoryName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().categoryName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * カテゴリ名を設定
+     * カテゴリー名を設定
      *
-     * @param categoryName カテゴリ名
+     * @param namespaceName カテゴリー名
      */
-    void setCategoryName(const Char* categoryName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().categoryName.emplace(categoryName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * カテゴリ名を設定
+     * カテゴリー名を設定
      *
-     * @param categoryName カテゴリ名
+     * @param namespaceName カテゴリー名
      */
-    SetCapacityByUserIdRequest& withCategoryName(const Char* categoryName)
+    SetCapacityByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().categoryName.emplace(categoryName);
+        ensureData().namespaceName.emplace(namespaceName);
+        return *this;
+    }
+
+    /**
+     * インベントリモデル名を取得
+     *
+     * @return インベントリモデル名
+     */
+    const optional<StringHolder>& getInventoryName() const
+    {
+        return ensureData().inventoryName;
+    }
+
+    /**
+     * インベントリモデル名を設定
+     *
+     * @param inventoryName インベントリモデル名
+     */
+    void setInventoryName(const Char* inventoryName)
+    {
+        ensureData().inventoryName.emplace(inventoryName);
+    }
+
+    /**
+     * インベントリモデル名を設定
+     *
+     * @param inventoryName インベントリモデル名
+     */
+    SetCapacityByUserIdRequest& withInventoryName(const Char* inventoryName)
+    {
+        ensureData().inventoryName.emplace(inventoryName);
         return *this;
     }
 
@@ -220,37 +251,6 @@ public:
     SetCapacityByUserIdRequest& withUserId(const Char* userId)
     {
         ensureData().userId.emplace(userId);
-        return *this;
-    }
-
-    /**
-     * インベントリモデル名を取得
-     *
-     * @return インベントリモデル名
-     */
-    const optional<StringHolder>& getInventoryModelName() const
-    {
-        return ensureData().inventoryModelName;
-    }
-
-    /**
-     * インベントリモデル名を設定
-     *
-     * @param inventoryModelName インベントリモデル名
-     */
-    void setInventoryModelName(const Char* inventoryModelName)
-    {
-        ensureData().inventoryModelName.emplace(inventoryModelName);
-    }
-
-    /**
-     * インベントリモデル名を設定
-     *
-     * @param inventoryModelName インベントリモデル名
-     */
-    SetCapacityByUserIdRequest& withInventoryModelName(const Char* inventoryModelName)
-    {
-        ensureData().inventoryModelName.emplace(inventoryModelName);
         return *this;
     }
 

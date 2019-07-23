@@ -28,7 +28,7 @@ namespace gs2 { namespace money
 {
 
 /**
- * スタンプシートを使用してウォレットの概要に残高を加算します のリクエストモデル
+ * スタンプシートを使用してウォレットに残高を加算します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

@@ -28,7 +28,7 @@ namespace gs2 { namespace identifier
 {
 
 /**
- * ユーザーを取得します のリクエストモデル
+ * ユーザを取得します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

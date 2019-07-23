@@ -29,7 +29,7 @@ namespace gs2 { namespace stamina
 {
 
 /**
- * スタミナを回復 のレスポンスモデル
+ * ユーザIDを指定してスタミナを回復 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */

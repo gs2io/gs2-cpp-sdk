@@ -41,7 +41,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ミューテックス のGRN */
+        /** ミューテックス */
         optional<StringHolder> mutexId;
         /** ユーザーID */
         optional<StringHolder> userId;
@@ -52,8 +52,8 @@ private:
         /** 参照回数 */
         optional<Int32> referenceCount;
         /** 作成日時 */
-        optional<Int64> createAt;
-        /** 作成日時 */
+        optional<Int64> createdAt;
+        /** ロックの有効期限 */
         optional<Int64> ttlAt;
 
         Data()
@@ -66,7 +66,7 @@ private:
             propertyId(data.propertyId),
             transactionId(data.transactionId),
             referenceCount(data.referenceCount),
-            createAt(data.createAt),
+            createdAt(data.createdAt),
             ttlAt(data.ttlAt)
         {}
 
@@ -77,7 +77,7 @@ private:
             propertyId(std::move(data.propertyId)),
             transactionId(std::move(data.transactionId)),
             referenceCount(std::move(data.referenceCount)),
-            createAt(std::move(data.createAt)),
+            createdAt(std::move(data.createdAt)),
             ttlAt(std::move(data.ttlAt))
         {}
 
@@ -119,10 +119,10 @@ private:
                     this->referenceCount = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
             else if (std::strcmp(name, "ttlAt") == 0) {
@@ -212,9 +212,9 @@ public:
         return this;
     }
     /**
-     * ミューテックス のGRNを取得
+     * ミューテックスを取得
      *
-     * @return ミューテックス のGRN
+     * @return ミューテックス
      */
     const optional<StringHolder>& getMutexId() const
     {
@@ -222,9 +222,9 @@ public:
     }
 
     /**
-     * ミューテックス のGRNを設定
+     * ミューテックスを設定
      *
-     * @param mutexId ミューテックス のGRN
+     * @param mutexId ミューテックス
      */
     void setMutexId(const Char* mutexId)
     {
@@ -232,9 +232,9 @@ public:
     }
 
     /**
-     * ミューテックス のGRNを設定
+     * ミューテックスを設定
      *
-     * @param mutexId ミューテックス のGRN
+     * @param mutexId ミューテックス
      */
     Mutex& withMutexId(const Char* mutexId)
     {
@@ -371,36 +371,36 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    Mutex& withCreateAt(Int64 createAt)
+    Mutex& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
     /**
-     * 作成日時を取得
+     * ロックの有効期限を取得
      *
-     * @return 作成日時
+     * @return ロックの有効期限
      */
     const optional<Int64>& getTtlAt() const
     {
@@ -408,9 +408,9 @@ public:
     }
 
     /**
-     * 作成日時を設定
+     * ロックの有効期限を設定
      *
-     * @param ttlAt 作成日時
+     * @param ttlAt ロックの有効期限
      */
     void setTtlAt(Int64 ttlAt)
     {
@@ -418,9 +418,9 @@ public:
     }
 
     /**
-     * 作成日時を設定
+     * ロックの有効期限を設定
      *
-     * @param ttlAt 作成日時
+     * @param ttlAt ロックの有効期限
      */
     Mutex& withTtlAt(Int64 ttlAt)
     {
@@ -463,7 +463,7 @@ bool operator!=(const Mutex& lhs, const Mutex& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }

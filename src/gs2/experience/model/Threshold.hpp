@@ -41,10 +41,6 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ランクアップ閾値 のGRN */
-        optional<StringHolder> thresholdId;
-        /** ランクアップ閾値名 */
-        optional<StringHolder> name;
         /** ランクアップ閾値のメタデータ */
         optional<StringHolder> metadata;
         /** ランクアップ経験値閾値リスト */
@@ -55,16 +51,12 @@ private:
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            thresholdId(data.thresholdId),
-            name(data.name),
             metadata(data.metadata),
             values(data.values)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            thresholdId(std::move(data.thresholdId)),
-            name(std::move(data.name)),
             metadata(std::move(data.metadata)),
             values(std::move(data.values))
         {}
@@ -77,19 +69,7 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "thresholdId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->thresholdId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "name") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "metadata") == 0) {
+            if (std::strcmp(name, "metadata") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
@@ -189,68 +169,6 @@ public:
         return this;
     }
     /**
-     * ランクアップ閾値 のGRNを取得
-     *
-     * @return ランクアップ閾値 のGRN
-     */
-    const optional<StringHolder>& getThresholdId() const
-    {
-        return ensureData().thresholdId;
-    }
-
-    /**
-     * ランクアップ閾値 のGRNを設定
-     *
-     * @param thresholdId ランクアップ閾値 のGRN
-     */
-    void setThresholdId(const Char* thresholdId)
-    {
-        ensureData().thresholdId.emplace(thresholdId);
-    }
-
-    /**
-     * ランクアップ閾値 のGRNを設定
-     *
-     * @param thresholdId ランクアップ閾値 のGRN
-     */
-    Threshold& withThresholdId(const Char* thresholdId)
-    {
-        setThresholdId(thresholdId);
-        return *this;
-    }
-
-    /**
-     * ランクアップ閾値名を取得
-     *
-     * @return ランクアップ閾値名
-     */
-    const optional<StringHolder>& getName() const
-    {
-        return ensureData().name;
-    }
-
-    /**
-     * ランクアップ閾値名を設定
-     *
-     * @param name ランクアップ閾値名
-     */
-    void setName(const Char* name)
-    {
-        ensureData().name.emplace(name);
-    }
-
-    /**
-     * ランクアップ閾値名を設定
-     *
-     * @param name ランクアップ閾値名
-     */
-    Threshold& withName(const Char* name)
-    {
-        setName(name);
-        return *this;
-    }
-
-    /**
      * ランクアップ閾値のメタデータを取得
      *
      * @return ランクアップ閾値のメタデータ
@@ -324,14 +242,6 @@ bool operator!=(const Threshold& lhs, const Threshold& lhr)
     if (lhs.m_pData != lhr.m_pData)
     {
         if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
-        {
-            return true;
-        }
-        if (lhs.m_pData->thresholdId != lhr.m_pData->thresholdId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
         {
             return true;
         }

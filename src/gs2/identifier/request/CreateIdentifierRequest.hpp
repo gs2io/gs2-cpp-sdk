@@ -28,7 +28,7 @@ namespace gs2 { namespace identifier
 {
 
 /**
- * GSIを新規作成します のリクエストモデル
+ * クレデンシャルを新規作成します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

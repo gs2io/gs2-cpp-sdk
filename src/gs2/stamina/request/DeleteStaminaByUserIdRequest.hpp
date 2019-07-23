@@ -28,7 +28,7 @@ namespace gs2 { namespace stamina
 {
 
 /**
- * スタミナを削除 のリクエストモデル
+ * ユーザIDを指定してスタミナを削除 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,10 +41,10 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** スタミナの種類名 */
-        optional<StringHolder> groupName;
-        /** スタミナの種類名 */
-        optional<StringHolder> staminaModelName;
+        optional<StringHolder> staminaName;
         /** ユーザーID */
         optional<StringHolder> userId;
         /** 重複実行回避機能に使用するID */
@@ -55,16 +55,16 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            groupName(data.groupName),
-            staminaModelName(data.staminaModelName),
+            namespaceName(data.namespaceName),
+            staminaName(data.staminaName),
             userId(data.userId),
             duplicationAvoider(data.duplicationAvoider)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            groupName(std::move(data.groupName)),
-            staminaModelName(std::move(data.staminaModelName)),
+            namespaceName(std::move(data.namespaceName)),
+            staminaName(std::move(data.staminaName)),
             userId(std::move(data.userId)),
             duplicationAvoider(std::move(data.duplicationAvoider))
         {}
@@ -158,33 +158,33 @@ public:
         return this;
     }
     /**
-     * スタミナの種類名を取得
+     * ネームスペース名を取得
      *
-     * @return スタミナの種類名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGroupName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().groupName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * スタミナの種類名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName スタミナの種類名
+     * @param namespaceName ネームスペース名
      */
-    void setGroupName(const Char* groupName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * スタミナの種類名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName スタミナの種類名
+     * @param namespaceName ネームスペース名
      */
-    DeleteStaminaByUserIdRequest& withGroupName(const Char* groupName)
+    DeleteStaminaByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -193,29 +193,29 @@ public:
      *
      * @return スタミナの種類名
      */
-    const optional<StringHolder>& getStaminaModelName() const
+    const optional<StringHolder>& getStaminaName() const
     {
-        return ensureData().staminaModelName;
+        return ensureData().staminaName;
     }
 
     /**
      * スタミナの種類名を設定
      *
-     * @param staminaModelName スタミナの種類名
+     * @param staminaName スタミナの種類名
      */
-    void setStaminaModelName(const Char* staminaModelName)
+    void setStaminaName(const Char* staminaName)
     {
-        ensureData().staminaModelName.emplace(staminaModelName);
+        ensureData().staminaName.emplace(staminaName);
     }
 
     /**
      * スタミナの種類名を設定
      *
-     * @param staminaModelName スタミナの種類名
+     * @param staminaName スタミナの種類名
      */
-    DeleteStaminaByUserIdRequest& withStaminaModelName(const Char* staminaModelName)
+    DeleteStaminaByUserIdRequest& withStaminaName(const Char* staminaName)
     {
-        ensureData().staminaModelName.emplace(staminaModelName);
+        ensureData().staminaName.emplace(staminaName);
         return *this;
     }
 

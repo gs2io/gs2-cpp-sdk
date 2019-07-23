@@ -29,7 +29,7 @@
 namespace gs2 { namespace stamina {
 
 /**
- * スタミナモデルマスター
+ * スタミナモデル
  *
  * @author Game Server Services, Inc.
  *
@@ -42,7 +42,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** スタミナモデルマスター のGRN */
+        /** スタミナモデルマスター */
         optional<StringHolder> staminaModelId;
         /** スタミナの種類名 */
         optional<StringHolder> name;
@@ -235,9 +235,9 @@ public:
         return this;
     }
     /**
-     * スタミナモデルマスター のGRNを取得
+     * スタミナモデルマスターを取得
      *
-     * @return スタミナモデルマスター のGRN
+     * @return スタミナモデルマスター
      */
     const optional<StringHolder>& getStaminaModelId() const
     {
@@ -245,9 +245,9 @@ public:
     }
 
     /**
-     * スタミナモデルマスター のGRNを設定
+     * スタミナモデルマスターを設定
      *
-     * @param staminaModelId スタミナモデルマスター のGRN
+     * @param staminaModelId スタミナモデルマスター
      */
     void setStaminaModelId(const Char* staminaModelId)
     {
@@ -255,9 +255,9 @@ public:
     }
 
     /**
-     * スタミナモデルマスター のGRNを設定
+     * スタミナモデルマスターを設定
      *
-     * @param staminaModelId スタミナモデルマスター のGRN
+     * @param staminaModelId スタミナモデルマスター
      */
     StaminaModel& withStaminaModelId(const Char* staminaModelId)
     {

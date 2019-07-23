@@ -41,14 +41,18 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 暗号鍵 のGRN */
+        /** 暗号鍵 */
         optional<StringHolder> keyId;
-        /** オーナーID */
-        optional<StringHolder> ownerId;
         /** 暗号鍵名 */
         optional<StringHolder> name;
+        /** 説明文 */
+        optional<StringHolder> description;
+        /** 暗号鍵 */
+        optional<StringHolder> secret;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
+        /** 最終更新日時 */
+        optional<Int64> updatedAt;
 
         Data()
         {}
@@ -56,17 +60,21 @@ private:
         Data(const Data& data) :
             detail::json::IModel(data),
             keyId(data.keyId),
-            ownerId(data.ownerId),
             name(data.name),
-            createAt(data.createAt)
+            description(data.description),
+            secret(data.secret),
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
             keyId(std::move(data.keyId)),
-            ownerId(std::move(data.ownerId)),
             name(std::move(data.name)),
-            createAt(std::move(data.createAt))
+            description(std::move(data.description)),
+            secret(std::move(data.secret)),
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -83,22 +91,34 @@ private:
                     this->keyId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "ownerId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->ownerId.emplace(jsonValue.GetString());
-                }
-            }
             else if (std::strcmp(name, "name") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "description") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->description.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "secret") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->secret.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name, "updatedAt") == 0) {
+                if (jsonValue.IsInt64())
+                {
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -182,9 +202,9 @@ public:
         return this;
     }
     /**
-     * 暗号鍵 のGRNを取得
+     * 暗号鍵を取得
      *
-     * @return 暗号鍵 のGRN
+     * @return 暗号鍵
      */
     const optional<StringHolder>& getKeyId() const
     {
@@ -192,9 +212,9 @@ public:
     }
 
     /**
-     * 暗号鍵 のGRNを設定
+     * 暗号鍵を設定
      *
-     * @param keyId 暗号鍵 のGRN
+     * @param keyId 暗号鍵
      */
     void setKeyId(const Char* keyId)
     {
@@ -202,44 +222,13 @@ public:
     }
 
     /**
-     * 暗号鍵 のGRNを設定
+     * 暗号鍵を設定
      *
-     * @param keyId 暗号鍵 のGRN
+     * @param keyId 暗号鍵
      */
     Key& withKeyId(const Char* keyId)
     {
         setKeyId(keyId);
-        return *this;
-    }
-
-    /**
-     * オーナーIDを取得
-     *
-     * @return オーナーID
-     */
-    const optional<StringHolder>& getOwnerId() const
-    {
-        return ensureData().ownerId;
-    }
-
-    /**
-     * オーナーIDを設定
-     *
-     * @param ownerId オーナーID
-     */
-    void setOwnerId(const Char* ownerId)
-    {
-        ensureData().ownerId.emplace(ownerId);
-    }
-
-    /**
-     * オーナーIDを設定
-     *
-     * @param ownerId オーナーID
-     */
-    Key& withOwnerId(const Char* ownerId)
-    {
-        setOwnerId(ownerId);
         return *this;
     }
 
@@ -275,33 +264,126 @@ public:
     }
 
     /**
+     * 説明文を取得
+     *
+     * @return 説明文
+     */
+    const optional<StringHolder>& getDescription() const
+    {
+        return ensureData().description;
+    }
+
+    /**
+     * 説明文を設定
+     *
+     * @param description 説明文
+     */
+    void setDescription(const Char* description)
+    {
+        ensureData().description.emplace(description);
+    }
+
+    /**
+     * 説明文を設定
+     *
+     * @param description 説明文
+     */
+    Key& withDescription(const Char* description)
+    {
+        setDescription(description);
+        return *this;
+    }
+
+    /**
+     * 暗号鍵を取得
+     *
+     * @return 暗号鍵
+     */
+    const optional<StringHolder>& getSecret() const
+    {
+        return ensureData().secret;
+    }
+
+    /**
+     * 暗号鍵を設定
+     *
+     * @param secret 暗号鍵
+     */
+    void setSecret(const Char* secret)
+    {
+        ensureData().secret.emplace(secret);
+    }
+
+    /**
+     * 暗号鍵を設定
+     *
+     * @param secret 暗号鍵
+     */
+    Key& withSecret(const Char* secret)
+    {
+        setSecret(secret);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    Key& withCreateAt(Int64 createAt)
+    Key& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
+        return *this;
+    }
+
+    /**
+     * 最終更新日時を取得
+     *
+     * @return 最終更新日時
+     */
+    const optional<Int64>& getUpdatedAt() const
+    {
+        return ensureData().updatedAt;
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    void setUpdatedAt(Int64 updatedAt)
+    {
+        ensureData().updatedAt.emplace(updatedAt);
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    Key& withUpdatedAt(Int64 updatedAt)
+    {
+        setUpdatedAt(updatedAt);
         return *this;
     }
 
@@ -324,15 +406,23 @@ bool operator!=(const Key& lhs, const Key& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
-        {
-            return true;
-        }
         if (lhs.m_pData->name != lhr.m_pData->name)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->secret != lhr.m_pData->secret)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

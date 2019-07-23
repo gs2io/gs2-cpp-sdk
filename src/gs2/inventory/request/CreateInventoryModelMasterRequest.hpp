@@ -28,7 +28,7 @@ namespace gs2 { namespace inventory
 {
 
 /**
- * インベントリマスターを新規作成 のリクエストモデル
+ * インベントリモデルマスターを新規作成 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,11 +41,11 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** カテゴリ名 */
-        optional<StringHolder> categoryName;
+        /** カテゴリー名 */
+        optional<StringHolder> namespaceName;
         /** インベントリの種類名 */
         optional<StringHolder> name;
-        /** インベントリマスターの説明 */
+        /** インベントリモデルマスターの説明 */
         optional<StringHolder> description;
         /** インベントリの種類のメタデータ */
         optional<StringHolder> metadata;
@@ -59,7 +59,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            categoryName(data.categoryName),
+            namespaceName(data.namespaceName),
             name(data.name),
             description(data.description),
             metadata(data.metadata),
@@ -69,7 +69,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            categoryName(std::move(data.categoryName)),
+            namespaceName(std::move(data.namespaceName)),
             name(std::move(data.name)),
             description(std::move(data.description)),
             metadata(std::move(data.metadata)),
@@ -166,33 +166,33 @@ public:
         return this;
     }
     /**
-     * カテゴリ名を取得
+     * カテゴリー名を取得
      *
-     * @return カテゴリ名
+     * @return カテゴリー名
      */
-    const optional<StringHolder>& getCategoryName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().categoryName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * カテゴリ名を設定
+     * カテゴリー名を設定
      *
-     * @param categoryName カテゴリ名
+     * @param namespaceName カテゴリー名
      */
-    void setCategoryName(const Char* categoryName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().categoryName.emplace(categoryName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * カテゴリ名を設定
+     * カテゴリー名を設定
      *
-     * @param categoryName カテゴリ名
+     * @param namespaceName カテゴリー名
      */
-    CreateInventoryModelMasterRequest& withCategoryName(const Char* categoryName)
+    CreateInventoryModelMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().categoryName.emplace(categoryName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
@@ -228,9 +228,9 @@ public:
     }
 
     /**
-     * インベントリマスターの説明を取得
+     * インベントリモデルマスターの説明を取得
      *
-     * @return インベントリマスターの説明
+     * @return インベントリモデルマスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -238,9 +238,9 @@ public:
     }
 
     /**
-     * インベントリマスターの説明を設定
+     * インベントリモデルマスターの説明を設定
      *
-     * @param description インベントリマスターの説明
+     * @param description インベントリモデルマスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -248,9 +248,9 @@ public:
     }
 
     /**
-     * インベントリマスターの説明を設定
+     * インベントリモデルマスターの説明を設定
      *
-     * @param description インベントリマスターの説明
+     * @param description インベントリモデルマスターの説明
      */
     CreateInventoryModelMasterRequest& withDescription(const Char* description)
     {

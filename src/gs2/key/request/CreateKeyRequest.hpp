@@ -41,20 +41,28 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** 暗号鍵名 */
         optional<StringHolder> name;
+        /** 説明文 */
+        optional<StringHolder> description;
 
         Data()
         {}
 
         Data(const Data& data) :
             Gs2Object(data),
-            name(data.name)
+            namespaceName(data.namespaceName),
+            name(data.name),
+            description(data.description)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            name(std::move(data.name))
+            namespaceName(std::move(data.namespaceName)),
+            name(std::move(data.name)),
+            description(std::move(data.description))
         {}
 
         ~Data() = default;
@@ -146,6 +154,37 @@ public:
         return this;
     }
     /**
+     * ネームスペース名を取得
+     *
+     * @return ネームスペース名
+     */
+    const optional<StringHolder>& getNamespaceName() const
+    {
+        return ensureData().namespaceName;
+    }
+
+    /**
+     * ネームスペース名を設定
+     *
+     * @param namespaceName ネームスペース名
+     */
+    void setNamespaceName(const Char* namespaceName)
+    {
+        ensureData().namespaceName.emplace(namespaceName);
+    }
+
+    /**
+     * ネームスペース名を設定
+     *
+     * @param namespaceName ネームスペース名
+     */
+    CreateKeyRequest& withNamespaceName(const Char* namespaceName)
+    {
+        ensureData().namespaceName.emplace(namespaceName);
+        return *this;
+    }
+
+    /**
      * 暗号鍵名を取得
      *
      * @return 暗号鍵名
@@ -173,6 +212,37 @@ public:
     CreateKeyRequest& withName(const Char* name)
     {
         ensureData().name.emplace(name);
+        return *this;
+    }
+
+    /**
+     * 説明文を取得
+     *
+     * @return 説明文
+     */
+    const optional<StringHolder>& getDescription() const
+    {
+        return ensureData().description;
+    }
+
+    /**
+     * 説明文を設定
+     *
+     * @param description 説明文
+     */
+    void setDescription(const Char* description)
+    {
+        ensureData().description.emplace(description);
+    }
+
+    /**
+     * 説明文を設定
+     *
+     * @param description 説明文
+     */
+    CreateKeyRequest& withDescription(const Char* description)
+    {
+        ensureData().description.emplace(description);
         return *this;
     }
 

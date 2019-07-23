@@ -41,12 +41,12 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザー のGRN */
+        /** ユーザ のGRN */
         optional<StringHolder> userId;
         /** セキュリティポリシー のGRNのリスト */
         optional<List<StringHolder>> securityPolicyIds;
         /** 作成日時 */
-        optional<Int64> attachAt;
+        optional<Int64> attachedAt;
 
         Data()
         {}
@@ -55,14 +55,14 @@ private:
             detail::json::IModel(data),
             userId(data.userId),
             securityPolicyIds(data.securityPolicyIds),
-            attachAt(data.attachAt)
+            attachedAt(data.attachedAt)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
             userId(std::move(data.userId)),
             securityPolicyIds(std::move(data.securityPolicyIds)),
-            attachAt(std::move(data.attachAt))
+            attachedAt(std::move(data.attachedAt))
         {}
 
         ~Data() = default;
@@ -94,10 +94,10 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name, "attachAt") == 0) {
+            else if (std::strcmp(name, "attachedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->attachAt = jsonValue.GetInt64();
+                    this->attachedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -181,9 +181,9 @@ public:
         return this;
     }
     /**
-     * ユーザー のGRNを取得
+     * ユーザ のGRNを取得
      *
-     * @return ユーザー のGRN
+     * @return ユーザ のGRN
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -191,9 +191,9 @@ public:
     }
 
     /**
-     * ユーザー のGRNを設定
+     * ユーザ のGRNを設定
      *
-     * @param userId ユーザー のGRN
+     * @param userId ユーザ のGRN
      */
     void setUserId(const Char* userId)
     {
@@ -201,9 +201,9 @@ public:
     }
 
     /**
-     * ユーザー のGRNを設定
+     * ユーザ のGRNを設定
      *
-     * @param userId ユーザー のGRN
+     * @param userId ユーザ のGRN
      */
     AttachSecurityPolicy& withUserId(const Char* userId)
     {
@@ -247,29 +247,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getAttachAt() const
+    const optional<Int64>& getAttachedAt() const
     {
-        return ensureData().attachAt;
+        return ensureData().attachedAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param attachAt 作成日時
+     * @param attachedAt 作成日時
      */
-    void setAttachAt(Int64 attachAt)
+    void setAttachedAt(Int64 attachedAt)
     {
-        ensureData().attachAt.emplace(attachAt);
+        ensureData().attachedAt.emplace(attachedAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param attachAt 作成日時
+     * @param attachedAt 作成日時
      */
-    AttachSecurityPolicy& withAttachAt(Int64 attachAt)
+    AttachSecurityPolicy& withAttachedAt(Int64 attachedAt)
     {
-        setAttachAt(attachAt);
+        setAttachedAt(attachedAt);
         return *this;
     }
 
@@ -296,7 +296,7 @@ bool operator!=(const AttachSecurityPolicy& lhs, const AttachSecurityPolicy& lhr
         {
             return true;
         }
-        if (lhs.m_pData->attachAt != lhr.m_pData->attachAt)
+        if (lhs.m_pData->attachedAt != lhr.m_pData->attachedAt)
         {
             return true;
         }

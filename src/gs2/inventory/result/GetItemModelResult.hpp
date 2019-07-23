@@ -29,7 +29,7 @@ namespace gs2 { namespace inventory
 {
 
 /**
- * アイテムマスターを取得 のレスポンスモデル
+ * Noneを取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** アイテムマスター */
+        /** None */
         optional<ItemModel> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * アイテムマスターを取得
+     * Noneを取得
      *
-     * @return アイテムマスター
+     * @return None
      */
     const optional<ItemModel>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * アイテムマスターを設定
+     * Noneを設定
      *
-     * @param item アイテムマスター
+     * @param item None
      */
     void setItem(const ItemModel& item)
     {

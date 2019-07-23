@@ -29,7 +29,7 @@ namespace gs2 { namespace stamina
 {
 
 /**
- * スタミナ最大値テーブルの一覧を取得 のレスポンスモデル
+ * スタミナの最大値テーブルマスターの一覧を取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** スタミナ最大値テーブルのリスト */
+        /** スタミナの最大値テーブルマスターのリスト */
         optional<List<MaxStaminaTableMaster>> items;
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
@@ -166,9 +166,9 @@ public:
         return this;
     }
     /**
-     * スタミナ最大値テーブルのリストを取得
+     * スタミナの最大値テーブルマスターのリストを取得
      *
-     * @return スタミナ最大値テーブルのリスト
+     * @return スタミナの最大値テーブルマスターのリスト
      */
     const optional<List<MaxStaminaTableMaster>>& getItems() const
     {
@@ -176,9 +176,9 @@ public:
     }
 
     /**
-     * スタミナ最大値テーブルのリストを設定
+     * スタミナの最大値テーブルマスターのリストを設定
      *
-     * @param items スタミナ最大値テーブルのリスト
+     * @param items スタミナの最大値テーブルマスターのリスト
      */
     void setItems(const List<MaxStaminaTableMaster>& items)
     {

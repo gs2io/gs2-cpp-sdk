@@ -28,7 +28,7 @@
 namespace gs2 { namespace account {
 
 /**
- * アカウント
+ * ゲームプレイヤーアカウント
  *
  * @author Game Server Services, Inc.
  *
@@ -41,14 +41,14 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** アカウント のGRN */
+        /** ゲームプレイヤーアカウント */
         optional<StringHolder> accountId;
         /** アカウントID */
         optional<StringHolder> userId;
         /** パスワード */
         optional<StringHolder> password;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
 
         Data()
         {}
@@ -58,7 +58,7 @@ private:
             accountId(data.accountId),
             userId(data.userId),
             password(data.password),
-            createAt(data.createAt)
+            createdAt(data.createdAt)
         {}
 
         Data(Data&& data) :
@@ -66,7 +66,7 @@ private:
             accountId(std::move(data.accountId)),
             userId(std::move(data.userId)),
             password(std::move(data.password)),
-            createAt(std::move(data.createAt))
+            createdAt(std::move(data.createdAt))
         {}
 
         ~Data() = default;
@@ -95,10 +95,10 @@ private:
                     this->password.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -182,9 +182,9 @@ public:
         return this;
     }
     /**
-     * アカウント のGRNを取得
+     * ゲームプレイヤーアカウントを取得
      *
-     * @return アカウント のGRN
+     * @return ゲームプレイヤーアカウント
      */
     const optional<StringHolder>& getAccountId() const
     {
@@ -192,9 +192,9 @@ public:
     }
 
     /**
-     * アカウント のGRNを設定
+     * ゲームプレイヤーアカウントを設定
      *
-     * @param accountId アカウント のGRN
+     * @param accountId ゲームプレイヤーアカウント
      */
     void setAccountId(const Char* accountId)
     {
@@ -202,9 +202,9 @@ public:
     }
 
     /**
-     * アカウント のGRNを設定
+     * ゲームプレイヤーアカウントを設定
      *
-     * @param accountId アカウント のGRN
+     * @param accountId ゲームプレイヤーアカウント
      */
     Account& withAccountId(const Char* accountId)
     {
@@ -279,29 +279,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    Account& withCreateAt(Int64 createAt)
+    Account& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -332,7 +332,7 @@ bool operator!=(const Account& lhs, const Account& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }

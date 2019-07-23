@@ -29,7 +29,7 @@ namespace gs2 { namespace inventory
 {
 
 /**
- * アイテムをインベントリに追加 のレスポンスモデル
+ * スタンプシートでアイテムをインベントリに追加 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,9 +39,9 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 加算後のアイテムセットのリスト */
+        /** 加算後の有効期限ごとのアイテム所持数量のリスト */
         optional<List<ItemSet>> items;
-        /** アイテムマスター */
+        /** アイテムモデル */
         optional<ItemModel> itemModel;
         /** インベントリ */
         optional<Inventory> inventory;
@@ -190,9 +190,9 @@ public:
         return this;
     }
     /**
-     * 加算後のアイテムセットのリストを取得
+     * 加算後の有効期限ごとのアイテム所持数量のリストを取得
      *
-     * @return 加算後のアイテムセットのリスト
+     * @return 加算後の有効期限ごとのアイテム所持数量のリスト
      */
     const optional<List<ItemSet>>& getItems() const
     {
@@ -200,9 +200,9 @@ public:
     }
 
     /**
-     * 加算後のアイテムセットのリストを設定
+     * 加算後の有効期限ごとのアイテム所持数量のリストを設定
      *
-     * @param items 加算後のアイテムセットのリスト
+     * @param items 加算後の有効期限ごとのアイテム所持数量のリスト
      */
     void setItems(const List<ItemSet>& items)
     {
@@ -210,9 +210,9 @@ public:
     }
 
     /**
-     * アイテムマスターを取得
+     * アイテムモデルを取得
      *
-     * @return アイテムマスター
+     * @return アイテムモデル
      */
     const optional<ItemModel>& getItemModel() const
     {
@@ -220,9 +220,9 @@ public:
     }
 
     /**
-     * アイテムマスターを設定
+     * アイテムモデルを設定
      *
-     * @param itemModel アイテムマスター
+     * @param itemModel アイテムモデル
      */
     void setItemModel(const ItemModel& itemModel)
     {

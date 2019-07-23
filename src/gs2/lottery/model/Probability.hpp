@@ -42,7 +42,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 排出された景品 */
+        /** 景品の種類 */
         optional<DrawnPrize> prize;
         /** 排出確率(0.0〜1.0) */
         optional<Float> rate;
@@ -165,9 +165,9 @@ public:
         return this;
     }
     /**
-     * 排出された景品を取得
+     * 景品の種類を取得
      *
-     * @return 排出された景品
+     * @return 景品の種類
      */
     const optional<DrawnPrize>& getPrize() const
     {
@@ -175,9 +175,9 @@ public:
     }
 
     /**
-     * 排出された景品を設定
+     * 景品の種類を設定
      *
-     * @param prize 排出された景品
+     * @param prize 景品の種類
      */
     void setPrize(const DrawnPrize& prize)
     {
@@ -185,9 +185,9 @@ public:
     }
 
     /**
-     * 排出された景品を設定
+     * 景品の種類を設定
      *
-     * @param prize 排出された景品
+     * @param prize 景品の種類
      */
     Probability& withPrize(const DrawnPrize& prize)
     {

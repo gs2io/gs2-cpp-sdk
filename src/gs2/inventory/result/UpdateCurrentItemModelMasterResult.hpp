@@ -29,7 +29,7 @@ namespace gs2 { namespace inventory
 {
 
 /**
- * 現在有効なカテゴリマスターJSONを更新します のレスポンスモデル
+ * 現在有効な現在有効な所持品マスターを更新します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 更新した現在有効なカテゴリマスターJSON */
+        /** 更新した現在有効な現在有効な所持品マスター */
         optional<CurrentItemModelMaster> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * 更新した現在有効なカテゴリマスターJSONを取得
+     * 更新した現在有効な現在有効な所持品マスターを取得
      *
-     * @return 更新した現在有効なカテゴリマスターJSON
+     * @return 更新した現在有効な現在有効な所持品マスター
      */
     const optional<CurrentItemModelMaster>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * 更新した現在有効なカテゴリマスターJSONを設定
+     * 更新した現在有効な現在有効な所持品マスターを設定
      *
-     * @param item 更新した現在有効なカテゴリマスターJSON
+     * @param item 更新した現在有効な現在有効な所持品マスター
      */
     void setItem(const CurrentItemModelMaster& item)
     {

@@ -41,16 +41,16 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** レシート のGRN */
+        /** レシート */
         optional<StringHolder> receiptId;
         /** トランザクションID */
         optional<StringHolder> transactionId;
         /** ユーザーID */
         optional<StringHolder> userId;
-        /** None */
-        optional<Int32> slot;
         /** 種類 */
         optional<StringHolder> type;
+        /** スロット番号 */
+        optional<Int32> slot;
         /** 単価 */
         optional<Float> price;
         /** 有償課金通貨 */
@@ -62,7 +62,7 @@ private:
         /** ストアプラットフォームで販売されているコンテンツID */
         optional<StringHolder> contentsId;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
 
         Data()
         {}
@@ -72,14 +72,14 @@ private:
             receiptId(data.receiptId),
             transactionId(data.transactionId),
             userId(data.userId),
-            slot(data.slot),
             type(data.type),
+            slot(data.slot),
             price(data.price),
             paid(data.paid),
             free(data.free),
             total(data.total),
             contentsId(data.contentsId),
-            createAt(data.createAt)
+            createdAt(data.createdAt)
         {}
 
         Data(Data&& data) :
@@ -87,14 +87,14 @@ private:
             receiptId(std::move(data.receiptId)),
             transactionId(std::move(data.transactionId)),
             userId(std::move(data.userId)),
-            slot(std::move(data.slot)),
             type(std::move(data.type)),
+            slot(std::move(data.slot)),
             price(std::move(data.price)),
             paid(std::move(data.paid)),
             free(std::move(data.free)),
             total(std::move(data.total)),
             contentsId(std::move(data.contentsId)),
-            createAt(std::move(data.createAt))
+            createdAt(std::move(data.createdAt))
         {}
 
         ~Data() = default;
@@ -123,16 +123,16 @@ private:
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "slot") == 0) {
-                if (jsonValue.IsInt())
-                {
-                    this->slot = jsonValue.GetInt();
-                }
-            }
             else if (std::strcmp(name, "type") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->type.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "slot") == 0) {
+                if (jsonValue.IsInt())
+                {
+                    this->slot = jsonValue.GetInt();
                 }
             }
             else if (std::strcmp(name, "price") == 0) {
@@ -165,10 +165,10 @@ private:
                     this->contentsId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -252,9 +252,9 @@ public:
         return this;
     }
     /**
-     * レシート のGRNを取得
+     * レシートを取得
      *
-     * @return レシート のGRN
+     * @return レシート
      */
     const optional<StringHolder>& getReceiptId() const
     {
@@ -262,9 +262,9 @@ public:
     }
 
     /**
-     * レシート のGRNを設定
+     * レシートを設定
      *
-     * @param receiptId レシート のGRN
+     * @param receiptId レシート
      */
     void setReceiptId(const Char* receiptId)
     {
@@ -272,9 +272,9 @@ public:
     }
 
     /**
-     * レシート のGRNを設定
+     * レシートを設定
      *
-     * @param receiptId レシート のGRN
+     * @param receiptId レシート
      */
     Receipt& withReceiptId(const Char* receiptId)
     {
@@ -345,37 +345,6 @@ public:
     }
 
     /**
-     * Noneを取得
-     *
-     * @return None
-     */
-    const optional<Int32>& getSlot() const
-    {
-        return ensureData().slot;
-    }
-
-    /**
-     * Noneを設定
-     *
-     * @param slot None
-     */
-    void setSlot(Int32 slot)
-    {
-        ensureData().slot.emplace(slot);
-    }
-
-    /**
-     * Noneを設定
-     *
-     * @param slot None
-     */
-    Receipt& withSlot(Int32 slot)
-    {
-        setSlot(slot);
-        return *this;
-    }
-
-    /**
      * 種類を取得
      *
      * @return 種類
@@ -403,6 +372,37 @@ public:
     Receipt& withType(const Char* type)
     {
         setType(type);
+        return *this;
+    }
+
+    /**
+     * スロット番号を取得
+     *
+     * @return スロット番号
+     */
+    const optional<Int32>& getSlot() const
+    {
+        return ensureData().slot;
+    }
+
+    /**
+     * スロット番号を設定
+     *
+     * @param slot スロット番号
+     */
+    void setSlot(Int32 slot)
+    {
+        ensureData().slot.emplace(slot);
+    }
+
+    /**
+     * スロット番号を設定
+     *
+     * @param slot スロット番号
+     */
+    Receipt& withSlot(Int32 slot)
+    {
+        setSlot(slot);
         return *this;
     }
 
@@ -566,29 +566,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    Receipt& withCreateAt(Int64 createAt)
+    Receipt& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -619,11 +619,11 @@ bool operator!=(const Receipt& lhs, const Receipt& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->slot != lhr.m_pData->slot)
+        if (lhs.m_pData->type != lhr.m_pData->type)
         {
             return true;
         }
-        if (lhs.m_pData->type != lhr.m_pData->type)
+        if (lhs.m_pData->slot != lhr.m_pData->slot)
         {
             return true;
         }
@@ -647,7 +647,7 @@ bool operator!=(const Receipt& lhs, const Receipt& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }

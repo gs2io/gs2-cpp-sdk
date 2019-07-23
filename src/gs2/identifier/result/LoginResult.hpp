@@ -40,19 +40,27 @@ private:
     {
     public:
         /** プロジェクトトークン */
-        optional<ProjectToken> item;
+        optional<StringHolder> accessToken;
+        /** Bearer */
+        optional<StringHolder> tokenType;
+        /** 有効期間(秒) */
+        optional<Int32> expiresIn;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            item(data.item)
+            accessToken(data.accessToken),
+            tokenType(data.tokenType),
+            expiresIn(data.expiresIn)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
+            accessToken(std::move(data.accessToken)),
+            tokenType(std::move(data.tokenType)),
+            expiresIn(std::move(data.expiresIn))
         {}
 
         virtual ~Data() = default;
@@ -63,12 +71,22 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "item") == 0) {
-                if (jsonValue.IsObject())
+            if (std::strcmp(name, "accessToken") == 0) {
+                if (jsonValue.IsString())
                 {
-                    const auto& jsonObject = jsonValue.GetObject();
-                    this->item.emplace();
-                    detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
+                    this->accessToken.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "tokenType") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->tokenType.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "expiresIn") == 0) {
+                if (jsonValue.IsInt())
+                {
+                    this->expiresIn = jsonValue.GetInt();
                 }
             }
         }
@@ -156,19 +174,59 @@ public:
      *
      * @return プロジェクトトークン
      */
-    const optional<ProjectToken>& getItem() const
+    const optional<StringHolder>& getAccessToken() const
     {
-        return ensureData().item;
+        return ensureData().accessToken;
     }
 
     /**
      * プロジェクトトークンを設定
      *
-     * @param item プロジェクトトークン
+     * @param accessToken プロジェクトトークン
      */
-    void setItem(const ProjectToken& item)
+    void setAccessToken(const Char* accessToken)
     {
-        ensureData().item.emplace(item);
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * Bearerを取得
+     *
+     * @return Bearer
+     */
+    const optional<StringHolder>& getTokenType() const
+    {
+        return ensureData().tokenType;
+    }
+
+    /**
+     * Bearerを設定
+     *
+     * @param tokenType Bearer
+     */
+    void setTokenType(const Char* tokenType)
+    {
+        ensureData().tokenType.emplace(tokenType);
+    }
+
+    /**
+     * 有効期間(秒)を取得
+     *
+     * @return 有効期間(秒)
+     */
+    const optional<Int32>& getExpiresIn() const
+    {
+        return ensureData().expiresIn;
+    }
+
+    /**
+     * 有効期間(秒)を設定
+     *
+     * @param expiresIn 有効期間(秒)
+     */
+    void setExpiresIn(Int32 expiresIn)
+    {
+        ensureData().expiresIn.emplace(expiresIn);
     }
 
 

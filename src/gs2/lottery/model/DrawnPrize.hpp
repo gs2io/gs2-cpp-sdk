@@ -23,6 +23,7 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "AcquireAction.hpp"
 #include <cstring>
 
 namespace gs2 { namespace lottery {
@@ -41,20 +42,20 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** プロパティID */
-        optional<StringHolder> propertyId;
+        /** 入手アクションのリスト */
+        optional<List<AcquireAction>> acquireActions;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            propertyId(data.propertyId)
+            acquireActions(data.acquireActions)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            propertyId(std::move(data.propertyId))
+            acquireActions(std::move(data.acquireActions))
         {}
 
         ~Data() = default;
@@ -65,10 +66,16 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "propertyId") == 0) {
-                if (jsonValue.IsString())
+            if (std::strcmp(name, "acquireActions") == 0) {
+                if (jsonValue.IsArray())
                 {
-                    this->propertyId.emplace(jsonValue.GetString());
+                    const auto& array = jsonValue.GetArray();
+                    this->acquireActions.emplace();
+                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
+                        AcquireAction item;
+                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
+                        detail::addToList(*this->acquireActions, std::move(item));
+                    }
                 }
             }
         }
@@ -152,33 +159,33 @@ public:
         return this;
     }
     /**
-     * プロパティIDを取得
+     * 入手アクションのリストを取得
      *
-     * @return プロパティID
+     * @return 入手アクションのリスト
      */
-    const optional<StringHolder>& getPropertyId() const
+    const optional<List<AcquireAction>>& getAcquireActions() const
     {
-        return ensureData().propertyId;
+        return ensureData().acquireActions;
     }
 
     /**
-     * プロパティIDを設定
+     * 入手アクションのリストを設定
      *
-     * @param propertyId プロパティID
+     * @param acquireActions 入手アクションのリスト
      */
-    void setPropertyId(const Char* propertyId)
+    void setAcquireActions(const List<AcquireAction>& acquireActions)
     {
-        ensureData().propertyId.emplace(propertyId);
+        ensureData().acquireActions.emplace(acquireActions);
     }
 
     /**
-     * プロパティIDを設定
+     * 入手アクションのリストを設定
      *
-     * @param propertyId プロパティID
+     * @param acquireActions 入手アクションのリスト
      */
-    DrawnPrize& withPropertyId(const Char* propertyId)
+    DrawnPrize& withAcquireActions(const List<AcquireAction>& acquireActions)
     {
-        setPropertyId(propertyId);
+        setAcquireActions(acquireActions);
         return *this;
     }
 
@@ -197,7 +204,7 @@ bool operator!=(const DrawnPrize& lhs, const DrawnPrize& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->propertyId != lhr.m_pData->propertyId)
+        if (lhs.m_pData->acquireActions != lhr.m_pData->acquireActions)
         {
             return true;
         }

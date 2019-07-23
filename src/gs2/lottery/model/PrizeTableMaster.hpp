@@ -23,13 +23,13 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
-#include "PrizeMaster.hpp"
+#include "Prize.hpp"
 #include <cstring>
 
 namespace gs2 { namespace lottery {
 
 /**
- * 景品の排出確率テーブル
+ * 排出確率テーブルマスター
  *
  * @author Game Server Services, Inc.
  *
@@ -42,20 +42,20 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 景品の排出確率テーブル のGRN */
+        /** 排出確率テーブルマスター */
         optional<StringHolder> prizeTableId;
-        /** 景品テーブル名 */
+        /** 排出確率テーブル名 */
         optional<StringHolder> name;
-        /** 景品テーブルのメタデータ */
+        /** 排出確率テーブルのメタデータ */
         optional<StringHolder> metadata;
-        /** 景品の排出確率テーブルの説明 */
+        /** 排出確率テーブルマスターの説明 */
         optional<StringHolder> description;
         /** 景品リスト */
-        optional<List<PrizeMaster>> prizes;
+        optional<List<Prize>> prizes;
         /** 作成日時 */
-        optional<Int64> createAt;
+        optional<Int64> createdAt;
         /** 最終更新日時 */
-        optional<Int64> updateAt;
+        optional<Int64> updatedAt;
 
         Data()
         {}
@@ -67,8 +67,8 @@ private:
             metadata(data.metadata),
             description(data.description),
             prizes(data.prizes),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {}
 
         Data(Data&& data) :
@@ -78,8 +78,8 @@ private:
             metadata(std::move(data.metadata)),
             description(std::move(data.description)),
             prizes(std::move(data.prizes)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
+            createdAt(std::move(data.createdAt)),
+            updatedAt(std::move(data.updatedAt))
         {}
 
         ~Data() = default;
@@ -120,22 +120,22 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->prizes.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        PrizeMaster item;
+                        Prize item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
                         detail::addToList(*this->prizes, std::move(item));
                     }
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt64();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
+            else if (std::strcmp(name, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt64();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -219,9 +219,9 @@ public:
         return this;
     }
     /**
-     * 景品の排出確率テーブル のGRNを取得
+     * 排出確率テーブルマスターを取得
      *
-     * @return 景品の排出確率テーブル のGRN
+     * @return 排出確率テーブルマスター
      */
     const optional<StringHolder>& getPrizeTableId() const
     {
@@ -229,9 +229,9 @@ public:
     }
 
     /**
-     * 景品の排出確率テーブル のGRNを設定
+     * 排出確率テーブルマスターを設定
      *
-     * @param prizeTableId 景品の排出確率テーブル のGRN
+     * @param prizeTableId 排出確率テーブルマスター
      */
     void setPrizeTableId(const Char* prizeTableId)
     {
@@ -239,9 +239,9 @@ public:
     }
 
     /**
-     * 景品の排出確率テーブル のGRNを設定
+     * 排出確率テーブルマスターを設定
      *
-     * @param prizeTableId 景品の排出確率テーブル のGRN
+     * @param prizeTableId 排出確率テーブルマスター
      */
     PrizeTableMaster& withPrizeTableId(const Char* prizeTableId)
     {
@@ -250,9 +250,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を取得
+     * 排出確率テーブル名を取得
      *
-     * @return 景品テーブル名
+     * @return 排出確率テーブル名
      */
     const optional<StringHolder>& getName() const
     {
@@ -260,9 +260,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を設定
+     * 排出確率テーブル名を設定
      *
-     * @param name 景品テーブル名
+     * @param name 排出確率テーブル名
      */
     void setName(const Char* name)
     {
@@ -270,9 +270,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を設定
+     * 排出確率テーブル名を設定
      *
-     * @param name 景品テーブル名
+     * @param name 排出確率テーブル名
      */
     PrizeTableMaster& withName(const Char* name)
     {
@@ -281,9 +281,9 @@ public:
     }
 
     /**
-     * 景品テーブルのメタデータを取得
+     * 排出確率テーブルのメタデータを取得
      *
-     * @return 景品テーブルのメタデータ
+     * @return 排出確率テーブルのメタデータ
      */
     const optional<StringHolder>& getMetadata() const
     {
@@ -291,9 +291,9 @@ public:
     }
 
     /**
-     * 景品テーブルのメタデータを設定
+     * 排出確率テーブルのメタデータを設定
      *
-     * @param metadata 景品テーブルのメタデータ
+     * @param metadata 排出確率テーブルのメタデータ
      */
     void setMetadata(const Char* metadata)
     {
@@ -301,9 +301,9 @@ public:
     }
 
     /**
-     * 景品テーブルのメタデータを設定
+     * 排出確率テーブルのメタデータを設定
      *
-     * @param metadata 景品テーブルのメタデータ
+     * @param metadata 排出確率テーブルのメタデータ
      */
     PrizeTableMaster& withMetadata(const Char* metadata)
     {
@@ -312,9 +312,9 @@ public:
     }
 
     /**
-     * 景品の排出確率テーブルの説明を取得
+     * 排出確率テーブルマスターの説明を取得
      *
-     * @return 景品の排出確率テーブルの説明
+     * @return 排出確率テーブルマスターの説明
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -322,9 +322,9 @@ public:
     }
 
     /**
-     * 景品の排出確率テーブルの説明を設定
+     * 排出確率テーブルマスターの説明を設定
      *
-     * @param description 景品の排出確率テーブルの説明
+     * @param description 排出確率テーブルマスターの説明
      */
     void setDescription(const Char* description)
     {
@@ -332,9 +332,9 @@ public:
     }
 
     /**
-     * 景品の排出確率テーブルの説明を設定
+     * 排出確率テーブルマスターの説明を設定
      *
-     * @param description 景品の排出確率テーブルの説明
+     * @param description 排出確率テーブルマスターの説明
      */
     PrizeTableMaster& withDescription(const Char* description)
     {
@@ -347,7 +347,7 @@ public:
      *
      * @return 景品リスト
      */
-    const optional<List<PrizeMaster>>& getPrizes() const
+    const optional<List<Prize>>& getPrizes() const
     {
         return ensureData().prizes;
     }
@@ -357,7 +357,7 @@ public:
      *
      * @param prizes 景品リスト
      */
-    void setPrizes(const List<PrizeMaster>& prizes)
+    void setPrizes(const List<Prize>& prizes)
     {
         ensureData().prizes.emplace(prizes);
     }
@@ -367,7 +367,7 @@ public:
      *
      * @param prizes 景品リスト
      */
-    PrizeTableMaster& withPrizes(const List<PrizeMaster>& prizes)
+    PrizeTableMaster& withPrizes(const List<Prize>& prizes)
     {
         setPrizes(prizes);
         return *this;
@@ -378,29 +378,29 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int64>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int64 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    PrizeTableMaster& withCreateAt(Int64 createAt)
+    PrizeTableMaster& withCreatedAt(Int64 createdAt)
     {
-        setCreateAt(createAt);
+        setCreatedAt(createdAt);
         return *this;
     }
 
@@ -409,29 +409,29 @@ public:
      *
      * @return 最終更新日時
      */
-    const optional<Int64>& getUpdateAt() const
+    const optional<Int64>& getUpdatedAt() const
     {
-        return ensureData().updateAt;
+        return ensureData().updatedAt;
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    void setUpdateAt(Int64 updateAt)
+    void setUpdatedAt(Int64 updatedAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        ensureData().updatedAt.emplace(updatedAt);
     }
 
     /**
      * 最終更新日時を設定
      *
-     * @param updateAt 最終更新日時
+     * @param updatedAt 最終更新日時
      */
-    PrizeTableMaster& withUpdateAt(Int64 updateAt)
+    PrizeTableMaster& withUpdatedAt(Int64 updatedAt)
     {
-        setUpdateAt(updateAt);
+        setUpdatedAt(updatedAt);
         return *this;
     }
 
@@ -470,11 +470,11 @@ bool operator!=(const PrizeTableMaster& lhs, const PrizeTableMaster& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAt != lhr.m_pData->createAt)
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
         {
             return true;
         }
-        if (lhs.m_pData->updateAt != lhr.m_pData->updateAt)
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

@@ -29,7 +29,7 @@ namespace gs2 { namespace lottery
 {
 
 /**
- * 景品の排出確率テーブルの一覧を取得 のレスポンスモデル
+ * 排出確率テーブルマスターの一覧を取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 景品の排出確率テーブルのリスト */
+        /** 排出確率テーブルマスターのリスト */
         optional<List<PrizeTableMaster>> items;
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
@@ -166,9 +166,9 @@ public:
         return this;
     }
     /**
-     * 景品の排出確率テーブルのリストを取得
+     * 排出確率テーブルマスターのリストを取得
      *
-     * @return 景品の排出確率テーブルのリスト
+     * @return 排出確率テーブルマスターのリスト
      */
     const optional<List<PrizeTableMaster>>& getItems() const
     {
@@ -176,9 +176,9 @@ public:
     }
 
     /**
-     * 景品の排出確率テーブルのリストを設定
+     * 排出確率テーブルマスターのリストを設定
      *
-     * @param items 景品の排出確率テーブルのリスト
+     * @param items 排出確率テーブルマスターのリスト
      */
     void setItems(const List<PrizeTableMaster>& items)
     {

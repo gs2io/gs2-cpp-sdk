@@ -28,7 +28,7 @@ namespace gs2 { namespace lottery
 {
 
 /**
- * 抽選マスターJSONのマスターデータをエクスポートします のリクエストモデル
+ * 現在有効な抽選設定のマスターデータをエクスポートします のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,20 +41,20 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** グループ名 */
-        optional<StringHolder> groupName;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
 
         Data()
         {}
 
         Data(const Data& data) :
             Gs2Object(data),
-            groupName(data.groupName)
+            namespaceName(data.namespaceName)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            groupName(std::move(data.groupName))
+            namespaceName(std::move(data.namespaceName))
         {}
 
         ~Data() = default;
@@ -146,33 +146,33 @@ public:
         return this;
     }
     /**
-     * グループ名を取得
+     * ネームスペース名を取得
      *
-     * @return グループ名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGroupName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().groupName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    void setGroupName(const Char* groupName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    ExportMasterRequest& withGroupName(const Char* groupName)
+    ExportMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 

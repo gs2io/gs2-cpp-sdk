@@ -18,6 +18,7 @@
 #define GS2_SCRIPT_MODEL_MODEL_HPP_
 
 #include <gs2/core/common.hpp>
+#include "Namespace.hpp"
 #include "Script.hpp"
 
 #endif //GS2_SCRIPT_MODEL_MODEL_HPP_

@@ -29,7 +29,7 @@ namespace gs2 { namespace lottery
 {
 
 /**
- * 排出済みの景品情報をリセット のレスポンスモデル
+ * ユーザIDを指定してボックスをリセット のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */

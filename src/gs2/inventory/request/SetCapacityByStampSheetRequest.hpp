@@ -28,7 +28,7 @@ namespace gs2 { namespace inventory
 {
 
 /**
- * キャパシティサイズを設定 のリクエストモデル
+ * スタンプシートでキャパシティサイズを設定 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

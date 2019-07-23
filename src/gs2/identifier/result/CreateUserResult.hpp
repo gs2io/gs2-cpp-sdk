@@ -29,7 +29,7 @@ namespace gs2 { namespace identifier
 {
 
 /**
- * ユーザーを新規作成します のレスポンスモデル
+ * ユーザを新規作成します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 作成したユーザー */
+        /** 作成したユーザ */
         optional<User> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * 作成したユーザーを取得
+     * 作成したユーザを取得
      *
-     * @return 作成したユーザー
+     * @return 作成したユーザ
      */
     const optional<User>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * 作成したユーザーを設定
+     * 作成したユーザを設定
      *
-     * @param item 作成したユーザー
+     * @param item 作成したユーザ
      */
     void setItem(const User& item)
     {

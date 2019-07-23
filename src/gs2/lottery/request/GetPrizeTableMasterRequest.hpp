@@ -28,7 +28,7 @@ namespace gs2 { namespace lottery
 {
 
 /**
- * 景品の排出確率テーブルを取得 のリクエストモデル
+ * 排出確率テーブルマスターを取得 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,9 +41,9 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** グループ名 */
-        optional<StringHolder> groupName;
-        /** 景品テーブル名 */
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
+        /** 排出確率テーブル名 */
         optional<StringHolder> prizeTableName;
 
         Data()
@@ -51,13 +51,13 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            groupName(data.groupName),
+            namespaceName(data.namespaceName),
             prizeTableName(data.prizeTableName)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
-            groupName(std::move(data.groupName)),
+            namespaceName(std::move(data.namespaceName)),
             prizeTableName(std::move(data.prizeTableName))
         {}
 
@@ -150,40 +150,40 @@ public:
         return this;
     }
     /**
-     * グループ名を取得
+     * ネームスペース名を取得
      *
-     * @return グループ名
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getGroupName() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().groupName;
+        return ensureData().namespaceName;
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    void setGroupName(const Char* groupName)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * グループ名を設定
+     * ネームスペース名を設定
      *
-     * @param groupName グループ名
+     * @param namespaceName ネームスペース名
      */
-    GetPrizeTableMasterRequest& withGroupName(const Char* groupName)
+    GetPrizeTableMasterRequest& withNamespaceName(const Char* namespaceName)
     {
-        ensureData().groupName.emplace(groupName);
+        ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
     /**
-     * 景品テーブル名を取得
+     * 排出確率テーブル名を取得
      *
-     * @return 景品テーブル名
+     * @return 排出確率テーブル名
      */
     const optional<StringHolder>& getPrizeTableName() const
     {
@@ -191,9 +191,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を設定
+     * 排出確率テーブル名を設定
      *
-     * @param prizeTableName 景品テーブル名
+     * @param prizeTableName 排出確率テーブル名
      */
     void setPrizeTableName(const Char* prizeTableName)
     {
@@ -201,9 +201,9 @@ public:
     }
 
     /**
-     * 景品テーブル名を設定
+     * 排出確率テーブル名を設定
      *
-     * @param prizeTableName 景品テーブル名
+     * @param prizeTableName 排出確率テーブル名
      */
     GetPrizeTableMasterRequest& withPrizeTableName(const Char* prizeTableName)
     {
