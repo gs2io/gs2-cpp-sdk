@@ -56,7 +56,6 @@
 #include "result/GetMutexByUserIdResult.hpp"
 #include "result/DeleteMutexByUserIdResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace lock {
 

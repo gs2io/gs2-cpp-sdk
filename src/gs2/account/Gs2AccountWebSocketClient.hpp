@@ -70,7 +70,6 @@
 #include "result/DeleteTakeOverByUserIdentifierResult.hpp"
 #include "result/DoTakeOverResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace account {
 

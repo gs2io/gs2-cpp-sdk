@@ -64,7 +64,6 @@
 #include "result/DetachSecurityPolicyResult.hpp"
 #include "result/LoginResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace identifier {
 
@@ -265,7 +264,8 @@ public:
     void describeUsers(std::function<void(AsyncDescribeUsersResult&)> callback, DescribeUsersRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeUsersResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -289,18 +289,17 @@ public:
             url += urlSafeValue;
             joint[0] = '&';
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
 
         std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -313,12 +312,13 @@ public:
     void createUser(std::function<void(AsyncCreateUserResult&)> callback, CreateUserRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateUserResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/user";
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
@@ -333,21 +333,23 @@ public:
             writer.writeCharArray(*request.getDescription());
         }
         writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestData(body, bodySize);
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
 
         std::vector<std::string> headerEntries;
         headerEntries.push_back("Content-Type: application/json");
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -360,7 +362,8 @@ public:
     void updateUser(std::function<void(AsyncUpdateUserResult&)> callback, UpdateUserRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateUserResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("PUT");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -369,7 +372,7 @@ public:
             auto& value = request.getUserName();
             url.replace("{userName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
@@ -379,21 +382,23 @@ public:
             writer.writeCharArray(*request.getDescription());
         }
         writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestData(body, bodySize);
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
 
         std::vector<std::string> headerEntries;
         headerEntries.push_back("Content-Type: application/json");
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -406,7 +411,8 @@ public:
     void getUser(std::function<void(AsyncGetUserResult&)> callback, GetUserRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetUserResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -417,18 +423,17 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
 
         std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -441,7 +446,8 @@ public:
     void deleteUser(std::function<void(AsyncDeleteUserResult&)> callback, DeleteUserRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("DELETE");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -452,18 +458,17 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
 
         std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -476,7 +481,8 @@ public:
     void describeSecurityPolicies(std::function<void(AsyncDescribeSecurityPoliciesResult&)> callback, DescribeSecurityPoliciesRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeSecurityPoliciesResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -500,18 +506,17 @@ public:
             url += urlSafeValue;
             joint[0] = '&';
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
 
         std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -524,7 +529,8 @@ public:
     void describeCommonSecurityPolicies(std::function<void(AsyncDescribeCommonSecurityPoliciesResult&)> callback, DescribeCommonSecurityPoliciesRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeCommonSecurityPoliciesResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -548,18 +554,17 @@ public:
             url += urlSafeValue;
             joint[0] = '&';
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
 
         std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -572,12 +577,13 @@ public:
     void createSecurityPolicy(std::function<void(AsyncCreateSecurityPolicyResult&)> callback, CreateSecurityPolicyRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateSecurityPolicyResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/securityPolicy";
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
@@ -597,21 +603,23 @@ public:
             writer.writeCharArray(*request.getPolicy());
         }
         writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestData(body, bodySize);
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
 
         std::vector<std::string> headerEntries;
         headerEntries.push_back("Content-Type: application/json");
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -624,7 +632,8 @@ public:
     void updateSecurityPolicy(std::function<void(AsyncUpdateSecurityPolicyResult&)> callback, UpdateSecurityPolicyRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateSecurityPolicyResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::PUT);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("PUT");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -633,7 +642,7 @@ public:
             auto& value = request.getSecurityPolicyName();
             url.replace("{securityPolicyName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
@@ -648,21 +657,23 @@ public:
             writer.writeCharArray(*request.getPolicy());
         }
         writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestData(body, bodySize);
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
 
         std::vector<std::string> headerEntries;
         headerEntries.push_back("Content-Type: application/json");
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -675,7 +686,8 @@ public:
     void getSecurityPolicy(std::function<void(AsyncGetSecurityPolicyResult&)> callback, GetSecurityPolicyRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetSecurityPolicyResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -686,18 +698,17 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
 
         std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -710,7 +721,8 @@ public:
     void deleteSecurityPolicy(std::function<void(AsyncDeleteSecurityPolicyResult&)> callback, DeleteSecurityPolicyRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("DELETE");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -721,18 +733,17 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
 
         std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -745,7 +756,8 @@ public:
     void describeIdentifiers(std::function<void(AsyncDescribeIdentifiersResult&)> callback, DescribeIdentifiersRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeIdentifiersResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -773,18 +785,17 @@ public:
             url += urlSafeValue;
             joint[0] = '&';
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
 
         std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -797,7 +808,8 @@ public:
     void createIdentifier(std::function<void(AsyncCreateIdentifierResult&)> callback, CreateIdentifierRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateIdentifierResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -806,26 +818,28 @@ public:
             auto& value = request.getUserName();
             url.replace("{userName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
         writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestData(body, bodySize);
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
 
         std::vector<std::string> headerEntries;
         headerEntries.push_back("Content-Type: application/json");
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -838,7 +852,8 @@ public:
     void getIdentifier(std::function<void(AsyncGetIdentifierResult&)> callback, GetIdentifierRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetIdentifierResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -853,18 +868,17 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
 
         std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -877,7 +891,8 @@ public:
     void deleteIdentifier(std::function<void(AsyncDeleteIdentifierResult&)> callback, DeleteIdentifierRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("DELETE");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -892,18 +907,17 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
 
         std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -916,7 +930,8 @@ public:
     void getHasSecurityPolicy(std::function<void(AsyncGetHasSecurityPolicyResult&)> callback, GetHasSecurityPolicyRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetHasSecurityPolicyResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::GET);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -927,18 +942,17 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
 
         std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -951,7 +965,8 @@ public:
     void attachSecurityPolicy(std::function<void(AsyncAttachSecurityPolicyResult&)> callback, AttachSecurityPolicyRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<AttachSecurityPolicyResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -960,7 +975,7 @@ public:
             auto& value = request.getUserName();
             url.replace("{userName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
@@ -970,21 +985,23 @@ public:
             writer.writeCharArray(*request.getSecurityPolicyId());
         }
         writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestData(body, bodySize);
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
 
         std::vector<std::string> headerEntries;
         headerEntries.push_back("Content-Type: application/json");
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -997,7 +1014,8 @@ public:
     void detachSecurityPolicy(std::function<void(AsyncDetachSecurityPolicyResult&)> callback, DetachSecurityPolicyRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DetachSecurityPolicyResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::DELETE);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("DELETE");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -1012,18 +1030,17 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
 
         std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 
@@ -1036,12 +1053,13 @@ public:
     void login(std::function<void(AsyncLoginResult&)> callback, LoginRequest& request)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<LoginResult>(getGs2RestSession(), callback);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "identifier");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/projectToken/login";
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setUrl(url.c_str());
+        httpRequest.SetURL(url.c_str());
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
@@ -1056,21 +1074,23 @@ public:
             writer.writeCharArray(*request.getClientSecret());
         }
         writer.writeObjectEnd();
-        auto body = writer.toString();
-        auto bodySize = strlen(body);
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setRequestData(body, bodySize);
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
 
         std::vector<std::string> headerEntries;
         headerEntries.push_back("Content-Type: application/json");
         if (request.getRequestId())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-REQUEST-ID", *request.getRequestId());
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         if (request.getAccessToken())
         {
-            detail::HttpTask::addHeaderEntry(headerEntries, "X-GS2-ACCESS-TOKEN", *request.getAccessToken());
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        gs2RestSessionTask.getGs2HttpTask().getHttpRequest().setHeaders(headerEntries);
         gs2RestSessionTask.execute();
     }
 

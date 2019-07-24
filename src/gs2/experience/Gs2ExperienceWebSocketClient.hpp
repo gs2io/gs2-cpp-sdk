@@ -94,7 +94,6 @@
 #include "result/AddRankCapByStampSheetResult.hpp"
 #include "result/SetRankCapByStampSheetResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace experience {
 

@@ -58,7 +58,6 @@
 #include "result/GetCurrentDistributorMasterResult.hpp"
 #include "result/UpdateCurrentDistributorMasterResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace distributor {
 

@@ -66,7 +66,7 @@ private:
             if (std::strcmp(name, "item") == 0) {
                 if (jsonValue.IsObject())
                 {
-                    const auto& jsonObject = jsonValue.GetObject();
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->item.emplace();
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
                 }

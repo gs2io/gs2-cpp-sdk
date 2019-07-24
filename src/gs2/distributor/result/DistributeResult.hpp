@@ -74,7 +74,7 @@ private:
             if (std::strcmp(name, "distributeResource") == 0) {
                 if (jsonValue.IsObject())
                 {
-                    const auto& jsonObject = jsonValue.GetObject();
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->distributeResource.emplace();
                     detail::json::JsonParser::parse(&this->distributeResource->getModel(), jsonObject);
                 }

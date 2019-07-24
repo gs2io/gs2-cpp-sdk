@@ -52,7 +52,6 @@
 #include "result/DescribeOutputsResult.hpp"
 #include "result/GetOutputResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace deploy {
 

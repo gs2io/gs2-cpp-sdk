@@ -52,7 +52,6 @@
 #include "result/EncryptResult.hpp"
 #include "result/DecryptResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace key {
 

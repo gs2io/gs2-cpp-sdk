@@ -56,7 +56,6 @@
 #include "result/DeleteMessageResult.hpp"
 #include "result/DeleteMessageByUserIdResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace inbox {
 

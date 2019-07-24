@@ -82,7 +82,7 @@ private:
                     this->items.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         ItemSet item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
+                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
                         detail::addToList(*this->items, std::move(item));
                     }
                 }
@@ -90,7 +90,7 @@ private:
             else if (std::strcmp(name, "itemModel") == 0) {
                 if (jsonValue.IsObject())
                 {
-                    const auto& jsonObject = jsonValue.GetObject();
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->itemModel.emplace();
                     detail::json::JsonParser::parse(&this->itemModel->getModel(), jsonObject);
                 }
@@ -98,7 +98,7 @@ private:
             else if (std::strcmp(name, "inventory") == 0) {
                 if (jsonValue.IsObject())
                 {
-                    const auto& jsonObject = jsonValue.GetObject();
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->inventory.emplace();
                     detail::json::JsonParser::parse(&this->inventory->getModel(), jsonObject);
                 }

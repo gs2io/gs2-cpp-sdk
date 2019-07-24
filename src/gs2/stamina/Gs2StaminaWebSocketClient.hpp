@@ -100,7 +100,6 @@
 #include "result/SetMaxValueByStampSheetResult.hpp"
 #include "result/ConsumeStaminaByStampTaskResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace stamina {
 

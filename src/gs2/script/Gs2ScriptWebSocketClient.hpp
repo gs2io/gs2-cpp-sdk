@@ -50,7 +50,6 @@
 #include "result/DeleteScriptResult.hpp"
 #include "result/DebugInvokeResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace script {
 

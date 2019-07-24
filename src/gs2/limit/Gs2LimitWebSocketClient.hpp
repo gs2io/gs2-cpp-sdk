@@ -74,7 +74,6 @@
 #include "result/DescribeLimitModelsResult.hpp"
 #include "result/GetLimitModelResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace limit {
 

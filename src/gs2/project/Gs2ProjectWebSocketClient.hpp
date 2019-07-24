@@ -52,7 +52,6 @@
 #include "result/UpdateProjectResult.hpp"
 #include "result/DeleteProjectResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace project {
 

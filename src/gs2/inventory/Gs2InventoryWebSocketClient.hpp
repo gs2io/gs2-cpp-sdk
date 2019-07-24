@@ -110,7 +110,6 @@
 #include "result/AcquireItemSetByStampSheetResult.hpp"
 #include "result/ConsumeItemSetByStampTaskResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace inventory {
 

@@ -64,7 +64,6 @@
 #include "result/DetachSecurityPolicyResult.hpp"
 #include "result/LoginResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace identifier {
 

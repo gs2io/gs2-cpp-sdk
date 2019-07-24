@@ -114,7 +114,7 @@ private:
                     this->attributeRanges.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         AttributeRange item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
+                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
                         detail::addToList(*this->attributeRanges, std::move(item));
                     }
                 }
@@ -126,7 +126,7 @@ private:
                     this->capacityOfRoles.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         CapacityOfRole item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
+                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
                         detail::addToList(*this->capacityOfRoles, std::move(item));
                     }
                 }

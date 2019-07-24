@@ -129,7 +129,7 @@ private:
             else if (std::strcmp(name, "rankThreshold") == 0) {
                 if (jsonValue.IsObject())
                 {
-                    const auto& jsonObject = jsonValue.GetObject();
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->rankThreshold.emplace();
                     detail::json::JsonParser::parse(&this->rankThreshold->getModel(), jsonObject);
                 }

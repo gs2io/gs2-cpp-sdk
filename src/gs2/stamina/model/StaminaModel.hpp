@@ -149,7 +149,7 @@ private:
             else if (std::strcmp(name, "maxStaminaTable") == 0) {
                 if (jsonValue.IsObject())
                 {
-                    const auto& jsonObject = jsonValue.GetObject();
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->maxStaminaTable.emplace();
                     detail::json::JsonParser::parse(&this->maxStaminaTable->getModel(), jsonObject);
                 }

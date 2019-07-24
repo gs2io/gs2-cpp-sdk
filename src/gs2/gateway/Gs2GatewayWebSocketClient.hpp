@@ -74,7 +74,6 @@
 #include "result/DeleteFirebaseTokenByUserIdResult.hpp"
 #include "result/SendMobileNotificationByUserIdResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace gateway {
 

@@ -74,7 +74,7 @@ private:
             if (std::strcmp(name, "item") == 0) {
                 if (jsonValue.IsObject())
                 {
-                    const auto& jsonObject = jsonValue.GetObject();
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->item.emplace();
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
                 }
@@ -82,7 +82,7 @@ private:
             else if (std::strcmp(name, "result") == 0) {
                 if (jsonValue.IsObject())
                 {
-                    const auto& jsonObject = jsonValue.GetObject();
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->result.emplace();
                     detail::json::JsonParser::parse(&this->result->getModel(), jsonObject);
                 }

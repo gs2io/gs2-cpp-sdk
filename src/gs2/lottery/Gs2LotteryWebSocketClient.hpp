@@ -84,7 +84,6 @@
 #include "result/GetCurrentLotteryMasterResult.hpp"
 #include "result/UpdateCurrentLotteryMasterResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace lottery {
 

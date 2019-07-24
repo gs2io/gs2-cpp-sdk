@@ -104,7 +104,6 @@
 #include "result/DescribeQuestModelsResult.hpp"
 #include "result/GetQuestModelResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace quest {
 

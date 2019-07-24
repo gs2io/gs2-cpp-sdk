@@ -60,7 +60,6 @@
 #include "result/CancelMatchmakingByUserIdResult.hpp"
 #include "result/DeleteGatheringResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace matchmaking {
 

@@ -68,7 +68,6 @@
 #include "result/RecordReceiptResult.hpp"
 #include "result/RecordReceiptByStampTaskResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace money {
 

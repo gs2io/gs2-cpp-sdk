@@ -30,7 +30,6 @@
 #include "result/LoginResult.hpp"
 #include "result/LoginBySignatureResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace auth {
 

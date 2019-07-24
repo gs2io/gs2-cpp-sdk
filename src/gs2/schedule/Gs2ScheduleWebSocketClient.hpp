@@ -80,7 +80,6 @@
 #include "result/GetCurrentEventMasterResult.hpp"
 #include "result/UpdateCurrentEventMasterResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace schedule {
 

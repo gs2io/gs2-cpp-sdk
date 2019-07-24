@@ -86,7 +86,6 @@
 #include "result/BuyResult.hpp"
 #include "result/BuyByUserIdResult.hpp"
 #include <cstring>
-#include <network/HttpRequest.h>
 
 namespace gs2 { namespace showcase {
 
