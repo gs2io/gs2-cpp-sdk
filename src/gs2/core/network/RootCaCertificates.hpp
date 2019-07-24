@@ -23,7 +23,7 @@ GS2_START_OF_NAMESPACE
 
 namespace detail {
 
-extern const char RootCaCertificates[];
+extern const char* RootCaCertificates;
 extern const size_t SizeOfRootCaCertificates;
 
 }
