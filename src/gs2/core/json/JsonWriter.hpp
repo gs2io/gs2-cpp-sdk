@@ -18,6 +18,12 @@
 #define GS2_CORE_JSON_JSONWRITER_HPP_
 
 #include "../Gs2Object.hpp"
+
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma push_macro("GetObject")
+#undef GetObject
+#endif
+
 #include "../external/rapidjson/include/rapidjson/stringbuffer.h"
 #include "../external/rapidjson/include/rapidjson/writer.h"
 
@@ -72,5 +78,9 @@ public:
 
 } }
 GS2_END_OF_NAMESPACE
+
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma pop_macro("GetObject")
+#endif
 
 #endif //GS2_CORE_JSON_JSONWRITER_HPP_
