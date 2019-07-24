@@ -26,8 +26,8 @@ include(external/DownloadProject/DownloadProject.cmake)
 if(NOT cocos2d-x_SOURCE_DIR)
     download_project(
             PROJ cocos2d-x
-            # URL http://www.cocos2d-x.org/filedown/cocos2d-x-3.16.zip
-            URL http://www.cocos2d-x.org/filedown/start/384
+            # URL http://cocos2d-x.org/filedown/cocos2d-x-3.17.zip
+            URL http://cocos2d-x.org/filedown/start/402
             UPDATE_DISCONNECTED 1
     )
 endif(NOT cocos2d-x_SOURCE_DIR)
