@@ -17,6 +17,15 @@
 #ifndef GS2_CORE_MACROS_HPP_
 #define GS2_CORE_MACROS_HPP_
 
+#define GS2_TARGET_UNKNOWN  0
+#define GS2_TARGET_WINDOWS  1
+
+#if _WIN32 == 1 || _WIN64 == 1
+#define GS2_TARGET  GS2_TARGET_WINDOWS
+#else
+#define GS2_TARGET  GS2_TARGET_UNKNOWN
+#endif
+
 #define GS2_START_OF_NAMESPACE  namespace gs2 {
 #define GS2_END_OF_NAMESPACE    }
 
