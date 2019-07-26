@@ -31,7 +31,7 @@ const char* toStr(char buffer[], Int32 value)
 
 const char* toStr(char buffer[], Int64 value)
 {
-    std::sprintf(buffer, "%ld", value);
+    std::sprintf(buffer, "%lld", value);
     return buffer;
 }
 
@@ -43,7 +43,7 @@ const char* toStr(char buffer[], UInt32 value)
 
 const char* toStr(char buffer[], UInt64 value)
 {
-    std::sprintf(buffer, "%lu", value);
+    std::sprintf(buffer, "%llu", value);
     return buffer;
 }
 
