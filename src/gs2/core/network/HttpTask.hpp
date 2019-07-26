@@ -20,13 +20,7 @@
 #include "../Gs2Object.hpp"
 #include <string>
 #include <vector>
-#include <network/HttpRequest.h>
-
-namespace cocos2d { namespace network {
-    class HttpClient;
-    class HttpRequest;
-    class HttpResponse;
-}}
+#include <Http.h>
 
 GS2_START_OF_NAMESPACE
 
@@ -37,10 +31,9 @@ class Gs2RestResponse;
 class HttpTask : public Gs2Object
 {
 private:
-    ::cocos2d::network::HttpRequest &m_HttpRequest;
+    TSharedRef<IHttpRequest> m_pHttpRequest;
 
-    static void callbackHandler(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse);
-    virtual void callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse) = 0;
+    virtual void callback(FHttpRequestPtr pHttpRequest, FHttpResponsePtr pHttpResponse, bool isSuccessful) = 0;
 
 public:
     HttpTask();
@@ -50,9 +43,9 @@ public:
     void send();
 
     // ユーザデータは設定しても send 時に上書きされます
-    ::cocos2d::network::HttpRequest &getHttpRequest()
+    IHttpRequest& getHttpRequest()
     {
-        return m_HttpRequest;
+        return *m_pHttpRequest;
     }
 
     // ユーティリティ
@@ -63,7 +56,7 @@ public:
 class Gs2HttpTask : public HttpTask
 {
 private:
-    void callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse) GS2_OVERRIDE;
+    void callback(FHttpRequestPtr pHttpRequest, FHttpResponsePtr pHttpResponse, bool isSuccessful) GS2_OVERRIDE;
     virtual void callback(Gs2RestResponse& gs2RestResponse) = 0;
 
 public:

@@ -29,7 +29,7 @@ Gs2RestSession::Gs2LoginTask::Gs2LoginTask(Gs2RestSession& gs2RestSession) :
     Gs2HttpTask(),
     m_Gs2RestSession(gs2RestSession)
 {
-    getHttpRequest().setRequestType(::cocos2d::network::HttpRequest::Type::POST);
+    getHttpRequest().SetVerb("POST");
     auto& writer = detail::json::JsonWriter::getInstance();
     writer.reset();
     writer.writeObjectStart();
@@ -39,17 +39,15 @@ Gs2RestSession::Gs2LoginTask::Gs2LoginTask(Gs2RestSession& gs2RestSession) :
     writer.writeCharArray(gs2RestSession.getGs2Credential().getClientSecret());
     writer.writeObjectEnd();
     auto body = writer.toString();
-    auto bodySize = strlen(body);
-    getHttpRequest().setRequestData(body, bodySize);
+    getHttpRequest().SetContentAsString(body);
 
     detail::StringVariable url(Gs2RestSession::EndpointHost);
     url.replace("{service}", "identifier");
     url.replace("{region}", gs2RestSession.getRegion().getName());
     url += "/projectToken/login";
-    getHttpRequest().setUrl(url.c_str());
+    getHttpRequest().SetURL(url.c_str());
     std::vector<std::string> headerEntries;
-    headerEntries.emplace_back("Content-Type: application/json");
-    getHttpRequest().setHeaders(headerEntries);
+    getHttpRequest().SetHeader("Content-Type", "application/json");
 }
 
 void Gs2RestSession::Gs2LoginTask::callback(detail::Gs2RestResponse& gs2RestResponse)

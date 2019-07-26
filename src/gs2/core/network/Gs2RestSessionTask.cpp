@@ -22,12 +22,10 @@ namespace detail {
 
 void Gs2RestSessionTaskBase::prepareImpl()
 {
-    auto headers = getGs2HttpTask().getHttpRequest().getHeaders();
+    auto& httpRequest = getGs2HttpTask().getHttpRequest();
 
-    detail::HttpTask::addHeaderEntry(headers, "X-GS2-CLIENT-ID", getGs2Session().getGs2Credential().getClientId());
-    detail::HttpTask::addHeaderEntry(headers, "Authorization", *getProjectToken());
-
-    getGs2HttpTask().getHttpRequest().setHeaders(headers);
+    httpRequest.SetHeader("X-GS2-CLIENT-ID", static_cast<const char*>(getGs2Session().getGs2Credential().getClientId()));
+    httpRequest.SetHeader("Authorization", static_cast<const char*>(*getProjectToken()));
 }
 
 void Gs2RestSessionTaskBase::executeImpl()

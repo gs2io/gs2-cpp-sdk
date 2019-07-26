@@ -19,9 +19,8 @@
 #include "../json/JsonParser.hpp"
 #include "../model/IGs2Credential.hpp"
 #include "../network/Gs2RestResponse.hpp"
-#include <network/HttpClient.h>
-#include <network/HttpRequest.h>
-#include <network/HttpResponse.h>
+#include <HttpModule.h>
+#include <HttpManager.h>
 #include <vector>
 
 GS2_START_OF_NAMESPACE
@@ -29,27 +28,19 @@ GS2_START_OF_NAMESPACE
 namespace detail {
 
 HttpTask::HttpTask() :
-    m_HttpRequest(*new ::cocos2d::network::HttpRequest())
+    m_pHttpRequest(FHttpModule::Get().CreateRequest()) 
 {
 }
 
 HttpTask::~HttpTask()
 {
-    m_HttpRequest.release();
-}
-
-void HttpTask::callbackHandler(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse)
-{
-    HttpTask* pHttpTask = reinterpret_cast<HttpTask*>(pResponse->getHttpRequest()->getUserData());
-    pHttpTask->callback(pClient, pResponse);
 }
 
 void HttpTask::send()
 {
-    m_HttpRequest.setUserData(this);
-    m_HttpRequest.setResponseCallback(callbackHandler);
-
-    ::cocos2d::network::HttpClient::getInstance()->send(&m_HttpRequest);
+    m_pHttpRequest->OnProcessRequestComplete().BindRaw(this, &HttpTask::callback);
+    m_pHttpRequest->ProcessRequest();
+    FHttpModule::Get().GetHttpManager().AddRequest(m_pHttpRequest);
 }
 
 void HttpTask::addHeaderEntry(std::vector<std::string>& headers, const Char key[], const Char value[])
@@ -62,20 +53,20 @@ void HttpTask::addHeaderEntry(std::vector<std::string>& headers, const Char key[
 }
 
 
-void Gs2HttpTask::callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse)
+void Gs2HttpTask::callback(FHttpRequestPtr pHttpRequest, FHttpResponsePtr pHttpResponse, bool isSuccessful)
 {
-    const char* responseBody = "";
-    {
-        auto pResponseData = pResponse->getResponseData();
-        if (pResponseData != nullptr)
-        {
-            pResponseData->push_back('\0');
-            responseBody = pResponseData->data();
-        }
-    }
+    GS2_NOT_USED(pHttpRequest);
+    GS2_NOT_USED(isSuccessful);
 
-    Gs2RestResponse gs2RestResponse(responseBody, static_cast<Int32>(pResponse->getResponseCode()));
+    size_t responseLength = pHttpResponse->GetContentLength();
+    auto responseBody = new char[responseLength + 1];
+    std::memcpy(responseBody, pHttpResponse->GetContent().GetData(), responseLength);
+    responseBody[responseLength] = '\0';
+
+    Gs2RestResponse gs2RestResponse(responseBody, static_cast<Int32>(pHttpResponse->GetResponseCode()));
     callback(gs2RestResponse);
+
+    delete[] responseBody;
 }
 
 }
