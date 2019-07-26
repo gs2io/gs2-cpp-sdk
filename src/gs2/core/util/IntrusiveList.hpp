@@ -55,7 +55,7 @@ public:
 
     T* getNext()
     {
-        return static_cast<T*>(getNext());
+        return static_cast<T*>(IntrusiveListItemBase::getNext());
     }
 };
 
