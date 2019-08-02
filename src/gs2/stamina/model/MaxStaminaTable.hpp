@@ -360,7 +360,7 @@ public:
     }
 };
 
-bool operator!=(const MaxStaminaTable& lhs, const MaxStaminaTable& lhr)
+inline bool operator!=(const MaxStaminaTable& lhs, const MaxStaminaTable& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -392,7 +392,7 @@ bool operator!=(const MaxStaminaTable& lhs, const MaxStaminaTable& lhr)
     return false;
 }
 
-bool operator==(const MaxStaminaTable& lhs, const MaxStaminaTable& lhr)
+inline bool operator==(const MaxStaminaTable& lhs, const MaxStaminaTable& lhr)
 {
     return !(lhs != lhr);
 }

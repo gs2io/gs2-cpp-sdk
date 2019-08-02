@@ -230,7 +230,7 @@ public:
     }
 };
 
-bool operator!=(const OutputField& lhs, const OutputField& lhr)
+inline bool operator!=(const OutputField& lhs, const OutputField& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -250,7 +250,7 @@ bool operator!=(const OutputField& lhs, const OutputField& lhr)
     return false;
 }
 
-bool operator==(const OutputField& lhs, const OutputField& lhr)
+inline bool operator==(const OutputField& lhs, const OutputField& lhr)
 {
     return !(lhs != lhr);
 }

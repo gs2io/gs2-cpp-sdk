@@ -520,7 +520,7 @@ public:
     }
 };
 
-bool operator!=(const StaminaModel& lhs, const StaminaModel& lhr)
+inline bool operator!=(const StaminaModel& lhs, const StaminaModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -568,7 +568,7 @@ bool operator!=(const StaminaModel& lhs, const StaminaModel& lhr)
     return false;
 }
 
-bool operator==(const StaminaModel& lhs, const StaminaModel& lhr)
+inline bool operator==(const StaminaModel& lhs, const StaminaModel& lhr)
 {
     return !(lhs != lhr);
 }

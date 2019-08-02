@@ -665,7 +665,7 @@ public:
     }
 };
 
-bool operator!=(const WorkingResource& lhs, const WorkingResource& lhr)
+inline bool operator!=(const WorkingResource& lhs, const WorkingResource& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -725,7 +725,7 @@ bool operator!=(const WorkingResource& lhs, const WorkingResource& lhr)
     return false;
 }
 
-bool operator==(const WorkingResource& lhs, const WorkingResource& lhr)
+inline bool operator==(const WorkingResource& lhs, const WorkingResource& lhr)
 {
     return !(lhs != lhr);
 }

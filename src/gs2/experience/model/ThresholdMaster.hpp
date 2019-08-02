@@ -442,7 +442,7 @@ public:
     }
 };
 
-bool operator!=(const ThresholdMaster& lhs, const ThresholdMaster& lhr)
+inline bool operator!=(const ThresholdMaster& lhs, const ThresholdMaster& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -482,7 +482,7 @@ bool operator!=(const ThresholdMaster& lhs, const ThresholdMaster& lhr)
     return false;
 }
 
-bool operator==(const ThresholdMaster& lhs, const ThresholdMaster& lhr)
+inline bool operator==(const ThresholdMaster& lhs, const ThresholdMaster& lhr)
 {
     return !(lhs != lhr);
 }

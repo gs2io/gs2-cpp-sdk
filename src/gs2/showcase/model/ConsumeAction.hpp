@@ -230,7 +230,7 @@ public:
     }
 };
 
-bool operator!=(const ConsumeAction& lhs, const ConsumeAction& lhr)
+inline bool operator!=(const ConsumeAction& lhs, const ConsumeAction& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -250,7 +250,7 @@ bool operator!=(const ConsumeAction& lhs, const ConsumeAction& lhr)
     return false;
 }
 
-bool operator==(const ConsumeAction& lhs, const ConsumeAction& lhr)
+inline bool operator==(const ConsumeAction& lhs, const ConsumeAction& lhr)
 {
     return !(lhs != lhr);
 }

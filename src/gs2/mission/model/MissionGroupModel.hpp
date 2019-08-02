@@ -360,7 +360,7 @@ public:
     }
 };
 
-bool operator!=(const MissionGroupModel& lhs, const MissionGroupModel& lhr)
+inline bool operator!=(const MissionGroupModel& lhs, const MissionGroupModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -392,7 +392,7 @@ bool operator!=(const MissionGroupModel& lhs, const MissionGroupModel& lhr)
     return false;
 }
 
-bool operator==(const MissionGroupModel& lhs, const MissionGroupModel& lhr)
+inline bool operator==(const MissionGroupModel& lhs, const MissionGroupModel& lhr)
 {
     return !(lhs != lhr);
 }

@@ -599,7 +599,7 @@ public:
     }
 };
 
-bool operator!=(const EventMaster& lhs, const EventMaster& lhr)
+inline bool operator!=(const EventMaster& lhs, const EventMaster& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -655,7 +655,7 @@ bool operator!=(const EventMaster& lhs, const EventMaster& lhr)
     return false;
 }
 
-bool operator==(const EventMaster& lhs, const EventMaster& lhr)
+inline bool operator==(const EventMaster& lhs, const EventMaster& lhr)
 {
     return !(lhs != lhr);
 }

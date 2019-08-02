@@ -328,7 +328,7 @@ public:
     }
 };
 
-bool operator!=(const CapacityOfRole& lhs, const CapacityOfRole& lhr)
+inline bool operator!=(const CapacityOfRole& lhs, const CapacityOfRole& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -356,7 +356,7 @@ bool operator!=(const CapacityOfRole& lhs, const CapacityOfRole& lhr)
     return false;
 }
 
-bool operator==(const CapacityOfRole& lhs, const CapacityOfRole& lhr)
+inline bool operator==(const CapacityOfRole& lhs, const CapacityOfRole& lhr)
 {
     return !(lhs != lhr);
 }

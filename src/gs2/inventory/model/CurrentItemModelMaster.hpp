@@ -230,7 +230,7 @@ public:
     }
 };
 
-bool operator!=(const CurrentItemModelMaster& lhs, const CurrentItemModelMaster& lhr)
+inline bool operator!=(const CurrentItemModelMaster& lhs, const CurrentItemModelMaster& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -250,7 +250,7 @@ bool operator!=(const CurrentItemModelMaster& lhs, const CurrentItemModelMaster&
     return false;
 }
 
-bool operator==(const CurrentItemModelMaster& lhs, const CurrentItemModelMaster& lhr)
+inline bool operator==(const CurrentItemModelMaster& lhs, const CurrentItemModelMaster& lhr)
 {
     return !(lhs != lhr);
 }

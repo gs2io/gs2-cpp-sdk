@@ -435,7 +435,7 @@ public:
     }
 };
 
-bool operator!=(const SecurityPolicy& lhs, const SecurityPolicy& lhr)
+inline bool operator!=(const SecurityPolicy& lhs, const SecurityPolicy& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -475,7 +475,7 @@ bool operator!=(const SecurityPolicy& lhs, const SecurityPolicy& lhr)
     return false;
 }
 
-bool operator==(const SecurityPolicy& lhs, const SecurityPolicy& lhr)
+inline bool operator==(const SecurityPolicy& lhs, const SecurityPolicy& lhr)
 {
     return !(lhs != lhr);
 }

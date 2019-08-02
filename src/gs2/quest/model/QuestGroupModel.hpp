@@ -360,7 +360,7 @@ public:
     }
 };
 
-bool operator!=(const QuestGroupModel& lhs, const QuestGroupModel& lhr)
+inline bool operator!=(const QuestGroupModel& lhs, const QuestGroupModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -392,7 +392,7 @@ bool operator!=(const QuestGroupModel& lhs, const QuestGroupModel& lhr)
     return false;
 }
 
-bool operator==(const QuestGroupModel& lhs, const QuestGroupModel& lhr)
+inline bool operator==(const QuestGroupModel& lhs, const QuestGroupModel& lhr)
 {
     return !(lhs != lhr);
 }

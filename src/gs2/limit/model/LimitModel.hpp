@@ -435,7 +435,7 @@ public:
     }
 };
 
-bool operator!=(const LimitModel& lhs, const LimitModel& lhr)
+inline bool operator!=(const LimitModel& lhs, const LimitModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -475,7 +475,7 @@ bool operator!=(const LimitModel& lhs, const LimitModel& lhr)
     return false;
 }
 
-bool operator==(const LimitModel& lhs, const LimitModel& lhr)
+inline bool operator==(const LimitModel& lhs, const LimitModel& lhr)
 {
     return !(lhs != lhr);
 }

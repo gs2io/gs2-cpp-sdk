@@ -435,7 +435,7 @@ public:
     }
 };
 
-bool operator!=(const Wallet& lhs, const Wallet& lhr)
+inline bool operator!=(const Wallet& lhs, const Wallet& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -475,7 +475,7 @@ bool operator!=(const Wallet& lhs, const Wallet& lhr)
     return false;
 }
 
-bool operator==(const Wallet& lhs, const Wallet& lhr)
+inline bool operator==(const Wallet& lhs, const Wallet& lhr)
 {
     return !(lhs != lhr);
 }

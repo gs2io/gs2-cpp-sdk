@@ -312,7 +312,7 @@ public:
     }
 };
 
-bool operator!=(const JobResultBody& lhs, const JobResultBody& lhr)
+inline bool operator!=(const JobResultBody& lhs, const JobResultBody& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -340,7 +340,7 @@ bool operator!=(const JobResultBody& lhs, const JobResultBody& lhr)
     return false;
 }
 
-bool operator==(const JobResultBody& lhs, const JobResultBody& lhr)
+inline bool operator==(const JobResultBody& lhs, const JobResultBody& lhr)
 {
     return !(lhs != lhr);
 }

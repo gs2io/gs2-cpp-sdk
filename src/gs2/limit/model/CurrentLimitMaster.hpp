@@ -230,7 +230,7 @@ public:
     }
 };
 
-bool operator!=(const CurrentLimitMaster& lhs, const CurrentLimitMaster& lhr)
+inline bool operator!=(const CurrentLimitMaster& lhs, const CurrentLimitMaster& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -250,7 +250,7 @@ bool operator!=(const CurrentLimitMaster& lhs, const CurrentLimitMaster& lhr)
     return false;
 }
 
-bool operator==(const CurrentLimitMaster& lhs, const CurrentLimitMaster& lhr)
+inline bool operator==(const CurrentLimitMaster& lhs, const CurrentLimitMaster& lhr)
 {
     return !(lhs != lhr);
 }

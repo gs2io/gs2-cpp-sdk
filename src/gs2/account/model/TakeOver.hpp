@@ -394,7 +394,7 @@ public:
     }
 };
 
-bool operator!=(const TakeOver& lhs, const TakeOver& lhr)
+inline bool operator!=(const TakeOver& lhs, const TakeOver& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -430,7 +430,7 @@ bool operator!=(const TakeOver& lhs, const TakeOver& lhr)
     return false;
 }
 
-bool operator==(const TakeOver& lhs, const TakeOver& lhr)
+inline bool operator==(const TakeOver& lhs, const TakeOver& lhr)
 {
     return !(lhs != lhr);
 }

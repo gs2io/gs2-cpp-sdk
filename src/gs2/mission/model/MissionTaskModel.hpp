@@ -524,7 +524,7 @@ public:
     }
 };
 
-bool operator!=(const MissionTaskModel& lhs, const MissionTaskModel& lhr)
+inline bool operator!=(const MissionTaskModel& lhs, const MissionTaskModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -572,7 +572,7 @@ bool operator!=(const MissionTaskModel& lhs, const MissionTaskModel& lhr)
     return false;
 }
 
-bool operator==(const MissionTaskModel& lhs, const MissionTaskModel& lhr)
+inline bool operator==(const MissionTaskModel& lhs, const MissionTaskModel& lhr)
 {
     return !(lhs != lhr);
 }

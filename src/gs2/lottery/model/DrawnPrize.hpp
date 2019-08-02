@@ -196,7 +196,7 @@ public:
     }
 };
 
-bool operator!=(const DrawnPrize& lhs, const DrawnPrize& lhr)
+inline bool operator!=(const DrawnPrize& lhs, const DrawnPrize& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -212,7 +212,7 @@ bool operator!=(const DrawnPrize& lhs, const DrawnPrize& lhr)
     return false;
 }
 
-bool operator==(const DrawnPrize& lhs, const DrawnPrize& lhr)
+inline bool operator==(const DrawnPrize& lhs, const DrawnPrize& lhr)
 {
     return !(lhs != lhr);
 }

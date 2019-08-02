@@ -476,7 +476,7 @@ public:
     }
 };
 
-bool operator!=(const Stack& lhs, const Stack& lhr)
+inline bool operator!=(const Stack& lhs, const Stack& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -520,7 +520,7 @@ bool operator!=(const Stack& lhs, const Stack& lhr)
     return false;
 }
 
-bool operator==(const Stack& lhs, const Stack& lhr)
+inline bool operator==(const Stack& lhs, const Stack& lhr)
 {
     return !(lhs != lhr);
 }

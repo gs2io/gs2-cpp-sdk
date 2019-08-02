@@ -394,7 +394,7 @@ public:
     }
 };
 
-bool operator!=(const WebsocketSession& lhs, const WebsocketSession& lhr)
+inline bool operator!=(const WebsocketSession& lhs, const WebsocketSession& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -430,7 +430,7 @@ bool operator!=(const WebsocketSession& lhs, const WebsocketSession& lhr)
     return false;
 }
 
-bool operator==(const WebsocketSession& lhs, const WebsocketSession& lhr)
+inline bool operator==(const WebsocketSession& lhs, const WebsocketSession& lhr)
 {
     return !(lhs != lhr);
 }

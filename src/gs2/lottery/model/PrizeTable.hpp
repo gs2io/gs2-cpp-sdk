@@ -319,7 +319,7 @@ public:
     }
 };
 
-bool operator!=(const PrizeTable& lhs, const PrizeTable& lhr)
+inline bool operator!=(const PrizeTable& lhs, const PrizeTable& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -347,7 +347,7 @@ bool operator!=(const PrizeTable& lhs, const PrizeTable& lhr)
     return false;
 }
 
-bool operator==(const PrizeTable& lhs, const PrizeTable& lhr)
+inline bool operator==(const PrizeTable& lhs, const PrizeTable& lhr)
 {
     return !(lhs != lhr);
 }

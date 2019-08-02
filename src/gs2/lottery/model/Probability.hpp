@@ -233,7 +233,7 @@ public:
     }
 };
 
-bool operator!=(const Probability& lhs, const Probability& lhr)
+inline bool operator!=(const Probability& lhs, const Probability& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -253,7 +253,7 @@ bool operator!=(const Probability& lhs, const Probability& lhr)
     return false;
 }
 
-bool operator==(const Probability& lhs, const Probability& lhr)
+inline bool operator==(const Probability& lhs, const Probability& lhr)
 {
     return !(lhs != lhr);
 }

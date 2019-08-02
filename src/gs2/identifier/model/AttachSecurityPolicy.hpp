@@ -280,7 +280,7 @@ public:
     }
 };
 
-bool operator!=(const AttachSecurityPolicy& lhs, const AttachSecurityPolicy& lhr)
+inline bool operator!=(const AttachSecurityPolicy& lhs, const AttachSecurityPolicy& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -304,7 +304,7 @@ bool operator!=(const AttachSecurityPolicy& lhs, const AttachSecurityPolicy& lhr
     return false;
 }
 
-bool operator==(const AttachSecurityPolicy& lhs, const AttachSecurityPolicy& lhr)
+inline bool operator==(const AttachSecurityPolicy& lhs, const AttachSecurityPolicy& lhr)
 {
     return !(lhs != lhr);
 }

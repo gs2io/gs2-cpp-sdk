@@ -230,7 +230,7 @@ public:
     }
 };
 
-bool operator!=(const CurrentExperienceMaster& lhs, const CurrentExperienceMaster& lhr)
+inline bool operator!=(const CurrentExperienceMaster& lhs, const CurrentExperienceMaster& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -250,7 +250,7 @@ bool operator!=(const CurrentExperienceMaster& lhs, const CurrentExperienceMaste
     return false;
 }
 
-bool operator==(const CurrentExperienceMaster& lhs, const CurrentExperienceMaster& lhr)
+inline bool operator==(const CurrentExperienceMaster& lhs, const CurrentExperienceMaster& lhr)
 {
     return !(lhs != lhr);
 }

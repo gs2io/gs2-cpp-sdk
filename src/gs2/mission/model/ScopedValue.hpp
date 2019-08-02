@@ -271,7 +271,7 @@ public:
     }
 };
 
-bool operator!=(const ScopedValue& lhs, const ScopedValue& lhr)
+inline bool operator!=(const ScopedValue& lhs, const ScopedValue& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -295,7 +295,7 @@ bool operator!=(const ScopedValue& lhs, const ScopedValue& lhr)
     return false;
 }
 
-bool operator==(const ScopedValue& lhs, const ScopedValue& lhr)
+inline bool operator==(const ScopedValue& lhs, const ScopedValue& lhr)
 {
     return !(lhs != lhr);
 }

@@ -558,7 +558,7 @@ public:
     }
 };
 
-bool operator!=(const ExperienceModelMaster& lhs, const ExperienceModelMaster& lhr)
+inline bool operator!=(const ExperienceModelMaster& lhs, const ExperienceModelMaster& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -610,7 +610,7 @@ bool operator!=(const ExperienceModelMaster& lhs, const ExperienceModelMaster& l
     return false;
 }
 
-bool operator==(const ExperienceModelMaster& lhs, const ExperienceModelMaster& lhr)
+inline bool operator==(const ExperienceModelMaster& lhs, const ExperienceModelMaster& lhr)
 {
     return !(lhs != lhr);
 }

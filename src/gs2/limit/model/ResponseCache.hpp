@@ -353,7 +353,7 @@ public:
     }
 };
 
-bool operator!=(const ResponseCache& lhs, const ResponseCache& lhr)
+inline bool operator!=(const ResponseCache& lhs, const ResponseCache& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -385,7 +385,7 @@ bool operator!=(const ResponseCache& lhs, const ResponseCache& lhr)
     return false;
 }
 
-bool operator==(const ResponseCache& lhs, const ResponseCache& lhr)
+inline bool operator==(const ResponseCache& lhs, const ResponseCache& lhr)
 {
     return !(lhs != lhr);
 }

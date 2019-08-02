@@ -312,7 +312,7 @@ public:
     }
 };
 
-bool operator!=(const CounterScopeModel& lhs, const CounterScopeModel& lhr)
+inline bool operator!=(const CounterScopeModel& lhs, const CounterScopeModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -340,7 +340,7 @@ bool operator!=(const CounterScopeModel& lhs, const CounterScopeModel& lhr)
     return false;
 }
 
-bool operator==(const CounterScopeModel& lhs, const CounterScopeModel& lhr)
+inline bool operator==(const CounterScopeModel& lhs, const CounterScopeModel& lhr)
 {
     return !(lhs != lhr);
 }

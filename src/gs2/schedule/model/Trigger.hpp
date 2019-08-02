@@ -353,7 +353,7 @@ public:
     }
 };
 
-bool operator!=(const Trigger& lhs, const Trigger& lhr)
+inline bool operator!=(const Trigger& lhs, const Trigger& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -385,7 +385,7 @@ bool operator!=(const Trigger& lhs, const Trigger& lhr)
     return false;
 }
 
-bool operator==(const Trigger& lhs, const Trigger& lhr)
+inline bool operator==(const Trigger& lhs, const Trigger& lhr)
 {
     return !(lhs != lhr);
 }

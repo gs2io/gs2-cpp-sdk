@@ -189,7 +189,7 @@ public:
     }
 };
 
-bool operator!=(const ProjectToken& lhs, const ProjectToken& lhr)
+inline bool operator!=(const ProjectToken& lhs, const ProjectToken& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -205,7 +205,7 @@ bool operator!=(const ProjectToken& lhs, const ProjectToken& lhr)
     return false;
 }
 
-bool operator==(const ProjectToken& lhs, const ProjectToken& lhr)
+inline bool operator==(const ProjectToken& lhs, const ProjectToken& lhr)
 {
     return !(lhs != lhr);
 }

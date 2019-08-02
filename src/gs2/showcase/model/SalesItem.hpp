@@ -326,7 +326,7 @@ public:
     }
 };
 
-bool operator!=(const SalesItem& lhs, const SalesItem& lhr)
+inline bool operator!=(const SalesItem& lhs, const SalesItem& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -354,7 +354,7 @@ bool operator!=(const SalesItem& lhs, const SalesItem& lhr)
     return false;
 }
 
-bool operator==(const SalesItem& lhs, const SalesItem& lhr)
+inline bool operator==(const SalesItem& lhs, const SalesItem& lhr)
 {
     return !(lhs != lhr);
 }

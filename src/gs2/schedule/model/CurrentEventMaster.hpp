@@ -230,7 +230,7 @@ public:
     }
 };
 
-bool operator!=(const CurrentEventMaster& lhs, const CurrentEventMaster& lhr)
+inline bool operator!=(const CurrentEventMaster& lhs, const CurrentEventMaster& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -250,7 +250,7 @@ bool operator!=(const CurrentEventMaster& lhs, const CurrentEventMaster& lhr)
     return false;
 }
 
-bool operator==(const CurrentEventMaster& lhs, const CurrentEventMaster& lhr)
+inline bool operator==(const CurrentEventMaster& lhs, const CurrentEventMaster& lhr)
 {
     return !(lhs != lhr);
 }

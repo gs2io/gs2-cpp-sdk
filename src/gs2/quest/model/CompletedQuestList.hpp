@@ -403,7 +403,7 @@ public:
     }
 };
 
-bool operator!=(const CompletedQuestList& lhs, const CompletedQuestList& lhr)
+inline bool operator!=(const CompletedQuestList& lhs, const CompletedQuestList& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -439,7 +439,7 @@ bool operator!=(const CompletedQuestList& lhs, const CompletedQuestList& lhr)
     return false;
 }
 
-bool operator==(const CompletedQuestList& lhs, const CompletedQuestList& lhr)
+inline bool operator==(const CompletedQuestList& lhs, const CompletedQuestList& lhr)
 {
     return !(lhs != lhr);
 }

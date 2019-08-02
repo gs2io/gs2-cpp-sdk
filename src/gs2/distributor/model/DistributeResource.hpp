@@ -230,7 +230,7 @@ public:
     }
 };
 
-bool operator!=(const DistributeResource& lhs, const DistributeResource& lhr)
+inline bool operator!=(const DistributeResource& lhs, const DistributeResource& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -250,7 +250,7 @@ bool operator!=(const DistributeResource& lhs, const DistributeResource& lhr)
     return false;
 }
 
-bool operator==(const DistributeResource& lhs, const DistributeResource& lhr)
+inline bool operator==(const DistributeResource& lhs, const DistributeResource& lhr)
 {
     return !(lhs != lhr);
 }

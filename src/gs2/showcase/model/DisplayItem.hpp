@@ -359,7 +359,7 @@ public:
     }
 };
 
-bool operator!=(const DisplayItem& lhs, const DisplayItem& lhr)
+inline bool operator!=(const DisplayItem& lhs, const DisplayItem& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -391,7 +391,7 @@ bool operator!=(const DisplayItem& lhs, const DisplayItem& lhr)
     return false;
 }
 
-bool operator==(const DisplayItem& lhs, const DisplayItem& lhr)
+inline bool operator==(const DisplayItem& lhs, const DisplayItem& lhr)
 {
     return !(lhs != lhr);
 }

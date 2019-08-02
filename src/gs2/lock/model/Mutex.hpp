@@ -435,7 +435,7 @@ public:
     }
 };
 
-bool operator!=(const Mutex& lhs, const Mutex& lhr)
+inline bool operator!=(const Mutex& lhs, const Mutex& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -475,7 +475,7 @@ bool operator!=(const Mutex& lhs, const Mutex& lhr)
     return false;
 }
 
-bool operator==(const Mutex& lhs, const Mutex& lhr)
+inline bool operator==(const Mutex& lhs, const Mutex& lhr)
 {
     return !(lhs != lhr);
 }

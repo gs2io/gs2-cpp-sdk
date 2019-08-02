@@ -558,7 +558,7 @@ public:
     }
 };
 
-bool operator!=(const LimitModelMaster& lhs, const LimitModelMaster& lhr)
+inline bool operator!=(const LimitModelMaster& lhs, const LimitModelMaster& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -610,7 +610,7 @@ bool operator!=(const LimitModelMaster& lhs, const LimitModelMaster& lhr)
     return false;
 }
 
-bool operator==(const LimitModelMaster& lhs, const LimitModelMaster& lhr)
+inline bool operator==(const LimitModelMaster& lhs, const LimitModelMaster& lhr)
 {
     return !(lhs != lhr);
 }

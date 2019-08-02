@@ -804,7 +804,7 @@ public:
     }
 };
 
-bool operator!=(const Namespace& lhs, const Namespace& lhr)
+inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -880,7 +880,7 @@ bool operator!=(const Namespace& lhs, const Namespace& lhr)
     return false;
 }
 
-bool operator==(const Namespace& lhs, const Namespace& lhr)
+inline bool operator==(const Namespace& lhs, const Namespace& lhr)
 {
     return !(lhs != lhr);
 }

@@ -312,7 +312,7 @@ public:
     }
 };
 
-bool operator!=(const AccessToken& lhs, const AccessToken& lhr)
+inline bool operator!=(const AccessToken& lhs, const AccessToken& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -340,7 +340,7 @@ bool operator!=(const AccessToken& lhs, const AccessToken& lhr)
     return false;
 }
 
-bool operator==(const AccessToken& lhs, const AccessToken& lhr)
+inline bool operator==(const AccessToken& lhs, const AccessToken& lhr)
 {
     return !(lhs != lhr);
 }

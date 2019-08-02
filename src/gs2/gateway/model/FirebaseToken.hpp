@@ -394,7 +394,7 @@ public:
     }
 };
 
-bool operator!=(const FirebaseToken& lhs, const FirebaseToken& lhr)
+inline bool operator!=(const FirebaseToken& lhs, const FirebaseToken& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -430,7 +430,7 @@ bool operator!=(const FirebaseToken& lhs, const FirebaseToken& lhr)
     return false;
 }
 
-bool operator==(const FirebaseToken& lhs, const FirebaseToken& lhr)
+inline bool operator==(const FirebaseToken& lhs, const FirebaseToken& lhr)
 {
     return !(lhs != lhr);
 }

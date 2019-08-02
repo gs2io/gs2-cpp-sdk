@@ -394,7 +394,7 @@ public:
     }
 };
 
-bool operator!=(const JobResult& lhs, const JobResult& lhr)
+inline bool operator!=(const JobResult& lhs, const JobResult& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -430,7 +430,7 @@ bool operator!=(const JobResult& lhs, const JobResult& lhr)
     return false;
 }
 
-bool operator==(const JobResult& lhs, const JobResult& lhr)
+inline bool operator==(const JobResult& lhs, const JobResult& lhr)
 {
     return !(lhs != lhr);
 }

@@ -476,7 +476,7 @@ public:
     }
 };
 
-bool operator!=(const LotteryModel& lhs, const LotteryModel& lhr)
+inline bool operator!=(const LotteryModel& lhs, const LotteryModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -520,7 +520,7 @@ bool operator!=(const LotteryModel& lhs, const LotteryModel& lhr)
     return false;
 }
 
-bool operator==(const LotteryModel& lhs, const LotteryModel& lhr)
+inline bool operator==(const LotteryModel& lhs, const LotteryModel& lhr)
 {
     return !(lhs != lhr);
 }

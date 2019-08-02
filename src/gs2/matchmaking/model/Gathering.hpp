@@ -499,7 +499,7 @@ public:
     }
 };
 
-bool operator!=(const Gathering& lhs, const Gathering& lhr)
+inline bool operator!=(const Gathering& lhs, const Gathering& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -543,7 +543,7 @@ bool operator!=(const Gathering& lhs, const Gathering& lhr)
     return false;
 }
 
-bool operator==(const Gathering& lhs, const Gathering& lhr)
+inline bool operator==(const Gathering& lhs, const Gathering& lhr)
 {
     return !(lhs != lhr);
 }
