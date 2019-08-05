@@ -200,8 +200,6 @@ public:
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
-
-        std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -249,9 +247,6 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
-
-        std::vector<std::string> headerEntries;
-        headerEntries.push_back("Content-Type: application/json");
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -285,8 +280,6 @@ public:
 
         Char joint[] = { '?', '\0' };
         httpRequest.SetURL(url.c_str());
-
-        std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -320,8 +313,6 @@ public:
 
         Char joint[] = { '?', '\0' };
         httpRequest.SetURL(url.c_str());
-
-        std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -368,9 +359,6 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
-
-        std::vector<std::string> headerEntries;
-        headerEntries.push_back("Content-Type: application/json");
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -404,8 +392,11 @@ public:
 
         Char joint[] = { '?', '\0' };
         httpRequest.SetURL(url.c_str());
-
-        std::vector<std::string> headerEntries;
+        {
+            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -456,8 +447,6 @@ public:
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
-
-        std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -514,9 +503,6 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
-
-        std::vector<std::string> headerEntries;
-        headerEntries.push_back("Content-Type: application/json");
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -554,8 +540,6 @@ public:
 
         Char joint[] = { '?', '\0' };
         httpRequest.SetURL(url.c_str());
-
-        std::vector<std::string> headerEntries;
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -611,9 +595,6 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
-
-        std::vector<std::string> headerEntries;
-        headerEntries.push_back("Content-Type: application/json");
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -651,8 +632,11 @@ public:
 
         Char joint[] = { '?', '\0' };
         httpRequest.SetURL(url.c_str());
-
-        std::vector<std::string> headerEntries;
+        {
+            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -704,9 +688,6 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
-
-        std::vector<std::string> headerEntries;
-        headerEntries.push_back("Content-Type: application/json");
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
