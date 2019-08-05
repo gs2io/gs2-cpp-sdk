@@ -58,15 +58,23 @@ void Gs2HttpTask::callback(FHttpRequestPtr pHttpRequest, FHttpResponsePtr pHttpR
     GS2_NOT_USED(pHttpRequest);
     GS2_NOT_USED(isSuccessful);
 
-    size_t responseLength = pHttpResponse->GetContentLength();
-    auto responseBody = new char[responseLength + 1];
-    std::memcpy(responseBody, pHttpResponse->GetContent().GetData(), responseLength);
-    responseBody[responseLength] = '\0';
+    if (pHttpResponse.IsValid())
+    {
+        size_t responseLength = pHttpResponse->GetContentLength();
+        auto responseBody = new char[responseLength + 1];
+        std::memcpy(responseBody, pHttpResponse->GetContent().GetData(), responseLength);
+        responseBody[responseLength] = '\0';
 
-    Gs2RestResponse gs2RestResponse(responseBody, static_cast<Int32>(pHttpResponse->GetResponseCode()));
-    callback(gs2RestResponse);
+        Gs2RestResponse gs2RestResponse(responseBody, static_cast<Int32>(pHttpResponse->GetResponseCode()));
+        callback(gs2RestResponse);
 
-    delete[] responseBody;
+        delete[] responseBody;
+    }
+    else
+    {
+        Gs2RestResponse gs2RestResponse("Client system error.", 0);     // TODO
+        callback(gs2RestResponse);
+    }
 }
 
 }
