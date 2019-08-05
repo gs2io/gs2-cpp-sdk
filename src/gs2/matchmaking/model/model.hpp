@@ -21,6 +21,7 @@
 #include "Namespace.hpp"
 #include "Gathering.hpp"
 #include "ResponseCache.hpp"
+#include "NotificationSetting.hpp"
 #include "AttributeRange.hpp"
 #include "CapacityOfRole.hpp"
 #include "Attribute.hpp"

@@ -194,6 +194,51 @@ private:
                 writer.writePropertyName("description");
                 writer.writeCharArray(*m_Request.getDescription());
             }
+            if (m_Request.getCreateGatheringTriggerType())
+            {
+                writer.writePropertyName("createGatheringTriggerType");
+                writer.writeCharArray(*m_Request.getCreateGatheringTriggerType());
+            }
+            if (m_Request.getCreateGatheringTriggerRealtimeNamespaceId())
+            {
+                writer.writePropertyName("createGatheringTriggerRealtimeNamespaceId");
+                writer.writeCharArray(*m_Request.getCreateGatheringTriggerRealtimeNamespaceId());
+            }
+            if (m_Request.getCreateGatheringTriggerScriptId())
+            {
+                writer.writePropertyName("createGatheringTriggerScriptId");
+                writer.writeCharArray(*m_Request.getCreateGatheringTriggerScriptId());
+            }
+            if (m_Request.getCompleteMatchmakingTriggerType())
+            {
+                writer.writePropertyName("completeMatchmakingTriggerType");
+                writer.writeCharArray(*m_Request.getCompleteMatchmakingTriggerType());
+            }
+            if (m_Request.getCompleteMatchmakingTriggerRealtimeNamespaceId())
+            {
+                writer.writePropertyName("completeMatchmakingTriggerRealtimeNamespaceId");
+                writer.writeCharArray(*m_Request.getCompleteMatchmakingTriggerRealtimeNamespaceId());
+            }
+            if (m_Request.getCompleteMatchmakingTriggerScriptId())
+            {
+                writer.writePropertyName("completeMatchmakingTriggerScriptId");
+                writer.writeCharArray(*m_Request.getCompleteMatchmakingTriggerScriptId());
+            }
+            if (m_Request.getJoinNotification())
+            {
+                writer.writePropertyName("joinNotification");
+                write(writer, *m_Request.getJoinNotification());
+            }
+            if (m_Request.getLeaveNotification())
+            {
+                writer.writePropertyName("leaveNotification");
+                write(writer, *m_Request.getLeaveNotification());
+            }
+            if (m_Request.getCompleteNotification())
+            {
+                writer.writePropertyName("completeNotification");
+                write(writer, *m_Request.getCompleteNotification());
+            }
             if (m_Request.getRequestId())
             {
                 writer.writePropertyName("xGs2RequestId");
@@ -417,6 +462,51 @@ private:
             {
                 writer.writePropertyName("description");
                 writer.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getCreateGatheringTriggerType())
+            {
+                writer.writePropertyName("createGatheringTriggerType");
+                writer.writeCharArray(*m_Request.getCreateGatheringTriggerType());
+            }
+            if (m_Request.getCreateGatheringTriggerRealtimeNamespaceId())
+            {
+                writer.writePropertyName("createGatheringTriggerRealtimeNamespaceId");
+                writer.writeCharArray(*m_Request.getCreateGatheringTriggerRealtimeNamespaceId());
+            }
+            if (m_Request.getCreateGatheringTriggerScriptId())
+            {
+                writer.writePropertyName("createGatheringTriggerScriptId");
+                writer.writeCharArray(*m_Request.getCreateGatheringTriggerScriptId());
+            }
+            if (m_Request.getCompleteMatchmakingTriggerType())
+            {
+                writer.writePropertyName("completeMatchmakingTriggerType");
+                writer.writeCharArray(*m_Request.getCompleteMatchmakingTriggerType());
+            }
+            if (m_Request.getCompleteMatchmakingTriggerRealtimeNamespaceId())
+            {
+                writer.writePropertyName("completeMatchmakingTriggerRealtimeNamespaceId");
+                writer.writeCharArray(*m_Request.getCompleteMatchmakingTriggerRealtimeNamespaceId());
+            }
+            if (m_Request.getCompleteMatchmakingTriggerScriptId())
+            {
+                writer.writePropertyName("completeMatchmakingTriggerScriptId");
+                writer.writeCharArray(*m_Request.getCompleteMatchmakingTriggerScriptId());
+            }
+            if (m_Request.getJoinNotification())
+            {
+                writer.writePropertyName("joinNotification");
+                write(writer, *m_Request.getJoinNotification());
+            }
+            if (m_Request.getLeaveNotification())
+            {
+                writer.writePropertyName("leaveNotification");
+                write(writer, *m_Request.getLeaveNotification());
+            }
+            if (m_Request.getCompleteNotification())
+            {
+                writer.writePropertyName("completeNotification");
+                write(writer, *m_Request.getCompleteNotification());
             }
             if (m_Request.getRequestId())
             {
@@ -1579,6 +1669,51 @@ private:
             writer.writePropertyName("description");
             writer.writeCharArray(*obj.getDescription());
         }
+        if (obj.getCreateGatheringTriggerType())
+        {
+            writer.writePropertyName("createGatheringTriggerType");
+            writer.writeCharArray(*obj.getCreateGatheringTriggerType());
+        }
+        if (obj.getCreateGatheringTriggerRealtimeNamespaceId())
+        {
+            writer.writePropertyName("createGatheringTriggerRealtimeNamespaceId");
+            writer.writeCharArray(*obj.getCreateGatheringTriggerRealtimeNamespaceId());
+        }
+        if (obj.getCreateGatheringTriggerScriptId())
+        {
+            writer.writePropertyName("createGatheringTriggerScriptId");
+            writer.writeCharArray(*obj.getCreateGatheringTriggerScriptId());
+        }
+        if (obj.getCompleteMatchmakingTriggerType())
+        {
+            writer.writePropertyName("completeMatchmakingTriggerType");
+            writer.writeCharArray(*obj.getCompleteMatchmakingTriggerType());
+        }
+        if (obj.getCompleteMatchmakingTriggerRealtimeNamespaceId())
+        {
+            writer.writePropertyName("completeMatchmakingTriggerRealtimeNamespaceId");
+            writer.writeCharArray(*obj.getCompleteMatchmakingTriggerRealtimeNamespaceId());
+        }
+        if (obj.getCompleteMatchmakingTriggerScriptId())
+        {
+            writer.writePropertyName("completeMatchmakingTriggerScriptId");
+            writer.writeCharArray(*obj.getCompleteMatchmakingTriggerScriptId());
+        }
+        if (obj.getJoinNotification())
+        {
+            writer.writePropertyName("joinNotification");
+            write(writer, *obj.getJoinNotification());
+        }
+        if (obj.getLeaveNotification())
+        {
+            writer.writePropertyName("leaveNotification");
+            write(writer, *obj.getLeaveNotification());
+        }
+        if (obj.getCompleteNotification())
+        {
+            writer.writePropertyName("completeNotification");
+            write(writer, *obj.getCompleteNotification());
+        }
         if (obj.getCreatedAt())
         {
             writer.writePropertyName("createdAt");
@@ -1683,6 +1818,27 @@ private:
         {
             writer.writePropertyName("result");
             writer.writeCharArray(*obj.getResult());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const NotificationSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGatewayNamespaceId())
+        {
+            writer.writePropertyName("gatewayNamespaceId");
+            writer.writeCharArray(*obj.getGatewayNamespaceId());
+        }
+        if (obj.getEnableTransferMobileNotification())
+        {
+            writer.writePropertyName("enableTransferMobileNotification");
+            writer.writeBool(*obj.getEnableTransferMobileNotification());
+        }
+        if (obj.getSound())
+        {
+            writer.writePropertyName("sound");
+            writer.writeCharArray(*obj.getSound());
         }
         writer.writeObjectEnd();
     }

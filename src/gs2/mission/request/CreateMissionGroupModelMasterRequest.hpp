@@ -49,7 +49,7 @@ private:
         optional<StringHolder> metadata;
         /** ミッショングループの説明 */
         optional<StringHolder> description;
-        /** ミッションを達成したときの通知先ゲーム のGRN */
+        /** ミッションを達成したときの通知先ネームスペース のGRN */
         optional<StringHolder> completeNotificationNamespaceId;
 
         Data()
@@ -286,9 +286,9 @@ public:
     }
 
     /**
-     * ミッションを達成したときの通知先ゲーム のGRNを取得
+     * ミッションを達成したときの通知先ネームスペース のGRNを取得
      *
-     * @return ミッションを達成したときの通知先ゲーム のGRN
+     * @return ミッションを達成したときの通知先ネームスペース のGRN
      */
     const optional<StringHolder>& getCompleteNotificationNamespaceId() const
     {
@@ -296,9 +296,9 @@ public:
     }
 
     /**
-     * ミッションを達成したときの通知先ゲーム のGRNを設定
+     * ミッションを達成したときの通知先ネームスペース のGRNを設定
      *
-     * @param completeNotificationNamespaceId ミッションを達成したときの通知先ゲーム のGRN
+     * @param completeNotificationNamespaceId ミッションを達成したときの通知先ネームスペース のGRN
      */
     void setCompleteNotificationNamespaceId(const Char* completeNotificationNamespaceId)
     {
@@ -306,9 +306,9 @@ public:
     }
 
     /**
-     * ミッションを達成したときの通知先ゲーム のGRNを設定
+     * ミッションを達成したときの通知先ネームスペース のGRNを設定
      *
-     * @param completeNotificationNamespaceId ミッションを達成したときの通知先ゲーム のGRN
+     * @param completeNotificationNamespaceId ミッションを達成したときの通知先ネームスペース のGRN
      */
     CreateMissionGroupModelMasterRequest& withCompleteNotificationNamespaceId(const Char* completeNotificationNamespaceId)
     {

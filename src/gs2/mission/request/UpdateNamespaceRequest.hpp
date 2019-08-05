@@ -67,6 +67,8 @@ private:
         optional<StringHolder> queueNamespaceId;
         /** 報酬付与処理のスタンプシートで使用する暗号鍵GRN */
         optional<StringHolder> keyId;
+        /** ミッションのタスクを達成したときのプッシュ通知 */
+        optional<NotificationSetting> completeNotification;
 
         Data()
         {}
@@ -85,7 +87,8 @@ private:
             receiveRewardsDoneTriggerScriptId(data.receiveRewardsDoneTriggerScriptId),
             receiveRewardsDoneTriggerQueueNamespaceId(data.receiveRewardsDoneTriggerQueueNamespaceId),
             queueNamespaceId(data.queueNamespaceId),
-            keyId(data.keyId)
+            keyId(data.keyId),
+            completeNotification(data.completeNotification)
         {}
 
         Data(Data&& data) :
@@ -102,7 +105,8 @@ private:
             receiveRewardsDoneTriggerScriptId(std::move(data.receiveRewardsDoneTriggerScriptId)),
             receiveRewardsDoneTriggerQueueNamespaceId(std::move(data.receiveRewardsDoneTriggerQueueNamespaceId)),
             queueNamespaceId(std::move(data.queueNamespaceId)),
-            keyId(std::move(data.keyId))
+            keyId(std::move(data.keyId)),
+            completeNotification(std::move(data.completeNotification))
         {}
 
         ~Data() = default;
@@ -593,6 +597,37 @@ public:
     UpdateNamespaceRequest& withKeyId(const Char* keyId)
     {
         ensureData().keyId.emplace(keyId);
+        return *this;
+    }
+
+    /**
+     * ミッションのタスクを達成したときのプッシュ通知を取得
+     *
+     * @return ミッションのタスクを達成したときのプッシュ通知
+     */
+    const optional<NotificationSetting>& getCompleteNotification() const
+    {
+        return ensureData().completeNotification;
+    }
+
+    /**
+     * ミッションのタスクを達成したときのプッシュ通知を設定
+     *
+     * @param completeNotification ミッションのタスクを達成したときのプッシュ通知
+     */
+    void setCompleteNotification(const NotificationSetting& completeNotification)
+    {
+        ensureData().completeNotification.emplace(completeNotification);
+    }
+
+    /**
+     * ミッションのタスクを達成したときのプッシュ通知を設定
+     *
+     * @param completeNotification ミッションのタスクを達成したときのプッシュ通知
+     */
+    UpdateNamespaceRequest& withCompleteNotification(const NotificationSetting& completeNotification)
+    {
+        ensureData().completeNotification.emplace(completeNotification);
         return *this;
     }
 

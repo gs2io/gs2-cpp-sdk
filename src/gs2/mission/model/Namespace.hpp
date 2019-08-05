@@ -23,6 +23,7 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "NotificationSetting.hpp"
 #include <cstring>
 
 namespace gs2 { namespace mission {
@@ -71,6 +72,8 @@ private:
         optional<StringHolder> queueNamespaceId;
         /** 報酬付与処理のスタンプシートで使用する暗号鍵GRN */
         optional<StringHolder> keyId;
+        /** ミッションのタスクを達成したときのプッシュ通知 */
+        optional<NotificationSetting> completeNotification;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -96,6 +99,7 @@ private:
             receiveRewardsDoneTriggerQueueNamespaceId(data.receiveRewardsDoneTriggerQueueNamespaceId),
             queueNamespaceId(data.queueNamespaceId),
             keyId(data.keyId),
+            completeNotification(data.completeNotification),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {}
@@ -117,6 +121,7 @@ private:
             receiveRewardsDoneTriggerQueueNamespaceId(std::move(data.receiveRewardsDoneTriggerQueueNamespaceId)),
             queueNamespaceId(std::move(data.queueNamespaceId)),
             keyId(std::move(data.keyId)),
+            completeNotification(std::move(data.completeNotification)),
             createdAt(std::move(data.createdAt)),
             updatedAt(std::move(data.updatedAt))
         {}
@@ -217,6 +222,14 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->keyId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "completeNotification") == 0) {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->completeNotification.emplace();
+                    detail::json::JsonParser::parse(&this->completeNotification->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name, "createdAt") == 0) {
@@ -777,6 +790,37 @@ public:
     }
 
     /**
+     * ミッションのタスクを達成したときのプッシュ通知を取得
+     *
+     * @return ミッションのタスクを達成したときのプッシュ通知
+     */
+    const optional<NotificationSetting>& getCompleteNotification() const
+    {
+        return ensureData().completeNotification;
+    }
+
+    /**
+     * ミッションのタスクを達成したときのプッシュ通知を設定
+     *
+     * @param completeNotification ミッションのタスクを達成したときのプッシュ通知
+     */
+    void setCompleteNotification(const NotificationSetting& completeNotification)
+    {
+        ensureData().completeNotification.emplace(completeNotification);
+    }
+
+    /**
+     * ミッションのタスクを達成したときのプッシュ通知を設定
+     *
+     * @param completeNotification ミッションのタスクを達成したときのプッシュ通知
+     */
+    Namespace& withCompleteNotification(const NotificationSetting& completeNotification)
+    {
+        setCompleteNotification(completeNotification);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -910,6 +954,10 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
             return true;
         }
         if (lhs.m_pData->keyId != lhr.m_pData->keyId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->completeNotification != lhr.m_pData->completeNotification)
         {
             return true;
         }

@@ -113,6 +113,51 @@ private:
             writer.writePropertyName("description");
             writer.writeCharArray(*obj.getDescription());
         }
+        if (obj.getCreateGatheringTriggerType())
+        {
+            writer.writePropertyName("createGatheringTriggerType");
+            writer.writeCharArray(*obj.getCreateGatheringTriggerType());
+        }
+        if (obj.getCreateGatheringTriggerRealtimeNamespaceId())
+        {
+            writer.writePropertyName("createGatheringTriggerRealtimeNamespaceId");
+            writer.writeCharArray(*obj.getCreateGatheringTriggerRealtimeNamespaceId());
+        }
+        if (obj.getCreateGatheringTriggerScriptId())
+        {
+            writer.writePropertyName("createGatheringTriggerScriptId");
+            writer.writeCharArray(*obj.getCreateGatheringTriggerScriptId());
+        }
+        if (obj.getCompleteMatchmakingTriggerType())
+        {
+            writer.writePropertyName("completeMatchmakingTriggerType");
+            writer.writeCharArray(*obj.getCompleteMatchmakingTriggerType());
+        }
+        if (obj.getCompleteMatchmakingTriggerRealtimeNamespaceId())
+        {
+            writer.writePropertyName("completeMatchmakingTriggerRealtimeNamespaceId");
+            writer.writeCharArray(*obj.getCompleteMatchmakingTriggerRealtimeNamespaceId());
+        }
+        if (obj.getCompleteMatchmakingTriggerScriptId())
+        {
+            writer.writePropertyName("completeMatchmakingTriggerScriptId");
+            writer.writeCharArray(*obj.getCompleteMatchmakingTriggerScriptId());
+        }
+        if (obj.getJoinNotification())
+        {
+            writer.writePropertyName("joinNotification");
+            write(writer, *obj.getJoinNotification());
+        }
+        if (obj.getLeaveNotification())
+        {
+            writer.writePropertyName("leaveNotification");
+            write(writer, *obj.getLeaveNotification());
+        }
+        if (obj.getCompleteNotification())
+        {
+            writer.writePropertyName("completeNotification");
+            write(writer, *obj.getCompleteNotification());
+        }
         if (obj.getCreatedAt())
         {
             writer.writePropertyName("createdAt");
@@ -217,6 +262,27 @@ private:
         {
             writer.writePropertyName("result");
             writer.writeCharArray(*obj.getResult());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const NotificationSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGatewayNamespaceId())
+        {
+            writer.writePropertyName("gatewayNamespaceId");
+            writer.writeCharArray(*obj.getGatewayNamespaceId());
+        }
+        if (obj.getEnableTransferMobileNotification())
+        {
+            writer.writePropertyName("enableTransferMobileNotification");
+            writer.writeBool(*obj.getEnableTransferMobileNotification());
+        }
+        if (obj.getSound())
+        {
+            writer.writePropertyName("sound");
+            writer.writeCharArray(*obj.getSound());
         }
         writer.writeObjectEnd();
     }
@@ -424,6 +490,51 @@ public:
             writer.writePropertyName("description");
             writer.writeCharArray(*request.getDescription());
         }
+        if (request.getCreateGatheringTriggerType())
+        {
+            writer.writePropertyName("createGatheringTriggerType");
+            writer.writeCharArray(*request.getCreateGatheringTriggerType());
+        }
+        if (request.getCreateGatheringTriggerRealtimeNamespaceId())
+        {
+            writer.writePropertyName("createGatheringTriggerRealtimeNamespaceId");
+            writer.writeCharArray(*request.getCreateGatheringTriggerRealtimeNamespaceId());
+        }
+        if (request.getCreateGatheringTriggerScriptId())
+        {
+            writer.writePropertyName("createGatheringTriggerScriptId");
+            writer.writeCharArray(*request.getCreateGatheringTriggerScriptId());
+        }
+        if (request.getCompleteMatchmakingTriggerType())
+        {
+            writer.writePropertyName("completeMatchmakingTriggerType");
+            writer.writeCharArray(*request.getCompleteMatchmakingTriggerType());
+        }
+        if (request.getCompleteMatchmakingTriggerRealtimeNamespaceId())
+        {
+            writer.writePropertyName("completeMatchmakingTriggerRealtimeNamespaceId");
+            writer.writeCharArray(*request.getCompleteMatchmakingTriggerRealtimeNamespaceId());
+        }
+        if (request.getCompleteMatchmakingTriggerScriptId())
+        {
+            writer.writePropertyName("completeMatchmakingTriggerScriptId");
+            writer.writeCharArray(*request.getCompleteMatchmakingTriggerScriptId());
+        }
+        if (request.getJoinNotification())
+        {
+            writer.writePropertyName("joinNotification");
+            write(writer, *request.getJoinNotification());
+        }
+        if (request.getLeaveNotification())
+        {
+            writer.writePropertyName("leaveNotification");
+            write(writer, *request.getLeaveNotification());
+        }
+        if (request.getCompleteNotification())
+        {
+            writer.writePropertyName("completeNotification");
+            write(writer, *request.getCompleteNotification());
+        }
         writer.writeObjectEnd();
         {
             auto body = writer.toString();
@@ -542,6 +653,51 @@ public:
         {
             writer.writePropertyName("description");
             writer.writeCharArray(*request.getDescription());
+        }
+        if (request.getCreateGatheringTriggerType())
+        {
+            writer.writePropertyName("createGatheringTriggerType");
+            writer.writeCharArray(*request.getCreateGatheringTriggerType());
+        }
+        if (request.getCreateGatheringTriggerRealtimeNamespaceId())
+        {
+            writer.writePropertyName("createGatheringTriggerRealtimeNamespaceId");
+            writer.writeCharArray(*request.getCreateGatheringTriggerRealtimeNamespaceId());
+        }
+        if (request.getCreateGatheringTriggerScriptId())
+        {
+            writer.writePropertyName("createGatheringTriggerScriptId");
+            writer.writeCharArray(*request.getCreateGatheringTriggerScriptId());
+        }
+        if (request.getCompleteMatchmakingTriggerType())
+        {
+            writer.writePropertyName("completeMatchmakingTriggerType");
+            writer.writeCharArray(*request.getCompleteMatchmakingTriggerType());
+        }
+        if (request.getCompleteMatchmakingTriggerRealtimeNamespaceId())
+        {
+            writer.writePropertyName("completeMatchmakingTriggerRealtimeNamespaceId");
+            writer.writeCharArray(*request.getCompleteMatchmakingTriggerRealtimeNamespaceId());
+        }
+        if (request.getCompleteMatchmakingTriggerScriptId())
+        {
+            writer.writePropertyName("completeMatchmakingTriggerScriptId");
+            writer.writeCharArray(*request.getCompleteMatchmakingTriggerScriptId());
+        }
+        if (request.getJoinNotification())
+        {
+            writer.writePropertyName("joinNotification");
+            write(writer, *request.getJoinNotification());
+        }
+        if (request.getLeaveNotification())
+        {
+            writer.writePropertyName("leaveNotification");
+            write(writer, *request.getLeaveNotification());
+        }
+        if (request.getCompleteNotification())
+        {
+            writer.writePropertyName("completeNotification");
+            write(writer, *request.getCompleteNotification());
         }
         writer.writeObjectEnd();
         {
