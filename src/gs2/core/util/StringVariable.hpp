@@ -38,6 +38,11 @@ public:
     {
     }
 
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma warning(push)
+#pragma warning(disable:4996)
+#endif
+
     explicit StringVariable(Int32 number)
     {
         char buffer[32];
@@ -65,6 +70,10 @@ public:
         std::sprintf(buffer, "%lf", number);
         assign(buffer);
     }
+
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma warning(pop)
+#endif
 
     explicit StringVariable(Bool number)
             : BasicString(number ? "true" : "false")
