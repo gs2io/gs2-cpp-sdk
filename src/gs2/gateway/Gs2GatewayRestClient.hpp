@@ -21,7 +21,6 @@
 #include <gs2/core/json/JsonWriter.hpp>
 #include <gs2/core/network/Gs2RestSessionTask.hpp>
 #include <gs2/core/network/Gs2RestSession.hpp>
-#include <gs2/core/util/StringUtil.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include <gs2/core/util/UrlEncoder.hpp>
 #include "model/model.hpp"
