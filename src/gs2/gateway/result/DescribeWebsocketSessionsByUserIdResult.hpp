@@ -29,18 +29,18 @@ namespace gs2 { namespace gateway
 {
 
 /**
- * Websocketセッションを新規作成 のレスポンスモデル
+ * ユーザIDを指定してWebsocketセッションの一覧を取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
-class DescribeWebsocketSessionsByUserIdResult : public Gs2Object
+class DescribeWebSocketSessionsByUserIdResult : public Gs2Object
 {
 private:
     class Data : public detail::json::IModel
     {
     public:
         /** Websocketセッションのリスト */
-        optional<List<WebsocketSession>> items;
+        optional<List<WebSocketSession>> items;
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
 
@@ -73,7 +73,7 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->items.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        WebsocketSession item;
+                        WebSocketSession item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
                         detail::addToList(*this->items, std::move(item));
                     }
@@ -105,23 +105,23 @@ private:
     }
 
 public:
-    DescribeWebsocketSessionsByUserIdResult() :
+    DescribeWebSocketSessionsByUserIdResult() :
         m_pData(nullptr)
     {}
 
-    DescribeWebsocketSessionsByUserIdResult(const DescribeWebsocketSessionsByUserIdResult& describeWebsocketSessionsByUserIdResult) :
-        Gs2Object(describeWebsocketSessionsByUserIdResult),
-        m_pData(describeWebsocketSessionsByUserIdResult.m_pData != nullptr ? new Data(*describeWebsocketSessionsByUserIdResult.m_pData) : nullptr)
+    DescribeWebSocketSessionsByUserIdResult(const DescribeWebSocketSessionsByUserIdResult& describeWebSocketSessionsByUserIdResult) :
+        Gs2Object(describeWebSocketSessionsByUserIdResult),
+        m_pData(describeWebSocketSessionsByUserIdResult.m_pData != nullptr ? new Data(*describeWebSocketSessionsByUserIdResult.m_pData) : nullptr)
     {}
 
-    DescribeWebsocketSessionsByUserIdResult(DescribeWebsocketSessionsByUserIdResult&& describeWebsocketSessionsByUserIdResult) :
-        Gs2Object(std::move(describeWebsocketSessionsByUserIdResult)),
-        m_pData(describeWebsocketSessionsByUserIdResult.m_pData)
+    DescribeWebSocketSessionsByUserIdResult(DescribeWebSocketSessionsByUserIdResult&& describeWebSocketSessionsByUserIdResult) :
+        Gs2Object(std::move(describeWebSocketSessionsByUserIdResult)),
+        m_pData(describeWebSocketSessionsByUserIdResult.m_pData)
     {
-        describeWebsocketSessionsByUserIdResult.m_pData = nullptr;
+        describeWebSocketSessionsByUserIdResult.m_pData = nullptr;
     }
 
-    ~DescribeWebsocketSessionsByUserIdResult()
+    ~DescribeWebSocketSessionsByUserIdResult()
     {
         if (m_pData != nullptr)
         {
@@ -129,39 +129,39 @@ public:
         }
     }
 
-    DescribeWebsocketSessionsByUserIdResult& operator=(const DescribeWebsocketSessionsByUserIdResult& describeWebsocketSessionsByUserIdResult)
+    DescribeWebSocketSessionsByUserIdResult& operator=(const DescribeWebSocketSessionsByUserIdResult& describeWebSocketSessionsByUserIdResult)
     {
-        Gs2Object::operator=(describeWebsocketSessionsByUserIdResult);
+        Gs2Object::operator=(describeWebSocketSessionsByUserIdResult);
 
         if (m_pData != nullptr)
         {
             delete m_pData;
         }
-        m_pData = new Data(*describeWebsocketSessionsByUserIdResult.m_pData);
+        m_pData = new Data(*describeWebSocketSessionsByUserIdResult.m_pData);
 
         return *this;
     }
 
-    DescribeWebsocketSessionsByUserIdResult& operator=(DescribeWebsocketSessionsByUserIdResult&& describeWebsocketSessionsByUserIdResult)
+    DescribeWebSocketSessionsByUserIdResult& operator=(DescribeWebSocketSessionsByUserIdResult&& describeWebSocketSessionsByUserIdResult)
     {
-        Gs2Object::operator=(std::move(describeWebsocketSessionsByUserIdResult));
+        Gs2Object::operator=(std::move(describeWebSocketSessionsByUserIdResult));
 
         if (m_pData != nullptr)
         {
             delete m_pData;
         }
-        m_pData = describeWebsocketSessionsByUserIdResult.m_pData;
-        describeWebsocketSessionsByUserIdResult.m_pData = nullptr;
+        m_pData = describeWebSocketSessionsByUserIdResult.m_pData;
+        describeWebSocketSessionsByUserIdResult.m_pData = nullptr;
 
         return *this;
     }
 
-    const DescribeWebsocketSessionsByUserIdResult* operator->() const
+    const DescribeWebSocketSessionsByUserIdResult* operator->() const
     {
         return this;
     }
 
-    DescribeWebsocketSessionsByUserIdResult* operator->()
+    DescribeWebSocketSessionsByUserIdResult* operator->()
     {
         return this;
     }
@@ -170,7 +170,7 @@ public:
      *
      * @return Websocketセッションのリスト
      */
-    const optional<List<WebsocketSession>>& getItems() const
+    const optional<List<WebSocketSession>>& getItems() const
     {
         return ensureData().items;
     }
@@ -180,7 +180,7 @@ public:
      *
      * @param items Websocketセッションのリスト
      */
-    void setItems(const List<WebsocketSession>& items)
+    void setItems(const List<WebSocketSession>& items)
     {
         ensureData().items.emplace(items);
     }

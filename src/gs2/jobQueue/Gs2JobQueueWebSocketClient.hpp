@@ -191,6 +191,11 @@ private:
                 writer.writePropertyName("description");
                 writer.writeCharArray(*m_Request.getDescription());
             }
+            if (m_Request.getPushNotification())
+            {
+                writer.writePropertyName("pushNotification");
+                write(writer, *m_Request.getPushNotification());
+            }
             if (m_Request.getRequestId())
             {
                 writer.writePropertyName("xGs2RequestId");
@@ -414,6 +419,11 @@ private:
             {
                 writer.writePropertyName("description");
                 writer.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getPushNotification())
+            {
+                writer.writePropertyName("pushNotification");
+                write(writer, *m_Request.getPushNotification());
             }
             if (m_Request.getRequestId())
             {
@@ -1441,6 +1451,11 @@ private:
             writer.writePropertyName("description");
             writer.writeCharArray(*obj.getDescription());
         }
+        if (obj.getPushNotification())
+        {
+            writer.writePropertyName("pushNotification");
+            write(writer, *obj.getPushNotification());
+        }
         if (obj.getCreatedAt())
         {
             writer.writePropertyName("createdAt");
@@ -1625,6 +1640,27 @@ private:
         {
             writer.writePropertyName("result");
             writer.writeCharArray(*obj.getResult());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const NotificationSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGatewayNamespaceId())
+        {
+            writer.writePropertyName("gatewayNamespaceId");
+            writer.writeCharArray(*obj.getGatewayNamespaceId());
+        }
+        if (obj.getEnableTransferMobileNotification())
+        {
+            writer.writePropertyName("enableTransferMobileNotification");
+            writer.writeBool(*obj.getEnableTransferMobileNotification());
+        }
+        if (obj.getSound())
+        {
+            writer.writePropertyName("sound");
+            writer.writeCharArray(*obj.getSound());
         }
         writer.writeObjectEnd();
     }

@@ -33,8 +33,10 @@
 #include "request/DeleteNamespaceRequest.hpp"
 #include "request/DescribeScriptsRequest.hpp"
 #include "request/CreateScriptRequest.hpp"
+#include "request/CreateScriptFromGitHubRequest.hpp"
 #include "request/GetScriptRequest.hpp"
 #include "request/UpdateScriptRequest.hpp"
+#include "request/UpdateScriptFromGitHubRequest.hpp"
 #include "request/DeleteScriptRequest.hpp"
 #include "request/DebugInvokeRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
@@ -45,8 +47,10 @@
 #include "result/DeleteNamespaceResult.hpp"
 #include "result/DescribeScriptsResult.hpp"
 #include "result/CreateScriptResult.hpp"
+#include "result/CreateScriptFromGitHubResult.hpp"
 #include "result/GetScriptResult.hpp"
 #include "result/UpdateScriptResult.hpp"
+#include "result/UpdateScriptFromGitHubResult.hpp"
 #include "result/DeleteScriptResult.hpp"
 #include "result/DebugInvokeResult.hpp"
 #include <cstring>
@@ -61,8 +65,10 @@ typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
 typedef AsyncResult<void> AsyncDeleteNamespaceResult;
 typedef AsyncResult<DescribeScriptsResult> AsyncDescribeScriptsResult;
 typedef AsyncResult<CreateScriptResult> AsyncCreateScriptResult;
+typedef AsyncResult<CreateScriptFromGitHubResult> AsyncCreateScriptFromGitHubResult;
 typedef AsyncResult<GetScriptResult> AsyncGetScriptResult;
 typedef AsyncResult<UpdateScriptResult> AsyncUpdateScriptResult;
+typedef AsyncResult<UpdateScriptFromGitHubResult> AsyncUpdateScriptFromGitHubResult;
 typedef AsyncResult<void> AsyncDeleteScriptResult;
 typedef AsyncResult<DebugInvokeResult> AsyncDebugInvokeResult;
 
@@ -148,6 +154,47 @@ private:
         {
             writer.writePropertyName("updatedAt");
             writer.writeInt64(*obj.getUpdatedAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            writer.writePropertyName("gitHubApiKeyId");
+            writer.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            writer.writePropertyName("repositoryName");
+            writer.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            writer.writePropertyName("sourcePath");
+            writer.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            writer.writePropertyName("referenceType");
+            writer.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            writer.writePropertyName("commitHash");
+            writer.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            writer.writePropertyName("branchName");
+            writer.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            writer.writePropertyName("tagName");
+            writer.writeCharArray(*obj.getTagName());
         }
         writer.writeObjectEnd();
     }
@@ -515,6 +562,62 @@ public:
     }
 
 	/**
+	 * GitHubリポジトリのコードからスクリプトを新規作成します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createScriptFromGitHub(std::function<void(AsyncCreateScriptFromGitHubResult&)> callback, CreateScriptFromGitHubRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateScriptFromGitHubResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "script");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/script/from_git_hub";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getName())
+        {
+            writer.writePropertyName("name");
+            writer.writeCharArray(*request.getName());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*request.getDescription());
+        }
+        if (request.getCheckoutSetting())
+        {
+            writer.writePropertyName("checkoutSetting");
+            write(writer, *request.getCheckoutSetting());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
 	 * スクリプトを取得します<br>
 	 *
      * @param callback コールバック関数
@@ -607,6 +710,61 @@ public:
     }
 
 	/**
+	 * スクリプトを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateScriptFromGitHub(std::function<void(AsyncUpdateScriptFromGitHubResult&)> callback, UpdateScriptFromGitHubRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateScriptFromGitHubResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("PUT");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "script");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/script/{scriptName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getScriptName();
+            url.replace("{scriptName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*request.getDescription());
+        }
+        if (request.getCheckoutSetting())
+        {
+            writer.writePropertyName("checkoutSetting");
+            write(writer, *request.getCheckoutSetting());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
 	 * スクリプトを削除します<br>
 	 *
      * @param callback コールバック関数
@@ -663,10 +821,6 @@ public:
         url.replace("{service}", "script");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/{namespaceName}/script/debug/invoke";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
         httpRequest.SetURL(url.c_str());
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();

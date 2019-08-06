@@ -38,6 +38,11 @@
 #include "request/DeleteKeyRequest.hpp"
 #include "request/EncryptRequest.hpp"
 #include "request/DecryptRequest.hpp"
+#include "request/DescribeGitHubApiKeysRequest.hpp"
+#include "request/CreateGitHubApiKeyRequest.hpp"
+#include "request/UpdateGitHubApiKeyRequest.hpp"
+#include "request/GetGitHubApiKeyRequest.hpp"
+#include "request/DeleteGitHubApiKeyRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -51,6 +56,11 @@
 #include "result/DeleteKeyResult.hpp"
 #include "result/EncryptResult.hpp"
 #include "result/DecryptResult.hpp"
+#include "result/DescribeGitHubApiKeysResult.hpp"
+#include "result/CreateGitHubApiKeyResult.hpp"
+#include "result/UpdateGitHubApiKeyResult.hpp"
+#include "result/GetGitHubApiKeyResult.hpp"
+#include "result/DeleteGitHubApiKeyResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace key {
@@ -68,6 +78,11 @@ typedef AsyncResult<GetKeyResult> AsyncGetKeyResult;
 typedef AsyncResult<void> AsyncDeleteKeyResult;
 typedef AsyncResult<EncryptResult> AsyncEncryptResult;
 typedef AsyncResult<DecryptResult> AsyncDecryptResult;
+typedef AsyncResult<DescribeGitHubApiKeysResult> AsyncDescribeGitHubApiKeysResult;
+typedef AsyncResult<CreateGitHubApiKeyResult> AsyncCreateGitHubApiKeyResult;
+typedef AsyncResult<UpdateGitHubApiKeyResult> AsyncUpdateGitHubApiKeyResult;
+typedef AsyncResult<GetGitHubApiKeyResult> AsyncGetGitHubApiKeyResult;
+typedef AsyncResult<void> AsyncDeleteGitHubApiKeyResult;
 
 /**
  * GS2 Key API クライアント
@@ -136,6 +151,47 @@ private:
         {
             writer.writePropertyName("secret");
             writer.writeCharArray(*obj.getSecret());
+        }
+        if (obj.getCreatedAt())
+        {
+            writer.writePropertyName("createdAt");
+            writer.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            writer.writePropertyName("updatedAt");
+            writer.writeInt64(*obj.getUpdatedAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const GitHubApiKey& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getApiKeyId())
+        {
+            writer.writePropertyName("apiKeyId");
+            writer.writeCharArray(*obj.getApiKeyId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.writeCharArray(*obj.getName());
+        }
+        if (obj.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*obj.getDescription());
+        }
+        if (obj.getApiKey())
+        {
+            writer.writePropertyName("apiKey");
+            writer.writeCharArray(*obj.getApiKey());
+        }
+        if (obj.getEncryptionKeyName())
+        {
+            writer.writePropertyName("encryptionKeyName");
+            writer.writeCharArray(*obj.getEncryptionKeyName());
         }
         if (obj.getCreatedAt())
         {
@@ -722,6 +778,256 @@ public:
         {
             auto body = writer.toString();
             TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * GitHub のAPIキーの一覧を取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeGitHubApiKeys(std::function<void(AsyncDescribeGitHubApiKeysResult&)> callback, DescribeGitHubApiKeysRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeGitHubApiKeysResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "key");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/github";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getPageToken()) {
+            Char urlSafeValue[2048];
+            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+            url += joint;
+            url += "pageToken=";
+            url += urlSafeValue;
+            joint[0] = '&';
+        }
+        if (request.getLimit()) {
+            Char urlSafeValue[32];
+            Int64 value = *request.getLimit();
+            std::sprintf(urlSafeValue, "%lld", value);
+            url += joint;
+            url += "limit=";
+            url += urlSafeValue;
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * GitHub のAPIキーを新規作成します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createGitHubApiKey(std::function<void(AsyncCreateGitHubApiKeyResult&)> callback, CreateGitHubApiKeyRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateGitHubApiKeyResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "key");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/github";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getName())
+        {
+            writer.writePropertyName("name");
+            writer.writeCharArray(*request.getName());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*request.getDescription());
+        }
+        if (request.getApiKey())
+        {
+            writer.writePropertyName("apiKey");
+            writer.writeCharArray(*request.getApiKey());
+        }
+        if (request.getEncryptionKeyName())
+        {
+            writer.writePropertyName("encryptionKeyName");
+            writer.writeCharArray(*request.getEncryptionKeyName());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * GitHub のAPIキーを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateGitHubApiKey(std::function<void(AsyncUpdateGitHubApiKeyResult&)> callback, UpdateGitHubApiKeyRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateGitHubApiKeyResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("PUT");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "key");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/github/{apiKeyName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getApiKeyName();
+            url.replace("{apiKeyName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*request.getDescription());
+        }
+        if (request.getApiKey())
+        {
+            writer.writePropertyName("apiKey");
+            writer.writeCharArray(*request.getApiKey());
+        }
+        if (request.getEncryptionKeyName())
+        {
+            writer.writePropertyName("encryptionKeyName");
+            writer.writeCharArray(*request.getEncryptionKeyName());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * GitHub のAPIキーを取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getGitHubApiKey(std::function<void(AsyncGetGitHubApiKeyResult&)> callback, GetGitHubApiKeyRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetGitHubApiKeyResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "key");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/github/{apiKeyName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getApiKeyName();
+            url.replace("{apiKeyName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        httpRequest.SetURL(url.c_str());
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * GitHub のAPIキーを削除します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteGitHubApiKey(std::function<void(AsyncDeleteGitHubApiKeyResult&)> callback, DeleteGitHubApiKeyRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("DELETE");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "key");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/github/{apiKeyName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getApiKeyName();
+            url.replace("{apiKeyName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        httpRequest.SetURL(url.c_str());
+        {
+            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");

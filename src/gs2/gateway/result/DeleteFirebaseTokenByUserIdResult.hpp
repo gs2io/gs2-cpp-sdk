@@ -29,7 +29,7 @@ namespace gs2 { namespace gateway
 {
 
 /**
- * Firebaseデバイストークンを新規作成 のレスポンスモデル
+ * ユーザIDを指定してFirebaseデバイストークンを削除 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 作成したFirebaseデバイストークン */
+        /** 削除したFirebaseデバイストークン */
         optional<FirebaseToken> item;
 
         Data()
@@ -152,9 +152,9 @@ public:
         return this;
     }
     /**
-     * 作成したFirebaseデバイストークンを取得
+     * 削除したFirebaseデバイストークンを取得
      *
-     * @return 作成したFirebaseデバイストークン
+     * @return 削除したFirebaseデバイストークン
      */
     const optional<FirebaseToken>& getItem() const
     {
@@ -162,9 +162,9 @@ public:
     }
 
     /**
-     * 作成したFirebaseデバイストークンを設定
+     * 削除したFirebaseデバイストークンを設定
      *
-     * @param item 作成したFirebaseデバイストークン
+     * @param item 削除したFirebaseデバイストークン
      */
     void setItem(const FirebaseToken& item)
     {

@@ -27,6 +27,7 @@
 #include "Probability.hpp"
 #include "CurrentLotteryMaster.hpp"
 #include "ResponseCache.hpp"
+#include "GitHubCheckoutSetting.hpp"
 #include "Prize.hpp"
 #include "AcquireAction.hpp"
 #include "DrawnPrize.hpp"

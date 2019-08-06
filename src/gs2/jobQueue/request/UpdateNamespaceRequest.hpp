@@ -45,6 +45,8 @@ private:
         optional<StringHolder> namespaceName;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
+        /** ジョブキューにジョブが登録されたときののプッシュ通知 */
+        optional<NotificationSetting> pushNotification;
 
         Data()
         {}
@@ -52,13 +54,15 @@ private:
         Data(const Data& data) :
             Gs2Object(data),
             namespaceName(data.namespaceName),
-            description(data.description)
+            description(data.description),
+            pushNotification(data.pushNotification)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
             namespaceName(std::move(data.namespaceName)),
-            description(std::move(data.description))
+            description(std::move(data.description)),
+            pushNotification(std::move(data.pushNotification))
         {}
 
         ~Data() = default;
@@ -208,6 +212,37 @@ public:
     UpdateNamespaceRequest& withDescription(const Char* description)
     {
         ensureData().description.emplace(description);
+        return *this;
+    }
+
+    /**
+     * ジョブキューにジョブが登録されたときののプッシュ通知を取得
+     *
+     * @return ジョブキューにジョブが登録されたときののプッシュ通知
+     */
+    const optional<NotificationSetting>& getPushNotification() const
+    {
+        return ensureData().pushNotification;
+    }
+
+    /**
+     * ジョブキューにジョブが登録されたときののプッシュ通知を設定
+     *
+     * @param pushNotification ジョブキューにジョブが登録されたときののプッシュ通知
+     */
+    void setPushNotification(const NotificationSetting& pushNotification)
+    {
+        ensureData().pushNotification.emplace(pushNotification);
+    }
+
+    /**
+     * ジョブキューにジョブが登録されたときののプッシュ通知を設定
+     *
+     * @param pushNotification ジョブキューにジョブが登録されたときののプッシュ通知
+     */
+    UpdateNamespaceRequest& withPushNotification(const NotificationSetting& pushNotification)
+    {
+        ensureData().pushNotification.emplace(pushNotification);
         return *this;
     }
 

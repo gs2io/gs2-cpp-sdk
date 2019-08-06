@@ -28,7 +28,7 @@
 namespace gs2 { namespace gateway {
 
 /**
- * ゲーム
+ * ネームスペース
  *
  * @author Game Server Services, Inc.
  *
@@ -41,11 +41,11 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ゲーム */
+        /** ネームスペース */
         optional<StringHolder> namespaceId;
         /** オーナーID */
         optional<StringHolder> ownerId;
-        /** ゲーム名 */
+        /** ネームスペース名 */
         optional<StringHolder> name;
         /** 説明文 */
         optional<StringHolder> description;
@@ -212,9 +212,9 @@ public:
         return this;
     }
     /**
-     * ゲームを取得
+     * ネームスペースを取得
      *
-     * @return ゲーム
+     * @return ネームスペース
      */
     const optional<StringHolder>& getNamespaceId() const
     {
@@ -222,9 +222,9 @@ public:
     }
 
     /**
-     * ゲームを設定
+     * ネームスペースを設定
      *
-     * @param namespaceId ゲーム
+     * @param namespaceId ネームスペース
      */
     void setNamespaceId(const Char* namespaceId)
     {
@@ -232,9 +232,9 @@ public:
     }
 
     /**
-     * ゲームを設定
+     * ネームスペースを設定
      *
-     * @param namespaceId ゲーム
+     * @param namespaceId ネームスペース
      */
     Namespace& withNamespaceId(const Char* namespaceId)
     {
@@ -274,9 +274,9 @@ public:
     }
 
     /**
-     * ゲーム名を取得
+     * ネームスペース名を取得
      *
-     * @return ゲーム名
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getName() const
     {
@@ -284,9 +284,9 @@ public:
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param name ゲーム名
+     * @param name ネームスペース名
      */
     void setName(const Char* name)
     {
@@ -294,9 +294,9 @@ public:
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param name ゲーム名
+     * @param name ネームスペース名
      */
     Namespace& withName(const Char* name)
     {

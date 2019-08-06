@@ -23,6 +23,7 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "NotificationSetting.hpp"
 #include <cstring>
 
 namespace gs2 { namespace jobQueue {
@@ -49,6 +50,8 @@ private:
         optional<StringHolder> name;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
+        /** ジョブキューにジョブが登録されたときののプッシュ通知 */
+        optional<NotificationSetting> pushNotification;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -63,6 +66,7 @@ private:
             ownerId(data.ownerId),
             name(data.name),
             description(data.description),
+            pushNotification(data.pushNotification),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {}
@@ -73,6 +77,7 @@ private:
             ownerId(std::move(data.ownerId)),
             name(std::move(data.name)),
             description(std::move(data.description)),
+            pushNotification(std::move(data.pushNotification)),
             createdAt(std::move(data.createdAt)),
             updatedAt(std::move(data.updatedAt))
         {}
@@ -107,6 +112,14 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "pushNotification") == 0) {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->pushNotification.emplace();
+                    detail::json::JsonParser::parse(&this->pushNotification->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name, "createdAt") == 0) {
@@ -326,6 +339,37 @@ public:
     }
 
     /**
+     * ジョブキューにジョブが登録されたときののプッシュ通知を取得
+     *
+     * @return ジョブキューにジョブが登録されたときののプッシュ通知
+     */
+    const optional<NotificationSetting>& getPushNotification() const
+    {
+        return ensureData().pushNotification;
+    }
+
+    /**
+     * ジョブキューにジョブが登録されたときののプッシュ通知を設定
+     *
+     * @param pushNotification ジョブキューにジョブが登録されたときののプッシュ通知
+     */
+    void setPushNotification(const NotificationSetting& pushNotification)
+    {
+        ensureData().pushNotification.emplace(pushNotification);
+    }
+
+    /**
+     * ジョブキューにジョブが登録されたときののプッシュ通知を設定
+     *
+     * @param pushNotification ジョブキューにジョブが登録されたときののプッシュ通知
+     */
+    Namespace& withPushNotification(const NotificationSetting& pushNotification)
+    {
+        setPushNotification(pushNotification);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -415,6 +459,10 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
             return true;
         }
         if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->pushNotification != lhr.m_pData->pushNotification)
         {
             return true;
         }

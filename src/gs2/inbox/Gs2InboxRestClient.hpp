@@ -36,10 +36,13 @@
 #include "request/SendMessageByUserIdRequest.hpp"
 #include "request/GetMessageRequest.hpp"
 #include "request/GetMessageByUserIdRequest.hpp"
+#include "request/OpenMessageRequest.hpp"
+#include "request/OpenMessageByUserIdRequest.hpp"
 #include "request/ReadMessageRequest.hpp"
 #include "request/ReadMessageByUserIdRequest.hpp"
 #include "request/DeleteMessageRequest.hpp"
 #include "request/DeleteMessageByUserIdRequest.hpp"
+#include "request/OpenByStampTaskRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -51,10 +54,13 @@
 #include "result/SendMessageByUserIdResult.hpp"
 #include "result/GetMessageResult.hpp"
 #include "result/GetMessageByUserIdResult.hpp"
+#include "result/OpenMessageResult.hpp"
+#include "result/OpenMessageByUserIdResult.hpp"
 #include "result/ReadMessageResult.hpp"
 #include "result/ReadMessageByUserIdResult.hpp"
 #include "result/DeleteMessageResult.hpp"
 #include "result/DeleteMessageByUserIdResult.hpp"
+#include "result/OpenByStampTaskResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace inbox {
@@ -70,10 +76,13 @@ typedef AsyncResult<DescribeMessagesByUserIdResult> AsyncDescribeMessagesByUserI
 typedef AsyncResult<SendMessageByUserIdResult> AsyncSendMessageByUserIdResult;
 typedef AsyncResult<GetMessageResult> AsyncGetMessageResult;
 typedef AsyncResult<GetMessageByUserIdResult> AsyncGetMessageByUserIdResult;
+typedef AsyncResult<OpenMessageResult> AsyncOpenMessageResult;
+typedef AsyncResult<OpenMessageByUserIdResult> AsyncOpenMessageByUserIdResult;
 typedef AsyncResult<ReadMessageResult> AsyncReadMessageResult;
 typedef AsyncResult<ReadMessageByUserIdResult> AsyncReadMessageByUserIdResult;
 typedef AsyncResult<void> AsyncDeleteMessageResult;
 typedef AsyncResult<void> AsyncDeleteMessageByUserIdResult;
+typedef AsyncResult<OpenByStampTaskResult> AsyncOpenByStampTaskResult;
 
 /**
  * GS2 Inbox API クライアント
@@ -157,6 +166,21 @@ private:
             writer.writePropertyName("deleteMessageDoneTriggerNamespaceId");
             writer.writeCharArray(*obj.getDeleteMessageDoneTriggerNamespaceId());
         }
+        if (obj.getQueueNamespaceId())
+        {
+            writer.writePropertyName("queueNamespaceId");
+            writer.writeCharArray(*obj.getQueueNamespaceId());
+        }
+        if (obj.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.writeCharArray(*obj.getKeyId());
+        }
+        if (obj.getReceiveNotification())
+        {
+            writer.writePropertyName("receiveNotification");
+            write(writer, *obj.getReceiveNotification());
+        }
         if (obj.getCreatedAt())
         {
             writer.writePropertyName("createdAt");
@@ -198,15 +222,16 @@ private:
             writer.writePropertyName("isRead");
             writer.writeBool(*obj.getIsRead());
         }
-        if (obj.getReadMessageTriggerScriptId())
+        if (obj.getReadAcquireActions())
         {
-            writer.writePropertyName("readMessageTriggerScriptId");
-            writer.writeCharArray(*obj.getReadMessageTriggerScriptId());
-        }
-        if (obj.getReadMessageTriggerScriptArgs())
-        {
-            writer.writePropertyName("readMessageTriggerScriptArgs");
-            writer.writeCharArray(*obj.getReadMessageTriggerScriptArgs());
+            writer.writePropertyName("readAcquireActions");
+            writer.writeArrayStart();
+            auto& list = *obj.getReadAcquireActions();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(writer, list[i]);
+            }
+            writer.writeArrayEnd();
         }
         if (obj.getReceivedAt())
         {
@@ -248,6 +273,59 @@ private:
         {
             writer.writePropertyName("result");
             writer.writeCharArray(*obj.getResult());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const Config& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getKey())
+        {
+            writer.writePropertyName("key");
+            writer.writeCharArray(*obj.getKey());
+        }
+        if (obj.getValue())
+        {
+            writer.writePropertyName("value");
+            writer.writeCharArray(*obj.getValue());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const NotificationSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGatewayNamespaceId())
+        {
+            writer.writePropertyName("gatewayNamespaceId");
+            writer.writeCharArray(*obj.getGatewayNamespaceId());
+        }
+        if (obj.getEnableTransferMobileNotification())
+        {
+            writer.writePropertyName("enableTransferMobileNotification");
+            writer.writeBool(*obj.getEnableTransferMobileNotification());
+        }
+        if (obj.getSound())
+        {
+            writer.writePropertyName("sound");
+            writer.writeCharArray(*obj.getSound());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const AcquireAction& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getAction())
+        {
+            writer.writePropertyName("action");
+            writer.writeCharArray(*obj.getAction());
+        }
+        if (obj.getRequest())
+        {
+            writer.writePropertyName("request");
+            writer.writeCharArray(*obj.getRequest());
         }
         writer.writeObjectEnd();
     }
@@ -389,6 +467,21 @@ public:
         {
             writer.writePropertyName("deleteMessageDoneTriggerNamespaceId");
             writer.writeCharArray(*request.getDeleteMessageDoneTriggerNamespaceId());
+        }
+        if (request.getQueueNamespaceId())
+        {
+            writer.writePropertyName("queueNamespaceId");
+            writer.writeCharArray(*request.getQueueNamespaceId());
+        }
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.writeCharArray(*request.getKeyId());
+        }
+        if (request.getReceiveNotification())
+        {
+            writer.writePropertyName("receiveNotification");
+            write(writer, *request.getReceiveNotification());
         }
         writer.writeObjectEnd();
         {
@@ -551,6 +644,21 @@ public:
         {
             writer.writePropertyName("deleteMessageDoneTriggerNamespaceId");
             writer.writeCharArray(*request.getDeleteMessageDoneTriggerNamespaceId());
+        }
+        if (request.getQueueNamespaceId())
+        {
+            writer.writePropertyName("queueNamespaceId");
+            writer.writeCharArray(*request.getQueueNamespaceId());
+        }
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.writeCharArray(*request.getKeyId());
+        }
+        if (request.getReceiveNotification())
+        {
+            writer.writePropertyName("receiveNotification");
+            write(writer, *request.getReceiveNotification());
         }
         writer.writeObjectEnd();
         {
@@ -756,15 +864,16 @@ public:
             writer.writePropertyName("metadata");
             writer.writeCharArray(*request.getMetadata());
         }
-        if (request.getReadMessageTriggerScriptId())
+        if (request.getReadAcquireActions())
         {
-            writer.writePropertyName("readMessageTriggerScriptId");
-            writer.writeCharArray(*request.getReadMessageTriggerScriptId());
-        }
-        if (request.getReadMessageTriggerScriptArgs())
-        {
-            writer.writePropertyName("readMessageTriggerScriptArgs");
-            writer.writeCharArray(*request.getReadMessageTriggerScriptArgs());
+            writer.writePropertyName("readAcquireActions");
+            writer.writeArrayStart();
+            auto& list = *request.getReadAcquireActions();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(writer, list[i]);
+            }
+            writer.writeArrayEnd();
         }
         writer.writeObjectEnd();
         {
@@ -880,9 +989,9 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void readMessage(std::function<void(AsyncReadMessageResult&)> callback, ReadMessageRequest& request)
+    void openMessage(std::function<void(AsyncOpenMessageResult&)> callback, OpenMessageRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<ReadMessageResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<OpenMessageResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
         httpRequest.SetVerb("POST");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
@@ -929,9 +1038,9 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void readMessageByUserId(std::function<void(AsyncReadMessageByUserIdResult&)> callback, ReadMessageByUserIdRequest& request)
+    void openMessageByUserId(std::function<void(AsyncOpenMessageByUserIdResult&)> callback, OpenMessageByUserIdRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<ReadMessageByUserIdResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<OpenMessageByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
         httpRequest.SetVerb("POST");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
@@ -954,6 +1063,130 @@ public:
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * メッセージを開封<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void readMessage(std::function<void(AsyncReadMessageResult&)> callback, ReadMessageRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<ReadMessageResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "inbox");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/user/me/{messageName}/read";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getMessageName();
+            url.replace("{messageName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getConfig())
+        {
+            writer.writePropertyName("config");
+            writer.writeArrayStart();
+            auto& list = *request.getConfig();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(writer, list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ユーザーIDを指定してメッセージを開封<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void readMessageByUserId(std::function<void(AsyncReadMessageByUserIdResult&)> callback, ReadMessageByUserIdRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<ReadMessageByUserIdResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "inbox");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/user/{userId}/{messageName}/read";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getUserId();
+            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getMessageName();
+            url.replace("{messageName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getConfig())
+        {
+            writer.writePropertyName("config");
+            writer.writeArrayStart();
+            auto& list = *request.getConfig();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(writer, list[i]);
+            }
+            writer.writeArrayEnd();
+        }
         writer.writeObjectEnd();
         {
             auto body = writer.toString();
@@ -1054,6 +1287,57 @@ public:
         httpRequest.SetURL(url.c_str());
         {
             TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * メッセージを作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void openByStampTask(std::function<void(AsyncOpenByStampTaskResult&)> callback, OpenByStampTaskRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<OpenByStampTaskResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "inbox");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/stamp/open";
+        httpRequest.SetURL(url.c_str());
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getStampTask())
+        {
+            writer.writePropertyName("stampTask");
+            writer.writeCharArray(*request.getStampTask());
+        }
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.writeCharArray(*request.getKeyId());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");

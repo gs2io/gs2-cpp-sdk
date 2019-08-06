@@ -23,6 +23,7 @@
 #include "LimitModelMaster.hpp"
 #include "CurrentLimitMaster.hpp"
 #include "ResponseCache.hpp"
+#include "GitHubCheckoutSetting.hpp"
 #include "LimitModel.hpp"
 
 #endif //GS2_LIMIT_MODEL_MODEL_HPP_

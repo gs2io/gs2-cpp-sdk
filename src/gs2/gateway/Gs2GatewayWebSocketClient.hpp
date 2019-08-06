@@ -31,17 +31,13 @@
 #include "request/GetNamespaceRequest.hpp"
 #include "request/UpdateNamespaceRequest.hpp"
 #include "request/DeleteNamespaceRequest.hpp"
-#include "request/DescribeWebsocketSessionsRequest.hpp"
-#include "request/DescribeWebsocketSessionsByOwnerIdRequest.hpp"
-#include "request/DescribeWebsocketSessionsByUserIdRequest.hpp"
-#include "request/DescribeWebsocketSessionsByOwnerIdAndUserIdRequest.hpp"
+#include "request/DescribeWebSocketSessionsRequest.hpp"
+#include "request/DescribeWebSocketSessionsByUserIdRequest.hpp"
 #include "request/SetUserIdRequest.hpp"
-#include "request/GetSessionRequest.hpp"
-#include "request/DeleteUserIdRequest.hpp"
+#include "request/SetUserIdByUserIdRequest.hpp"
+#include "request/GetWebSocketSessionRequest.hpp"
+#include "request/GetWebSocketSessionByConnectionIdRequest.hpp"
 #include "request/SendNotificationRequest.hpp"
-#include "request/SendNotificationBySystemRequest.hpp"
-#include "request/DescribeFirebaseTokensRequest.hpp"
-#include "request/DescribeFirebaseTokensByOwnerIdRequest.hpp"
 #include "request/SetFirebaseTokenRequest.hpp"
 #include "request/SetFirebaseTokenByUserIdRequest.hpp"
 #include "request/GetFirebaseTokenRequest.hpp"
@@ -55,17 +51,13 @@
 #include "result/GetNamespaceResult.hpp"
 #include "result/UpdateNamespaceResult.hpp"
 #include "result/DeleteNamespaceResult.hpp"
-#include "result/DescribeWebsocketSessionsResult.hpp"
-#include "result/DescribeWebsocketSessionsByOwnerIdResult.hpp"
-#include "result/DescribeWebsocketSessionsByUserIdResult.hpp"
-#include "result/DescribeWebsocketSessionsByOwnerIdAndUserIdResult.hpp"
+#include "result/DescribeWebSocketSessionsResult.hpp"
+#include "result/DescribeWebSocketSessionsByUserIdResult.hpp"
 #include "result/SetUserIdResult.hpp"
-#include "result/GetSessionResult.hpp"
-#include "result/DeleteUserIdResult.hpp"
+#include "result/SetUserIdByUserIdResult.hpp"
+#include "result/GetWebSocketSessionResult.hpp"
+#include "result/GetWebSocketSessionByConnectionIdResult.hpp"
 #include "result/SendNotificationResult.hpp"
-#include "result/SendNotificationBySystemResult.hpp"
-#include "result/DescribeFirebaseTokensResult.hpp"
-#include "result/DescribeFirebaseTokensByOwnerIdResult.hpp"
 #include "result/SetFirebaseTokenResult.hpp"
 #include "result/SetFirebaseTokenByUserIdResult.hpp"
 #include "result/GetFirebaseTokenResult.hpp"
@@ -83,24 +75,20 @@ typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
 typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
 typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
 typedef AsyncResult<void> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeWebsocketSessionsResult> AsyncDescribeWebsocketSessionsResult;
-typedef AsyncResult<DescribeWebsocketSessionsByOwnerIdResult> AsyncDescribeWebsocketSessionsByOwnerIdResult;
-typedef AsyncResult<DescribeWebsocketSessionsByUserIdResult> AsyncDescribeWebsocketSessionsByUserIdResult;
-typedef AsyncResult<DescribeWebsocketSessionsByOwnerIdAndUserIdResult> AsyncDescribeWebsocketSessionsByOwnerIdAndUserIdResult;
+typedef AsyncResult<DescribeWebSocketSessionsResult> AsyncDescribeWebSocketSessionsResult;
+typedef AsyncResult<DescribeWebSocketSessionsByUserIdResult> AsyncDescribeWebSocketSessionsByUserIdResult;
 typedef AsyncResult<SetUserIdResult> AsyncSetUserIdResult;
-typedef AsyncResult<GetSessionResult> AsyncGetSessionResult;
-typedef AsyncResult<DeleteUserIdResult> AsyncDeleteUserIdResult;
+typedef AsyncResult<SetUserIdByUserIdResult> AsyncSetUserIdByUserIdResult;
+typedef AsyncResult<GetWebSocketSessionResult> AsyncGetWebSocketSessionResult;
+typedef AsyncResult<GetWebSocketSessionByConnectionIdResult> AsyncGetWebSocketSessionByConnectionIdResult;
 typedef AsyncResult<SendNotificationResult> AsyncSendNotificationResult;
-typedef AsyncResult<SendNotificationBySystemResult> AsyncSendNotificationBySystemResult;
-typedef AsyncResult<DescribeFirebaseTokensResult> AsyncDescribeFirebaseTokensResult;
-typedef AsyncResult<DescribeFirebaseTokensByOwnerIdResult> AsyncDescribeFirebaseTokensByOwnerIdResult;
 typedef AsyncResult<SetFirebaseTokenResult> AsyncSetFirebaseTokenResult;
 typedef AsyncResult<SetFirebaseTokenByUserIdResult> AsyncSetFirebaseTokenByUserIdResult;
 typedef AsyncResult<GetFirebaseTokenResult> AsyncGetFirebaseTokenResult;
 typedef AsyncResult<GetFirebaseTokenByUserIdResult> AsyncGetFirebaseTokenByUserIdResult;
 typedef AsyncResult<DeleteFirebaseTokenResult> AsyncDeleteFirebaseTokenResult;
 typedef AsyncResult<DeleteFirebaseTokenByUserIdResult> AsyncDeleteFirebaseTokenByUserIdResult;
-typedef AsyncResult<SendMobileNotificationByUserIdResult> AsyncSendMobileNotificationByUserIdResult;
+typedef AsyncResult<void> AsyncSendMobileNotificationByUserIdResult;
 
 /**
  * GS2 Gateway API クライアント
@@ -575,181 +563,10 @@ private:
         ~DeleteNamespaceTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeWebsocketSessionsTask : public detail::Gs2WebSocketSessionTask<DescribeWebsocketSessionsResult>
+    class DescribeWebSocketSessionsTask : public detail::Gs2WebSocketSessionTask<DescribeWebSocketSessionsResult>
     {
     private:
-        DescribeWebsocketSessionsRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
-            writer.writeObjectStart();
-
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getPageToken())
-            {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("gateway");
-            writer.writePropertyName("component");
-            writer.writeCharArray("websocketSession");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeWebsocketSessions");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        DescribeWebsocketSessionsTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeWebsocketSessionsRequest& request,
-            Gs2WebSocketSessionTask<DescribeWebsocketSessionsResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeWebsocketSessionsResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~DescribeWebsocketSessionsTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeWebsocketSessionsByOwnerIdTask : public detail::Gs2WebSocketSessionTask<DescribeWebsocketSessionsByOwnerIdResult>
-    {
-    private:
-        DescribeWebsocketSessionsByOwnerIdRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
-            writer.writeObjectStart();
-
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getOwnerId())
-            {
-                writer.writePropertyName("ownerId");
-                writer.writeCharArray(*m_Request.getOwnerId());
-            }
-            if (m_Request.getPageToken())
-            {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("gateway");
-            writer.writePropertyName("component");
-            writer.writeCharArray("websocketSession");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeWebsocketSessionsByOwnerId");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        DescribeWebsocketSessionsByOwnerIdTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeWebsocketSessionsByOwnerIdRequest& request,
-            Gs2WebSocketSessionTask<DescribeWebsocketSessionsByOwnerIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeWebsocketSessionsByOwnerIdResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~DescribeWebsocketSessionsByOwnerIdTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeWebsocketSessionsByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeWebsocketSessionsByUserIdResult>
-    {
-    private:
-        DescribeWebsocketSessionsByUserIdRequest& m_Request;
+        DescribeWebSocketSessionsRequest& m_Request;
 
         void sendImpl(
             const StringHolder& clientId,
@@ -802,9 +619,9 @@ private:
             writer.writePropertyName("service");
             writer.writeCharArray("gateway");
             writer.writePropertyName("component");
-            writer.writeCharArray("websocketSession");
+            writer.writeCharArray("webSocketSession");
             writer.writePropertyName("function");
-            writer.writeCharArray("describeWebsocketSessionsByUserId");
+            writer.writeCharArray("describeWebSocketSessions");
             writer.writePropertyName("contentType");
             writer.writeCharArray("application/json");
             writer.writePropertyName("requestId");
@@ -822,22 +639,22 @@ private:
         }
 
     public:
-        DescribeWebsocketSessionsByUserIdTask(
+        DescribeWebSocketSessionsTask(
             Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeWebsocketSessionsByUserIdRequest& request,
-            Gs2WebSocketSessionTask<DescribeWebsocketSessionsByUserIdResult>::CallbackType callback
+            DescribeWebSocketSessionsRequest& request,
+            Gs2WebSocketSessionTask<DescribeWebSocketSessionsResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DescribeWebsocketSessionsByUserIdResult>(gs2WebSocketSession, callback),
+            Gs2WebSocketSessionTask<DescribeWebSocketSessionsResult>(gs2WebSocketSession, callback),
             m_Request(request)
         {}
 
-        ~DescribeWebsocketSessionsByUserIdTask() GS2_OVERRIDE = default;
+        ~DescribeWebSocketSessionsTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeWebsocketSessionsByOwnerIdAndUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeWebsocketSessionsByOwnerIdAndUserIdResult>
+    class DescribeWebSocketSessionsByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeWebSocketSessionsByUserIdResult>
     {
     private:
-        DescribeWebsocketSessionsByOwnerIdAndUserIdRequest& m_Request;
+        DescribeWebSocketSessionsByUserIdRequest& m_Request;
 
         void sendImpl(
             const StringHolder& clientId,
@@ -895,9 +712,9 @@ private:
             writer.writePropertyName("service");
             writer.writeCharArray("gateway");
             writer.writePropertyName("component");
-            writer.writeCharArray("websocketSession");
+            writer.writeCharArray("webSocketSession");
             writer.writePropertyName("function");
-            writer.writeCharArray("describeWebsocketSessionsByOwnerIdAndUserId");
+            writer.writeCharArray("describeWebSocketSessionsByUserId");
             writer.writePropertyName("contentType");
             writer.writeCharArray("application/json");
             writer.writePropertyName("requestId");
@@ -915,16 +732,16 @@ private:
         }
 
     public:
-        DescribeWebsocketSessionsByOwnerIdAndUserIdTask(
+        DescribeWebSocketSessionsByUserIdTask(
             Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeWebsocketSessionsByOwnerIdAndUserIdRequest& request,
-            Gs2WebSocketSessionTask<DescribeWebsocketSessionsByOwnerIdAndUserIdResult>::CallbackType callback
+            DescribeWebSocketSessionsByUserIdRequest& request,
+            Gs2WebSocketSessionTask<DescribeWebSocketSessionsByUserIdResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DescribeWebsocketSessionsByOwnerIdAndUserIdResult>(gs2WebSocketSession, callback),
+            Gs2WebSocketSessionTask<DescribeWebSocketSessionsByUserIdResult>(gs2WebSocketSession, callback),
             m_Request(request)
         {}
 
-        ~DescribeWebsocketSessionsByOwnerIdAndUserIdTask() GS2_OVERRIDE = default;
+        ~DescribeWebSocketSessionsByUserIdTask() GS2_OVERRIDE = default;
     };
 
     class SetUserIdTask : public detail::Gs2WebSocketSessionTask<SetUserIdResult>
@@ -978,7 +795,7 @@ private:
             writer.writePropertyName("service");
             writer.writeCharArray("gateway");
             writer.writePropertyName("component");
-            writer.writeCharArray("websocketSession");
+            writer.writeCharArray("webSocketSession");
             writer.writePropertyName("function");
             writer.writeCharArray("setUserId");
             writer.writePropertyName("contentType");
@@ -1010,10 +827,10 @@ private:
         ~SetUserIdTask() GS2_OVERRIDE = default;
     };
 
-    class GetSessionTask : public detail::Gs2WebSocketSessionTask<GetSessionResult>
+    class SetUserIdByUserIdTask : public detail::Gs2WebSocketSessionTask<SetUserIdByUserIdResult>
     {
     private:
-        GetSessionRequest& m_Request;
+        SetUserIdByUserIdRequest& m_Request;
 
         void sendImpl(
             const StringHolder& clientId,
@@ -1029,6 +846,16 @@ private:
             {
                 writer.writePropertyName("namespaceName");
                 writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                writer.writePropertyName("userId");
+                writer.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getAllowConcurrentAccess())
+            {
+                writer.writePropertyName("allowConcurrentAccess");
+                writer.writeBool(*m_Request.getAllowConcurrentAccess());
             }
             if (m_Request.getRequestId())
             {
@@ -1056,9 +883,9 @@ private:
             writer.writePropertyName("service");
             writer.writeCharArray("gateway");
             writer.writePropertyName("component");
-            writer.writeCharArray("websocketSession");
+            writer.writeCharArray("webSocketSession");
             writer.writePropertyName("function");
-            writer.writeCharArray("getSession");
+            writer.writeCharArray("setUserIdByUserId");
             writer.writePropertyName("contentType");
             writer.writeCharArray("application/json");
             writer.writePropertyName("requestId");
@@ -1076,22 +903,22 @@ private:
         }
 
     public:
-        GetSessionTask(
+        SetUserIdByUserIdTask(
             Gs2WebSocketSession& gs2WebSocketSession,
-            GetSessionRequest& request,
-            Gs2WebSocketSessionTask<GetSessionResult>::CallbackType callback
+            SetUserIdByUserIdRequest& request,
+            Gs2WebSocketSessionTask<SetUserIdByUserIdResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetSessionResult>(gs2WebSocketSession, callback),
+            Gs2WebSocketSessionTask<SetUserIdByUserIdResult>(gs2WebSocketSession, callback),
             m_Request(request)
         {}
 
-        ~GetSessionTask() GS2_OVERRIDE = default;
+        ~SetUserIdByUserIdTask() GS2_OVERRIDE = default;
     };
 
-    class DeleteUserIdTask : public detail::Gs2WebSocketSessionTask<DeleteUserIdResult>
+    class GetWebSocketSessionTask : public detail::Gs2WebSocketSessionTask<GetWebSocketSessionResult>
     {
     private:
-        DeleteUserIdRequest& m_Request;
+        GetWebSocketSessionRequest& m_Request;
 
         void sendImpl(
             const StringHolder& clientId,
@@ -1118,11 +945,6 @@ private:
                 writer.writePropertyName("xGs2AccessToken");
                 writer.writeCharArray(*m_Request.getAccessToken());
             }
-            if (m_Request.getDuplicationAvoider())
-            {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
 
             writer.writePropertyName("xGs2ClientId");
             writer.writeCharArray(clientId);
@@ -1134,9 +956,9 @@ private:
             writer.writePropertyName("service");
             writer.writeCharArray("gateway");
             writer.writePropertyName("component");
-            writer.writeCharArray("websocketSession");
+            writer.writeCharArray("webSocketSession");
             writer.writePropertyName("function");
-            writer.writeCharArray("deleteUserId");
+            writer.writeCharArray("getWebSocketSession");
             writer.writePropertyName("contentType");
             writer.writeCharArray("application/json");
             writer.writePropertyName("requestId");
@@ -1154,16 +976,94 @@ private:
         }
 
     public:
-        DeleteUserIdTask(
+        GetWebSocketSessionTask(
             Gs2WebSocketSession& gs2WebSocketSession,
-            DeleteUserIdRequest& request,
-            Gs2WebSocketSessionTask<DeleteUserIdResult>::CallbackType callback
+            GetWebSocketSessionRequest& request,
+            Gs2WebSocketSessionTask<GetWebSocketSessionResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DeleteUserIdResult>(gs2WebSocketSession, callback),
+            Gs2WebSocketSessionTask<GetWebSocketSessionResult>(gs2WebSocketSession, callback),
             m_Request(request)
         {}
 
-        ~DeleteUserIdTask() GS2_OVERRIDE = default;
+        ~GetWebSocketSessionTask() GS2_OVERRIDE = default;
+    };
+
+    class GetWebSocketSessionByConnectionIdTask : public detail::Gs2WebSocketSessionTask<GetWebSocketSessionByConnectionIdResult>
+    {
+    private:
+        GetWebSocketSessionByConnectionIdRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            auto& writer = detail::json::JsonWriter::getInstance();
+            writer.reset();
+            writer.writeObjectStart();
+
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getConnectionId())
+            {
+                writer.writePropertyName("connectionId");
+                writer.writeCharArray(*m_Request.getConnectionId());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("gateway");
+            writer.writePropertyName("component");
+            writer.writeCharArray("webSocketSession");
+            writer.writePropertyName("function");
+            writer.writeCharArray("getWebSocketSessionByConnectionId");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        GetWebSocketSessionByConnectionIdTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            GetWebSocketSessionByConnectionIdRequest& request,
+            Gs2WebSocketSessionTask<GetWebSocketSessionByConnectionIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetWebSocketSessionByConnectionIdResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~GetWebSocketSessionByConnectionIdTask() GS2_OVERRIDE = default;
     };
 
     class SendNotificationTask : public detail::Gs2WebSocketSessionTask<SendNotificationResult>
@@ -1237,7 +1137,7 @@ private:
             writer.writePropertyName("service");
             writer.writeCharArray("gateway");
             writer.writePropertyName("component");
-            writer.writeCharArray("websocketSession");
+            writer.writeCharArray("webSocketSession");
             writer.writePropertyName("function");
             writer.writeCharArray("sendNotification");
             writer.writePropertyName("contentType");
@@ -1267,285 +1167,6 @@ private:
         {}
 
         ~SendNotificationTask() GS2_OVERRIDE = default;
-    };
-
-    class SendNotificationBySystemTask : public detail::Gs2WebSocketSessionTask<SendNotificationBySystemResult>
-    {
-    private:
-        SendNotificationBySystemRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
-            writer.writeObjectStart();
-
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getUserId())
-            {
-                writer.writePropertyName("userId");
-                writer.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getIssuer())
-            {
-                writer.writePropertyName("issuer");
-                writer.writeCharArray(*m_Request.getIssuer());
-            }
-            if (m_Request.getSubject())
-            {
-                writer.writePropertyName("subject");
-                writer.writeCharArray(*m_Request.getSubject());
-            }
-            if (m_Request.getPayload())
-            {
-                writer.writePropertyName("payload");
-                writer.writeCharArray(*m_Request.getPayload());
-            }
-            if (m_Request.getEnableTransferMobileNotification())
-            {
-                writer.writePropertyName("enableTransferMobileNotification");
-                writer.writeBool(*m_Request.getEnableTransferMobileNotification());
-            }
-            if (m_Request.getSound())
-            {
-                writer.writePropertyName("sound");
-                writer.writeCharArray(*m_Request.getSound());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("gateway");
-            writer.writePropertyName("component");
-            writer.writeCharArray("websocketSession");
-            writer.writePropertyName("function");
-            writer.writeCharArray("sendNotificationBySystem");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        SendNotificationBySystemTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            SendNotificationBySystemRequest& request,
-            Gs2WebSocketSessionTask<SendNotificationBySystemResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<SendNotificationBySystemResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~SendNotificationBySystemTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeFirebaseTokensTask : public detail::Gs2WebSocketSessionTask<DescribeFirebaseTokensResult>
-    {
-    private:
-        DescribeFirebaseTokensRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
-            writer.writeObjectStart();
-
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getPageToken())
-            {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("gateway");
-            writer.writePropertyName("component");
-            writer.writeCharArray("firebaseToken");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeFirebaseTokens");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        DescribeFirebaseTokensTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeFirebaseTokensRequest& request,
-            Gs2WebSocketSessionTask<DescribeFirebaseTokensResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeFirebaseTokensResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~DescribeFirebaseTokensTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeFirebaseTokensByOwnerIdTask : public detail::Gs2WebSocketSessionTask<DescribeFirebaseTokensByOwnerIdResult>
-    {
-    private:
-        DescribeFirebaseTokensByOwnerIdRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
-            writer.writeObjectStart();
-
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getOwnerId())
-            {
-                writer.writePropertyName("ownerId");
-                writer.writeCharArray(*m_Request.getOwnerId());
-            }
-            if (m_Request.getPageToken())
-            {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("gateway");
-            writer.writePropertyName("component");
-            writer.writeCharArray("firebaseToken");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeFirebaseTokensByOwnerId");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        DescribeFirebaseTokensByOwnerIdTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeFirebaseTokensByOwnerIdRequest& request,
-            Gs2WebSocketSessionTask<DescribeFirebaseTokensByOwnerIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeFirebaseTokensByOwnerIdResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~DescribeFirebaseTokensByOwnerIdTask() GS2_OVERRIDE = default;
     };
 
     class SetFirebaseTokenTask : public detail::Gs2WebSocketSessionTask<SetFirebaseTokenResult>
@@ -2041,7 +1662,7 @@ private:
         ~DeleteFirebaseTokenByUserIdTask() GS2_OVERRIDE = default;
     };
 
-    class SendMobileNotificationByUserIdTask : public detail::Gs2WebSocketSessionTask<SendMobileNotificationByUserIdResult>
+    class SendMobileNotificationByUserIdTask : public detail::Gs2WebSocketSessionTask<void>
     {
     private:
         SendMobileNotificationByUserIdRequest& m_Request;
@@ -2071,10 +1692,10 @@ private:
                 writer.writePropertyName("subject");
                 writer.writeCharArray(*m_Request.getSubject());
             }
-            if (m_Request.getMetadata())
+            if (m_Request.getPayload())
             {
-                writer.writePropertyName("metadata");
-                writer.writeCharArray(*m_Request.getMetadata());
+                writer.writePropertyName("payload");
+                writer.writeCharArray(*m_Request.getPayload());
             }
             if (m_Request.getSound())
             {
@@ -2130,9 +1751,9 @@ private:
         SendMobileNotificationByUserIdTask(
             Gs2WebSocketSession& gs2WebSocketSession,
             SendMobileNotificationByUserIdRequest& request,
-            Gs2WebSocketSessionTask<SendMobileNotificationByUserIdResult>::CallbackType callback
+            Gs2WebSocketSessionTask<void>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<SendMobileNotificationByUserIdResult>(gs2WebSocketSession, callback),
+            Gs2WebSocketSessionTask<void>(gs2WebSocketSession, callback),
             m_Request(request)
         {}
 
@@ -2181,23 +1802,23 @@ private:
         writer.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const WebsocketSession& obj)
+    static void write(detail::json::JsonWriter& writer, const WebSocketSession& obj)
     {
         writer.writeObjectStart();
-        if (obj.getWebsocketSessionId())
+        if (obj.getConnectionId())
         {
-            writer.writePropertyName("websocketSessionId");
-            writer.writeCharArray(*obj.getWebsocketSessionId());
+            writer.writePropertyName("connectionId");
+            writer.writeCharArray(*obj.getConnectionId());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
             writer.writeCharArray(*obj.getOwnerId());
         }
-        if (obj.getConnectionId())
+        if (obj.getNamespaceName())
         {
-            writer.writePropertyName("connectionId");
-            writer.writeCharArray(*obj.getConnectionId());
+            writer.writePropertyName("namespaceName");
+            writer.writeCharArray(*obj.getNamespaceName());
         }
         if (obj.getUserId())
         {
@@ -2298,7 +1919,7 @@ public:
     }
 
 	/**
-	 * ゲームの一覧を取得<br>
+	 * ネームスペースの一覧を取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2310,7 +1931,7 @@ public:
     }
 
 	/**
-	 * ゲームを新規作成<br>
+	 * ネームスペースを新規作成<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2322,7 +1943,7 @@ public:
     }
 
 	/**
-	 * ゲームを取得<br>
+	 * ネームスペースを取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2334,7 +1955,7 @@ public:
     }
 
 	/**
-	 * ゲームを取得<br>
+	 * ネームスペースを取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2346,7 +1967,7 @@ public:
     }
 
 	/**
-	 * ゲームを更新<br>
+	 * ネームスペースを更新<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2358,7 +1979,7 @@ public:
     }
 
 	/**
-	 * ゲームを削除<br>
+	 * ネームスペースを削除<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2370,55 +1991,31 @@ public:
     }
 
 	/**
-	 * Websocketセッションを新規作成<br>
+	 * Websocketセッションの一覧を取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWebsocketSessions(std::function<void(AsyncDescribeWebsocketSessionsResult&)> callback, DescribeWebsocketSessionsRequest& request)
+    void describeWebSocketSessions(std::function<void(AsyncDescribeWebSocketSessionsResult&)> callback, DescribeWebSocketSessionsRequest& request)
     {
-        DescribeWebsocketSessionsTask& task = *new DescribeWebsocketSessionsTask(getGs2WebSocketSession(), request, callback);
+        DescribeWebSocketSessionsTask& task = *new DescribeWebSocketSessionsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 
 	/**
-	 * Websocketセッションを新規作成<br>
+	 * ユーザIDを指定してWebsocketセッションの一覧を取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWebsocketSessionsByOwnerId(std::function<void(AsyncDescribeWebsocketSessionsByOwnerIdResult&)> callback, DescribeWebsocketSessionsByOwnerIdRequest& request)
+    void describeWebSocketSessionsByUserId(std::function<void(AsyncDescribeWebSocketSessionsByUserIdResult&)> callback, DescribeWebSocketSessionsByUserIdRequest& request)
     {
-        DescribeWebsocketSessionsByOwnerIdTask& task = *new DescribeWebsocketSessionsByOwnerIdTask(getGs2WebSocketSession(), request, callback);
+        DescribeWebSocketSessionsByUserIdTask& task = *new DescribeWebSocketSessionsByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 
 	/**
-	 * Websocketセッションを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeWebsocketSessionsByUserId(std::function<void(AsyncDescribeWebsocketSessionsByUserIdResult&)> callback, DescribeWebsocketSessionsByUserIdRequest& request)
-    {
-        DescribeWebsocketSessionsByUserIdTask& task = *new DescribeWebsocketSessionsByUserIdTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * Websocketセッションを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeWebsocketSessionsByOwnerIdAndUserId(std::function<void(AsyncDescribeWebsocketSessionsByOwnerIdAndUserIdResult&)> callback, DescribeWebsocketSessionsByOwnerIdAndUserIdRequest& request)
-    {
-        DescribeWebsocketSessionsByOwnerIdAndUserIdTask& task = *new DescribeWebsocketSessionsByOwnerIdAndUserIdTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * Websocketセッションを新規作成<br>
+	 * WebsocketセッションにユーザIDを設定<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2430,31 +2027,43 @@ public:
     }
 
 	/**
-	 * Websocketセッションを新規作成<br>
+	 * WebsocketセッションにユーザIDを設定<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getSession(std::function<void(AsyncGetSessionResult&)> callback, GetSessionRequest& request)
+    void setUserIdByUserId(std::function<void(AsyncSetUserIdByUserIdResult&)> callback, SetUserIdByUserIdRequest& request)
     {
-        GetSessionTask& task = *new GetSessionTask(getGs2WebSocketSession(), request, callback);
+        SetUserIdByUserIdTask& task = *new SetUserIdByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 
 	/**
-	 * Websocketセッションを新規作成<br>
+	 * Websocketセッションを取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteUserId(std::function<void(AsyncDeleteUserIdResult&)> callback, DeleteUserIdRequest& request)
+    void getWebSocketSession(std::function<void(AsyncGetWebSocketSessionResult&)> callback, GetWebSocketSessionRequest& request)
     {
-        DeleteUserIdTask& task = *new DeleteUserIdTask(getGs2WebSocketSession(), request, callback);
+        GetWebSocketSessionTask& task = *new GetWebSocketSessionTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 
 	/**
-	 * Websocketセッションを新規作成<br>
+	 * ユーザIDを指定してWebsocketセッションを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getWebSocketSessionByConnectionId(std::function<void(AsyncGetWebSocketSessionByConnectionIdResult&)> callback, GetWebSocketSessionByConnectionIdRequest& request)
+    {
+        GetWebSocketSessionByConnectionIdTask& task = *new GetWebSocketSessionByConnectionIdTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * 通知を送信<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2466,43 +2075,7 @@ public:
     }
 
 	/**
-	 * Websocketセッションを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void sendNotificationBySystem(std::function<void(AsyncSendNotificationBySystemResult&)> callback, SendNotificationBySystemRequest& request)
-    {
-        SendNotificationBySystemTask& task = *new SendNotificationBySystemTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * Firebaseデバイストークンを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeFirebaseTokens(std::function<void(AsyncDescribeFirebaseTokensResult&)> callback, DescribeFirebaseTokensRequest& request)
-    {
-        DescribeFirebaseTokensTask& task = *new DescribeFirebaseTokensTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * Firebaseデバイストークンを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeFirebaseTokensByOwnerId(std::function<void(AsyncDescribeFirebaseTokensByOwnerIdResult&)> callback, DescribeFirebaseTokensByOwnerIdRequest& request)
-    {
-        DescribeFirebaseTokensByOwnerIdTask& task = *new DescribeFirebaseTokensByOwnerIdTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * Firebaseデバイストークンを新規作成<br>
+	 * デバイストークンを設定<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2514,7 +2087,7 @@ public:
     }
 
 	/**
-	 * Firebaseデバイストークンを新規作成<br>
+	 * ユーザIDを指定してデバイストークンを設定<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2526,7 +2099,7 @@ public:
     }
 
 	/**
-	 * Firebaseデバイストークンを新規作成<br>
+	 * Firebaseデバイストークンを取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2538,7 +2111,7 @@ public:
     }
 
 	/**
-	 * Firebaseデバイストークンを新規作成<br>
+	 * ユーザIDを指定してFirebaseデバイストークンを取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2550,7 +2123,7 @@ public:
     }
 
 	/**
-	 * Firebaseデバイストークンを新規作成<br>
+	 * Firebaseデバイストークンを削除<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2562,7 +2135,7 @@ public:
     }
 
 	/**
-	 * Firebaseデバイストークンを新規作成<br>
+	 * ユーザIDを指定してFirebaseデバイストークンを削除<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2574,7 +2147,7 @@ public:
     }
 
 	/**
-	 * Firebaseデバイストークンを新規作成<br>
+	 * モバイルプッシュ通知を送信<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ

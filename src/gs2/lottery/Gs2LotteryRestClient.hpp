@@ -54,6 +54,7 @@
 #include "request/ExportMasterRequest.hpp"
 #include "request/GetCurrentLotteryMasterRequest.hpp"
 #include "request/UpdateCurrentLotteryMasterRequest.hpp"
+#include "request/UpdateCurrentLotteryMasterFromGitHubRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -83,6 +84,7 @@
 #include "result/ExportMasterResult.hpp"
 #include "result/GetCurrentLotteryMasterResult.hpp"
 #include "result/UpdateCurrentLotteryMasterResult.hpp"
+#include "result/UpdateCurrentLotteryMasterFromGitHubResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace lottery {
@@ -116,6 +118,7 @@ typedef AsyncResult<GetPrizeTableResult> AsyncGetPrizeTableResult;
 typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
 typedef AsyncResult<GetCurrentLotteryMasterResult> AsyncGetCurrentLotteryMasterResult;
 typedef AsyncResult<UpdateCurrentLotteryMasterResult> AsyncUpdateCurrentLotteryMasterResult;
+typedef AsyncResult<UpdateCurrentLotteryMasterFromGitHubResult> AsyncUpdateCurrentLotteryMasterFromGitHubResult;
 
 /**
  * GS2 Lottery API クライアント
@@ -469,6 +472,47 @@ private:
         {
             writer.writePropertyName("result");
             writer.writeCharArray(*obj.getResult());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            writer.writePropertyName("gitHubApiKeyId");
+            writer.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            writer.writePropertyName("repositoryName");
+            writer.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            writer.writePropertyName("sourcePath");
+            writer.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            writer.writePropertyName("referenceType");
+            writer.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            writer.writePropertyName("commitHash");
+            writer.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            writer.writePropertyName("branchName");
+            writer.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            writer.writePropertyName("tagName");
+            writer.writeCharArray(*obj.getTagName());
         }
         writer.writeObjectEnd();
     }
@@ -1988,6 +2032,52 @@ public:
         {
             writer.writePropertyName("settings");
             writer.writeCharArray(*request.getSettings());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * 現在有効な現在有効な抽選設定を更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentLotteryMasterFromGitHub(std::function<void(AsyncUpdateCurrentLotteryMasterFromGitHubResult&)> callback, UpdateCurrentLotteryMasterFromGitHubRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateCurrentLotteryMasterFromGitHubResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("PUT");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "lottery");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/from_git_hub";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getCheckoutSetting())
+        {
+            writer.writePropertyName("checkoutSetting");
+            write(writer, *request.getCheckoutSetting());
         }
         writer.writeObjectEnd();
         {

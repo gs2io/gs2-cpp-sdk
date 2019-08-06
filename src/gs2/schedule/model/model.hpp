@@ -24,5 +24,6 @@
 #include "Event.hpp"
 #include "CurrentEventMaster.hpp"
 #include "ResponseCache.hpp"
+#include "GitHubCheckoutSetting.hpp"
 
 #endif //GS2_SCHEDULE_MODEL_MODEL_HPP_

@@ -29,7 +29,7 @@ namespace gs2 { namespace gateway
 {
 
 /**
- * Firebaseデバイストークンを新規作成 のレスポンスモデル
+ * デバイストークンを設定 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */

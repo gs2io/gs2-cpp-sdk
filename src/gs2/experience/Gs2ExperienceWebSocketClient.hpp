@@ -46,6 +46,7 @@
 #include "request/ExportMasterRequest.hpp"
 #include "request/GetCurrentExperienceMasterRequest.hpp"
 #include "request/UpdateCurrentExperienceMasterRequest.hpp"
+#include "request/UpdateCurrentExperienceMasterFromGitHubRequest.hpp"
 #include "request/DescribeStatusesRequest.hpp"
 #include "request/DescribeStatusesByUserIdRequest.hpp"
 #include "request/GetStatusRequest.hpp"
@@ -80,6 +81,7 @@
 #include "result/ExportMasterResult.hpp"
 #include "result/GetCurrentExperienceMasterResult.hpp"
 #include "result/UpdateCurrentExperienceMasterResult.hpp"
+#include "result/UpdateCurrentExperienceMasterFromGitHubResult.hpp"
 #include "result/DescribeStatusesResult.hpp"
 #include "result/DescribeStatusesByUserIdResult.hpp"
 #include "result/GetStatusResult.hpp"
@@ -118,6 +120,7 @@ typedef AsyncResult<DeleteThresholdMasterResult> AsyncDeleteThresholdMasterResul
 typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
 typedef AsyncResult<GetCurrentExperienceMasterResult> AsyncGetCurrentExperienceMasterResult;
 typedef AsyncResult<UpdateCurrentExperienceMasterResult> AsyncUpdateCurrentExperienceMasterResult;
+typedef AsyncResult<UpdateCurrentExperienceMasterFromGitHubResult> AsyncUpdateCurrentExperienceMasterFromGitHubResult;
 typedef AsyncResult<DescribeStatusesResult> AsyncDescribeStatusesResult;
 typedef AsyncResult<DescribeStatusesByUserIdResult> AsyncDescribeStatusesByUserIdResult;
 typedef AsyncResult<GetStatusResult> AsyncGetStatusResult;
@@ -1952,6 +1955,84 @@ private:
         ~UpdateCurrentExperienceMasterTask() GS2_OVERRIDE = default;
     };
 
+    class UpdateCurrentExperienceMasterFromGitHubTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentExperienceMasterFromGitHubResult>
+    {
+    private:
+        UpdateCurrentExperienceMasterFromGitHubRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            auto& writer = detail::json::JsonWriter::getInstance();
+            writer.reset();
+            writer.writeObjectStart();
+
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCheckoutSetting())
+            {
+                writer.writePropertyName("checkoutSetting");
+                write(writer, *m_Request.getCheckoutSetting());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("experience");
+            writer.writePropertyName("component");
+            writer.writeCharArray("currentExperienceMaster");
+            writer.writePropertyName("function");
+            writer.writeCharArray("updateCurrentExperienceMasterFromGitHub");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        UpdateCurrentExperienceMasterFromGitHubTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            UpdateCurrentExperienceMasterFromGitHubRequest& request,
+            Gs2WebSocketSessionTask<UpdateCurrentExperienceMasterFromGitHubResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateCurrentExperienceMasterFromGitHubResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~UpdateCurrentExperienceMasterFromGitHubTask() GS2_OVERRIDE = default;
+    };
+
     class DescribeStatusesTask : public detail::Gs2WebSocketSessionTask<DescribeStatusesResult>
     {
     private:
@@ -3380,6 +3461,11 @@ private:
     static void write(detail::json::JsonWriter& writer, const Threshold& obj)
     {
         writer.writeObjectStart();
+        if (obj.getThresholdId())
+        {
+            writer.writePropertyName("thresholdId");
+            writer.writeCharArray(*obj.getThresholdId());
+        }
         if (obj.getMetadata())
         {
             writer.writePropertyName("metadata");
@@ -3493,6 +3579,47 @@ private:
         {
             writer.writePropertyName("result");
             writer.writeCharArray(*obj.getResult());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            writer.writePropertyName("gitHubApiKeyId");
+            writer.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            writer.writePropertyName("repositoryName");
+            writer.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            writer.writePropertyName("sourcePath");
+            writer.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            writer.writePropertyName("referenceType");
+            writer.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            writer.writePropertyName("commitHash");
+            writer.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            writer.writePropertyName("branchName");
+            writer.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            writer.writePropertyName("tagName");
+            writer.writeCharArray(*obj.getTagName());
         }
         writer.writeObjectEnd();
     }
@@ -3759,6 +3886,18 @@ public:
     void updateCurrentExperienceMaster(std::function<void(AsyncUpdateCurrentExperienceMasterResult&)> callback, UpdateCurrentExperienceMasterRequest& request)
     {
         UpdateCurrentExperienceMasterTask& task = *new UpdateCurrentExperienceMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * 現在有効な現在有効な経験値設定を更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentExperienceMasterFromGitHub(std::function<void(AsyncUpdateCurrentExperienceMasterFromGitHubResult&)> callback, UpdateCurrentExperienceMasterFromGitHubRequest& request)
+    {
+        UpdateCurrentExperienceMasterFromGitHubTask& task = *new UpdateCurrentExperienceMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 

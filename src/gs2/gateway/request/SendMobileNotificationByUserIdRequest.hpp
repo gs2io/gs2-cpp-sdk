@@ -28,7 +28,7 @@ namespace gs2 { namespace gateway
 {
 
 /**
- * Firebaseデバイストークンを新規作成 のリクエストモデル
+ * モバイルプッシュ通知を送信 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,14 +41,14 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** ゲーム名 */
+        /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** ユーザーID */
         optional<StringHolder> userId;
-        /** 通知メッセージ */
+        /** タイトル */
         optional<StringHolder> subject;
-        /** メタデータ */
-        optional<StringHolder> metadata;
+        /** ペイロード */
+        optional<StringHolder> payload;
         /** 再生する音声ファイル名 */
         optional<StringHolder> sound;
         /** 重複実行回避機能に使用するID */
@@ -62,7 +62,7 @@ private:
             namespaceName(data.namespaceName),
             userId(data.userId),
             subject(data.subject),
-            metadata(data.metadata),
+            payload(data.payload),
             sound(data.sound),
             duplicationAvoider(data.duplicationAvoider)
         {}
@@ -72,7 +72,7 @@ private:
             namespaceName(std::move(data.namespaceName)),
             userId(std::move(data.userId)),
             subject(std::move(data.subject)),
-            metadata(std::move(data.metadata)),
+            payload(std::move(data.payload)),
             sound(std::move(data.sound)),
             duplicationAvoider(std::move(data.duplicationAvoider))
         {}
@@ -166,9 +166,9 @@ public:
         return this;
     }
     /**
-     * ゲーム名を取得
+     * ネームスペース名を取得
      *
-     * @return ゲーム名
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getNamespaceName() const
     {
@@ -176,9 +176,9 @@ public:
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName ゲーム名
+     * @param namespaceName ネームスペース名
      */
     void setNamespaceName(const Char* namespaceName)
     {
@@ -186,9 +186,9 @@ public:
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName ゲーム名
+     * @param namespaceName ネームスペース名
      */
     SendMobileNotificationByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {
@@ -228,9 +228,9 @@ public:
     }
 
     /**
-     * 通知メッセージを取得
+     * タイトルを取得
      *
-     * @return 通知メッセージ
+     * @return タイトル
      */
     const optional<StringHolder>& getSubject() const
     {
@@ -238,9 +238,9 @@ public:
     }
 
     /**
-     * 通知メッセージを設定
+     * タイトルを設定
      *
-     * @param subject 通知メッセージ
+     * @param subject タイトル
      */
     void setSubject(const Char* subject)
     {
@@ -248,9 +248,9 @@ public:
     }
 
     /**
-     * 通知メッセージを設定
+     * タイトルを設定
      *
-     * @param subject 通知メッセージ
+     * @param subject タイトル
      */
     SendMobileNotificationByUserIdRequest& withSubject(const Char* subject)
     {
@@ -259,33 +259,33 @@ public:
     }
 
     /**
-     * メタデータを取得
+     * ペイロードを取得
      *
-     * @return メタデータ
+     * @return ペイロード
      */
-    const optional<StringHolder>& getMetadata() const
+    const optional<StringHolder>& getPayload() const
     {
-        return ensureData().metadata;
+        return ensureData().payload;
     }
 
     /**
-     * メタデータを設定
+     * ペイロードを設定
      *
-     * @param metadata メタデータ
+     * @param payload ペイロード
      */
-    void setMetadata(const Char* metadata)
+    void setPayload(const Char* payload)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().payload.emplace(payload);
     }
 
     /**
-     * メタデータを設定
+     * ペイロードを設定
      *
-     * @param metadata メタデータ
+     * @param payload ペイロード
      */
-    SendMobileNotificationByUserIdRequest& withMetadata(const Char* metadata)
+    SendMobileNotificationByUserIdRequest& withPayload(const Char* payload)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().payload.emplace(payload);
         return *this;
     }
 

@@ -54,6 +54,7 @@
 #include "request/ExportMasterRequest.hpp"
 #include "request/GetCurrentLotteryMasterRequest.hpp"
 #include "request/UpdateCurrentLotteryMasterRequest.hpp"
+#include "request/UpdateCurrentLotteryMasterFromGitHubRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -83,6 +84,7 @@
 #include "result/ExportMasterResult.hpp"
 #include "result/GetCurrentLotteryMasterResult.hpp"
 #include "result/UpdateCurrentLotteryMasterResult.hpp"
+#include "result/UpdateCurrentLotteryMasterFromGitHubResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace lottery {
@@ -116,6 +118,7 @@ typedef AsyncResult<GetPrizeTableResult> AsyncGetPrizeTableResult;
 typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
 typedef AsyncResult<GetCurrentLotteryMasterResult> AsyncGetCurrentLotteryMasterResult;
 typedef AsyncResult<UpdateCurrentLotteryMasterResult> AsyncUpdateCurrentLotteryMasterResult;
+typedef AsyncResult<UpdateCurrentLotteryMasterFromGitHubResult> AsyncUpdateCurrentLotteryMasterFromGitHubResult;
 
 /**
  * GS2 Lottery API クライアント
@@ -2571,6 +2574,84 @@ private:
         ~UpdateCurrentLotteryMasterTask() GS2_OVERRIDE = default;
     };
 
+    class UpdateCurrentLotteryMasterFromGitHubTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentLotteryMasterFromGitHubResult>
+    {
+    private:
+        UpdateCurrentLotteryMasterFromGitHubRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            auto& writer = detail::json::JsonWriter::getInstance();
+            writer.reset();
+            writer.writeObjectStart();
+
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCheckoutSetting())
+            {
+                writer.writePropertyName("checkoutSetting");
+                write(writer, *m_Request.getCheckoutSetting());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("lottery");
+            writer.writePropertyName("component");
+            writer.writeCharArray("currentLotteryMaster");
+            writer.writePropertyName("function");
+            writer.writeCharArray("updateCurrentLotteryMasterFromGitHub");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        UpdateCurrentLotteryMasterFromGitHubTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            UpdateCurrentLotteryMasterFromGitHubRequest& request,
+            Gs2WebSocketSessionTask<UpdateCurrentLotteryMasterFromGitHubResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateCurrentLotteryMasterFromGitHubResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~UpdateCurrentLotteryMasterFromGitHubTask() GS2_OVERRIDE = default;
+    };
+
 private:
     static void write(detail::json::JsonWriter& writer, const Namespace& obj)
     {
@@ -2915,6 +2996,47 @@ private:
         {
             writer.writePropertyName("result");
             writer.writeCharArray(*obj.getResult());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            writer.writePropertyName("gitHubApiKeyId");
+            writer.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            writer.writePropertyName("repositoryName");
+            writer.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            writer.writePropertyName("sourcePath");
+            writer.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            writer.writePropertyName("referenceType");
+            writer.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            writer.writePropertyName("commitHash");
+            writer.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            writer.writePropertyName("branchName");
+            writer.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            writer.writePropertyName("tagName");
+            writer.writeCharArray(*obj.getTagName());
         }
         writer.writeObjectEnd();
     }
@@ -3417,6 +3539,18 @@ public:
     void updateCurrentLotteryMaster(std::function<void(AsyncUpdateCurrentLotteryMasterResult&)> callback, UpdateCurrentLotteryMasterRequest& request)
     {
         UpdateCurrentLotteryMasterTask& task = *new UpdateCurrentLotteryMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * 現在有効な現在有効な抽選設定を更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentLotteryMasterFromGitHub(std::function<void(AsyncUpdateCurrentLotteryMasterFromGitHubResult&)> callback, UpdateCurrentLotteryMasterFromGitHubRequest& request)
+    {
+        UpdateCurrentLotteryMasterFromGitHubTask& task = *new UpdateCurrentLotteryMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 

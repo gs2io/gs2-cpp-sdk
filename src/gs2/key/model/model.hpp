@@ -20,5 +20,6 @@
 #include <gs2/core/common.hpp>
 #include "Namespace.hpp"
 #include "Key.hpp"
+#include "GitHubApiKey.hpp"
 
 #endif //GS2_KEY_MODEL_MODEL_HPP_

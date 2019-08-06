@@ -29,7 +29,7 @@ namespace gs2 { namespace gateway
 {
 
 /**
- * ゲームを削除 のレスポンスモデル
+ * ネームスペースを削除 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */

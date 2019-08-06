@@ -23,6 +23,7 @@
 #include "DistributorModel.hpp"
 #include "CurrentDistributorMaster.hpp"
 #include "ResponseCache.hpp"
+#include "GitHubCheckoutSetting.hpp"
 #include "DistributeResource.hpp"
 
 #endif //GS2_DISTRIBUTOR_MODEL_MODEL_HPP_

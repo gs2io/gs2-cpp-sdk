@@ -28,7 +28,7 @@ namespace gs2 { namespace gateway
 {
 
 /**
- * Firebaseデバイストークンを新規作成 のリクエストモデル
+ * ユーザIDを指定してデバイストークンを設定 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,7 +41,7 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** ゲーム名 */
+        /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** ユーザーID */
         optional<StringHolder> userId;
@@ -158,9 +158,9 @@ public:
         return this;
     }
     /**
-     * ゲーム名を取得
+     * ネームスペース名を取得
      *
-     * @return ゲーム名
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getNamespaceName() const
     {
@@ -168,9 +168,9 @@ public:
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName ゲーム名
+     * @param namespaceName ネームスペース名
      */
     void setNamespaceName(const Char* namespaceName)
     {
@@ -178,9 +178,9 @@ public:
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName ゲーム名
+     * @param namespaceName ネームスペース名
      */
     SetFirebaseTokenByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {

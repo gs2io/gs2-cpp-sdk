@@ -41,18 +41,22 @@ private:
     public:
         /** メッセージ */
         optional<Message> item;
+        /** スタンプシート */
+        optional<StringHolder> stampSheet;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            item(data.item)
+            item(data.item),
+            stampSheet(data.stampSheet)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
+            item(std::move(data.item)),
+            stampSheet(std::move(data.stampSheet))
         {}
 
         virtual ~Data() = default;
@@ -69,6 +73,12 @@ private:
                     const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->item.emplace();
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
+                }
+            }
+            else if (std::strcmp(name, "stampSheet") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->stampSheet.emplace(jsonValue.GetString());
                 }
             }
         }
@@ -169,6 +179,26 @@ public:
     void setItem(const Message& item)
     {
         ensureData().item.emplace(item);
+    }
+
+    /**
+     * スタンプシートを取得
+     *
+     * @return スタンプシート
+     */
+    const optional<StringHolder>& getStampSheet() const
+    {
+        return ensureData().stampSheet;
+    }
+
+    /**
+     * スタンプシートを設定
+     *
+     * @param stampSheet スタンプシート
+     */
+    void setStampSheet(const Char* stampSheet)
+    {
+        ensureData().stampSheet.emplace(stampSheet);
     }
 
 

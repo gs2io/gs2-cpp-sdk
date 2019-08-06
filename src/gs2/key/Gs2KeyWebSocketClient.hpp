@@ -38,6 +38,11 @@
 #include "request/DeleteKeyRequest.hpp"
 #include "request/EncryptRequest.hpp"
 #include "request/DecryptRequest.hpp"
+#include "request/DescribeGitHubApiKeysRequest.hpp"
+#include "request/CreateGitHubApiKeyRequest.hpp"
+#include "request/UpdateGitHubApiKeyRequest.hpp"
+#include "request/GetGitHubApiKeyRequest.hpp"
+#include "request/DeleteGitHubApiKeyRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -51,6 +56,11 @@
 #include "result/DeleteKeyResult.hpp"
 #include "result/EncryptResult.hpp"
 #include "result/DecryptResult.hpp"
+#include "result/DescribeGitHubApiKeysResult.hpp"
+#include "result/CreateGitHubApiKeyResult.hpp"
+#include "result/UpdateGitHubApiKeyResult.hpp"
+#include "result/GetGitHubApiKeyResult.hpp"
+#include "result/DeleteGitHubApiKeyResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace key {
@@ -68,6 +78,11 @@ typedef AsyncResult<GetKeyResult> AsyncGetKeyResult;
 typedef AsyncResult<void> AsyncDeleteKeyResult;
 typedef AsyncResult<EncryptResult> AsyncEncryptResult;
 typedef AsyncResult<DecryptResult> AsyncDecryptResult;
+typedef AsyncResult<DescribeGitHubApiKeysResult> AsyncDescribeGitHubApiKeysResult;
+typedef AsyncResult<CreateGitHubApiKeyResult> AsyncCreateGitHubApiKeyResult;
+typedef AsyncResult<UpdateGitHubApiKeyResult> AsyncUpdateGitHubApiKeyResult;
+typedef AsyncResult<GetGitHubApiKeyResult> AsyncGetGitHubApiKeyResult;
+typedef AsyncResult<void> AsyncDeleteGitHubApiKeyResult;
 
 /**
  * GS2 Key API クライアント
@@ -1103,6 +1118,431 @@ private:
         ~DecryptTask() GS2_OVERRIDE = default;
     };
 
+    class DescribeGitHubApiKeysTask : public detail::Gs2WebSocketSessionTask<DescribeGitHubApiKeysResult>
+    {
+    private:
+        DescribeGitHubApiKeysRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            auto& writer = detail::json::JsonWriter::getInstance();
+            writer.reset();
+            writer.writeObjectStart();
+
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getPageToken())
+            {
+                writer.writePropertyName("pageToken");
+                writer.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                writer.writePropertyName("limit");
+                writer.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("key");
+            writer.writePropertyName("component");
+            writer.writeCharArray("gitHubApiKey");
+            writer.writePropertyName("function");
+            writer.writeCharArray("describeGitHubApiKeys");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        DescribeGitHubApiKeysTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            DescribeGitHubApiKeysRequest& request,
+            Gs2WebSocketSessionTask<DescribeGitHubApiKeysResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeGitHubApiKeysResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~DescribeGitHubApiKeysTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateGitHubApiKeyTask : public detail::Gs2WebSocketSessionTask<CreateGitHubApiKeyResult>
+    {
+    private:
+        CreateGitHubApiKeyRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            auto& writer = detail::json::JsonWriter::getInstance();
+            writer.reset();
+            writer.writeObjectStart();
+
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getName())
+            {
+                writer.writePropertyName("name");
+                writer.writeCharArray(*m_Request.getName());
+            }
+            if (m_Request.getDescription())
+            {
+                writer.writePropertyName("description");
+                writer.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getApiKey())
+            {
+                writer.writePropertyName("apiKey");
+                writer.writeCharArray(*m_Request.getApiKey());
+            }
+            if (m_Request.getEncryptionKeyName())
+            {
+                writer.writePropertyName("encryptionKeyName");
+                writer.writeCharArray(*m_Request.getEncryptionKeyName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("key");
+            writer.writePropertyName("component");
+            writer.writeCharArray("gitHubApiKey");
+            writer.writePropertyName("function");
+            writer.writeCharArray("createGitHubApiKey");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        CreateGitHubApiKeyTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            CreateGitHubApiKeyRequest& request,
+            Gs2WebSocketSessionTask<CreateGitHubApiKeyResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<CreateGitHubApiKeyResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~CreateGitHubApiKeyTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateGitHubApiKeyTask : public detail::Gs2WebSocketSessionTask<UpdateGitHubApiKeyResult>
+    {
+    private:
+        UpdateGitHubApiKeyRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            auto& writer = detail::json::JsonWriter::getInstance();
+            writer.reset();
+            writer.writeObjectStart();
+
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getApiKeyName())
+            {
+                writer.writePropertyName("apiKeyName");
+                writer.writeCharArray(*m_Request.getApiKeyName());
+            }
+            if (m_Request.getDescription())
+            {
+                writer.writePropertyName("description");
+                writer.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getApiKey())
+            {
+                writer.writePropertyName("apiKey");
+                writer.writeCharArray(*m_Request.getApiKey());
+            }
+            if (m_Request.getEncryptionKeyName())
+            {
+                writer.writePropertyName("encryptionKeyName");
+                writer.writeCharArray(*m_Request.getEncryptionKeyName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("key");
+            writer.writePropertyName("component");
+            writer.writeCharArray("gitHubApiKey");
+            writer.writePropertyName("function");
+            writer.writeCharArray("updateGitHubApiKey");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        UpdateGitHubApiKeyTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            UpdateGitHubApiKeyRequest& request,
+            Gs2WebSocketSessionTask<UpdateGitHubApiKeyResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateGitHubApiKeyResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~UpdateGitHubApiKeyTask() GS2_OVERRIDE = default;
+    };
+
+    class GetGitHubApiKeyTask : public detail::Gs2WebSocketSessionTask<GetGitHubApiKeyResult>
+    {
+    private:
+        GetGitHubApiKeyRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            auto& writer = detail::json::JsonWriter::getInstance();
+            writer.reset();
+            writer.writeObjectStart();
+
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getApiKeyName())
+            {
+                writer.writePropertyName("apiKeyName");
+                writer.writeCharArray(*m_Request.getApiKeyName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("key");
+            writer.writePropertyName("component");
+            writer.writeCharArray("gitHubApiKey");
+            writer.writePropertyName("function");
+            writer.writeCharArray("getGitHubApiKey");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        GetGitHubApiKeyTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            GetGitHubApiKeyRequest& request,
+            Gs2WebSocketSessionTask<GetGitHubApiKeyResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetGitHubApiKeyResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~GetGitHubApiKeyTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteGitHubApiKeyTask : public detail::Gs2WebSocketSessionTask<void>
+    {
+    private:
+        DeleteGitHubApiKeyRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            auto& writer = detail::json::JsonWriter::getInstance();
+            writer.reset();
+            writer.writeObjectStart();
+
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getApiKeyName())
+            {
+                writer.writePropertyName("apiKeyName");
+                writer.writeCharArray(*m_Request.getApiKeyName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("key");
+            writer.writePropertyName("component");
+            writer.writeCharArray("gitHubApiKey");
+            writer.writePropertyName("function");
+            writer.writeCharArray("deleteGitHubApiKey");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        DeleteGitHubApiKeyTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            DeleteGitHubApiKeyRequest& request,
+            Gs2WebSocketSessionTask<void>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<void>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~DeleteGitHubApiKeyTask() GS2_OVERRIDE = default;
+    };
+
 private:
     static void write(detail::json::JsonWriter& writer, const Namespace& obj)
     {
@@ -1162,6 +1602,47 @@ private:
         {
             writer.writePropertyName("secret");
             writer.writeCharArray(*obj.getSecret());
+        }
+        if (obj.getCreatedAt())
+        {
+            writer.writePropertyName("createdAt");
+            writer.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            writer.writePropertyName("updatedAt");
+            writer.writeInt64(*obj.getUpdatedAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const GitHubApiKey& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getApiKeyId())
+        {
+            writer.writePropertyName("apiKeyId");
+            writer.writeCharArray(*obj.getApiKeyId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.writeCharArray(*obj.getName());
+        }
+        if (obj.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*obj.getDescription());
+        }
+        if (obj.getApiKey())
+        {
+            writer.writePropertyName("apiKey");
+            writer.writeCharArray(*obj.getApiKey());
+        }
+        if (obj.getEncryptionKeyName())
+        {
+            writer.writePropertyName("encryptionKeyName");
+            writer.writeCharArray(*obj.getEncryptionKeyName());
         }
         if (obj.getCreatedAt())
         {
@@ -1342,6 +1823,66 @@ public:
     void decrypt(std::function<void(AsyncDecryptResult&)> callback, DecryptRequest& request)
     {
         DecryptTask& task = *new DecryptTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * GitHub のAPIキーの一覧を取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeGitHubApiKeys(std::function<void(AsyncDescribeGitHubApiKeysResult&)> callback, DescribeGitHubApiKeysRequest& request)
+    {
+        DescribeGitHubApiKeysTask& task = *new DescribeGitHubApiKeysTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * GitHub のAPIキーを新規作成します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createGitHubApiKey(std::function<void(AsyncCreateGitHubApiKeyResult&)> callback, CreateGitHubApiKeyRequest& request)
+    {
+        CreateGitHubApiKeyTask& task = *new CreateGitHubApiKeyTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * GitHub のAPIキーを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateGitHubApiKey(std::function<void(AsyncUpdateGitHubApiKeyResult&)> callback, UpdateGitHubApiKeyRequest& request)
+    {
+        UpdateGitHubApiKeyTask& task = *new UpdateGitHubApiKeyTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * GitHub のAPIキーを取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getGitHubApiKey(std::function<void(AsyncGetGitHubApiKeyResult&)> callback, GetGitHubApiKeyRequest& request)
+    {
+        GetGitHubApiKeyTask& task = *new GetGitHubApiKeyTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * GitHub のAPIキーを削除します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteGitHubApiKey(std::function<void(AsyncDeleteGitHubApiKeyResult&)> callback, DeleteGitHubApiKeyRequest& request)
+    {
+        DeleteGitHubApiKeyTask& task = *new DeleteGitHubApiKeyTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 

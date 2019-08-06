@@ -29,7 +29,7 @@ namespace gs2 { namespace gateway
 {
 
 /**
- * Websocketセッションを新規作成 のレスポンスモデル
+ * 通知を送信 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,20 +39,20 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 作成したWebsocketセッションのリスト */
-        optional<List<WebsocketSession>> items;
+        /** 通知に使用したプロトコル */
+        optional<StringHolder> protocol;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            items(data.items)
+            protocol(data.protocol)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            items(std::move(data.items))
+            protocol(std::move(data.protocol))
         {}
 
         virtual ~Data() = default;
@@ -63,16 +63,10 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "items") == 0) {
-                if (jsonValue.IsArray())
+            if (std::strcmp(name, "protocol") == 0) {
+                if (jsonValue.IsString())
                 {
-                    const auto& array = jsonValue.GetArray();
-                    this->items.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        WebsocketSession item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        detail::addToList(*this->items, std::move(item));
-                    }
+                    this->protocol.emplace(jsonValue.GetString());
                 }
             }
         }
@@ -156,23 +150,23 @@ public:
         return this;
     }
     /**
-     * 作成したWebsocketセッションのリストを取得
+     * 通知に使用したプロトコルを取得
      *
-     * @return 作成したWebsocketセッションのリスト
+     * @return 通知に使用したプロトコル
      */
-    const optional<List<WebsocketSession>>& getItems() const
+    const optional<StringHolder>& getProtocol() const
     {
-        return ensureData().items;
+        return ensureData().protocol;
     }
 
     /**
-     * 作成したWebsocketセッションのリストを設定
+     * 通知に使用したプロトコルを設定
      *
-     * @param items 作成したWebsocketセッションのリスト
+     * @param protocol 通知に使用したプロトコル
      */
-    void setItems(const List<WebsocketSession>& items)
+    void setProtocol(const Char* protocol)
     {
-        ensureData().items.emplace(items);
+        ensureData().protocol.emplace(protocol);
     }
 
 

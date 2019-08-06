@@ -28,6 +28,7 @@
 #include "request/CreateAccountRequest.hpp"
 #include "request/VerifyRequest.hpp"
 #include "request/SignInRequest.hpp"
+#include "request/IssueAccountTokenRequest.hpp"
 #include "request/ForgetRequest.hpp"
 #include "request/IssuePasswordRequest.hpp"
 #include "request/UpdateAccountRequest.hpp"
@@ -41,6 +42,7 @@
 #include "result/CreateAccountResult.hpp"
 #include "result/VerifyResult.hpp"
 #include "result/SignInResult.hpp"
+#include "result/IssueAccountTokenResult.hpp"
 #include "result/ForgetResult.hpp"
 #include "result/IssuePasswordResult.hpp"
 #include "result/UpdateAccountResult.hpp"
@@ -58,6 +60,7 @@ namespace gs2 { namespace project {
 typedef AsyncResult<CreateAccountResult> AsyncCreateAccountResult;
 typedef AsyncResult<VerifyResult> AsyncVerifyResult;
 typedef AsyncResult<SignInResult> AsyncSignInResult;
+typedef AsyncResult<IssueAccountTokenResult> AsyncIssueAccountTokenResult;
 typedef AsyncResult<ForgetResult> AsyncForgetResult;
 typedef AsyncResult<IssuePasswordResult> AsyncIssuePasswordResult;
 typedef AsyncResult<UpdateAccountResult> AsyncUpdateAccountResult;
@@ -310,6 +313,48 @@ public:
         {
             writer.writePropertyName("password");
             writer.writeCharArray(*request.getPassword());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * 指定したアカウント名のアカウントトークンを発行<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void issueAccountToken(std::function<void(AsyncIssueAccountTokenResult&)> callback, IssueAccountTokenRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<IssueAccountTokenResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "project");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/account/accountToken";
+        httpRequest.SetURL(url.c_str());
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getAccountName())
+        {
+            writer.writePropertyName("accountName");
+            writer.writeCharArray(*request.getAccountName());
         }
         writer.writeObjectEnd();
         {

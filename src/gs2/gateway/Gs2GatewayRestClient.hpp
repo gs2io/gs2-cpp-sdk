@@ -31,17 +31,13 @@
 #include "request/GetNamespaceRequest.hpp"
 #include "request/UpdateNamespaceRequest.hpp"
 #include "request/DeleteNamespaceRequest.hpp"
-#include "request/DescribeWebsocketSessionsRequest.hpp"
-#include "request/DescribeWebsocketSessionsByOwnerIdRequest.hpp"
-#include "request/DescribeWebsocketSessionsByUserIdRequest.hpp"
-#include "request/DescribeWebsocketSessionsByOwnerIdAndUserIdRequest.hpp"
+#include "request/DescribeWebSocketSessionsRequest.hpp"
+#include "request/DescribeWebSocketSessionsByUserIdRequest.hpp"
 #include "request/SetUserIdRequest.hpp"
-#include "request/GetSessionRequest.hpp"
-#include "request/DeleteUserIdRequest.hpp"
+#include "request/SetUserIdByUserIdRequest.hpp"
+#include "request/GetWebSocketSessionRequest.hpp"
+#include "request/GetWebSocketSessionByConnectionIdRequest.hpp"
 #include "request/SendNotificationRequest.hpp"
-#include "request/SendNotificationBySystemRequest.hpp"
-#include "request/DescribeFirebaseTokensRequest.hpp"
-#include "request/DescribeFirebaseTokensByOwnerIdRequest.hpp"
 #include "request/SetFirebaseTokenRequest.hpp"
 #include "request/SetFirebaseTokenByUserIdRequest.hpp"
 #include "request/GetFirebaseTokenRequest.hpp"
@@ -55,17 +51,13 @@
 #include "result/GetNamespaceResult.hpp"
 #include "result/UpdateNamespaceResult.hpp"
 #include "result/DeleteNamespaceResult.hpp"
-#include "result/DescribeWebsocketSessionsResult.hpp"
-#include "result/DescribeWebsocketSessionsByOwnerIdResult.hpp"
-#include "result/DescribeWebsocketSessionsByUserIdResult.hpp"
-#include "result/DescribeWebsocketSessionsByOwnerIdAndUserIdResult.hpp"
+#include "result/DescribeWebSocketSessionsResult.hpp"
+#include "result/DescribeWebSocketSessionsByUserIdResult.hpp"
 #include "result/SetUserIdResult.hpp"
-#include "result/GetSessionResult.hpp"
-#include "result/DeleteUserIdResult.hpp"
+#include "result/SetUserIdByUserIdResult.hpp"
+#include "result/GetWebSocketSessionResult.hpp"
+#include "result/GetWebSocketSessionByConnectionIdResult.hpp"
 #include "result/SendNotificationResult.hpp"
-#include "result/SendNotificationBySystemResult.hpp"
-#include "result/DescribeFirebaseTokensResult.hpp"
-#include "result/DescribeFirebaseTokensByOwnerIdResult.hpp"
 #include "result/SetFirebaseTokenResult.hpp"
 #include "result/SetFirebaseTokenByUserIdResult.hpp"
 #include "result/GetFirebaseTokenResult.hpp"
@@ -83,24 +75,20 @@ typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
 typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
 typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
 typedef AsyncResult<void> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeWebsocketSessionsResult> AsyncDescribeWebsocketSessionsResult;
-typedef AsyncResult<DescribeWebsocketSessionsByOwnerIdResult> AsyncDescribeWebsocketSessionsByOwnerIdResult;
-typedef AsyncResult<DescribeWebsocketSessionsByUserIdResult> AsyncDescribeWebsocketSessionsByUserIdResult;
-typedef AsyncResult<DescribeWebsocketSessionsByOwnerIdAndUserIdResult> AsyncDescribeWebsocketSessionsByOwnerIdAndUserIdResult;
+typedef AsyncResult<DescribeWebSocketSessionsResult> AsyncDescribeWebSocketSessionsResult;
+typedef AsyncResult<DescribeWebSocketSessionsByUserIdResult> AsyncDescribeWebSocketSessionsByUserIdResult;
 typedef AsyncResult<SetUserIdResult> AsyncSetUserIdResult;
-typedef AsyncResult<GetSessionResult> AsyncGetSessionResult;
-typedef AsyncResult<DeleteUserIdResult> AsyncDeleteUserIdResult;
+typedef AsyncResult<SetUserIdByUserIdResult> AsyncSetUserIdByUserIdResult;
+typedef AsyncResult<GetWebSocketSessionResult> AsyncGetWebSocketSessionResult;
+typedef AsyncResult<GetWebSocketSessionByConnectionIdResult> AsyncGetWebSocketSessionByConnectionIdResult;
 typedef AsyncResult<SendNotificationResult> AsyncSendNotificationResult;
-typedef AsyncResult<SendNotificationBySystemResult> AsyncSendNotificationBySystemResult;
-typedef AsyncResult<DescribeFirebaseTokensResult> AsyncDescribeFirebaseTokensResult;
-typedef AsyncResult<DescribeFirebaseTokensByOwnerIdResult> AsyncDescribeFirebaseTokensByOwnerIdResult;
 typedef AsyncResult<SetFirebaseTokenResult> AsyncSetFirebaseTokenResult;
 typedef AsyncResult<SetFirebaseTokenByUserIdResult> AsyncSetFirebaseTokenByUserIdResult;
 typedef AsyncResult<GetFirebaseTokenResult> AsyncGetFirebaseTokenResult;
 typedef AsyncResult<GetFirebaseTokenByUserIdResult> AsyncGetFirebaseTokenByUserIdResult;
 typedef AsyncResult<DeleteFirebaseTokenResult> AsyncDeleteFirebaseTokenResult;
 typedef AsyncResult<DeleteFirebaseTokenByUserIdResult> AsyncDeleteFirebaseTokenByUserIdResult;
-typedef AsyncResult<SendMobileNotificationByUserIdResult> AsyncSendMobileNotificationByUserIdResult;
+typedef AsyncResult<void> AsyncSendMobileNotificationByUserIdResult;
 
 /**
  * GS2 Gateway API クライアント
@@ -152,23 +140,23 @@ private:
         writer.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const WebsocketSession& obj)
+    static void write(detail::json::JsonWriter& writer, const WebSocketSession& obj)
     {
         writer.writeObjectStart();
-        if (obj.getWebsocketSessionId())
+        if (obj.getConnectionId())
         {
-            writer.writePropertyName("websocketSessionId");
-            writer.writeCharArray(*obj.getWebsocketSessionId());
+            writer.writePropertyName("connectionId");
+            writer.writeCharArray(*obj.getConnectionId());
         }
         if (obj.getOwnerId())
         {
             writer.writePropertyName("ownerId");
             writer.writeCharArray(*obj.getOwnerId());
         }
-        if (obj.getConnectionId())
+        if (obj.getNamespaceName())
         {
-            writer.writePropertyName("connectionId");
-            writer.writeCharArray(*obj.getConnectionId());
+            writer.writePropertyName("namespaceName");
+            writer.writeCharArray(*obj.getNamespaceName());
         }
         if (obj.getUserId())
         {
@@ -269,7 +257,7 @@ public:
     }
 
 	/**
-	 * ゲームの一覧を取得<br>
+	 * ネームスペースの一覧を取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -315,7 +303,7 @@ public:
     }
 
 	/**
-	 * ゲームを新規作成<br>
+	 * ネームスペースを新規作成<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -367,7 +355,7 @@ public:
     }
 
 	/**
-	 * ゲームを取得<br>
+	 * ネームスペースを取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -400,7 +388,7 @@ public:
     }
 
 	/**
-	 * ゲームを取得<br>
+	 * ネームスペースを取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -433,7 +421,7 @@ public:
     }
 
 	/**
-	 * ゲームを更新<br>
+	 * ネームスペースを更新<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -484,7 +472,7 @@ public:
     }
 
 	/**
-	 * ゲームを削除<br>
+	 * ネームスペースを削除<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -522,106 +510,20 @@ public:
     }
 
 	/**
-	 * Websocketセッションを新規作成<br>
+	 * Websocketセッションの一覧を取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWebsocketSessions(std::function<void(AsyncDescribeWebsocketSessionsResult&)> callback, DescribeWebsocketSessionsRequest& request)
+    void describeWebSocketSessions(std::function<void(AsyncDescribeWebSocketSessionsResult&)> callback, DescribeWebSocketSessionsRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeWebsocketSessionsResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeWebSocketSessionsResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
         httpRequest.SetVerb("POST");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "gateway");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/session";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * Websocketセッションを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeWebsocketSessionsByOwnerId(std::function<void(AsyncDescribeWebsocketSessionsByOwnerIdResult&)> callback, DescribeWebsocketSessionsByOwnerIdRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeWebsocketSessionsByOwnerIdResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "gateway");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/system/{ownerId}/{namespaceName}/session";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getOwnerId();
-            url.replace("{ownerId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * Websocketセッションを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeWebsocketSessionsByUserId(std::function<void(AsyncDescribeWebsocketSessionsByUserIdResult&)> callback, DescribeWebsocketSessionsByUserIdRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeWebsocketSessionsByUserIdResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "gateway");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/session";
+        url += "/{namespaceName}/session/user/me";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -653,20 +555,20 @@ public:
     }
 
 	/**
-	 * Websocketセッションを新規作成<br>
+	 * ユーザIDを指定してWebsocketセッションの一覧を取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWebsocketSessionsByOwnerIdAndUserId(std::function<void(AsyncDescribeWebsocketSessionsByOwnerIdAndUserIdResult&)> callback, DescribeWebsocketSessionsByOwnerIdAndUserIdRequest& request)
+    void describeWebSocketSessionsByUserId(std::function<void(AsyncDescribeWebSocketSessionsByUserIdResult&)> callback, DescribeWebSocketSessionsByUserIdRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeWebsocketSessionsByOwnerIdAndUserIdResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeWebSocketSessionsByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
         httpRequest.SetVerb("POST");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "gateway");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/system/{ownerId}/{namespaceName}/session";
+        url += "/{namespaceName}/session/user/{userId}";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -702,7 +604,7 @@ public:
     }
 
 	/**
-	 * Websocketセッションを新規作成<br>
+	 * WebsocketセッションにユーザIDを設定<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -715,7 +617,7 @@ public:
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "gateway");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/session";
+        url += "/{namespaceName}/session/user/me/user";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -752,28 +654,37 @@ public:
     }
 
 	/**
-	 * Websocketセッションを新規作成<br>
+	 * WebsocketセッションにユーザIDを設定<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getSession(std::function<void(AsyncGetSessionResult&)> callback, GetSessionRequest& request)
+    void setUserIdByUserId(std::function<void(AsyncSetUserIdByUserIdResult&)> callback, SetUserIdByUserIdRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetSessionResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<SetUserIdByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
         httpRequest.SetVerb("POST");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "gateway");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/session";
+        url += "/{namespaceName}/session/user/{userId}/user";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getUserId();
+            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
+        if (request.getAllowConcurrentAccess())
+        {
+            writer.writePropertyName("allowConcurrentAccess");
+            writer.writeBool(*request.getAllowConcurrentAccess());
+        }
         writer.writeObjectEnd();
         {
             auto body = writer.toString();
@@ -797,16 +708,16 @@ public:
     }
 
 	/**
-	 * Websocketセッションを新規作成<br>
+	 * Websocketセッションを取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteUserId(std::function<void(AsyncDeleteUserIdResult&)> callback, DeleteUserIdRequest& request)
+    void getWebSocketSession(std::function<void(AsyncGetWebSocketSessionResult&)> callback, GetWebSocketSessionRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteUserIdResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetWebSocketSessionResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
+        httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "gateway");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
@@ -815,17 +726,9 @@ public:
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
+
+        Char joint[] = { '?', '\0' };
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -834,15 +737,48 @@ public:
         {
             httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
-        if (request.getDuplicationAvoider())
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ユーザIDを指定してWebsocketセッションを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getWebSocketSessionByConnectionId(std::function<void(AsyncGetWebSocketSessionByConnectionIdResult&)> callback, GetWebSocketSessionByConnectionIdRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetWebSocketSessionByConnectionIdResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "gateway");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/session/{connectionId}";
         {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getConnectionId();
+            url.replace("{connectionId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        httpRequest.SetURL(url.c_str());
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
         gs2RestSessionTask.execute();
     }
 
 	/**
-	 * Websocketセッションを新規作成<br>
+	 * 通知を送信<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -855,20 +791,19 @@ public:
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "gateway");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/session";
+        url += "/{namespaceName}/session/user/{userId}/notification";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getUserId();
+            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
         auto& writer = detail::json::JsonWriter::getInstance();
         writer.reset();
         writer.writeObjectStart();
-        if (request.getUserId())
-        {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*request.getUserId());
-        }
         if (request.getSubject())
         {
             writer.writePropertyName("subject");
@@ -912,168 +847,7 @@ public:
     }
 
 	/**
-	 * Websocketセッションを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void sendNotificationBySystem(std::function<void(AsyncSendNotificationBySystemResult&)> callback, SendNotificationBySystemRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<SendNotificationBySystemResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "gateway");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/session";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        if (request.getUserId())
-        {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*request.getUserId());
-        }
-        if (request.getIssuer())
-        {
-            writer.writePropertyName("issuer");
-            writer.writeCharArray(*request.getIssuer());
-        }
-        if (request.getSubject())
-        {
-            writer.writePropertyName("subject");
-            writer.writeCharArray(*request.getSubject());
-        }
-        if (request.getPayload())
-        {
-            writer.writePropertyName("payload");
-            writer.writeCharArray(*request.getPayload());
-        }
-        if (request.getEnableTransferMobileNotification())
-        {
-            writer.writePropertyName("enableTransferMobileNotification");
-            writer.writeBool(*request.getEnableTransferMobileNotification());
-        }
-        if (request.getSound())
-        {
-            writer.writePropertyName("sound");
-            writer.writeCharArray(*request.getSound());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * Firebaseデバイストークンを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeFirebaseTokens(std::function<void(AsyncDescribeFirebaseTokensResult&)> callback, DescribeFirebaseTokensRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeFirebaseTokensResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "gateway");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/firebase:token";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * Firebaseデバイストークンを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeFirebaseTokensByOwnerId(std::function<void(AsyncDescribeFirebaseTokensByOwnerIdResult&)> callback, DescribeFirebaseTokensByOwnerIdRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeFirebaseTokensByOwnerIdResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "gateway");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/system/{ownerId}/{namespaceName}/user/{userId}/firebase:token";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getOwnerId();
-            url.replace("{ownerId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * Firebaseデバイストークンを新規作成<br>
+	 * デバイストークンを設定<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -1082,11 +856,11 @@ public:
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<SetFirebaseTokenResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
+        httpRequest.SetVerb("PUT");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "gateway");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/me/firebase:token";
+        url += "/{namespaceName}/user/me/firebase/token";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -1123,7 +897,7 @@ public:
     }
 
 	/**
-	 * Firebaseデバイストークンを新規作成<br>
+	 * ユーザIDを指定してデバイストークンを設定<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -1132,11 +906,11 @@ public:
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<SetFirebaseTokenByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
+        httpRequest.SetVerb("PUT");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "gateway");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/firebase:token";
+        url += "/{namespaceName}/user/{userId}/firebase/token";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -1177,7 +951,7 @@ public:
     }
 
 	/**
-	 * Firebaseデバイストークンを新規作成<br>
+	 * Firebaseデバイストークンを取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -1186,26 +960,18 @@ public:
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetFirebaseTokenResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
+        httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "gateway");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/me/firebase:token";
+        url += "/{namespaceName}/user/me/firebase/token";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
+
+        Char joint[] = { '?', '\0' };
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1222,7 +988,7 @@ public:
     }
 
 	/**
-	 * Firebaseデバイストークンを新規作成<br>
+	 * ユーザIDを指定してFirebaseデバイストークンを取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -1231,11 +997,11 @@ public:
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetFirebaseTokenByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
+        httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "gateway");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/firebase:token";
+        url += "/{namespaceName}/user/{userId}/firebase/token";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -1244,17 +1010,9 @@ public:
             auto& value = request.getUserId();
             url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
+
+        Char joint[] = { '?', '\0' };
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1271,7 +1029,7 @@ public:
     }
 
 	/**
-	 * Firebaseデバイストークンを新規作成<br>
+	 * Firebaseデバイストークンを削除<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -1280,23 +1038,20 @@ public:
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteFirebaseTokenResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
+        httpRequest.SetVerb("DELETE");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "gateway");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/me/firebase:token";
+        url += "/{namespaceName}/user/me/firebase/token";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
+
+        Char joint[] = { '?', '\0' };
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        writer.writeObjectEnd();
         {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
@@ -1316,7 +1071,7 @@ public:
     }
 
 	/**
-	 * Firebaseデバイストークンを新規作成<br>
+	 * ユーザIDを指定してFirebaseデバイストークンを削除<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -1325,11 +1080,11 @@ public:
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteFirebaseTokenByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
+        httpRequest.SetVerb("DELETE");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "gateway");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/firebase:token";
+        url += "/{namespaceName}/user/{userId}/firebase/token";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -1338,14 +1093,11 @@ public:
             auto& value = request.getUserId();
             url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
+
+        Char joint[] = { '?', '\0' };
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
-        writer.writeObjectStart();
-        writer.writeObjectEnd();
         {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
@@ -1365,20 +1117,20 @@ public:
     }
 
 	/**
-	 * Firebaseデバイストークンを新規作成<br>
+	 * モバイルプッシュ通知を送信<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
     void sendMobileNotificationByUserId(std::function<void(AsyncSendMobileNotificationByUserIdResult&)> callback, SendMobileNotificationByUserIdRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<SendMobileNotificationByUserIdResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
         httpRequest.SetVerb("POST");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "gateway");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/firebase:token";
+        url += "/{namespaceName}/user/{userId}/firebase/token/notification";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -1396,10 +1148,10 @@ public:
             writer.writePropertyName("subject");
             writer.writeCharArray(*request.getSubject());
         }
-        if (request.getMetadata())
+        if (request.getPayload())
         {
-            writer.writePropertyName("metadata");
-            writer.writeCharArray(*request.getMetadata());
+            writer.writePropertyName("payload");
+            writer.writeCharArray(*request.getPayload());
         }
         if (request.getSound())
         {

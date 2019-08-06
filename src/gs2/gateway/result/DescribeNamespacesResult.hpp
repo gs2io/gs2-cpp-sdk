@@ -29,7 +29,7 @@ namespace gs2 { namespace gateway
 {
 
 /**
- * ゲームの一覧を取得 のレスポンスモデル
+ * ネームスペースの一覧を取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,7 +39,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ゲームのリスト */
+        /** ネームスペースのリスト */
         optional<List<Namespace>> items;
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
@@ -166,9 +166,9 @@ public:
         return this;
     }
     /**
-     * ゲームのリストを取得
+     * ネームスペースのリストを取得
      *
-     * @return ゲームのリスト
+     * @return ネームスペースのリスト
      */
     const optional<List<Namespace>>& getItems() const
     {
@@ -176,9 +176,9 @@ public:
     }
 
     /**
-     * ゲームのリストを設定
+     * ネームスペースのリストを設定
      *
-     * @param items ゲームのリスト
+     * @param items ネームスペースのリスト
      */
     void setItems(const List<Namespace>& items)
     {

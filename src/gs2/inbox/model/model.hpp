@@ -21,5 +21,8 @@
 #include "Namespace.hpp"
 #include "Message.hpp"
 #include "ResponseCache.hpp"
+#include "Config.hpp"
+#include "NotificationSetting.hpp"
+#include "AcquireAction.hpp"
 
 #endif //GS2_INBOX_MODEL_MODEL_HPP_

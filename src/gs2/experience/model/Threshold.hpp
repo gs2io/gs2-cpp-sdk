@@ -41,6 +41,8 @@ private:
     class Data : public detail::json::IModel
     {
     public:
+        /** しきい値ID */
+        optional<StringHolder> thresholdId;
         /** ランクアップ閾値のメタデータ */
         optional<StringHolder> metadata;
         /** ランクアップ経験値閾値リスト */
@@ -51,12 +53,14 @@ private:
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            thresholdId(data.thresholdId),
             metadata(data.metadata),
             values(data.values)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
+            thresholdId(std::move(data.thresholdId)),
             metadata(std::move(data.metadata)),
             values(std::move(data.values))
         {}
@@ -69,7 +73,13 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "metadata") == 0) {
+            if (std::strcmp(name, "thresholdId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->thresholdId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "metadata") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
@@ -169,6 +179,37 @@ public:
         return this;
     }
     /**
+     * しきい値IDを取得
+     *
+     * @return しきい値ID
+     */
+    const optional<StringHolder>& getThresholdId() const
+    {
+        return ensureData().thresholdId;
+    }
+
+    /**
+     * しきい値IDを設定
+     *
+     * @param thresholdId しきい値ID
+     */
+    void setThresholdId(const Char* thresholdId)
+    {
+        ensureData().thresholdId.emplace(thresholdId);
+    }
+
+    /**
+     * しきい値IDを設定
+     *
+     * @param thresholdId しきい値ID
+     */
+    Threshold& withThresholdId(const Char* thresholdId)
+    {
+        setThresholdId(thresholdId);
+        return *this;
+    }
+
+    /**
      * ランクアップ閾値のメタデータを取得
      *
      * @return ランクアップ閾値のメタデータ
@@ -242,6 +283,10 @@ inline bool operator!=(const Threshold& lhs, const Threshold& lhr)
     if (lhs.m_pData != lhr.m_pData)
     {
         if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->thresholdId != lhr.m_pData->thresholdId)
         {
             return true;
         }

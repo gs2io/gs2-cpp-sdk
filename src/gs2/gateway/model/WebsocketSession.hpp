@@ -33,20 +33,20 @@ namespace gs2 { namespace gateway {
  * @author Game Server Services, Inc.
  *
  */
-class WebsocketSession : public Gs2Object
+class WebSocketSession : public Gs2Object
 {
-    friend bool operator!=(const WebsocketSession& lhs, const WebsocketSession& lhr);
+    friend bool operator!=(const WebSocketSession& lhs, const WebSocketSession& lhr);
 
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** Websocketセッション のGRN */
-        optional<StringHolder> websocketSessionId;
-        /** オーナーID */
-        optional<StringHolder> ownerId;
         /** コネクションID */
         optional<StringHolder> connectionId;
+        /** オーナーID */
+        optional<StringHolder> ownerId;
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
         /** ユーザーID */
         optional<StringHolder> userId;
         /** 作成日時 */
@@ -59,9 +59,9 @@ private:
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            websocketSessionId(data.websocketSessionId),
-            ownerId(data.ownerId),
             connectionId(data.connectionId),
+            ownerId(data.ownerId),
+            namespaceName(data.namespaceName),
             userId(data.userId),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
@@ -69,9 +69,9 @@ private:
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            websocketSessionId(std::move(data.websocketSessionId)),
-            ownerId(std::move(data.ownerId)),
             connectionId(std::move(data.connectionId)),
+            ownerId(std::move(data.ownerId)),
+            namespaceName(std::move(data.namespaceName)),
             userId(std::move(data.userId)),
             createdAt(std::move(data.createdAt)),
             updatedAt(std::move(data.updatedAt))
@@ -85,10 +85,10 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "websocketSessionId") == 0) {
+            if (std::strcmp(name, "connectionId") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->websocketSessionId.emplace(jsonValue.GetString());
+                    this->connectionId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "ownerId") == 0) {
@@ -97,10 +97,10 @@ private:
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "connectionId") == 0) {
+            else if (std::strcmp(name, "namespaceName") == 0) {
                 if (jsonValue.IsString())
                 {
-                    this->connectionId.emplace(jsonValue.GetString());
+                    this->namespaceName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name, "userId") == 0) {
@@ -141,23 +141,23 @@ private:
     }
 
 public:
-    WebsocketSession() :
+    WebSocketSession() :
         m_pData(nullptr)
     {}
 
-    WebsocketSession(const WebsocketSession& websocketSession) :
-        Gs2Object(websocketSession),
-        m_pData(websocketSession.m_pData != nullptr ? new Data(*websocketSession.m_pData) : nullptr)
+    WebSocketSession(const WebSocketSession& webSocketSession) :
+        Gs2Object(webSocketSession),
+        m_pData(webSocketSession.m_pData != nullptr ? new Data(*webSocketSession.m_pData) : nullptr)
     {}
 
-    WebsocketSession(WebsocketSession&& websocketSession) :
-        Gs2Object(std::move(websocketSession)),
-        m_pData(websocketSession.m_pData)
+    WebSocketSession(WebSocketSession&& webSocketSession) :
+        Gs2Object(std::move(webSocketSession)),
+        m_pData(webSocketSession.m_pData)
     {
-        websocketSession.m_pData = nullptr;
+        webSocketSession.m_pData = nullptr;
     }
 
-    ~WebsocketSession()
+    ~WebSocketSession()
     {
         if (m_pData != nullptr)
         {
@@ -165,70 +165,70 @@ public:
         }
     }
 
-    WebsocketSession& operator=(const WebsocketSession& websocketSession)
+    WebSocketSession& operator=(const WebSocketSession& webSocketSession)
     {
-        Gs2Object::operator=(websocketSession);
+        Gs2Object::operator=(webSocketSession);
 
         if (m_pData != nullptr)
         {
             delete m_pData;
         }
-        m_pData = new Data(*websocketSession.m_pData);
+        m_pData = new Data(*webSocketSession.m_pData);
 
         return *this;
     }
 
-    WebsocketSession& operator=(WebsocketSession&& websocketSession)
+    WebSocketSession& operator=(WebSocketSession&& webSocketSession)
     {
-        Gs2Object::operator=(std::move(websocketSession));
+        Gs2Object::operator=(std::move(webSocketSession));
 
         if (m_pData != nullptr)
         {
             delete m_pData;
         }
-        m_pData = websocketSession.m_pData;
-        websocketSession.m_pData = nullptr;
+        m_pData = webSocketSession.m_pData;
+        webSocketSession.m_pData = nullptr;
 
         return *this;
     }
 
-    const WebsocketSession* operator->() const
+    const WebSocketSession* operator->() const
     {
         return this;
     }
 
-    WebsocketSession* operator->()
+    WebSocketSession* operator->()
     {
         return this;
     }
     /**
-     * Websocketセッション のGRNを取得
+     * コネクションIDを取得
      *
-     * @return Websocketセッション のGRN
+     * @return コネクションID
      */
-    const optional<StringHolder>& getWebsocketSessionId() const
+    const optional<StringHolder>& getConnectionId() const
     {
-        return ensureData().websocketSessionId;
+        return ensureData().connectionId;
     }
 
     /**
-     * Websocketセッション のGRNを設定
+     * コネクションIDを設定
      *
-     * @param websocketSessionId Websocketセッション のGRN
+     * @param connectionId コネクションID
      */
-    void setWebsocketSessionId(const Char* websocketSessionId)
+    void setConnectionId(const Char* connectionId)
     {
-        ensureData().websocketSessionId.emplace(websocketSessionId);
+        ensureData().connectionId.emplace(connectionId);
     }
 
     /**
-     * Websocketセッション のGRNを設定
+     * コネクションIDを設定
      *
-     * @param websocketSessionId Websocketセッション のGRN
+     * @param connectionId コネクションID
      */
-    WebsocketSession& withWebsocketSessionId(const Char* websocketSessionId)
+    WebSocketSession& withConnectionId(const Char* connectionId)
     {
-        setWebsocketSessionId(websocketSessionId);
+        setConnectionId(connectionId);
         return *this;
     }
 
@@ -257,40 +257,40 @@ public:
      *
      * @param ownerId オーナーID
      */
-    WebsocketSession& withOwnerId(const Char* ownerId)
+    WebSocketSession& withOwnerId(const Char* ownerId)
     {
         setOwnerId(ownerId);
         return *this;
     }
 
     /**
-     * コネクションIDを取得
+     * ネームスペース名を取得
      *
-     * @return コネクションID
+     * @return ネームスペース名
      */
-    const optional<StringHolder>& getConnectionId() const
+    const optional<StringHolder>& getNamespaceName() const
     {
-        return ensureData().connectionId;
+        return ensureData().namespaceName;
     }
 
     /**
-     * コネクションIDを設定
+     * ネームスペース名を設定
      *
-     * @param connectionId コネクションID
+     * @param namespaceName ネームスペース名
      */
-    void setConnectionId(const Char* connectionId)
+    void setNamespaceName(const Char* namespaceName)
     {
-        ensureData().connectionId.emplace(connectionId);
+        ensureData().namespaceName.emplace(namespaceName);
     }
 
     /**
-     * コネクションIDを設定
+     * ネームスペース名を設定
      *
-     * @param connectionId コネクションID
+     * @param namespaceName ネームスペース名
      */
-    WebsocketSession& withConnectionId(const Char* connectionId)
+    WebSocketSession& withNamespaceName(const Char* namespaceName)
     {
-        setConnectionId(connectionId);
+        setNamespaceName(namespaceName);
         return *this;
     }
 
@@ -319,7 +319,7 @@ public:
      *
      * @param userId ユーザーID
      */
-    WebsocketSession& withUserId(const Char* userId)
+    WebSocketSession& withUserId(const Char* userId)
     {
         setUserId(userId);
         return *this;
@@ -350,7 +350,7 @@ public:
      *
      * @param createdAt 作成日時
      */
-    WebsocketSession& withCreatedAt(Int64 createdAt)
+    WebSocketSession& withCreatedAt(Int64 createdAt)
     {
         setCreatedAt(createdAt);
         return *this;
@@ -381,7 +381,7 @@ public:
      *
      * @param updatedAt 最終更新日時
      */
-    WebsocketSession& withUpdatedAt(Int64 updatedAt)
+    WebSocketSession& withUpdatedAt(Int64 updatedAt)
     {
         setUpdatedAt(updatedAt);
         return *this;
@@ -394,7 +394,7 @@ public:
     }
 };
 
-inline bool operator!=(const WebsocketSession& lhs, const WebsocketSession& lhr)
+inline bool operator!=(const WebSocketSession& lhs, const WebSocketSession& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -402,7 +402,7 @@ inline bool operator!=(const WebsocketSession& lhs, const WebsocketSession& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->websocketSessionId != lhr.m_pData->websocketSessionId)
+        if (lhs.m_pData->connectionId != lhr.m_pData->connectionId)
         {
             return true;
         }
@@ -410,7 +410,7 @@ inline bool operator!=(const WebsocketSession& lhs, const WebsocketSession& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->connectionId != lhr.m_pData->connectionId)
+        if (lhs.m_pData->namespaceName != lhr.m_pData->namespaceName)
         {
             return true;
         }
@@ -430,7 +430,7 @@ inline bool operator!=(const WebsocketSession& lhs, const WebsocketSession& lhr)
     return false;
 }
 
-inline bool operator==(const WebsocketSession& lhs, const WebsocketSession& lhr)
+inline bool operator==(const WebSocketSession& lhs, const WebSocketSession& lhr)
 {
     return !(lhs != lhr);
 }

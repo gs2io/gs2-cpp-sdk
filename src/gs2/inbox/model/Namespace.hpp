@@ -23,6 +23,7 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "NotificationSetting.hpp"
 #include <cstring>
 
 namespace gs2 { namespace inbox {
@@ -69,6 +70,12 @@ private:
         optional<StringHolder> deleteMessageDoneTriggerScriptId;
         /** メッセージ削除完了時 にジョブが登録されるネームスペース のGRN */
         optional<StringHolder> deleteMessageDoneTriggerNamespaceId;
+        /** 報酬付与処理をジョブとして追加するキューネームスペース のGRN */
+        optional<StringHolder> queueNamespaceId;
+        /** 報酬付与処理のスタンプシートで使用する暗号鍵GRN */
+        optional<StringHolder> keyId;
+        /** メッセージを受信したときのプッシュ通知 */
+        optional<NotificationSetting> receiveNotification;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -93,6 +100,9 @@ private:
             deleteMessageTriggerScriptId(data.deleteMessageTriggerScriptId),
             deleteMessageDoneTriggerScriptId(data.deleteMessageDoneTriggerScriptId),
             deleteMessageDoneTriggerNamespaceId(data.deleteMessageDoneTriggerNamespaceId),
+            queueNamespaceId(data.queueNamespaceId),
+            keyId(data.keyId),
+            receiveNotification(data.receiveNotification),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {}
@@ -113,6 +123,9 @@ private:
             deleteMessageTriggerScriptId(std::move(data.deleteMessageTriggerScriptId)),
             deleteMessageDoneTriggerScriptId(std::move(data.deleteMessageDoneTriggerScriptId)),
             deleteMessageDoneTriggerNamespaceId(std::move(data.deleteMessageDoneTriggerNamespaceId)),
+            queueNamespaceId(std::move(data.queueNamespaceId)),
+            keyId(std::move(data.keyId)),
+            receiveNotification(std::move(data.receiveNotification)),
             createdAt(std::move(data.createdAt)),
             updatedAt(std::move(data.updatedAt))
         {}
@@ -207,6 +220,26 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->deleteMessageDoneTriggerNamespaceId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "queueNamespaceId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->queueNamespaceId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "keyId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->keyId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name, "receiveNotification") == 0) {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->receiveNotification.emplace();
+                    detail::json::JsonParser::parse(&this->receiveNotification->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name, "createdAt") == 0) {
@@ -736,6 +769,99 @@ public:
     }
 
     /**
+     * 報酬付与処理をジョブとして追加するキューネームスペース のGRNを取得
+     *
+     * @return 報酬付与処理をジョブとして追加するキューネームスペース のGRN
+     */
+    const optional<StringHolder>& getQueueNamespaceId() const
+    {
+        return ensureData().queueNamespaceId;
+    }
+
+    /**
+     * 報酬付与処理をジョブとして追加するキューネームスペース のGRNを設定
+     *
+     * @param queueNamespaceId 報酬付与処理をジョブとして追加するキューネームスペース のGRN
+     */
+    void setQueueNamespaceId(const Char* queueNamespaceId)
+    {
+        ensureData().queueNamespaceId.emplace(queueNamespaceId);
+    }
+
+    /**
+     * 報酬付与処理をジョブとして追加するキューネームスペース のGRNを設定
+     *
+     * @param queueNamespaceId 報酬付与処理をジョブとして追加するキューネームスペース のGRN
+     */
+    Namespace& withQueueNamespaceId(const Char* queueNamespaceId)
+    {
+        setQueueNamespaceId(queueNamespaceId);
+        return *this;
+    }
+
+    /**
+     * 報酬付与処理のスタンプシートで使用する暗号鍵GRNを取得
+     *
+     * @return 報酬付与処理のスタンプシートで使用する暗号鍵GRN
+     */
+    const optional<StringHolder>& getKeyId() const
+    {
+        return ensureData().keyId;
+    }
+
+    /**
+     * 報酬付与処理のスタンプシートで使用する暗号鍵GRNを設定
+     *
+     * @param keyId 報酬付与処理のスタンプシートで使用する暗号鍵GRN
+     */
+    void setKeyId(const Char* keyId)
+    {
+        ensureData().keyId.emplace(keyId);
+    }
+
+    /**
+     * 報酬付与処理のスタンプシートで使用する暗号鍵GRNを設定
+     *
+     * @param keyId 報酬付与処理のスタンプシートで使用する暗号鍵GRN
+     */
+    Namespace& withKeyId(const Char* keyId)
+    {
+        setKeyId(keyId);
+        return *this;
+    }
+
+    /**
+     * メッセージを受信したときのプッシュ通知を取得
+     *
+     * @return メッセージを受信したときのプッシュ通知
+     */
+    const optional<NotificationSetting>& getReceiveNotification() const
+    {
+        return ensureData().receiveNotification;
+    }
+
+    /**
+     * メッセージを受信したときのプッシュ通知を設定
+     *
+     * @param receiveNotification メッセージを受信したときのプッシュ通知
+     */
+    void setReceiveNotification(const NotificationSetting& receiveNotification)
+    {
+        ensureData().receiveNotification.emplace(receiveNotification);
+    }
+
+    /**
+     * メッセージを受信したときのプッシュ通知を設定
+     *
+     * @param receiveNotification メッセージを受信したときのプッシュ通知
+     */
+    Namespace& withReceiveNotification(const NotificationSetting& receiveNotification)
+    {
+        setReceiveNotification(receiveNotification);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -865,6 +991,18 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
             return true;
         }
         if (lhs.m_pData->deleteMessageDoneTriggerNamespaceId != lhr.m_pData->deleteMessageDoneTriggerNamespaceId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->queueNamespaceId != lhr.m_pData->queueNamespaceId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->keyId != lhr.m_pData->keyId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->receiveNotification != lhr.m_pData->receiveNotification)
         {
             return true;
         }

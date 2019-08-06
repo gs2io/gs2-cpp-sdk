@@ -26,5 +26,6 @@
 #include "MaxStaminaTable.hpp"
 #include "Stamina.hpp"
 #include "ResponseCache.hpp"
+#include "GitHubCheckoutSetting.hpp"
 
 #endif //GS2_STAMINA_MODEL_MODEL_HPP_

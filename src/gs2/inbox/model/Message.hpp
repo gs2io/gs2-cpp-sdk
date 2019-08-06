@@ -23,6 +23,7 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "AcquireAction.hpp"
 #include <cstring>
 
 namespace gs2 { namespace inbox {
@@ -51,10 +52,8 @@ private:
         optional<StringHolder> metadata;
         /** 既読状態 */
         optional<Bool> isRead;
-        /** メッセージ開封時 に実行されるスクリプト のGRN */
-        optional<StringHolder> readMessageTriggerScriptId;
-        /** メッセージ開封時 に実行されるスクリプト に指定する引数 */
-        optional<StringHolder> readMessageTriggerScriptArgs;
+        /** 開封時に実行する入手アクション */
+        optional<List<AcquireAction>> readAcquireActions;
         /** 作成日時 */
         optional<Int64> receivedAt;
         /** 最終更新日時 */
@@ -70,8 +69,7 @@ private:
             userId(data.userId),
             metadata(data.metadata),
             isRead(data.isRead),
-            readMessageTriggerScriptId(data.readMessageTriggerScriptId),
-            readMessageTriggerScriptArgs(data.readMessageTriggerScriptArgs),
+            readAcquireActions(data.readAcquireActions),
             receivedAt(data.receivedAt),
             readAt(data.readAt)
         {}
@@ -83,8 +81,7 @@ private:
             userId(std::move(data.userId)),
             metadata(std::move(data.metadata)),
             isRead(std::move(data.isRead)),
-            readMessageTriggerScriptId(std::move(data.readMessageTriggerScriptId)),
-            readMessageTriggerScriptArgs(std::move(data.readMessageTriggerScriptArgs)),
+            readAcquireActions(std::move(data.readAcquireActions)),
             receivedAt(std::move(data.receivedAt)),
             readAt(std::move(data.readAt))
         {}
@@ -127,16 +124,16 @@ private:
                     this->isRead = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name, "readMessageTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name, "readAcquireActions") == 0) {
+                if (jsonValue.IsArray())
                 {
-                    this->readMessageTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "readMessageTriggerScriptArgs") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->readMessageTriggerScriptArgs.emplace(jsonValue.GetString());
+                    const auto& array = jsonValue.GetArray();
+                    this->readAcquireActions.emplace();
+                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
+                        AcquireAction item;
+                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        detail::addToList(*this->readAcquireActions, std::move(item));
+                    }
                 }
             }
             else if (std::strcmp(name, "receivedAt") == 0) {
@@ -387,64 +384,33 @@ public:
     }
 
     /**
-     * メッセージ開封時 に実行されるスクリプト のGRNを取得
+     * 開封時に実行する入手アクションを取得
      *
-     * @return メッセージ開封時 に実行されるスクリプト のGRN
+     * @return 開封時に実行する入手アクション
      */
-    const optional<StringHolder>& getReadMessageTriggerScriptId() const
+    const optional<List<AcquireAction>>& getReadAcquireActions() const
     {
-        return ensureData().readMessageTriggerScriptId;
+        return ensureData().readAcquireActions;
     }
 
     /**
-     * メッセージ開封時 に実行されるスクリプト のGRNを設定
+     * 開封時に実行する入手アクションを設定
      *
-     * @param readMessageTriggerScriptId メッセージ開封時 に実行されるスクリプト のGRN
+     * @param readAcquireActions 開封時に実行する入手アクション
      */
-    void setReadMessageTriggerScriptId(const Char* readMessageTriggerScriptId)
+    void setReadAcquireActions(const List<AcquireAction>& readAcquireActions)
     {
-        ensureData().readMessageTriggerScriptId.emplace(readMessageTriggerScriptId);
+        ensureData().readAcquireActions.emplace(readAcquireActions);
     }
 
     /**
-     * メッセージ開封時 に実行されるスクリプト のGRNを設定
+     * 開封時に実行する入手アクションを設定
      *
-     * @param readMessageTriggerScriptId メッセージ開封時 に実行されるスクリプト のGRN
+     * @param readAcquireActions 開封時に実行する入手アクション
      */
-    Message& withReadMessageTriggerScriptId(const Char* readMessageTriggerScriptId)
+    Message& withReadAcquireActions(const List<AcquireAction>& readAcquireActions)
     {
-        setReadMessageTriggerScriptId(readMessageTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * メッセージ開封時 に実行されるスクリプト に指定する引数を取得
-     *
-     * @return メッセージ開封時 に実行されるスクリプト に指定する引数
-     */
-    const optional<StringHolder>& getReadMessageTriggerScriptArgs() const
-    {
-        return ensureData().readMessageTriggerScriptArgs;
-    }
-
-    /**
-     * メッセージ開封時 に実行されるスクリプト に指定する引数を設定
-     *
-     * @param readMessageTriggerScriptArgs メッセージ開封時 に実行されるスクリプト に指定する引数
-     */
-    void setReadMessageTriggerScriptArgs(const Char* readMessageTriggerScriptArgs)
-    {
-        ensureData().readMessageTriggerScriptArgs.emplace(readMessageTriggerScriptArgs);
-    }
-
-    /**
-     * メッセージ開封時 に実行されるスクリプト に指定する引数を設定
-     *
-     * @param readMessageTriggerScriptArgs メッセージ開封時 に実行されるスクリプト に指定する引数
-     */
-    Message& withReadMessageTriggerScriptArgs(const Char* readMessageTriggerScriptArgs)
-    {
-        setReadMessageTriggerScriptArgs(readMessageTriggerScriptArgs);
+        setReadAcquireActions(readAcquireActions);
         return *this;
     }
 
@@ -545,11 +511,7 @@ inline bool operator!=(const Message& lhs, const Message& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->readMessageTriggerScriptId != lhr.m_pData->readMessageTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->readMessageTriggerScriptArgs != lhr.m_pData->readMessageTriggerScriptArgs)
+        if (lhs.m_pData->readAcquireActions != lhr.m_pData->readAcquireActions)
         {
             return true;
         }

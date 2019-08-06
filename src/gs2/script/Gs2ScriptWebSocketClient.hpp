@@ -33,8 +33,10 @@
 #include "request/DeleteNamespaceRequest.hpp"
 #include "request/DescribeScriptsRequest.hpp"
 #include "request/CreateScriptRequest.hpp"
+#include "request/CreateScriptFromGitHubRequest.hpp"
 #include "request/GetScriptRequest.hpp"
 #include "request/UpdateScriptRequest.hpp"
+#include "request/UpdateScriptFromGitHubRequest.hpp"
 #include "request/DeleteScriptRequest.hpp"
 #include "request/DebugInvokeRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
@@ -45,8 +47,10 @@
 #include "result/DeleteNamespaceResult.hpp"
 #include "result/DescribeScriptsResult.hpp"
 #include "result/CreateScriptResult.hpp"
+#include "result/CreateScriptFromGitHubResult.hpp"
 #include "result/GetScriptResult.hpp"
 #include "result/UpdateScriptResult.hpp"
+#include "result/UpdateScriptFromGitHubResult.hpp"
 #include "result/DeleteScriptResult.hpp"
 #include "result/DebugInvokeResult.hpp"
 #include <cstring>
@@ -61,8 +65,10 @@ typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
 typedef AsyncResult<void> AsyncDeleteNamespaceResult;
 typedef AsyncResult<DescribeScriptsResult> AsyncDescribeScriptsResult;
 typedef AsyncResult<CreateScriptResult> AsyncCreateScriptResult;
+typedef AsyncResult<CreateScriptFromGitHubResult> AsyncCreateScriptFromGitHubResult;
 typedef AsyncResult<GetScriptResult> AsyncGetScriptResult;
 typedef AsyncResult<UpdateScriptResult> AsyncUpdateScriptResult;
+typedef AsyncResult<UpdateScriptFromGitHubResult> AsyncUpdateScriptFromGitHubResult;
 typedef AsyncResult<void> AsyncDeleteScriptResult;
 typedef AsyncResult<DebugInvokeResult> AsyncDebugInvokeResult;
 
@@ -700,6 +706,94 @@ private:
         ~CreateScriptTask() GS2_OVERRIDE = default;
     };
 
+    class CreateScriptFromGitHubTask : public detail::Gs2WebSocketSessionTask<CreateScriptFromGitHubResult>
+    {
+    private:
+        CreateScriptFromGitHubRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            auto& writer = detail::json::JsonWriter::getInstance();
+            writer.reset();
+            writer.writeObjectStart();
+
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getName())
+            {
+                writer.writePropertyName("name");
+                writer.writeCharArray(*m_Request.getName());
+            }
+            if (m_Request.getDescription())
+            {
+                writer.writePropertyName("description");
+                writer.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getCheckoutSetting())
+            {
+                writer.writePropertyName("checkoutSetting");
+                write(writer, *m_Request.getCheckoutSetting());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("script");
+            writer.writePropertyName("component");
+            writer.writeCharArray("script");
+            writer.writePropertyName("function");
+            writer.writeCharArray("createScriptFromGitHub");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        CreateScriptFromGitHubTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            CreateScriptFromGitHubRequest& request,
+            Gs2WebSocketSessionTask<CreateScriptFromGitHubResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<CreateScriptFromGitHubResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~CreateScriptFromGitHubTask() GS2_OVERRIDE = default;
+    };
+
     class GetScriptTask : public detail::Gs2WebSocketSessionTask<GetScriptResult>
     {
     private:
@@ -866,6 +960,94 @@ private:
         ~UpdateScriptTask() GS2_OVERRIDE = default;
     };
 
+    class UpdateScriptFromGitHubTask : public detail::Gs2WebSocketSessionTask<UpdateScriptFromGitHubResult>
+    {
+    private:
+        UpdateScriptFromGitHubRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            auto& writer = detail::json::JsonWriter::getInstance();
+            writer.reset();
+            writer.writeObjectStart();
+
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getScriptName())
+            {
+                writer.writePropertyName("scriptName");
+                writer.writeCharArray(*m_Request.getScriptName());
+            }
+            if (m_Request.getDescription())
+            {
+                writer.writePropertyName("description");
+                writer.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getCheckoutSetting())
+            {
+                writer.writePropertyName("checkoutSetting");
+                write(writer, *m_Request.getCheckoutSetting());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("script");
+            writer.writePropertyName("component");
+            writer.writeCharArray("script");
+            writer.writePropertyName("function");
+            writer.writeCharArray("updateScriptFromGitHub");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        UpdateScriptFromGitHubTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            UpdateScriptFromGitHubRequest& request,
+            Gs2WebSocketSessionTask<UpdateScriptFromGitHubResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateScriptFromGitHubResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~UpdateScriptFromGitHubTask() GS2_OVERRIDE = default;
+    };
+
     class DeleteScriptTask : public detail::Gs2WebSocketSessionTask<void>
     {
     private:
@@ -959,11 +1141,6 @@ private:
             writer.reset();
             writer.writeObjectStart();
 
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
             if (m_Request.getScript())
             {
                 writer.writePropertyName("script");
@@ -1105,6 +1282,47 @@ private:
         writer.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            writer.writePropertyName("gitHubApiKeyId");
+            writer.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            writer.writePropertyName("repositoryName");
+            writer.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            writer.writePropertyName("sourcePath");
+            writer.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            writer.writePropertyName("referenceType");
+            writer.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            writer.writePropertyName("commitHash");
+            writer.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            writer.writePropertyName("branchName");
+            writer.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            writer.writePropertyName("tagName");
+            writer.writeCharArray(*obj.getTagName());
+        }
+        writer.writeObjectEnd();
+    }
+
 
 
 public:
@@ -1215,6 +1433,18 @@ public:
     }
 
 	/**
+	 * GitHubリポジトリのコードからスクリプトを新規作成します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createScriptFromGitHub(std::function<void(AsyncCreateScriptFromGitHubResult&)> callback, CreateScriptFromGitHubRequest& request)
+    {
+        CreateScriptFromGitHubTask& task = *new CreateScriptFromGitHubTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
 	 * スクリプトを取得します<br>
 	 *
      * @param callback コールバック関数
@@ -1235,6 +1465,18 @@ public:
     void updateScript(std::function<void(AsyncUpdateScriptResult&)> callback, UpdateScriptRequest& request)
     {
         UpdateScriptTask& task = *new UpdateScriptTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * スクリプトを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateScriptFromGitHub(std::function<void(AsyncUpdateScriptFromGitHubResult&)> callback, UpdateScriptFromGitHubRequest& request)
+    {
+        UpdateScriptFromGitHubTask& task = *new UpdateScriptFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 

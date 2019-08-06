@@ -46,6 +46,7 @@
 #include "request/ExportMasterRequest.hpp"
 #include "request/GetCurrentExperienceMasterRequest.hpp"
 #include "request/UpdateCurrentExperienceMasterRequest.hpp"
+#include "request/UpdateCurrentExperienceMasterFromGitHubRequest.hpp"
 #include "request/DescribeStatusesRequest.hpp"
 #include "request/DescribeStatusesByUserIdRequest.hpp"
 #include "request/GetStatusRequest.hpp"
@@ -80,6 +81,7 @@
 #include "result/ExportMasterResult.hpp"
 #include "result/GetCurrentExperienceMasterResult.hpp"
 #include "result/UpdateCurrentExperienceMasterResult.hpp"
+#include "result/UpdateCurrentExperienceMasterFromGitHubResult.hpp"
 #include "result/DescribeStatusesResult.hpp"
 #include "result/DescribeStatusesByUserIdResult.hpp"
 #include "result/GetStatusResult.hpp"
@@ -118,6 +120,7 @@ typedef AsyncResult<DeleteThresholdMasterResult> AsyncDeleteThresholdMasterResul
 typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
 typedef AsyncResult<GetCurrentExperienceMasterResult> AsyncGetCurrentExperienceMasterResult;
 typedef AsyncResult<UpdateCurrentExperienceMasterResult> AsyncUpdateCurrentExperienceMasterResult;
+typedef AsyncResult<UpdateCurrentExperienceMasterFromGitHubResult> AsyncUpdateCurrentExperienceMasterFromGitHubResult;
 typedef AsyncResult<DescribeStatusesResult> AsyncDescribeStatusesResult;
 typedef AsyncResult<DescribeStatusesByUserIdResult> AsyncDescribeStatusesByUserIdResult;
 typedef AsyncResult<GetStatusResult> AsyncGetStatusResult;
@@ -369,6 +372,11 @@ private:
     static void write(detail::json::JsonWriter& writer, const Threshold& obj)
     {
         writer.writeObjectStart();
+        if (obj.getThresholdId())
+        {
+            writer.writePropertyName("thresholdId");
+            writer.writeCharArray(*obj.getThresholdId());
+        }
         if (obj.getMetadata())
         {
             writer.writePropertyName("metadata");
@@ -482,6 +490,47 @@ private:
         {
             writer.writePropertyName("result");
             writer.writeCharArray(*obj.getResult());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            writer.writePropertyName("gitHubApiKeyId");
+            writer.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            writer.writePropertyName("repositoryName");
+            writer.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            writer.writePropertyName("sourcePath");
+            writer.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            writer.writePropertyName("referenceType");
+            writer.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            writer.writePropertyName("commitHash");
+            writer.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            writer.writePropertyName("branchName");
+            writer.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            writer.writePropertyName("tagName");
+            writer.writeCharArray(*obj.getTagName());
         }
         writer.writeObjectEnd();
     }
@@ -1537,6 +1586,52 @@ public:
         {
             writer.writePropertyName("settings");
             writer.writeCharArray(*request.getSettings());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * 現在有効な現在有効な経験値設定を更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentExperienceMasterFromGitHub(std::function<void(AsyncUpdateCurrentExperienceMasterFromGitHubResult&)> callback, UpdateCurrentExperienceMasterFromGitHubRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateCurrentExperienceMasterFromGitHubResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("PUT");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "experience");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/from_git_hub";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getCheckoutSetting())
+        {
+            writer.writePropertyName("checkoutSetting");
+            write(writer, *request.getCheckoutSetting());
         }
         writer.writeObjectEnd();
         {

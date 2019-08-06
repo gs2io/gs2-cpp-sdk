@@ -28,6 +28,7 @@
 #include "request/CreateAccountRequest.hpp"
 #include "request/VerifyRequest.hpp"
 #include "request/SignInRequest.hpp"
+#include "request/IssueAccountTokenRequest.hpp"
 #include "request/ForgetRequest.hpp"
 #include "request/IssuePasswordRequest.hpp"
 #include "request/UpdateAccountRequest.hpp"
@@ -41,6 +42,7 @@
 #include "result/CreateAccountResult.hpp"
 #include "result/VerifyResult.hpp"
 #include "result/SignInResult.hpp"
+#include "result/IssueAccountTokenResult.hpp"
 #include "result/ForgetResult.hpp"
 #include "result/IssuePasswordResult.hpp"
 #include "result/UpdateAccountResult.hpp"
@@ -58,6 +60,7 @@ namespace gs2 { namespace project {
 typedef AsyncResult<CreateAccountResult> AsyncCreateAccountResult;
 typedef AsyncResult<VerifyResult> AsyncVerifyResult;
 typedef AsyncResult<SignInResult> AsyncSignInResult;
+typedef AsyncResult<IssueAccountTokenResult> AsyncIssueAccountTokenResult;
 typedef AsyncResult<ForgetResult> AsyncForgetResult;
 typedef AsyncResult<IssuePasswordResult> AsyncIssuePasswordResult;
 typedef AsyncResult<UpdateAccountResult> AsyncUpdateAccountResult;
@@ -316,6 +319,79 @@ private:
         {}
 
         ~SignInTask() GS2_OVERRIDE = default;
+    };
+
+    class IssueAccountTokenTask : public detail::Gs2WebSocketSessionTask<IssueAccountTokenResult>
+    {
+    private:
+        IssueAccountTokenRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            auto& writer = detail::json::JsonWriter::getInstance();
+            writer.reset();
+            writer.writeObjectStart();
+
+            if (m_Request.getAccountName())
+            {
+                writer.writePropertyName("accountName");
+                writer.writeCharArray(*m_Request.getAccountName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("project");
+            writer.writePropertyName("component");
+            writer.writeCharArray("account");
+            writer.writePropertyName("function");
+            writer.writeCharArray("issueAccountToken");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        IssueAccountTokenTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            IssueAccountTokenRequest& request,
+            Gs2WebSocketSessionTask<IssueAccountTokenResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<IssueAccountTokenResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~IssueAccountTokenTask() GS2_OVERRIDE = default;
     };
 
     class ForgetTask : public detail::Gs2WebSocketSessionTask<ForgetResult>
@@ -1247,6 +1323,18 @@ public:
     void signIn(std::function<void(AsyncSignInResult&)> callback, SignInRequest& request)
     {
         SignInTask& task = *new SignInTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * 指定したアカウント名のアカウントトークンを発行<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void issueAccountToken(std::function<void(AsyncIssueAccountTokenResult&)> callback, IssueAccountTokenRequest& request)
+    {
+        IssueAccountTokenTask& task = *new IssueAccountTokenTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 

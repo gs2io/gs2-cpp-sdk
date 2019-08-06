@@ -47,10 +47,8 @@ private:
         optional<StringHolder> userId;
         /** メッセージの内容に相当するメタデータ */
         optional<StringHolder> metadata;
-        /** メッセージ開封時 に実行されるスクリプト のGRN */
-        optional<StringHolder> readMessageTriggerScriptId;
-        /** メッセージ開封時 に実行されるスクリプト に指定する引数 */
-        optional<StringHolder> readMessageTriggerScriptArgs;
+        /** 開封時に実行する入手アクション */
+        optional<List<AcquireAction>> readAcquireActions;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -62,8 +60,7 @@ private:
             namespaceName(data.namespaceName),
             userId(data.userId),
             metadata(data.metadata),
-            readMessageTriggerScriptId(data.readMessageTriggerScriptId),
-            readMessageTriggerScriptArgs(data.readMessageTriggerScriptArgs),
+            readAcquireActions(data.readAcquireActions),
             duplicationAvoider(data.duplicationAvoider)
         {}
 
@@ -72,8 +69,7 @@ private:
             namespaceName(std::move(data.namespaceName)),
             userId(std::move(data.userId)),
             metadata(std::move(data.metadata)),
-            readMessageTriggerScriptId(std::move(data.readMessageTriggerScriptId)),
-            readMessageTriggerScriptArgs(std::move(data.readMessageTriggerScriptArgs)),
+            readAcquireActions(std::move(data.readAcquireActions)),
             duplicationAvoider(std::move(data.duplicationAvoider))
         {}
 
@@ -259,64 +255,33 @@ public:
     }
 
     /**
-     * メッセージ開封時 に実行されるスクリプト のGRNを取得
+     * 開封時に実行する入手アクションを取得
      *
-     * @return メッセージ開封時 に実行されるスクリプト のGRN
+     * @return 開封時に実行する入手アクション
      */
-    const optional<StringHolder>& getReadMessageTriggerScriptId() const
+    const optional<List<AcquireAction>>& getReadAcquireActions() const
     {
-        return ensureData().readMessageTriggerScriptId;
+        return ensureData().readAcquireActions;
     }
 
     /**
-     * メッセージ開封時 に実行されるスクリプト のGRNを設定
+     * 開封時に実行する入手アクションを設定
      *
-     * @param readMessageTriggerScriptId メッセージ開封時 に実行されるスクリプト のGRN
+     * @param readAcquireActions 開封時に実行する入手アクション
      */
-    void setReadMessageTriggerScriptId(const Char* readMessageTriggerScriptId)
+    void setReadAcquireActions(const List<AcquireAction>& readAcquireActions)
     {
-        ensureData().readMessageTriggerScriptId.emplace(readMessageTriggerScriptId);
+        ensureData().readAcquireActions.emplace(readAcquireActions);
     }
 
     /**
-     * メッセージ開封時 に実行されるスクリプト のGRNを設定
+     * 開封時に実行する入手アクションを設定
      *
-     * @param readMessageTriggerScriptId メッセージ開封時 に実行されるスクリプト のGRN
+     * @param readAcquireActions 開封時に実行する入手アクション
      */
-    SendMessageByUserIdRequest& withReadMessageTriggerScriptId(const Char* readMessageTriggerScriptId)
+    SendMessageByUserIdRequest& withReadAcquireActions(const List<AcquireAction>& readAcquireActions)
     {
-        ensureData().readMessageTriggerScriptId.emplace(readMessageTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * メッセージ開封時 に実行されるスクリプト に指定する引数を取得
-     *
-     * @return メッセージ開封時 に実行されるスクリプト に指定する引数
-     */
-    const optional<StringHolder>& getReadMessageTriggerScriptArgs() const
-    {
-        return ensureData().readMessageTriggerScriptArgs;
-    }
-
-    /**
-     * メッセージ開封時 に実行されるスクリプト に指定する引数を設定
-     *
-     * @param readMessageTriggerScriptArgs メッセージ開封時 に実行されるスクリプト に指定する引数
-     */
-    void setReadMessageTriggerScriptArgs(const Char* readMessageTriggerScriptArgs)
-    {
-        ensureData().readMessageTriggerScriptArgs.emplace(readMessageTriggerScriptArgs);
-    }
-
-    /**
-     * メッセージ開封時 に実行されるスクリプト に指定する引数を設定
-     *
-     * @param readMessageTriggerScriptArgs メッセージ開封時 に実行されるスクリプト に指定する引数
-     */
-    SendMessageByUserIdRequest& withReadMessageTriggerScriptArgs(const Char* readMessageTriggerScriptArgs)
-    {
-        ensureData().readMessageTriggerScriptArgs.emplace(readMessageTriggerScriptArgs);
+        ensureData().readAcquireActions.emplace(readAcquireActions);
         return *this;
     }
 

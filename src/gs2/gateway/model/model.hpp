@@ -19,7 +19,7 @@
 
 #include <gs2/core/common.hpp>
 #include "Namespace.hpp"
-#include "WebsocketSession.hpp"
+#include "WebSocketSession.hpp"
 #include "FirebaseToken.hpp"
 #include "ResponseCache.hpp"
 

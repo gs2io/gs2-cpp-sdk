@@ -48,6 +48,7 @@
 #include "request/ExportMasterRequest.hpp"
 #include "request/GetCurrentItemModelMasterRequest.hpp"
 #include "request/UpdateCurrentItemModelMasterRequest.hpp"
+#include "request/UpdateCurrentItemModelMasterFromGitHubRequest.hpp"
 #include "request/DescribeInventoriesRequest.hpp"
 #include "request/DescribeInventoriesByUserIdRequest.hpp"
 #include "request/GetInventoryRequest.hpp"
@@ -90,6 +91,7 @@
 #include "result/ExportMasterResult.hpp"
 #include "result/GetCurrentItemModelMasterResult.hpp"
 #include "result/UpdateCurrentItemModelMasterResult.hpp"
+#include "result/UpdateCurrentItemModelMasterFromGitHubResult.hpp"
 #include "result/DescribeInventoriesResult.hpp"
 #include "result/DescribeInventoriesByUserIdResult.hpp"
 #include "result/GetInventoryResult.hpp"
@@ -136,6 +138,7 @@ typedef AsyncResult<GetItemModelResult> AsyncGetItemModelResult;
 typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
 typedef AsyncResult<GetCurrentItemModelMasterResult> AsyncGetCurrentItemModelMasterResult;
 typedef AsyncResult<UpdateCurrentItemModelMasterResult> AsyncUpdateCurrentItemModelMasterResult;
+typedef AsyncResult<UpdateCurrentItemModelMasterFromGitHubResult> AsyncUpdateCurrentItemModelMasterFromGitHubResult;
 typedef AsyncResult<DescribeInventoriesResult> AsyncDescribeInventoriesResult;
 typedef AsyncResult<DescribeInventoriesByUserIdResult> AsyncDescribeInventoriesByUserIdResult;
 typedef AsyncResult<GetInventoryResult> AsyncGetInventoryResult;
@@ -2128,6 +2131,84 @@ private:
         {}
 
         ~UpdateCurrentItemModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateCurrentItemModelMasterFromGitHubTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentItemModelMasterFromGitHubResult>
+    {
+    private:
+        UpdateCurrentItemModelMasterFromGitHubRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            auto& writer = detail::json::JsonWriter::getInstance();
+            writer.reset();
+            writer.writeObjectStart();
+
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCheckoutSetting())
+            {
+                writer.writePropertyName("checkoutSetting");
+                write(writer, *m_Request.getCheckoutSetting());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("inventory");
+            writer.writePropertyName("component");
+            writer.writeCharArray("currentItemModelMaster");
+            writer.writePropertyName("function");
+            writer.writeCharArray("updateCurrentItemModelMasterFromGitHub");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        UpdateCurrentItemModelMasterFromGitHubTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            UpdateCurrentItemModelMasterFromGitHubRequest& request,
+            Gs2WebSocketSessionTask<UpdateCurrentItemModelMasterFromGitHubResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateCurrentItemModelMasterFromGitHubResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~UpdateCurrentItemModelMasterFromGitHubTask() GS2_OVERRIDE = default;
     };
 
     class DescribeInventoriesTask : public detail::Gs2WebSocketSessionTask<DescribeInventoriesResult>
@@ -4258,6 +4339,47 @@ private:
         writer.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            writer.writePropertyName("gitHubApiKeyId");
+            writer.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            writer.writePropertyName("repositoryName");
+            writer.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            writer.writePropertyName("sourcePath");
+            writer.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            writer.writePropertyName("referenceType");
+            writer.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            writer.writePropertyName("commitHash");
+            writer.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            writer.writePropertyName("branchName");
+            writer.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            writer.writePropertyName("tagName");
+            writer.writeCharArray(*obj.getTagName());
+        }
+        writer.writeObjectEnd();
+    }
+
 
 
 public:
@@ -4544,6 +4666,18 @@ public:
     void updateCurrentItemModelMaster(std::function<void(AsyncUpdateCurrentItemModelMasterResult&)> callback, UpdateCurrentItemModelMasterRequest& request)
     {
         UpdateCurrentItemModelMasterTask& task = *new UpdateCurrentItemModelMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * 現在有効な現在有効な所持品マスターを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentItemModelMasterFromGitHub(std::function<void(AsyncUpdateCurrentItemModelMasterFromGitHubResult&)> callback, UpdateCurrentItemModelMasterFromGitHubRequest& request)
+    {
+        UpdateCurrentItemModelMasterFromGitHubTask& task = *new UpdateCurrentItemModelMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 

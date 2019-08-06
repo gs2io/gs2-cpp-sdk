@@ -17,20 +17,22 @@
 #ifndef GS2_GATEWAY_CONTROL_DESCRIBEWEBSOCKETSESSIONSBYUSERIDREQUEST_HPP_
 #define GS2_GATEWAY_CONTROL_DESCRIBEWEBSOCKETSESSIONSBYUSERIDREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2GatewayConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace gateway
 {
 
 /**
- * Websocketセッションを新規作成 のリクエストモデル
+ * ユーザIDを指定してWebsocketセッションの一覧を取得 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
-class DescribeWebsocketSessionsByUserIdRequest : public Gs2UserRequest, public Gs2Gateway
+class DescribeWebSocketSessionsByUserIdRequest : public Gs2BasicRequest, public Gs2Gateway
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,8 +41,10 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** ゲーム名 */
+        /** ネームスペース名 */
         optional<StringHolder> namespaceName;
+        /** ユーザーID */
+        optional<StringHolder> userId;
         /** データの取得を開始する位置を指定するトークン */
         optional<StringHolder> pageToken;
         /** データの取得件数 */
@@ -54,6 +58,7 @@ private:
         Data(const Data& data) :
             Gs2Object(data),
             namespaceName(data.namespaceName),
+            userId(data.userId),
             pageToken(data.pageToken),
             limit(data.limit),
             duplicationAvoider(data.duplicationAvoider)
@@ -62,6 +67,7 @@ private:
         Data(Data&& data) :
             Gs2Object(std::move(data)),
             namespaceName(std::move(data.namespaceName)),
+            userId(std::move(data.userId)),
             pageToken(std::move(data.pageToken)),
             limit(std::move(data.limit)),
             duplicationAvoider(std::move(data.duplicationAvoider))
@@ -91,25 +97,25 @@ private:
     }
 
 public:
-    DescribeWebsocketSessionsByUserIdRequest() :
+    DescribeWebSocketSessionsByUserIdRequest() :
         m_pData(nullptr)
     {}
 
-    DescribeWebsocketSessionsByUserIdRequest(const DescribeWebsocketSessionsByUserIdRequest& obj) :
-        Gs2UserRequest(obj),
+    DescribeWebSocketSessionsByUserIdRequest(const DescribeWebSocketSessionsByUserIdRequest& obj) :
+        Gs2BasicRequest(obj),
         Gs2Gateway(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
-    DescribeWebsocketSessionsByUserIdRequest(DescribeWebsocketSessionsByUserIdRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+    DescribeWebSocketSessionsByUserIdRequest(DescribeWebSocketSessionsByUserIdRequest&& obj) :
+        Gs2BasicRequest(std::move(obj)),
         Gs2Gateway(std::move(obj)),
         m_pData(obj.m_pData)
     {
         obj.m_pData = nullptr;
     }
 
-    ~DescribeWebsocketSessionsByUserIdRequest()
+    ~DescribeWebSocketSessionsByUserIdRequest()
     {
         if (m_pData != nullptr)
         {
@@ -117,48 +123,48 @@ public:
         }
     }
 
-    DescribeWebsocketSessionsByUserIdRequest& operator=(const DescribeWebsocketSessionsByUserIdRequest& describeWebsocketSessionsByUserIdRequest)
+    DescribeWebSocketSessionsByUserIdRequest& operator=(const DescribeWebSocketSessionsByUserIdRequest& describeWebSocketSessionsByUserIdRequest)
     {
-        Gs2UserRequest::operator=(describeWebsocketSessionsByUserIdRequest);
-        Gs2Gateway::operator=(describeWebsocketSessionsByUserIdRequest);
+        Gs2BasicRequest::operator=(describeWebSocketSessionsByUserIdRequest);
+        Gs2Gateway::operator=(describeWebSocketSessionsByUserIdRequest);
 
         if (m_pData != nullptr)
         {
             delete m_pData;
         }
-        m_pData = new Data(*describeWebsocketSessionsByUserIdRequest.m_pData);
+        m_pData = new Data(*describeWebSocketSessionsByUserIdRequest.m_pData);
 
         return *this;
     }
 
-    DescribeWebsocketSessionsByUserIdRequest& operator=(DescribeWebsocketSessionsByUserIdRequest&& describeWebsocketSessionsByUserIdRequest)
+    DescribeWebSocketSessionsByUserIdRequest& operator=(DescribeWebSocketSessionsByUserIdRequest&& describeWebSocketSessionsByUserIdRequest)
     {
-        Gs2UserRequest::operator=(std::move(describeWebsocketSessionsByUserIdRequest));
-        Gs2Gateway::operator=(std::move(describeWebsocketSessionsByUserIdRequest));
+        Gs2BasicRequest::operator=(std::move(describeWebSocketSessionsByUserIdRequest));
+        Gs2Gateway::operator=(std::move(describeWebSocketSessionsByUserIdRequest));
 
         if (m_pData != nullptr)
         {
             delete m_pData;
         }
-        m_pData = describeWebsocketSessionsByUserIdRequest.m_pData;
-        describeWebsocketSessionsByUserIdRequest.m_pData = nullptr;
+        m_pData = describeWebSocketSessionsByUserIdRequest.m_pData;
+        describeWebSocketSessionsByUserIdRequest.m_pData = nullptr;
 
         return *this;
     }
 
-    const DescribeWebsocketSessionsByUserIdRequest* operator->() const
+    const DescribeWebSocketSessionsByUserIdRequest* operator->() const
     {
         return this;
     }
 
-    DescribeWebsocketSessionsByUserIdRequest* operator->()
+    DescribeWebSocketSessionsByUserIdRequest* operator->()
     {
         return this;
     }
     /**
-     * ゲーム名を取得
+     * ネームスペース名を取得
      *
-     * @return ゲーム名
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getNamespaceName() const
     {
@@ -166,9 +172,9 @@ public:
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName ゲーム名
+     * @param namespaceName ネームスペース名
      */
     void setNamespaceName(const Char* namespaceName)
     {
@@ -176,13 +182,44 @@ public:
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName ゲーム名
+     * @param namespaceName ネームスペース名
      */
-    DescribeWebsocketSessionsByUserIdRequest& withNamespaceName(const Char* namespaceName)
+    DescribeWebSocketSessionsByUserIdRequest& withNamespaceName(const Char* namespaceName)
     {
         ensureData().namespaceName.emplace(namespaceName);
+        return *this;
+    }
+
+    /**
+     * ユーザーIDを取得
+     *
+     * @return ユーザーID
+     */
+    const optional<StringHolder>& getUserId() const
+    {
+        return ensureData().userId;
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    void setUserId(const Char* userId)
+    {
+        ensureData().userId.emplace(userId);
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    DescribeWebSocketSessionsByUserIdRequest& withUserId(const Char* userId)
+    {
+        ensureData().userId.emplace(userId);
         return *this;
     }
 
@@ -211,7 +248,7 @@ public:
      *
      * @param pageToken データの取得を開始する位置を指定するトークン
      */
-    DescribeWebsocketSessionsByUserIdRequest& withPageToken(const Char* pageToken)
+    DescribeWebSocketSessionsByUserIdRequest& withPageToken(const Char* pageToken)
     {
         ensureData().pageToken.emplace(pageToken);
         return *this;
@@ -242,7 +279,7 @@ public:
      *
      * @param limit データの取得件数
      */
-    DescribeWebsocketSessionsByUserIdRequest& withLimit(Int64 limit)
+    DescribeWebSocketSessionsByUserIdRequest& withLimit(Int64 limit)
     {
         ensureData().limit.emplace(limit);
         return *this;
@@ -273,7 +310,7 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    DescribeWebsocketSessionsByUserIdRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    DescribeWebSocketSessionsByUserIdRequest& withDuplicationAvoider(const Char* duplicationAvoider)
     {
         ensureData().duplicationAvoider.emplace(duplicationAvoider);
         return *this;
@@ -286,7 +323,7 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    DescribeWebsocketSessionsByUserIdRequest& withGs2ClientId(const Char* gs2ClientId)
+    DescribeWebSocketSessionsByUserIdRequest& withGs2ClientId(const Char* gs2ClientId)
     {
         setGs2ClientId(gs2ClientId);
         return *this;
@@ -298,7 +335,7 @@ public:
      *
      * @param gs2Timestamp タイムスタンプ
      */
-    DescribeWebsocketSessionsByUserIdRequest& withGs2Timestamp(Int64 gs2Timestamp)
+    DescribeWebSocketSessionsByUserIdRequest& withGs2Timestamp(Int64 gs2Timestamp)
     {
         setGs2Timestamp(gs2Timestamp);
         return *this;
@@ -310,7 +347,7 @@ public:
      *
      * @param gs2RequestSign GS2認証署名
      */
-    DescribeWebsocketSessionsByUserIdRequest& withGs2RequestSign(const Char* gs2RequestSign)
+    DescribeWebSocketSessionsByUserIdRequest& withGs2RequestSign(const Char* gs2RequestSign)
     {
         setGs2RequestSign(gs2RequestSign);
         return *this;
@@ -321,20 +358,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    DescribeWebsocketSessionsByUserIdRequest& withRequestId(const Char* gs2RequestId)
+    DescribeWebSocketSessionsByUserIdRequest& withRequestId(const Char* gs2RequestId)
     {
         setRequestId(gs2RequestId);
-        return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    DescribeWebsocketSessionsByUserIdRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
         return *this;
     }
 

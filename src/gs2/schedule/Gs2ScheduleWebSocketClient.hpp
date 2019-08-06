@@ -52,6 +52,7 @@
 #include "request/ExportMasterRequest.hpp"
 #include "request/GetCurrentEventMasterRequest.hpp"
 #include "request/UpdateCurrentEventMasterRequest.hpp"
+#include "request/UpdateCurrentEventMasterFromGitHubRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -79,6 +80,7 @@
 #include "result/ExportMasterResult.hpp"
 #include "result/GetCurrentEventMasterResult.hpp"
 #include "result/UpdateCurrentEventMasterResult.hpp"
+#include "result/UpdateCurrentEventMasterFromGitHubResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace schedule {
@@ -110,6 +112,7 @@ typedef AsyncResult<GetRawEventResult> AsyncGetRawEventResult;
 typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
 typedef AsyncResult<GetCurrentEventMasterResult> AsyncGetCurrentEventMasterResult;
 typedef AsyncResult<UpdateCurrentEventMasterResult> AsyncUpdateCurrentEventMasterResult;
+typedef AsyncResult<UpdateCurrentEventMasterFromGitHubResult> AsyncUpdateCurrentEventMasterFromGitHubResult;
 
 /**
  * GS2 Schedule API クライアント
@@ -2367,6 +2370,84 @@ private:
         ~UpdateCurrentEventMasterTask() GS2_OVERRIDE = default;
     };
 
+    class UpdateCurrentEventMasterFromGitHubTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentEventMasterFromGitHubResult>
+    {
+    private:
+        UpdateCurrentEventMasterFromGitHubRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            auto& writer = detail::json::JsonWriter::getInstance();
+            writer.reset();
+            writer.writeObjectStart();
+
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCheckoutSetting())
+            {
+                writer.writePropertyName("checkoutSetting");
+                write(writer, *m_Request.getCheckoutSetting());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("schedule");
+            writer.writePropertyName("component");
+            writer.writeCharArray("currentEventMaster");
+            writer.writePropertyName("function");
+            writer.writeCharArray("updateCurrentEventMasterFromGitHub");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        UpdateCurrentEventMasterFromGitHubTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            UpdateCurrentEventMasterFromGitHubRequest& request,
+            Gs2WebSocketSessionTask<UpdateCurrentEventMasterFromGitHubResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateCurrentEventMasterFromGitHubResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~UpdateCurrentEventMasterFromGitHubTask() GS2_OVERRIDE = default;
+    };
+
 private:
     static void write(detail::json::JsonWriter& writer, const Namespace& obj)
     {
@@ -2585,6 +2666,47 @@ private:
         {
             writer.writePropertyName("result");
             writer.writeCharArray(*obj.getResult());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            writer.writePropertyName("gitHubApiKeyId");
+            writer.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            writer.writePropertyName("repositoryName");
+            writer.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            writer.writePropertyName("sourcePath");
+            writer.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            writer.writePropertyName("referenceType");
+            writer.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            writer.writePropertyName("commitHash");
+            writer.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            writer.writePropertyName("branchName");
+            writer.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            writer.writePropertyName("tagName");
+            writer.writeCharArray(*obj.getTagName());
         }
         writer.writeObjectEnd();
     }
@@ -2923,6 +3045,18 @@ public:
     void updateCurrentEventMaster(std::function<void(AsyncUpdateCurrentEventMasterResult&)> callback, UpdateCurrentEventMasterRequest& request)
     {
         UpdateCurrentEventMasterTask& task = *new UpdateCurrentEventMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * 現在有効な現在有効なイベントスケジュールマスターを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentEventMasterFromGitHub(std::function<void(AsyncUpdateCurrentEventMasterFromGitHubResult&)> callback, UpdateCurrentEventMasterFromGitHubRequest& request)
+    {
+        UpdateCurrentEventMasterFromGitHubTask& task = *new UpdateCurrentEventMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 

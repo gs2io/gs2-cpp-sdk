@@ -29,18 +29,18 @@ namespace gs2 { namespace gateway
 {
 
 /**
- * Websocketセッションを新規作成 のレスポンスモデル
+ * Websocketセッションの一覧を取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
-class DescribeWebsocketSessionsResult : public Gs2Object
+class DescribeWebSocketSessionsResult : public Gs2Object
 {
 private:
     class Data : public detail::json::IModel
     {
     public:
         /** Websocketセッションのリスト */
-        optional<List<WebsocketSession>> items;
+        optional<List<WebSocketSession>> items;
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
 
@@ -73,7 +73,7 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->items.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        WebsocketSession item;
+                        WebSocketSession item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
                         detail::addToList(*this->items, std::move(item));
                     }
@@ -105,23 +105,23 @@ private:
     }
 
 public:
-    DescribeWebsocketSessionsResult() :
+    DescribeWebSocketSessionsResult() :
         m_pData(nullptr)
     {}
 
-    DescribeWebsocketSessionsResult(const DescribeWebsocketSessionsResult& describeWebsocketSessionsResult) :
-        Gs2Object(describeWebsocketSessionsResult),
-        m_pData(describeWebsocketSessionsResult.m_pData != nullptr ? new Data(*describeWebsocketSessionsResult.m_pData) : nullptr)
+    DescribeWebSocketSessionsResult(const DescribeWebSocketSessionsResult& describeWebSocketSessionsResult) :
+        Gs2Object(describeWebSocketSessionsResult),
+        m_pData(describeWebSocketSessionsResult.m_pData != nullptr ? new Data(*describeWebSocketSessionsResult.m_pData) : nullptr)
     {}
 
-    DescribeWebsocketSessionsResult(DescribeWebsocketSessionsResult&& describeWebsocketSessionsResult) :
-        Gs2Object(std::move(describeWebsocketSessionsResult)),
-        m_pData(describeWebsocketSessionsResult.m_pData)
+    DescribeWebSocketSessionsResult(DescribeWebSocketSessionsResult&& describeWebSocketSessionsResult) :
+        Gs2Object(std::move(describeWebSocketSessionsResult)),
+        m_pData(describeWebSocketSessionsResult.m_pData)
     {
-        describeWebsocketSessionsResult.m_pData = nullptr;
+        describeWebSocketSessionsResult.m_pData = nullptr;
     }
 
-    ~DescribeWebsocketSessionsResult()
+    ~DescribeWebSocketSessionsResult()
     {
         if (m_pData != nullptr)
         {
@@ -129,39 +129,39 @@ public:
         }
     }
 
-    DescribeWebsocketSessionsResult& operator=(const DescribeWebsocketSessionsResult& describeWebsocketSessionsResult)
+    DescribeWebSocketSessionsResult& operator=(const DescribeWebSocketSessionsResult& describeWebSocketSessionsResult)
     {
-        Gs2Object::operator=(describeWebsocketSessionsResult);
+        Gs2Object::operator=(describeWebSocketSessionsResult);
 
         if (m_pData != nullptr)
         {
             delete m_pData;
         }
-        m_pData = new Data(*describeWebsocketSessionsResult.m_pData);
+        m_pData = new Data(*describeWebSocketSessionsResult.m_pData);
 
         return *this;
     }
 
-    DescribeWebsocketSessionsResult& operator=(DescribeWebsocketSessionsResult&& describeWebsocketSessionsResult)
+    DescribeWebSocketSessionsResult& operator=(DescribeWebSocketSessionsResult&& describeWebSocketSessionsResult)
     {
-        Gs2Object::operator=(std::move(describeWebsocketSessionsResult));
+        Gs2Object::operator=(std::move(describeWebSocketSessionsResult));
 
         if (m_pData != nullptr)
         {
             delete m_pData;
         }
-        m_pData = describeWebsocketSessionsResult.m_pData;
-        describeWebsocketSessionsResult.m_pData = nullptr;
+        m_pData = describeWebSocketSessionsResult.m_pData;
+        describeWebSocketSessionsResult.m_pData = nullptr;
 
         return *this;
     }
 
-    const DescribeWebsocketSessionsResult* operator->() const
+    const DescribeWebSocketSessionsResult* operator->() const
     {
         return this;
     }
 
-    DescribeWebsocketSessionsResult* operator->()
+    DescribeWebSocketSessionsResult* operator->()
     {
         return this;
     }
@@ -170,7 +170,7 @@ public:
      *
      * @return Websocketセッションのリスト
      */
-    const optional<List<WebsocketSession>>& getItems() const
+    const optional<List<WebSocketSession>>& getItems() const
     {
         return ensureData().items;
     }
@@ -180,7 +180,7 @@ public:
      *
      * @param items Websocketセッションのリスト
      */
-    void setItems(const List<WebsocketSession>& items)
+    void setItems(const List<WebSocketSession>& items)
     {
         ensureData().items.emplace(items);
     }

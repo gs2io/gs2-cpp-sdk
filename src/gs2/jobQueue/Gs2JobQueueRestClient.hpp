@@ -110,6 +110,11 @@ private:
             writer.writePropertyName("description");
             writer.writeCharArray(*obj.getDescription());
         }
+        if (obj.getPushNotification())
+        {
+            writer.writePropertyName("pushNotification");
+            write(writer, *obj.getPushNotification());
+        }
         if (obj.getCreatedAt())
         {
             writer.writePropertyName("createdAt");
@@ -298,6 +303,27 @@ private:
         writer.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& writer, const NotificationSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGatewayNamespaceId())
+        {
+            writer.writePropertyName("gatewayNamespaceId");
+            writer.writeCharArray(*obj.getGatewayNamespaceId());
+        }
+        if (obj.getEnableTransferMobileNotification())
+        {
+            writer.writePropertyName("enableTransferMobileNotification");
+            writer.writeBool(*obj.getEnableTransferMobileNotification());
+        }
+        if (obj.getSound())
+        {
+            writer.writePropertyName("sound");
+            writer.writeCharArray(*obj.getSound());
+        }
+        writer.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& writer, const JobEntry& obj)
     {
         writer.writeObjectStart();
@@ -433,6 +459,11 @@ public:
             writer.writePropertyName("description");
             writer.writeCharArray(*request.getDescription());
         }
+        if (request.getPushNotification())
+        {
+            writer.writePropertyName("pushNotification");
+            write(writer, *request.getPushNotification());
+        }
         writer.writeObjectEnd();
         {
             auto body = writer.toString();
@@ -544,6 +575,11 @@ public:
         {
             writer.writePropertyName("description");
             writer.writeCharArray(*request.getDescription());
+        }
+        if (request.getPushNotification())
+        {
+            writer.writePropertyName("pushNotification");
+            write(writer, *request.getPushNotification());
         }
         writer.writeObjectEnd();
         {

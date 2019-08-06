@@ -23,6 +23,7 @@
 #include "JobResult.hpp"
 #include "DeadLetterJob.hpp"
 #include "ResponseCache.hpp"
+#include "NotificationSetting.hpp"
 #include "JobEntry.hpp"
 #include "JobResultBody.hpp"
 

@@ -28,7 +28,7 @@ namespace gs2 { namespace gateway
 {
 
 /**
- * ゲームを新規作成 のリクエストモデル
+ * ネームスペースを新規作成 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -41,7 +41,7 @@ private:
     class Data : public Gs2Object
     {
     public:
-        /** ゲーム名 */
+        /** ネームスペース名 */
         optional<StringHolder> name;
         /** 説明文 */
         optional<StringHolder> description;
@@ -154,9 +154,9 @@ public:
         return this;
     }
     /**
-     * ゲーム名を取得
+     * ネームスペース名を取得
      *
-     * @return ゲーム名
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getName() const
     {
@@ -164,9 +164,9 @@ public:
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param name ゲーム名
+     * @param name ネームスペース名
      */
     void setName(const Char* name)
     {
@@ -174,9 +174,9 @@ public:
     }
 
     /**
-     * ゲーム名を設定
+     * ネームスペース名を設定
      *
-     * @param name ゲーム名
+     * @param name ネームスペース名
      */
     CreateNamespaceRequest& withName(const Char* name)
     {

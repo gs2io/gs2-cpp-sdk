@@ -24,6 +24,7 @@
 #include "WorkingResource.hpp"
 #include "Event.hpp"
 #include "Output.hpp"
+#include "GitHubCheckoutSetting.hpp"
 #include "OutputField.hpp"
 
 #endif //GS2_DEPLOY_MODEL_MODEL_HPP_

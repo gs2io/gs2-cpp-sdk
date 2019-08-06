@@ -24,6 +24,7 @@
 #include "ShowcaseMaster.hpp"
 #include "CurrentShowcaseMaster.hpp"
 #include "ResponseCache.hpp"
+#include "GitHubCheckoutSetting.hpp"
 #include "SalesItem.hpp"
 #include "SalesItemGroup.hpp"
 #include "Showcase.hpp"

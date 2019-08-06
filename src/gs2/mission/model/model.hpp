@@ -18,21 +18,22 @@
 #define GS2_MISSION_MODEL_MODEL_HPP_
 
 #include <gs2/core/common.hpp>
-#include "Namespace.hpp"
 #include "Counter.hpp"
-#include "CurrentMissionMaster.hpp"
-#include "MissionTaskModelMaster.hpp"
-#include "Config.hpp"
 #include "Complete.hpp"
-#include "MissionGroupModelMaster.hpp"
-#include "AcquireAction.hpp"
-#include "MissionTaskModel.hpp"
+#include "GitHubCheckoutSetting.hpp"
 #include "CounterScopeModel.hpp"
+#include "MissionTaskModelMaster.hpp"
+#include "MissionGroupModelMaster.hpp"
+#include "MissionTaskModel.hpp"
 #include "MissionGroupModel.hpp"
 #include "ResponseCache.hpp"
 #include "NotificationSetting.hpp"
-#include "CounterModel.hpp"
 #include "ScopedValue.hpp"
+#include "AcquireAction.hpp"
+#include "CurrentMissionMaster.hpp"
+#include "Namespace.hpp"
+#include "Config.hpp"
 #include "CounterModelMaster.hpp"
+#include "CounterModel.hpp"
 
 #endif //GS2_MISSION_MODEL_MODEL_HPP_

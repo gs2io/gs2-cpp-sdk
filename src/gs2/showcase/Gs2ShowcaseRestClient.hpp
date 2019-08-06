@@ -49,6 +49,7 @@
 #include "request/ExportMasterRequest.hpp"
 #include "request/GetCurrentShowcaseMasterRequest.hpp"
 #include "request/UpdateCurrentShowcaseMasterRequest.hpp"
+#include "request/UpdateCurrentShowcaseMasterFromGitHubRequest.hpp"
 #include "request/DescribeShowcasesRequest.hpp"
 #include "request/DescribeShowcasesByUserIdRequest.hpp"
 #include "request/GetShowcaseRequest.hpp"
@@ -79,6 +80,7 @@
 #include "result/ExportMasterResult.hpp"
 #include "result/GetCurrentShowcaseMasterResult.hpp"
 #include "result/UpdateCurrentShowcaseMasterResult.hpp"
+#include "result/UpdateCurrentShowcaseMasterFromGitHubResult.hpp"
 #include "result/DescribeShowcasesResult.hpp"
 #include "result/DescribeShowcasesByUserIdResult.hpp"
 #include "result/GetShowcaseResult.hpp"
@@ -113,6 +115,7 @@ typedef AsyncResult<DeleteShowcaseMasterResult> AsyncDeleteShowcaseMasterResult;
 typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
 typedef AsyncResult<GetCurrentShowcaseMasterResult> AsyncGetCurrentShowcaseMasterResult;
 typedef AsyncResult<UpdateCurrentShowcaseMasterResult> AsyncUpdateCurrentShowcaseMasterResult;
+typedef AsyncResult<UpdateCurrentShowcaseMasterFromGitHubResult> AsyncUpdateCurrentShowcaseMasterFromGitHubResult;
 typedef AsyncResult<DescribeShowcasesResult> AsyncDescribeShowcasesResult;
 typedef AsyncResult<DescribeShowcasesByUserIdResult> AsyncDescribeShowcasesByUserIdResult;
 typedef AsyncResult<GetShowcaseResult> AsyncGetShowcaseResult;
@@ -375,6 +378,47 @@ private:
         {
             writer.writePropertyName("result");
             writer.writeCharArray(*obj.getResult());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            writer.writePropertyName("gitHubApiKeyId");
+            writer.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            writer.writePropertyName("repositoryName");
+            writer.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            writer.writePropertyName("sourcePath");
+            writer.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            writer.writePropertyName("referenceType");
+            writer.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            writer.writePropertyName("commitHash");
+            writer.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            writer.writePropertyName("branchName");
+            writer.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            writer.writePropertyName("tagName");
+            writer.writeCharArray(*obj.getTagName());
         }
         writer.writeObjectEnd();
     }
@@ -1773,6 +1817,52 @@ public:
         {
             writer.writePropertyName("settings");
             writer.writeCharArray(*request.getSettings());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * 現在有効な現在有効な陳列棚マスターを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentShowcaseMasterFromGitHub(std::function<void(AsyncUpdateCurrentShowcaseMasterFromGitHubResult&)> callback, UpdateCurrentShowcaseMasterFromGitHubRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateCurrentShowcaseMasterFromGitHubResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("PUT");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "showcase");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/from_git_hub";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getCheckoutSetting())
+        {
+            writer.writePropertyName("checkoutSetting");
+            write(writer, *request.getCheckoutSetting());
         }
         writer.writeObjectEnd();
         {

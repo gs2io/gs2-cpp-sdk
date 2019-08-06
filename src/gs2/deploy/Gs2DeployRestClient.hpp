@@ -27,9 +27,11 @@
 #include "model/model.hpp"
 #include "request/DescribeStacksRequest.hpp"
 #include "request/CreateStackRequest.hpp"
+#include "request/CreateStackFromGitHubRequest.hpp"
 #include "request/GetStackStatusRequest.hpp"
 #include "request/GetStackRequest.hpp"
 #include "request/UpdateStackRequest.hpp"
+#include "request/UpdateStackFromGitHubRequest.hpp"
 #include "request/DeleteStackRequest.hpp"
 #include "request/ForceDeleteStackRequest.hpp"
 #include "request/DescribeResourcesRequest.hpp"
@@ -40,9 +42,11 @@
 #include "request/GetOutputRequest.hpp"
 #include "result/DescribeStacksResult.hpp"
 #include "result/CreateStackResult.hpp"
+#include "result/CreateStackFromGitHubResult.hpp"
 #include "result/GetStackStatusResult.hpp"
 #include "result/GetStackResult.hpp"
 #include "result/UpdateStackResult.hpp"
+#include "result/UpdateStackFromGitHubResult.hpp"
 #include "result/DeleteStackResult.hpp"
 #include "result/ForceDeleteStackResult.hpp"
 #include "result/DescribeResourcesResult.hpp"
@@ -57,9 +61,11 @@ namespace gs2 { namespace deploy {
 
 typedef AsyncResult<DescribeStacksResult> AsyncDescribeStacksResult;
 typedef AsyncResult<CreateStackResult> AsyncCreateStackResult;
+typedef AsyncResult<CreateStackFromGitHubResult> AsyncCreateStackFromGitHubResult;
 typedef AsyncResult<GetStackStatusResult> AsyncGetStackStatusResult;
 typedef AsyncResult<GetStackResult> AsyncGetStackResult;
 typedef AsyncResult<UpdateStackResult> AsyncUpdateStackResult;
+typedef AsyncResult<UpdateStackFromGitHubResult> AsyncUpdateStackFromGitHubResult;
 typedef AsyncResult<DeleteStackResult> AsyncDeleteStackResult;
 typedef AsyncResult<ForceDeleteStackResult> AsyncForceDeleteStackResult;
 typedef AsyncResult<DescribeResourcesResult> AsyncDescribeResourcesResult;
@@ -369,6 +375,47 @@ private:
         writer.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            writer.writePropertyName("gitHubApiKeyId");
+            writer.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            writer.writePropertyName("repositoryName");
+            writer.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            writer.writePropertyName("sourcePath");
+            writer.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            writer.writePropertyName("referenceType");
+            writer.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            writer.writePropertyName("commitHash");
+            writer.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            writer.writePropertyName("branchName");
+            writer.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            writer.writePropertyName("tagName");
+            writer.writeCharArray(*obj.getTagName());
+        }
+        writer.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& writer, const OutputField& obj)
     {
         writer.writeObjectStart();
@@ -497,6 +544,58 @@ public:
     }
 
 	/**
+	 * スタックを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createStackFromGitHub(std::function<void(AsyncCreateStackFromGitHubResult&)> callback, CreateStackFromGitHubRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateStackFromGitHubResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "deploy");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/stack";
+        httpRequest.SetURL(url.c_str());
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getName())
+        {
+            writer.writePropertyName("name");
+            writer.writeCharArray(*request.getName());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*request.getDescription());
+        }
+        if (request.getCheckoutSetting())
+        {
+            writer.writePropertyName("checkoutSetting");
+            write(writer, *request.getCheckoutSetting());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
 	 * スタックを取得<br>
 	 *
      * @param callback コールバック関数
@@ -594,6 +693,57 @@ public:
         {
             writer.writePropertyName("template");
             writer.writeCharArray(*request.getTemplate());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * スタックを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateStackFromGitHub(std::function<void(AsyncUpdateStackFromGitHubResult&)> callback, UpdateStackFromGitHubRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateStackFromGitHubResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("PUT");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "deploy");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/stack/{stackName}/from_git_hub";
+        {
+            auto& value = request.getStackName();
+            url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*request.getDescription());
+        }
+        if (request.getCheckoutSetting())
+        {
+            writer.writePropertyName("checkoutSetting");
+            write(writer, *request.getCheckoutSetting());
         }
         writer.writeObjectEnd();
         {

@@ -44,6 +44,7 @@
 #include "request/ExportMasterRequest.hpp"
 #include "request/GetCurrentStaminaMasterRequest.hpp"
 #include "request/UpdateCurrentStaminaMasterRequest.hpp"
+#include "request/UpdateCurrentStaminaMasterFromGitHubRequest.hpp"
 #include "request/DescribeStaminaModelsRequest.hpp"
 #include "request/GetStaminaModelRequest.hpp"
 #include "request/DescribeStaminasRequest.hpp"
@@ -81,6 +82,7 @@
 #include "result/ExportMasterResult.hpp"
 #include "result/GetCurrentStaminaMasterResult.hpp"
 #include "result/UpdateCurrentStaminaMasterResult.hpp"
+#include "result/UpdateCurrentStaminaMasterFromGitHubResult.hpp"
 #include "result/DescribeStaminaModelsResult.hpp"
 #include "result/GetStaminaModelResult.hpp"
 #include "result/DescribeStaminasResult.hpp"
@@ -122,6 +124,7 @@ typedef AsyncResult<DeleteMaxStaminaTableMasterResult> AsyncDeleteMaxStaminaTabl
 typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
 typedef AsyncResult<GetCurrentStaminaMasterResult> AsyncGetCurrentStaminaMasterResult;
 typedef AsyncResult<UpdateCurrentStaminaMasterResult> AsyncUpdateCurrentStaminaMasterResult;
+typedef AsyncResult<UpdateCurrentStaminaMasterFromGitHubResult> AsyncUpdateCurrentStaminaMasterFromGitHubResult;
 typedef AsyncResult<DescribeStaminaModelsResult> AsyncDescribeStaminaModelsResult;
 typedef AsyncResult<GetStaminaModelResult> AsyncGetStaminaModelResult;
 typedef AsyncResult<DescribeStaminasResult> AsyncDescribeStaminasResult;
@@ -1768,6 +1771,84 @@ private:
         {}
 
         ~UpdateCurrentStaminaMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateCurrentStaminaMasterFromGitHubTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentStaminaMasterFromGitHubResult>
+    {
+    private:
+        UpdateCurrentStaminaMasterFromGitHubRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            auto& writer = detail::json::JsonWriter::getInstance();
+            writer.reset();
+            writer.writeObjectStart();
+
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCheckoutSetting())
+            {
+                writer.writePropertyName("checkoutSetting");
+                write(writer, *m_Request.getCheckoutSetting());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("stamina");
+            writer.writePropertyName("component");
+            writer.writeCharArray("currentStaminaMaster");
+            writer.writePropertyName("function");
+            writer.writeCharArray("updateCurrentStaminaMasterFromGitHub");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        UpdateCurrentStaminaMasterFromGitHubTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            UpdateCurrentStaminaMasterFromGitHubRequest& request,
+            Gs2WebSocketSessionTask<UpdateCurrentStaminaMasterFromGitHubResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateCurrentStaminaMasterFromGitHubResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~UpdateCurrentStaminaMasterFromGitHubTask() GS2_OVERRIDE = default;
     };
 
     class DescribeStaminaModelsTask : public detail::Gs2WebSocketSessionTask<DescribeStaminaModelsResult>
@@ -3695,6 +3776,47 @@ private:
         writer.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            writer.writePropertyName("gitHubApiKeyId");
+            writer.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            writer.writePropertyName("repositoryName");
+            writer.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            writer.writePropertyName("sourcePath");
+            writer.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            writer.writePropertyName("referenceType");
+            writer.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            writer.writePropertyName("commitHash");
+            writer.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            writer.writePropertyName("branchName");
+            writer.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            writer.writePropertyName("tagName");
+            writer.writeCharArray(*obj.getTagName());
+        }
+        writer.writeObjectEnd();
+    }
+
 
 
 public:
@@ -3933,6 +4055,18 @@ public:
     void updateCurrentStaminaMaster(std::function<void(AsyncUpdateCurrentStaminaMasterResult&)> callback, UpdateCurrentStaminaMasterRequest& request)
     {
         UpdateCurrentStaminaMasterTask& task = *new UpdateCurrentStaminaMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * 現在有効な現在有効なスタミナマスターを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentStaminaMasterFromGitHub(std::function<void(AsyncUpdateCurrentStaminaMasterFromGitHubResult&)> callback, UpdateCurrentStaminaMasterFromGitHubRequest& request)
+    {
+        UpdateCurrentStaminaMasterFromGitHubTask& task = *new UpdateCurrentStaminaMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 

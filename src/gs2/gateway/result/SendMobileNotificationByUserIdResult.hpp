@@ -29,7 +29,7 @@ namespace gs2 { namespace gateway
 {
 
 /**
- * Firebaseデバイストークンを新規作成 のレスポンスモデル
+ * モバイルプッシュ通知を送信 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,20 +39,16 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 作成したFirebaseデバイストークン */
-        optional<FirebaseToken> item;
 
         Data()
         {}
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
+            detail::json::IModel(data)
         {}
 
         Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
+            detail::json::IModel(std::move(data))
         {}
 
         virtual ~Data() = default;
@@ -63,14 +59,6 @@ private:
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "item") == 0) {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->item.emplace();
-                    detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
-                }
-            }
         }
     };
 
@@ -151,26 +139,6 @@ public:
     {
         return this;
     }
-    /**
-     * 作成したFirebaseデバイストークンを取得
-     *
-     * @return 作成したFirebaseデバイストークン
-     */
-    const optional<FirebaseToken>& getItem() const
-    {
-        return ensureData().item;
-    }
-
-    /**
-     * 作成したFirebaseデバイストークンを設定
-     *
-     * @param item 作成したFirebaseデバイストークン
-     */
-    void setItem(const FirebaseToken& item)
-    {
-        ensureData().item.emplace(item);
-    }
-
 
     detail::json::IModel& getModel()
     {

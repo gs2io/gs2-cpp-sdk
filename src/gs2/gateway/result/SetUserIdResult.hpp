@@ -29,7 +29,7 @@ namespace gs2 { namespace gateway
 {
 
 /**
- * Websocketセッションを新規作成 のレスポンスモデル
+ * WebsocketセッションにユーザIDを設定 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -39,8 +39,8 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 作成したWebsocketセッション */
-        optional<WebsocketSession> item;
+        /** 更新したWebsocketセッション */
+        optional<WebSocketSession> item;
 
         Data()
         {}
@@ -152,21 +152,21 @@ public:
         return this;
     }
     /**
-     * 作成したWebsocketセッションを取得
+     * 更新したWebsocketセッションを取得
      *
-     * @return 作成したWebsocketセッション
+     * @return 更新したWebsocketセッション
      */
-    const optional<WebsocketSession>& getItem() const
+    const optional<WebSocketSession>& getItem() const
     {
         return ensureData().item;
     }
 
     /**
-     * 作成したWebsocketセッションを設定
+     * 更新したWebsocketセッションを設定
      *
-     * @param item 作成したWebsocketセッション
+     * @param item 更新したWebsocketセッション
      */
-    void setItem(const WebsocketSession& item)
+    void setItem(const WebSocketSession& item)
     {
         ensureData().item.emplace(item);
     }

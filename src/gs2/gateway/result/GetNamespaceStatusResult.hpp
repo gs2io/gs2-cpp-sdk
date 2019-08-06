@@ -29,7 +29,7 @@ namespace gs2 { namespace gateway
 {
 
 /**
- * ゲームを取得 のレスポンスモデル
+ * ネームスペースを取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */

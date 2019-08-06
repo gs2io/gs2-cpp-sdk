@@ -48,6 +48,7 @@
 #include "request/ExportMasterRequest.hpp"
 #include "request/GetCurrentItemModelMasterRequest.hpp"
 #include "request/UpdateCurrentItemModelMasterRequest.hpp"
+#include "request/UpdateCurrentItemModelMasterFromGitHubRequest.hpp"
 #include "request/DescribeInventoriesRequest.hpp"
 #include "request/DescribeInventoriesByUserIdRequest.hpp"
 #include "request/GetInventoryRequest.hpp"
@@ -90,6 +91,7 @@
 #include "result/ExportMasterResult.hpp"
 #include "result/GetCurrentItemModelMasterResult.hpp"
 #include "result/UpdateCurrentItemModelMasterResult.hpp"
+#include "result/UpdateCurrentItemModelMasterFromGitHubResult.hpp"
 #include "result/DescribeInventoriesResult.hpp"
 #include "result/DescribeInventoriesByUserIdResult.hpp"
 #include "result/GetInventoryResult.hpp"
@@ -136,6 +138,7 @@ typedef AsyncResult<GetItemModelResult> AsyncGetItemModelResult;
 typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
 typedef AsyncResult<GetCurrentItemModelMasterResult> AsyncGetCurrentItemModelMasterResult;
 typedef AsyncResult<UpdateCurrentItemModelMasterResult> AsyncUpdateCurrentItemModelMasterResult;
+typedef AsyncResult<UpdateCurrentItemModelMasterFromGitHubResult> AsyncUpdateCurrentItemModelMasterFromGitHubResult;
 typedef AsyncResult<DescribeInventoriesResult> AsyncDescribeInventoriesResult;
 typedef AsyncResult<DescribeInventoriesByUserIdResult> AsyncDescribeInventoriesByUserIdResult;
 typedef AsyncResult<GetInventoryResult> AsyncGetInventoryResult;
@@ -546,6 +549,47 @@ private:
         {
             writer.writePropertyName("result");
             writer.writeCharArray(*obj.getResult());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            writer.writePropertyName("gitHubApiKeyId");
+            writer.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            writer.writePropertyName("repositoryName");
+            writer.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            writer.writePropertyName("sourcePath");
+            writer.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            writer.writePropertyName("referenceType");
+            writer.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            writer.writePropertyName("commitHash");
+            writer.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            writer.writePropertyName("branchName");
+            writer.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            writer.writePropertyName("tagName");
+            writer.writeCharArray(*obj.getTagName());
         }
         writer.writeObjectEnd();
     }
@@ -1667,6 +1711,52 @@ public:
         {
             writer.writePropertyName("settings");
             writer.writeCharArray(*request.getSettings());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * 現在有効な現在有効な所持品マスターを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentItemModelMasterFromGitHub(std::function<void(AsyncUpdateCurrentItemModelMasterFromGitHubResult&)> callback, UpdateCurrentItemModelMasterFromGitHubRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateCurrentItemModelMasterFromGitHubResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("PUT");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "inventory");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/from_git_hub";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        auto& writer = detail::json::JsonWriter::getInstance();
+        writer.reset();
+        writer.writeObjectStart();
+        if (request.getCheckoutSetting())
+        {
+            writer.writePropertyName("checkoutSetting");
+            write(writer, *request.getCheckoutSetting());
         }
         writer.writeObjectEnd();
         {

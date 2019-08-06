@@ -43,6 +43,8 @@ private:
         optional<StringHolder> namespaceName;
         /** メッセージID */
         optional<StringHolder> messageName;
+        /** スタンプシートの変数に適用する設定値 */
+        optional<List<Config>> config;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -53,6 +55,7 @@ private:
             Gs2Object(data),
             namespaceName(data.namespaceName),
             messageName(data.messageName),
+            config(data.config),
             duplicationAvoider(data.duplicationAvoider)
         {}
 
@@ -60,6 +63,7 @@ private:
             Gs2Object(std::move(data)),
             namespaceName(std::move(data.namespaceName)),
             messageName(std::move(data.messageName)),
+            config(std::move(data.config)),
             duplicationAvoider(std::move(data.duplicationAvoider))
         {}
 
@@ -210,6 +214,37 @@ public:
     ReadMessageRequest& withMessageName(const Char* messageName)
     {
         ensureData().messageName.emplace(messageName);
+        return *this;
+    }
+
+    /**
+     * スタンプシートの変数に適用する設定値を取得
+     *
+     * @return スタンプシートの変数に適用する設定値
+     */
+    const optional<List<Config>>& getConfig() const
+    {
+        return ensureData().config;
+    }
+
+    /**
+     * スタンプシートの変数に適用する設定値を設定
+     *
+     * @param config スタンプシートの変数に適用する設定値
+     */
+    void setConfig(const List<Config>& config)
+    {
+        ensureData().config.emplace(config);
+    }
+
+    /**
+     * スタンプシートの変数に適用する設定値を設定
+     *
+     * @param config スタンプシートの変数に適用する設定値
+     */
+    ReadMessageRequest& withConfig(const List<Config>& config)
+    {
+        ensureData().config.emplace(config);
         return *this;
     }
 
