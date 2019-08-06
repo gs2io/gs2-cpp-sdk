@@ -4614,6 +4614,27 @@ private:
         writer.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& writer, const ScopedValue& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getResetType())
+        {
+            writer.writePropertyName("resetType");
+            writer.writeCharArray(*obj.getResetType());
+        }
+        if (obj.getValue())
+        {
+            writer.writePropertyName("value");
+            writer.writeInt64(*obj.getValue());
+        }
+        if (obj.getUpdatedAt())
+        {
+            writer.writePropertyName("updatedAt");
+            writer.writeInt64(*obj.getUpdatedAt());
+        }
+        writer.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& writer, const MissionTaskModel& obj)
     {
         writer.writeObjectStart();
@@ -4756,27 +4777,6 @@ private:
         {
             writer.writePropertyName("sound");
             writer.writeCharArray(*obj.getSound());
-        }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const ScopedValue& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getResetType())
-        {
-            writer.writePropertyName("resetType");
-            writer.writeCharArray(*obj.getResetType());
-        }
-        if (obj.getValue())
-        {
-            writer.writePropertyName("value");
-            writer.writeInt64(*obj.getValue());
-        }
-        if (obj.getUpdatedAt())
-        {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
         }
         writer.writeObjectEnd();
     }

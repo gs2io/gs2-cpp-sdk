@@ -122,69 +122,69 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "namespaceId") == 0) {
+            if (std::strcmp(name_, "namespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->namespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createGatheringTriggerType") == 0) {
+            else if (std::strcmp(name_, "createGatheringTriggerType") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->createGatheringTriggerType.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createGatheringTriggerRealtimeNamespaceId") == 0) {
+            else if (std::strcmp(name_, "createGatheringTriggerRealtimeNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->createGatheringTriggerRealtimeNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createGatheringTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "createGatheringTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->createGatheringTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "completeMatchmakingTriggerType") == 0) {
+            else if (std::strcmp(name_, "completeMatchmakingTriggerType") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->completeMatchmakingTriggerType.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "completeMatchmakingTriggerRealtimeNamespaceId") == 0) {
+            else if (std::strcmp(name_, "completeMatchmakingTriggerRealtimeNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->completeMatchmakingTriggerRealtimeNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "completeMatchmakingTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "completeMatchmakingTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->completeMatchmakingTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "joinNotification") == 0) {
+            else if (std::strcmp(name_, "joinNotification") == 0) {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -192,7 +192,7 @@ private:
                     detail::json::JsonParser::parse(&this->joinNotification->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name, "leaveNotification") == 0) {
+            else if (std::strcmp(name_, "leaveNotification") == 0) {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -200,7 +200,7 @@ private:
                     detail::json::JsonParser::parse(&this->leaveNotification->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name, "completeNotification") == 0) {
+            else if (std::strcmp(name_, "completeNotification") == 0) {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -208,13 +208,13 @@ private:
                     detail::json::JsonParser::parse(&this->completeNotification->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();

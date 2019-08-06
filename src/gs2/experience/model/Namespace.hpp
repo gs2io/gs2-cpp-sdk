@@ -119,93 +119,93 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "namespaceId") == 0) {
+            if (std::strcmp(name_, "namespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->namespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "experienceCapScriptId") == 0) {
+            else if (std::strcmp(name_, "experienceCapScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->experienceCapScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "changeExperienceTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "changeExperienceTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->changeExperienceTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "changeExperienceDoneTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "changeExperienceDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->changeExperienceDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "changeExperienceDoneTriggerNamespaceId") == 0) {
+            else if (std::strcmp(name_, "changeExperienceDoneTriggerNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->changeExperienceDoneTriggerNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "changeRankTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "changeRankTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->changeRankTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "changeRankTriggerNamespaceId") == 0) {
+            else if (std::strcmp(name_, "changeRankTriggerNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->changeRankTriggerNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "changeRankCapTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "changeRankCapTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->changeRankCapTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "changeRankCapDoneTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "changeRankCapDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->changeRankCapDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "changeRankCapDoneTriggerNamespaceId") == 0) {
+            else if (std::strcmp(name_, "changeRankCapDoneTriggerNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->changeRankCapDoneTriggerNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();

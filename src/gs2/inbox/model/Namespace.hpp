@@ -136,105 +136,105 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "namespaceId") == 0) {
+            if (std::strcmp(name_, "namespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->namespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "isAutomaticDeletingEnabled") == 0) {
+            else if (std::strcmp(name_, "isAutomaticDeletingEnabled") == 0) {
                 if (jsonValue.IsBool())
                 {
                     this->isAutomaticDeletingEnabled = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name, "receiveMessageTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "receiveMessageTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->receiveMessageTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "receiveMessageDoneTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "receiveMessageDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->receiveMessageDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "receiveMessageDoneTriggerNamespaceId") == 0) {
+            else if (std::strcmp(name_, "receiveMessageDoneTriggerNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->receiveMessageDoneTriggerNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "readMessageTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "readMessageTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->readMessageTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "readMessageDoneTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "readMessageDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->readMessageDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "readMessageDoneTriggerNamespaceId") == 0) {
+            else if (std::strcmp(name_, "readMessageDoneTriggerNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->readMessageDoneTriggerNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "deleteMessageTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "deleteMessageTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->deleteMessageTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "deleteMessageDoneTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "deleteMessageDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->deleteMessageDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "deleteMessageDoneTriggerNamespaceId") == 0) {
+            else if (std::strcmp(name_, "deleteMessageDoneTriggerNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->deleteMessageDoneTriggerNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "queueNamespaceId") == 0) {
+            else if (std::strcmp(name_, "queueNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->queueNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "keyId") == 0) {
+            else if (std::strcmp(name_, "keyId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->keyId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "receiveNotification") == 0) {
+            else if (std::strcmp(name_, "receiveNotification") == 0) {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -242,13 +242,13 @@ private:
                     detail::json::JsonParser::parse(&this->receiveNotification->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();

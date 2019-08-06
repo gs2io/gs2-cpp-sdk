@@ -87,45 +87,45 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "gitHubApiKeyId") == 0) {
+            if (std::strcmp(name_, "gitHubApiKeyId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->gitHubApiKeyId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "repositoryName") == 0) {
+            else if (std::strcmp(name_, "repositoryName") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->repositoryName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "sourcePath") == 0) {
+            else if (std::strcmp(name_, "sourcePath") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->sourcePath.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "referenceType") == 0) {
+            else if (std::strcmp(name_, "referenceType") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->referenceType.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "commitHash") == 0) {
+            else if (std::strcmp(name_, "commitHash") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->commitHash.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "branchName") == 0) {
+            else if (std::strcmp(name_, "branchName") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->branchName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "tagName") == 0) {
+            else if (std::strcmp(name_, "tagName") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->tagName.emplace(jsonValue.GetString());

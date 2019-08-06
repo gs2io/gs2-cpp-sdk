@@ -127,105 +127,105 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "namespaceId") == 0) {
+            if (std::strcmp(name_, "namespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->namespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "startQuestTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "startQuestTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->startQuestTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "startQuestDoneTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "startQuestDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->startQuestDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "startQuestDoneTriggerQueueNamespaceId") == 0) {
+            else if (std::strcmp(name_, "startQuestDoneTriggerQueueNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->startQuestDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "completeQuestTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "completeQuestTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->completeQuestTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "completeQuestDoneTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "completeQuestDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->completeQuestDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "completeQuestDoneTriggerQueueNamespaceId") == 0) {
+            else if (std::strcmp(name_, "completeQuestDoneTriggerQueueNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->completeQuestDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "failedQuestTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "failedQuestTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->failedQuestTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "failedQuestDoneTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "failedQuestDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->failedQuestDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "failedQuestDoneTriggerQueueNamespaceId") == 0) {
+            else if (std::strcmp(name_, "failedQuestDoneTriggerQueueNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->failedQuestDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "queueNamespaceId") == 0) {
+            else if (std::strcmp(name_, "queueNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->queueNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "keyId") == 0) {
+            else if (std::strcmp(name_, "keyId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->keyId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();

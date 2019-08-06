@@ -67,15 +67,15 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "namespaceName") == 0) {
+            if (std::strcmp(name_, "namespaceName") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->namespaceName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "settings") == 0) {
+            else if (std::strcmp(name_, "settings") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->settings.emplace(jsonValue.GetString());

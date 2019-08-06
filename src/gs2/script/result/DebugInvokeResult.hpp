@@ -77,33 +77,33 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "code") == 0) {
+            if (std::strcmp(name_, "code") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->code = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "result") == 0) {
+            else if (std::strcmp(name_, "result") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->result.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "executeTime") == 0) {
+            else if (std::strcmp(name_, "executeTime") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->executeTime = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "charged") == 0) {
+            else if (std::strcmp(name_, "charged") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->charged = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "output") == 0) {
+            else if (std::strcmp(name_, "output") == 0) {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();

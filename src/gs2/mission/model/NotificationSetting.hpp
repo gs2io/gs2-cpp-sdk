@@ -71,21 +71,21 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "gatewayNamespaceId") == 0) {
+            if (std::strcmp(name_, "gatewayNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->gatewayNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "enableTransferMobileNotification") == 0) {
+            else if (std::strcmp(name_, "enableTransferMobileNotification") == 0) {
                 if (jsonValue.IsBool())
                 {
                     this->enableTransferMobileNotification = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name, "sound") == 0) {
+            else if (std::strcmp(name_, "sound") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->sound.emplace(jsonValue.GetString());

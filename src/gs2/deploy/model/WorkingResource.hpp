@@ -108,39 +108,39 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "resourceId") == 0) {
+            if (std::strcmp(name_, "resourceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->resourceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "context") == 0) {
+            else if (std::strcmp(name_, "context") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->context.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "type") == 0) {
+            else if (std::strcmp(name_, "type") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->type.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "request") == 0) {
+            else if (std::strcmp(name_, "request") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->request.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "after") == 0) {
+            else if (std::strcmp(name_, "after") == 0) {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -155,19 +155,19 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name, "rollbackContext") == 0) {
+            else if (std::strcmp(name_, "rollbackContext") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->rollbackContext.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "rollbackRequest") == 0) {
+            else if (std::strcmp(name_, "rollbackRequest") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->rollbackRequest.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "rollbackAfter") == 0) {
+            else if (std::strcmp(name_, "rollbackAfter") == 0) {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -182,7 +182,7 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name, "outputFields") == 0) {
+            else if (std::strcmp(name_, "outputFields") == 0) {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -194,13 +194,13 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();

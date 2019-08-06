@@ -71,21 +71,21 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "name") == 0) {
+            if (std::strcmp(name_, "name") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "min") == 0) {
+            else if (std::strcmp(name_, "min") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->min = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "max") == 0) {
+            else if (std::strcmp(name_, "max") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->max = jsonValue.GetInt();

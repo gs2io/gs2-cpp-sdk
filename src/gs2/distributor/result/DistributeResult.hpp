@@ -69,9 +69,9 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "distributeResource") == 0) {
+            if (std::strcmp(name_, "distributeResource") == 0) {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -79,13 +79,13 @@ private:
                     detail::json::JsonParser::parse(&this->distributeResource->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name, "inboxNamespaceId") == 0) {
+            else if (std::strcmp(name_, "inboxNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->inboxNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "result") == 0) {
+            else if (std::strcmp(name_, "result") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->result.emplace(jsonValue.GetString());

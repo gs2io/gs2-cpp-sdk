@@ -431,12 +431,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -818,12 +815,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -876,12 +870,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -938,12 +929,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -985,9 +973,8 @@ public:
             auto& value = request.getSlot();
             if (value.has_value())
             {
-                Char urlSafeValue[32];
-                std::sprintf(urlSafeValue, "%d", *value);
-                url.replace("{slot}", urlSafeValue);
+                detail::StringVariable urlSafeValue(*value);
+                url.replace("{slot}", urlSafeValue.c_str());
             }
             else
             {
@@ -1039,9 +1026,8 @@ public:
             auto& value = request.getSlot();
             if (value.has_value())
             {
-                Char urlSafeValue[32];
-                std::sprintf(urlSafeValue, "%d", *value);
-                url.replace("{slot}", urlSafeValue);
+                detail::StringVariable urlSafeValue(*value);
+                url.replace("{slot}", urlSafeValue.c_str());
             }
             else
             {
@@ -1093,9 +1079,8 @@ public:
             auto& value = request.getSlot();
             if (value.has_value())
             {
-                Char urlSafeValue[32];
-                std::sprintf(urlSafeValue, "%d", *value);
-                url.replace("{slot}", urlSafeValue);
+                detail::StringVariable urlSafeValue(*value);
+                url.replace("{slot}", urlSafeValue.c_str());
             }
             else
             {
@@ -1171,9 +1156,8 @@ public:
             auto& value = request.getSlot();
             if (value.has_value())
             {
-                Char urlSafeValue[32];
-                std::sprintf(urlSafeValue, "%d", *value);
-                url.replace("{slot}", urlSafeValue);
+                detail::StringVariable urlSafeValue(*value);
+                url.replace("{slot}", urlSafeValue.c_str());
             }
             else
             {
@@ -1243,9 +1227,8 @@ public:
             auto& value = request.getSlot();
             if (value.has_value())
             {
-                Char urlSafeValue[32];
-                std::sprintf(urlSafeValue, "%d", *value);
-                url.replace("{slot}", urlSafeValue);
+                detail::StringVariable urlSafeValue(*value);
+                url.replace("{slot}", urlSafeValue.c_str());
             }
             else
             {
@@ -1416,9 +1399,8 @@ public:
             auto& value = request.getSlot();
             if (value.has_value())
             {
-                Char urlSafeValue[32];
-                std::sprintf(urlSafeValue, "%d", *value);
-                url.replace("{slot}", urlSafeValue);
+                detail::StringVariable urlSafeValue(*value);
+                url.replace("{slot}", urlSafeValue.c_str());
             }
             else
             {
@@ -1436,12 +1418,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -1490,30 +1469,21 @@ public:
             joint[0] = '&';
         }
         if (request.getSlot()) {
-            Char urlSafeValue[32];
-            Int32 value = *request.getSlot();
-            std::sprintf(urlSafeValue, "%d", value);
             url += joint;
             url += "slot=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getSlot()).c_str();
             joint[0] = '&';
         }
         if (request.getBegin()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getBegin();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "begin=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getBegin()).c_str();
             joint[0] = '&';
         }
         if (request.getEnd()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getEnd();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "end=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getEnd()).c_str();
             joint[0] = '&';
         }
         if (request.getPageToken()) {
@@ -1525,12 +1495,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());

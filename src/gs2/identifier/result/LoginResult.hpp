@@ -69,21 +69,21 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "accessToken") == 0) {
+            if (std::strcmp(name_, "accessToken") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->accessToken.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "tokenType") == 0) {
+            else if (std::strcmp(name_, "tokenType") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->tokenType.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "expiresIn") == 0) {
+            else if (std::strcmp(name_, "expiresIn") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->expiresIn = jsonValue.GetInt();

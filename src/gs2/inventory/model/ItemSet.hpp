@@ -95,57 +95,57 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "itemSetId") == 0) {
+            if (std::strcmp(name_, "itemSetId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->itemSetId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "inventoryName") == 0) {
+            else if (std::strcmp(name_, "inventoryName") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->inventoryName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "itemName") == 0) {
+            else if (std::strcmp(name_, "itemName") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->itemName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "count") == 0) {
+            else if (std::strcmp(name_, "count") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->count = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "sortValue") == 0) {
+            else if (std::strcmp(name_, "sortValue") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->sortValue = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "expiresAt") == 0) {
+            else if (std::strcmp(name_, "expiresAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->expiresAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();

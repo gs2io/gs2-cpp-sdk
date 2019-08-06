@@ -115,87 +115,87 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "namespaceId") == 0) {
+            if (std::strcmp(name_, "namespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->namespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "acquireTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "acquireTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->acquireTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "acquireDoneTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "acquireDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->acquireDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "acquireDoneTriggerQueueNamespaceId") == 0) {
+            else if (std::strcmp(name_, "acquireDoneTriggerQueueNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->acquireDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "overflowTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "overflowTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->overflowTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "overflowTriggerQueueNamespaceId") == 0) {
+            else if (std::strcmp(name_, "overflowTriggerQueueNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->overflowTriggerQueueNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "consumeTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "consumeTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->consumeTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "consumeDoneTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "consumeDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->consumeDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "consumeDoneTriggerQueueNamespaceId") == 0) {
+            else if (std::strcmp(name_, "consumeDoneTriggerQueueNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->consumeDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();

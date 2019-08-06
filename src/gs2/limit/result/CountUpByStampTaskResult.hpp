@@ -65,9 +65,9 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0) {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,7 +75,7 @@ private:
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name, "newContextStack") == 0) {
+            else if (std::strcmp(name_, "newContextStack") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->newContextStack.emplace(jsonValue.GetString());

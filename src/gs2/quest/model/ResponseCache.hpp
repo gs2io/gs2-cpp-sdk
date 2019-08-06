@@ -79,33 +79,33 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "region") == 0) {
+            if (std::strcmp(name_, "region") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->region.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "responseCacheId") == 0) {
+            else if (std::strcmp(name_, "responseCacheId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->responseCacheId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "requestHash") == 0) {
+            else if (std::strcmp(name_, "requestHash") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->requestHash.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "result") == 0) {
+            else if (std::strcmp(name_, "result") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->result.emplace(jsonValue.GetString());

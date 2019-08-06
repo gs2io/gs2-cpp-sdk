@@ -633,12 +633,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -960,12 +957,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -1294,12 +1288,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -1806,12 +1797,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -1864,12 +1852,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -2276,12 +2261,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -2338,12 +2320,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -2392,12 +2371,9 @@ public:
 
         Char joint[] = { '?', '\0' };
         if (request.getExpiresAt()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getExpiresAt();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "expiresAt=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getExpiresAt()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -2451,9 +2427,8 @@ public:
             auto& value = request.getExpiresAt();
             if (value.has_value())
             {
-                Char urlSafeValue[32];
-                std::sprintf(urlSafeValue, "%lld", *value);
-                url.replace("{expiresAt}", urlSafeValue);
+                detail::StringVariable urlSafeValue(*value);
+                url.replace("{expiresAt}", urlSafeValue.c_str());
             }
             else
             {
@@ -2710,9 +2685,8 @@ public:
             auto& value = request.getExpiresAt();
             if (value.has_value())
             {
-                Char urlSafeValue[32];
-                std::sprintf(urlSafeValue, "%lld", *value);
-                url.replace("{expiresAt}", urlSafeValue);
+                detail::StringVariable urlSafeValue(*value);
+                url.replace("{expiresAt}", urlSafeValue.c_str());
             }
             else
             {

@@ -103,69 +103,69 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "lotteryModelId") == 0) {
+            if (std::strcmp(name_, "lotteryModelId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->lotteryModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "mode") == 0) {
+            else if (std::strcmp(name_, "mode") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->mode.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "count") == 0) {
+            else if (std::strcmp(name_, "count") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->count = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "method") == 0) {
+            else if (std::strcmp(name_, "method") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->method.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "prizeTableName") == 0) {
+            else if (std::strcmp(name_, "prizeTableName") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->prizeTableName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "choicePrizeTableScriptId") == 0) {
+            else if (std::strcmp(name_, "choicePrizeTableScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->choicePrizeTableScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();

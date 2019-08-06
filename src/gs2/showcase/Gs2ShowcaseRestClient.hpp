@@ -669,12 +669,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -936,12 +933,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -1220,12 +1214,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -1482,12 +1473,9 @@ public:
             joint[0] = '&';
         }
         if (request.getLimit()) {
-            Char urlSafeValue[32];
-            Int64 value = *request.getLimit();
-            std::sprintf(urlSafeValue, "%lld", value);
             url += joint;
             url += "limit=";
-            url += urlSafeValue;
+            url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());

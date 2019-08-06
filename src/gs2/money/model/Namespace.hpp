@@ -147,135 +147,135 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "namespaceId") == 0) {
+            if (std::strcmp(name_, "namespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->namespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "priority") == 0) {
+            else if (std::strcmp(name_, "priority") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->priority.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "shareFree") == 0) {
+            else if (std::strcmp(name_, "shareFree") == 0) {
                 if (jsonValue.IsBool())
                 {
                     this->shareFree = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name, "currency") == 0) {
+            else if (std::strcmp(name_, "currency") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->currency.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "appleKey") == 0) {
+            else if (std::strcmp(name_, "appleKey") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->appleKey.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "googleKey") == 0) {
+            else if (std::strcmp(name_, "googleKey") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->googleKey.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "enableFakeReceipt") == 0) {
+            else if (std::strcmp(name_, "enableFakeReceipt") == 0) {
                 if (jsonValue.IsBool())
                 {
                     this->enableFakeReceipt = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name, "createWalletTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "createWalletTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->createWalletTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createWalletDoneTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "createWalletDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->createWalletDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createWalletDoneTriggerNamespaceId") == 0) {
+            else if (std::strcmp(name_, "createWalletDoneTriggerNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->createWalletDoneTriggerNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "depositTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "depositTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->depositTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "depositDoneTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "depositDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->depositDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "depositDoneTriggerNamespaceId") == 0) {
+            else if (std::strcmp(name_, "depositDoneTriggerNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->depositDoneTriggerNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "withdrawTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "withdrawTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->withdrawTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "withdrawDoneTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "withdrawDoneTriggerScriptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->withdrawDoneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "withdrawDoneTriggerNamespaceId") == 0) {
+            else if (std::strcmp(name_, "withdrawDoneTriggerNamespaceId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->withdrawDoneTriggerNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "balance") == 0) {
+            else if (std::strcmp(name_, "balance") == 0) {
                 if (jsonValue.IsDouble())
                 {
                     this->balance = jsonValue.GetDouble();
                 }
             }
-            else if (std::strcmp(name, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();

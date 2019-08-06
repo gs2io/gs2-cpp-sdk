@@ -61,9 +61,9 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "protocol") == 0) {
+            if (std::strcmp(name_, "protocol") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->protocol.emplace(jsonValue.GetString());

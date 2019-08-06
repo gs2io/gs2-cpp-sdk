@@ -81,21 +81,21 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "displayItemId") == 0) {
+            if (std::strcmp(name_, "displayItemId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->displayItemId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "type") == 0) {
+            else if (std::strcmp(name_, "type") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->type.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "salesItem") == 0) {
+            else if (std::strcmp(name_, "salesItem") == 0) {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -103,7 +103,7 @@ private:
                     detail::json::JsonParser::parse(&this->salesItem->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name, "salesItemGroup") == 0) {
+            else if (std::strcmp(name_, "salesItemGroup") == 0) {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -111,7 +111,7 @@ private:
                     detail::json::JsonParser::parse(&this->salesItemGroup->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name, "salesPeriodEventId") == 0) {
+            else if (std::strcmp(name_, "salesPeriodEventId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->salesPeriodEventId.emplace(jsonValue.GetString());

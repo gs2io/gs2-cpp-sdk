@@ -103,69 +103,69 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "receiptId") == 0) {
+            if (std::strcmp(name_, "receiptId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->receiptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "transactionId") == 0) {
+            else if (std::strcmp(name_, "transactionId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->transactionId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "type") == 0) {
+            else if (std::strcmp(name_, "type") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->type.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "slot") == 0) {
+            else if (std::strcmp(name_, "slot") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->slot = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "price") == 0) {
+            else if (std::strcmp(name_, "price") == 0) {
                 if (jsonValue.IsFloat())
                 {
                     this->price = jsonValue.GetFloat();
                 }
             }
-            else if (std::strcmp(name, "paid") == 0) {
+            else if (std::strcmp(name_, "paid") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->paid = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "free") == 0) {
+            else if (std::strcmp(name_, "free") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->free = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "total") == 0) {
+            else if (std::strcmp(name_, "total") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->total = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "contentsId") == 0) {
+            else if (std::strcmp(name_, "contentsId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->contentsId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();

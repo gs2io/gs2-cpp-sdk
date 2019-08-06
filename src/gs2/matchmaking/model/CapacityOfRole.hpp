@@ -76,15 +76,15 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "roleName") == 0) {
+            if (std::strcmp(name_, "roleName") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->roleName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "roleAliases") == 0) {
+            else if (std::strcmp(name_, "roleAliases") == 0) {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -99,13 +99,13 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name, "capacity") == 0) {
+            else if (std::strcmp(name_, "capacity") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->capacity = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "participants") == 0) {
+            else if (std::strcmp(name_, "participants") == 0) {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();

@@ -83,39 +83,39 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "jobResultId") == 0) {
+            if (std::strcmp(name_, "jobResultId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->jobResultId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "jobId") == 0) {
+            else if (std::strcmp(name_, "jobId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->jobId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "tryNumber") == 0) {
+            else if (std::strcmp(name_, "tryNumber") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->tryNumber = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "statusCode") == 0) {
+            else if (std::strcmp(name_, "statusCode") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->statusCode = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "result") == 0) {
+            else if (std::strcmp(name_, "result") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->result.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "tryAt") == 0) {
+            else if (std::strcmp(name_, "tryAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->tryAt = jsonValue.GetInt64();

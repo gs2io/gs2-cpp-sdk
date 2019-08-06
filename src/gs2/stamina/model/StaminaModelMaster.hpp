@@ -107,75 +107,75 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "staminaModelId") == 0) {
+            if (std::strcmp(name_, "staminaModelId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->staminaModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "recoverIntervalMinutes") == 0) {
+            else if (std::strcmp(name_, "recoverIntervalMinutes") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->recoverIntervalMinutes = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "recoverValue") == 0) {
+            else if (std::strcmp(name_, "recoverValue") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->recoverValue = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "initialCapacity") == 0) {
+            else if (std::strcmp(name_, "initialCapacity") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->initialCapacity = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "isOverflow") == 0) {
+            else if (std::strcmp(name_, "isOverflow") == 0) {
                 if (jsonValue.IsBool())
                 {
                     this->isOverflow = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name, "maxCapacity") == 0) {
+            else if (std::strcmp(name_, "maxCapacity") == 0) {
                 if (jsonValue.IsInt())
                 {
                     this->maxCapacity = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "maxStaminaTableId") == 0) {
+            else if (std::strcmp(name_, "maxStaminaTableId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->maxStaminaTableId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();

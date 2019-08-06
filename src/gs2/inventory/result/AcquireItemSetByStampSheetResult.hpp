@@ -73,9 +73,9 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0) {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -87,7 +87,7 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name, "itemModel") == 0) {
+            else if (std::strcmp(name_, "itemModel") == 0) {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -95,7 +95,7 @@ private:
                     detail::json::JsonParser::parse(&this->itemModel->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name, "inventory") == 0) {
+            else if (std::strcmp(name_, "inventory") == 0) {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -103,7 +103,7 @@ private:
                     detail::json::JsonParser::parse(&this->inventory->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name, "overflowCount") == 0) {
+            else if (std::strcmp(name_, "overflowCount") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->overflowCount = jsonValue.GetInt64();

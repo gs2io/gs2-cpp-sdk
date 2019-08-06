@@ -110,39 +110,39 @@ private:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "questModelId") == 0) {
+            if (std::strcmp(name_, "questModelId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->questModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "questGroupName") == 0) {
+            else if (std::strcmp(name_, "questGroupName") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->questGroupName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "contents") == 0) {
+            else if (std::strcmp(name_, "contents") == 0) {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -154,13 +154,13 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name, "challengePeriodEventId") == 0) {
+            else if (std::strcmp(name_, "challengePeriodEventId") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->challengePeriodEventId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "consumeActions") == 0) {
+            else if (std::strcmp(name_, "consumeActions") == 0) {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -172,7 +172,7 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name, "failedAcquireActions") == 0) {
+            else if (std::strcmp(name_, "failedAcquireActions") == 0) {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -184,7 +184,7 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name, "premiseQuestNames") == 0) {
+            else if (std::strcmp(name_, "premiseQuestNames") == 0) {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -199,13 +199,13 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0) {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
