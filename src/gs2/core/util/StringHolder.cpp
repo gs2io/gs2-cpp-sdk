@@ -19,18 +19,34 @@
 
 GS2_START_OF_NAMESPACE
 
+namespace {
+
+    inline void strcpy(char buffer[], const char string[])
+    {
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma warning(push)
+#pragma warning(disable:4996)
+#endif
+        std::strcpy(buffer, string);
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma warning(pop)
+#endif
+    }
+
+}
+
 StringHolder::StringHolder(const Char string[])
         : m_Size(std::strlen(string) + 1),
           m_Buffer(reinterpret_cast<Char*>(Gs2Object::getAllocator().malloc(m_Size)))
 {
-    std::strcpy(m_Buffer, string);
+    strcpy(m_Buffer, string);
 }
 
 StringHolder::StringHolder(const StringHolder& stringHolder)
         : m_Size(stringHolder.m_Size),
           m_Buffer(reinterpret_cast<Char*>(Gs2Object::getAllocator().malloc(m_Size)))
 {
-    std::strcpy(m_Buffer, stringHolder.m_Buffer);
+    strcpy(m_Buffer, stringHolder.m_Buffer);
 }
 
 StringHolder::StringHolder(StringHolder&& stringHolder) noexcept
@@ -57,7 +73,7 @@ StringHolder& StringHolder::operator=(const StringHolder& stringHolder)
     {
         m_Size = stringHolder.m_Size;
         m_Buffer = reinterpret_cast<Char *>(Gs2Object::getAllocator().realloc(m_Buffer, m_Size));
-        std::strcpy(m_Buffer, stringHolder.m_Buffer);
+        strcpy(m_Buffer, stringHolder.m_Buffer);
     }
 
     return *this;
@@ -90,7 +106,7 @@ StringHolder& StringHolder::operator=(const Char string[])
     {
         m_Size = std::strlen(string) + 1;
         m_Buffer = reinterpret_cast<Char*>(Gs2Object::getAllocator().realloc(m_Buffer, m_Size));
-        std::strcpy(m_Buffer, string);
+        strcpy(m_Buffer, string);
     }
 
     return *this;
