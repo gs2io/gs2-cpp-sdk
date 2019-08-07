@@ -40,6 +40,9 @@ inline JsonConstValue::ConstObject getObject(const JsonConstValue& jsonValue)
 class IModel : public Gs2Object
 {
 public:
+    IModel() = default;
+    virtual ~IModel() = default;
+
     virtual void set(const JsonConstValue& jsonValue)
     {
         if(jsonValue.IsArray()) {
