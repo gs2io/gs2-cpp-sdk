@@ -97,7 +97,7 @@ public:
         gs2BasicRequest.m_pData = nullptr;
     }
 
-    ~Gs2BasicRequest()
+    virtual ~Gs2BasicRequest()
     {
         if (m_pData != nullptr)
         {

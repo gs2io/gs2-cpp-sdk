@@ -83,7 +83,7 @@ public:
         gs2UserRequest.m_pData = nullptr;
     }
 
-    ~Gs2UserRequest()
+    ~Gs2UserRequest() GS2_OVERRIDE
     {
         if (m_pData != nullptr)
         {
