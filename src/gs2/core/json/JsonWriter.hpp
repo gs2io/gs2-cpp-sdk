@@ -38,31 +38,24 @@ typedef GS2_RAPIDJSON_NAMESPACE::Writer<RapidJsonStringBuffer, GS2_RAPIDJSON_NAM
 class JsonWriter : public Gs2Object
 {
 private:
-
-    static JsonWriter instance;
-
-    RapidJsonStringBuffer* stringBuffer = nullptr;
-    RapidJsonWriter* writer = nullptr;
-
-    JsonWriter();
+    RapidJsonStringBuffer m_StringBuffer;
+    RapidJsonWriter m_Writer;
 
 public:
+    JsonWriter();
+    ~JsonWriter() = default;
 
     JsonWriter(JsonWriter&) = delete;
     JsonWriter(JsonWriter&&) = delete;
-
-    ~JsonWriter();
-
-    static JsonWriter& getInstance();
 
     void reset();
 
     void writeObjectStart();
     void writeArrayStart();
 
-    void writePropertyName(const Char* name);
+    void writePropertyName(const Char name[]);
 
-    void writeCharArray(const Char* value);
+    void writeCharArray(const Char value[]);
     void writeBool(Bool value);
     void writeInt32(Int32 value);
     void writeInt64(Int64 value);
