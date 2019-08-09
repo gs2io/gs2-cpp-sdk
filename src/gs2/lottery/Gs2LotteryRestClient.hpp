@@ -728,8 +728,8 @@ public:
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/";
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getName())
         {
@@ -865,8 +865,8 @@ public:
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getDescription())
         {
@@ -1016,8 +1016,8 @@ public:
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getName())
         {
@@ -1138,8 +1138,8 @@ public:
             url.replace("{lotteryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getDescription())
         {
@@ -1303,8 +1303,8 @@ public:
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getName())
         {
@@ -1411,8 +1411,8 @@ public:
             url.replace("{prizeTableName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getDescription())
         {
@@ -2009,8 +2009,8 @@ public:
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getSettings())
         {
@@ -2055,8 +2055,8 @@ public:
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getCheckoutSetting())
         {

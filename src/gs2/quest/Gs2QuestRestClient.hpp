@@ -842,8 +842,8 @@ public:
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/";
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getName())
         {
@@ -1014,8 +1014,8 @@ public:
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getDescription())
         {
@@ -1200,8 +1200,8 @@ public:
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getName())
         {
@@ -1302,8 +1302,8 @@ public:
             url.replace("{questGroupName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getDescription())
         {
@@ -1455,8 +1455,8 @@ public:
             url.replace("{questGroupName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getName())
         {
@@ -1609,8 +1609,8 @@ public:
             url.replace("{questName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getDescription())
         {
@@ -1821,8 +1821,8 @@ public:
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getSettings())
         {
@@ -1867,8 +1867,8 @@ public:
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getCheckoutSetting())
         {
@@ -1976,8 +1976,8 @@ public:
             url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getQuestModelId())
         {
@@ -2147,8 +2147,8 @@ public:
             url.replace("{questName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getForce())
         {
@@ -2239,8 +2239,8 @@ public:
             url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getForce())
         {
@@ -2303,8 +2303,8 @@ public:
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getTransactionId())
         {
@@ -2387,8 +2387,8 @@ public:
             url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getTransactionId())
         {
@@ -2548,8 +2548,8 @@ public:
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/stamp/progress/create";
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getStampSheet())
         {

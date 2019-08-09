@@ -92,8 +92,8 @@ private:
             const detail::Gs2SessionTaskId& gs2SessionTaskId
         ) GS2_OVERRIDE
         {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
+            detail::json::JsonWriter writer;
+
             writer.writeObjectStart();
 
             if (m_Request.getEmail())
@@ -180,8 +180,8 @@ private:
             const detail::Gs2SessionTaskId& gs2SessionTaskId
         ) GS2_OVERRIDE
         {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
+            detail::json::JsonWriter writer;
+
             writer.writeObjectStart();
 
             if (m_Request.getVerifyToken())
@@ -253,8 +253,8 @@ private:
             const detail::Gs2SessionTaskId& gs2SessionTaskId
         ) GS2_OVERRIDE
         {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
+            detail::json::JsonWriter writer;
+
             writer.writeObjectStart();
 
             if (m_Request.getEmail())
@@ -331,8 +331,8 @@ private:
             const detail::Gs2SessionTaskId& gs2SessionTaskId
         ) GS2_OVERRIDE
         {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
+            detail::json::JsonWriter writer;
+
             writer.writeObjectStart();
 
             if (m_Request.getAccountName())
@@ -404,8 +404,8 @@ private:
             const detail::Gs2SessionTaskId& gs2SessionTaskId
         ) GS2_OVERRIDE
         {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
+            detail::json::JsonWriter writer;
+
             writer.writeObjectStart();
 
             if (m_Request.getEmail())
@@ -477,8 +477,8 @@ private:
             const detail::Gs2SessionTaskId& gs2SessionTaskId
         ) GS2_OVERRIDE
         {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
+            detail::json::JsonWriter writer;
+
             writer.writeObjectStart();
 
             if (m_Request.getIssuePasswordToken())
@@ -550,8 +550,8 @@ private:
             const detail::Gs2SessionTaskId& gs2SessionTaskId
         ) GS2_OVERRIDE
         {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
+            detail::json::JsonWriter writer;
+
             writer.writeObjectStart();
 
             if (m_Request.getEmail())
@@ -643,8 +643,8 @@ private:
             const detail::Gs2SessionTaskId& gs2SessionTaskId
         ) GS2_OVERRIDE
         {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
+            detail::json::JsonWriter writer;
+
             writer.writeObjectStart();
 
             if (m_Request.getRequestId())
@@ -711,8 +711,8 @@ private:
             const detail::Gs2SessionTaskId& gs2SessionTaskId
         ) GS2_OVERRIDE
         {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
+            detail::json::JsonWriter writer;
+
             writer.writeObjectStart();
 
             if (m_Request.getAccountToken())
@@ -794,8 +794,8 @@ private:
             const detail::Gs2SessionTaskId& gs2SessionTaskId
         ) GS2_OVERRIDE
         {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
+            detail::json::JsonWriter writer;
+
             writer.writeObjectStart();
 
             if (m_Request.getAccountToken())
@@ -877,8 +877,8 @@ private:
             const detail::Gs2SessionTaskId& gs2SessionTaskId
         ) GS2_OVERRIDE
         {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
+            detail::json::JsonWriter writer;
+
             writer.writeObjectStart();
 
             if (m_Request.getAccountToken())
@@ -955,8 +955,8 @@ private:
             const detail::Gs2SessionTaskId& gs2SessionTaskId
         ) GS2_OVERRIDE
         {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
+            detail::json::JsonWriter writer;
+
             writer.writeObjectStart();
 
             if (m_Request.getProjectName())
@@ -1033,8 +1033,8 @@ private:
             const detail::Gs2SessionTaskId& gs2SessionTaskId
         ) GS2_OVERRIDE
         {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
+            detail::json::JsonWriter writer;
+
             writer.writeObjectStart();
 
             if (m_Request.getAccountToken())
@@ -1116,8 +1116,8 @@ private:
             const detail::Gs2SessionTaskId& gs2SessionTaskId
         ) GS2_OVERRIDE
         {
-            auto& writer = detail::json::JsonWriter::getInstance();
-            writer.reset();
+            detail::json::JsonWriter writer;
+
             writer.writeObjectStart();
 
             if (m_Request.getAccountToken())

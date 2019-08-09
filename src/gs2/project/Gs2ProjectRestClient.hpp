@@ -201,8 +201,8 @@ public:
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/account";
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getEmail())
         {
@@ -258,8 +258,8 @@ public:
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/account/verify";
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getVerifyToken())
         {
@@ -300,8 +300,8 @@ public:
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/account/signIn";
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getEmail())
         {
@@ -347,8 +347,8 @@ public:
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/account/accountToken";
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getAccountName())
         {
@@ -389,8 +389,8 @@ public:
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/account/forget";
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getEmail())
         {
@@ -431,8 +431,8 @@ public:
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/account/password/issue";
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getIssuePasswordToken())
         {
@@ -473,8 +473,8 @@ public:
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/account";
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getEmail())
         {
@@ -620,8 +620,8 @@ public:
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/account/me/project";
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getAccountToken())
         {
@@ -717,8 +717,8 @@ public:
             url.replace("{projectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getAccountToken())
         {
@@ -763,8 +763,8 @@ public:
             url.replace("{projectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getAccountToken())
         {

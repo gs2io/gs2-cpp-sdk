@@ -101,8 +101,8 @@ public:
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/login";
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getUserId())
         {
@@ -148,8 +148,8 @@ public:
         url.replace("{region}", getGs2RestSession().getRegion().getName());
         url += "/login/signed";
         httpRequest.SetURL(url.c_str());
-        auto& writer = detail::json::JsonWriter::getInstance();
-        writer.reset();
+        detail::json::JsonWriter writer;
+
         writer.writeObjectStart();
         if (request.getUserId())
         {
