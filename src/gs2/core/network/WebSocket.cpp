@@ -77,9 +77,9 @@ void Gs2WebSocket::onConnectComplete()
 
 void Gs2WebSocket::onConnectError(const FString& error)
 {
-    // TODO: [TORIAEZU]
     GS2_NOT_USED(error);
     Gs2ClientException gs2ClientException;
+    gs2ClientException.setType(Gs2ClientException::Type::SessionNotOpenException);
     onError(gs2ClientException);
     onClose();
 }
