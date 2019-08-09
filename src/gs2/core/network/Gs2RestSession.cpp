@@ -61,13 +61,13 @@ void Gs2RestSession::Gs2LoginTask::callback(detail::Gs2RestResponse& gs2RestResp
         optional<StringHolder> projectToken;
         Gs2ClientException gs2ClientException;
         gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-        m_Gs2RestSession.openCallback(nullptr, &gs2ClientException);
+        m_Gs2RestSession.openCallback(nullptr, &gs2ClientException, false);
     }
     else if (gs2RestResponse.getGs2ClientException())
     {
         // ログイン処理がエラーになった場合
 
-        m_Gs2RestSession.openCallback(nullptr, &*gs2RestResponse.getGs2ClientException());
+        m_Gs2RestSession.openCallback(nullptr, &*gs2RestResponse.getGs2ClientException(), false);
     }
     else
     {
@@ -80,7 +80,7 @@ void Gs2RestSession::Gs2LoginTask::callback(detail::Gs2RestResponse& gs2RestResp
         {
             // 応答からプロジェクトトークンが取得できた場合
 
-            m_Gs2RestSession.openCallback(&*resultModel.accessToken, nullptr);
+            m_Gs2RestSession.openCallback(&*resultModel.accessToken, nullptr, false);
         }
         else
         {
@@ -88,18 +88,20 @@ void Gs2RestSession::Gs2LoginTask::callback(detail::Gs2RestResponse& gs2RestResp
 
             Gs2ClientException gs2ClientException;
             gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-            m_Gs2RestSession.openCallback(nullptr, &gs2ClientException);
+            m_Gs2RestSession.openCallback(nullptr, &gs2ClientException, false);
         }
     }
 
     delete this;
 }
 
-void Gs2RestSession::openImpl()
+bool Gs2RestSession::openImpl()
 {
     m_IsOpenCancelled = false;
 
     (new Gs2LoginTask(*this))->send();
+
+    return false;
 }
 
 void Gs2RestSession::cancelOpenImpl()

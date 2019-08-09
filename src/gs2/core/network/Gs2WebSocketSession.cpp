@@ -82,7 +82,7 @@ void Gs2WebSocketSession::WebSocket::onMessage(detail::Gs2WebSocketResponse& gs2
                 if (loginResultModel.accessToken)   // パース成功
                 {
                     m_Gs2WebSocketSession.m_State = Gs2WebSocketSession::State::Available;
-                    m_Gs2WebSocketSession.openCallback(&*loginResultModel.accessToken, nullptr);
+                    m_Gs2WebSocketSession.openCallback(&*loginResultModel.accessToken, nullptr, false);
                 }
                 else
                 {
@@ -143,7 +143,7 @@ void Gs2WebSocketSession::WebSocket::onClose()
     case Gs2WebSocketSession::State::LoggingIn:
     case Gs2WebSocketSession::State::LoginFailed:
         // Gs2Session としては Available になっていないので closeCallback ではなく openCallback に失敗を伝える
-        m_Gs2WebSocketSession.openCallback(nullptr, &m_Gs2WebSocketSession.m_LastGs2ClientException);
+        m_Gs2WebSocketSession.openCallback(nullptr, &m_Gs2WebSocketSession.m_LastGs2ClientException, false);
         break;
 
     case Gs2WebSocketSession::State::Available:
@@ -184,13 +184,23 @@ void Gs2WebSocketSession::WebSocket::onError(gs2::Gs2ClientException& gs2ClientE
     }
 }
 
-void Gs2WebSocketSession::openImpl()
+bool Gs2WebSocketSession::openImpl()
 {
     assert(m_State == State::Idle);
 
     m_State = State::Opening;   // Idle のあいだにコールバックは来ないので、別スレッドから状態変更できる
 
-    m_WebSocket.open();
+    if (m_WebSocket.open())
+    {
+        return false;
+    }
+    else
+    {
+        Gs2ClientException gs2ClientException;
+        gs2ClientException.setType(Gs2ClientException::Type::SessionNotOpenException);  // TODO
+        openCallback(nullptr, &gs2ClientException, true);
+        return true;
+    }
 }
 
 void Gs2WebSocketSession::cancelOpenImpl()

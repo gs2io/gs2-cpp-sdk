@@ -117,7 +117,7 @@ protected:
         return m_ProjectToken;
     }
 
-    void openCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException);
+    void openCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException, bool isOpenInstant);
     void closeCallback(Gs2ClientException& gs2ClientException, bool isCloseInstant);
     void cancelTasksCallback(Gs2ClientException& gs2ClientException);
 
@@ -162,7 +162,7 @@ public:
 
 private:
     // 以下の関数は m_Mutex のロック内から呼ばれます
-    virtual void openImpl() = 0;
+    virtual bool openImpl() = 0;
     virtual void cancelOpenImpl() {}
     virtual bool closeImpl() = 0;   // 中で closeCallback() を呼んだ場合は true を返すこと
 };

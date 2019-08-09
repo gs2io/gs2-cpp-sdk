@@ -79,9 +79,16 @@ void Gs2Session::changeStateToOpening()
 
     m_State = State::Opening;
 
-    openImpl();
+    auto isOpenInstant = openImpl();
 
-    exitStateLock();
+    if (isOpenInstant)
+    {
+        // Idle か Available に遷移しているはずだけど、ロックから出てしまっているので検証はしない
+    }
+    else
+    {
+        exitStateLock();
+    }
 }
 
 void Gs2Session::changeStateToCancellingOpen()
@@ -183,11 +190,14 @@ void Gs2Session::open(OpenCallbackType callback)
     }
 }
 
-void Gs2Session::openCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException)
+void Gs2Session::openCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException, bool isOpenInstant)
 {
     // 接続完了コールバック
 
-    enterStateLock();
+    if (!isOpenInstant)
+    {
+        enterStateLock();
+    }
 
     if (pClientException == nullptr)
     {

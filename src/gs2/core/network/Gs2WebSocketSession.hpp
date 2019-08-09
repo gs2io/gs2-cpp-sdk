@@ -92,7 +92,7 @@ public:
     ~Gs2WebSocketSession() GS2_OVERRIDE = default;
 
 private:
-    void openImpl() GS2_OVERRIDE;
+    bool openImpl() GS2_OVERRIDE;
     void cancelOpenImpl() GS2_OVERRIDE;
     bool closeImpl() GS2_OVERRIDE;
 };
