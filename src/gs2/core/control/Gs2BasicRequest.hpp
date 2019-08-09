@@ -97,7 +97,7 @@ public:
         gs2BasicRequest.m_pData = nullptr;
     }
 
-    virtual ~Gs2BasicRequest()
+    ~Gs2BasicRequest()
     {
         if (m_pData != nullptr)
         {
@@ -267,10 +267,6 @@ public:
         setRequestId(gs2RequestId);
         return *this;
     }
-
-    virtual const Char* getModuleName() const = 0;
-
-    virtual const Char* getFunctionName() const = 0;
 };
 
 GS2_END_OF_NAMESPACE
