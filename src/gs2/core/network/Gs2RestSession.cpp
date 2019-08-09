@@ -30,8 +30,7 @@ Gs2RestSession::Gs2LoginTask::Gs2LoginTask(Gs2RestSession& gs2RestSession) :
     m_Gs2RestSession(gs2RestSession)
 {
     getHttpRequest().SetVerb("POST");
-    auto& writer = detail::json::JsonWriter::getInstance();
-    writer.reset();
+    detail::json::JsonWriter writer;
     writer.writeObjectStart();
     writer.writePropertyName("client_id");
     writer.writeCharArray(gs2RestSession.getGs2Credential().getClientId());
