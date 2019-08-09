@@ -114,11 +114,6 @@ private:
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
             }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
 
             writer.writePropertyName("xGs2ClientId");
             writer.writeCharArray(clientId);
@@ -196,11 +191,6 @@ private:
             {
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
             }
 
             writer.writePropertyName("xGs2ClientId");
@@ -280,11 +270,6 @@ private:
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
             }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
 
             writer.writePropertyName("xGs2ClientId");
             writer.writeCharArray(clientId);
@@ -353,11 +338,6 @@ private:
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
             }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
 
             writer.writePropertyName("xGs2ClientId");
             writer.writeCharArray(clientId);
@@ -425,11 +405,6 @@ private:
             {
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
             }
 
             writer.writePropertyName("xGs2ClientId");
@@ -509,11 +484,6 @@ private:
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
             }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
 
             writer.writePropertyName("xGs2ClientId");
             writer.writeCharArray(clientId);
@@ -592,11 +562,6 @@ private:
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
             }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
 
             writer.writePropertyName("xGs2ClientId");
             writer.writeCharArray(clientId);
@@ -665,11 +630,6 @@ private:
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
             }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
 
             writer.writePropertyName("xGs2ClientId");
             writer.writeCharArray(clientId);
@@ -737,11 +697,6 @@ private:
             {
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
             }
 
             writer.writePropertyName("xGs2ClientId");
@@ -821,11 +776,6 @@ private:
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
             }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
 
             writer.writePropertyName("xGs2ClientId");
             writer.writeCharArray(clientId);
@@ -898,11 +848,6 @@ private:
             {
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
             }
 
             writer.writePropertyName("xGs2ClientId");
@@ -982,11 +927,6 @@ private:
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
             }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
 
             writer.writePropertyName("xGs2ClientId");
             writer.writeCharArray(clientId);
@@ -1059,11 +999,6 @@ private:
             {
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
             }
 
             writer.writePropertyName("xGs2ClientId");
@@ -1143,11 +1078,6 @@ private:
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
             }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
 
             writer.writePropertyName("xGs2ClientId");
             writer.writeCharArray(clientId);
@@ -1220,11 +1150,6 @@ private:
             {
                 writer.writePropertyName("xGs2RequestId");
                 writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
             }
 
             writer.writePropertyName("xGs2ClientId");

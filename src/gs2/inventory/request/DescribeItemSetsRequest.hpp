@@ -17,10 +17,12 @@
 #ifndef GS2_INVENTORY_CONTROL_DESCRIBEITEMSETSREQUEST_HPP_
 #define GS2_INVENTORY_CONTROL_DESCRIBEITEMSETSREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2InventoryConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace inventory
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace inventory
  *
  * @author Game Server Services, Inc.
  */
-class DescribeItemSetsRequest : public Gs2UserRequest, public Gs2Inventory
+class DescribeItemSetsRequest : public Gs2BasicRequest, public Gs2Inventory
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** カテゴリー名 */
         optional<StringHolder> namespaceName;
         /** インベントリの名前 */
@@ -55,6 +59,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             inventoryName(data.inventoryName),
             pageToken(data.pageToken),
@@ -64,6 +69,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             inventoryName(std::move(data.inventoryName)),
             pageToken(std::move(data.pageToken)),
@@ -100,13 +106,13 @@ public:
     {}
 
     DescribeItemSetsRequest(const DescribeItemSetsRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Inventory(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     DescribeItemSetsRequest(DescribeItemSetsRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Inventory(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -123,7 +129,7 @@ public:
 
     DescribeItemSetsRequest& operator=(const DescribeItemSetsRequest& describeItemSetsRequest)
     {
-        Gs2UserRequest::operator=(describeItemSetsRequest);
+        Gs2BasicRequest::operator=(describeItemSetsRequest);
         Gs2Inventory::operator=(describeItemSetsRequest);
 
         if (m_pData != nullptr)
@@ -137,7 +143,7 @@ public:
 
     DescribeItemSetsRequest& operator=(DescribeItemSetsRequest&& describeItemSetsRequest)
     {
-        Gs2UserRequest::operator=(std::move(describeItemSetsRequest));
+        Gs2BasicRequest::operator=(std::move(describeItemSetsRequest));
         Gs2Inventory::operator=(std::move(describeItemSetsRequest));
 
         if (m_pData != nullptr)
@@ -159,6 +165,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    DescribeItemSetsRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * カテゴリー名を取得
      *
@@ -360,27 +396,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    DescribeItemSetsRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

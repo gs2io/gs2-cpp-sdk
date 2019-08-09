@@ -17,10 +17,12 @@
 #ifndef GS2_DISTRIBUTOR_CONTROL_DISTRIBUTEREQUEST_HPP_
 #define GS2_DISTRIBUTOR_CONTROL_DISTRIBUTEREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2DistributorConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace distributor
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace distributor
  *
  * @author Game Server Services, Inc.
  */
-class DistributeRequest : public Gs2UserRequest, public Gs2Distributor
+class DistributeRequest : public Gs2BasicRequest, public Gs2Distributor
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** ディストリビューターの種類名 */
@@ -53,6 +57,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             distributorName(data.distributorName),
             distributeResource(data.distributeResource),
@@ -61,6 +66,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             distributorName(std::move(data.distributorName)),
             distributeResource(std::move(data.distributeResource)),
@@ -96,13 +102,13 @@ public:
     {}
 
     DistributeRequest(const DistributeRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Distributor(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     DistributeRequest(DistributeRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Distributor(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -119,7 +125,7 @@ public:
 
     DistributeRequest& operator=(const DistributeRequest& distributeRequest)
     {
-        Gs2UserRequest::operator=(distributeRequest);
+        Gs2BasicRequest::operator=(distributeRequest);
         Gs2Distributor::operator=(distributeRequest);
 
         if (m_pData != nullptr)
@@ -133,7 +139,7 @@ public:
 
     DistributeRequest& operator=(DistributeRequest&& distributeRequest)
     {
-        Gs2UserRequest::operator=(std::move(distributeRequest));
+        Gs2BasicRequest::operator=(std::move(distributeRequest));
         Gs2Distributor::operator=(std::move(distributeRequest));
 
         if (m_pData != nullptr)
@@ -155,6 +161,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    DistributeRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * ネームスペース名を取得
      *
@@ -325,27 +361,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    DistributeRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

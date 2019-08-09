@@ -17,10 +17,12 @@
 #ifndef GS2_MATCHMAKING_CONTROL_DOMATCHMAKINGREQUEST_HPP_
 #define GS2_MATCHMAKING_CONTROL_DOMATCHMAKINGREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2MatchmakingConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace matchmaking
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace matchmaking
  *
  * @author Game Server Services, Inc.
  */
-class DoMatchmakingRequest : public Gs2UserRequest, public Gs2Matchmaking
+class DoMatchmakingRequest : public Gs2BasicRequest, public Gs2Matchmaking
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** 自身のプレイヤー情報 */
@@ -53,6 +57,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             player(data.player),
             matchmakingContextToken(data.matchmakingContextToken),
@@ -61,6 +66,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             player(std::move(data.player)),
             matchmakingContextToken(std::move(data.matchmakingContextToken)),
@@ -96,13 +102,13 @@ public:
     {}
 
     DoMatchmakingRequest(const DoMatchmakingRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Matchmaking(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     DoMatchmakingRequest(DoMatchmakingRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Matchmaking(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -119,7 +125,7 @@ public:
 
     DoMatchmakingRequest& operator=(const DoMatchmakingRequest& doMatchmakingRequest)
     {
-        Gs2UserRequest::operator=(doMatchmakingRequest);
+        Gs2BasicRequest::operator=(doMatchmakingRequest);
         Gs2Matchmaking::operator=(doMatchmakingRequest);
 
         if (m_pData != nullptr)
@@ -133,7 +139,7 @@ public:
 
     DoMatchmakingRequest& operator=(DoMatchmakingRequest&& doMatchmakingRequest)
     {
-        Gs2UserRequest::operator=(std::move(doMatchmakingRequest));
+        Gs2BasicRequest::operator=(std::move(doMatchmakingRequest));
         Gs2Matchmaking::operator=(std::move(doMatchmakingRequest));
 
         if (m_pData != nullptr)
@@ -155,6 +161,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    DoMatchmakingRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * ネームスペース名を取得
      *
@@ -325,27 +361,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    DoMatchmakingRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

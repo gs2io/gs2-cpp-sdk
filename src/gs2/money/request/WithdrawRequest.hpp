@@ -17,10 +17,12 @@
 #ifndef GS2_MONEY_CONTROL_WITHDRAWREQUEST_HPP_
 #define GS2_MONEY_CONTROL_WITHDRAWREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2MoneyConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace money
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace money
  *
  * @author Game Server Services, Inc.
  */
-class WithdrawRequest : public Gs2UserRequest, public Gs2Money
+class WithdrawRequest : public Gs2BasicRequest, public Gs2Money
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** ネームスペースの名前 */
         optional<StringHolder> namespaceName;
         /** スロット番号 */
@@ -55,6 +59,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             slot(data.slot),
             count(data.count),
@@ -64,6 +69,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             slot(std::move(data.slot)),
             count(std::move(data.count)),
@@ -100,13 +106,13 @@ public:
     {}
 
     WithdrawRequest(const WithdrawRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Money(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     WithdrawRequest(WithdrawRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Money(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -123,7 +129,7 @@ public:
 
     WithdrawRequest& operator=(const WithdrawRequest& withdrawRequest)
     {
-        Gs2UserRequest::operator=(withdrawRequest);
+        Gs2BasicRequest::operator=(withdrawRequest);
         Gs2Money::operator=(withdrawRequest);
 
         if (m_pData != nullptr)
@@ -137,7 +143,7 @@ public:
 
     WithdrawRequest& operator=(WithdrawRequest&& withdrawRequest)
     {
-        Gs2UserRequest::operator=(std::move(withdrawRequest));
+        Gs2BasicRequest::operator=(std::move(withdrawRequest));
         Gs2Money::operator=(std::move(withdrawRequest));
 
         if (m_pData != nullptr)
@@ -159,6 +165,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    WithdrawRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * ネームスペースの名前を取得
      *
@@ -360,27 +396,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    WithdrawRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

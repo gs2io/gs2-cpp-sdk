@@ -149,6 +149,7 @@ public:
     {
         return this;
     }
+
     /**
      * データの取得を開始する位置を指定するトークンを取得
      *
@@ -257,16 +258,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

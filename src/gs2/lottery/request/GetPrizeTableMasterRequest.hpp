@@ -149,6 +149,7 @@ public:
     {
         return this;
     }
+
     /**
      * ネームスペース名を取得
      *
@@ -257,16 +258,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

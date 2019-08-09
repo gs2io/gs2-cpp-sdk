@@ -17,10 +17,12 @@
 #ifndef GS2_ACCOUNT_CONTROL_DELETETAKEOVERREQUEST_HPP_
 #define GS2_ACCOUNT_CONTROL_DELETETAKEOVERREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2AccountConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace account
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace account
  *
  * @author Game Server Services, Inc.
  */
-class DeleteTakeOverRequest : public Gs2UserRequest, public Gs2Account
+class DeleteTakeOverRequest : public Gs2BasicRequest, public Gs2Account
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** スロット番号 */
@@ -53,6 +57,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             type(data.type),
             userIdentifier(data.userIdentifier),
@@ -61,6 +66,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             type(std::move(data.type)),
             userIdentifier(std::move(data.userIdentifier)),
@@ -96,13 +102,13 @@ public:
     {}
 
     DeleteTakeOverRequest(const DeleteTakeOverRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Account(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     DeleteTakeOverRequest(DeleteTakeOverRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Account(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -119,7 +125,7 @@ public:
 
     DeleteTakeOverRequest& operator=(const DeleteTakeOverRequest& deleteTakeOverRequest)
     {
-        Gs2UserRequest::operator=(deleteTakeOverRequest);
+        Gs2BasicRequest::operator=(deleteTakeOverRequest);
         Gs2Account::operator=(deleteTakeOverRequest);
 
         if (m_pData != nullptr)
@@ -133,7 +139,7 @@ public:
 
     DeleteTakeOverRequest& operator=(DeleteTakeOverRequest&& deleteTakeOverRequest)
     {
-        Gs2UserRequest::operator=(std::move(deleteTakeOverRequest));
+        Gs2BasicRequest::operator=(std::move(deleteTakeOverRequest));
         Gs2Account::operator=(std::move(deleteTakeOverRequest));
 
         if (m_pData != nullptr)
@@ -155,6 +161,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    DeleteTakeOverRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * ネームスペース名を取得
      *
@@ -325,27 +361,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    DeleteTakeOverRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

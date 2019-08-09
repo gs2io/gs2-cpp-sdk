@@ -17,10 +17,12 @@
 #ifndef GS2_EXPERIENCE_CONTROL_DESCRIBESTATUSESREQUEST_HPP_
 #define GS2_EXPERIENCE_CONTROL_DESCRIBESTATUSESREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ExperienceConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace experience
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace experience
  *
  * @author Game Server Services, Inc.
  */
-class DescribeStatusesRequest : public Gs2UserRequest, public Gs2Experience
+class DescribeStatusesRequest : public Gs2BasicRequest, public Gs2Experience
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** 経験値の種類名 */
@@ -55,6 +59,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             experienceName(data.experienceName),
             pageToken(data.pageToken),
@@ -64,6 +69,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             experienceName(std::move(data.experienceName)),
             pageToken(std::move(data.pageToken)),
@@ -100,13 +106,13 @@ public:
     {}
 
     DescribeStatusesRequest(const DescribeStatusesRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Experience(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     DescribeStatusesRequest(DescribeStatusesRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Experience(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -123,7 +129,7 @@ public:
 
     DescribeStatusesRequest& operator=(const DescribeStatusesRequest& describeStatusesRequest)
     {
-        Gs2UserRequest::operator=(describeStatusesRequest);
+        Gs2BasicRequest::operator=(describeStatusesRequest);
         Gs2Experience::operator=(describeStatusesRequest);
 
         if (m_pData != nullptr)
@@ -137,7 +143,7 @@ public:
 
     DescribeStatusesRequest& operator=(DescribeStatusesRequest&& describeStatusesRequest)
     {
-        Gs2UserRequest::operator=(std::move(describeStatusesRequest));
+        Gs2BasicRequest::operator=(std::move(describeStatusesRequest));
         Gs2Experience::operator=(std::move(describeStatusesRequest));
 
         if (m_pData != nullptr)
@@ -159,6 +165,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    DescribeStatusesRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * ネームスペース名を取得
      *
@@ -360,27 +396,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    DescribeStatusesRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

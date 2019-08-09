@@ -377,10 +377,6 @@ public:
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
         gs2RestSessionTask.execute();
     }
 
@@ -424,10 +420,6 @@ public:
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
         gs2RestSessionTask.execute();
     }
 
@@ -457,10 +449,6 @@ public:
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
         gs2RestSessionTask.execute();
     }
 
@@ -489,10 +477,6 @@ public:
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
         gs2RestSessionTask.execute();
     }
@@ -536,10 +520,6 @@ public:
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
         gs2RestSessionTask.execute();
     }
 
@@ -573,10 +553,6 @@ public:
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
         gs2RestSessionTask.execute();
     }
@@ -620,10 +596,6 @@ public:
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
         gs2RestSessionTask.execute();
     }
@@ -698,10 +670,6 @@ public:
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
         gs2RestSessionTask.execute();
     }
 
@@ -734,10 +702,6 @@ public:
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
         gs2RestSessionTask.execute();
     }
@@ -811,10 +775,6 @@ public:
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
         gs2RestSessionTask.execute();
     }
 
@@ -853,10 +813,6 @@ public:
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
         gs2RestSessionTask.execute();
     }
 
@@ -885,10 +841,6 @@ public:
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
         gs2RestSessionTask.execute();
     }
@@ -923,10 +875,6 @@ public:
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
         gs2RestSessionTask.execute();
     }
 
@@ -956,10 +904,6 @@ public:
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
         gs2RestSessionTask.execute();
     }
 
@@ -988,10 +932,6 @@ public:
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
         gs2RestSessionTask.execute();
     }
@@ -1035,10 +975,6 @@ public:
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
         gs2RestSessionTask.execute();
     }
 
@@ -1080,10 +1016,6 @@ public:
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
         }
         gs2RestSessionTask.execute();
     }

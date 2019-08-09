@@ -17,10 +17,12 @@
 #ifndef GS2_MATCHMAKING_CONTROL_UPDATEGATHERINGREQUEST_HPP_
 #define GS2_MATCHMAKING_CONTROL_UPDATEGATHERINGREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2MatchmakingConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace matchmaking
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace matchmaking
  *
  * @author Game Server Services, Inc.
  */
-class UpdateGatheringRequest : public Gs2UserRequest, public Gs2Matchmaking
+class UpdateGatheringRequest : public Gs2BasicRequest, public Gs2Matchmaking
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** ギャザリング名 */
@@ -53,6 +57,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             gatheringName(data.gatheringName),
             attributeRanges(data.attributeRanges),
@@ -61,6 +66,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             gatheringName(std::move(data.gatheringName)),
             attributeRanges(std::move(data.attributeRanges)),
@@ -96,13 +102,13 @@ public:
     {}
 
     UpdateGatheringRequest(const UpdateGatheringRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Matchmaking(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     UpdateGatheringRequest(UpdateGatheringRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Matchmaking(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -119,7 +125,7 @@ public:
 
     UpdateGatheringRequest& operator=(const UpdateGatheringRequest& updateGatheringRequest)
     {
-        Gs2UserRequest::operator=(updateGatheringRequest);
+        Gs2BasicRequest::operator=(updateGatheringRequest);
         Gs2Matchmaking::operator=(updateGatheringRequest);
 
         if (m_pData != nullptr)
@@ -133,7 +139,7 @@ public:
 
     UpdateGatheringRequest& operator=(UpdateGatheringRequest&& updateGatheringRequest)
     {
-        Gs2UserRequest::operator=(std::move(updateGatheringRequest));
+        Gs2BasicRequest::operator=(std::move(updateGatheringRequest));
         Gs2Matchmaking::operator=(std::move(updateGatheringRequest));
 
         if (m_pData != nullptr)
@@ -155,6 +161,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    UpdateGatheringRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * ネームスペース名を取得
      *
@@ -325,27 +361,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    UpdateGatheringRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

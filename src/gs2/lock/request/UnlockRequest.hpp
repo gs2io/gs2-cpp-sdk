@@ -17,10 +17,12 @@
 #ifndef GS2_LOCK_CONTROL_UNLOCKREQUEST_HPP_
 #define GS2_LOCK_CONTROL_UNLOCKREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2LockConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace lock
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace lock
  *
  * @author Game Server Services, Inc.
  */
-class UnlockRequest : public Gs2UserRequest, public Gs2Lock
+class UnlockRequest : public Gs2BasicRequest, public Gs2Lock
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** カテゴリー名 */
         optional<StringHolder> namespaceName;
         /** プロパティID */
@@ -53,6 +57,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             propertyId(data.propertyId),
             transactionId(data.transactionId),
@@ -61,6 +66,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             propertyId(std::move(data.propertyId)),
             transactionId(std::move(data.transactionId)),
@@ -96,13 +102,13 @@ public:
     {}
 
     UnlockRequest(const UnlockRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Lock(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     UnlockRequest(UnlockRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Lock(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -119,7 +125,7 @@ public:
 
     UnlockRequest& operator=(const UnlockRequest& unlockRequest)
     {
-        Gs2UserRequest::operator=(unlockRequest);
+        Gs2BasicRequest::operator=(unlockRequest);
         Gs2Lock::operator=(unlockRequest);
 
         if (m_pData != nullptr)
@@ -133,7 +139,7 @@ public:
 
     UnlockRequest& operator=(UnlockRequest&& unlockRequest)
     {
-        Gs2UserRequest::operator=(std::move(unlockRequest));
+        Gs2BasicRequest::operator=(std::move(unlockRequest));
         Gs2Lock::operator=(std::move(unlockRequest));
 
         if (m_pData != nullptr)
@@ -155,6 +161,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    UnlockRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * カテゴリー名を取得
      *
@@ -325,27 +361,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    UnlockRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

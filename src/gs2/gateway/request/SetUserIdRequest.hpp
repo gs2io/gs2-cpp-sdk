@@ -17,10 +17,12 @@
 #ifndef GS2_GATEWAY_CONTROL_SETUSERIDREQUEST_HPP_
 #define GS2_GATEWAY_CONTROL_SETUSERIDREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2GatewayConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace gateway
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace gateway
  *
  * @author Game Server Services, Inc.
  */
-class SetUserIdRequest : public Gs2UserRequest, public Gs2Gateway
+class SetUserIdRequest : public Gs2BasicRequest, public Gs2Gateway
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** コネクションID */
@@ -53,6 +57,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             connectionId(data.connectionId),
             allowConcurrentAccess(data.allowConcurrentAccess),
@@ -61,6 +66,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             connectionId(std::move(data.connectionId)),
             allowConcurrentAccess(std::move(data.allowConcurrentAccess)),
@@ -96,13 +102,13 @@ public:
     {}
 
     SetUserIdRequest(const SetUserIdRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Gateway(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     SetUserIdRequest(SetUserIdRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Gateway(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -119,7 +125,7 @@ public:
 
     SetUserIdRequest& operator=(const SetUserIdRequest& setUserIdRequest)
     {
-        Gs2UserRequest::operator=(setUserIdRequest);
+        Gs2BasicRequest::operator=(setUserIdRequest);
         Gs2Gateway::operator=(setUserIdRequest);
 
         if (m_pData != nullptr)
@@ -133,7 +139,7 @@ public:
 
     SetUserIdRequest& operator=(SetUserIdRequest&& setUserIdRequest)
     {
-        Gs2UserRequest::operator=(std::move(setUserIdRequest));
+        Gs2BasicRequest::operator=(std::move(setUserIdRequest));
         Gs2Gateway::operator=(std::move(setUserIdRequest));
 
         if (m_pData != nullptr)
@@ -155,6 +161,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    SetUserIdRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * ネームスペース名を取得
      *
@@ -325,27 +361,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    SetUserIdRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

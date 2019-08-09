@@ -17,10 +17,12 @@
 #ifndef GS2_ACCOUNT_CONTROL_DESCRIBETAKEOVERSREQUEST_HPP_
 #define GS2_ACCOUNT_CONTROL_DESCRIBETAKEOVERSREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2AccountConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace account
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace account
  *
  * @author Game Server Services, Inc.
  */
-class DescribeTakeOversRequest : public Gs2UserRequest, public Gs2Account
+class DescribeTakeOversRequest : public Gs2BasicRequest, public Gs2Account
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** データの取得を開始する位置を指定するトークン */
@@ -53,6 +57,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             pageToken(data.pageToken),
             limit(data.limit),
@@ -61,6 +66,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             pageToken(std::move(data.pageToken)),
             limit(std::move(data.limit)),
@@ -96,13 +102,13 @@ public:
     {}
 
     DescribeTakeOversRequest(const DescribeTakeOversRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Account(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     DescribeTakeOversRequest(DescribeTakeOversRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Account(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -119,7 +125,7 @@ public:
 
     DescribeTakeOversRequest& operator=(const DescribeTakeOversRequest& describeTakeOversRequest)
     {
-        Gs2UserRequest::operator=(describeTakeOversRequest);
+        Gs2BasicRequest::operator=(describeTakeOversRequest);
         Gs2Account::operator=(describeTakeOversRequest);
 
         if (m_pData != nullptr)
@@ -133,7 +139,7 @@ public:
 
     DescribeTakeOversRequest& operator=(DescribeTakeOversRequest&& describeTakeOversRequest)
     {
-        Gs2UserRequest::operator=(std::move(describeTakeOversRequest));
+        Gs2BasicRequest::operator=(std::move(describeTakeOversRequest));
         Gs2Account::operator=(std::move(describeTakeOversRequest));
 
         if (m_pData != nullptr)
@@ -155,6 +161,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    DescribeTakeOversRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * ネームスペース名を取得
      *
@@ -325,27 +361,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    DescribeTakeOversRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

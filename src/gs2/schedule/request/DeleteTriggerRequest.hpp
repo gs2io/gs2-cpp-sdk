@@ -17,10 +17,12 @@
 #ifndef GS2_SCHEDULE_CONTROL_DELETETRIGGERREQUEST_HPP_
 #define GS2_SCHEDULE_CONTROL_DELETETRIGGERREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ScheduleConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace schedule
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace schedule
  *
  * @author Game Server Services, Inc.
  */
-class DeleteTriggerRequest : public Gs2UserRequest, public Gs2Schedule
+class DeleteTriggerRequest : public Gs2BasicRequest, public Gs2Schedule
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** トリガーの名前 */
@@ -51,6 +55,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             triggerName(data.triggerName),
             duplicationAvoider(data.duplicationAvoider)
@@ -58,6 +63,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             triggerName(std::move(data.triggerName)),
             duplicationAvoider(std::move(data.duplicationAvoider))
@@ -92,13 +98,13 @@ public:
     {}
 
     DeleteTriggerRequest(const DeleteTriggerRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Schedule(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     DeleteTriggerRequest(DeleteTriggerRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Schedule(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -115,7 +121,7 @@ public:
 
     DeleteTriggerRequest& operator=(const DeleteTriggerRequest& deleteTriggerRequest)
     {
-        Gs2UserRequest::operator=(deleteTriggerRequest);
+        Gs2BasicRequest::operator=(deleteTriggerRequest);
         Gs2Schedule::operator=(deleteTriggerRequest);
 
         if (m_pData != nullptr)
@@ -129,7 +135,7 @@ public:
 
     DeleteTriggerRequest& operator=(DeleteTriggerRequest&& deleteTriggerRequest)
     {
-        Gs2UserRequest::operator=(std::move(deleteTriggerRequest));
+        Gs2BasicRequest::operator=(std::move(deleteTriggerRequest));
         Gs2Schedule::operator=(std::move(deleteTriggerRequest));
 
         if (m_pData != nullptr)
@@ -151,6 +157,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    DeleteTriggerRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * ネームスペース名を取得
      *
@@ -290,27 +326,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    DeleteTriggerRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

@@ -17,10 +17,12 @@
 #ifndef GS2_MISSION_CONTROL_GETCOMPLETEREQUEST_HPP_
 #define GS2_MISSION_CONTROL_GETCOMPLETEREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2MissionConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace mission
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace mission
  *
  * @author Game Server Services, Inc.
  */
-class GetCompleteRequest : public Gs2UserRequest, public Gs2Mission
+class GetCompleteRequest : public Gs2BasicRequest, public Gs2Mission
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** ミッショングループ名 */
@@ -51,6 +55,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             missionGroupName(data.missionGroupName),
             duplicationAvoider(data.duplicationAvoider)
@@ -58,6 +63,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             missionGroupName(std::move(data.missionGroupName)),
             duplicationAvoider(std::move(data.duplicationAvoider))
@@ -92,13 +98,13 @@ public:
     {}
 
     GetCompleteRequest(const GetCompleteRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Mission(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     GetCompleteRequest(GetCompleteRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Mission(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -115,7 +121,7 @@ public:
 
     GetCompleteRequest& operator=(const GetCompleteRequest& getCompleteRequest)
     {
-        Gs2UserRequest::operator=(getCompleteRequest);
+        Gs2BasicRequest::operator=(getCompleteRequest);
         Gs2Mission::operator=(getCompleteRequest);
 
         if (m_pData != nullptr)
@@ -129,7 +135,7 @@ public:
 
     GetCompleteRequest& operator=(GetCompleteRequest&& getCompleteRequest)
     {
-        Gs2UserRequest::operator=(std::move(getCompleteRequest));
+        Gs2BasicRequest::operator=(std::move(getCompleteRequest));
         Gs2Mission::operator=(std::move(getCompleteRequest));
 
         if (m_pData != nullptr)
@@ -151,6 +157,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    GetCompleteRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * ネームスペース名を取得
      *
@@ -290,27 +326,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    GetCompleteRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

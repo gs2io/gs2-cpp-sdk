@@ -17,10 +17,12 @@
 #ifndef GS2_SHOWCASE_CONTROL_DESCRIBESHOWCASESREQUEST_HPP_
 #define GS2_SHOWCASE_CONTROL_DESCRIBESHOWCASESREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ShowcaseConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace showcase
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace showcase
  *
  * @author Game Server Services, Inc.
  */
-class DescribeShowcasesRequest : public Gs2UserRequest, public Gs2Showcase
+class DescribeShowcasesRequest : public Gs2BasicRequest, public Gs2Showcase
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** 重複実行回避機能に使用するID */
@@ -49,12 +53,14 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             duplicationAvoider(data.duplicationAvoider)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             duplicationAvoider(std::move(data.duplicationAvoider))
         {}
@@ -88,13 +94,13 @@ public:
     {}
 
     DescribeShowcasesRequest(const DescribeShowcasesRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Showcase(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     DescribeShowcasesRequest(DescribeShowcasesRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Showcase(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -111,7 +117,7 @@ public:
 
     DescribeShowcasesRequest& operator=(const DescribeShowcasesRequest& describeShowcasesRequest)
     {
-        Gs2UserRequest::operator=(describeShowcasesRequest);
+        Gs2BasicRequest::operator=(describeShowcasesRequest);
         Gs2Showcase::operator=(describeShowcasesRequest);
 
         if (m_pData != nullptr)
@@ -125,7 +131,7 @@ public:
 
     DescribeShowcasesRequest& operator=(DescribeShowcasesRequest&& describeShowcasesRequest)
     {
-        Gs2UserRequest::operator=(std::move(describeShowcasesRequest));
+        Gs2BasicRequest::operator=(std::move(describeShowcasesRequest));
         Gs2Showcase::operator=(std::move(describeShowcasesRequest));
 
         if (m_pData != nullptr)
@@ -147,6 +153,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    DescribeShowcasesRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * ネームスペース名を取得
      *
@@ -255,27 +291,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    DescribeShowcasesRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

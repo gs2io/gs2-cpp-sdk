@@ -17,10 +17,12 @@
 #ifndef GS2_QUEST_CONTROL_ENDREQUEST_HPP_
 #define GS2_QUEST_CONTROL_ENDREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2QuestConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace quest
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace quest
  *
  * @author Game Server Services, Inc.
  */
-class EndRequest : public Gs2UserRequest, public Gs2Quest
+class EndRequest : public Gs2BasicRequest, public Gs2Quest
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** カテゴリ名 */
         optional<StringHolder> namespaceName;
         /** トランザクションID */
@@ -57,6 +61,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             transactionId(data.transactionId),
             rewards(data.rewards),
@@ -67,6 +72,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             transactionId(std::move(data.transactionId)),
             rewards(std::move(data.rewards)),
@@ -104,13 +110,13 @@ public:
     {}
 
     EndRequest(const EndRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Quest(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     EndRequest(EndRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Quest(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -127,7 +133,7 @@ public:
 
     EndRequest& operator=(const EndRequest& endRequest)
     {
-        Gs2UserRequest::operator=(endRequest);
+        Gs2BasicRequest::operator=(endRequest);
         Gs2Quest::operator=(endRequest);
 
         if (m_pData != nullptr)
@@ -141,7 +147,7 @@ public:
 
     EndRequest& operator=(EndRequest&& endRequest)
     {
-        Gs2UserRequest::operator=(std::move(endRequest));
+        Gs2BasicRequest::operator=(std::move(endRequest));
         Gs2Quest::operator=(std::move(endRequest));
 
         if (m_pData != nullptr)
@@ -163,6 +169,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    EndRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * カテゴリ名を取得
      *
@@ -395,27 +431,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    EndRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 

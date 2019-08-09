@@ -17,10 +17,12 @@
 #ifndef GS2_INBOX_CONTROL_DESCRIBEMESSAGESREQUEST_HPP_
 #define GS2_INBOX_CONTROL_DESCRIBEMESSAGESREQUEST_HPP_
 
-#include <gs2/core/control/Gs2UserRequest.hpp>
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2InboxConst.hpp"
+#include "../model/model.hpp"
 
 namespace gs2 { namespace inbox
 {
@@ -30,7 +32,7 @@ namespace gs2 { namespace inbox
  *
  * @author Game Server Services, Inc.
  */
-class DescribeMessagesRequest : public Gs2UserRequest, public Gs2Inbox
+class DescribeMessagesRequest : public Gs2BasicRequest, public Gs2Inbox
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -39,6 +41,8 @@ private:
     class Data : public Gs2Object
     {
     public:
+        /** アクセストークン */
+        optional<StringHolder> accessToken;
         /** プレゼントボックス名 */
         optional<StringHolder> namespaceName;
         /** データの取得を開始する位置を指定するトークン */
@@ -53,6 +57,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             pageToken(data.pageToken),
             limit(data.limit),
@@ -61,6 +66,7 @@ private:
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
+            accessToken(std::move(data.accessToken)),
             namespaceName(std::move(data.namespaceName)),
             pageToken(std::move(data.pageToken)),
             limit(std::move(data.limit)),
@@ -96,13 +102,13 @@ public:
     {}
 
     DescribeMessagesRequest(const DescribeMessagesRequest& obj) :
-        Gs2UserRequest(obj),
+        Gs2BasicRequest(obj),
         Gs2Inbox(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
     DescribeMessagesRequest(DescribeMessagesRequest&& obj) :
-        Gs2UserRequest(std::move(obj)),
+        Gs2BasicRequest(std::move(obj)),
         Gs2Inbox(std::move(obj)),
         m_pData(obj.m_pData)
     {
@@ -119,7 +125,7 @@ public:
 
     DescribeMessagesRequest& operator=(const DescribeMessagesRequest& describeMessagesRequest)
     {
-        Gs2UserRequest::operator=(describeMessagesRequest);
+        Gs2BasicRequest::operator=(describeMessagesRequest);
         Gs2Inbox::operator=(describeMessagesRequest);
 
         if (m_pData != nullptr)
@@ -133,7 +139,7 @@ public:
 
     DescribeMessagesRequest& operator=(DescribeMessagesRequest&& describeMessagesRequest)
     {
-        Gs2UserRequest::operator=(std::move(describeMessagesRequest));
+        Gs2BasicRequest::operator=(std::move(describeMessagesRequest));
         Gs2Inbox::operator=(std::move(describeMessagesRequest));
 
         if (m_pData != nullptr)
@@ -155,6 +161,36 @@ public:
     {
         return this;
     }
+
+    /**
+     * アクセストークンを取得。
+     *
+     * @return アクセストークン
+     */
+    const gs2::optional<StringHolder>& getAccessToken() const {
+        return ensureData().accessToken;
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     */
+    void setAccessToken(const Char* accessToken) {
+        ensureData().accessToken.emplace(accessToken);
+    }
+
+    /**
+     * アクセストークンを設定。
+     *
+     * @param accessToken アクセストークン
+     * @return this
+     */
+    DescribeMessagesRequest& withAccessToken(const Char* accessToken) {
+        setAccessToken(accessToken);
+        return *this;
+    }
+
     /**
      * プレゼントボックス名を取得
      *
@@ -325,27 +361,6 @@ public:
     {
         setRequestId(gs2RequestId);
         return *this;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    DescribeMessagesRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
-        return *this;
-    }
-
-    virtual const Char* getModuleName() const
-    {
-        return MODULE;
-    }
-
-    virtual const Char* getFunctionName() const
-    {
-        return FUNCTION;
     }
 };
 
