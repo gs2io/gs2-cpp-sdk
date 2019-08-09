@@ -160,18 +160,6 @@ public:
     }
 
     /**
-     * GS2認証クライアントIDを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2ClientId GS2認証クライアントID
-     */
-    Gs2BasicRequest& withGs2ClientId(const Char* gs2ClientId)
-    {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
      * タイムスタンプを取得。
      *
      * @return タイムスタンプ
@@ -190,18 +178,6 @@ public:
     void setGs2Timestamp(Int64 gs2Timestamp)
     {
         ensureData().gs2Timestamp = gs2Timestamp;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    Gs2BasicRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
     }
 
     /**
@@ -226,18 +202,6 @@ public:
     }
 
     /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    Gs2BasicRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
-        return *this;
-    }
-
-    /**
      * GS2リクエストIDを取得。
      *
      * @return GS2リクエストID
@@ -255,17 +219,6 @@ public:
     void setRequestId(const Char* gs2RequestId)
     {
         ensureData().gs2RequestId.emplace(gs2RequestId);
-    }
-
-    /**
-     * GS2リクエストIDを設定。
-     *
-     * @param gs2RequestId GS2リクエストID
-     */
-    Gs2BasicRequest& withRequestId(const Char* gs2RequestId)
-    {
-        setRequestId(gs2RequestId);
-        return *this;
     }
 };
 
