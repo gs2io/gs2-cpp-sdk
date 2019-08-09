@@ -268,13 +268,6 @@ public:
         return *this;
     }
 
-    /**
-     * アクセストークンを取得。
-     *
-     * @return アクセストークン
-     */
-    virtual const gs2::optional<StringHolder>& getAccessToken() const;
-
     virtual const Char* getModuleName() const = 0;
 
     virtual const Char* getFunctionName() const = 0;
