@@ -37,6 +37,8 @@ private:
         gs2::optional<StringHolder> gs2RequestSign;
         /** GS2リクエストID */
         gs2::optional<StringHolder> gs2RequestId;
+        /** コンテクストスタック */
+        gs2::optional<StringHolder> contextStack;
 
         Data()
         {}
@@ -46,7 +48,8 @@ private:
             gs2ClientId(data.gs2ClientId),
             gs2Timestamp(data.gs2Timestamp),
             gs2RequestSign(data.gs2RequestSign),
-            gs2RequestId(data.gs2RequestId)
+            gs2RequestId(data.gs2RequestId),
+            contextStack(data.contextStack)
         {}
 
         Data(Data&& data) :
@@ -54,7 +57,8 @@ private:
             gs2ClientId(std::move(data.gs2ClientId)),
             gs2Timestamp(std::move(data.gs2Timestamp)),
             gs2RequestSign(std::move(data.gs2RequestSign)),
-            gs2RequestId(std::move(data.gs2RequestId))
+            gs2RequestId(std::move(data.gs2RequestId)),
+            contextStack(std::move(data.contextStack))
         {}
 
         ~Data() = default;
@@ -219,6 +223,27 @@ public:
     void setRequestId(const Char* gs2RequestId)
     {
         ensureData().gs2RequestId.emplace(gs2RequestId);
+    }
+
+    /**
+     * コンテクストスタックを設定。
+     * 通常は自動的に計算されるため、この値を設定する必要はありません。
+     *
+     * @param contextStack コンテクストスタック
+     */
+    void setContextStack(const Char* contextStack)
+    {
+        ensureData().contextStack.emplace(contextStack);
+    }
+
+    /**
+     * コンテクストスタックを取得。
+     *
+     * @return コンテクストスタック
+     */
+    const gs2::optional<StringHolder>& getContextStack() const
+    {
+        return ensureData().contextStack;
     }
 };
 
