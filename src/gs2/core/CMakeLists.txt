@@ -73,7 +73,6 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         util/StringHolder.hpp
         util/StringUtil.hpp
         util/StringVariable.hpp
-        util/UrlEncoder.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
@@ -104,7 +103,6 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         util/StringHolder.cpp
         util/StringUtil.cpp
         util/StringVariable.cpp
-        util/UrlEncoder.cpp
         )
 
 file(GLOB ${PROJECT_NAME}_ETC_FILES

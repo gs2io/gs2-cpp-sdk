@@ -33,8 +33,11 @@ typedef std::basic_string<Char, std::char_traits<Char>, StandardAllocator<Char>>
 class StringVariable : public BasicString, public Gs2Object
 {
 public:
-    explicit StringVariable(const Char string[])
-            : BasicString(string)
+	struct UrlSafeEncode {};
+
+public:
+    explicit StringVariable(const Char string[]) :
+        BasicString(string)
     {
     }
 
@@ -81,6 +84,8 @@ public:
     }
 
     explicit StringVariable(const List<StringHolder>& list);
+
+    StringVariable(const Char string[], UrlSafeEncode);
 
     StringVariable& replace(const Char pattern[], const Char replacement[]);
     StringVariable& replace(const StringVariable& pattern, const Char replacement[]);

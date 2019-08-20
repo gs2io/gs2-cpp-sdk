@@ -23,6 +23,49 @@ GS2_START_OF_NAMESPACE
 
 namespace detail {
 
+namespace {
+
+inline char toHex(char ch)
+{
+    return ch < 10 ? '0' + ch : 'A' + (ch - 10);
+}
+
+void encodeUrl(StringVariable& dst, const char src[], std::size_t srcSize)
+{
+    dst.reserve(srcSize * 12 / 10);     // Base64 変換済の文字列を変換するのが主要ユースケースなので、ざっくり1.2倍程度確保
+
+    char encoded[4];
+    encoded[0] = '%';
+    encoded[3] = '\0';
+
+    for (int i = 0; i < srcSize; i++)
+    {
+        char ch = src[i];
+
+        if (ch == ' ')
+        {
+            dst.append("+");
+        }
+        else if (std::isalnum(ch) || ch == '-' || ch == '_' || ch == '.' || ch == '~')
+        {
+            dst.append(1, ch);
+        }
+        else
+        {
+            encoded[1] = toHex((ch >> 4) & 0xF);
+            encoded[2] = toHex((ch & 0xF));
+            dst.append(encoded);
+        }
+    }
+}
+
+void encodeUrl(StringVariable& dst, const char src[])
+{
+    encodeUrl(dst, src, std::strlen(src));
+}
+
+}
+
 StringVariable::StringVariable(const List<StringHolder>& list)
 {
     auto count = getCountOfListElements(list);
@@ -35,6 +78,13 @@ StringVariable::StringVariable(const List<StringHolder>& list)
             append(",").append(list[i].getCString());
         }
     }
+}
+
+StringVariable::StringVariable(const Char string[], UrlSafeEncode urlSafeEncode)
+{
+    GS2_NOT_USED(urlSafeEncode);
+
+    encodeUrl(*this, string);
 }
 
 StringVariable& StringVariable::replace(const Char pattern[], const Char replacement[])
