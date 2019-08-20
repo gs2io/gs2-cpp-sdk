@@ -22,7 +22,6 @@
 #include <gs2/core/network/Gs2WebSocketSessionTask.hpp>
 #include <gs2/core/network/Gs2WebSocketSession.hpp>
 #include <gs2/core/util/StringVariable.hpp>
-#include <gs2/core/util/UrlEncoder.hpp>
 #include "model/model.hpp"
 #include "request/DescribeNamespacesRequest.hpp"
 #include "request/CreateNamespaceRequest.hpp"
@@ -108,6 +107,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getPageToken())
             {
                 writer.writePropertyName("pageToken");
@@ -181,6 +185,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getName())
             {
                 writer.writePropertyName("name");
@@ -319,6 +328,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -387,6 +401,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -455,6 +474,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -593,6 +617,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -661,6 +690,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -749,6 +783,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -837,6 +876,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -931,6 +975,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1014,6 +1063,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1097,6 +1151,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1180,6 +1239,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1263,6 +1327,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1357,6 +1426,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1451,6 +1525,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1534,6 +1613,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1617,6 +1701,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getStampTask())
             {
                 writer.writePropertyName("stampTask");

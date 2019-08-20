@@ -41,18 +41,22 @@ private:
     public:
         /** 消費後のウォレット */
         optional<Wallet> item;
+        /** 消費した通貨の価格 */
+        optional<Float> price;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            item(data.item)
+            item(data.item),
+            price(data.price)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
+            item(std::move(data.item)),
+            price(std::move(data.price))
         {}
 
         virtual ~Data() = default;
@@ -69,6 +73,12 @@ private:
                     const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->item.emplace();
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
+                }
+            }
+            else if (std::strcmp(name_, "price") == 0) {
+                if (jsonValue.IsFloat())
+                {
+                    this->price = jsonValue.GetFloat();
                 }
             }
         }
@@ -169,6 +179,26 @@ public:
     void setItem(const Wallet& item)
     {
         ensureData().item.emplace(item);
+    }
+
+    /**
+     * 消費した通貨の価格を取得
+     *
+     * @return 消費した通貨の価格
+     */
+    const optional<Float>& getPrice() const
+    {
+        return ensureData().price;
+    }
+
+    /**
+     * 消費した通貨の価格を設定
+     *
+     * @param price 消費した通貨の価格
+     */
+    void setPrice(Float price)
+    {
+        ensureData().price.emplace(price);
     }
 
 

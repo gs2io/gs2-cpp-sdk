@@ -28,7 +28,7 @@ namespace gs2 { namespace script
 {
 
 /**
- * スクリプトを更新します のリクエストモデル
+ * GithHub をデータソースとしてスクリプトを更新します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

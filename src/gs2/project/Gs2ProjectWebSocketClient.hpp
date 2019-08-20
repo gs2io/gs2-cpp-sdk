@@ -22,7 +22,6 @@
 #include <gs2/core/network/Gs2WebSocketSessionTask.hpp>
 #include <gs2/core/network/Gs2WebSocketSession.hpp>
 #include <gs2/core/util/StringVariable.hpp>
-#include <gs2/core/util/UrlEncoder.hpp>
 #include "model/model.hpp"
 #include "request/CreateAccountRequest.hpp"
 #include "request/VerifyRequest.hpp"
@@ -96,6 +95,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getEmail())
             {
                 writer.writePropertyName("email");
@@ -179,6 +183,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getVerifyToken())
             {
                 writer.writePropertyName("verifyToken");
@@ -247,6 +256,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getEmail())
             {
                 writer.writePropertyName("email");
@@ -320,6 +334,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getAccountName())
             {
                 writer.writePropertyName("accountName");
@@ -388,6 +407,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getEmail())
             {
                 writer.writePropertyName("email");
@@ -456,6 +480,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getIssuePasswordToken())
             {
                 writer.writePropertyName("issuePasswordToken");
@@ -524,6 +553,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getEmail())
             {
                 writer.writePropertyName("email");
@@ -612,6 +646,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getRequestId())
             {
                 writer.writePropertyName("xGs2RequestId");
@@ -675,6 +714,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getAccountToken())
             {
                 writer.writePropertyName("accountToken");
@@ -753,6 +797,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getAccountToken())
             {
                 writer.writePropertyName("accountToken");
@@ -831,6 +880,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getAccountToken())
             {
                 writer.writePropertyName("accountToken");
@@ -904,6 +958,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getProjectName())
             {
                 writer.writePropertyName("projectName");
@@ -977,6 +1036,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getAccountToken())
             {
                 writer.writePropertyName("accountToken");
@@ -1055,6 +1119,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getAccountToken())
             {
                 writer.writePropertyName("accountToken");

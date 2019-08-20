@@ -51,8 +51,6 @@ private:
         optional<StringHolder> description;
         /** 抽選モード */
         optional<StringHolder> mode;
-        /** 抽選回数 */
-        optional<Int32> count;
         /** 抽選方法 */
         optional<StringHolder> method;
         /** 景品テーブルの名前 */
@@ -74,7 +72,6 @@ private:
             metadata(data.metadata),
             description(data.description),
             mode(data.mode),
-            count(data.count),
             method(data.method),
             prizeTableName(data.prizeTableName),
             choicePrizeTableScriptId(data.choicePrizeTableScriptId),
@@ -89,7 +86,6 @@ private:
             metadata(std::move(data.metadata)),
             description(std::move(data.description)),
             mode(std::move(data.mode)),
-            count(std::move(data.count)),
             method(std::move(data.method)),
             prizeTableName(std::move(data.prizeTableName)),
             choicePrizeTableScriptId(std::move(data.choicePrizeTableScriptId)),
@@ -133,12 +129,6 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->mode.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "count") == 0) {
-                if (jsonValue.IsInt())
-                {
-                    this->count = jsonValue.GetInt();
                 }
             }
             else if (std::strcmp(name_, "method") == 0) {
@@ -407,37 +397,6 @@ public:
     }
 
     /**
-     * 抽選回数を取得
-     *
-     * @return 抽選回数
-     */
-    const optional<Int32>& getCount() const
-    {
-        return ensureData().count;
-    }
-
-    /**
-     * 抽選回数を設定
-     *
-     * @param count 抽選回数
-     */
-    void setCount(Int32 count)
-    {
-        ensureData().count.emplace(count);
-    }
-
-    /**
-     * 抽選回数を設定
-     *
-     * @param count 抽選回数
-     */
-    LotteryModelMaster& withCount(Int32 count)
-    {
-        setCount(count);
-        return *this;
-    }
-
-    /**
      * 抽選方法を取得
      *
      * @return 抽選方法
@@ -624,10 +583,6 @@ inline bool operator!=(const LotteryModelMaster& lhs, const LotteryModelMaster& 
             return true;
         }
         if (lhs.m_pData->mode != lhr.m_pData->mode)
-        {
-            return true;
-        }
-        if (lhs.m_pData->count != lhr.m_pData->count)
         {
             return true;
         }

@@ -22,7 +22,6 @@
 #include <gs2/core/network/Gs2RestSessionTask.hpp>
 #include <gs2/core/network/Gs2RestSession.hpp>
 #include <gs2/core/util/StringVariable.hpp>
-#include <gs2/core/util/UrlEncoder.hpp>
 #include "model/model.hpp"
 #include "request/DescribeNamespacesRequest.hpp"
 #include "request/CreateNamespaceRequest.hpp"
@@ -414,21 +413,29 @@ public:
         url += "/";
 
         Char joint[] = { '?', '\0' };
-        if (request.getPageToken()) {
-            Char urlSafeValue[2048];
-            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+        if (request.getContextStack())
+        {
             url += joint;
-            url += "pageToken=";
-            url += urlSafeValue;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
             joint[0] = '&';
         }
-        if (request.getLimit()) {
+        if (request.getPageToken())
+        {
+            url += joint;
+            url += "pageToken=";
+            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getLimit())
+        {
             url += joint;
             url += "limit=";
             url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -455,6 +462,11 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         if (request.getName())
         {
             writer.writePropertyName("name");
@@ -472,6 +484,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -500,7 +513,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -529,7 +550,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -560,6 +589,11 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
@@ -572,6 +606,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -600,12 +635,20 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
         {
             TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -634,21 +677,29 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
-        if (request.getPageToken()) {
-            Char urlSafeValue[2048];
-            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+        if (request.getContextStack())
+        {
             url += joint;
-            url += "pageToken=";
-            url += urlSafeValue;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
             joint[0] = '&';
         }
-        if (request.getLimit()) {
+        if (request.getPageToken())
+        {
+            url += joint;
+            url += "pageToken=";
+            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getLimit())
+        {
             url += joint;
             url += "limit=";
             url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -679,6 +730,11 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         if (request.getName())
         {
             writer.writePropertyName("name");
@@ -726,6 +782,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -758,7 +815,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -793,6 +858,11 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         if (request.getDescription())
         {
             writer.writePropertyName("description");
@@ -835,6 +905,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -867,12 +938,20 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
         {
             TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -901,21 +980,29 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
-        if (request.getPageToken()) {
-            Char urlSafeValue[2048];
-            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+        if (request.getContextStack())
+        {
             url += joint;
-            url += "pageToken=";
-            url += urlSafeValue;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
             joint[0] = '&';
         }
-        if (request.getLimit()) {
+        if (request.getPageToken())
+        {
+            url += joint;
+            url += "pageToken=";
+            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getLimit())
+        {
             url += joint;
             url += "limit=";
             url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -956,21 +1043,29 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
-        if (request.getPageToken()) {
-            Char urlSafeValue[2048];
-            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+        if (request.getContextStack())
+        {
             url += joint;
-            url += "pageToken=";
-            url += urlSafeValue;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
             joint[0] = '&';
         }
-        if (request.getLimit()) {
+        if (request.getPageToken())
+        {
+            url += joint;
+            url += "pageToken=";
+            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getLimit())
+        {
             url += joint;
             url += "limit=";
             url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1007,7 +1102,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1052,7 +1155,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1095,6 +1206,11 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         if (request.getTriggerStrategy())
         {
             writer.writePropertyName("triggerStrategy");
@@ -1112,6 +1228,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1148,12 +1265,20 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
         {
             TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1198,12 +1323,20 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
         {
             TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1236,7 +1369,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1277,7 +1418,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1310,7 +1459,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1343,7 +1500,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1388,7 +1553,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1425,7 +1598,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1454,7 +1635,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1483,7 +1672,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1514,6 +1711,11 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         if (request.getSettings())
         {
             writer.writePropertyName("settings");
@@ -1526,6 +1728,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1556,6 +1759,11 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         if (request.getCheckoutSetting())
         {
             writer.writePropertyName("checkoutSetting");
@@ -1568,6 +1776,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));

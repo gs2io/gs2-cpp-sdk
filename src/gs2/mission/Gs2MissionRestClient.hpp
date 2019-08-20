@@ -22,15 +22,15 @@
 #include <gs2/core/network/Gs2RestSessionTask.hpp>
 #include <gs2/core/network/Gs2RestSession.hpp>
 #include <gs2/core/util/StringVariable.hpp>
-#include <gs2/core/util/UrlEncoder.hpp>
 #include "model/model.hpp"
-#include "request/DescribeCountersRequest.hpp"
-#include "request/DescribeCountersByUserIdRequest.hpp"
-#include "request/IncreaseCounterByUserIdRequest.hpp"
-#include "request/GetCounterRequest.hpp"
-#include "request/GetCounterByUserIdRequest.hpp"
-#include "request/DeleteCounterByUserIdRequest.hpp"
-#include "request/IncreaseByStampSheetRequest.hpp"
+#include "request/DescribeMissionTaskModelsRequest.hpp"
+#include "request/GetMissionTaskModelRequest.hpp"
+#include "request/ExportMasterRequest.hpp"
+#include "request/GetCurrentMissionMasterRequest.hpp"
+#include "request/UpdateCurrentMissionMasterRequest.hpp"
+#include "request/UpdateCurrentMissionMasterFromGitHubRequest.hpp"
+#include "request/DescribeCounterModelsRequest.hpp"
+#include "request/GetCounterModelRequest.hpp"
 #include "request/DescribeCompletesRequest.hpp"
 #include "request/DescribeCompletesByUserIdRequest.hpp"
 #include "request/CompleteRequest.hpp"
@@ -40,44 +40,44 @@
 #include "request/GetCompleteByUserIdRequest.hpp"
 #include "request/DeleteCompleteByUserIdRequest.hpp"
 #include "request/ReceiveByStampTaskRequest.hpp"
-#include "request/DescribeMissionTaskModelMastersRequest.hpp"
-#include "request/CreateMissionTaskModelMasterRequest.hpp"
-#include "request/GetMissionTaskModelMasterRequest.hpp"
-#include "request/UpdateMissionTaskModelMasterRequest.hpp"
-#include "request/DeleteMissionTaskModelMasterRequest.hpp"
-#include "request/DescribeMissionGroupModelMastersRequest.hpp"
-#include "request/CreateMissionGroupModelMasterRequest.hpp"
-#include "request/GetMissionGroupModelMasterRequest.hpp"
-#include "request/UpdateMissionGroupModelMasterRequest.hpp"
-#include "request/DeleteMissionGroupModelMasterRequest.hpp"
-#include "request/DescribeMissionTaskModelsRequest.hpp"
-#include "request/GetMissionTaskModelRequest.hpp"
-#include "request/DescribeMissionGroupModelsRequest.hpp"
-#include "request/GetMissionGroupModelRequest.hpp"
-#include "request/ExportMasterRequest.hpp"
-#include "request/GetCurrentMissionMasterRequest.hpp"
-#include "request/UpdateCurrentMissionMasterRequest.hpp"
-#include "request/UpdateCurrentMissionMasterFromGitHubRequest.hpp"
+#include "request/DescribeCounterModelMastersRequest.hpp"
+#include "request/CreateCounterModelMasterRequest.hpp"
+#include "request/GetCounterModelMasterRequest.hpp"
+#include "request/UpdateCounterModelMasterRequest.hpp"
+#include "request/DeleteCounterModelMasterRequest.hpp"
 #include "request/DescribeNamespacesRequest.hpp"
 #include "request/CreateNamespaceRequest.hpp"
 #include "request/GetNamespaceStatusRequest.hpp"
 #include "request/GetNamespaceRequest.hpp"
 #include "request/UpdateNamespaceRequest.hpp"
 #include "request/DeleteNamespaceRequest.hpp"
-#include "request/DescribeCounterModelMastersRequest.hpp"
-#include "request/CreateCounterModelMasterRequest.hpp"
-#include "request/GetCounterModelMasterRequest.hpp"
-#include "request/UpdateCounterModelMasterRequest.hpp"
-#include "request/DeleteCounterModelMasterRequest.hpp"
-#include "request/DescribeCounterModelsRequest.hpp"
-#include "request/GetCounterModelRequest.hpp"
-#include "result/DescribeCountersResult.hpp"
-#include "result/DescribeCountersByUserIdResult.hpp"
-#include "result/IncreaseCounterByUserIdResult.hpp"
-#include "result/GetCounterResult.hpp"
-#include "result/GetCounterByUserIdResult.hpp"
-#include "result/DeleteCounterByUserIdResult.hpp"
-#include "result/IncreaseByStampSheetResult.hpp"
+#include "request/DescribeMissionGroupModelsRequest.hpp"
+#include "request/GetMissionGroupModelRequest.hpp"
+#include "request/DescribeMissionGroupModelMastersRequest.hpp"
+#include "request/CreateMissionGroupModelMasterRequest.hpp"
+#include "request/GetMissionGroupModelMasterRequest.hpp"
+#include "request/UpdateMissionGroupModelMasterRequest.hpp"
+#include "request/DeleteMissionGroupModelMasterRequest.hpp"
+#include "request/DescribeMissionTaskModelMastersRequest.hpp"
+#include "request/CreateMissionTaskModelMasterRequest.hpp"
+#include "request/GetMissionTaskModelMasterRequest.hpp"
+#include "request/UpdateMissionTaskModelMasterRequest.hpp"
+#include "request/DeleteMissionTaskModelMasterRequest.hpp"
+#include "request/DescribeCountersRequest.hpp"
+#include "request/DescribeCountersByUserIdRequest.hpp"
+#include "request/IncreaseCounterByUserIdRequest.hpp"
+#include "request/GetCounterRequest.hpp"
+#include "request/GetCounterByUserIdRequest.hpp"
+#include "request/DeleteCounterByUserIdRequest.hpp"
+#include "request/IncreaseByStampSheetRequest.hpp"
+#include "result/DescribeMissionTaskModelsResult.hpp"
+#include "result/GetMissionTaskModelResult.hpp"
+#include "result/ExportMasterResult.hpp"
+#include "result/GetCurrentMissionMasterResult.hpp"
+#include "result/UpdateCurrentMissionMasterResult.hpp"
+#include "result/UpdateCurrentMissionMasterFromGitHubResult.hpp"
+#include "result/DescribeCounterModelsResult.hpp"
+#include "result/GetCounterModelResult.hpp"
 #include "result/DescribeCompletesResult.hpp"
 #include "result/DescribeCompletesByUserIdResult.hpp"
 #include "result/CompleteResult.hpp"
@@ -87,48 +87,48 @@
 #include "result/GetCompleteByUserIdResult.hpp"
 #include "result/DeleteCompleteByUserIdResult.hpp"
 #include "result/ReceiveByStampTaskResult.hpp"
-#include "result/DescribeMissionTaskModelMastersResult.hpp"
-#include "result/CreateMissionTaskModelMasterResult.hpp"
-#include "result/GetMissionTaskModelMasterResult.hpp"
-#include "result/UpdateMissionTaskModelMasterResult.hpp"
-#include "result/DeleteMissionTaskModelMasterResult.hpp"
-#include "result/DescribeMissionGroupModelMastersResult.hpp"
-#include "result/CreateMissionGroupModelMasterResult.hpp"
-#include "result/GetMissionGroupModelMasterResult.hpp"
-#include "result/UpdateMissionGroupModelMasterResult.hpp"
-#include "result/DeleteMissionGroupModelMasterResult.hpp"
-#include "result/DescribeMissionTaskModelsResult.hpp"
-#include "result/GetMissionTaskModelResult.hpp"
-#include "result/DescribeMissionGroupModelsResult.hpp"
-#include "result/GetMissionGroupModelResult.hpp"
-#include "result/ExportMasterResult.hpp"
-#include "result/GetCurrentMissionMasterResult.hpp"
-#include "result/UpdateCurrentMissionMasterResult.hpp"
-#include "result/UpdateCurrentMissionMasterFromGitHubResult.hpp"
+#include "result/DescribeCounterModelMastersResult.hpp"
+#include "result/CreateCounterModelMasterResult.hpp"
+#include "result/GetCounterModelMasterResult.hpp"
+#include "result/UpdateCounterModelMasterResult.hpp"
+#include "result/DeleteCounterModelMasterResult.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
 #include "result/GetNamespaceResult.hpp"
 #include "result/UpdateNamespaceResult.hpp"
 #include "result/DeleteNamespaceResult.hpp"
-#include "result/DescribeCounterModelMastersResult.hpp"
-#include "result/CreateCounterModelMasterResult.hpp"
-#include "result/GetCounterModelMasterResult.hpp"
-#include "result/UpdateCounterModelMasterResult.hpp"
-#include "result/DeleteCounterModelMasterResult.hpp"
-#include "result/DescribeCounterModelsResult.hpp"
-#include "result/GetCounterModelResult.hpp"
+#include "result/DescribeMissionGroupModelsResult.hpp"
+#include "result/GetMissionGroupModelResult.hpp"
+#include "result/DescribeMissionGroupModelMastersResult.hpp"
+#include "result/CreateMissionGroupModelMasterResult.hpp"
+#include "result/GetMissionGroupModelMasterResult.hpp"
+#include "result/UpdateMissionGroupModelMasterResult.hpp"
+#include "result/DeleteMissionGroupModelMasterResult.hpp"
+#include "result/DescribeMissionTaskModelMastersResult.hpp"
+#include "result/CreateMissionTaskModelMasterResult.hpp"
+#include "result/GetMissionTaskModelMasterResult.hpp"
+#include "result/UpdateMissionTaskModelMasterResult.hpp"
+#include "result/DeleteMissionTaskModelMasterResult.hpp"
+#include "result/DescribeCountersResult.hpp"
+#include "result/DescribeCountersByUserIdResult.hpp"
+#include "result/IncreaseCounterByUserIdResult.hpp"
+#include "result/GetCounterResult.hpp"
+#include "result/GetCounterByUserIdResult.hpp"
+#include "result/DeleteCounterByUserIdResult.hpp"
+#include "result/IncreaseByStampSheetResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace mission {
 
-typedef AsyncResult<DescribeCountersResult> AsyncDescribeCountersResult;
-typedef AsyncResult<DescribeCountersByUserIdResult> AsyncDescribeCountersByUserIdResult;
-typedef AsyncResult<IncreaseCounterByUserIdResult> AsyncIncreaseCounterByUserIdResult;
-typedef AsyncResult<GetCounterResult> AsyncGetCounterResult;
-typedef AsyncResult<GetCounterByUserIdResult> AsyncGetCounterByUserIdResult;
-typedef AsyncResult<DeleteCounterByUserIdResult> AsyncDeleteCounterByUserIdResult;
-typedef AsyncResult<IncreaseByStampSheetResult> AsyncIncreaseByStampSheetResult;
+typedef AsyncResult<DescribeMissionTaskModelsResult> AsyncDescribeMissionTaskModelsResult;
+typedef AsyncResult<GetMissionTaskModelResult> AsyncGetMissionTaskModelResult;
+typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
+typedef AsyncResult<GetCurrentMissionMasterResult> AsyncGetCurrentMissionMasterResult;
+typedef AsyncResult<UpdateCurrentMissionMasterResult> AsyncUpdateCurrentMissionMasterResult;
+typedef AsyncResult<UpdateCurrentMissionMasterFromGitHubResult> AsyncUpdateCurrentMissionMasterFromGitHubResult;
+typedef AsyncResult<DescribeCounterModelsResult> AsyncDescribeCounterModelsResult;
+typedef AsyncResult<GetCounterModelResult> AsyncGetCounterModelResult;
 typedef AsyncResult<DescribeCompletesResult> AsyncDescribeCompletesResult;
 typedef AsyncResult<DescribeCompletesByUserIdResult> AsyncDescribeCompletesByUserIdResult;
 typedef AsyncResult<CompleteResult> AsyncCompleteResult;
@@ -138,37 +138,36 @@ typedef AsyncResult<GetCompleteResult> AsyncGetCompleteResult;
 typedef AsyncResult<GetCompleteByUserIdResult> AsyncGetCompleteByUserIdResult;
 typedef AsyncResult<DeleteCompleteByUserIdResult> AsyncDeleteCompleteByUserIdResult;
 typedef AsyncResult<ReceiveByStampTaskResult> AsyncReceiveByStampTaskResult;
-typedef AsyncResult<DescribeMissionTaskModelMastersResult> AsyncDescribeMissionTaskModelMastersResult;
-typedef AsyncResult<CreateMissionTaskModelMasterResult> AsyncCreateMissionTaskModelMasterResult;
-typedef AsyncResult<GetMissionTaskModelMasterResult> AsyncGetMissionTaskModelMasterResult;
-typedef AsyncResult<UpdateMissionTaskModelMasterResult> AsyncUpdateMissionTaskModelMasterResult;
-typedef AsyncResult<DeleteMissionTaskModelMasterResult> AsyncDeleteMissionTaskModelMasterResult;
-typedef AsyncResult<DescribeMissionGroupModelMastersResult> AsyncDescribeMissionGroupModelMastersResult;
-typedef AsyncResult<CreateMissionGroupModelMasterResult> AsyncCreateMissionGroupModelMasterResult;
-typedef AsyncResult<GetMissionGroupModelMasterResult> AsyncGetMissionGroupModelMasterResult;
-typedef AsyncResult<UpdateMissionGroupModelMasterResult> AsyncUpdateMissionGroupModelMasterResult;
-typedef AsyncResult<DeleteMissionGroupModelMasterResult> AsyncDeleteMissionGroupModelMasterResult;
-typedef AsyncResult<DescribeMissionTaskModelsResult> AsyncDescribeMissionTaskModelsResult;
-typedef AsyncResult<GetMissionTaskModelResult> AsyncGetMissionTaskModelResult;
-typedef AsyncResult<DescribeMissionGroupModelsResult> AsyncDescribeMissionGroupModelsResult;
-typedef AsyncResult<GetMissionGroupModelResult> AsyncGetMissionGroupModelResult;
-typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
-typedef AsyncResult<GetCurrentMissionMasterResult> AsyncGetCurrentMissionMasterResult;
-typedef AsyncResult<UpdateCurrentMissionMasterResult> AsyncUpdateCurrentMissionMasterResult;
-typedef AsyncResult<UpdateCurrentMissionMasterFromGitHubResult> AsyncUpdateCurrentMissionMasterFromGitHubResult;
+typedef AsyncResult<DescribeCounterModelMastersResult> AsyncDescribeCounterModelMastersResult;
+typedef AsyncResult<CreateCounterModelMasterResult> AsyncCreateCounterModelMasterResult;
+typedef AsyncResult<GetCounterModelMasterResult> AsyncGetCounterModelMasterResult;
+typedef AsyncResult<UpdateCounterModelMasterResult> AsyncUpdateCounterModelMasterResult;
+typedef AsyncResult<DeleteCounterModelMasterResult> AsyncDeleteCounterModelMasterResult;
 typedef AsyncResult<DescribeNamespacesResult> AsyncDescribeNamespacesResult;
 typedef AsyncResult<CreateNamespaceResult> AsyncCreateNamespaceResult;
 typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
 typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
 typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
 typedef AsyncResult<DeleteNamespaceResult> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeCounterModelMastersResult> AsyncDescribeCounterModelMastersResult;
-typedef AsyncResult<CreateCounterModelMasterResult> AsyncCreateCounterModelMasterResult;
-typedef AsyncResult<GetCounterModelMasterResult> AsyncGetCounterModelMasterResult;
-typedef AsyncResult<UpdateCounterModelMasterResult> AsyncUpdateCounterModelMasterResult;
-typedef AsyncResult<DeleteCounterModelMasterResult> AsyncDeleteCounterModelMasterResult;
-typedef AsyncResult<DescribeCounterModelsResult> AsyncDescribeCounterModelsResult;
-typedef AsyncResult<GetCounterModelResult> AsyncGetCounterModelResult;
+typedef AsyncResult<DescribeMissionGroupModelsResult> AsyncDescribeMissionGroupModelsResult;
+typedef AsyncResult<GetMissionGroupModelResult> AsyncGetMissionGroupModelResult;
+typedef AsyncResult<DescribeMissionGroupModelMastersResult> AsyncDescribeMissionGroupModelMastersResult;
+typedef AsyncResult<CreateMissionGroupModelMasterResult> AsyncCreateMissionGroupModelMasterResult;
+typedef AsyncResult<GetMissionGroupModelMasterResult> AsyncGetMissionGroupModelMasterResult;
+typedef AsyncResult<UpdateMissionGroupModelMasterResult> AsyncUpdateMissionGroupModelMasterResult;
+typedef AsyncResult<DeleteMissionGroupModelMasterResult> AsyncDeleteMissionGroupModelMasterResult;
+typedef AsyncResult<DescribeMissionTaskModelMastersResult> AsyncDescribeMissionTaskModelMastersResult;
+typedef AsyncResult<CreateMissionTaskModelMasterResult> AsyncCreateMissionTaskModelMasterResult;
+typedef AsyncResult<GetMissionTaskModelMasterResult> AsyncGetMissionTaskModelMasterResult;
+typedef AsyncResult<UpdateMissionTaskModelMasterResult> AsyncUpdateMissionTaskModelMasterResult;
+typedef AsyncResult<DeleteMissionTaskModelMasterResult> AsyncDeleteMissionTaskModelMasterResult;
+typedef AsyncResult<DescribeCountersResult> AsyncDescribeCountersResult;
+typedef AsyncResult<DescribeCountersByUserIdResult> AsyncDescribeCountersByUserIdResult;
+typedef AsyncResult<IncreaseCounterByUserIdResult> AsyncIncreaseCounterByUserIdResult;
+typedef AsyncResult<GetCounterResult> AsyncGetCounterResult;
+typedef AsyncResult<GetCounterByUserIdResult> AsyncGetCounterByUserIdResult;
+typedef AsyncResult<DeleteCounterByUserIdResult> AsyncDeleteCounterByUserIdResult;
+typedef AsyncResult<IncreaseByStampSheetResult> AsyncIncreaseByStampSheetResult;
 
 /**
  * GS2 Mission API クライアント
@@ -179,7 +178,158 @@ typedef AsyncResult<GetCounterModelResult> AsyncGetCounterModelResult;
 class Gs2MissionRestClient : public AbstractGs2ClientBase
 {
 private:
-    static void write(detail::json::JsonWriter& writer, const Counter& obj)
+    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            writer.writePropertyName("gitHubApiKeyId");
+            writer.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            writer.writePropertyName("repositoryName");
+            writer.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            writer.writePropertyName("sourcePath");
+            writer.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            writer.writePropertyName("referenceType");
+            writer.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            writer.writePropertyName("commitHash");
+            writer.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            writer.writePropertyName("branchName");
+            writer.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            writer.writePropertyName("tagName");
+            writer.writeCharArray(*obj.getTagName());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const AcquireAction& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getAction())
+        {
+            writer.writePropertyName("action");
+            writer.writeCharArray(*obj.getAction());
+        }
+        if (obj.getRequest())
+        {
+            writer.writePropertyName("request");
+            writer.writeCharArray(*obj.getRequest());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const MissionTaskModel& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getMissionTaskId())
+        {
+            writer.writePropertyName("missionTaskId");
+            writer.writeCharArray(*obj.getMissionTaskId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getCounterName())
+        {
+            writer.writePropertyName("counterName");
+            writer.writeCharArray(*obj.getCounterName());
+        }
+        if (obj.getResetType())
+        {
+            writer.writePropertyName("resetType");
+            writer.writeCharArray(*obj.getResetType());
+        }
+        if (obj.getTargetValue())
+        {
+            writer.writePropertyName("targetValue");
+            writer.writeInt64(*obj.getTargetValue());
+        }
+        if (obj.getCompleteAcquireActions())
+        {
+            writer.writePropertyName("completeAcquireActions");
+            writer.writeArrayStart();
+            auto& list = *obj.getCompleteAcquireActions();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(writer, list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        if (obj.getChallengePeriodEventId())
+        {
+            writer.writePropertyName("challengePeriodEventId");
+            writer.writeCharArray(*obj.getChallengePeriodEventId());
+        }
+        if (obj.getPremiseMissionTaskName())
+        {
+            writer.writePropertyName("premiseMissionTaskName");
+            writer.writeCharArray(*obj.getPremiseMissionTaskName());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const CurrentMissionMaster& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getNamespaceName())
+        {
+            writer.writePropertyName("namespaceName");
+            writer.writeCharArray(*obj.getNamespaceName());
+        }
+        if (obj.getSettings())
+        {
+            writer.writePropertyName("settings");
+            writer.writeCharArray(*obj.getSettings());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const NotificationSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGatewayNamespaceId())
+        {
+            writer.writePropertyName("gatewayNamespaceId");
+            writer.writeCharArray(*obj.getGatewayNamespaceId());
+        }
+        if (obj.getEnableTransferMobileNotification())
+        {
+            writer.writePropertyName("enableTransferMobileNotification");
+            writer.writeBool(*obj.getEnableTransferMobileNotification());
+        }
+        if (obj.getSound())
+        {
+            writer.writePropertyName("sound");
+            writer.writeCharArray(*obj.getSound());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const CounterModel& obj)
     {
         writer.writeObjectStart();
         if (obj.getCounterId())
@@ -187,31 +337,47 @@ private:
             writer.writePropertyName("counterId");
             writer.writeCharArray(*obj.getCounterId());
         }
-        if (obj.getUserId())
-        {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*obj.getUserId());
-        }
         if (obj.getName())
         {
             writer.writePropertyName("name");
             writer.writeCharArray(*obj.getName());
         }
-        if (obj.getValues())
+        if (obj.getMetadata())
         {
-            writer.writePropertyName("values");
+            writer.writePropertyName("metadata");
+            writer.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getScopes())
+        {
+            writer.writePropertyName("scopes");
             writer.writeArrayStart();
-            auto& list = *obj.getValues();
+            auto& list = *obj.getScopes();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
                 write(writer, list[i]);
             }
             writer.writeArrayEnd();
         }
-        if (obj.getCreatedAt())
+        if (obj.getChallengePeriodEventId())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            writer.writePropertyName("challengePeriodEventId");
+            writer.writeCharArray(*obj.getChallengePeriodEventId());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const ScopedValue& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getResetType())
+        {
+            writer.writePropertyName("resetType");
+            writer.writeCharArray(*obj.getResetType());
+        }
+        if (obj.getValue())
+        {
+            writer.writePropertyName("value");
+            writer.writeInt64(*obj.getValue());
         }
         if (obj.getUpdatedAt())
         {
@@ -274,381 +440,70 @@ private:
         writer.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    static void write(detail::json::JsonWriter& writer, const Config& obj)
     {
         writer.writeObjectStart();
-        if (obj.getGitHubApiKeyId())
+        if (obj.getKey())
         {
-            writer.writePropertyName("gitHubApiKeyId");
-            writer.writeCharArray(*obj.getGitHubApiKeyId());
-        }
-        if (obj.getRepositoryName())
-        {
-            writer.writePropertyName("repositoryName");
-            writer.writeCharArray(*obj.getRepositoryName());
-        }
-        if (obj.getSourcePath())
-        {
-            writer.writePropertyName("sourcePath");
-            writer.writeCharArray(*obj.getSourcePath());
-        }
-        if (obj.getReferenceType())
-        {
-            writer.writePropertyName("referenceType");
-            writer.writeCharArray(*obj.getReferenceType());
-        }
-        if (obj.getCommitHash())
-        {
-            writer.writePropertyName("commitHash");
-            writer.writeCharArray(*obj.getCommitHash());
-        }
-        if (obj.getBranchName())
-        {
-            writer.writePropertyName("branchName");
-            writer.writeCharArray(*obj.getBranchName());
-        }
-        if (obj.getTagName())
-        {
-            writer.writePropertyName("tagName");
-            writer.writeCharArray(*obj.getTagName());
-        }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const CounterScopeModel& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getResetType())
-        {
-            writer.writePropertyName("resetType");
-            writer.writeCharArray(*obj.getResetType());
-        }
-        if (obj.getResetDayOfMonth())
-        {
-            writer.writePropertyName("resetDayOfMonth");
-            writer.writeInt32(*obj.getResetDayOfMonth());
-        }
-        if (obj.getResetDayOfWeek())
-        {
-            writer.writePropertyName("resetDayOfWeek");
-            writer.writeCharArray(*obj.getResetDayOfWeek());
-        }
-        if (obj.getResetHour())
-        {
-            writer.writePropertyName("resetHour");
-            writer.writeInt32(*obj.getResetHour());
-        }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const MissionTaskModelMaster& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getMissionTaskId())
-        {
-            writer.writePropertyName("missionTaskId");
-            writer.writeCharArray(*obj.getMissionTaskId());
-        }
-        if (obj.getName())
-        {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
-        }
-        if (obj.getMetadata())
-        {
-            writer.writePropertyName("metadata");
-            writer.writeCharArray(*obj.getMetadata());
-        }
-        if (obj.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*obj.getDescription());
-        }
-        if (obj.getCounterName())
-        {
-            writer.writePropertyName("counterName");
-            writer.writeCharArray(*obj.getCounterName());
-        }
-        if (obj.getResetType())
-        {
-            writer.writePropertyName("resetType");
-            writer.writeCharArray(*obj.getResetType());
-        }
-        if (obj.getTargetValue())
-        {
-            writer.writePropertyName("targetValue");
-            writer.writeInt64(*obj.getTargetValue());
-        }
-        if (obj.getCompleteAcquireActions())
-        {
-            writer.writePropertyName("completeAcquireActions");
-            writer.writeArrayStart();
-            auto& list = *obj.getCompleteAcquireActions();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        if (obj.getChallengePeriodEventId())
-        {
-            writer.writePropertyName("challengePeriodEventId");
-            writer.writeCharArray(*obj.getChallengePeriodEventId());
-        }
-        if (obj.getPremiseMissionTaskName())
-        {
-            writer.writePropertyName("premiseMissionTaskName");
-            writer.writeCharArray(*obj.getPremiseMissionTaskName());
-        }
-        if (obj.getCreatedAt())
-        {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
-        }
-        if (obj.getUpdatedAt())
-        {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
-        }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const MissionGroupModelMaster& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getMissionGroupId())
-        {
-            writer.writePropertyName("missionGroupId");
-            writer.writeCharArray(*obj.getMissionGroupId());
-        }
-        if (obj.getName())
-        {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
-        }
-        if (obj.getMetadata())
-        {
-            writer.writePropertyName("metadata");
-            writer.writeCharArray(*obj.getMetadata());
-        }
-        if (obj.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*obj.getDescription());
-        }
-        if (obj.getCompleteNotificationNamespaceId())
-        {
-            writer.writePropertyName("completeNotificationNamespaceId");
-            writer.writeCharArray(*obj.getCompleteNotificationNamespaceId());
-        }
-        if (obj.getCreatedAt())
-        {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
-        }
-        if (obj.getUpdatedAt())
-        {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
-        }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const MissionTaskModel& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getMissionTaskId())
-        {
-            writer.writePropertyName("missionTaskId");
-            writer.writeCharArray(*obj.getMissionTaskId());
-        }
-        if (obj.getName())
-        {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
-        }
-        if (obj.getMetadata())
-        {
-            writer.writePropertyName("metadata");
-            writer.writeCharArray(*obj.getMetadata());
-        }
-        if (obj.getCounterName())
-        {
-            writer.writePropertyName("counterName");
-            writer.writeCharArray(*obj.getCounterName());
-        }
-        if (obj.getResetType())
-        {
-            writer.writePropertyName("resetType");
-            writer.writeCharArray(*obj.getResetType());
-        }
-        if (obj.getTargetValue())
-        {
-            writer.writePropertyName("targetValue");
-            writer.writeInt64(*obj.getTargetValue());
-        }
-        if (obj.getCompleteAcquireActions())
-        {
-            writer.writePropertyName("completeAcquireActions");
-            writer.writeArrayStart();
-            auto& list = *obj.getCompleteAcquireActions();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        if (obj.getChallengePeriodEventId())
-        {
-            writer.writePropertyName("challengePeriodEventId");
-            writer.writeCharArray(*obj.getChallengePeriodEventId());
-        }
-        if (obj.getPremiseMissionTaskName())
-        {
-            writer.writePropertyName("premiseMissionTaskName");
-            writer.writeCharArray(*obj.getPremiseMissionTaskName());
-        }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const MissionGroupModel& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getMissionGroupId())
-        {
-            writer.writePropertyName("missionGroupId");
-            writer.writeCharArray(*obj.getMissionGroupId());
-        }
-        if (obj.getName())
-        {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
-        }
-        if (obj.getMetadata())
-        {
-            writer.writePropertyName("metadata");
-            writer.writeCharArray(*obj.getMetadata());
-        }
-        if (obj.getTasks())
-        {
-            writer.writePropertyName("tasks");
-            writer.writeArrayStart();
-            auto& list = *obj.getTasks();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        if (obj.getCompleteNotificationNamespaceId())
-        {
-            writer.writePropertyName("completeNotificationNamespaceId");
-            writer.writeCharArray(*obj.getCompleteNotificationNamespaceId());
-        }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const ResponseCache& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getRegion())
-        {
-            writer.writePropertyName("region");
-            writer.writeCharArray(*obj.getRegion());
-        }
-        if (obj.getOwnerId())
-        {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
-        }
-        if (obj.getResponseCacheId())
-        {
-            writer.writePropertyName("responseCacheId");
-            writer.writeCharArray(*obj.getResponseCacheId());
-        }
-        if (obj.getRequestHash())
-        {
-            writer.writePropertyName("requestHash");
-            writer.writeCharArray(*obj.getRequestHash());
-        }
-        if (obj.getResult())
-        {
-            writer.writePropertyName("result");
-            writer.writeCharArray(*obj.getResult());
-        }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const NotificationSetting& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getGatewayNamespaceId())
-        {
-            writer.writePropertyName("gatewayNamespaceId");
-            writer.writeCharArray(*obj.getGatewayNamespaceId());
-        }
-        if (obj.getEnableTransferMobileNotification())
-        {
-            writer.writePropertyName("enableTransferMobileNotification");
-            writer.writeBool(*obj.getEnableTransferMobileNotification());
-        }
-        if (obj.getSound())
-        {
-            writer.writePropertyName("sound");
-            writer.writeCharArray(*obj.getSound());
-        }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const ScopedValue& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getResetType())
-        {
-            writer.writePropertyName("resetType");
-            writer.writeCharArray(*obj.getResetType());
+            writer.writePropertyName("key");
+            writer.writeCharArray(*obj.getKey());
         }
         if (obj.getValue())
         {
             writer.writePropertyName("value");
-            writer.writeInt64(*obj.getValue());
+            writer.writeCharArray(*obj.getValue());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const CounterModelMaster& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getCounterId())
+        {
+            writer.writePropertyName("counterId");
+            writer.writeCharArray(*obj.getCounterId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*obj.getDescription());
+        }
+        if (obj.getScopes())
+        {
+            writer.writePropertyName("scopes");
+            writer.writeArrayStart();
+            auto& list = *obj.getScopes();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(writer, list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        if (obj.getChallengePeriodEventId())
+        {
+            writer.writePropertyName("challengePeriodEventId");
+            writer.writeCharArray(*obj.getChallengePeriodEventId());
+        }
+        if (obj.getCreatedAt())
+        {
+            writer.writePropertyName("createdAt");
+            writer.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
             writer.writePropertyName("updatedAt");
             writer.writeInt64(*obj.getUpdatedAt());
-        }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const AcquireAction& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getAction())
-        {
-            writer.writePropertyName("action");
-            writer.writeCharArray(*obj.getAction());
-        }
-        if (obj.getRequest())
-        {
-            writer.writePropertyName("request");
-            writer.writeCharArray(*obj.getRequest());
-        }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const CurrentMissionMaster& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getNamespaceName())
-        {
-            writer.writePropertyName("namespaceName");
-            writer.writeCharArray(*obj.getNamespaceName());
-        }
-        if (obj.getSettings())
-        {
-            writer.writePropertyName("settings");
-            writer.writeCharArray(*obj.getSettings());
         }
         writer.writeObjectEnd();
     }
@@ -749,29 +604,76 @@ private:
         writer.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Config& obj)
+    static void write(detail::json::JsonWriter& writer, const MissionGroupModel& obj)
     {
         writer.writeObjectStart();
-        if (obj.getKey())
+        if (obj.getMissionGroupId())
         {
-            writer.writePropertyName("key");
-            writer.writeCharArray(*obj.getKey());
+            writer.writePropertyName("missionGroupId");
+            writer.writeCharArray(*obj.getMissionGroupId());
         }
-        if (obj.getValue())
+        if (obj.getName())
         {
-            writer.writePropertyName("value");
-            writer.writeCharArray(*obj.getValue());
+            writer.writePropertyName("name");
+            writer.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getTasks())
+        {
+            writer.writePropertyName("tasks");
+            writer.writeArrayStart();
+            auto& list = *obj.getTasks();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(writer, list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        if (obj.getCompleteNotificationNamespaceId())
+        {
+            writer.writePropertyName("completeNotificationNamespaceId");
+            writer.writeCharArray(*obj.getCompleteNotificationNamespaceId());
         }
         writer.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const CounterModelMaster& obj)
+    static void write(detail::json::JsonWriter& writer, const CounterScopeModel& obj)
     {
         writer.writeObjectStart();
-        if (obj.getCounterId())
+        if (obj.getResetType())
         {
-            writer.writePropertyName("counterId");
-            writer.writeCharArray(*obj.getCounterId());
+            writer.writePropertyName("resetType");
+            writer.writeCharArray(*obj.getResetType());
+        }
+        if (obj.getResetDayOfMonth())
+        {
+            writer.writePropertyName("resetDayOfMonth");
+            writer.writeInt32(*obj.getResetDayOfMonth());
+        }
+        if (obj.getResetDayOfWeek())
+        {
+            writer.writePropertyName("resetDayOfWeek");
+            writer.writeCharArray(*obj.getResetDayOfWeek());
+        }
+        if (obj.getResetHour())
+        {
+            writer.writePropertyName("resetHour");
+            writer.writeInt32(*obj.getResetHour());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const MissionGroupModelMaster& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getMissionGroupId())
+        {
+            writer.writePropertyName("missionGroupId");
+            writer.writeCharArray(*obj.getMissionGroupId());
         }
         if (obj.getName())
         {
@@ -788,21 +690,10 @@ private:
             writer.writePropertyName("description");
             writer.writeCharArray(*obj.getDescription());
         }
-        if (obj.getScopes())
+        if (obj.getCompleteNotificationNamespaceId())
         {
-            writer.writePropertyName("scopes");
-            writer.writeArrayStart();
-            auto& list = *obj.getScopes();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        if (obj.getChallengePeriodEventId())
-        {
-            writer.writePropertyName("challengePeriodEventId");
-            writer.writeCharArray(*obj.getChallengePeriodEventId());
+            writer.writePropertyName("completeNotificationNamespaceId");
+            writer.writeCharArray(*obj.getCompleteNotificationNamespaceId());
         }
         if (obj.getCreatedAt())
         {
@@ -817,13 +708,13 @@ private:
         writer.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const CounterModel& obj)
+    static void write(detail::json::JsonWriter& writer, const MissionTaskModelMaster& obj)
     {
         writer.writeObjectStart();
-        if (obj.getCounterId())
+        if (obj.getMissionTaskId())
         {
-            writer.writePropertyName("counterId");
-            writer.writeCharArray(*obj.getCounterId());
+            writer.writePropertyName("missionTaskId");
+            writer.writeCharArray(*obj.getMissionTaskId());
         }
         if (obj.getName())
         {
@@ -835,11 +726,31 @@ private:
             writer.writePropertyName("metadata");
             writer.writeCharArray(*obj.getMetadata());
         }
-        if (obj.getScopes())
+        if (obj.getDescription())
         {
-            writer.writePropertyName("scopes");
+            writer.writePropertyName("description");
+            writer.writeCharArray(*obj.getDescription());
+        }
+        if (obj.getCounterName())
+        {
+            writer.writePropertyName("counterName");
+            writer.writeCharArray(*obj.getCounterName());
+        }
+        if (obj.getResetType())
+        {
+            writer.writePropertyName("resetType");
+            writer.writeCharArray(*obj.getResetType());
+        }
+        if (obj.getTargetValue())
+        {
+            writer.writePropertyName("targetValue");
+            writer.writeInt64(*obj.getTargetValue());
+        }
+        if (obj.getCompleteAcquireActions())
+        {
+            writer.writePropertyName("completeAcquireActions");
             writer.writeArrayStart();
-            auto& list = *obj.getScopes();
+            auto& list = *obj.getCompleteAcquireActions();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
                 write(writer, list[i]);
@@ -850,6 +761,94 @@ private:
         {
             writer.writePropertyName("challengePeriodEventId");
             writer.writeCharArray(*obj.getChallengePeriodEventId());
+        }
+        if (obj.getPremiseMissionTaskName())
+        {
+            writer.writePropertyName("premiseMissionTaskName");
+            writer.writeCharArray(*obj.getPremiseMissionTaskName());
+        }
+        if (obj.getCreatedAt())
+        {
+            writer.writePropertyName("createdAt");
+            writer.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            writer.writePropertyName("updatedAt");
+            writer.writeInt64(*obj.getUpdatedAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const Counter& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getCounterId())
+        {
+            writer.writePropertyName("counterId");
+            writer.writeCharArray(*obj.getCounterId());
+        }
+        if (obj.getUserId())
+        {
+            writer.writePropertyName("userId");
+            writer.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.writeCharArray(*obj.getName());
+        }
+        if (obj.getValues())
+        {
+            writer.writePropertyName("values");
+            writer.writeArrayStart();
+            auto& list = *obj.getValues();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(writer, list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        if (obj.getCreatedAt())
+        {
+            writer.writePropertyName("createdAt");
+            writer.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            writer.writePropertyName("updatedAt");
+            writer.writeInt64(*obj.getUpdatedAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const ResponseCache& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getRegion())
+        {
+            writer.writePropertyName("region");
+            writer.writeCharArray(*obj.getRegion());
+        }
+        if (obj.getOwnerId())
+        {
+            writer.writePropertyName("ownerId");
+            writer.writeCharArray(*obj.getOwnerId());
+        }
+        if (obj.getResponseCacheId())
+        {
+            writer.writePropertyName("responseCacheId");
+            writer.writeCharArray(*obj.getResponseCacheId());
+        }
+        if (obj.getRequestHash())
+        {
+            writer.writePropertyName("requestHash");
+            writer.writeCharArray(*obj.getRequestHash());
+        }
+        if (obj.getResult())
+        {
+            writer.writePropertyName("result");
+            writer.writeCharArray(*obj.getResult());
         }
         writer.writeObjectEnd();
     }
@@ -868,142 +867,197 @@ public:
     }
 
 	/**
-	 * カウンターの一覧を取得<br>
+	 * ミッションタスクの一覧を取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCounters(std::function<void(AsyncDescribeCountersResult&)> callback, DescribeCountersRequest& request)
+    void describeMissionTaskModels(std::function<void(AsyncDescribeMissionTaskModelsResult&)> callback, DescribeMissionTaskModelsRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeCountersResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeMissionTaskModelsResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
         httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "mission");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/me/counter";
+        url += "/{namespaceName}/group/{missionGroupName}/task";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getMissionGroupName();
+            url.replace("{missionGroupName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ミッションタスクを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getMissionTaskModel(std::function<void(AsyncGetMissionTaskModelResult&)> callback, GetMissionTaskModelRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetMissionTaskModelResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/group/{missionGroupName}/task/{missionTaskName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getMissionGroupName();
+            url.replace("{missionGroupName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getMissionTaskName();
+            url.replace("{missionTaskName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * 現在有効なミッションのマスターデータをエクスポートします<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<ExportMasterResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/export";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
 
         Char joint[] = { '?', '\0' };
-        if (request.getPageToken()) {
-            Char urlSafeValue[2048];
-            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+        if (request.getContextStack())
+        {
             url += joint;
-            url += "pageToken=";
-            url += urlSafeValue;
-            joint[0] = '&';
-        }
-        if (request.getLimit()) {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
         }
         gs2RestSessionTask.execute();
     }
 
 	/**
-	 * ユーザIDを指定してカウンターの一覧を取得<br>
+	 * 現在有効な現在有効なミッションを取得します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCountersByUserId(std::function<void(AsyncDescribeCountersByUserIdResult&)> callback, DescribeCountersByUserIdRequest& request)
+    void getCurrentMissionMaster(std::function<void(AsyncGetCurrentMissionMasterResult&)> callback, GetCurrentMissionMasterRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeCountersByUserIdResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetCurrentMissionMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
         httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "mission");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/counter";
+        url += "/{namespaceName}/master";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
-        {
-            auto& value = request.getUserId();
-            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
 
         Char joint[] = { '?', '\0' };
-        if (request.getPageToken()) {
-            Char urlSafeValue[2048];
-            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+        if (request.getContextStack())
+        {
             url += joint;
-            url += "pageToken=";
-            url += urlSafeValue;
-            joint[0] = '&';
-        }
-        if (request.getLimit()) {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
         }
         gs2RestSessionTask.execute();
     }
 
 	/**
-	 * カウンターに加算<br>
+	 * 現在有効な現在有効なミッションを更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void increaseCounterByUserId(std::function<void(AsyncIncreaseCounterByUserIdResult&)> callback, IncreaseCounterByUserIdRequest& request)
+    void updateCurrentMissionMaster(std::function<void(AsyncUpdateCurrentMissionMasterResult&)> callback, UpdateCurrentMissionMasterRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<IncreaseCounterByUserIdResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateCurrentMissionMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
+        httpRequest.SetVerb("PUT");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "mission");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/counter/{counterName}";
+        url += "/{namespaceName}/master";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getCounterName();
-            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getUserId();
-            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
-        if (request.getValue())
+        if (request.getContextStack())
         {
-            writer.writePropertyName("value");
-            writer.writeInt64(*request.getValue());
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
+        if (request.getSettings())
+        {
+            writer.writePropertyName("settings");
+            writer.writeCharArray(*request.getSettings());
         }
         writer.writeObjectEnd();
         {
@@ -1012,173 +1066,46 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
         }
         gs2RestSessionTask.execute();
     }
 
 	/**
-	 * カウンターを取得<br>
+	 * 現在有効な現在有効なミッションを更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCounter(std::function<void(AsyncGetCounterResult&)> callback, GetCounterRequest& request)
+    void updateCurrentMissionMasterFromGitHub(std::function<void(AsyncUpdateCurrentMissionMasterFromGitHubResult&)> callback, UpdateCurrentMissionMasterFromGitHubRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetCounterResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateCurrentMissionMasterFromGitHubResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
+        httpRequest.SetVerb("PUT");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "mission");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/me/counter/{counterName}";
+        url += "/{namespaceName}/master/from_git_hub";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
-        {
-            auto& value = request.getCounterName();
-            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * ユーザIDを指定してカウンターを取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getCounterByUserId(std::function<void(AsyncGetCounterByUserIdResult&)> callback, GetCounterByUserIdRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetCounterByUserIdResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/counter/{counterName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getCounterName();
-            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getUserId();
-            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * カウンターを削除<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteCounterByUserId(std::function<void(AsyncDeleteCounterByUserIdResult&)> callback, DeleteCounterByUserIdRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteCounterByUserIdResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("DELETE");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/counter/{counterName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getUserId();
-            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getCounterName();
-            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        {
-            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * カウンター加算<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void increaseByStampSheet(std::function<void(AsyncIncreaseByStampSheetResult&)> callback, IncreaseByStampSheetRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<IncreaseByStampSheetResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stamp/increase";
         httpRequest.SetURL(url.c_str());
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
-        if (request.getStampSheet())
+        if (request.getContextStack())
         {
-            writer.writePropertyName("stampSheet");
-            writer.writeCharArray(*request.getStampSheet());
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
         }
-        if (request.getKeyId())
+        if (request.getCheckoutSetting())
         {
-            writer.writePropertyName("keyId");
-            writer.writeCharArray(*request.getKeyId());
+            writer.writePropertyName("checkoutSetting");
+            write(writer, *request.getCheckoutSetting());
         }
         writer.writeObjectEnd();
         {
@@ -1187,13 +1114,88 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
-        if (request.getDuplicationAvoider())
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * カウンターの種類の一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeCounterModels(std::function<void(AsyncDescribeCounterModelsResult&)> callback, DescribeCounterModelsRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeCounterModelsResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/counter";
         {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * カウンターの種類を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getCounterModel(std::function<void(AsyncGetCounterModelResult&)> callback, GetCounterModelRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetCounterModelResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/counter/{counterName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getCounterName();
+            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         gs2RestSessionTask.execute();
     }
@@ -1219,21 +1221,29 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
-        if (request.getPageToken()) {
-            Char urlSafeValue[2048];
-            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+        if (request.getContextStack())
+        {
             url += joint;
-            url += "pageToken=";
-            url += urlSafeValue;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
             joint[0] = '&';
         }
-        if (request.getLimit()) {
+        if (request.getPageToken())
+        {
+            url += joint;
+            url += "pageToken=";
+            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getLimit())
+        {
             url += joint;
             url += "limit=";
             url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1274,21 +1284,29 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
-        if (request.getPageToken()) {
-            Char urlSafeValue[2048];
-            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+        if (request.getContextStack())
+        {
             url += joint;
-            url += "pageToken=";
-            url += urlSafeValue;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
             joint[0] = '&';
         }
-        if (request.getLimit()) {
+        if (request.getPageToken())
+        {
+            url += joint;
+            url += "pageToken=";
+            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getLimit())
+        {
             url += joint;
             url += "limit=";
             url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1331,6 +1349,11 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         if (request.getConfig())
         {
             writer.writePropertyName("config");
@@ -1349,6 +1372,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1399,6 +1423,11 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         if (request.getConfig())
         {
             writer.writePropertyName("config");
@@ -1417,6 +1446,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1463,6 +1493,11 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         writer.writeObjectEnd();
         {
             auto body = writer.toString();
@@ -1470,6 +1505,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1506,7 +1542,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1551,7 +1595,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1592,12 +1644,20 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
         {
             TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1628,6 +1688,11 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         if (request.getStampTask())
         {
             writer.writePropertyName("stampTask");
@@ -1645,6 +1710,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1652,6 +1718,1012 @@ public:
         if (request.getDuplicationAvoider())
         {
             httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * カウンターの種類マスターの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeCounterModelMasters(std::function<void(AsyncDescribeCounterModelMastersResult&)> callback, DescribeCounterModelMastersRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeCounterModelMastersResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/counter";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getPageToken())
+        {
+            url += joint;
+            url += "pageToken=";
+            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getLimit())
+        {
+            url += joint;
+            url += "limit=";
+            url += detail::StringVariable(*request.getLimit()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * カウンターの種類マスターを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createCounterModelMaster(std::function<void(AsyncCreateCounterModelMasterResult&)> callback, CreateCounterModelMasterRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateCounterModelMasterResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/counter";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        detail::json::JsonWriter writer;
+
+        writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
+        if (request.getName())
+        {
+            writer.writePropertyName("name");
+            writer.writeCharArray(*request.getName());
+        }
+        if (request.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.writeCharArray(*request.getMetadata());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*request.getDescription());
+        }
+        if (request.getScopes())
+        {
+            writer.writePropertyName("scopes");
+            writer.writeArrayStart();
+            auto& list = *request.getScopes();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(writer, list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        if (request.getChallengePeriodEventId())
+        {
+            writer.writePropertyName("challengePeriodEventId");
+            writer.writeCharArray(*request.getChallengePeriodEventId());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * カウンターの種類マスターを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getCounterModelMaster(std::function<void(AsyncGetCounterModelMasterResult&)> callback, GetCounterModelMasterRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetCounterModelMasterResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/counter/{counterName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getCounterName();
+            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * カウンターの種類マスターを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCounterModelMaster(std::function<void(AsyncUpdateCounterModelMasterResult&)> callback, UpdateCounterModelMasterRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateCounterModelMasterResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("PUT");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/counter/{counterName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getCounterName();
+            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        detail::json::JsonWriter writer;
+
+        writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
+        if (request.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.writeCharArray(*request.getMetadata());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*request.getDescription());
+        }
+        if (request.getScopes())
+        {
+            writer.writePropertyName("scopes");
+            writer.writeArrayStart();
+            auto& list = *request.getScopes();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(writer, list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        if (request.getChallengePeriodEventId())
+        {
+            writer.writePropertyName("challengePeriodEventId");
+            writer.writeCharArray(*request.getChallengePeriodEventId());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * カウンターの種類マスターを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteCounterModelMaster(std::function<void(AsyncDeleteCounterModelMasterResult&)> callback, DeleteCounterModelMasterRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteCounterModelMasterResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("DELETE");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/counter/{counterName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getCounterName();
+            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+        {
+            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ネームスペースの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeNamespacesResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/";
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getPageToken())
+        {
+            url += joint;
+            url += "pageToken=";
+            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getLimit())
+        {
+            url += joint;
+            url += "limit=";
+            url += detail::StringVariable(*request.getLimit()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ネームスペースを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateNamespaceResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/";
+        httpRequest.SetURL(url.c_str());
+        detail::json::JsonWriter writer;
+
+        writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
+        if (request.getName())
+        {
+            writer.writePropertyName("name");
+            writer.writeCharArray(*request.getName());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*request.getDescription());
+        }
+        if (request.getMissionCompleteTriggerScriptId())
+        {
+            writer.writePropertyName("missionCompleteTriggerScriptId");
+            writer.writeCharArray(*request.getMissionCompleteTriggerScriptId());
+        }
+        if (request.getMissionCompleteDoneTriggerScriptId())
+        {
+            writer.writePropertyName("missionCompleteDoneTriggerScriptId");
+            writer.writeCharArray(*request.getMissionCompleteDoneTriggerScriptId());
+        }
+        if (request.getMissionCompleteDoneTriggerQueueNamespaceId())
+        {
+            writer.writePropertyName("missionCompleteDoneTriggerQueueNamespaceId");
+            writer.writeCharArray(*request.getMissionCompleteDoneTriggerQueueNamespaceId());
+        }
+        if (request.getCounterIncrementTriggerScriptId())
+        {
+            writer.writePropertyName("counterIncrementTriggerScriptId");
+            writer.writeCharArray(*request.getCounterIncrementTriggerScriptId());
+        }
+        if (request.getCounterIncrementDoneTriggerScriptId())
+        {
+            writer.writePropertyName("counterIncrementDoneTriggerScriptId");
+            writer.writeCharArray(*request.getCounterIncrementDoneTriggerScriptId());
+        }
+        if (request.getCounterIncrementDoneTriggerQueueNamespaceId())
+        {
+            writer.writePropertyName("counterIncrementDoneTriggerQueueNamespaceId");
+            writer.writeCharArray(*request.getCounterIncrementDoneTriggerQueueNamespaceId());
+        }
+        if (request.getReceiveRewardsTriggerScriptId())
+        {
+            writer.writePropertyName("receiveRewardsTriggerScriptId");
+            writer.writeCharArray(*request.getReceiveRewardsTriggerScriptId());
+        }
+        if (request.getReceiveRewardsDoneTriggerScriptId())
+        {
+            writer.writePropertyName("receiveRewardsDoneTriggerScriptId");
+            writer.writeCharArray(*request.getReceiveRewardsDoneTriggerScriptId());
+        }
+        if (request.getReceiveRewardsDoneTriggerQueueNamespaceId())
+        {
+            writer.writePropertyName("receiveRewardsDoneTriggerQueueNamespaceId");
+            writer.writeCharArray(*request.getReceiveRewardsDoneTriggerQueueNamespaceId());
+        }
+        if (request.getQueueNamespaceId())
+        {
+            writer.writePropertyName("queueNamespaceId");
+            writer.writeCharArray(*request.getQueueNamespaceId());
+        }
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.writeCharArray(*request.getKeyId());
+        }
+        if (request.getCompleteNotification())
+        {
+            writer.writePropertyName("completeNotification");
+            write(writer, *request.getCompleteNotification());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ネームスペースの状態を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceStatusResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/status";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ネームスペースを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ネームスペースを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateNamespaceResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("PUT");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        detail::json::JsonWriter writer;
+
+        writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*request.getDescription());
+        }
+        if (request.getMissionCompleteTriggerScriptId())
+        {
+            writer.writePropertyName("missionCompleteTriggerScriptId");
+            writer.writeCharArray(*request.getMissionCompleteTriggerScriptId());
+        }
+        if (request.getMissionCompleteDoneTriggerScriptId())
+        {
+            writer.writePropertyName("missionCompleteDoneTriggerScriptId");
+            writer.writeCharArray(*request.getMissionCompleteDoneTriggerScriptId());
+        }
+        if (request.getMissionCompleteDoneTriggerQueueNamespaceId())
+        {
+            writer.writePropertyName("missionCompleteDoneTriggerQueueNamespaceId");
+            writer.writeCharArray(*request.getMissionCompleteDoneTriggerQueueNamespaceId());
+        }
+        if (request.getCounterIncrementTriggerScriptId())
+        {
+            writer.writePropertyName("counterIncrementTriggerScriptId");
+            writer.writeCharArray(*request.getCounterIncrementTriggerScriptId());
+        }
+        if (request.getCounterIncrementDoneTriggerScriptId())
+        {
+            writer.writePropertyName("counterIncrementDoneTriggerScriptId");
+            writer.writeCharArray(*request.getCounterIncrementDoneTriggerScriptId());
+        }
+        if (request.getCounterIncrementDoneTriggerQueueNamespaceId())
+        {
+            writer.writePropertyName("counterIncrementDoneTriggerQueueNamespaceId");
+            writer.writeCharArray(*request.getCounterIncrementDoneTriggerQueueNamespaceId());
+        }
+        if (request.getReceiveRewardsTriggerScriptId())
+        {
+            writer.writePropertyName("receiveRewardsTriggerScriptId");
+            writer.writeCharArray(*request.getReceiveRewardsTriggerScriptId());
+        }
+        if (request.getReceiveRewardsDoneTriggerScriptId())
+        {
+            writer.writePropertyName("receiveRewardsDoneTriggerScriptId");
+            writer.writeCharArray(*request.getReceiveRewardsDoneTriggerScriptId());
+        }
+        if (request.getReceiveRewardsDoneTriggerQueueNamespaceId())
+        {
+            writer.writePropertyName("receiveRewardsDoneTriggerQueueNamespaceId");
+            writer.writeCharArray(*request.getReceiveRewardsDoneTriggerQueueNamespaceId());
+        }
+        if (request.getQueueNamespaceId())
+        {
+            writer.writePropertyName("queueNamespaceId");
+            writer.writeCharArray(*request.getQueueNamespaceId());
+        }
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.writeCharArray(*request.getKeyId());
+        }
+        if (request.getCompleteNotification())
+        {
+            writer.writePropertyName("completeNotification");
+            write(writer, *request.getCompleteNotification());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ネームスペースを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteNamespaceResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("DELETE");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+        {
+            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ミッショングループの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeMissionGroupModels(std::function<void(AsyncDescribeMissionGroupModelsResult&)> callback, DescribeMissionGroupModelsRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeMissionGroupModelsResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/group";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ミッショングループを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getMissionGroupModel(std::function<void(AsyncGetMissionGroupModelResult&)> callback, GetMissionGroupModelRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetMissionGroupModelResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/group/{missionGroupName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getMissionGroupName();
+            url.replace("{missionGroupName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ミッショングループマスターの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeMissionGroupModelMasters(std::function<void(AsyncDescribeMissionGroupModelMastersResult&)> callback, DescribeMissionGroupModelMastersRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeMissionGroupModelMastersResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/group";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getPageToken())
+        {
+            url += joint;
+            url += "pageToken=";
+            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getLimit())
+        {
+            url += joint;
+            url += "limit=";
+            url += detail::StringVariable(*request.getLimit()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ミッショングループマスターを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createMissionGroupModelMaster(std::function<void(AsyncCreateMissionGroupModelMasterResult&)> callback, CreateMissionGroupModelMasterRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateMissionGroupModelMasterResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/group";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        detail::json::JsonWriter writer;
+
+        writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
+        if (request.getName())
+        {
+            writer.writePropertyName("name");
+            writer.writeCharArray(*request.getName());
+        }
+        if (request.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.writeCharArray(*request.getMetadata());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*request.getDescription());
+        }
+        if (request.getCompleteNotificationNamespaceId())
+        {
+            writer.writePropertyName("completeNotificationNamespaceId");
+            writer.writeCharArray(*request.getCompleteNotificationNamespaceId());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ミッショングループマスターを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getMissionGroupModelMaster(std::function<void(AsyncGetMissionGroupModelMasterResult&)> callback, GetMissionGroupModelMasterRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetMissionGroupModelMasterResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/group/{missionGroupName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getMissionGroupName();
+            url.replace("{missionGroupName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ミッショングループマスターを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateMissionGroupModelMaster(std::function<void(AsyncUpdateMissionGroupModelMasterResult&)> callback, UpdateMissionGroupModelMasterRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateMissionGroupModelMasterResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("PUT");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/group/{missionGroupName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getMissionGroupName();
+            url.replace("{missionGroupName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        detail::json::JsonWriter writer;
+
+        writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
+        if (request.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.writeCharArray(*request.getMetadata());
+        }
+        if (request.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*request.getDescription());
+        }
+        if (request.getCompleteNotificationNamespaceId())
+        {
+            writer.writePropertyName("completeNotificationNamespaceId");
+            writer.writeCharArray(*request.getCompleteNotificationNamespaceId());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ミッショングループマスターを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteMissionGroupModelMaster(std::function<void(AsyncDeleteMissionGroupModelMasterResult&)> callback, DeleteMissionGroupModelMasterRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteMissionGroupModelMasterResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("DELETE");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/master/group/{missionGroupName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getMissionGroupName();
+            url.replace("{missionGroupName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+        {
+            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
         gs2RestSessionTask.execute();
     }
@@ -1681,21 +2753,29 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
-        if (request.getPageToken()) {
-            Char urlSafeValue[2048];
-            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+        if (request.getContextStack())
+        {
             url += joint;
-            url += "pageToken=";
-            url += urlSafeValue;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
             joint[0] = '&';
         }
-        if (request.getLimit()) {
+        if (request.getPageToken())
+        {
+            url += joint;
+            url += "pageToken=";
+            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getLimit())
+        {
             url += joint;
             url += "limit=";
             url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1730,6 +2810,11 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         if (request.getName())
         {
             writer.writePropertyName("name");
@@ -1788,6 +2873,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1824,7 +2910,15 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1863,6 +2957,11 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         if (request.getMetadata())
         {
             writer.writePropertyName("metadata");
@@ -1916,6 +3015,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1952,12 +3052,20 @@ public:
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
         {
             TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -1966,179 +3074,163 @@ public:
     }
 
 	/**
-	 * ミッショングループマスターの一覧を取得<br>
+	 * カウンターの一覧を取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeMissionGroupModelMasters(std::function<void(AsyncDescribeMissionGroupModelMastersResult&)> callback, DescribeMissionGroupModelMastersRequest& request)
+    void describeCounters(std::function<void(AsyncDescribeCountersResult&)> callback, DescribeCountersRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeMissionGroupModelMastersResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeCountersResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
         httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "mission");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/master/group";
+        url += "/{namespaceName}/user/me/counter";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
 
         Char joint[] = { '?', '\0' };
-        if (request.getPageToken()) {
-            Char urlSafeValue[2048];
-            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
+        if (request.getContextStack())
+        {
             url += joint;
-            url += "pageToken=";
-            url += urlSafeValue;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
             joint[0] = '&';
         }
-        if (request.getLimit()) {
+        if (request.getPageToken())
+        {
+            url += joint;
+            url += "pageToken=";
+            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getLimit())
+        {
             url += joint;
             url += "limit=";
             url += detail::StringVariable(*request.getLimit()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
         }
         gs2RestSessionTask.execute();
     }
 
 	/**
-	 * ミッショングループマスターを新規作成<br>
+	 * ユーザIDを指定してカウンターの一覧を取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createMissionGroupModelMaster(std::function<void(AsyncCreateMissionGroupModelMasterResult&)> callback, CreateMissionGroupModelMasterRequest& request)
+    void describeCountersByUserId(std::function<void(AsyncDescribeCountersByUserIdResult&)> callback, DescribeCountersByUserIdRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateMissionGroupModelMasterResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/master/group";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getName())
-        {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*request.getName());
-        }
-        if (request.getMetadata())
-        {
-            writer.writePropertyName("metadata");
-            writer.writeCharArray(*request.getMetadata());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        if (request.getCompleteNotificationNamespaceId())
-        {
-            writer.writePropertyName("completeNotificationNamespaceId");
-            writer.writeCharArray(*request.getCompleteNotificationNamespaceId());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * ミッショングループマスターを取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getMissionGroupModelMaster(std::function<void(AsyncGetMissionGroupModelMasterResult&)> callback, GetMissionGroupModelMasterRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetMissionGroupModelMasterResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeCountersByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
         httpRequest.SetVerb("GET");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "mission");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/master/group/{missionGroupName}";
+        url += "/{namespaceName}/user/{userId}/counter";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         {
-            auto& value = request.getMissionGroupName();
-            url.replace("{missionGroupName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            auto& value = request.getUserId();
+            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getPageToken())
+        {
+            url += joint;
+            url += "pageToken=";
+            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getLimit())
+        {
+            url += joint;
+            url += "limit=";
+            url += detail::StringVariable(*request.getLimit()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
         }
         gs2RestSessionTask.execute();
     }
 
 	/**
-	 * ミッショングループマスターを更新<br>
+	 * カウンターに加算<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateMissionGroupModelMaster(std::function<void(AsyncUpdateMissionGroupModelMasterResult&)> callback, UpdateMissionGroupModelMasterRequest& request)
+    void increaseCounterByUserId(std::function<void(AsyncIncreaseCounterByUserIdResult&)> callback, IncreaseCounterByUserIdRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateMissionGroupModelMasterResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<IncreaseCounterByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("PUT");
+        httpRequest.SetVerb("POST");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "mission");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/master/group/{missionGroupName}";
+        url += "/{namespaceName}/user/{userId}/counter/{counterName}";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         {
-            auto& value = request.getMissionGroupName();
-            url.replace("{missionGroupName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            auto& value = request.getCounterName();
+            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getUserId();
+            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         httpRequest.SetURL(url.c_str());
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
-        if (request.getMetadata())
+        if (request.getContextStack())
         {
-            writer.writePropertyName("metadata");
-            writer.writeCharArray(*request.getMetadata());
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
         }
-        if (request.getDescription())
+        if (request.getValue())
         {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        if (request.getCompleteNotificationNamespaceId())
-        {
-            writer.writePropertyName("completeNotificationNamespaceId");
-            writer.writeCharArray(*request.getCompleteNotificationNamespaceId());
+            writer.writePropertyName("value");
+            writer.writeInt64(*request.getValue());
         }
         writer.writeObjectEnd();
         {
@@ -2147,453 +3239,204 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
         }
         gs2RestSessionTask.execute();
     }
 
 	/**
-	 * ミッショングループマスターを削除<br>
+	 * カウンターを取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteMissionGroupModelMaster(std::function<void(AsyncDeleteMissionGroupModelMasterResult&)> callback, DeleteMissionGroupModelMasterRequest& request)
+    void getCounter(std::function<void(AsyncGetCounterResult&)> callback, GetCounterRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteMissionGroupModelMasterResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetCounterResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/user/me/counter/{counterName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getCounterName();
+            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ユーザIDを指定してカウンターを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getCounterByUserId(std::function<void(AsyncGetCounterByUserIdResult&)> callback, GetCounterByUserIdRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetCounterByUserIdResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "mission");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/user/{userId}/counter/{counterName}";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getCounterName();
+            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getUserId();
+            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * カウンターを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteCounterByUserId(std::function<void(AsyncDeleteCounterByUserIdResult&)> callback, DeleteCounterByUserIdRequest& request)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteCounterByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
         httpRequest.SetVerb("DELETE");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "mission");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/master/group/{missionGroupName}";
+        url += "/{namespaceName}/user/{userId}/counter/{counterName}";
         {
             auto& value = request.getNamespaceName();
             url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
         {
-            auto& value = request.getMissionGroupName();
-            url.replace("{missionGroupName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            auto& value = request.getUserId();
+            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getCounterName();
+            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
 
         Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
         httpRequest.SetURL(url.c_str());
         {
             TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
         }
         gs2RestSessionTask.execute();
     }
 
 	/**
-	 * ミッションタスクの一覧を取得<br>
+	 * カウンター加算<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeMissionTaskModels(std::function<void(AsyncDescribeMissionTaskModelsResult&)> callback, DescribeMissionTaskModelsRequest& request)
+    void increaseByStampSheet(std::function<void(AsyncIncreaseByStampSheetResult&)> callback, IncreaseByStampSheetRequest& request)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeMissionTaskModelsResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/group/{missionGroupName}/task";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getMissionGroupName();
-            url.replace("{missionGroupName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * ミッションタスクを取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getMissionTaskModel(std::function<void(AsyncGetMissionTaskModelResult&)> callback, GetMissionTaskModelRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetMissionTaskModelResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/group/{missionGroupName}/task/{missionTaskName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getMissionGroupName();
-            url.replace("{missionGroupName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getMissionTaskName();
-            url.replace("{missionTaskName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * ミッショングループの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeMissionGroupModels(std::function<void(AsyncDescribeMissionGroupModelsResult&)> callback, DescribeMissionGroupModelsRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeMissionGroupModelsResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/group";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * ミッショングループを取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getMissionGroupModel(std::function<void(AsyncGetMissionGroupModelResult&)> callback, GetMissionGroupModelRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetMissionGroupModelResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/group/{missionGroupName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getMissionGroupName();
-            url.replace("{missionGroupName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * 現在有効なミッションのマスターデータをエクスポートします<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<ExportMasterResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/master/export";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * 現在有効な現在有効なミッションを取得します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getCurrentMissionMaster(std::function<void(AsyncGetCurrentMissionMasterResult&)> callback, GetCurrentMissionMasterRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetCurrentMissionMasterResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/master";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * 現在有効な現在有効なミッションを更新します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateCurrentMissionMaster(std::function<void(AsyncUpdateCurrentMissionMasterResult&)> callback, UpdateCurrentMissionMasterRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateCurrentMissionMasterResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("PUT");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/master";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getSettings())
-        {
-            writer.writePropertyName("settings");
-            writer.writeCharArray(*request.getSettings());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * 現在有効な現在有効なミッションを更新します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateCurrentMissionMasterFromGitHub(std::function<void(AsyncUpdateCurrentMissionMasterFromGitHubResult&)> callback, UpdateCurrentMissionMasterFromGitHubRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateCurrentMissionMasterFromGitHubResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("PUT");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/master/from_git_hub";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getCheckoutSetting())
-        {
-            writer.writePropertyName("checkoutSetting");
-            write(writer, *request.getCheckoutSetting());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * ネームスペースの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeNamespacesResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/";
-
-        Char joint[] = { '?', '\0' };
-        if (request.getPageToken()) {
-            Char urlSafeValue[2048];
-            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
-            url += joint;
-            url += "pageToken=";
-            url += urlSafeValue;
-            joint[0] = '&';
-        }
-        if (request.getLimit()) {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * ネームスペースを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateNamespaceResult>(getGs2RestSession(), callback);
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<IncreaseByStampSheetResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
         httpRequest.SetVerb("POST");
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "mission");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/";
+        url += "/stamp/increase";
         httpRequest.SetURL(url.c_str());
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
-        if (request.getName())
+        if (request.getContextStack())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*request.getName());
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
         }
-        if (request.getDescription())
+        if (request.getStampSheet())
         {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        if (request.getMissionCompleteTriggerScriptId())
-        {
-            writer.writePropertyName("missionCompleteTriggerScriptId");
-            writer.writeCharArray(*request.getMissionCompleteTriggerScriptId());
-        }
-        if (request.getMissionCompleteDoneTriggerScriptId())
-        {
-            writer.writePropertyName("missionCompleteDoneTriggerScriptId");
-            writer.writeCharArray(*request.getMissionCompleteDoneTriggerScriptId());
-        }
-        if (request.getMissionCompleteDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("missionCompleteDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getMissionCompleteDoneTriggerQueueNamespaceId());
-        }
-        if (request.getCounterIncrementTriggerScriptId())
-        {
-            writer.writePropertyName("counterIncrementTriggerScriptId");
-            writer.writeCharArray(*request.getCounterIncrementTriggerScriptId());
-        }
-        if (request.getCounterIncrementDoneTriggerScriptId())
-        {
-            writer.writePropertyName("counterIncrementDoneTriggerScriptId");
-            writer.writeCharArray(*request.getCounterIncrementDoneTriggerScriptId());
-        }
-        if (request.getCounterIncrementDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("counterIncrementDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getCounterIncrementDoneTriggerQueueNamespaceId());
-        }
-        if (request.getReceiveRewardsTriggerScriptId())
-        {
-            writer.writePropertyName("receiveRewardsTriggerScriptId");
-            writer.writeCharArray(*request.getReceiveRewardsTriggerScriptId());
-        }
-        if (request.getReceiveRewardsDoneTriggerScriptId())
-        {
-            writer.writePropertyName("receiveRewardsDoneTriggerScriptId");
-            writer.writeCharArray(*request.getReceiveRewardsDoneTriggerScriptId());
-        }
-        if (request.getReceiveRewardsDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("receiveRewardsDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getReceiveRewardsDoneTriggerQueueNamespaceId());
-        }
-        if (request.getQueueNamespaceId())
-        {
-            writer.writePropertyName("queueNamespaceId");
-            writer.writeCharArray(*request.getQueueNamespaceId());
+            writer.writePropertyName("stampSheet");
+            writer.writeCharArray(*request.getStampSheet());
         }
         if (request.getKeyId())
         {
             writer.writePropertyName("keyId");
             writer.writeCharArray(*request.getKeyId());
         }
-        if (request.getCompleteNotification())
-        {
-            writer.writePropertyName("completeNotification");
-            write(writer, *request.getCompleteNotification());
-        }
         writer.writeObjectEnd();
         {
             auto body = writer.toString();
@@ -2601,514 +3444,14 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
         }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * ネームスペースの状態を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceStatusResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/status";
+        if (request.getDuplicationAvoider())
         {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * ネームスペースを取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * ネームスペースを更新<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateNamespaceResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("PUT");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        if (request.getMissionCompleteTriggerScriptId())
-        {
-            writer.writePropertyName("missionCompleteTriggerScriptId");
-            writer.writeCharArray(*request.getMissionCompleteTriggerScriptId());
-        }
-        if (request.getMissionCompleteDoneTriggerScriptId())
-        {
-            writer.writePropertyName("missionCompleteDoneTriggerScriptId");
-            writer.writeCharArray(*request.getMissionCompleteDoneTriggerScriptId());
-        }
-        if (request.getMissionCompleteDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("missionCompleteDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getMissionCompleteDoneTriggerQueueNamespaceId());
-        }
-        if (request.getCounterIncrementTriggerScriptId())
-        {
-            writer.writePropertyName("counterIncrementTriggerScriptId");
-            writer.writeCharArray(*request.getCounterIncrementTriggerScriptId());
-        }
-        if (request.getCounterIncrementDoneTriggerScriptId())
-        {
-            writer.writePropertyName("counterIncrementDoneTriggerScriptId");
-            writer.writeCharArray(*request.getCounterIncrementDoneTriggerScriptId());
-        }
-        if (request.getCounterIncrementDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("counterIncrementDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getCounterIncrementDoneTriggerQueueNamespaceId());
-        }
-        if (request.getReceiveRewardsTriggerScriptId())
-        {
-            writer.writePropertyName("receiveRewardsTriggerScriptId");
-            writer.writeCharArray(*request.getReceiveRewardsTriggerScriptId());
-        }
-        if (request.getReceiveRewardsDoneTriggerScriptId())
-        {
-            writer.writePropertyName("receiveRewardsDoneTriggerScriptId");
-            writer.writeCharArray(*request.getReceiveRewardsDoneTriggerScriptId());
-        }
-        if (request.getReceiveRewardsDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("receiveRewardsDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getReceiveRewardsDoneTriggerQueueNamespaceId());
-        }
-        if (request.getQueueNamespaceId())
-        {
-            writer.writePropertyName("queueNamespaceId");
-            writer.writeCharArray(*request.getQueueNamespaceId());
-        }
-        if (request.getKeyId())
-        {
-            writer.writePropertyName("keyId");
-            writer.writeCharArray(*request.getKeyId());
-        }
-        if (request.getCompleteNotification())
-        {
-            writer.writePropertyName("completeNotification");
-            write(writer, *request.getCompleteNotification());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * ネームスペースを削除<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteNamespaceResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("DELETE");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        {
-            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * カウンターの種類マスターの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeCounterModelMasters(std::function<void(AsyncDescribeCounterModelMastersResult&)> callback, DescribeCounterModelMastersRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeCounterModelMastersResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/master/counter";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getPageToken()) {
-            Char urlSafeValue[2048];
-            gs2::detail::encodeUrl(urlSafeValue, *request.getPageToken(), sizeof(urlSafeValue));
-            url += joint;
-            url += "pageToken=";
-            url += urlSafeValue;
-            joint[0] = '&';
-        }
-        if (request.getLimit()) {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * カウンターの種類マスターを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void createCounterModelMaster(std::function<void(AsyncCreateCounterModelMasterResult&)> callback, CreateCounterModelMasterRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateCounterModelMasterResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/master/counter";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getName())
-        {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*request.getName());
-        }
-        if (request.getMetadata())
-        {
-            writer.writePropertyName("metadata");
-            writer.writeCharArray(*request.getMetadata());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        if (request.getScopes())
-        {
-            writer.writePropertyName("scopes");
-            writer.writeArrayStart();
-            auto& list = *request.getScopes();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        if (request.getChallengePeriodEventId())
-        {
-            writer.writePropertyName("challengePeriodEventId");
-            writer.writeCharArray(*request.getChallengePeriodEventId());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * カウンターの種類マスターを取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getCounterModelMaster(std::function<void(AsyncGetCounterModelMasterResult&)> callback, GetCounterModelMasterRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetCounterModelMasterResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/master/counter/{counterName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getCounterName();
-            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * カウンターの種類マスターを更新<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateCounterModelMaster(std::function<void(AsyncUpdateCounterModelMasterResult&)> callback, UpdateCounterModelMasterRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateCounterModelMasterResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("PUT");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/master/counter/{counterName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getCounterName();
-            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getMetadata())
-        {
-            writer.writePropertyName("metadata");
-            writer.writeCharArray(*request.getMetadata());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        if (request.getScopes())
-        {
-            writer.writePropertyName("scopes");
-            writer.writeArrayStart();
-            auto& list = *request.getScopes();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        if (request.getChallengePeriodEventId())
-        {
-            writer.writePropertyName("challengePeriodEventId");
-            writer.writeCharArray(*request.getChallengePeriodEventId());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * カウンターの種類マスターを削除<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteCounterModelMaster(std::function<void(AsyncDeleteCounterModelMasterResult&)> callback, DeleteCounterModelMasterRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteCounterModelMasterResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("DELETE");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/master/counter/{counterName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getCounterName();
-            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        {
-            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * カウンターの種類の一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeCounterModels(std::function<void(AsyncDescribeCounterModelsResult&)> callback, DescribeCounterModelsRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeCounterModelsResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/counter";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
-    }
-
-	/**
-	 * カウンターの種類を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getCounterModel(std::function<void(AsyncGetCounterModelResult&)> callback, GetCounterModelRequest& request)
-    {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetCounterModelResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "mission");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/counter/{counterName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getCounterName();
-            url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        httpRequest.SetURL(url.c_str());
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
         }
         gs2RestSessionTask.execute();
     }

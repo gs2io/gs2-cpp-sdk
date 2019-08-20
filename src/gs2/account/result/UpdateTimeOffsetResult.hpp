@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_MONEY_CONTROL_WITHDRAWBYUSERIDRESULT_HPP_
-#define GS2_MONEY_CONTROL_WITHDRAWBYUSERIDRESULT_HPP_
+#ifndef GS2_ACCOUNT_CONTROL_UPDATETIMEOFFSETRESULT_HPP_
+#define GS2_ACCOUNT_CONTROL_UPDATETIMEOFFSETRESULT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
@@ -25,38 +25,34 @@
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
 
-namespace gs2 { namespace money
+namespace gs2 { namespace account
 {
 
 /**
- * ユーザーIDを指定してウォレットから残高を消費します のレスポンスモデル
+ * ゲームプレイヤーアカウントの現在時刻に対する補正値を更新 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
-class WithdrawByUserIdResult : public Gs2Object
+class UpdateTimeOffsetResult : public Gs2Object
 {
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 消費後のウォレット */
-        optional<Wallet> item;
-        /** 消費した通貨の価格 */
-        optional<Float> price;
+        /** 更新したゲームプレイヤーアカウント */
+        optional<Account> item;
 
         Data()
         {}
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            item(data.item),
-            price(data.price)
+            item(data.item)
         {}
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
-            item(std::move(data.item)),
-            price(std::move(data.price))
+            item(std::move(data.item))
         {}
 
         virtual ~Data() = default;
@@ -73,12 +69,6 @@ private:
                     const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->item.emplace();
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "price") == 0) {
-                if (jsonValue.IsFloat())
-                {
-                    this->price = jsonValue.GetFloat();
                 }
             }
         }
@@ -101,23 +91,23 @@ private:
     }
 
 public:
-    WithdrawByUserIdResult() :
+    UpdateTimeOffsetResult() :
         m_pData(nullptr)
     {}
 
-    WithdrawByUserIdResult(const WithdrawByUserIdResult& withdrawByUserIdResult) :
-        Gs2Object(withdrawByUserIdResult),
-        m_pData(withdrawByUserIdResult.m_pData != nullptr ? new Data(*withdrawByUserIdResult.m_pData) : nullptr)
+    UpdateTimeOffsetResult(const UpdateTimeOffsetResult& updateTimeOffsetResult) :
+        Gs2Object(updateTimeOffsetResult),
+        m_pData(updateTimeOffsetResult.m_pData != nullptr ? new Data(*updateTimeOffsetResult.m_pData) : nullptr)
     {}
 
-    WithdrawByUserIdResult(WithdrawByUserIdResult&& withdrawByUserIdResult) :
-        Gs2Object(std::move(withdrawByUserIdResult)),
-        m_pData(withdrawByUserIdResult.m_pData)
+    UpdateTimeOffsetResult(UpdateTimeOffsetResult&& updateTimeOffsetResult) :
+        Gs2Object(std::move(updateTimeOffsetResult)),
+        m_pData(updateTimeOffsetResult.m_pData)
     {
-        withdrawByUserIdResult.m_pData = nullptr;
+        updateTimeOffsetResult.m_pData = nullptr;
     }
 
-    ~WithdrawByUserIdResult()
+    ~UpdateTimeOffsetResult()
     {
         if (m_pData != nullptr)
         {
@@ -125,80 +115,60 @@ public:
         }
     }
 
-    WithdrawByUserIdResult& operator=(const WithdrawByUserIdResult& withdrawByUserIdResult)
+    UpdateTimeOffsetResult& operator=(const UpdateTimeOffsetResult& updateTimeOffsetResult)
     {
-        Gs2Object::operator=(withdrawByUserIdResult);
+        Gs2Object::operator=(updateTimeOffsetResult);
 
         if (m_pData != nullptr)
         {
             delete m_pData;
         }
-        m_pData = new Data(*withdrawByUserIdResult.m_pData);
+        m_pData = new Data(*updateTimeOffsetResult.m_pData);
 
         return *this;
     }
 
-    WithdrawByUserIdResult& operator=(WithdrawByUserIdResult&& withdrawByUserIdResult)
+    UpdateTimeOffsetResult& operator=(UpdateTimeOffsetResult&& updateTimeOffsetResult)
     {
-        Gs2Object::operator=(std::move(withdrawByUserIdResult));
+        Gs2Object::operator=(std::move(updateTimeOffsetResult));
 
         if (m_pData != nullptr)
         {
             delete m_pData;
         }
-        m_pData = withdrawByUserIdResult.m_pData;
-        withdrawByUserIdResult.m_pData = nullptr;
+        m_pData = updateTimeOffsetResult.m_pData;
+        updateTimeOffsetResult.m_pData = nullptr;
 
         return *this;
     }
 
-    const WithdrawByUserIdResult* operator->() const
+    const UpdateTimeOffsetResult* operator->() const
     {
         return this;
     }
 
-    WithdrawByUserIdResult* operator->()
+    UpdateTimeOffsetResult* operator->()
     {
         return this;
     }
     /**
-     * 消費後のウォレットを取得
+     * 更新したゲームプレイヤーアカウントを取得
      *
-     * @return 消費後のウォレット
+     * @return 更新したゲームプレイヤーアカウント
      */
-    const optional<Wallet>& getItem() const
+    const optional<Account>& getItem() const
     {
         return ensureData().item;
     }
 
     /**
-     * 消費後のウォレットを設定
+     * 更新したゲームプレイヤーアカウントを設定
      *
-     * @param item 消費後のウォレット
+     * @param item 更新したゲームプレイヤーアカウント
      */
-    void setItem(const Wallet& item)
+    void setItem(const Account& item)
     {
         ensureData().item.emplace(item);
-    }
-
-    /**
-     * 消費した通貨の価格を取得
-     *
-     * @return 消費した通貨の価格
-     */
-    const optional<Float>& getPrice() const
-    {
-        return ensureData().price;
-    }
-
-    /**
-     * 消費した通貨の価格を設定
-     *
-     * @param price 消費した通貨の価格
-     */
-    void setPrice(Float price)
-    {
-        ensureData().price.emplace(price);
     }
 
 
@@ -210,4 +180,4 @@ public:
 
 } }
 
-#endif //GS2_MONEY_CONTROL_WITHDRAWBYUSERIDRESULT_HPP_
+#endif //GS2_ACCOUNT_CONTROL_UPDATETIMEOFFSETRESULT_HPP_

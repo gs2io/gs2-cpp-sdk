@@ -46,7 +46,7 @@ private:
         /** スタックの説明 */
         optional<StringHolder> description;
         /** テンプレートデータ */
-        optional<StringHolder> template;
+        optional<StringHolder> template_;
 
         Data()
         {}
@@ -55,14 +55,14 @@ private:
             Gs2Object(data),
             name(data.name),
             description(data.description),
-            template(data.template)
+            template_(data.template_)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
             name(std::move(data.name)),
             description(std::move(data.description)),
-            template(std::move(data.template))
+            template_(std::move(data.template_))
         {}
 
         ~Data() = default;
@@ -223,27 +223,27 @@ public:
      */
     const optional<StringHolder>& getTemplate() const
     {
-        return ensureData().template;
+        return ensureData().template_;
     }
 
     /**
      * テンプレートデータを設定
      *
-     * @param template テンプレートデータ
+     * @param template_ テンプレートデータ
      */
-    void setTemplate(const Char* template)
+    void setTemplate(const Char* template_)
     {
-        ensureData().template.emplace(template);
+        ensureData().template_.emplace(template_);
     }
 
     /**
      * テンプレートデータを設定
      *
-     * @param template テンプレートデータ
+     * @param template_ テンプレートデータ
      */
-    CreateStackRequest& withTemplate(const Char* template)
+    CreateStackRequest& withTemplate(const Char* template_)
     {
-        ensureData().template.emplace(template);
+        ensureData().template_.emplace(template_);
         return *this;
     }
 

@@ -51,8 +51,6 @@ private:
         optional<StringHolder> metadata;
         /** 抽選モード */
         optional<StringHolder> mode;
-        /** 抽選回数 */
-        optional<Int32> count;
         /** 抽選方法 */
         optional<StringHolder> method;
         /** 景品テーブルの名前 */
@@ -70,7 +68,6 @@ private:
             description(data.description),
             metadata(data.metadata),
             mode(data.mode),
-            count(data.count),
             method(data.method),
             prizeTableName(data.prizeTableName),
             choicePrizeTableScriptId(data.choicePrizeTableScriptId)
@@ -83,7 +80,6 @@ private:
             description(std::move(data.description)),
             metadata(std::move(data.metadata)),
             mode(std::move(data.mode)),
-            count(std::move(data.count)),
             method(std::move(data.method)),
             prizeTableName(std::move(data.prizeTableName)),
             choicePrizeTableScriptId(std::move(data.choicePrizeTableScriptId))
@@ -330,37 +326,6 @@ public:
     CreateLotteryModelMasterRequest& withMode(const Char* mode)
     {
         ensureData().mode.emplace(mode);
-        return *this;
-    }
-
-    /**
-     * 抽選回数を取得
-     *
-     * @return 抽選回数
-     */
-    const optional<Int32>& getCount() const
-    {
-        return ensureData().count;
-    }
-
-    /**
-     * 抽選回数を設定
-     *
-     * @param count 抽選回数
-     */
-    void setCount(Int32 count)
-    {
-        ensureData().count.emplace(count);
-    }
-
-    /**
-     * 抽選回数を設定
-     *
-     * @param count 抽選回数
-     */
-    CreateLotteryModelMasterRequest& withCount(Int32 count)
-    {
-        ensureData().count.emplace(count);
         return *this;
     }
 

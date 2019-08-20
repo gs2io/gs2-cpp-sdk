@@ -51,8 +51,10 @@ private:
         optional<StringHolder> description;
         /** アイテムモデルの種類のメタデータ */
         optional<StringHolder> metadata;
-        /** 所有可能な最大数量 */
-        optional<Int64> maxCount;
+        /** スタック可能な最大数量 */
+        optional<Int64> stackingLimit;
+        /** スタック可能な最大数量を超えた時複数枠にアイテムを保管することを許すか */
+        optional<Bool> allowMultipleStacks;
         /** 表示順番 */
         optional<Int32> sortValue;
 
@@ -66,7 +68,8 @@ private:
             name(data.name),
             description(data.description),
             metadata(data.metadata),
-            maxCount(data.maxCount),
+            stackingLimit(data.stackingLimit),
+            allowMultipleStacks(data.allowMultipleStacks),
             sortValue(data.sortValue)
         {}
 
@@ -77,7 +80,8 @@ private:
             name(std::move(data.name)),
             description(std::move(data.description)),
             metadata(std::move(data.metadata)),
-            maxCount(std::move(data.maxCount)),
+            stackingLimit(std::move(data.stackingLimit)),
+            allowMultipleStacks(std::move(data.allowMultipleStacks)),
             sortValue(std::move(data.sortValue))
         {}
 
@@ -326,33 +330,64 @@ public:
     }
 
     /**
-     * 所有可能な最大数量を取得
+     * スタック可能な最大数量を取得
      *
-     * @return 所有可能な最大数量
+     * @return スタック可能な最大数量
      */
-    const optional<Int64>& getMaxCount() const
+    const optional<Int64>& getStackingLimit() const
     {
-        return ensureData().maxCount;
+        return ensureData().stackingLimit;
     }
 
     /**
-     * 所有可能な最大数量を設定
+     * スタック可能な最大数量を設定
      *
-     * @param maxCount 所有可能な最大数量
+     * @param stackingLimit スタック可能な最大数量
      */
-    void setMaxCount(Int64 maxCount)
+    void setStackingLimit(Int64 stackingLimit)
     {
-        ensureData().maxCount.emplace(maxCount);
+        ensureData().stackingLimit.emplace(stackingLimit);
     }
 
     /**
-     * 所有可能な最大数量を設定
+     * スタック可能な最大数量を設定
      *
-     * @param maxCount 所有可能な最大数量
+     * @param stackingLimit スタック可能な最大数量
      */
-    CreateItemModelMasterRequest& withMaxCount(Int64 maxCount)
+    CreateItemModelMasterRequest& withStackingLimit(Int64 stackingLimit)
     {
-        ensureData().maxCount.emplace(maxCount);
+        ensureData().stackingLimit.emplace(stackingLimit);
+        return *this;
+    }
+
+    /**
+     * スタック可能な最大数量を超えた時複数枠にアイテムを保管することを許すかを取得
+     *
+     * @return スタック可能な最大数量を超えた時複数枠にアイテムを保管することを許すか
+     */
+    const optional<Bool>& getAllowMultipleStacks() const
+    {
+        return ensureData().allowMultipleStacks;
+    }
+
+    /**
+     * スタック可能な最大数量を超えた時複数枠にアイテムを保管することを許すかを設定
+     *
+     * @param allowMultipleStacks スタック可能な最大数量を超えた時複数枠にアイテムを保管することを許すか
+     */
+    void setAllowMultipleStacks(Bool allowMultipleStacks)
+    {
+        ensureData().allowMultipleStacks.emplace(allowMultipleStacks);
+    }
+
+    /**
+     * スタック可能な最大数量を超えた時複数枠にアイテムを保管することを許すかを設定
+     *
+     * @param allowMultipleStacks スタック可能な最大数量を超えた時複数枠にアイテムを保管することを許すか
+     */
+    CreateItemModelMasterRequest& withAllowMultipleStacks(Bool allowMultipleStacks)
+    {
+        ensureData().allowMultipleStacks.emplace(allowMultipleStacks);
         return *this;
     }
 

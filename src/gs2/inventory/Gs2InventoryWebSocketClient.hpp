@@ -22,7 +22,6 @@
 #include <gs2/core/network/Gs2WebSocketSessionTask.hpp>
 #include <gs2/core/network/Gs2WebSocketSession.hpp>
 #include <gs2/core/util/StringVariable.hpp>
-#include <gs2/core/util/UrlEncoder.hpp>
 #include "model/model.hpp"
 #include "request/DescribeNamespacesRequest.hpp"
 #include "request/CreateNamespaceRequest.hpp"
@@ -183,6 +182,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getPageToken())
             {
                 writer.writePropertyName("pageToken");
@@ -256,6 +260,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getName())
             {
                 writer.writePropertyName("name");
@@ -369,6 +378,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -437,6 +451,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -505,6 +524,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -618,6 +642,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -686,6 +715,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -764,6 +798,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -857,6 +896,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -930,6 +974,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1023,6 +1072,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1096,6 +1150,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1164,6 +1223,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1237,6 +1301,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1320,6 +1389,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1345,10 +1419,15 @@ private:
                 writer.writePropertyName("metadata");
                 writer.writeCharArray(*m_Request.getMetadata());
             }
-            if (m_Request.getMaxCount())
+            if (m_Request.getStackingLimit())
             {
-                writer.writePropertyName("maxCount");
-                writer.writeInt64(*m_Request.getMaxCount());
+                writer.writePropertyName("stackingLimit");
+                writer.writeInt64(*m_Request.getStackingLimit());
+            }
+            if (m_Request.getAllowMultipleStacks())
+            {
+                writer.writePropertyName("allowMultipleStacks");
+                writer.writeBool(*m_Request.getAllowMultipleStacks());
             }
             if (m_Request.getSortValue())
             {
@@ -1418,6 +1497,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1496,6 +1580,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1521,10 +1610,15 @@ private:
                 writer.writePropertyName("metadata");
                 writer.writeCharArray(*m_Request.getMetadata());
             }
-            if (m_Request.getMaxCount())
+            if (m_Request.getStackingLimit())
             {
-                writer.writePropertyName("maxCount");
-                writer.writeInt64(*m_Request.getMaxCount());
+                writer.writePropertyName("stackingLimit");
+                writer.writeInt64(*m_Request.getStackingLimit());
+            }
+            if (m_Request.getAllowMultipleStacks())
+            {
+                writer.writePropertyName("allowMultipleStacks");
+                writer.writeBool(*m_Request.getAllowMultipleStacks());
             }
             if (m_Request.getSortValue())
             {
@@ -1594,6 +1688,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1672,6 +1771,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1745,6 +1849,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1823,6 +1932,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1891,6 +2005,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1959,6 +2078,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -2032,6 +2156,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -2105,6 +2234,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -2193,6 +2327,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -2281,6 +2420,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -2364,6 +2508,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -2447,6 +2596,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -2535,6 +2689,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -2623,6 +2782,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -2706,6 +2870,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getStampSheet())
             {
                 writer.writePropertyName("stampSheet");
@@ -2784,6 +2953,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getStampSheet())
             {
                 writer.writePropertyName("stampSheet");
@@ -2862,6 +3036,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -2955,6 +3134,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -3048,6 +3232,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -3141,6 +3330,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -3234,6 +3428,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -3332,6 +3531,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -3430,6 +3634,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -3528,6 +3737,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -3621,6 +3835,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getStampSheet())
             {
                 writer.writePropertyName("stampSheet");
@@ -3699,6 +3918,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getStampTask())
             {
                 writer.writePropertyName("stampTask");
@@ -3955,10 +4179,15 @@ private:
             writer.writePropertyName("metadata");
             writer.writeCharArray(*obj.getMetadata());
         }
-        if (obj.getMaxCount())
+        if (obj.getStackingLimit())
         {
-            writer.writePropertyName("maxCount");
-            writer.writeInt64(*obj.getMaxCount());
+            writer.writePropertyName("stackingLimit");
+            writer.writeInt64(*obj.getStackingLimit());
+        }
+        if (obj.getAllowMultipleStacks())
+        {
+            writer.writePropertyName("allowMultipleStacks");
+            writer.writeBool(*obj.getAllowMultipleStacks());
         }
         if (obj.getSortValue())
         {
@@ -3996,10 +4225,15 @@ private:
             writer.writePropertyName("metadata");
             writer.writeCharArray(*obj.getMetadata());
         }
-        if (obj.getMaxCount())
+        if (obj.getStackingLimit())
         {
-            writer.writePropertyName("maxCount");
-            writer.writeInt64(*obj.getMaxCount());
+            writer.writePropertyName("stackingLimit");
+            writer.writeInt64(*obj.getStackingLimit());
+        }
+        if (obj.getAllowMultipleStacks())
+        {
+            writer.writePropertyName("allowMultipleStacks");
+            writer.writeBool(*obj.getAllowMultipleStacks());
         }
         if (obj.getSortValue())
         {

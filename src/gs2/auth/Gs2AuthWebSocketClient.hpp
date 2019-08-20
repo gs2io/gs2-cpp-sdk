@@ -22,7 +22,6 @@
 #include <gs2/core/network/Gs2WebSocketSessionTask.hpp>
 #include <gs2/core/network/Gs2WebSocketSession.hpp>
 #include <gs2/core/util/StringVariable.hpp>
-#include <gs2/core/util/UrlEncoder.hpp>
 #include "model/model.hpp"
 #include "request/LoginRequest.hpp"
 #include "request/LoginBySignatureRequest.hpp"
@@ -60,10 +59,20 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getUserId())
             {
                 writer.writePropertyName("userId");
                 writer.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getTimeOffset())
+            {
+                writer.writePropertyName("timeOffset");
+                writer.writeInt32(*m_Request.getTimeOffset());
             }
             if (m_Request.getRequestId())
             {
@@ -133,6 +142,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getUserId())
             {
                 writer.writePropertyName("userId");

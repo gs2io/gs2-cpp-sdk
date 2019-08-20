@@ -22,7 +22,6 @@
 #include <gs2/core/network/Gs2RestSessionTask.hpp>
 #include <gs2/core/network/Gs2RestSession.hpp>
 #include <gs2/core/util/StringVariable.hpp>
-#include <gs2/core/util/UrlEncoder.hpp>
 #include "model/model.hpp"
 #include "request/LoginRequest.hpp"
 #include "request/LoginBySignatureRequest.hpp"
@@ -104,10 +103,20 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         if (request.getUserId())
         {
             writer.writePropertyName("userId");
             writer.writeCharArray(*request.getUserId());
+        }
+        if (request.getTimeOffset())
+        {
+            writer.writePropertyName("timeOffset");
+            writer.writeInt32(*request.getTimeOffset());
         }
         writer.writeObjectEnd();
         {
@@ -116,6 +125,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
@@ -147,6 +157,11 @@ public:
         detail::json::JsonWriter writer;
 
         writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
         if (request.getUserId())
         {
             writer.writePropertyName("userId");
@@ -174,6 +189,7 @@ public:
             httpRequest.SetContent(content);
         }
         httpRequest.SetHeader("Content-Type", "application/json");
+
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));

@@ -22,7 +22,6 @@
 #include <gs2/core/network/Gs2WebSocketSessionTask.hpp>
 #include <gs2/core/network/Gs2WebSocketSession.hpp>
 #include <gs2/core/util/StringVariable.hpp>
-#include <gs2/core/util/UrlEncoder.hpp>
 #include "model/model.hpp"
 #include "request/DescribeNamespacesRequest.hpp"
 #include "request/CreateNamespaceRequest.hpp"
@@ -32,6 +31,7 @@
 #include "request/DeleteNamespaceRequest.hpp"
 #include "request/DescribeAccountsRequest.hpp"
 #include "request/CreateAccountRequest.hpp"
+#include "request/UpdateTimeOffsetRequest.hpp"
 #include "request/GetAccountRequest.hpp"
 #include "request/DeleteAccountRequest.hpp"
 #include "request/AuthenticationRequest.hpp"
@@ -54,6 +54,7 @@
 #include "result/DeleteNamespaceResult.hpp"
 #include "result/DescribeAccountsResult.hpp"
 #include "result/CreateAccountResult.hpp"
+#include "result/UpdateTimeOffsetResult.hpp"
 #include "result/GetAccountResult.hpp"
 #include "result/DeleteAccountResult.hpp"
 #include "result/AuthenticationResult.hpp"
@@ -80,6 +81,7 @@ typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
 typedef AsyncResult<void> AsyncDeleteNamespaceResult;
 typedef AsyncResult<DescribeAccountsResult> AsyncDescribeAccountsResult;
 typedef AsyncResult<CreateAccountResult> AsyncCreateAccountResult;
+typedef AsyncResult<UpdateTimeOffsetResult> AsyncUpdateTimeOffsetResult;
 typedef AsyncResult<GetAccountResult> AsyncGetAccountResult;
 typedef AsyncResult<void> AsyncDeleteAccountResult;
 typedef AsyncResult<AuthenticationResult> AsyncAuthenticationResult;
@@ -120,6 +122,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getPageToken())
             {
                 writer.writePropertyName("pageToken");
@@ -193,6 +200,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getName())
             {
                 writer.writePropertyName("name");
@@ -331,6 +343,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -399,6 +416,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -467,6 +489,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -605,6 +632,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -673,6 +705,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -751,6 +788,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -804,6 +846,94 @@ private:
         ~CreateAccountTask() GS2_OVERRIDE = default;
     };
 
+    class UpdateTimeOffsetTask : public detail::Gs2WebSocketSessionTask<UpdateTimeOffsetResult>
+    {
+    private:
+        UpdateTimeOffsetRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                writer.writePropertyName("userId");
+                writer.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getTimeOffset())
+            {
+                writer.writePropertyName("timeOffset");
+                writer.writeInt32(*m_Request.getTimeOffset());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("account");
+            writer.writePropertyName("component");
+            writer.writeCharArray("account");
+            writer.writePropertyName("function");
+            writer.writeCharArray("updateTimeOffset");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        UpdateTimeOffsetTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            UpdateTimeOffsetRequest& request,
+            Gs2WebSocketSessionTask<UpdateTimeOffsetResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateTimeOffsetResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~UpdateTimeOffsetTask() GS2_OVERRIDE = default;
+    };
+
     class GetAccountTask : public detail::Gs2WebSocketSessionTask<GetAccountResult>
     {
     private:
@@ -819,6 +949,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -897,6 +1032,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -975,6 +1115,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1063,6 +1208,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1151,6 +1301,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1239,6 +1394,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1332,6 +1492,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1425,6 +1590,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1508,6 +1678,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1591,6 +1766,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1684,6 +1864,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1777,6 +1962,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1865,6 +2055,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -1948,6 +2143,11 @@ private:
 
             writer.writeObjectStart();
 
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
             if (m_Request.getNamespaceName())
             {
                 writer.writePropertyName("namespaceName");
@@ -2136,6 +2336,11 @@ private:
             writer.writePropertyName("password");
             writer.writeCharArray(*obj.getPassword());
         }
+        if (obj.getTimeOffset())
+        {
+            writer.writePropertyName("timeOffset");
+            writer.writeInt32(*obj.getTimeOffset());
+        }
         if (obj.getCreatedAt())
         {
             writer.writePropertyName("createdAt");
@@ -2317,6 +2522,18 @@ public:
     void createAccount(std::function<void(AsyncCreateAccountResult&)> callback, CreateAccountRequest& request)
     {
         CreateAccountTask& task = *new CreateAccountTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ゲームプレイヤーアカウントの現在時刻に対する補正値を更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateTimeOffset(std::function<void(AsyncUpdateTimeOffsetResult&)> callback, UpdateTimeOffsetRequest& request)
+    {
+        UpdateTimeOffsetTask& task = *new UpdateTimeOffsetTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 

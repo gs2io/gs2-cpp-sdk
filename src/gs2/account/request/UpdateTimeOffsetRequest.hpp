@@ -14,25 +14,25 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_LOTTERY_CONTROL_DRAWBYUSERIDREQUEST_HPP_
-#define GS2_LOTTERY_CONTROL_DRAWBYUSERIDREQUEST_HPP_
+#ifndef GS2_ACCOUNT_CONTROL_UPDATETIMEOFFSETREQUEST_HPP_
+#define GS2_ACCOUNT_CONTROL_UPDATETIMEOFFSETREQUEST_HPP_
 
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
-#include "../Gs2LotteryConst.hpp"
+#include "../Gs2AccountConst.hpp"
 #include "../model/model.hpp"
 
-namespace gs2 { namespace lottery
+namespace gs2 { namespace account
 {
 
 /**
- * ユーザIDを指定して抽選を実行 のリクエストモデル
+ * ゲームプレイヤーアカウントの現在時刻に対する補正値を更新 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
-class DrawByUserIdRequest : public Gs2BasicRequest, public Gs2Lottery
+class UpdateTimeOffsetRequest : public Gs2BasicRequest, public Gs2Account
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -43,14 +43,10 @@ private:
     public:
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
-        /** 抽選モデルの種類名 */
-        optional<StringHolder> lotteryName;
-        /** ユーザーID */
+        /** アカウントID */
         optional<StringHolder> userId;
-        /** 抽選回数 */
-        optional<Int32> count;
-        /** スタンプシートのプレースホルダの適用する設定値 */
-        optional<List<Config>> config;
+        /** 現在時刻に対する補正値（現在時刻を起点とした秒数） */
+        optional<Int32> timeOffset;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -60,20 +56,16 @@ private:
         Data(const Data& data) :
             Gs2Object(data),
             namespaceName(data.namespaceName),
-            lotteryName(data.lotteryName),
             userId(data.userId),
-            count(data.count),
-            config(data.config),
+            timeOffset(data.timeOffset),
             duplicationAvoider(data.duplicationAvoider)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
             namespaceName(std::move(data.namespaceName)),
-            lotteryName(std::move(data.lotteryName)),
             userId(std::move(data.userId)),
-            count(std::move(data.count)),
-            config(std::move(data.config)),
+            timeOffset(std::move(data.timeOffset)),
             duplicationAvoider(std::move(data.duplicationAvoider))
         {}
 
@@ -101,25 +93,25 @@ private:
     }
 
 public:
-    DrawByUserIdRequest() :
+    UpdateTimeOffsetRequest() :
         m_pData(nullptr)
     {}
 
-    DrawByUserIdRequest(const DrawByUserIdRequest& obj) :
+    UpdateTimeOffsetRequest(const UpdateTimeOffsetRequest& obj) :
         Gs2BasicRequest(obj),
-        Gs2Lottery(obj),
+        Gs2Account(obj),
         m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
     {}
 
-    DrawByUserIdRequest(DrawByUserIdRequest&& obj) :
+    UpdateTimeOffsetRequest(UpdateTimeOffsetRequest&& obj) :
         Gs2BasicRequest(std::move(obj)),
-        Gs2Lottery(std::move(obj)),
+        Gs2Account(std::move(obj)),
         m_pData(obj.m_pData)
     {
         obj.m_pData = nullptr;
     }
 
-    ~DrawByUserIdRequest()
+    ~UpdateTimeOffsetRequest()
     {
         if (m_pData != nullptr)
         {
@@ -127,41 +119,41 @@ public:
         }
     }
 
-    DrawByUserIdRequest& operator=(const DrawByUserIdRequest& drawByUserIdRequest)
+    UpdateTimeOffsetRequest& operator=(const UpdateTimeOffsetRequest& updateTimeOffsetRequest)
     {
-        Gs2BasicRequest::operator=(drawByUserIdRequest);
-        Gs2Lottery::operator=(drawByUserIdRequest);
+        Gs2BasicRequest::operator=(updateTimeOffsetRequest);
+        Gs2Account::operator=(updateTimeOffsetRequest);
 
         if (m_pData != nullptr)
         {
             delete m_pData;
         }
-        m_pData = new Data(*drawByUserIdRequest.m_pData);
+        m_pData = new Data(*updateTimeOffsetRequest.m_pData);
 
         return *this;
     }
 
-    DrawByUserIdRequest& operator=(DrawByUserIdRequest&& drawByUserIdRequest)
+    UpdateTimeOffsetRequest& operator=(UpdateTimeOffsetRequest&& updateTimeOffsetRequest)
     {
-        Gs2BasicRequest::operator=(std::move(drawByUserIdRequest));
-        Gs2Lottery::operator=(std::move(drawByUserIdRequest));
+        Gs2BasicRequest::operator=(std::move(updateTimeOffsetRequest));
+        Gs2Account::operator=(std::move(updateTimeOffsetRequest));
 
         if (m_pData != nullptr)
         {
             delete m_pData;
         }
-        m_pData = drawByUserIdRequest.m_pData;
-        drawByUserIdRequest.m_pData = nullptr;
+        m_pData = updateTimeOffsetRequest.m_pData;
+        updateTimeOffsetRequest.m_pData = nullptr;
 
         return *this;
     }
 
-    const DrawByUserIdRequest* operator->() const
+    const UpdateTimeOffsetRequest* operator->() const
     {
         return this;
     }
 
-    DrawByUserIdRequest* operator->()
+    UpdateTimeOffsetRequest* operator->()
     {
         return this;
     }
@@ -191,47 +183,16 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    DrawByUserIdRequest& withNamespaceName(const Char* namespaceName)
+    UpdateTimeOffsetRequest& withNamespaceName(const Char* namespaceName)
     {
         ensureData().namespaceName.emplace(namespaceName);
         return *this;
     }
 
     /**
-     * 抽選モデルの種類名を取得
+     * アカウントIDを取得
      *
-     * @return 抽選モデルの種類名
-     */
-    const optional<StringHolder>& getLotteryName() const
-    {
-        return ensureData().lotteryName;
-    }
-
-    /**
-     * 抽選モデルの種類名を設定
-     *
-     * @param lotteryName 抽選モデルの種類名
-     */
-    void setLotteryName(const Char* lotteryName)
-    {
-        ensureData().lotteryName.emplace(lotteryName);
-    }
-
-    /**
-     * 抽選モデルの種類名を設定
-     *
-     * @param lotteryName 抽選モデルの種類名
-     */
-    DrawByUserIdRequest& withLotteryName(const Char* lotteryName)
-    {
-        ensureData().lotteryName.emplace(lotteryName);
-        return *this;
-    }
-
-    /**
-     * ユーザーIDを取得
-     *
-     * @return ユーザーID
+     * @return アカウントID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -239,9 +200,9 @@ public:
     }
 
     /**
-     * ユーザーIDを設定
+     * アカウントIDを設定
      *
-     * @param userId ユーザーID
+     * @param userId アカウントID
      */
     void setUserId(const Char* userId)
     {
@@ -249,75 +210,44 @@ public:
     }
 
     /**
-     * ユーザーIDを設定
+     * アカウントIDを設定
      *
-     * @param userId ユーザーID
+     * @param userId アカウントID
      */
-    DrawByUserIdRequest& withUserId(const Char* userId)
+    UpdateTimeOffsetRequest& withUserId(const Char* userId)
     {
         ensureData().userId.emplace(userId);
         return *this;
     }
 
     /**
-     * 抽選回数を取得
+     * 現在時刻に対する補正値（現在時刻を起点とした秒数）を取得
      *
-     * @return 抽選回数
+     * @return 現在時刻に対する補正値（現在時刻を起点とした秒数）
      */
-    const optional<Int32>& getCount() const
+    const optional<Int32>& getTimeOffset() const
     {
-        return ensureData().count;
+        return ensureData().timeOffset;
     }
 
     /**
-     * 抽選回数を設定
+     * 現在時刻に対する補正値（現在時刻を起点とした秒数）を設定
      *
-     * @param count 抽選回数
+     * @param timeOffset 現在時刻に対する補正値（現在時刻を起点とした秒数）
      */
-    void setCount(Int32 count)
+    void setTimeOffset(Int32 timeOffset)
     {
-        ensureData().count.emplace(count);
+        ensureData().timeOffset.emplace(timeOffset);
     }
 
     /**
-     * 抽選回数を設定
+     * 現在時刻に対する補正値（現在時刻を起点とした秒数）を設定
      *
-     * @param count 抽選回数
+     * @param timeOffset 現在時刻に対する補正値（現在時刻を起点とした秒数）
      */
-    DrawByUserIdRequest& withCount(Int32 count)
+    UpdateTimeOffsetRequest& withTimeOffset(Int32 timeOffset)
     {
-        ensureData().count.emplace(count);
-        return *this;
-    }
-
-    /**
-     * スタンプシートのプレースホルダの適用する設定値を取得
-     *
-     * @return スタンプシートのプレースホルダの適用する設定値
-     */
-    const optional<List<Config>>& getConfig() const
-    {
-        return ensureData().config;
-    }
-
-    /**
-     * スタンプシートのプレースホルダの適用する設定値を設定
-     *
-     * @param config スタンプシートのプレースホルダの適用する設定値
-     */
-    void setConfig(const List<Config>& config)
-    {
-        ensureData().config.emplace(config);
-    }
-
-    /**
-     * スタンプシートのプレースホルダの適用する設定値を設定
-     *
-     * @param config スタンプシートのプレースホルダの適用する設定値
-     */
-    DrawByUserIdRequest& withConfig(const List<Config>& config)
-    {
-        ensureData().config.emplace(config);
+        ensureData().timeOffset.emplace(timeOffset);
         return *this;
     }
 
@@ -346,7 +276,7 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    DrawByUserIdRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    UpdateTimeOffsetRequest& withDuplicationAvoider(const Char* duplicationAvoider)
     {
         ensureData().duplicationAvoider.emplace(duplicationAvoider);
         return *this;
@@ -359,7 +289,7 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    DrawByUserIdRequest& withGs2ClientId(const Char* gs2ClientId)
+    UpdateTimeOffsetRequest& withGs2ClientId(const Char* gs2ClientId)
     {
         setGs2ClientId(gs2ClientId);
         return *this;
@@ -371,7 +301,7 @@ public:
      *
      * @param gs2Timestamp タイムスタンプ
      */
-    DrawByUserIdRequest& withGs2Timestamp(Int64 gs2Timestamp)
+    UpdateTimeOffsetRequest& withGs2Timestamp(Int64 gs2Timestamp)
     {
         setGs2Timestamp(gs2Timestamp);
         return *this;
@@ -383,7 +313,7 @@ public:
      *
      * @param gs2RequestSign GS2認証署名
      */
-    DrawByUserIdRequest& withGs2RequestSign(const Char* gs2RequestSign)
+    UpdateTimeOffsetRequest& withGs2RequestSign(const Char* gs2RequestSign)
     {
         setGs2RequestSign(gs2RequestSign);
         return *this;
@@ -394,7 +324,7 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    DrawByUserIdRequest& withRequestId(const Char* gs2RequestId)
+    UpdateTimeOffsetRequest& withRequestId(const Char* gs2RequestId)
     {
         setRequestId(gs2RequestId);
         return *this;
@@ -403,4 +333,4 @@ public:
 
 } }
 
-#endif //GS2_LOTTERY_CONTROL_DRAWBYUSERIDREQUEST_HPP_
+#endif //GS2_ACCOUNT_CONTROL_UPDATETIMEOFFSETREQUEST_HPP_

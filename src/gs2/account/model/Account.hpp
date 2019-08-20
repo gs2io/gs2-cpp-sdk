@@ -47,6 +47,8 @@ private:
         optional<StringHolder> userId;
         /** パスワード */
         optional<StringHolder> password;
+        /** 現在時刻に対する補正値（現在時刻を起点とした秒数） */
+        optional<Int32> timeOffset;
         /** 作成日時 */
         optional<Int64> createdAt;
 
@@ -58,6 +60,7 @@ private:
             accountId(data.accountId),
             userId(data.userId),
             password(data.password),
+            timeOffset(data.timeOffset),
             createdAt(data.createdAt)
         {}
 
@@ -66,6 +69,7 @@ private:
             accountId(std::move(data.accountId)),
             userId(std::move(data.userId)),
             password(std::move(data.password)),
+            timeOffset(std::move(data.timeOffset)),
             createdAt(std::move(data.createdAt))
         {}
 
@@ -93,6 +97,12 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->password.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "timeOffset") == 0) {
+                if (jsonValue.IsInt())
+                {
+                    this->timeOffset = jsonValue.GetInt();
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0) {
@@ -275,6 +285,37 @@ public:
     }
 
     /**
+     * 現在時刻に対する補正値（現在時刻を起点とした秒数）を取得
+     *
+     * @return 現在時刻に対する補正値（現在時刻を起点とした秒数）
+     */
+    const optional<Int32>& getTimeOffset() const
+    {
+        return ensureData().timeOffset;
+    }
+
+    /**
+     * 現在時刻に対する補正値（現在時刻を起点とした秒数）を設定
+     *
+     * @param timeOffset 現在時刻に対する補正値（現在時刻を起点とした秒数）
+     */
+    void setTimeOffset(Int32 timeOffset)
+    {
+        ensureData().timeOffset.emplace(timeOffset);
+    }
+
+    /**
+     * 現在時刻に対する補正値（現在時刻を起点とした秒数）を設定
+     *
+     * @param timeOffset 現在時刻に対する補正値（現在時刻を起点とした秒数）
+     */
+    Account& withTimeOffset(Int32 timeOffset)
+    {
+        setTimeOffset(timeOffset);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -329,6 +370,10 @@ inline bool operator!=(const Account& lhs, const Account& lhr)
             return true;
         }
         if (lhs.m_pData->password != lhr.m_pData->password)
+        {
+            return true;
+        }
+        if (lhs.m_pData->timeOffset != lhr.m_pData->timeOffset)
         {
             return true;
         }

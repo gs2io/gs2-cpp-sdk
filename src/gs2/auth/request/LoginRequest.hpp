@@ -43,6 +43,8 @@ private:
     public:
         /** ユーザーID */
         optional<StringHolder> userId;
+        /** 現在時刻に対する補正値（現在時刻を起点とした秒数） */
+        optional<Int32> timeOffset;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -52,12 +54,14 @@ private:
         Data(const Data& data) :
             Gs2Object(data),
             userId(data.userId),
+            timeOffset(data.timeOffset),
             duplicationAvoider(data.duplicationAvoider)
         {}
 
         Data(Data&& data) :
             Gs2Object(std::move(data)),
             userId(std::move(data.userId)),
+            timeOffset(std::move(data.timeOffset)),
             duplicationAvoider(std::move(data.duplicationAvoider))
         {}
 
@@ -178,6 +182,37 @@ public:
     LoginRequest& withUserId(const Char* userId)
     {
         ensureData().userId.emplace(userId);
+        return *this;
+    }
+
+    /**
+     * 現在時刻に対する補正値（現在時刻を起点とした秒数）を取得
+     *
+     * @return 現在時刻に対する補正値（現在時刻を起点とした秒数）
+     */
+    const optional<Int32>& getTimeOffset() const
+    {
+        return ensureData().timeOffset;
+    }
+
+    /**
+     * 現在時刻に対する補正値（現在時刻を起点とした秒数）を設定
+     *
+     * @param timeOffset 現在時刻に対する補正値（現在時刻を起点とした秒数）
+     */
+    void setTimeOffset(Int32 timeOffset)
+    {
+        ensureData().timeOffset.emplace(timeOffset);
+    }
+
+    /**
+     * 現在時刻に対する補正値（現在時刻を起点とした秒数）を設定
+     *
+     * @param timeOffset 現在時刻に対する補正値（現在時刻を起点とした秒数）
+     */
+    LoginRequest& withTimeOffset(Int32 timeOffset)
+    {
+        ensureData().timeOffset.emplace(timeOffset);
         return *this;
     }
 

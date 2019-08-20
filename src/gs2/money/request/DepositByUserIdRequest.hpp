@@ -51,10 +51,6 @@ private:
         optional<Float> price;
         /** 付与する課金通貨の数量 */
         optional<Int32> count;
-        /** トランザクションID */
-        optional<StringHolder> transactionId;
-        /** ストアプラットフォームで販売されているコンテンツID */
-        optional<StringHolder> contentsId;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -68,8 +64,6 @@ private:
             slot(data.slot),
             price(data.price),
             count(data.count),
-            transactionId(data.transactionId),
-            contentsId(data.contentsId),
             duplicationAvoider(data.duplicationAvoider)
         {}
 
@@ -80,8 +74,6 @@ private:
             slot(std::move(data.slot)),
             price(std::move(data.price)),
             count(std::move(data.count)),
-            transactionId(std::move(data.transactionId)),
-            contentsId(std::move(data.contentsId)),
             duplicationAvoider(std::move(data.duplicationAvoider))
         {}
 
@@ -326,68 +318,6 @@ public:
     DepositByUserIdRequest& withCount(Int32 count)
     {
         ensureData().count.emplace(count);
-        return *this;
-    }
-
-    /**
-     * トランザクションIDを取得
-     *
-     * @return トランザクションID
-     */
-    const optional<StringHolder>& getTransactionId() const
-    {
-        return ensureData().transactionId;
-    }
-
-    /**
-     * トランザクションIDを設定
-     *
-     * @param transactionId トランザクションID
-     */
-    void setTransactionId(const Char* transactionId)
-    {
-        ensureData().transactionId.emplace(transactionId);
-    }
-
-    /**
-     * トランザクションIDを設定
-     *
-     * @param transactionId トランザクションID
-     */
-    DepositByUserIdRequest& withTransactionId(const Char* transactionId)
-    {
-        ensureData().transactionId.emplace(transactionId);
-        return *this;
-    }
-
-    /**
-     * ストアプラットフォームで販売されているコンテンツIDを取得
-     *
-     * @return ストアプラットフォームで販売されているコンテンツID
-     */
-    const optional<StringHolder>& getContentsId() const
-    {
-        return ensureData().contentsId;
-    }
-
-    /**
-     * ストアプラットフォームで販売されているコンテンツIDを設定
-     *
-     * @param contentsId ストアプラットフォームで販売されているコンテンツID
-     */
-    void setContentsId(const Char* contentsId)
-    {
-        ensureData().contentsId.emplace(contentsId);
-    }
-
-    /**
-     * ストアプラットフォームで販売されているコンテンツIDを設定
-     *
-     * @param contentsId ストアプラットフォームで販売されているコンテンツID
-     */
-    DepositByUserIdRequest& withContentsId(const Char* contentsId)
-    {
-        ensureData().contentsId.emplace(contentsId);
         return *this;
     }
 
