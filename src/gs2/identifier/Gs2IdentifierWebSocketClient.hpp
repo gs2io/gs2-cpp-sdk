@@ -1728,7 +1728,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeUsers(std::function<void(AsyncDescribeUsersResult&)> callback, DescribeUsersRequest& request)
+    void describeUsers(DescribeUsersRequest& request, std::function<void(AsyncDescribeUsersResult&)> callback)
     {
         DescribeUsersTask& task = *new DescribeUsersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1740,7 +1740,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createUser(std::function<void(AsyncCreateUserResult&)> callback, CreateUserRequest& request)
+    void createUser(CreateUserRequest& request, std::function<void(AsyncCreateUserResult&)> callback)
     {
         CreateUserTask& task = *new CreateUserTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1752,7 +1752,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateUser(std::function<void(AsyncUpdateUserResult&)> callback, UpdateUserRequest& request)
+    void updateUser(UpdateUserRequest& request, std::function<void(AsyncUpdateUserResult&)> callback)
     {
         UpdateUserTask& task = *new UpdateUserTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1764,7 +1764,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getUser(std::function<void(AsyncGetUserResult&)> callback, GetUserRequest& request)
+    void getUser(GetUserRequest& request, std::function<void(AsyncGetUserResult&)> callback)
     {
         GetUserTask& task = *new GetUserTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1776,7 +1776,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteUser(std::function<void(AsyncDeleteUserResult&)> callback, DeleteUserRequest& request)
+    void deleteUser(DeleteUserRequest& request, std::function<void(AsyncDeleteUserResult&)> callback)
     {
         DeleteUserTask& task = *new DeleteUserTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1788,7 +1788,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeSecurityPolicies(std::function<void(AsyncDescribeSecurityPoliciesResult&)> callback, DescribeSecurityPoliciesRequest& request)
+    void describeSecurityPolicies(DescribeSecurityPoliciesRequest& request, std::function<void(AsyncDescribeSecurityPoliciesResult&)> callback)
     {
         DescribeSecurityPoliciesTask& task = *new DescribeSecurityPoliciesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1800,7 +1800,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCommonSecurityPolicies(std::function<void(AsyncDescribeCommonSecurityPoliciesResult&)> callback, DescribeCommonSecurityPoliciesRequest& request)
+    void describeCommonSecurityPolicies(DescribeCommonSecurityPoliciesRequest& request, std::function<void(AsyncDescribeCommonSecurityPoliciesResult&)> callback)
     {
         DescribeCommonSecurityPoliciesTask& task = *new DescribeCommonSecurityPoliciesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1812,7 +1812,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createSecurityPolicy(std::function<void(AsyncCreateSecurityPolicyResult&)> callback, CreateSecurityPolicyRequest& request)
+    void createSecurityPolicy(CreateSecurityPolicyRequest& request, std::function<void(AsyncCreateSecurityPolicyResult&)> callback)
     {
         CreateSecurityPolicyTask& task = *new CreateSecurityPolicyTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1824,7 +1824,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateSecurityPolicy(std::function<void(AsyncUpdateSecurityPolicyResult&)> callback, UpdateSecurityPolicyRequest& request)
+    void updateSecurityPolicy(UpdateSecurityPolicyRequest& request, std::function<void(AsyncUpdateSecurityPolicyResult&)> callback)
     {
         UpdateSecurityPolicyTask& task = *new UpdateSecurityPolicyTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1836,7 +1836,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getSecurityPolicy(std::function<void(AsyncGetSecurityPolicyResult&)> callback, GetSecurityPolicyRequest& request)
+    void getSecurityPolicy(GetSecurityPolicyRequest& request, std::function<void(AsyncGetSecurityPolicyResult&)> callback)
     {
         GetSecurityPolicyTask& task = *new GetSecurityPolicyTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1848,7 +1848,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteSecurityPolicy(std::function<void(AsyncDeleteSecurityPolicyResult&)> callback, DeleteSecurityPolicyRequest& request)
+    void deleteSecurityPolicy(DeleteSecurityPolicyRequest& request, std::function<void(AsyncDeleteSecurityPolicyResult&)> callback)
     {
         DeleteSecurityPolicyTask& task = *new DeleteSecurityPolicyTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1860,7 +1860,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeIdentifiers(std::function<void(AsyncDescribeIdentifiersResult&)> callback, DescribeIdentifiersRequest& request)
+    void describeIdentifiers(DescribeIdentifiersRequest& request, std::function<void(AsyncDescribeIdentifiersResult&)> callback)
     {
         DescribeIdentifiersTask& task = *new DescribeIdentifiersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1872,7 +1872,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createIdentifier(std::function<void(AsyncCreateIdentifierResult&)> callback, CreateIdentifierRequest& request)
+    void createIdentifier(CreateIdentifierRequest& request, std::function<void(AsyncCreateIdentifierResult&)> callback)
     {
         CreateIdentifierTask& task = *new CreateIdentifierTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1884,7 +1884,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getIdentifier(std::function<void(AsyncGetIdentifierResult&)> callback, GetIdentifierRequest& request)
+    void getIdentifier(GetIdentifierRequest& request, std::function<void(AsyncGetIdentifierResult&)> callback)
     {
         GetIdentifierTask& task = *new GetIdentifierTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1896,7 +1896,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteIdentifier(std::function<void(AsyncDeleteIdentifierResult&)> callback, DeleteIdentifierRequest& request)
+    void deleteIdentifier(DeleteIdentifierRequest& request, std::function<void(AsyncDeleteIdentifierResult&)> callback)
     {
         DeleteIdentifierTask& task = *new DeleteIdentifierTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1908,7 +1908,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getHasSecurityPolicy(std::function<void(AsyncGetHasSecurityPolicyResult&)> callback, GetHasSecurityPolicyRequest& request)
+    void getHasSecurityPolicy(GetHasSecurityPolicyRequest& request, std::function<void(AsyncGetHasSecurityPolicyResult&)> callback)
     {
         GetHasSecurityPolicyTask& task = *new GetHasSecurityPolicyTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1920,7 +1920,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void attachSecurityPolicy(std::function<void(AsyncAttachSecurityPolicyResult&)> callback, AttachSecurityPolicyRequest& request)
+    void attachSecurityPolicy(AttachSecurityPolicyRequest& request, std::function<void(AsyncAttachSecurityPolicyResult&)> callback)
     {
         AttachSecurityPolicyTask& task = *new AttachSecurityPolicyTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1932,7 +1932,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void detachSecurityPolicy(std::function<void(AsyncDetachSecurityPolicyResult&)> callback, DetachSecurityPolicyRequest& request)
+    void detachSecurityPolicy(DetachSecurityPolicyRequest& request, std::function<void(AsyncDetachSecurityPolicyResult&)> callback)
     {
         DetachSecurityPolicyTask& task = *new DetachSecurityPolicyTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1944,7 +1944,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void login(std::function<void(AsyncLoginResult&)> callback, LoginRequest& request)
+    void login(LoginRequest& request, std::function<void(AsyncLoginResult&)> callback)
     {
         LoginTask& task = *new LoginTask(getGs2WebSocketSession(), request, callback);
         task.execute();

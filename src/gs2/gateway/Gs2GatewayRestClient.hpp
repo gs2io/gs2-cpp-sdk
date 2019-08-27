@@ -260,7 +260,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeNamespacesResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -307,7 +307,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -361,7 +361,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceStatusResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -398,7 +398,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -435,7 +435,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -488,7 +488,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -530,7 +530,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWebSocketSessions(std::function<void(AsyncDescribeWebSocketSessionsResult&)> callback, DescribeWebSocketSessionsRequest& request)
+    void describeWebSocketSessions(DescribeWebSocketSessionsRequest& request, std::function<void(AsyncDescribeWebSocketSessionsResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeWebSocketSessionsResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -581,7 +581,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWebSocketSessionsByUserId(std::function<void(AsyncDescribeWebSocketSessionsByUserIdResult&)> callback, DescribeWebSocketSessionsByUserIdRequest& request)
+    void describeWebSocketSessionsByUserId(DescribeWebSocketSessionsByUserIdRequest& request, std::function<void(AsyncDescribeWebSocketSessionsByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeWebSocketSessionsByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -632,7 +632,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void setUserId(std::function<void(AsyncSetUserIdResult&)> callback, SetUserIdRequest& request)
+    void setUserId(SetUserIdRequest& request, std::function<void(AsyncSetUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<SetUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -688,7 +688,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void setUserIdByUserId(std::function<void(AsyncSetUserIdByUserIdResult&)> callback, SetUserIdByUserIdRequest& request)
+    void setUserIdByUserId(SetUserIdByUserIdRequest& request, std::function<void(AsyncSetUserIdByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<SetUserIdByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -744,7 +744,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getWebSocketSession(std::function<void(AsyncGetWebSocketSessionResult&)> callback, GetWebSocketSessionRequest& request)
+    void getWebSocketSession(GetWebSocketSessionRequest& request, std::function<void(AsyncGetWebSocketSessionResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetWebSocketSessionResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -781,7 +781,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getWebSocketSessionByConnectionId(std::function<void(AsyncGetWebSocketSessionByConnectionIdResult&)> callback, GetWebSocketSessionByConnectionIdRequest& request)
+    void getWebSocketSessionByConnectionId(GetWebSocketSessionByConnectionIdRequest& request, std::function<void(AsyncGetWebSocketSessionByConnectionIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetWebSocketSessionByConnectionIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -822,7 +822,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void sendNotification(std::function<void(AsyncSendNotificationResult&)> callback, SendNotificationRequest& request)
+    void sendNotification(SendNotificationRequest& request, std::function<void(AsyncSendNotificationResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<SendNotificationResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -893,7 +893,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void setFirebaseToken(std::function<void(AsyncSetFirebaseTokenResult&)> callback, SetFirebaseTokenRequest& request)
+    void setFirebaseToken(SetFirebaseTokenRequest& request, std::function<void(AsyncSetFirebaseTokenResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<SetFirebaseTokenResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -949,7 +949,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void setFirebaseTokenByUserId(std::function<void(AsyncSetFirebaseTokenByUserIdResult&)> callback, SetFirebaseTokenByUserIdRequest& request)
+    void setFirebaseTokenByUserId(SetFirebaseTokenByUserIdRequest& request, std::function<void(AsyncSetFirebaseTokenByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<SetFirebaseTokenByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1005,7 +1005,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getFirebaseToken(std::function<void(AsyncGetFirebaseTokenResult&)> callback, GetFirebaseTokenRequest& request)
+    void getFirebaseToken(GetFirebaseTokenRequest& request, std::function<void(AsyncGetFirebaseTokenResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetFirebaseTokenResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1050,7 +1050,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getFirebaseTokenByUserId(std::function<void(AsyncGetFirebaseTokenByUserIdResult&)> callback, GetFirebaseTokenByUserIdRequest& request)
+    void getFirebaseTokenByUserId(GetFirebaseTokenByUserIdRequest& request, std::function<void(AsyncGetFirebaseTokenByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetFirebaseTokenByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1095,7 +1095,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteFirebaseToken(std::function<void(AsyncDeleteFirebaseTokenResult&)> callback, DeleteFirebaseTokenRequest& request)
+    void deleteFirebaseToken(DeleteFirebaseTokenRequest& request, std::function<void(AsyncDeleteFirebaseTokenResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteFirebaseTokenResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1145,7 +1145,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteFirebaseTokenByUserId(std::function<void(AsyncDeleteFirebaseTokenByUserIdResult&)> callback, DeleteFirebaseTokenByUserIdRequest& request)
+    void deleteFirebaseTokenByUserId(DeleteFirebaseTokenByUserIdRequest& request, std::function<void(AsyncDeleteFirebaseTokenByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteFirebaseTokenByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1195,7 +1195,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void sendMobileNotificationByUserId(std::function<void(AsyncSendMobileNotificationByUserIdResult&)> callback, SendMobileNotificationByUserIdRequest& request)
+    void sendMobileNotificationByUserId(SendMobileNotificationByUserIdRequest& request, std::function<void(AsyncSendMobileNotificationByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();

@@ -1993,7 +1993,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         DescribeNamespacesTask& task = *new DescribeNamespacesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2005,7 +2005,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         CreateNamespaceTask& task = *new CreateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2017,7 +2017,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2029,7 +2029,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         GetNamespaceTask& task = *new GetNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2041,7 +2041,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         UpdateNamespaceTask& task = *new UpdateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2053,7 +2053,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         DeleteNamespaceTask& task = *new DeleteNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2065,7 +2065,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeGatherings(std::function<void(AsyncDescribeGatheringsResult&)> callback, DescribeGatheringsRequest& request)
+    void describeGatherings(DescribeGatheringsRequest& request, std::function<void(AsyncDescribeGatheringsResult&)> callback)
     {
         DescribeGatheringsTask& task = *new DescribeGatheringsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2101,7 +2101,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createGathering(std::function<void(AsyncCreateGatheringResult&)> callback, CreateGatheringRequest& request)
+    void createGathering(CreateGatheringRequest& request, std::function<void(AsyncCreateGatheringResult&)> callback)
     {
         CreateGatheringTask& task = *new CreateGatheringTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2137,7 +2137,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createGatheringByUserId(std::function<void(AsyncCreateGatheringByUserIdResult&)> callback, CreateGatheringByUserIdRequest& request)
+    void createGatheringByUserId(CreateGatheringByUserIdRequest& request, std::function<void(AsyncCreateGatheringByUserIdResult&)> callback)
     {
         CreateGatheringByUserIdTask& task = *new CreateGatheringByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2149,7 +2149,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateGathering(std::function<void(AsyncUpdateGatheringResult&)> callback, UpdateGatheringRequest& request)
+    void updateGathering(UpdateGatheringRequest& request, std::function<void(AsyncUpdateGatheringResult&)> callback)
     {
         UpdateGatheringTask& task = *new UpdateGatheringTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2161,7 +2161,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateGatheringByUserId(std::function<void(AsyncUpdateGatheringByUserIdResult&)> callback, UpdateGatheringByUserIdRequest& request)
+    void updateGatheringByUserId(UpdateGatheringByUserIdRequest& request, std::function<void(AsyncUpdateGatheringByUserIdResult&)> callback)
     {
         UpdateGatheringByUserIdTask& task = *new UpdateGatheringByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2177,7 +2177,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void doMatchmakingByPlayer(std::function<void(AsyncDoMatchmakingByPlayerResult&)> callback, DoMatchmakingByPlayerRequest& request)
+    void doMatchmakingByPlayer(DoMatchmakingByPlayerRequest& request, std::function<void(AsyncDoMatchmakingByPlayerResult&)> callback)
     {
         DoMatchmakingByPlayerTask& task = *new DoMatchmakingByPlayerTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2193,7 +2193,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void doMatchmaking(std::function<void(AsyncDoMatchmakingResult&)> callback, DoMatchmakingRequest& request)
+    void doMatchmaking(DoMatchmakingRequest& request, std::function<void(AsyncDoMatchmakingResult&)> callback)
     {
         DoMatchmakingTask& task = *new DoMatchmakingTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2205,7 +2205,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getGathering(std::function<void(AsyncGetGatheringResult&)> callback, GetGatheringRequest& request)
+    void getGathering(GetGatheringRequest& request, std::function<void(AsyncGetGatheringResult&)> callback)
     {
         GetGatheringTask& task = *new GetGatheringTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2219,7 +2219,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void cancelMatchmaking(std::function<void(AsyncCancelMatchmakingResult&)> callback, CancelMatchmakingRequest& request)
+    void cancelMatchmaking(CancelMatchmakingRequest& request, std::function<void(AsyncCancelMatchmakingResult&)> callback)
     {
         CancelMatchmakingTask& task = *new CancelMatchmakingTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2233,7 +2233,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void cancelMatchmakingByUserId(std::function<void(AsyncCancelMatchmakingByUserIdResult&)> callback, CancelMatchmakingByUserIdRequest& request)
+    void cancelMatchmakingByUserId(CancelMatchmakingByUserIdRequest& request, std::function<void(AsyncCancelMatchmakingByUserIdResult&)> callback)
     {
         CancelMatchmakingByUserIdTask& task = *new CancelMatchmakingByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2245,7 +2245,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteGathering(std::function<void(AsyncDeleteGatheringResult&)> callback, DeleteGatheringRequest& request)
+    void deleteGathering(DeleteGatheringRequest& request, std::function<void(AsyncDeleteGatheringResult&)> callback)
     {
         DeleteGatheringTask& task = *new DeleteGatheringTask(getGs2WebSocketSession(), request, callback);
         task.execute();

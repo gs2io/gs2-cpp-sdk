@@ -17,6 +17,7 @@
 #include "StringVariable.hpp"
 #include "List.hpp"
 #include "StringHolder.hpp"
+#include <cctype>
 #include <cstring>
 
 GS2_START_OF_NAMESPACE

@@ -209,7 +209,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeNamespacesResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -256,7 +256,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -305,7 +305,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceStatusResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -342,7 +342,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -379,7 +379,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -427,7 +427,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -469,7 +469,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeMutexes(std::function<void(AsyncDescribeMutexesResult&)> callback, DescribeMutexesRequest& request)
+    void describeMutexes(DescribeMutexesRequest& request, std::function<void(AsyncDescribeMutexesResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeMutexesResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -528,7 +528,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeMutexesByUserId(std::function<void(AsyncDescribeMutexesByUserIdResult&)> callback, DescribeMutexesByUserIdRequest& request)
+    void describeMutexesByUserId(DescribeMutexesByUserIdRequest& request, std::function<void(AsyncDescribeMutexesByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeMutexesByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -587,7 +587,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void lock(std::function<void(AsyncLockResult&)> callback, LockRequest& request)
+    void lock(LockRequest& request, std::function<void(AsyncLockResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<LockResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -652,7 +652,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void lockByUserId(std::function<void(AsyncLockByUserIdResult&)> callback, LockByUserIdRequest& request)
+    void lockByUserId(LockByUserIdRequest& request, std::function<void(AsyncLockByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<LockByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -717,7 +717,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void unlock(std::function<void(AsyncUnlockResult&)> callback, UnlockRequest& request)
+    void unlock(UnlockRequest& request, std::function<void(AsyncUnlockResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UnlockResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -777,7 +777,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void unlockByUserId(std::function<void(AsyncUnlockByUserIdResult&)> callback, UnlockByUserIdRequest& request)
+    void unlockByUserId(UnlockByUserIdRequest& request, std::function<void(AsyncUnlockByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UnlockByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -837,7 +837,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getMutex(std::function<void(AsyncGetMutexResult&)> callback, GetMutexRequest& request)
+    void getMutex(GetMutexRequest& request, std::function<void(AsyncGetMutexResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetMutexResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -886,7 +886,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getMutexByUserId(std::function<void(AsyncGetMutexByUserIdResult&)> callback, GetMutexByUserIdRequest& request)
+    void getMutexByUserId(GetMutexByUserIdRequest& request, std::function<void(AsyncGetMutexByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetMutexByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -935,7 +935,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteMutexByUserId(std::function<void(AsyncDeleteMutexByUserIdResult&)> callback, DeleteMutexByUserIdRequest& request)
+    void deleteMutexByUserId(DeleteMutexByUserIdRequest& request, std::function<void(AsyncDeleteMutexByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteMutexByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();

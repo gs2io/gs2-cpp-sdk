@@ -393,7 +393,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeNamespacesResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -440,7 +440,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -489,7 +489,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceStatusResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -526,7 +526,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -563,7 +563,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -611,7 +611,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -653,7 +653,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCounters(std::function<void(AsyncDescribeCountersResult&)> callback, DescribeCountersRequest& request)
+    void describeCounters(DescribeCountersRequest& request, std::function<void(AsyncDescribeCountersResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeCountersResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -719,7 +719,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCountersByUserId(std::function<void(AsyncDescribeCountersByUserIdResult&)> callback, DescribeCountersByUserIdRequest& request)
+    void describeCountersByUserId(DescribeCountersByUserIdRequest& request, std::function<void(AsyncDescribeCountersByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeCountersByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -785,7 +785,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCounter(std::function<void(AsyncGetCounterResult&)> callback, GetCounterRequest& request)
+    void getCounter(GetCounterRequest& request, std::function<void(AsyncGetCounterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetCounterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -838,7 +838,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCounterByUserId(std::function<void(AsyncGetCounterByUserIdResult&)> callback, GetCounterByUserIdRequest& request)
+    void getCounterByUserId(GetCounterByUserIdRequest& request, std::function<void(AsyncGetCounterByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetCounterByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -891,7 +891,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void countUpByUserId(std::function<void(AsyncCountUpByUserIdResult&)> callback, CountUpByUserIdRequest& request)
+    void countUpByUserId(CountUpByUserIdRequest& request, std::function<void(AsyncCountUpByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CountUpByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -960,7 +960,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteCounterByUserId(std::function<void(AsyncDeleteCounterByUserIdResult&)> callback, DeleteCounterByUserIdRequest& request)
+    void deleteCounterByUserId(DeleteCounterByUserIdRequest& request, std::function<void(AsyncDeleteCounterByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteCounterByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1018,7 +1018,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void countUpByStampTask(std::function<void(AsyncCountUpByStampTaskResult&)> callback, CountUpByStampTaskRequest& request)
+    void countUpByStampTask(CountUpByStampTaskRequest& request, std::function<void(AsyncCountUpByStampTaskResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CountUpByStampTaskResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1071,7 +1071,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteByStampSheet(std::function<void(AsyncDeleteByStampSheetResult&)> callback, DeleteByStampSheetRequest& request)
+    void deleteByStampSheet(DeleteByStampSheetRequest& request, std::function<void(AsyncDeleteByStampSheetResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteByStampSheetResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1123,7 +1123,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeLimitModelMasters(std::function<void(AsyncDescribeLimitModelMastersResult&)> callback, DescribeLimitModelMastersRequest& request)
+    void describeLimitModelMasters(DescribeLimitModelMastersRequest& request, std::function<void(AsyncDescribeLimitModelMastersResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeLimitModelMastersResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1174,7 +1174,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createLimitModelMaster(std::function<void(AsyncCreateLimitModelMasterResult&)> callback, CreateLimitModelMasterRequest& request)
+    void createLimitModelMaster(CreateLimitModelMasterRequest& request, std::function<void(AsyncCreateLimitModelMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateLimitModelMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1252,7 +1252,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getLimitModelMaster(std::function<void(AsyncGetLimitModelMasterResult&)> callback, GetLimitModelMasterRequest& request)
+    void getLimitModelMaster(GetLimitModelMasterRequest& request, std::function<void(AsyncGetLimitModelMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetLimitModelMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1293,7 +1293,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateLimitModelMaster(std::function<void(AsyncUpdateLimitModelMasterResult&)> callback, UpdateLimitModelMasterRequest& request)
+    void updateLimitModelMaster(UpdateLimitModelMasterRequest& request, std::function<void(AsyncUpdateLimitModelMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateLimitModelMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1370,7 +1370,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteLimitModelMaster(std::function<void(AsyncDeleteLimitModelMasterResult&)> callback, DeleteLimitModelMasterRequest& request)
+    void deleteLimitModelMaster(DeleteLimitModelMasterRequest& request, std::function<void(AsyncDeleteLimitModelMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteLimitModelMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1416,7 +1416,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
+    void exportMaster(ExportMasterRequest& request, std::function<void(AsyncExportMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<ExportMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1453,7 +1453,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCurrentLimitMaster(std::function<void(AsyncGetCurrentLimitMasterResult&)> callback, GetCurrentLimitMasterRequest& request)
+    void getCurrentLimitMaster(GetCurrentLimitMasterRequest& request, std::function<void(AsyncGetCurrentLimitMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetCurrentLimitMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1490,7 +1490,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentLimitMaster(std::function<void(AsyncUpdateCurrentLimitMasterResult&)> callback, UpdateCurrentLimitMasterRequest& request)
+    void updateCurrentLimitMaster(UpdateCurrentLimitMasterRequest& request, std::function<void(AsyncUpdateCurrentLimitMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateCurrentLimitMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1538,7 +1538,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentLimitMasterFromGitHub(std::function<void(AsyncUpdateCurrentLimitMasterFromGitHubResult&)> callback, UpdateCurrentLimitMasterFromGitHubRequest& request)
+    void updateCurrentLimitMasterFromGitHub(UpdateCurrentLimitMasterFromGitHubRequest& request, std::function<void(AsyncUpdateCurrentLimitMasterFromGitHubResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateCurrentLimitMasterFromGitHubResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1586,7 +1586,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeLimitModels(std::function<void(AsyncDescribeLimitModelsResult&)> callback, DescribeLimitModelsRequest& request)
+    void describeLimitModels(DescribeLimitModelsRequest& request, std::function<void(AsyncDescribeLimitModelsResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeLimitModelsResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1623,7 +1623,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getLimitModel(std::function<void(AsyncGetLimitModelResult&)> callback, GetLimitModelRequest& request)
+    void getLimitModel(GetLimitModelRequest& request, std::function<void(AsyncGetLimitModelResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetLimitModelResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();

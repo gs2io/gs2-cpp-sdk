@@ -2500,7 +2500,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         DescribeNamespacesTask& task = *new DescribeNamespacesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2512,7 +2512,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         CreateNamespaceTask& task = *new CreateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2524,7 +2524,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2536,7 +2536,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         GetNamespaceTask& task = *new GetNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2548,7 +2548,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         UpdateNamespaceTask& task = *new UpdateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2560,7 +2560,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         DeleteNamespaceTask& task = *new DeleteNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2572,7 +2572,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCounters(std::function<void(AsyncDescribeCountersResult&)> callback, DescribeCountersRequest& request)
+    void describeCounters(DescribeCountersRequest& request, std::function<void(AsyncDescribeCountersResult&)> callback)
     {
         DescribeCountersTask& task = *new DescribeCountersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2584,7 +2584,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCountersByUserId(std::function<void(AsyncDescribeCountersByUserIdResult&)> callback, DescribeCountersByUserIdRequest& request)
+    void describeCountersByUserId(DescribeCountersByUserIdRequest& request, std::function<void(AsyncDescribeCountersByUserIdResult&)> callback)
     {
         DescribeCountersByUserIdTask& task = *new DescribeCountersByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2596,7 +2596,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCounter(std::function<void(AsyncGetCounterResult&)> callback, GetCounterRequest& request)
+    void getCounter(GetCounterRequest& request, std::function<void(AsyncGetCounterResult&)> callback)
     {
         GetCounterTask& task = *new GetCounterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2608,7 +2608,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCounterByUserId(std::function<void(AsyncGetCounterByUserIdResult&)> callback, GetCounterByUserIdRequest& request)
+    void getCounterByUserId(GetCounterByUserIdRequest& request, std::function<void(AsyncGetCounterByUserIdResult&)> callback)
     {
         GetCounterByUserIdTask& task = *new GetCounterByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2620,7 +2620,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void countUpByUserId(std::function<void(AsyncCountUpByUserIdResult&)> callback, CountUpByUserIdRequest& request)
+    void countUpByUserId(CountUpByUserIdRequest& request, std::function<void(AsyncCountUpByUserIdResult&)> callback)
     {
         CountUpByUserIdTask& task = *new CountUpByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2632,7 +2632,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteCounterByUserId(std::function<void(AsyncDeleteCounterByUserIdResult&)> callback, DeleteCounterByUserIdRequest& request)
+    void deleteCounterByUserId(DeleteCounterByUserIdRequest& request, std::function<void(AsyncDeleteCounterByUserIdResult&)> callback)
     {
         DeleteCounterByUserIdTask& task = *new DeleteCounterByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2644,7 +2644,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void countUpByStampTask(std::function<void(AsyncCountUpByStampTaskResult&)> callback, CountUpByStampTaskRequest& request)
+    void countUpByStampTask(CountUpByStampTaskRequest& request, std::function<void(AsyncCountUpByStampTaskResult&)> callback)
     {
         CountUpByStampTaskTask& task = *new CountUpByStampTaskTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2656,7 +2656,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteByStampSheet(std::function<void(AsyncDeleteByStampSheetResult&)> callback, DeleteByStampSheetRequest& request)
+    void deleteByStampSheet(DeleteByStampSheetRequest& request, std::function<void(AsyncDeleteByStampSheetResult&)> callback)
     {
         DeleteByStampSheetTask& task = *new DeleteByStampSheetTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2668,7 +2668,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeLimitModelMasters(std::function<void(AsyncDescribeLimitModelMastersResult&)> callback, DescribeLimitModelMastersRequest& request)
+    void describeLimitModelMasters(DescribeLimitModelMastersRequest& request, std::function<void(AsyncDescribeLimitModelMastersResult&)> callback)
     {
         DescribeLimitModelMastersTask& task = *new DescribeLimitModelMastersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2680,7 +2680,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createLimitModelMaster(std::function<void(AsyncCreateLimitModelMasterResult&)> callback, CreateLimitModelMasterRequest& request)
+    void createLimitModelMaster(CreateLimitModelMasterRequest& request, std::function<void(AsyncCreateLimitModelMasterResult&)> callback)
     {
         CreateLimitModelMasterTask& task = *new CreateLimitModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2692,7 +2692,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getLimitModelMaster(std::function<void(AsyncGetLimitModelMasterResult&)> callback, GetLimitModelMasterRequest& request)
+    void getLimitModelMaster(GetLimitModelMasterRequest& request, std::function<void(AsyncGetLimitModelMasterResult&)> callback)
     {
         GetLimitModelMasterTask& task = *new GetLimitModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2704,7 +2704,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateLimitModelMaster(std::function<void(AsyncUpdateLimitModelMasterResult&)> callback, UpdateLimitModelMasterRequest& request)
+    void updateLimitModelMaster(UpdateLimitModelMasterRequest& request, std::function<void(AsyncUpdateLimitModelMasterResult&)> callback)
     {
         UpdateLimitModelMasterTask& task = *new UpdateLimitModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2716,7 +2716,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteLimitModelMaster(std::function<void(AsyncDeleteLimitModelMasterResult&)> callback, DeleteLimitModelMasterRequest& request)
+    void deleteLimitModelMaster(DeleteLimitModelMasterRequest& request, std::function<void(AsyncDeleteLimitModelMasterResult&)> callback)
     {
         DeleteLimitModelMasterTask& task = *new DeleteLimitModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2728,7 +2728,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
+    void exportMaster(ExportMasterRequest& request, std::function<void(AsyncExportMasterResult&)> callback)
     {
         ExportMasterTask& task = *new ExportMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2740,7 +2740,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCurrentLimitMaster(std::function<void(AsyncGetCurrentLimitMasterResult&)> callback, GetCurrentLimitMasterRequest& request)
+    void getCurrentLimitMaster(GetCurrentLimitMasterRequest& request, std::function<void(AsyncGetCurrentLimitMasterResult&)> callback)
     {
         GetCurrentLimitMasterTask& task = *new GetCurrentLimitMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2752,7 +2752,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentLimitMaster(std::function<void(AsyncUpdateCurrentLimitMasterResult&)> callback, UpdateCurrentLimitMasterRequest& request)
+    void updateCurrentLimitMaster(UpdateCurrentLimitMasterRequest& request, std::function<void(AsyncUpdateCurrentLimitMasterResult&)> callback)
     {
         UpdateCurrentLimitMasterTask& task = *new UpdateCurrentLimitMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2764,7 +2764,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentLimitMasterFromGitHub(std::function<void(AsyncUpdateCurrentLimitMasterFromGitHubResult&)> callback, UpdateCurrentLimitMasterFromGitHubRequest& request)
+    void updateCurrentLimitMasterFromGitHub(UpdateCurrentLimitMasterFromGitHubRequest& request, std::function<void(AsyncUpdateCurrentLimitMasterFromGitHubResult&)> callback)
     {
         UpdateCurrentLimitMasterFromGitHubTask& task = *new UpdateCurrentLimitMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2776,7 +2776,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeLimitModels(std::function<void(AsyncDescribeLimitModelsResult&)> callback, DescribeLimitModelsRequest& request)
+    void describeLimitModels(DescribeLimitModelsRequest& request, std::function<void(AsyncDescribeLimitModelsResult&)> callback)
     {
         DescribeLimitModelsTask& task = *new DescribeLimitModelsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2788,7 +2788,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getLimitModel(std::function<void(AsyncGetLimitModelResult&)> callback, GetLimitModelRequest& request)
+    void getLimitModel(GetLimitModelRequest& request, std::function<void(AsyncGetLimitModelResult&)> callback)
     {
         GetLimitModelTask& task = *new GetLimitModelTask(getGs2WebSocketSession(), request, callback);
         task.execute();

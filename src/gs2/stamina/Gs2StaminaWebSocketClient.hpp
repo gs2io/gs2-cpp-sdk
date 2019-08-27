@@ -3854,7 +3854,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         DescribeNamespacesTask& task = *new DescribeNamespacesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3866,7 +3866,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         CreateNamespaceTask& task = *new CreateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3878,7 +3878,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3890,7 +3890,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         GetNamespaceTask& task = *new GetNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3902,7 +3902,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         UpdateNamespaceTask& task = *new UpdateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3914,7 +3914,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         DeleteNamespaceTask& task = *new DeleteNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3926,7 +3926,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeStaminaModelMasters(std::function<void(AsyncDescribeStaminaModelMastersResult&)> callback, DescribeStaminaModelMastersRequest& request)
+    void describeStaminaModelMasters(DescribeStaminaModelMastersRequest& request, std::function<void(AsyncDescribeStaminaModelMastersResult&)> callback)
     {
         DescribeStaminaModelMastersTask& task = *new DescribeStaminaModelMastersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3938,7 +3938,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createStaminaModelMaster(std::function<void(AsyncCreateStaminaModelMasterResult&)> callback, CreateStaminaModelMasterRequest& request)
+    void createStaminaModelMaster(CreateStaminaModelMasterRequest& request, std::function<void(AsyncCreateStaminaModelMasterResult&)> callback)
     {
         CreateStaminaModelMasterTask& task = *new CreateStaminaModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3950,7 +3950,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStaminaModelMaster(std::function<void(AsyncGetStaminaModelMasterResult&)> callback, GetStaminaModelMasterRequest& request)
+    void getStaminaModelMaster(GetStaminaModelMasterRequest& request, std::function<void(AsyncGetStaminaModelMasterResult&)> callback)
     {
         GetStaminaModelMasterTask& task = *new GetStaminaModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3962,7 +3962,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateStaminaModelMaster(std::function<void(AsyncUpdateStaminaModelMasterResult&)> callback, UpdateStaminaModelMasterRequest& request)
+    void updateStaminaModelMaster(UpdateStaminaModelMasterRequest& request, std::function<void(AsyncUpdateStaminaModelMasterResult&)> callback)
     {
         UpdateStaminaModelMasterTask& task = *new UpdateStaminaModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3974,7 +3974,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteStaminaModelMaster(std::function<void(AsyncDeleteStaminaModelMasterResult&)> callback, DeleteStaminaModelMasterRequest& request)
+    void deleteStaminaModelMaster(DeleteStaminaModelMasterRequest& request, std::function<void(AsyncDeleteStaminaModelMasterResult&)> callback)
     {
         DeleteStaminaModelMasterTask& task = *new DeleteStaminaModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3986,7 +3986,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeMaxStaminaTableMasters(std::function<void(AsyncDescribeMaxStaminaTableMastersResult&)> callback, DescribeMaxStaminaTableMastersRequest& request)
+    void describeMaxStaminaTableMasters(DescribeMaxStaminaTableMastersRequest& request, std::function<void(AsyncDescribeMaxStaminaTableMastersResult&)> callback)
     {
         DescribeMaxStaminaTableMastersTask& task = *new DescribeMaxStaminaTableMastersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3998,7 +3998,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createMaxStaminaTableMaster(std::function<void(AsyncCreateMaxStaminaTableMasterResult&)> callback, CreateMaxStaminaTableMasterRequest& request)
+    void createMaxStaminaTableMaster(CreateMaxStaminaTableMasterRequest& request, std::function<void(AsyncCreateMaxStaminaTableMasterResult&)> callback)
     {
         CreateMaxStaminaTableMasterTask& task = *new CreateMaxStaminaTableMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4010,7 +4010,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getMaxStaminaTableMaster(std::function<void(AsyncGetMaxStaminaTableMasterResult&)> callback, GetMaxStaminaTableMasterRequest& request)
+    void getMaxStaminaTableMaster(GetMaxStaminaTableMasterRequest& request, std::function<void(AsyncGetMaxStaminaTableMasterResult&)> callback)
     {
         GetMaxStaminaTableMasterTask& task = *new GetMaxStaminaTableMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4022,7 +4022,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateMaxStaminaTableMaster(std::function<void(AsyncUpdateMaxStaminaTableMasterResult&)> callback, UpdateMaxStaminaTableMasterRequest& request)
+    void updateMaxStaminaTableMaster(UpdateMaxStaminaTableMasterRequest& request, std::function<void(AsyncUpdateMaxStaminaTableMasterResult&)> callback)
     {
         UpdateMaxStaminaTableMasterTask& task = *new UpdateMaxStaminaTableMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4034,7 +4034,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteMaxStaminaTableMaster(std::function<void(AsyncDeleteMaxStaminaTableMasterResult&)> callback, DeleteMaxStaminaTableMasterRequest& request)
+    void deleteMaxStaminaTableMaster(DeleteMaxStaminaTableMasterRequest& request, std::function<void(AsyncDeleteMaxStaminaTableMasterResult&)> callback)
     {
         DeleteMaxStaminaTableMasterTask& task = *new DeleteMaxStaminaTableMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4046,7 +4046,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
+    void exportMaster(ExportMasterRequest& request, std::function<void(AsyncExportMasterResult&)> callback)
     {
         ExportMasterTask& task = *new ExportMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4058,7 +4058,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCurrentStaminaMaster(std::function<void(AsyncGetCurrentStaminaMasterResult&)> callback, GetCurrentStaminaMasterRequest& request)
+    void getCurrentStaminaMaster(GetCurrentStaminaMasterRequest& request, std::function<void(AsyncGetCurrentStaminaMasterResult&)> callback)
     {
         GetCurrentStaminaMasterTask& task = *new GetCurrentStaminaMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4070,7 +4070,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentStaminaMaster(std::function<void(AsyncUpdateCurrentStaminaMasterResult&)> callback, UpdateCurrentStaminaMasterRequest& request)
+    void updateCurrentStaminaMaster(UpdateCurrentStaminaMasterRequest& request, std::function<void(AsyncUpdateCurrentStaminaMasterResult&)> callback)
     {
         UpdateCurrentStaminaMasterTask& task = *new UpdateCurrentStaminaMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4082,7 +4082,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentStaminaMasterFromGitHub(std::function<void(AsyncUpdateCurrentStaminaMasterFromGitHubResult&)> callback, UpdateCurrentStaminaMasterFromGitHubRequest& request)
+    void updateCurrentStaminaMasterFromGitHub(UpdateCurrentStaminaMasterFromGitHubRequest& request, std::function<void(AsyncUpdateCurrentStaminaMasterFromGitHubResult&)> callback)
     {
         UpdateCurrentStaminaMasterFromGitHubTask& task = *new UpdateCurrentStaminaMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4094,7 +4094,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeStaminaModels(std::function<void(AsyncDescribeStaminaModelsResult&)> callback, DescribeStaminaModelsRequest& request)
+    void describeStaminaModels(DescribeStaminaModelsRequest& request, std::function<void(AsyncDescribeStaminaModelsResult&)> callback)
     {
         DescribeStaminaModelsTask& task = *new DescribeStaminaModelsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4106,7 +4106,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStaminaModel(std::function<void(AsyncGetStaminaModelResult&)> callback, GetStaminaModelRequest& request)
+    void getStaminaModel(GetStaminaModelRequest& request, std::function<void(AsyncGetStaminaModelResult&)> callback)
     {
         GetStaminaModelTask& task = *new GetStaminaModelTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4118,7 +4118,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeStaminas(std::function<void(AsyncDescribeStaminasResult&)> callback, DescribeStaminasRequest& request)
+    void describeStaminas(DescribeStaminasRequest& request, std::function<void(AsyncDescribeStaminasResult&)> callback)
     {
         DescribeStaminasTask& task = *new DescribeStaminasTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4130,7 +4130,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeStaminasByUserId(std::function<void(AsyncDescribeStaminasByUserIdResult&)> callback, DescribeStaminasByUserIdRequest& request)
+    void describeStaminasByUserId(DescribeStaminasByUserIdRequest& request, std::function<void(AsyncDescribeStaminasByUserIdResult&)> callback)
     {
         DescribeStaminasByUserIdTask& task = *new DescribeStaminasByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4142,7 +4142,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStamina(std::function<void(AsyncGetStaminaResult&)> callback, GetStaminaRequest& request)
+    void getStamina(GetStaminaRequest& request, std::function<void(AsyncGetStaminaResult&)> callback)
     {
         GetStaminaTask& task = *new GetStaminaTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4154,7 +4154,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStaminaByUserId(std::function<void(AsyncGetStaminaByUserIdResult&)> callback, GetStaminaByUserIdRequest& request)
+    void getStaminaByUserId(GetStaminaByUserIdRequest& request, std::function<void(AsyncGetStaminaByUserIdResult&)> callback)
     {
         GetStaminaByUserIdTask& task = *new GetStaminaByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4166,7 +4166,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateStaminaByUserId(std::function<void(AsyncUpdateStaminaByUserIdResult&)> callback, UpdateStaminaByUserIdRequest& request)
+    void updateStaminaByUserId(UpdateStaminaByUserIdRequest& request, std::function<void(AsyncUpdateStaminaByUserIdResult&)> callback)
     {
         UpdateStaminaByUserIdTask& task = *new UpdateStaminaByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4178,7 +4178,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void consumeStamina(std::function<void(AsyncConsumeStaminaResult&)> callback, ConsumeStaminaRequest& request)
+    void consumeStamina(ConsumeStaminaRequest& request, std::function<void(AsyncConsumeStaminaResult&)> callback)
     {
         ConsumeStaminaTask& task = *new ConsumeStaminaTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4190,7 +4190,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void consumeStaminaByUserId(std::function<void(AsyncConsumeStaminaByUserIdResult&)> callback, ConsumeStaminaByUserIdRequest& request)
+    void consumeStaminaByUserId(ConsumeStaminaByUserIdRequest& request, std::function<void(AsyncConsumeStaminaByUserIdResult&)> callback)
     {
         ConsumeStaminaByUserIdTask& task = *new ConsumeStaminaByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4202,7 +4202,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void recoverStaminaByUserId(std::function<void(AsyncRecoverStaminaByUserIdResult&)> callback, RecoverStaminaByUserIdRequest& request)
+    void recoverStaminaByUserId(RecoverStaminaByUserIdRequest& request, std::function<void(AsyncRecoverStaminaByUserIdResult&)> callback)
     {
         RecoverStaminaByUserIdTask& task = *new RecoverStaminaByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4214,7 +4214,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void raiseMaxValueByUserId(std::function<void(AsyncRaiseMaxValueByUserIdResult&)> callback, RaiseMaxValueByUserIdRequest& request)
+    void raiseMaxValueByUserId(RaiseMaxValueByUserIdRequest& request, std::function<void(AsyncRaiseMaxValueByUserIdResult&)> callback)
     {
         RaiseMaxValueByUserIdTask& task = *new RaiseMaxValueByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4226,7 +4226,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void setMaxValueByUserId(std::function<void(AsyncSetMaxValueByUserIdResult&)> callback, SetMaxValueByUserIdRequest& request)
+    void setMaxValueByUserId(SetMaxValueByUserIdRequest& request, std::function<void(AsyncSetMaxValueByUserIdResult&)> callback)
     {
         SetMaxValueByUserIdTask& task = *new SetMaxValueByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4238,7 +4238,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void setMaxValueByStatus(std::function<void(AsyncSetMaxValueByStatusResult&)> callback, SetMaxValueByStatusRequest& request)
+    void setMaxValueByStatus(SetMaxValueByStatusRequest& request, std::function<void(AsyncSetMaxValueByStatusResult&)> callback)
     {
         SetMaxValueByStatusTask& task = *new SetMaxValueByStatusTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4250,7 +4250,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteStaminaByUserId(std::function<void(AsyncDeleteStaminaByUserIdResult&)> callback, DeleteStaminaByUserIdRequest& request)
+    void deleteStaminaByUserId(DeleteStaminaByUserIdRequest& request, std::function<void(AsyncDeleteStaminaByUserIdResult&)> callback)
     {
         DeleteStaminaByUserIdTask& task = *new DeleteStaminaByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4262,7 +4262,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void recoverStaminaByStampSheet(std::function<void(AsyncRecoverStaminaByStampSheetResult&)> callback, RecoverStaminaByStampSheetRequest& request)
+    void recoverStaminaByStampSheet(RecoverStaminaByStampSheetRequest& request, std::function<void(AsyncRecoverStaminaByStampSheetResult&)> callback)
     {
         RecoverStaminaByStampSheetTask& task = *new RecoverStaminaByStampSheetTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4274,7 +4274,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void raiseMaxValueByStampSheet(std::function<void(AsyncRaiseMaxValueByStampSheetResult&)> callback, RaiseMaxValueByStampSheetRequest& request)
+    void raiseMaxValueByStampSheet(RaiseMaxValueByStampSheetRequest& request, std::function<void(AsyncRaiseMaxValueByStampSheetResult&)> callback)
     {
         RaiseMaxValueByStampSheetTask& task = *new RaiseMaxValueByStampSheetTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4286,7 +4286,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void setMaxValueByStampSheet(std::function<void(AsyncSetMaxValueByStampSheetResult&)> callback, SetMaxValueByStampSheetRequest& request)
+    void setMaxValueByStampSheet(SetMaxValueByStampSheetRequest& request, std::function<void(AsyncSetMaxValueByStampSheetResult&)> callback)
     {
         SetMaxValueByStampSheetTask& task = *new SetMaxValueByStampSheetTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4298,7 +4298,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void consumeStaminaByStampTask(std::function<void(AsyncConsumeStaminaByStampTaskResult&)> callback, ConsumeStaminaByStampTaskRequest& request)
+    void consumeStaminaByStampTask(ConsumeStaminaByStampTaskRequest& request, std::function<void(AsyncConsumeStaminaByStampTaskResult&)> callback)
     {
         ConsumeStaminaByStampTaskTask& task = *new ConsumeStaminaByStampTaskTask(getGs2WebSocketSession(), request, callback);
         task.execute();

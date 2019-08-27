@@ -2026,7 +2026,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         DescribeNamespacesTask& task = *new DescribeNamespacesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2038,7 +2038,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         CreateNamespaceTask& task = *new CreateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2050,7 +2050,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2062,7 +2062,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         GetNamespaceTask& task = *new GetNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2074,7 +2074,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         UpdateNamespaceTask& task = *new UpdateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2086,7 +2086,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         DeleteNamespaceTask& task = *new DeleteNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2098,7 +2098,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeMessages(std::function<void(AsyncDescribeMessagesResult&)> callback, DescribeMessagesRequest& request)
+    void describeMessages(DescribeMessagesRequest& request, std::function<void(AsyncDescribeMessagesResult&)> callback)
     {
         DescribeMessagesTask& task = *new DescribeMessagesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2110,7 +2110,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeMessagesByUserId(std::function<void(AsyncDescribeMessagesByUserIdResult&)> callback, DescribeMessagesByUserIdRequest& request)
+    void describeMessagesByUserId(DescribeMessagesByUserIdRequest& request, std::function<void(AsyncDescribeMessagesByUserIdResult&)> callback)
     {
         DescribeMessagesByUserIdTask& task = *new DescribeMessagesByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2122,7 +2122,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void sendMessageByUserId(std::function<void(AsyncSendMessageByUserIdResult&)> callback, SendMessageByUserIdRequest& request)
+    void sendMessageByUserId(SendMessageByUserIdRequest& request, std::function<void(AsyncSendMessageByUserIdResult&)> callback)
     {
         SendMessageByUserIdTask& task = *new SendMessageByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2134,7 +2134,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getMessage(std::function<void(AsyncGetMessageResult&)> callback, GetMessageRequest& request)
+    void getMessage(GetMessageRequest& request, std::function<void(AsyncGetMessageResult&)> callback)
     {
         GetMessageTask& task = *new GetMessageTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2146,7 +2146,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getMessageByUserId(std::function<void(AsyncGetMessageByUserIdResult&)> callback, GetMessageByUserIdRequest& request)
+    void getMessageByUserId(GetMessageByUserIdRequest& request, std::function<void(AsyncGetMessageByUserIdResult&)> callback)
     {
         GetMessageByUserIdTask& task = *new GetMessageByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2158,7 +2158,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void openMessage(std::function<void(AsyncOpenMessageResult&)> callback, OpenMessageRequest& request)
+    void openMessage(OpenMessageRequest& request, std::function<void(AsyncOpenMessageResult&)> callback)
     {
         OpenMessageTask& task = *new OpenMessageTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2170,7 +2170,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void openMessageByUserId(std::function<void(AsyncOpenMessageByUserIdResult&)> callback, OpenMessageByUserIdRequest& request)
+    void openMessageByUserId(OpenMessageByUserIdRequest& request, std::function<void(AsyncOpenMessageByUserIdResult&)> callback)
     {
         OpenMessageByUserIdTask& task = *new OpenMessageByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2182,7 +2182,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void readMessage(std::function<void(AsyncReadMessageResult&)> callback, ReadMessageRequest& request)
+    void readMessage(ReadMessageRequest& request, std::function<void(AsyncReadMessageResult&)> callback)
     {
         ReadMessageTask& task = *new ReadMessageTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2194,7 +2194,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void readMessageByUserId(std::function<void(AsyncReadMessageByUserIdResult&)> callback, ReadMessageByUserIdRequest& request)
+    void readMessageByUserId(ReadMessageByUserIdRequest& request, std::function<void(AsyncReadMessageByUserIdResult&)> callback)
     {
         ReadMessageByUserIdTask& task = *new ReadMessageByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2206,7 +2206,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteMessage(std::function<void(AsyncDeleteMessageResult&)> callback, DeleteMessageRequest& request)
+    void deleteMessage(DeleteMessageRequest& request, std::function<void(AsyncDeleteMessageResult&)> callback)
     {
         DeleteMessageTask& task = *new DeleteMessageTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2218,7 +2218,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteMessageByUserId(std::function<void(AsyncDeleteMessageByUserIdResult&)> callback, DeleteMessageByUserIdRequest& request)
+    void deleteMessageByUserId(DeleteMessageByUserIdRequest& request, std::function<void(AsyncDeleteMessageByUserIdResult&)> callback)
     {
         DeleteMessageByUserIdTask& task = *new DeleteMessageByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2230,7 +2230,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void openByStampTask(std::function<void(AsyncOpenByStampTaskResult&)> callback, OpenByStampTaskRequest& request)
+    void openByStampTask(OpenByStampTaskRequest& request, std::function<void(AsyncOpenByStampTaskResult&)> callback)
     {
         OpenByStampTaskTask& task = *new OpenByStampTaskTask(getGs2WebSocketSession(), request, callback);
         task.execute();

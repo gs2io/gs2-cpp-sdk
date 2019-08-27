@@ -1496,7 +1496,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         DescribeNamespacesTask& task = *new DescribeNamespacesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1508,7 +1508,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         CreateNamespaceTask& task = *new CreateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1520,7 +1520,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1532,7 +1532,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         GetNamespaceTask& task = *new GetNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1544,7 +1544,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         UpdateNamespaceTask& task = *new UpdateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1556,7 +1556,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         DeleteNamespaceTask& task = *new DeleteNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1568,7 +1568,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeMutexes(std::function<void(AsyncDescribeMutexesResult&)> callback, DescribeMutexesRequest& request)
+    void describeMutexes(DescribeMutexesRequest& request, std::function<void(AsyncDescribeMutexesResult&)> callback)
     {
         DescribeMutexesTask& task = *new DescribeMutexesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1580,7 +1580,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeMutexesByUserId(std::function<void(AsyncDescribeMutexesByUserIdResult&)> callback, DescribeMutexesByUserIdRequest& request)
+    void describeMutexesByUserId(DescribeMutexesByUserIdRequest& request, std::function<void(AsyncDescribeMutexesByUserIdResult&)> callback)
     {
         DescribeMutexesByUserIdTask& task = *new DescribeMutexesByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1592,7 +1592,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void lock(std::function<void(AsyncLockResult&)> callback, LockRequest& request)
+    void lock(LockRequest& request, std::function<void(AsyncLockResult&)> callback)
     {
         LockTask& task = *new LockTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1604,7 +1604,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void lockByUserId(std::function<void(AsyncLockByUserIdResult&)> callback, LockByUserIdRequest& request)
+    void lockByUserId(LockByUserIdRequest& request, std::function<void(AsyncLockByUserIdResult&)> callback)
     {
         LockByUserIdTask& task = *new LockByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1616,7 +1616,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void unlock(std::function<void(AsyncUnlockResult&)> callback, UnlockRequest& request)
+    void unlock(UnlockRequest& request, std::function<void(AsyncUnlockResult&)> callback)
     {
         UnlockTask& task = *new UnlockTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1628,7 +1628,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void unlockByUserId(std::function<void(AsyncUnlockByUserIdResult&)> callback, UnlockByUserIdRequest& request)
+    void unlockByUserId(UnlockByUserIdRequest& request, std::function<void(AsyncUnlockByUserIdResult&)> callback)
     {
         UnlockByUserIdTask& task = *new UnlockByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1640,7 +1640,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getMutex(std::function<void(AsyncGetMutexResult&)> callback, GetMutexRequest& request)
+    void getMutex(GetMutexRequest& request, std::function<void(AsyncGetMutexResult&)> callback)
     {
         GetMutexTask& task = *new GetMutexTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1652,7 +1652,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getMutexByUserId(std::function<void(AsyncGetMutexByUserIdResult&)> callback, GetMutexByUserIdRequest& request)
+    void getMutexByUserId(GetMutexByUserIdRequest& request, std::function<void(AsyncGetMutexByUserIdResult&)> callback)
     {
         GetMutexByUserIdTask& task = *new GetMutexByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1664,7 +1664,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteMutexByUserId(std::function<void(AsyncDeleteMutexByUserIdResult&)> callback, DeleteMutexByUserIdRequest& request)
+    void deleteMutexByUserId(DeleteMutexByUserIdRequest& request, std::function<void(AsyncDeleteMutexByUserIdResult&)> callback)
     {
         DeleteMutexByUserIdTask& task = *new DeleteMutexByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();

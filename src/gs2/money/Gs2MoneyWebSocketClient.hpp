@@ -2389,7 +2389,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         DescribeNamespacesTask& task = *new DescribeNamespacesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2401,7 +2401,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         CreateNamespaceTask& task = *new CreateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2413,7 +2413,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2425,7 +2425,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         GetNamespaceTask& task = *new GetNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2437,7 +2437,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         UpdateNamespaceTask& task = *new UpdateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2449,7 +2449,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         DeleteNamespaceTask& task = *new DeleteNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2461,7 +2461,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWallets(std::function<void(AsyncDescribeWalletsResult&)> callback, DescribeWalletsRequest& request)
+    void describeWallets(DescribeWalletsRequest& request, std::function<void(AsyncDescribeWalletsResult&)> callback)
     {
         DescribeWalletsTask& task = *new DescribeWalletsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2473,7 +2473,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWalletsByUserId(std::function<void(AsyncDescribeWalletsByUserIdResult&)> callback, DescribeWalletsByUserIdRequest& request)
+    void describeWalletsByUserId(DescribeWalletsByUserIdRequest& request, std::function<void(AsyncDescribeWalletsByUserIdResult&)> callback)
     {
         DescribeWalletsByUserIdTask& task = *new DescribeWalletsByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2485,7 +2485,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void queryWallets(std::function<void(AsyncQueryWalletsResult&)> callback, QueryWalletsRequest& request)
+    void queryWallets(QueryWalletsRequest& request, std::function<void(AsyncQueryWalletsResult&)> callback)
     {
         QueryWalletsTask& task = *new QueryWalletsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2497,7 +2497,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getWallet(std::function<void(AsyncGetWalletResult&)> callback, GetWalletRequest& request)
+    void getWallet(GetWalletRequest& request, std::function<void(AsyncGetWalletResult&)> callback)
     {
         GetWalletTask& task = *new GetWalletTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2509,7 +2509,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getWalletByUserId(std::function<void(AsyncGetWalletByUserIdResult&)> callback, GetWalletByUserIdRequest& request)
+    void getWalletByUserId(GetWalletByUserIdRequest& request, std::function<void(AsyncGetWalletByUserIdResult&)> callback)
     {
         GetWalletByUserIdTask& task = *new GetWalletByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2521,7 +2521,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void depositByUserId(std::function<void(AsyncDepositByUserIdResult&)> callback, DepositByUserIdRequest& request)
+    void depositByUserId(DepositByUserIdRequest& request, std::function<void(AsyncDepositByUserIdResult&)> callback)
     {
         DepositByUserIdTask& task = *new DepositByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2533,7 +2533,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void withdraw(std::function<void(AsyncWithdrawResult&)> callback, WithdrawRequest& request)
+    void withdraw(WithdrawRequest& request, std::function<void(AsyncWithdrawResult&)> callback)
     {
         WithdrawTask& task = *new WithdrawTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2545,7 +2545,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void withdrawByUserId(std::function<void(AsyncWithdrawByUserIdResult&)> callback, WithdrawByUserIdRequest& request)
+    void withdrawByUserId(WithdrawByUserIdRequest& request, std::function<void(AsyncWithdrawByUserIdResult&)> callback)
     {
         WithdrawByUserIdTask& task = *new WithdrawByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2557,7 +2557,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void depositByStampSheet(std::function<void(AsyncDepositByStampSheetResult&)> callback, DepositByStampSheetRequest& request)
+    void depositByStampSheet(DepositByStampSheetRequest& request, std::function<void(AsyncDepositByStampSheetResult&)> callback)
     {
         DepositByStampSheetTask& task = *new DepositByStampSheetTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2569,7 +2569,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void withdrawByStampTask(std::function<void(AsyncWithdrawByStampTaskResult&)> callback, WithdrawByStampTaskRequest& request)
+    void withdrawByStampTask(WithdrawByStampTaskRequest& request, std::function<void(AsyncWithdrawByStampTaskResult&)> callback)
     {
         WithdrawByStampTaskTask& task = *new WithdrawByStampTaskTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2581,7 +2581,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWalletDetailsByUserId(std::function<void(AsyncDescribeWalletDetailsByUserIdResult&)> callback, DescribeWalletDetailsByUserIdRequest& request)
+    void describeWalletDetailsByUserId(DescribeWalletDetailsByUserIdRequest& request, std::function<void(AsyncDescribeWalletDetailsByUserIdResult&)> callback)
     {
         DescribeWalletDetailsByUserIdTask& task = *new DescribeWalletDetailsByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2593,7 +2593,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeReceipts(std::function<void(AsyncDescribeReceiptsResult&)> callback, DescribeReceiptsRequest& request)
+    void describeReceipts(DescribeReceiptsRequest& request, std::function<void(AsyncDescribeReceiptsResult&)> callback)
     {
         DescribeReceiptsTask& task = *new DescribeReceiptsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2605,7 +2605,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getByUserIdAndTransactionId(std::function<void(AsyncGetByUserIdAndTransactionIdResult&)> callback, GetByUserIdAndTransactionIdRequest& request)
+    void getByUserIdAndTransactionId(GetByUserIdAndTransactionIdRequest& request, std::function<void(AsyncGetByUserIdAndTransactionIdResult&)> callback)
     {
         GetByUserIdAndTransactionIdTask& task = *new GetByUserIdAndTransactionIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2617,7 +2617,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void recordReceipt(std::function<void(AsyncRecordReceiptResult&)> callback, RecordReceiptRequest& request)
+    void recordReceipt(RecordReceiptRequest& request, std::function<void(AsyncRecordReceiptResult&)> callback)
     {
         RecordReceiptTask& task = *new RecordReceiptTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2629,7 +2629,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void recordReceiptByStampTask(std::function<void(AsyncRecordReceiptByStampTaskResult&)> callback, RecordReceiptByStampTaskRequest& request)
+    void recordReceiptByStampTask(RecordReceiptByStampTaskRequest& request, std::function<void(AsyncRecordReceiptByStampTaskResult&)> callback)
     {
         RecordReceiptByStampTaskTask& task = *new RecordReceiptByStampTaskTask(getGs2WebSocketSession(), request, callback);
         task.execute();

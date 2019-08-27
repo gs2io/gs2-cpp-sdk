@@ -3317,7 +3317,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         DescribeNamespacesTask& task = *new DescribeNamespacesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3329,7 +3329,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         CreateNamespaceTask& task = *new CreateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3341,7 +3341,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3353,7 +3353,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         GetNamespaceTask& task = *new GetNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3365,7 +3365,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         UpdateNamespaceTask& task = *new UpdateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3377,7 +3377,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         DeleteNamespaceTask& task = *new DeleteNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3389,7 +3389,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeSalesItemMasters(std::function<void(AsyncDescribeSalesItemMastersResult&)> callback, DescribeSalesItemMastersRequest& request)
+    void describeSalesItemMasters(DescribeSalesItemMastersRequest& request, std::function<void(AsyncDescribeSalesItemMastersResult&)> callback)
     {
         DescribeSalesItemMastersTask& task = *new DescribeSalesItemMastersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3401,7 +3401,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createSalesItemMaster(std::function<void(AsyncCreateSalesItemMasterResult&)> callback, CreateSalesItemMasterRequest& request)
+    void createSalesItemMaster(CreateSalesItemMasterRequest& request, std::function<void(AsyncCreateSalesItemMasterResult&)> callback)
     {
         CreateSalesItemMasterTask& task = *new CreateSalesItemMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3413,7 +3413,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getSalesItemMaster(std::function<void(AsyncGetSalesItemMasterResult&)> callback, GetSalesItemMasterRequest& request)
+    void getSalesItemMaster(GetSalesItemMasterRequest& request, std::function<void(AsyncGetSalesItemMasterResult&)> callback)
     {
         GetSalesItemMasterTask& task = *new GetSalesItemMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3425,7 +3425,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateSalesItemMaster(std::function<void(AsyncUpdateSalesItemMasterResult&)> callback, UpdateSalesItemMasterRequest& request)
+    void updateSalesItemMaster(UpdateSalesItemMasterRequest& request, std::function<void(AsyncUpdateSalesItemMasterResult&)> callback)
     {
         UpdateSalesItemMasterTask& task = *new UpdateSalesItemMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3437,7 +3437,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteSalesItemMaster(std::function<void(AsyncDeleteSalesItemMasterResult&)> callback, DeleteSalesItemMasterRequest& request)
+    void deleteSalesItemMaster(DeleteSalesItemMasterRequest& request, std::function<void(AsyncDeleteSalesItemMasterResult&)> callback)
     {
         DeleteSalesItemMasterTask& task = *new DeleteSalesItemMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3449,7 +3449,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeSalesItemGroupMasters(std::function<void(AsyncDescribeSalesItemGroupMastersResult&)> callback, DescribeSalesItemGroupMastersRequest& request)
+    void describeSalesItemGroupMasters(DescribeSalesItemGroupMastersRequest& request, std::function<void(AsyncDescribeSalesItemGroupMastersResult&)> callback)
     {
         DescribeSalesItemGroupMastersTask& task = *new DescribeSalesItemGroupMastersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3461,7 +3461,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createSalesItemGroupMaster(std::function<void(AsyncCreateSalesItemGroupMasterResult&)> callback, CreateSalesItemGroupMasterRequest& request)
+    void createSalesItemGroupMaster(CreateSalesItemGroupMasterRequest& request, std::function<void(AsyncCreateSalesItemGroupMasterResult&)> callback)
     {
         CreateSalesItemGroupMasterTask& task = *new CreateSalesItemGroupMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3473,7 +3473,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getSalesItemGroupMaster(std::function<void(AsyncGetSalesItemGroupMasterResult&)> callback, GetSalesItemGroupMasterRequest& request)
+    void getSalesItemGroupMaster(GetSalesItemGroupMasterRequest& request, std::function<void(AsyncGetSalesItemGroupMasterResult&)> callback)
     {
         GetSalesItemGroupMasterTask& task = *new GetSalesItemGroupMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3485,7 +3485,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateSalesItemGroupMaster(std::function<void(AsyncUpdateSalesItemGroupMasterResult&)> callback, UpdateSalesItemGroupMasterRequest& request)
+    void updateSalesItemGroupMaster(UpdateSalesItemGroupMasterRequest& request, std::function<void(AsyncUpdateSalesItemGroupMasterResult&)> callback)
     {
         UpdateSalesItemGroupMasterTask& task = *new UpdateSalesItemGroupMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3497,7 +3497,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteSalesItemGroupMaster(std::function<void(AsyncDeleteSalesItemGroupMasterResult&)> callback, DeleteSalesItemGroupMasterRequest& request)
+    void deleteSalesItemGroupMaster(DeleteSalesItemGroupMasterRequest& request, std::function<void(AsyncDeleteSalesItemGroupMasterResult&)> callback)
     {
         DeleteSalesItemGroupMasterTask& task = *new DeleteSalesItemGroupMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3509,7 +3509,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeShowcaseMasters(std::function<void(AsyncDescribeShowcaseMastersResult&)> callback, DescribeShowcaseMastersRequest& request)
+    void describeShowcaseMasters(DescribeShowcaseMastersRequest& request, std::function<void(AsyncDescribeShowcaseMastersResult&)> callback)
     {
         DescribeShowcaseMastersTask& task = *new DescribeShowcaseMastersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3521,7 +3521,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createShowcaseMaster(std::function<void(AsyncCreateShowcaseMasterResult&)> callback, CreateShowcaseMasterRequest& request)
+    void createShowcaseMaster(CreateShowcaseMasterRequest& request, std::function<void(AsyncCreateShowcaseMasterResult&)> callback)
     {
         CreateShowcaseMasterTask& task = *new CreateShowcaseMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3533,7 +3533,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getShowcaseMaster(std::function<void(AsyncGetShowcaseMasterResult&)> callback, GetShowcaseMasterRequest& request)
+    void getShowcaseMaster(GetShowcaseMasterRequest& request, std::function<void(AsyncGetShowcaseMasterResult&)> callback)
     {
         GetShowcaseMasterTask& task = *new GetShowcaseMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3545,7 +3545,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateShowcaseMaster(std::function<void(AsyncUpdateShowcaseMasterResult&)> callback, UpdateShowcaseMasterRequest& request)
+    void updateShowcaseMaster(UpdateShowcaseMasterRequest& request, std::function<void(AsyncUpdateShowcaseMasterResult&)> callback)
     {
         UpdateShowcaseMasterTask& task = *new UpdateShowcaseMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3557,7 +3557,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteShowcaseMaster(std::function<void(AsyncDeleteShowcaseMasterResult&)> callback, DeleteShowcaseMasterRequest& request)
+    void deleteShowcaseMaster(DeleteShowcaseMasterRequest& request, std::function<void(AsyncDeleteShowcaseMasterResult&)> callback)
     {
         DeleteShowcaseMasterTask& task = *new DeleteShowcaseMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3569,7 +3569,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
+    void exportMaster(ExportMasterRequest& request, std::function<void(AsyncExportMasterResult&)> callback)
     {
         ExportMasterTask& task = *new ExportMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3581,7 +3581,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCurrentShowcaseMaster(std::function<void(AsyncGetCurrentShowcaseMasterResult&)> callback, GetCurrentShowcaseMasterRequest& request)
+    void getCurrentShowcaseMaster(GetCurrentShowcaseMasterRequest& request, std::function<void(AsyncGetCurrentShowcaseMasterResult&)> callback)
     {
         GetCurrentShowcaseMasterTask& task = *new GetCurrentShowcaseMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3593,7 +3593,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentShowcaseMaster(std::function<void(AsyncUpdateCurrentShowcaseMasterResult&)> callback, UpdateCurrentShowcaseMasterRequest& request)
+    void updateCurrentShowcaseMaster(UpdateCurrentShowcaseMasterRequest& request, std::function<void(AsyncUpdateCurrentShowcaseMasterResult&)> callback)
     {
         UpdateCurrentShowcaseMasterTask& task = *new UpdateCurrentShowcaseMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3605,7 +3605,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentShowcaseMasterFromGitHub(std::function<void(AsyncUpdateCurrentShowcaseMasterFromGitHubResult&)> callback, UpdateCurrentShowcaseMasterFromGitHubRequest& request)
+    void updateCurrentShowcaseMasterFromGitHub(UpdateCurrentShowcaseMasterFromGitHubRequest& request, std::function<void(AsyncUpdateCurrentShowcaseMasterFromGitHubResult&)> callback)
     {
         UpdateCurrentShowcaseMasterFromGitHubTask& task = *new UpdateCurrentShowcaseMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3617,7 +3617,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeShowcases(std::function<void(AsyncDescribeShowcasesResult&)> callback, DescribeShowcasesRequest& request)
+    void describeShowcases(DescribeShowcasesRequest& request, std::function<void(AsyncDescribeShowcasesResult&)> callback)
     {
         DescribeShowcasesTask& task = *new DescribeShowcasesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3629,7 +3629,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeShowcasesByUserId(std::function<void(AsyncDescribeShowcasesByUserIdResult&)> callback, DescribeShowcasesByUserIdRequest& request)
+    void describeShowcasesByUserId(DescribeShowcasesByUserIdRequest& request, std::function<void(AsyncDescribeShowcasesByUserIdResult&)> callback)
     {
         DescribeShowcasesByUserIdTask& task = *new DescribeShowcasesByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3641,7 +3641,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getShowcase(std::function<void(AsyncGetShowcaseResult&)> callback, GetShowcaseRequest& request)
+    void getShowcase(GetShowcaseRequest& request, std::function<void(AsyncGetShowcaseResult&)> callback)
     {
         GetShowcaseTask& task = *new GetShowcaseTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3653,7 +3653,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getShowcaseByUserId(std::function<void(AsyncGetShowcaseByUserIdResult&)> callback, GetShowcaseByUserIdRequest& request)
+    void getShowcaseByUserId(GetShowcaseByUserIdRequest& request, std::function<void(AsyncGetShowcaseByUserIdResult&)> callback)
     {
         GetShowcaseByUserIdTask& task = *new GetShowcaseByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3665,7 +3665,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void buy(std::function<void(AsyncBuyResult&)> callback, BuyRequest& request)
+    void buy(BuyRequest& request, std::function<void(AsyncBuyResult&)> callback)
     {
         BuyTask& task = *new BuyTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3677,7 +3677,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void buyByUserId(std::function<void(AsyncBuyByUserIdResult&)> callback, BuyByUserIdRequest& request)
+    void buyByUserId(BuyByUserIdRequest& request, std::function<void(AsyncBuyByUserIdResult&)> callback)
     {
         BuyByUserIdTask& task = *new BuyByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();

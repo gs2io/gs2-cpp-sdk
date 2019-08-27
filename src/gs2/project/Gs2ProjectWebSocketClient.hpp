@@ -1294,7 +1294,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createAccount(std::function<void(AsyncCreateAccountResult&)> callback, CreateAccountRequest& request)
+    void createAccount(CreateAccountRequest& request, std::function<void(AsyncCreateAccountResult&)> callback)
     {
         CreateAccountTask& task = *new CreateAccountTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1306,7 +1306,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void verify(std::function<void(AsyncVerifyResult&)> callback, VerifyRequest& request)
+    void verify(VerifyRequest& request, std::function<void(AsyncVerifyResult&)> callback)
     {
         VerifyTask& task = *new VerifyTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1318,7 +1318,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void signIn(std::function<void(AsyncSignInResult&)> callback, SignInRequest& request)
+    void signIn(SignInRequest& request, std::function<void(AsyncSignInResult&)> callback)
     {
         SignInTask& task = *new SignInTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1330,7 +1330,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void issueAccountToken(std::function<void(AsyncIssueAccountTokenResult&)> callback, IssueAccountTokenRequest& request)
+    void issueAccountToken(IssueAccountTokenRequest& request, std::function<void(AsyncIssueAccountTokenResult&)> callback)
     {
         IssueAccountTokenTask& task = *new IssueAccountTokenTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1342,7 +1342,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void forget(std::function<void(AsyncForgetResult&)> callback, ForgetRequest& request)
+    void forget(ForgetRequest& request, std::function<void(AsyncForgetResult&)> callback)
     {
         ForgetTask& task = *new ForgetTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1354,7 +1354,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void issuePassword(std::function<void(AsyncIssuePasswordResult&)> callback, IssuePasswordRequest& request)
+    void issuePassword(IssuePasswordRequest& request, std::function<void(AsyncIssuePasswordResult&)> callback)
     {
         IssuePasswordTask& task = *new IssuePasswordTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1366,7 +1366,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateAccount(std::function<void(AsyncUpdateAccountResult&)> callback, UpdateAccountRequest& request)
+    void updateAccount(UpdateAccountRequest& request, std::function<void(AsyncUpdateAccountResult&)> callback)
     {
         UpdateAccountTask& task = *new UpdateAccountTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1378,7 +1378,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteAccount(std::function<void(AsyncDeleteAccountResult&)> callback, DeleteAccountRequest& request)
+    void deleteAccount(DeleteAccountRequest& request, std::function<void(AsyncDeleteAccountResult&)> callback)
     {
         DeleteAccountTask& task = *new DeleteAccountTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1390,7 +1390,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeProjects(std::function<void(AsyncDescribeProjectsResult&)> callback, DescribeProjectsRequest& request)
+    void describeProjects(DescribeProjectsRequest& request, std::function<void(AsyncDescribeProjectsResult&)> callback)
     {
         DescribeProjectsTask& task = *new DescribeProjectsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1402,7 +1402,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createProject(std::function<void(AsyncCreateProjectResult&)> callback, CreateProjectRequest& request)
+    void createProject(CreateProjectRequest& request, std::function<void(AsyncCreateProjectResult&)> callback)
     {
         CreateProjectTask& task = *new CreateProjectTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1414,7 +1414,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getProject(std::function<void(AsyncGetProjectResult&)> callback, GetProjectRequest& request)
+    void getProject(GetProjectRequest& request, std::function<void(AsyncGetProjectResult&)> callback)
     {
         GetProjectTask& task = *new GetProjectTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1426,7 +1426,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getProjectToken(std::function<void(AsyncGetProjectTokenResult&)> callback, GetProjectTokenRequest& request)
+    void getProjectToken(GetProjectTokenRequest& request, std::function<void(AsyncGetProjectTokenResult&)> callback)
     {
         GetProjectTokenTask& task = *new GetProjectTokenTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1438,7 +1438,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateProject(std::function<void(AsyncUpdateProjectResult&)> callback, UpdateProjectRequest& request)
+    void updateProject(UpdateProjectRequest& request, std::function<void(AsyncUpdateProjectResult&)> callback)
     {
         UpdateProjectTask& task = *new UpdateProjectTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1450,7 +1450,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteProject(std::function<void(AsyncDeleteProjectResult&)> callback, DeleteProjectRequest& request)
+    void deleteProject(DeleteProjectRequest& request, std::function<void(AsyncDeleteProjectResult&)> callback)
     {
         DeleteProjectTask& task = *new DeleteProjectTask(getGs2WebSocketSession(), request, callback);
         task.execute();

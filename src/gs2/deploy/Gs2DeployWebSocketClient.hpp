@@ -1636,7 +1636,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeStacks(std::function<void(AsyncDescribeStacksResult&)> callback, DescribeStacksRequest& request)
+    void describeStacks(DescribeStacksRequest& request, std::function<void(AsyncDescribeStacksResult&)> callback)
     {
         DescribeStacksTask& task = *new DescribeStacksTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1648,7 +1648,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createStack(std::function<void(AsyncCreateStackResult&)> callback, CreateStackRequest& request)
+    void createStack(CreateStackRequest& request, std::function<void(AsyncCreateStackResult&)> callback)
     {
         CreateStackTask& task = *new CreateStackTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1660,7 +1660,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createStackFromGitHub(std::function<void(AsyncCreateStackFromGitHubResult&)> callback, CreateStackFromGitHubRequest& request)
+    void createStackFromGitHub(CreateStackFromGitHubRequest& request, std::function<void(AsyncCreateStackFromGitHubResult&)> callback)
     {
         CreateStackFromGitHubTask& task = *new CreateStackFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1672,7 +1672,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStackStatus(std::function<void(AsyncGetStackStatusResult&)> callback, GetStackStatusRequest& request)
+    void getStackStatus(GetStackStatusRequest& request, std::function<void(AsyncGetStackStatusResult&)> callback)
     {
         GetStackStatusTask& task = *new GetStackStatusTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1684,7 +1684,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStack(std::function<void(AsyncGetStackResult&)> callback, GetStackRequest& request)
+    void getStack(GetStackRequest& request, std::function<void(AsyncGetStackResult&)> callback)
     {
         GetStackTask& task = *new GetStackTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1696,7 +1696,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateStack(std::function<void(AsyncUpdateStackResult&)> callback, UpdateStackRequest& request)
+    void updateStack(UpdateStackRequest& request, std::function<void(AsyncUpdateStackResult&)> callback)
     {
         UpdateStackTask& task = *new UpdateStackTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1708,7 +1708,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateStackFromGitHub(std::function<void(AsyncUpdateStackFromGitHubResult&)> callback, UpdateStackFromGitHubRequest& request)
+    void updateStackFromGitHub(UpdateStackFromGitHubRequest& request, std::function<void(AsyncUpdateStackFromGitHubResult&)> callback)
     {
         UpdateStackFromGitHubTask& task = *new UpdateStackFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1724,7 +1724,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteStack(std::function<void(AsyncDeleteStackResult&)> callback, DeleteStackRequest& request)
+    void deleteStack(DeleteStackRequest& request, std::function<void(AsyncDeleteStackResult&)> callback)
     {
         DeleteStackTask& task = *new DeleteStackTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1736,7 +1736,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void forceDeleteStack(std::function<void(AsyncForceDeleteStackResult&)> callback, ForceDeleteStackRequest& request)
+    void forceDeleteStack(ForceDeleteStackRequest& request, std::function<void(AsyncForceDeleteStackResult&)> callback)
     {
         ForceDeleteStackTask& task = *new ForceDeleteStackTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1748,7 +1748,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeResources(std::function<void(AsyncDescribeResourcesResult&)> callback, DescribeResourcesRequest& request)
+    void describeResources(DescribeResourcesRequest& request, std::function<void(AsyncDescribeResourcesResult&)> callback)
     {
         DescribeResourcesTask& task = *new DescribeResourcesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1760,7 +1760,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getResource(std::function<void(AsyncGetResourceResult&)> callback, GetResourceRequest& request)
+    void getResource(GetResourceRequest& request, std::function<void(AsyncGetResourceResult&)> callback)
     {
         GetResourceTask& task = *new GetResourceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1772,7 +1772,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeEvents(std::function<void(AsyncDescribeEventsResult&)> callback, DescribeEventsRequest& request)
+    void describeEvents(DescribeEventsRequest& request, std::function<void(AsyncDescribeEventsResult&)> callback)
     {
         DescribeEventsTask& task = *new DescribeEventsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1784,7 +1784,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getEvent(std::function<void(AsyncGetEventResult&)> callback, GetEventRequest& request)
+    void getEvent(GetEventRequest& request, std::function<void(AsyncGetEventResult&)> callback)
     {
         GetEventTask& task = *new GetEventTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1796,7 +1796,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeOutputs(std::function<void(AsyncDescribeOutputsResult&)> callback, DescribeOutputsRequest& request)
+    void describeOutputs(DescribeOutputsRequest& request, std::function<void(AsyncDescribeOutputsResult&)> callback)
     {
         DescribeOutputsTask& task = *new DescribeOutputsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1808,7 +1808,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getOutput(std::function<void(AsyncGetOutputResult&)> callback, GetOutputRequest& request)
+    void getOutput(GetOutputRequest& request, std::function<void(AsyncGetOutputResult&)> callback)
     {
         GetOutputTask& task = *new GetOutputTask(getGs2WebSocketSession(), request, callback);
         task.execute();

@@ -556,7 +556,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeNamespacesResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -603,7 +603,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -662,7 +662,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceStatusResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -699,7 +699,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -736,7 +736,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -794,7 +794,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -836,7 +836,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeStaminaModelMasters(std::function<void(AsyncDescribeStaminaModelMastersResult&)> callback, DescribeStaminaModelMastersRequest& request)
+    void describeStaminaModelMasters(DescribeStaminaModelMastersRequest& request, std::function<void(AsyncDescribeStaminaModelMastersResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeStaminaModelMastersResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -887,7 +887,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createStaminaModelMaster(std::function<void(AsyncCreateStaminaModelMasterResult&)> callback, CreateStaminaModelMasterRequest& request)
+    void createStaminaModelMaster(CreateStaminaModelMasterRequest& request, std::function<void(AsyncCreateStaminaModelMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateStaminaModelMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -975,7 +975,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStaminaModelMaster(std::function<void(AsyncGetStaminaModelMasterResult&)> callback, GetStaminaModelMasterRequest& request)
+    void getStaminaModelMaster(GetStaminaModelMasterRequest& request, std::function<void(AsyncGetStaminaModelMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetStaminaModelMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1016,7 +1016,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateStaminaModelMaster(std::function<void(AsyncUpdateStaminaModelMasterResult&)> callback, UpdateStaminaModelMasterRequest& request)
+    void updateStaminaModelMaster(UpdateStaminaModelMasterRequest& request, std::function<void(AsyncUpdateStaminaModelMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateStaminaModelMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1103,7 +1103,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteStaminaModelMaster(std::function<void(AsyncDeleteStaminaModelMasterResult&)> callback, DeleteStaminaModelMasterRequest& request)
+    void deleteStaminaModelMaster(DeleteStaminaModelMasterRequest& request, std::function<void(AsyncDeleteStaminaModelMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteStaminaModelMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1149,7 +1149,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeMaxStaminaTableMasters(std::function<void(AsyncDescribeMaxStaminaTableMastersResult&)> callback, DescribeMaxStaminaTableMastersRequest& request)
+    void describeMaxStaminaTableMasters(DescribeMaxStaminaTableMastersRequest& request, std::function<void(AsyncDescribeMaxStaminaTableMastersResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeMaxStaminaTableMastersResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1200,7 +1200,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createMaxStaminaTableMaster(std::function<void(AsyncCreateMaxStaminaTableMasterResult&)> callback, CreateMaxStaminaTableMasterRequest& request)
+    void createMaxStaminaTableMaster(CreateMaxStaminaTableMasterRequest& request, std::function<void(AsyncCreateMaxStaminaTableMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateMaxStaminaTableMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1274,7 +1274,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getMaxStaminaTableMaster(std::function<void(AsyncGetMaxStaminaTableMasterResult&)> callback, GetMaxStaminaTableMasterRequest& request)
+    void getMaxStaminaTableMaster(GetMaxStaminaTableMasterRequest& request, std::function<void(AsyncGetMaxStaminaTableMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetMaxStaminaTableMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1315,7 +1315,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateMaxStaminaTableMaster(std::function<void(AsyncUpdateMaxStaminaTableMasterResult&)> callback, UpdateMaxStaminaTableMasterRequest& request)
+    void updateMaxStaminaTableMaster(UpdateMaxStaminaTableMasterRequest& request, std::function<void(AsyncUpdateMaxStaminaTableMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateMaxStaminaTableMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1388,7 +1388,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteMaxStaminaTableMaster(std::function<void(AsyncDeleteMaxStaminaTableMasterResult&)> callback, DeleteMaxStaminaTableMasterRequest& request)
+    void deleteMaxStaminaTableMaster(DeleteMaxStaminaTableMasterRequest& request, std::function<void(AsyncDeleteMaxStaminaTableMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteMaxStaminaTableMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1434,7 +1434,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
+    void exportMaster(ExportMasterRequest& request, std::function<void(AsyncExportMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<ExportMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1471,7 +1471,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCurrentStaminaMaster(std::function<void(AsyncGetCurrentStaminaMasterResult&)> callback, GetCurrentStaminaMasterRequest& request)
+    void getCurrentStaminaMaster(GetCurrentStaminaMasterRequest& request, std::function<void(AsyncGetCurrentStaminaMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetCurrentStaminaMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1508,7 +1508,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentStaminaMaster(std::function<void(AsyncUpdateCurrentStaminaMasterResult&)> callback, UpdateCurrentStaminaMasterRequest& request)
+    void updateCurrentStaminaMaster(UpdateCurrentStaminaMasterRequest& request, std::function<void(AsyncUpdateCurrentStaminaMasterResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateCurrentStaminaMasterResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1556,7 +1556,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentStaminaMasterFromGitHub(std::function<void(AsyncUpdateCurrentStaminaMasterFromGitHubResult&)> callback, UpdateCurrentStaminaMasterFromGitHubRequest& request)
+    void updateCurrentStaminaMasterFromGitHub(UpdateCurrentStaminaMasterFromGitHubRequest& request, std::function<void(AsyncUpdateCurrentStaminaMasterFromGitHubResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateCurrentStaminaMasterFromGitHubResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1604,7 +1604,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeStaminaModels(std::function<void(AsyncDescribeStaminaModelsResult&)> callback, DescribeStaminaModelsRequest& request)
+    void describeStaminaModels(DescribeStaminaModelsRequest& request, std::function<void(AsyncDescribeStaminaModelsResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeStaminaModelsResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1641,7 +1641,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStaminaModel(std::function<void(AsyncGetStaminaModelResult&)> callback, GetStaminaModelRequest& request)
+    void getStaminaModel(GetStaminaModelRequest& request, std::function<void(AsyncGetStaminaModelResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetStaminaModelResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1682,7 +1682,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeStaminas(std::function<void(AsyncDescribeStaminasResult&)> callback, DescribeStaminasRequest& request)
+    void describeStaminas(DescribeStaminasRequest& request, std::function<void(AsyncDescribeStaminasResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeStaminasResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1741,7 +1741,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeStaminasByUserId(std::function<void(AsyncDescribeStaminasByUserIdResult&)> callback, DescribeStaminasByUserIdRequest& request)
+    void describeStaminasByUserId(DescribeStaminasByUserIdRequest& request, std::function<void(AsyncDescribeStaminasByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeStaminasByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1800,7 +1800,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStamina(std::function<void(AsyncGetStaminaResult&)> callback, GetStaminaRequest& request)
+    void getStamina(GetStaminaRequest& request, std::function<void(AsyncGetStaminaResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetStaminaResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1849,7 +1849,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStaminaByUserId(std::function<void(AsyncGetStaminaByUserIdResult&)> callback, GetStaminaByUserIdRequest& request)
+    void getStaminaByUserId(GetStaminaByUserIdRequest& request, std::function<void(AsyncGetStaminaByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetStaminaByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1898,7 +1898,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateStaminaByUserId(std::function<void(AsyncUpdateStaminaByUserIdResult&)> callback, UpdateStaminaByUserIdRequest& request)
+    void updateStaminaByUserId(UpdateStaminaByUserIdRequest& request, std::function<void(AsyncUpdateStaminaByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateStaminaByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1963,7 +1963,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void consumeStamina(std::function<void(AsyncConsumeStaminaResult&)> callback, ConsumeStaminaRequest& request)
+    void consumeStamina(ConsumeStaminaRequest& request, std::function<void(AsyncConsumeStaminaResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<ConsumeStaminaResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -2023,7 +2023,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void consumeStaminaByUserId(std::function<void(AsyncConsumeStaminaByUserIdResult&)> callback, ConsumeStaminaByUserIdRequest& request)
+    void consumeStaminaByUserId(ConsumeStaminaByUserIdRequest& request, std::function<void(AsyncConsumeStaminaByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<ConsumeStaminaByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -2083,7 +2083,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void recoverStaminaByUserId(std::function<void(AsyncRecoverStaminaByUserIdResult&)> callback, RecoverStaminaByUserIdRequest& request)
+    void recoverStaminaByUserId(RecoverStaminaByUserIdRequest& request, std::function<void(AsyncRecoverStaminaByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<RecoverStaminaByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -2143,7 +2143,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void raiseMaxValueByUserId(std::function<void(AsyncRaiseMaxValueByUserIdResult&)> callback, RaiseMaxValueByUserIdRequest& request)
+    void raiseMaxValueByUserId(RaiseMaxValueByUserIdRequest& request, std::function<void(AsyncRaiseMaxValueByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<RaiseMaxValueByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -2203,7 +2203,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void setMaxValueByUserId(std::function<void(AsyncSetMaxValueByUserIdResult&)> callback, SetMaxValueByUserIdRequest& request)
+    void setMaxValueByUserId(SetMaxValueByUserIdRequest& request, std::function<void(AsyncSetMaxValueByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<SetMaxValueByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -2263,7 +2263,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void setMaxValueByStatus(std::function<void(AsyncSetMaxValueByStatusResult&)> callback, SetMaxValueByStatusRequest& request)
+    void setMaxValueByStatus(SetMaxValueByStatusRequest& request, std::function<void(AsyncSetMaxValueByStatusResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<SetMaxValueByStatusResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -2333,7 +2333,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteStaminaByUserId(std::function<void(AsyncDeleteStaminaByUserIdResult&)> callback, DeleteStaminaByUserIdRequest& request)
+    void deleteStaminaByUserId(DeleteStaminaByUserIdRequest& request, std::function<void(AsyncDeleteStaminaByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -2387,7 +2387,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void recoverStaminaByStampSheet(std::function<void(AsyncRecoverStaminaByStampSheetResult&)> callback, RecoverStaminaByStampSheetRequest& request)
+    void recoverStaminaByStampSheet(RecoverStaminaByStampSheetRequest& request, std::function<void(AsyncRecoverStaminaByStampSheetResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<RecoverStaminaByStampSheetResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -2439,7 +2439,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void raiseMaxValueByStampSheet(std::function<void(AsyncRaiseMaxValueByStampSheetResult&)> callback, RaiseMaxValueByStampSheetRequest& request)
+    void raiseMaxValueByStampSheet(RaiseMaxValueByStampSheetRequest& request, std::function<void(AsyncRaiseMaxValueByStampSheetResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<RaiseMaxValueByStampSheetResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -2491,7 +2491,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void setMaxValueByStampSheet(std::function<void(AsyncSetMaxValueByStampSheetResult&)> callback, SetMaxValueByStampSheetRequest& request)
+    void setMaxValueByStampSheet(SetMaxValueByStampSheetRequest& request, std::function<void(AsyncSetMaxValueByStampSheetResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<SetMaxValueByStampSheetResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -2543,7 +2543,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void consumeStaminaByStampTask(std::function<void(AsyncConsumeStaminaByStampTaskResult&)> callback, ConsumeStaminaByStampTaskRequest& request)
+    void consumeStaminaByStampTask(ConsumeStaminaByStampTaskRequest& request, std::function<void(AsyncConsumeStaminaByStampTaskResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<ConsumeStaminaByStampTaskResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();

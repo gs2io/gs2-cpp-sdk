@@ -409,7 +409,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeNamespacesResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -456,7 +456,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -580,7 +580,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceStatusResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -617,7 +617,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -654,7 +654,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -767,7 +767,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -809,7 +809,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWallets(std::function<void(AsyncDescribeWalletsResult&)> callback, DescribeWalletsRequest& request)
+    void describeWallets(DescribeWalletsRequest& request, std::function<void(AsyncDescribeWalletsResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeWalletsResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -868,7 +868,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWalletsByUserId(std::function<void(AsyncDescribeWalletsByUserIdResult&)> callback, DescribeWalletsByUserIdRequest& request)
+    void describeWalletsByUserId(DescribeWalletsByUserIdRequest& request, std::function<void(AsyncDescribeWalletsByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeWalletsByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -927,7 +927,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void queryWallets(std::function<void(AsyncQueryWalletsResult&)> callback, QueryWalletsRequest& request)
+    void queryWallets(QueryWalletsRequest& request, std::function<void(AsyncQueryWalletsResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<QueryWalletsResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -989,7 +989,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getWallet(std::function<void(AsyncGetWalletResult&)> callback, GetWalletRequest& request)
+    void getWallet(GetWalletRequest& request, std::function<void(AsyncGetWalletResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetWalletResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1046,7 +1046,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getWalletByUserId(std::function<void(AsyncGetWalletByUserIdResult&)> callback, GetWalletByUserIdRequest& request)
+    void getWalletByUserId(GetWalletByUserIdRequest& request, std::function<void(AsyncGetWalletByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetWalletByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1103,7 +1103,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void depositByUserId(std::function<void(AsyncDepositByUserIdResult&)> callback, DepositByUserIdRequest& request)
+    void depositByUserId(DepositByUserIdRequest& request, std::function<void(AsyncDepositByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DepositByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1176,7 +1176,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void withdraw(std::function<void(AsyncWithdrawResult&)> callback, WithdrawRequest& request)
+    void withdraw(WithdrawRequest& request, std::function<void(AsyncWithdrawResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<WithdrawResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1249,7 +1249,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void withdrawByUserId(std::function<void(AsyncWithdrawByUserIdResult&)> callback, WithdrawByUserIdRequest& request)
+    void withdrawByUserId(WithdrawByUserIdRequest& request, std::function<void(AsyncWithdrawByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<WithdrawByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1322,7 +1322,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void depositByStampSheet(std::function<void(AsyncDepositByStampSheetResult&)> callback, DepositByStampSheetRequest& request)
+    void depositByStampSheet(DepositByStampSheetRequest& request, std::function<void(AsyncDepositByStampSheetResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DepositByStampSheetResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1374,7 +1374,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void withdrawByStampTask(std::function<void(AsyncWithdrawByStampTaskResult&)> callback, WithdrawByStampTaskRequest& request)
+    void withdrawByStampTask(WithdrawByStampTaskRequest& request, std::function<void(AsyncWithdrawByStampTaskResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<WithdrawByStampTaskResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1427,7 +1427,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWalletDetailsByUserId(std::function<void(AsyncDescribeWalletDetailsByUserIdResult&)> callback, DescribeWalletDetailsByUserIdRequest& request)
+    void describeWalletDetailsByUserId(DescribeWalletDetailsByUserIdRequest& request, std::function<void(AsyncDescribeWalletDetailsByUserIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeWalletDetailsByUserIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1498,7 +1498,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeReceipts(std::function<void(AsyncDescribeReceiptsResult&)> callback, DescribeReceiptsRequest& request)
+    void describeReceipts(DescribeReceiptsRequest& request, std::function<void(AsyncDescribeReceiptsResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeReceiptsResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1581,7 +1581,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getByUserIdAndTransactionId(std::function<void(AsyncGetByUserIdAndTransactionIdResult&)> callback, GetByUserIdAndTransactionIdRequest& request)
+    void getByUserIdAndTransactionId(GetByUserIdAndTransactionIdRequest& request, std::function<void(AsyncGetByUserIdAndTransactionIdResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetByUserIdAndTransactionIdResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1630,7 +1630,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void recordReceipt(std::function<void(AsyncRecordReceiptResult&)> callback, RecordReceiptRequest& request)
+    void recordReceipt(RecordReceiptRequest& request, std::function<void(AsyncRecordReceiptResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<RecordReceiptResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1691,7 +1691,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void recordReceiptByStampTask(std::function<void(AsyncRecordReceiptByStampTaskResult&)> callback, RecordReceiptByStampTaskRequest& request)
+    void recordReceiptByStampTask(RecordReceiptByStampTaskRequest& request, std::function<void(AsyncRecordReceiptByStampTaskResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<RecordReceiptByStampTaskResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();

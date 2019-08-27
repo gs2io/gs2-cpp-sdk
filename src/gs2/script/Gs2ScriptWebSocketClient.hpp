@@ -1340,7 +1340,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         DescribeNamespacesTask& task = *new DescribeNamespacesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1352,7 +1352,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         CreateNamespaceTask& task = *new CreateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1364,7 +1364,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1376,7 +1376,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         GetNamespaceTask& task = *new GetNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1388,7 +1388,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         UpdateNamespaceTask& task = *new UpdateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1400,7 +1400,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         DeleteNamespaceTask& task = *new DeleteNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1412,7 +1412,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeScripts(std::function<void(AsyncDescribeScriptsResult&)> callback, DescribeScriptsRequest& request)
+    void describeScripts(DescribeScriptsRequest& request, std::function<void(AsyncDescribeScriptsResult&)> callback)
     {
         DescribeScriptsTask& task = *new DescribeScriptsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1424,7 +1424,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createScript(std::function<void(AsyncCreateScriptResult&)> callback, CreateScriptRequest& request)
+    void createScript(CreateScriptRequest& request, std::function<void(AsyncCreateScriptResult&)> callback)
     {
         CreateScriptTask& task = *new CreateScriptTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1436,7 +1436,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createScriptFromGitHub(std::function<void(AsyncCreateScriptFromGitHubResult&)> callback, CreateScriptFromGitHubRequest& request)
+    void createScriptFromGitHub(CreateScriptFromGitHubRequest& request, std::function<void(AsyncCreateScriptFromGitHubResult&)> callback)
     {
         CreateScriptFromGitHubTask& task = *new CreateScriptFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1448,7 +1448,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getScript(std::function<void(AsyncGetScriptResult&)> callback, GetScriptRequest& request)
+    void getScript(GetScriptRequest& request, std::function<void(AsyncGetScriptResult&)> callback)
     {
         GetScriptTask& task = *new GetScriptTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1460,7 +1460,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateScript(std::function<void(AsyncUpdateScriptResult&)> callback, UpdateScriptRequest& request)
+    void updateScript(UpdateScriptRequest& request, std::function<void(AsyncUpdateScriptResult&)> callback)
     {
         UpdateScriptTask& task = *new UpdateScriptTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1472,7 +1472,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateScriptFromGitHub(std::function<void(AsyncUpdateScriptFromGitHubResult&)> callback, UpdateScriptFromGitHubRequest& request)
+    void updateScriptFromGitHub(UpdateScriptFromGitHubRequest& request, std::function<void(AsyncUpdateScriptFromGitHubResult&)> callback)
     {
         UpdateScriptFromGitHubTask& task = *new UpdateScriptFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1484,7 +1484,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteScript(std::function<void(AsyncDeleteScriptResult&)> callback, DeleteScriptRequest& request)
+    void deleteScript(DeleteScriptRequest& request, std::function<void(AsyncDeleteScriptResult&)> callback)
     {
         DeleteScriptTask& task = *new DeleteScriptTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1496,7 +1496,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void debugInvoke(std::function<void(AsyncDebugInvokeResult&)> callback, DebugInvokeRequest& request)
+    void debugInvoke(DebugInvokeRequest& request, std::function<void(AsyncDebugInvokeResult&)> callback)
     {
         DebugInvokeTask& task = *new DebugInvokeTask(getGs2WebSocketSession(), request, callback);
         task.execute();

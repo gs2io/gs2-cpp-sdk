@@ -1711,7 +1711,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         DescribeNamespacesTask& task = *new DescribeNamespacesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1723,7 +1723,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         CreateNamespaceTask& task = *new CreateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1735,7 +1735,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1747,7 +1747,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         GetNamespaceTask& task = *new GetNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1759,7 +1759,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         UpdateNamespaceTask& task = *new UpdateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1771,7 +1771,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         DeleteNamespaceTask& task = *new DeleteNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1783,7 +1783,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeDistributorModelMasters(std::function<void(AsyncDescribeDistributorModelMastersResult&)> callback, DescribeDistributorModelMastersRequest& request)
+    void describeDistributorModelMasters(DescribeDistributorModelMastersRequest& request, std::function<void(AsyncDescribeDistributorModelMastersResult&)> callback)
     {
         DescribeDistributorModelMastersTask& task = *new DescribeDistributorModelMastersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1795,7 +1795,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createDistributorModelMaster(std::function<void(AsyncCreateDistributorModelMasterResult&)> callback, CreateDistributorModelMasterRequest& request)
+    void createDistributorModelMaster(CreateDistributorModelMasterRequest& request, std::function<void(AsyncCreateDistributorModelMasterResult&)> callback)
     {
         CreateDistributorModelMasterTask& task = *new CreateDistributorModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1807,7 +1807,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getDistributorModelMaster(std::function<void(AsyncGetDistributorModelMasterResult&)> callback, GetDistributorModelMasterRequest& request)
+    void getDistributorModelMaster(GetDistributorModelMasterRequest& request, std::function<void(AsyncGetDistributorModelMasterResult&)> callback)
     {
         GetDistributorModelMasterTask& task = *new GetDistributorModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1819,7 +1819,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateDistributorModelMaster(std::function<void(AsyncUpdateDistributorModelMasterResult&)> callback, UpdateDistributorModelMasterRequest& request)
+    void updateDistributorModelMaster(UpdateDistributorModelMasterRequest& request, std::function<void(AsyncUpdateDistributorModelMasterResult&)> callback)
     {
         UpdateDistributorModelMasterTask& task = *new UpdateDistributorModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1831,7 +1831,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteDistributorModelMaster(std::function<void(AsyncDeleteDistributorModelMasterResult&)> callback, DeleteDistributorModelMasterRequest& request)
+    void deleteDistributorModelMaster(DeleteDistributorModelMasterRequest& request, std::function<void(AsyncDeleteDistributorModelMasterResult&)> callback)
     {
         DeleteDistributorModelMasterTask& task = *new DeleteDistributorModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1843,7 +1843,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeDistributorModels(std::function<void(AsyncDescribeDistributorModelsResult&)> callback, DescribeDistributorModelsRequest& request)
+    void describeDistributorModels(DescribeDistributorModelsRequest& request, std::function<void(AsyncDescribeDistributorModelsResult&)> callback)
     {
         DescribeDistributorModelsTask& task = *new DescribeDistributorModelsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1855,7 +1855,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getDistributorModel(std::function<void(AsyncGetDistributorModelResult&)> callback, GetDistributorModelRequest& request)
+    void getDistributorModel(GetDistributorModelRequest& request, std::function<void(AsyncGetDistributorModelResult&)> callback)
     {
         GetDistributorModelTask& task = *new GetDistributorModelTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1867,7 +1867,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
+    void exportMaster(ExportMasterRequest& request, std::function<void(AsyncExportMasterResult&)> callback)
     {
         ExportMasterTask& task = *new ExportMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1879,7 +1879,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCurrentDistributorMaster(std::function<void(AsyncGetCurrentDistributorMasterResult&)> callback, GetCurrentDistributorMasterRequest& request)
+    void getCurrentDistributorMaster(GetCurrentDistributorMasterRequest& request, std::function<void(AsyncGetCurrentDistributorMasterResult&)> callback)
     {
         GetCurrentDistributorMasterTask& task = *new GetCurrentDistributorMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1891,7 +1891,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentDistributorMaster(std::function<void(AsyncUpdateCurrentDistributorMasterResult&)> callback, UpdateCurrentDistributorMasterRequest& request)
+    void updateCurrentDistributorMaster(UpdateCurrentDistributorMasterRequest& request, std::function<void(AsyncUpdateCurrentDistributorMasterResult&)> callback)
     {
         UpdateCurrentDistributorMasterTask& task = *new UpdateCurrentDistributorMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -1903,7 +1903,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentDistributorMasterFromGitHub(std::function<void(AsyncUpdateCurrentDistributorMasterFromGitHubResult&)> callback, UpdateCurrentDistributorMasterFromGitHubRequest& request)
+    void updateCurrentDistributorMasterFromGitHub(UpdateCurrentDistributorMasterFromGitHubRequest& request, std::function<void(AsyncUpdateCurrentDistributorMasterFromGitHubResult&)> callback)
     {
         UpdateCurrentDistributorMasterFromGitHubTask& task = *new UpdateCurrentDistributorMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();

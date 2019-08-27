@@ -90,7 +90,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void login(std::function<void(AsyncLoginResult&)> callback, LoginRequest& request)
+    void login(LoginRequest& request, std::function<void(AsyncLoginResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<LoginResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -144,7 +144,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void loginBySignature(std::function<void(AsyncLoginBySignatureResult&)> callback, LoginBySignatureRequest& request)
+    void loginBySignature(LoginBySignatureRequest& request, std::function<void(AsyncLoginBySignatureResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<LoginBySignatureResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();

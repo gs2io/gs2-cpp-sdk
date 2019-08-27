@@ -449,7 +449,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeStacks(std::function<void(AsyncDescribeStacksResult&)> callback, DescribeStacksRequest& request)
+    void describeStacks(DescribeStacksRequest& request, std::function<void(AsyncDescribeStacksResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeStacksResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -496,7 +496,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createStack(std::function<void(AsyncCreateStackResult&)> callback, CreateStackRequest& request)
+    void createStack(CreateStackRequest& request, std::function<void(AsyncCreateStackResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateStackResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -550,7 +550,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createStackFromGitHub(std::function<void(AsyncCreateStackFromGitHubResult&)> callback, CreateStackFromGitHubRequest& request)
+    void createStackFromGitHub(CreateStackFromGitHubRequest& request, std::function<void(AsyncCreateStackFromGitHubResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateStackFromGitHubResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -604,7 +604,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStackStatus(std::function<void(AsyncGetStackStatusResult&)> callback, GetStackStatusRequest& request)
+    void getStackStatus(GetStackStatusRequest& request, std::function<void(AsyncGetStackStatusResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetStackStatusResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -641,7 +641,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStack(std::function<void(AsyncGetStackResult&)> callback, GetStackRequest& request)
+    void getStack(GetStackRequest& request, std::function<void(AsyncGetStackResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetStackResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -678,7 +678,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateStack(std::function<void(AsyncUpdateStackResult&)> callback, UpdateStackRequest& request)
+    void updateStack(UpdateStackRequest& request, std::function<void(AsyncUpdateStackResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateStackResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -731,7 +731,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateStackFromGitHub(std::function<void(AsyncUpdateStackFromGitHubResult&)> callback, UpdateStackFromGitHubRequest& request)
+    void updateStackFromGitHub(UpdateStackFromGitHubRequest& request, std::function<void(AsyncUpdateStackFromGitHubResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateStackFromGitHubResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -788,7 +788,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteStack(std::function<void(AsyncDeleteStackResult&)> callback, DeleteStackRequest& request)
+    void deleteStack(DeleteStackRequest& request, std::function<void(AsyncDeleteStackResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteStackResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -830,7 +830,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void forceDeleteStack(std::function<void(AsyncForceDeleteStackResult&)> callback, ForceDeleteStackRequest& request)
+    void forceDeleteStack(ForceDeleteStackRequest& request, std::function<void(AsyncForceDeleteStackResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<ForceDeleteStackResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -872,7 +872,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeResources(std::function<void(AsyncDescribeResourcesResult&)> callback, DescribeResourcesRequest& request)
+    void describeResources(DescribeResourcesRequest& request, std::function<void(AsyncDescribeResourcesResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeResourcesResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -923,7 +923,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getResource(std::function<void(AsyncGetResourceResult&)> callback, GetResourceRequest& request)
+    void getResource(GetResourceRequest& request, std::function<void(AsyncGetResourceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetResourceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -964,7 +964,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeEvents(std::function<void(AsyncDescribeEventsResult&)> callback, DescribeEventsRequest& request)
+    void describeEvents(DescribeEventsRequest& request, std::function<void(AsyncDescribeEventsResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeEventsResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1015,7 +1015,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getEvent(std::function<void(AsyncGetEventResult&)> callback, GetEventRequest& request)
+    void getEvent(GetEventRequest& request, std::function<void(AsyncGetEventResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetEventResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1056,7 +1056,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeOutputs(std::function<void(AsyncDescribeOutputsResult&)> callback, DescribeOutputsRequest& request)
+    void describeOutputs(DescribeOutputsRequest& request, std::function<void(AsyncDescribeOutputsResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeOutputsResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1107,7 +1107,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getOutput(std::function<void(AsyncGetOutputResult&)> callback, GetOutputRequest& request)
+    void getOutput(GetOutputRequest& request, std::function<void(AsyncGetOutputResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetOutputResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();

@@ -259,7 +259,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeUsers(std::function<void(AsyncDescribeUsersResult&)> callback, DescribeUsersRequest& request)
+    void describeUsers(DescribeUsersRequest& request, std::function<void(AsyncDescribeUsersResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeUsersResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -306,7 +306,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createUser(std::function<void(AsyncCreateUserResult&)> callback, CreateUserRequest& request)
+    void createUser(CreateUserRequest& request, std::function<void(AsyncCreateUserResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateUserResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -355,7 +355,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateUser(std::function<void(AsyncUpdateUserResult&)> callback, UpdateUserRequest& request)
+    void updateUser(UpdateUserRequest& request, std::function<void(AsyncUpdateUserResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateUserResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -403,7 +403,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getUser(std::function<void(AsyncGetUserResult&)> callback, GetUserRequest& request)
+    void getUser(GetUserRequest& request, std::function<void(AsyncGetUserResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetUserResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -440,7 +440,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteUser(std::function<void(AsyncDeleteUserResult&)> callback, DeleteUserRequest& request)
+    void deleteUser(DeleteUserRequest& request, std::function<void(AsyncDeleteUserResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -482,7 +482,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeSecurityPolicies(std::function<void(AsyncDescribeSecurityPoliciesResult&)> callback, DescribeSecurityPoliciesRequest& request)
+    void describeSecurityPolicies(DescribeSecurityPoliciesRequest& request, std::function<void(AsyncDescribeSecurityPoliciesResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeSecurityPoliciesResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -529,7 +529,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCommonSecurityPolicies(std::function<void(AsyncDescribeCommonSecurityPoliciesResult&)> callback, DescribeCommonSecurityPoliciesRequest& request)
+    void describeCommonSecurityPolicies(DescribeCommonSecurityPoliciesRequest& request, std::function<void(AsyncDescribeCommonSecurityPoliciesResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeCommonSecurityPoliciesResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -576,7 +576,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createSecurityPolicy(std::function<void(AsyncCreateSecurityPolicyResult&)> callback, CreateSecurityPolicyRequest& request)
+    void createSecurityPolicy(CreateSecurityPolicyRequest& request, std::function<void(AsyncCreateSecurityPolicyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateSecurityPolicyResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -630,7 +630,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateSecurityPolicy(std::function<void(AsyncUpdateSecurityPolicyResult&)> callback, UpdateSecurityPolicyRequest& request)
+    void updateSecurityPolicy(UpdateSecurityPolicyRequest& request, std::function<void(AsyncUpdateSecurityPolicyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateSecurityPolicyResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -683,7 +683,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getSecurityPolicy(std::function<void(AsyncGetSecurityPolicyResult&)> callback, GetSecurityPolicyRequest& request)
+    void getSecurityPolicy(GetSecurityPolicyRequest& request, std::function<void(AsyncGetSecurityPolicyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetSecurityPolicyResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -720,7 +720,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteSecurityPolicy(std::function<void(AsyncDeleteSecurityPolicyResult&)> callback, DeleteSecurityPolicyRequest& request)
+    void deleteSecurityPolicy(DeleteSecurityPolicyRequest& request, std::function<void(AsyncDeleteSecurityPolicyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -762,7 +762,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeIdentifiers(std::function<void(AsyncDescribeIdentifiersResult&)> callback, DescribeIdentifiersRequest& request)
+    void describeIdentifiers(DescribeIdentifiersRequest& request, std::function<void(AsyncDescribeIdentifiersResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeIdentifiersResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -813,7 +813,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createIdentifier(std::function<void(AsyncCreateIdentifierResult&)> callback, CreateIdentifierRequest& request)
+    void createIdentifier(CreateIdentifierRequest& request, std::function<void(AsyncCreateIdentifierResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateIdentifierResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -856,7 +856,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getIdentifier(std::function<void(AsyncGetIdentifierResult&)> callback, GetIdentifierRequest& request)
+    void getIdentifier(GetIdentifierRequest& request, std::function<void(AsyncGetIdentifierResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetIdentifierResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -897,7 +897,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteIdentifier(std::function<void(AsyncDeleteIdentifierResult&)> callback, DeleteIdentifierRequest& request)
+    void deleteIdentifier(DeleteIdentifierRequest& request, std::function<void(AsyncDeleteIdentifierResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -943,7 +943,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getHasSecurityPolicy(std::function<void(AsyncGetHasSecurityPolicyResult&)> callback, GetHasSecurityPolicyRequest& request)
+    void getHasSecurityPolicy(GetHasSecurityPolicyRequest& request, std::function<void(AsyncGetHasSecurityPolicyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetHasSecurityPolicyResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -980,7 +980,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void attachSecurityPolicy(std::function<void(AsyncAttachSecurityPolicyResult&)> callback, AttachSecurityPolicyRequest& request)
+    void attachSecurityPolicy(AttachSecurityPolicyRequest& request, std::function<void(AsyncAttachSecurityPolicyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<AttachSecurityPolicyResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1028,7 +1028,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void detachSecurityPolicy(std::function<void(AsyncDetachSecurityPolicyResult&)> callback, DetachSecurityPolicyRequest& request)
+    void detachSecurityPolicy(DetachSecurityPolicyRequest& request, std::function<void(AsyncDetachSecurityPolicyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DetachSecurityPolicyResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1074,7 +1074,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void login(std::function<void(AsyncLoginResult&)> callback, LoginRequest& request)
+    void login(LoginRequest& request, std::function<void(AsyncLoginResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<LoginResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();

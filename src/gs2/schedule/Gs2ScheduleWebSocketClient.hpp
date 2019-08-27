@@ -2753,7 +2753,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         DescribeNamespacesTask& task = *new DescribeNamespacesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2765,7 +2765,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         CreateNamespaceTask& task = *new CreateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2777,7 +2777,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2789,7 +2789,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         GetNamespaceTask& task = *new GetNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2801,7 +2801,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         UpdateNamespaceTask& task = *new UpdateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2813,7 +2813,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         DeleteNamespaceTask& task = *new DeleteNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2825,7 +2825,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeEventMasters(std::function<void(AsyncDescribeEventMastersResult&)> callback, DescribeEventMastersRequest& request)
+    void describeEventMasters(DescribeEventMastersRequest& request, std::function<void(AsyncDescribeEventMastersResult&)> callback)
     {
         DescribeEventMastersTask& task = *new DescribeEventMastersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2837,7 +2837,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createEventMaster(std::function<void(AsyncCreateEventMasterResult&)> callback, CreateEventMasterRequest& request)
+    void createEventMaster(CreateEventMasterRequest& request, std::function<void(AsyncCreateEventMasterResult&)> callback)
     {
         CreateEventMasterTask& task = *new CreateEventMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2849,7 +2849,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getEventMaster(std::function<void(AsyncGetEventMasterResult&)> callback, GetEventMasterRequest& request)
+    void getEventMaster(GetEventMasterRequest& request, std::function<void(AsyncGetEventMasterResult&)> callback)
     {
         GetEventMasterTask& task = *new GetEventMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2861,7 +2861,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateEventMaster(std::function<void(AsyncUpdateEventMasterResult&)> callback, UpdateEventMasterRequest& request)
+    void updateEventMaster(UpdateEventMasterRequest& request, std::function<void(AsyncUpdateEventMasterResult&)> callback)
     {
         UpdateEventMasterTask& task = *new UpdateEventMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2873,7 +2873,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteEventMaster(std::function<void(AsyncDeleteEventMasterResult&)> callback, DeleteEventMasterRequest& request)
+    void deleteEventMaster(DeleteEventMasterRequest& request, std::function<void(AsyncDeleteEventMasterResult&)> callback)
     {
         DeleteEventMasterTask& task = *new DeleteEventMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2885,7 +2885,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeTriggers(std::function<void(AsyncDescribeTriggersResult&)> callback, DescribeTriggersRequest& request)
+    void describeTriggers(DescribeTriggersRequest& request, std::function<void(AsyncDescribeTriggersResult&)> callback)
     {
         DescribeTriggersTask& task = *new DescribeTriggersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2897,7 +2897,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeTriggersByUserId(std::function<void(AsyncDescribeTriggersByUserIdResult&)> callback, DescribeTriggersByUserIdRequest& request)
+    void describeTriggersByUserId(DescribeTriggersByUserIdRequest& request, std::function<void(AsyncDescribeTriggersByUserIdResult&)> callback)
     {
         DescribeTriggersByUserIdTask& task = *new DescribeTriggersByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2909,7 +2909,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getTrigger(std::function<void(AsyncGetTriggerResult&)> callback, GetTriggerRequest& request)
+    void getTrigger(GetTriggerRequest& request, std::function<void(AsyncGetTriggerResult&)> callback)
     {
         GetTriggerTask& task = *new GetTriggerTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2921,7 +2921,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getTriggerByUserId(std::function<void(AsyncGetTriggerByUserIdResult&)> callback, GetTriggerByUserIdRequest& request)
+    void getTriggerByUserId(GetTriggerByUserIdRequest& request, std::function<void(AsyncGetTriggerByUserIdResult&)> callback)
     {
         GetTriggerByUserIdTask& task = *new GetTriggerByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2933,7 +2933,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void triggerByUserId(std::function<void(AsyncTriggerByUserIdResult&)> callback, TriggerByUserIdRequest& request)
+    void triggerByUserId(TriggerByUserIdRequest& request, std::function<void(AsyncTriggerByUserIdResult&)> callback)
     {
         TriggerByUserIdTask& task = *new TriggerByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2945,7 +2945,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteTrigger(std::function<void(AsyncDeleteTriggerResult&)> callback, DeleteTriggerRequest& request)
+    void deleteTrigger(DeleteTriggerRequest& request, std::function<void(AsyncDeleteTriggerResult&)> callback)
     {
         DeleteTriggerTask& task = *new DeleteTriggerTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2957,7 +2957,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteTriggerByUserId(std::function<void(AsyncDeleteTriggerByUserIdResult&)> callback, DeleteTriggerByUserIdRequest& request)
+    void deleteTriggerByUserId(DeleteTriggerByUserIdRequest& request, std::function<void(AsyncDeleteTriggerByUserIdResult&)> callback)
     {
         DeleteTriggerByUserIdTask& task = *new DeleteTriggerByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2969,7 +2969,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeEvents(std::function<void(AsyncDescribeEventsResult&)> callback, DescribeEventsRequest& request)
+    void describeEvents(DescribeEventsRequest& request, std::function<void(AsyncDescribeEventsResult&)> callback)
     {
         DescribeEventsTask& task = *new DescribeEventsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2981,7 +2981,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeEventsByUserId(std::function<void(AsyncDescribeEventsByUserIdResult&)> callback, DescribeEventsByUserIdRequest& request)
+    void describeEventsByUserId(DescribeEventsByUserIdRequest& request, std::function<void(AsyncDescribeEventsByUserIdResult&)> callback)
     {
         DescribeEventsByUserIdTask& task = *new DescribeEventsByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -2993,7 +2993,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeRawEvents(std::function<void(AsyncDescribeRawEventsResult&)> callback, DescribeRawEventsRequest& request)
+    void describeRawEvents(DescribeRawEventsRequest& request, std::function<void(AsyncDescribeRawEventsResult&)> callback)
     {
         DescribeRawEventsTask& task = *new DescribeRawEventsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3005,7 +3005,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getEvent(std::function<void(AsyncGetEventResult&)> callback, GetEventRequest& request)
+    void getEvent(GetEventRequest& request, std::function<void(AsyncGetEventResult&)> callback)
     {
         GetEventTask& task = *new GetEventTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3017,7 +3017,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getEventByUserId(std::function<void(AsyncGetEventByUserIdResult&)> callback, GetEventByUserIdRequest& request)
+    void getEventByUserId(GetEventByUserIdRequest& request, std::function<void(AsyncGetEventByUserIdResult&)> callback)
     {
         GetEventByUserIdTask& task = *new GetEventByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3029,7 +3029,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getRawEvent(std::function<void(AsyncGetRawEventResult&)> callback, GetRawEventRequest& request)
+    void getRawEvent(GetRawEventRequest& request, std::function<void(AsyncGetRawEventResult&)> callback)
     {
         GetRawEventTask& task = *new GetRawEventTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3041,7 +3041,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
+    void exportMaster(ExportMasterRequest& request, std::function<void(AsyncExportMasterResult&)> callback)
     {
         ExportMasterTask& task = *new ExportMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3053,7 +3053,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCurrentEventMaster(std::function<void(AsyncGetCurrentEventMasterResult&)> callback, GetCurrentEventMasterRequest& request)
+    void getCurrentEventMaster(GetCurrentEventMasterRequest& request, std::function<void(AsyncGetCurrentEventMasterResult&)> callback)
     {
         GetCurrentEventMasterTask& task = *new GetCurrentEventMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3065,7 +3065,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentEventMaster(std::function<void(AsyncUpdateCurrentEventMasterResult&)> callback, UpdateCurrentEventMasterRequest& request)
+    void updateCurrentEventMaster(UpdateCurrentEventMasterRequest& request, std::function<void(AsyncUpdateCurrentEventMasterResult&)> callback)
     {
         UpdateCurrentEventMasterTask& task = *new UpdateCurrentEventMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -3077,7 +3077,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentEventMasterFromGitHub(std::function<void(AsyncUpdateCurrentEventMasterFromGitHubResult&)> callback, UpdateCurrentEventMasterFromGitHubRequest& request)
+    void updateCurrentEventMasterFromGitHub(UpdateCurrentEventMasterFromGitHubRequest& request, std::function<void(AsyncUpdateCurrentEventMasterFromGitHubResult&)> callback)
     {
         UpdateCurrentEventMasterFromGitHubTask& task = *new UpdateCurrentEventMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();

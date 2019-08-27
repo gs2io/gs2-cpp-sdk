@@ -23,12 +23,6 @@
 #include <gs2/core/network/Gs2WebSocketSession.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include "model/model.hpp"
-#include "request/DescribeMissionTaskModelsRequest.hpp"
-#include "request/GetMissionTaskModelRequest.hpp"
-#include "request/ExportMasterRequest.hpp"
-#include "request/GetCurrentMissionMasterRequest.hpp"
-#include "request/UpdateCurrentMissionMasterRequest.hpp"
-#include "request/UpdateCurrentMissionMasterFromGitHubRequest.hpp"
 #include "request/DescribeCounterModelsRequest.hpp"
 #include "request/GetCounterModelRequest.hpp"
 #include "request/DescribeCompletesRequest.hpp"
@@ -40,6 +34,24 @@
 #include "request/GetCompleteByUserIdRequest.hpp"
 #include "request/DeleteCompleteByUserIdRequest.hpp"
 #include "request/ReceiveByStampTaskRequest.hpp"
+#include "request/DescribeMissionTaskModelsRequest.hpp"
+#include "request/GetMissionTaskModelRequest.hpp"
+#include "request/DescribeCountersRequest.hpp"
+#include "request/DescribeCountersByUserIdRequest.hpp"
+#include "request/IncreaseCounterByUserIdRequest.hpp"
+#include "request/GetCounterRequest.hpp"
+#include "request/GetCounterByUserIdRequest.hpp"
+#include "request/DeleteCounterByUserIdRequest.hpp"
+#include "request/IncreaseByStampSheetRequest.hpp"
+#include "request/DescribeMissionTaskModelMastersRequest.hpp"
+#include "request/CreateMissionTaskModelMasterRequest.hpp"
+#include "request/GetMissionTaskModelMasterRequest.hpp"
+#include "request/UpdateMissionTaskModelMasterRequest.hpp"
+#include "request/DeleteMissionTaskModelMasterRequest.hpp"
+#include "request/ExportMasterRequest.hpp"
+#include "request/GetCurrentMissionMasterRequest.hpp"
+#include "request/UpdateCurrentMissionMasterRequest.hpp"
+#include "request/UpdateCurrentMissionMasterFromGitHubRequest.hpp"
 #include "request/DescribeCounterModelMastersRequest.hpp"
 #include "request/CreateCounterModelMasterRequest.hpp"
 #include "request/GetCounterModelMasterRequest.hpp"
@@ -51,31 +63,13 @@
 #include "request/GetNamespaceRequest.hpp"
 #include "request/UpdateNamespaceRequest.hpp"
 #include "request/DeleteNamespaceRequest.hpp"
-#include "request/DescribeMissionGroupModelsRequest.hpp"
-#include "request/GetMissionGroupModelRequest.hpp"
 #include "request/DescribeMissionGroupModelMastersRequest.hpp"
 #include "request/CreateMissionGroupModelMasterRequest.hpp"
 #include "request/GetMissionGroupModelMasterRequest.hpp"
 #include "request/UpdateMissionGroupModelMasterRequest.hpp"
 #include "request/DeleteMissionGroupModelMasterRequest.hpp"
-#include "request/DescribeMissionTaskModelMastersRequest.hpp"
-#include "request/CreateMissionTaskModelMasterRequest.hpp"
-#include "request/GetMissionTaskModelMasterRequest.hpp"
-#include "request/UpdateMissionTaskModelMasterRequest.hpp"
-#include "request/DeleteMissionTaskModelMasterRequest.hpp"
-#include "request/DescribeCountersRequest.hpp"
-#include "request/DescribeCountersByUserIdRequest.hpp"
-#include "request/IncreaseCounterByUserIdRequest.hpp"
-#include "request/GetCounterRequest.hpp"
-#include "request/GetCounterByUserIdRequest.hpp"
-#include "request/DeleteCounterByUserIdRequest.hpp"
-#include "request/IncreaseByStampSheetRequest.hpp"
-#include "result/DescribeMissionTaskModelsResult.hpp"
-#include "result/GetMissionTaskModelResult.hpp"
-#include "result/ExportMasterResult.hpp"
-#include "result/GetCurrentMissionMasterResult.hpp"
-#include "result/UpdateCurrentMissionMasterResult.hpp"
-#include "result/UpdateCurrentMissionMasterFromGitHubResult.hpp"
+#include "request/DescribeMissionGroupModelsRequest.hpp"
+#include "request/GetMissionGroupModelRequest.hpp"
 #include "result/DescribeCounterModelsResult.hpp"
 #include "result/GetCounterModelResult.hpp"
 #include "result/DescribeCompletesResult.hpp"
@@ -87,6 +81,24 @@
 #include "result/GetCompleteByUserIdResult.hpp"
 #include "result/DeleteCompleteByUserIdResult.hpp"
 #include "result/ReceiveByStampTaskResult.hpp"
+#include "result/DescribeMissionTaskModelsResult.hpp"
+#include "result/GetMissionTaskModelResult.hpp"
+#include "result/DescribeCountersResult.hpp"
+#include "result/DescribeCountersByUserIdResult.hpp"
+#include "result/IncreaseCounterByUserIdResult.hpp"
+#include "result/GetCounterResult.hpp"
+#include "result/GetCounterByUserIdResult.hpp"
+#include "result/DeleteCounterByUserIdResult.hpp"
+#include "result/IncreaseByStampSheetResult.hpp"
+#include "result/DescribeMissionTaskModelMastersResult.hpp"
+#include "result/CreateMissionTaskModelMasterResult.hpp"
+#include "result/GetMissionTaskModelMasterResult.hpp"
+#include "result/UpdateMissionTaskModelMasterResult.hpp"
+#include "result/DeleteMissionTaskModelMasterResult.hpp"
+#include "result/ExportMasterResult.hpp"
+#include "result/GetCurrentMissionMasterResult.hpp"
+#include "result/UpdateCurrentMissionMasterResult.hpp"
+#include "result/UpdateCurrentMissionMasterFromGitHubResult.hpp"
 #include "result/DescribeCounterModelMastersResult.hpp"
 #include "result/CreateCounterModelMasterResult.hpp"
 #include "result/GetCounterModelMasterResult.hpp"
@@ -98,35 +110,17 @@
 #include "result/GetNamespaceResult.hpp"
 #include "result/UpdateNamespaceResult.hpp"
 #include "result/DeleteNamespaceResult.hpp"
-#include "result/DescribeMissionGroupModelsResult.hpp"
-#include "result/GetMissionGroupModelResult.hpp"
 #include "result/DescribeMissionGroupModelMastersResult.hpp"
 #include "result/CreateMissionGroupModelMasterResult.hpp"
 #include "result/GetMissionGroupModelMasterResult.hpp"
 #include "result/UpdateMissionGroupModelMasterResult.hpp"
 #include "result/DeleteMissionGroupModelMasterResult.hpp"
-#include "result/DescribeMissionTaskModelMastersResult.hpp"
-#include "result/CreateMissionTaskModelMasterResult.hpp"
-#include "result/GetMissionTaskModelMasterResult.hpp"
-#include "result/UpdateMissionTaskModelMasterResult.hpp"
-#include "result/DeleteMissionTaskModelMasterResult.hpp"
-#include "result/DescribeCountersResult.hpp"
-#include "result/DescribeCountersByUserIdResult.hpp"
-#include "result/IncreaseCounterByUserIdResult.hpp"
-#include "result/GetCounterResult.hpp"
-#include "result/GetCounterByUserIdResult.hpp"
-#include "result/DeleteCounterByUserIdResult.hpp"
-#include "result/IncreaseByStampSheetResult.hpp"
+#include "result/DescribeMissionGroupModelsResult.hpp"
+#include "result/GetMissionGroupModelResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace mission {
 
-typedef AsyncResult<DescribeMissionTaskModelsResult> AsyncDescribeMissionTaskModelsResult;
-typedef AsyncResult<GetMissionTaskModelResult> AsyncGetMissionTaskModelResult;
-typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
-typedef AsyncResult<GetCurrentMissionMasterResult> AsyncGetCurrentMissionMasterResult;
-typedef AsyncResult<UpdateCurrentMissionMasterResult> AsyncUpdateCurrentMissionMasterResult;
-typedef AsyncResult<UpdateCurrentMissionMasterFromGitHubResult> AsyncUpdateCurrentMissionMasterFromGitHubResult;
 typedef AsyncResult<DescribeCounterModelsResult> AsyncDescribeCounterModelsResult;
 typedef AsyncResult<GetCounterModelResult> AsyncGetCounterModelResult;
 typedef AsyncResult<DescribeCompletesResult> AsyncDescribeCompletesResult;
@@ -138,6 +132,24 @@ typedef AsyncResult<GetCompleteResult> AsyncGetCompleteResult;
 typedef AsyncResult<GetCompleteByUserIdResult> AsyncGetCompleteByUserIdResult;
 typedef AsyncResult<DeleteCompleteByUserIdResult> AsyncDeleteCompleteByUserIdResult;
 typedef AsyncResult<ReceiveByStampTaskResult> AsyncReceiveByStampTaskResult;
+typedef AsyncResult<DescribeMissionTaskModelsResult> AsyncDescribeMissionTaskModelsResult;
+typedef AsyncResult<GetMissionTaskModelResult> AsyncGetMissionTaskModelResult;
+typedef AsyncResult<DescribeCountersResult> AsyncDescribeCountersResult;
+typedef AsyncResult<DescribeCountersByUserIdResult> AsyncDescribeCountersByUserIdResult;
+typedef AsyncResult<IncreaseCounterByUserIdResult> AsyncIncreaseCounterByUserIdResult;
+typedef AsyncResult<GetCounterResult> AsyncGetCounterResult;
+typedef AsyncResult<GetCounterByUserIdResult> AsyncGetCounterByUserIdResult;
+typedef AsyncResult<DeleteCounterByUserIdResult> AsyncDeleteCounterByUserIdResult;
+typedef AsyncResult<IncreaseByStampSheetResult> AsyncIncreaseByStampSheetResult;
+typedef AsyncResult<DescribeMissionTaskModelMastersResult> AsyncDescribeMissionTaskModelMastersResult;
+typedef AsyncResult<CreateMissionTaskModelMasterResult> AsyncCreateMissionTaskModelMasterResult;
+typedef AsyncResult<GetMissionTaskModelMasterResult> AsyncGetMissionTaskModelMasterResult;
+typedef AsyncResult<UpdateMissionTaskModelMasterResult> AsyncUpdateMissionTaskModelMasterResult;
+typedef AsyncResult<DeleteMissionTaskModelMasterResult> AsyncDeleteMissionTaskModelMasterResult;
+typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
+typedef AsyncResult<GetCurrentMissionMasterResult> AsyncGetCurrentMissionMasterResult;
+typedef AsyncResult<UpdateCurrentMissionMasterResult> AsyncUpdateCurrentMissionMasterResult;
+typedef AsyncResult<UpdateCurrentMissionMasterFromGitHubResult> AsyncUpdateCurrentMissionMasterFromGitHubResult;
 typedef AsyncResult<DescribeCounterModelMastersResult> AsyncDescribeCounterModelMastersResult;
 typedef AsyncResult<CreateCounterModelMasterResult> AsyncCreateCounterModelMasterResult;
 typedef AsyncResult<GetCounterModelMasterResult> AsyncGetCounterModelMasterResult;
@@ -149,25 +161,13 @@ typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
 typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
 typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
 typedef AsyncResult<DeleteNamespaceResult> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeMissionGroupModelsResult> AsyncDescribeMissionGroupModelsResult;
-typedef AsyncResult<GetMissionGroupModelResult> AsyncGetMissionGroupModelResult;
 typedef AsyncResult<DescribeMissionGroupModelMastersResult> AsyncDescribeMissionGroupModelMastersResult;
 typedef AsyncResult<CreateMissionGroupModelMasterResult> AsyncCreateMissionGroupModelMasterResult;
 typedef AsyncResult<GetMissionGroupModelMasterResult> AsyncGetMissionGroupModelMasterResult;
 typedef AsyncResult<UpdateMissionGroupModelMasterResult> AsyncUpdateMissionGroupModelMasterResult;
 typedef AsyncResult<DeleteMissionGroupModelMasterResult> AsyncDeleteMissionGroupModelMasterResult;
-typedef AsyncResult<DescribeMissionTaskModelMastersResult> AsyncDescribeMissionTaskModelMastersResult;
-typedef AsyncResult<CreateMissionTaskModelMasterResult> AsyncCreateMissionTaskModelMasterResult;
-typedef AsyncResult<GetMissionTaskModelMasterResult> AsyncGetMissionTaskModelMasterResult;
-typedef AsyncResult<UpdateMissionTaskModelMasterResult> AsyncUpdateMissionTaskModelMasterResult;
-typedef AsyncResult<DeleteMissionTaskModelMasterResult> AsyncDeleteMissionTaskModelMasterResult;
-typedef AsyncResult<DescribeCountersResult> AsyncDescribeCountersResult;
-typedef AsyncResult<DescribeCountersByUserIdResult> AsyncDescribeCountersByUserIdResult;
-typedef AsyncResult<IncreaseCounterByUserIdResult> AsyncIncreaseCounterByUserIdResult;
-typedef AsyncResult<GetCounterResult> AsyncGetCounterResult;
-typedef AsyncResult<GetCounterByUserIdResult> AsyncGetCounterByUserIdResult;
-typedef AsyncResult<DeleteCounterByUserIdResult> AsyncDeleteCounterByUserIdResult;
-typedef AsyncResult<IncreaseByStampSheetResult> AsyncIncreaseByStampSheetResult;
+typedef AsyncResult<DescribeMissionGroupModelsResult> AsyncDescribeMissionGroupModelsResult;
+typedef AsyncResult<GetMissionGroupModelResult> AsyncGetMissionGroupModelResult;
 
 /**
  * GS2 Mission API クライアント
@@ -178,469 +178,6 @@ typedef AsyncResult<IncreaseByStampSheetResult> AsyncIncreaseByStampSheetResult;
 class Gs2MissionWebSocketClient : public AbstractGs2ClientBase
 {
 private:
-
-    class DescribeMissionTaskModelsTask : public detail::Gs2WebSocketSessionTask<DescribeMissionTaskModelsResult>
-    {
-    private:
-        DescribeMissionTaskModelsRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getMissionGroupName())
-            {
-                writer.writePropertyName("missionGroupName");
-                writer.writeCharArray(*m_Request.getMissionGroupName());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("missionTaskModel");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeMissionTaskModels");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        DescribeMissionTaskModelsTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeMissionTaskModelsRequest& request,
-            Gs2WebSocketSessionTask<DescribeMissionTaskModelsResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeMissionTaskModelsResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~DescribeMissionTaskModelsTask() GS2_OVERRIDE = default;
-    };
-
-    class GetMissionTaskModelTask : public detail::Gs2WebSocketSessionTask<GetMissionTaskModelResult>
-    {
-    private:
-        GetMissionTaskModelRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getMissionGroupName())
-            {
-                writer.writePropertyName("missionGroupName");
-                writer.writeCharArray(*m_Request.getMissionGroupName());
-            }
-            if (m_Request.getMissionTaskName())
-            {
-                writer.writePropertyName("missionTaskName");
-                writer.writeCharArray(*m_Request.getMissionTaskName());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("missionTaskModel");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getMissionTaskModel");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        GetMissionTaskModelTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetMissionTaskModelRequest& request,
-            Gs2WebSocketSessionTask<GetMissionTaskModelResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<GetMissionTaskModelResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~GetMissionTaskModelTask() GS2_OVERRIDE = default;
-    };
-
-    class ExportMasterTask : public detail::Gs2WebSocketSessionTask<ExportMasterResult>
-    {
-    private:
-        ExportMasterRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("currentMissionMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("exportMaster");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        ExportMasterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            ExportMasterRequest& request,
-            Gs2WebSocketSessionTask<ExportMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<ExportMasterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~ExportMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class GetCurrentMissionMasterTask : public detail::Gs2WebSocketSessionTask<GetCurrentMissionMasterResult>
-    {
-    private:
-        GetCurrentMissionMasterRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("currentMissionMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getCurrentMissionMaster");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        GetCurrentMissionMasterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetCurrentMissionMasterRequest& request,
-            Gs2WebSocketSessionTask<GetCurrentMissionMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<GetCurrentMissionMasterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~GetCurrentMissionMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class UpdateCurrentMissionMasterTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentMissionMasterResult>
-    {
-    private:
-        UpdateCurrentMissionMasterRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getSettings())
-            {
-                writer.writePropertyName("settings");
-                writer.writeCharArray(*m_Request.getSettings());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("currentMissionMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("updateCurrentMissionMaster");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        UpdateCurrentMissionMasterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            UpdateCurrentMissionMasterRequest& request,
-            Gs2WebSocketSessionTask<UpdateCurrentMissionMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<UpdateCurrentMissionMasterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~UpdateCurrentMissionMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class UpdateCurrentMissionMasterFromGitHubTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentMissionMasterFromGitHubResult>
-    {
-    private:
-        UpdateCurrentMissionMasterFromGitHubRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getCheckoutSetting())
-            {
-                writer.writePropertyName("checkoutSetting");
-                write(writer, *m_Request.getCheckoutSetting());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("currentMissionMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("updateCurrentMissionMasterFromGitHub");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        UpdateCurrentMissionMasterFromGitHubTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            UpdateCurrentMissionMasterFromGitHubRequest& request,
-            Gs2WebSocketSessionTask<UpdateCurrentMissionMasterFromGitHubResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<UpdateCurrentMissionMasterFromGitHubResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~UpdateCurrentMissionMasterFromGitHubTask() GS2_OVERRIDE = default;
-    };
 
     class DescribeCounterModelsTask : public detail::Gs2WebSocketSessionTask<DescribeCounterModelsResult>
     {
@@ -1625,6 +1162,1607 @@ private:
         {}
 
         ~ReceiveByStampTaskTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeMissionTaskModelsTask : public detail::Gs2WebSocketSessionTask<DescribeMissionTaskModelsResult>
+    {
+    private:
+        DescribeMissionTaskModelsRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getMissionGroupName())
+            {
+                writer.writePropertyName("missionGroupName");
+                writer.writeCharArray(*m_Request.getMissionGroupName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("missionTaskModel");
+            writer.writePropertyName("function");
+            writer.writeCharArray("describeMissionTaskModels");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        DescribeMissionTaskModelsTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            DescribeMissionTaskModelsRequest& request,
+            Gs2WebSocketSessionTask<DescribeMissionTaskModelsResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeMissionTaskModelsResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~DescribeMissionTaskModelsTask() GS2_OVERRIDE = default;
+    };
+
+    class GetMissionTaskModelTask : public detail::Gs2WebSocketSessionTask<GetMissionTaskModelResult>
+    {
+    private:
+        GetMissionTaskModelRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getMissionGroupName())
+            {
+                writer.writePropertyName("missionGroupName");
+                writer.writeCharArray(*m_Request.getMissionGroupName());
+            }
+            if (m_Request.getMissionTaskName())
+            {
+                writer.writePropertyName("missionTaskName");
+                writer.writeCharArray(*m_Request.getMissionTaskName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("missionTaskModel");
+            writer.writePropertyName("function");
+            writer.writeCharArray("getMissionTaskModel");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        GetMissionTaskModelTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            GetMissionTaskModelRequest& request,
+            Gs2WebSocketSessionTask<GetMissionTaskModelResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetMissionTaskModelResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~GetMissionTaskModelTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeCountersTask : public detail::Gs2WebSocketSessionTask<DescribeCountersResult>
+    {
+    private:
+        DescribeCountersRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getPageToken())
+            {
+                writer.writePropertyName("pageToken");
+                writer.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                writer.writePropertyName("limit");
+                writer.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("counter");
+            writer.writePropertyName("function");
+            writer.writeCharArray("describeCounters");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        DescribeCountersTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            DescribeCountersRequest& request,
+            Gs2WebSocketSessionTask<DescribeCountersResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeCountersResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~DescribeCountersTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeCountersByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeCountersByUserIdResult>
+    {
+    private:
+        DescribeCountersByUserIdRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                writer.writePropertyName("userId");
+                writer.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getPageToken())
+            {
+                writer.writePropertyName("pageToken");
+                writer.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                writer.writePropertyName("limit");
+                writer.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("counter");
+            writer.writePropertyName("function");
+            writer.writeCharArray("describeCountersByUserId");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        DescribeCountersByUserIdTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            DescribeCountersByUserIdRequest& request,
+            Gs2WebSocketSessionTask<DescribeCountersByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeCountersByUserIdResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~DescribeCountersByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class IncreaseCounterByUserIdTask : public detail::Gs2WebSocketSessionTask<IncreaseCounterByUserIdResult>
+    {
+    private:
+        IncreaseCounterByUserIdRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCounterName())
+            {
+                writer.writePropertyName("counterName");
+                writer.writeCharArray(*m_Request.getCounterName());
+            }
+            if (m_Request.getUserId())
+            {
+                writer.writePropertyName("userId");
+                writer.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getValue())
+            {
+                writer.writePropertyName("value");
+                writer.writeInt64(*m_Request.getValue());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("counter");
+            writer.writePropertyName("function");
+            writer.writeCharArray("increaseCounterByUserId");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        IncreaseCounterByUserIdTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            IncreaseCounterByUserIdRequest& request,
+            Gs2WebSocketSessionTask<IncreaseCounterByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<IncreaseCounterByUserIdResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~IncreaseCounterByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class GetCounterTask : public detail::Gs2WebSocketSessionTask<GetCounterResult>
+    {
+    private:
+        GetCounterRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCounterName())
+            {
+                writer.writePropertyName("counterName");
+                writer.writeCharArray(*m_Request.getCounterName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("counter");
+            writer.writePropertyName("function");
+            writer.writeCharArray("getCounter");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        GetCounterTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            GetCounterRequest& request,
+            Gs2WebSocketSessionTask<GetCounterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetCounterResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~GetCounterTask() GS2_OVERRIDE = default;
+    };
+
+    class GetCounterByUserIdTask : public detail::Gs2WebSocketSessionTask<GetCounterByUserIdResult>
+    {
+    private:
+        GetCounterByUserIdRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCounterName())
+            {
+                writer.writePropertyName("counterName");
+                writer.writeCharArray(*m_Request.getCounterName());
+            }
+            if (m_Request.getUserId())
+            {
+                writer.writePropertyName("userId");
+                writer.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("counter");
+            writer.writePropertyName("function");
+            writer.writeCharArray("getCounterByUserId");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        GetCounterByUserIdTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            GetCounterByUserIdRequest& request,
+            Gs2WebSocketSessionTask<GetCounterByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetCounterByUserIdResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~GetCounterByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteCounterByUserIdTask : public detail::Gs2WebSocketSessionTask<DeleteCounterByUserIdResult>
+    {
+    private:
+        DeleteCounterByUserIdRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                writer.writePropertyName("userId");
+                writer.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getCounterName())
+            {
+                writer.writePropertyName("counterName");
+                writer.writeCharArray(*m_Request.getCounterName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("counter");
+            writer.writePropertyName("function");
+            writer.writeCharArray("deleteCounterByUserId");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        DeleteCounterByUserIdTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            DeleteCounterByUserIdRequest& request,
+            Gs2WebSocketSessionTask<DeleteCounterByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DeleteCounterByUserIdResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~DeleteCounterByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class IncreaseByStampSheetTask : public detail::Gs2WebSocketSessionTask<IncreaseByStampSheetResult>
+    {
+    private:
+        IncreaseByStampSheetRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                writer.writePropertyName("stampSheet");
+                writer.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                writer.writePropertyName("keyId");
+                writer.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("counter");
+            writer.writePropertyName("function");
+            writer.writeCharArray("increaseByStampSheet");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        IncreaseByStampSheetTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            IncreaseByStampSheetRequest& request,
+            Gs2WebSocketSessionTask<IncreaseByStampSheetResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<IncreaseByStampSheetResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~IncreaseByStampSheetTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeMissionTaskModelMastersTask : public detail::Gs2WebSocketSessionTask<DescribeMissionTaskModelMastersResult>
+    {
+    private:
+        DescribeMissionTaskModelMastersRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getMissionGroupName())
+            {
+                writer.writePropertyName("missionGroupName");
+                writer.writeCharArray(*m_Request.getMissionGroupName());
+            }
+            if (m_Request.getPageToken())
+            {
+                writer.writePropertyName("pageToken");
+                writer.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                writer.writePropertyName("limit");
+                writer.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("missionTaskModelMaster");
+            writer.writePropertyName("function");
+            writer.writeCharArray("describeMissionTaskModelMasters");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        DescribeMissionTaskModelMastersTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            DescribeMissionTaskModelMastersRequest& request,
+            Gs2WebSocketSessionTask<DescribeMissionTaskModelMastersResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeMissionTaskModelMastersResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~DescribeMissionTaskModelMastersTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateMissionTaskModelMasterTask : public detail::Gs2WebSocketSessionTask<CreateMissionTaskModelMasterResult>
+    {
+    private:
+        CreateMissionTaskModelMasterRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getMissionGroupName())
+            {
+                writer.writePropertyName("missionGroupName");
+                writer.writeCharArray(*m_Request.getMissionGroupName());
+            }
+            if (m_Request.getName())
+            {
+                writer.writePropertyName("name");
+                writer.writeCharArray(*m_Request.getName());
+            }
+            if (m_Request.getMetadata())
+            {
+                writer.writePropertyName("metadata");
+                writer.writeCharArray(*m_Request.getMetadata());
+            }
+            if (m_Request.getDescription())
+            {
+                writer.writePropertyName("description");
+                writer.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getCounterName())
+            {
+                writer.writePropertyName("counterName");
+                writer.writeCharArray(*m_Request.getCounterName());
+            }
+            if (m_Request.getResetType())
+            {
+                writer.writePropertyName("resetType");
+                writer.writeCharArray(*m_Request.getResetType());
+            }
+            if (m_Request.getTargetValue())
+            {
+                writer.writePropertyName("targetValue");
+                writer.writeInt64(*m_Request.getTargetValue());
+            }
+            if (m_Request.getCompleteAcquireActions())
+            {
+                writer.writePropertyName("completeAcquireActions");
+                writer.writeArrayStart();
+                auto& list = *m_Request.getCompleteAcquireActions();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(writer, list[i]);
+                }
+                writer.writeArrayEnd();
+            }
+            if (m_Request.getChallengePeriodEventId())
+            {
+                writer.writePropertyName("challengePeriodEventId");
+                writer.writeCharArray(*m_Request.getChallengePeriodEventId());
+            }
+            if (m_Request.getPremiseMissionTaskName())
+            {
+                writer.writePropertyName("premiseMissionTaskName");
+                writer.writeCharArray(*m_Request.getPremiseMissionTaskName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("missionTaskModelMaster");
+            writer.writePropertyName("function");
+            writer.writeCharArray("createMissionTaskModelMaster");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        CreateMissionTaskModelMasterTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            CreateMissionTaskModelMasterRequest& request,
+            Gs2WebSocketSessionTask<CreateMissionTaskModelMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<CreateMissionTaskModelMasterResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~CreateMissionTaskModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class GetMissionTaskModelMasterTask : public detail::Gs2WebSocketSessionTask<GetMissionTaskModelMasterResult>
+    {
+    private:
+        GetMissionTaskModelMasterRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getMissionGroupName())
+            {
+                writer.writePropertyName("missionGroupName");
+                writer.writeCharArray(*m_Request.getMissionGroupName());
+            }
+            if (m_Request.getMissionTaskName())
+            {
+                writer.writePropertyName("missionTaskName");
+                writer.writeCharArray(*m_Request.getMissionTaskName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("missionTaskModelMaster");
+            writer.writePropertyName("function");
+            writer.writeCharArray("getMissionTaskModelMaster");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        GetMissionTaskModelMasterTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            GetMissionTaskModelMasterRequest& request,
+            Gs2WebSocketSessionTask<GetMissionTaskModelMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetMissionTaskModelMasterResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~GetMissionTaskModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateMissionTaskModelMasterTask : public detail::Gs2WebSocketSessionTask<UpdateMissionTaskModelMasterResult>
+    {
+    private:
+        UpdateMissionTaskModelMasterRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getMissionGroupName())
+            {
+                writer.writePropertyName("missionGroupName");
+                writer.writeCharArray(*m_Request.getMissionGroupName());
+            }
+            if (m_Request.getMissionTaskName())
+            {
+                writer.writePropertyName("missionTaskName");
+                writer.writeCharArray(*m_Request.getMissionTaskName());
+            }
+            if (m_Request.getMetadata())
+            {
+                writer.writePropertyName("metadata");
+                writer.writeCharArray(*m_Request.getMetadata());
+            }
+            if (m_Request.getDescription())
+            {
+                writer.writePropertyName("description");
+                writer.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getCounterName())
+            {
+                writer.writePropertyName("counterName");
+                writer.writeCharArray(*m_Request.getCounterName());
+            }
+            if (m_Request.getResetType())
+            {
+                writer.writePropertyName("resetType");
+                writer.writeCharArray(*m_Request.getResetType());
+            }
+            if (m_Request.getTargetValue())
+            {
+                writer.writePropertyName("targetValue");
+                writer.writeInt64(*m_Request.getTargetValue());
+            }
+            if (m_Request.getCompleteAcquireActions())
+            {
+                writer.writePropertyName("completeAcquireActions");
+                writer.writeArrayStart();
+                auto& list = *m_Request.getCompleteAcquireActions();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(writer, list[i]);
+                }
+                writer.writeArrayEnd();
+            }
+            if (m_Request.getChallengePeriodEventId())
+            {
+                writer.writePropertyName("challengePeriodEventId");
+                writer.writeCharArray(*m_Request.getChallengePeriodEventId());
+            }
+            if (m_Request.getPremiseMissionTaskName())
+            {
+                writer.writePropertyName("premiseMissionTaskName");
+                writer.writeCharArray(*m_Request.getPremiseMissionTaskName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("missionTaskModelMaster");
+            writer.writePropertyName("function");
+            writer.writeCharArray("updateMissionTaskModelMaster");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        UpdateMissionTaskModelMasterTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            UpdateMissionTaskModelMasterRequest& request,
+            Gs2WebSocketSessionTask<UpdateMissionTaskModelMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateMissionTaskModelMasterResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~UpdateMissionTaskModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteMissionTaskModelMasterTask : public detail::Gs2WebSocketSessionTask<DeleteMissionTaskModelMasterResult>
+    {
+    private:
+        DeleteMissionTaskModelMasterRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getMissionGroupName())
+            {
+                writer.writePropertyName("missionGroupName");
+                writer.writeCharArray(*m_Request.getMissionGroupName());
+            }
+            if (m_Request.getMissionTaskName())
+            {
+                writer.writePropertyName("missionTaskName");
+                writer.writeCharArray(*m_Request.getMissionTaskName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("missionTaskModelMaster");
+            writer.writePropertyName("function");
+            writer.writeCharArray("deleteMissionTaskModelMaster");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        DeleteMissionTaskModelMasterTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            DeleteMissionTaskModelMasterRequest& request,
+            Gs2WebSocketSessionTask<DeleteMissionTaskModelMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DeleteMissionTaskModelMasterResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~DeleteMissionTaskModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class ExportMasterTask : public detail::Gs2WebSocketSessionTask<ExportMasterResult>
+    {
+    private:
+        ExportMasterRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("currentMissionMaster");
+            writer.writePropertyName("function");
+            writer.writeCharArray("exportMaster");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        ExportMasterTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            ExportMasterRequest& request,
+            Gs2WebSocketSessionTask<ExportMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<ExportMasterResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~ExportMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class GetCurrentMissionMasterTask : public detail::Gs2WebSocketSessionTask<GetCurrentMissionMasterResult>
+    {
+    private:
+        GetCurrentMissionMasterRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("currentMissionMaster");
+            writer.writePropertyName("function");
+            writer.writeCharArray("getCurrentMissionMaster");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        GetCurrentMissionMasterTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            GetCurrentMissionMasterRequest& request,
+            Gs2WebSocketSessionTask<GetCurrentMissionMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetCurrentMissionMasterResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~GetCurrentMissionMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateCurrentMissionMasterTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentMissionMasterResult>
+    {
+    private:
+        UpdateCurrentMissionMasterRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getSettings())
+            {
+                writer.writePropertyName("settings");
+                writer.writeCharArray(*m_Request.getSettings());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("currentMissionMaster");
+            writer.writePropertyName("function");
+            writer.writeCharArray("updateCurrentMissionMaster");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        UpdateCurrentMissionMasterTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            UpdateCurrentMissionMasterRequest& request,
+            Gs2WebSocketSessionTask<UpdateCurrentMissionMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateCurrentMissionMasterResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~UpdateCurrentMissionMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateCurrentMissionMasterFromGitHubTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentMissionMasterFromGitHubResult>
+    {
+    private:
+        UpdateCurrentMissionMasterFromGitHubRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCheckoutSetting())
+            {
+                writer.writePropertyName("checkoutSetting");
+                write(writer, *m_Request.getCheckoutSetting());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("currentMissionMaster");
+            writer.writePropertyName("function");
+            writer.writeCharArray("updateCurrentMissionMasterFromGitHub");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        UpdateCurrentMissionMasterFromGitHubTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            UpdateCurrentMissionMasterFromGitHubRequest& request,
+            Gs2WebSocketSessionTask<UpdateCurrentMissionMasterFromGitHubResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateCurrentMissionMasterFromGitHubResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~UpdateCurrentMissionMasterFromGitHubTask() GS2_OVERRIDE = default;
     };
 
     class DescribeCounterModelMastersTask : public detail::Gs2WebSocketSessionTask<DescribeCounterModelMastersResult>
@@ -2647,157 +3785,6 @@ private:
         ~DeleteNamespaceTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeMissionGroupModelsTask : public detail::Gs2WebSocketSessionTask<DescribeMissionGroupModelsResult>
-    {
-    private:
-        DescribeMissionGroupModelsRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("missionGroupModel");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeMissionGroupModels");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        DescribeMissionGroupModelsTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeMissionGroupModelsRequest& request,
-            Gs2WebSocketSessionTask<DescribeMissionGroupModelsResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeMissionGroupModelsResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~DescribeMissionGroupModelsTask() GS2_OVERRIDE = default;
-    };
-
-    class GetMissionGroupModelTask : public detail::Gs2WebSocketSessionTask<GetMissionGroupModelResult>
-    {
-    private:
-        GetMissionGroupModelRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getMissionGroupName())
-            {
-                writer.writePropertyName("missionGroupName");
-                writer.writeCharArray(*m_Request.getMissionGroupName());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("missionGroupModel");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getMissionGroupModel");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        GetMissionGroupModelTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetMissionGroupModelRequest& request,
-            Gs2WebSocketSessionTask<GetMissionGroupModelResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<GetMissionGroupModelResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~GetMissionGroupModelTask() GS2_OVERRIDE = default;
-    };
-
     class DescribeMissionGroupModelMastersTask : public detail::Gs2WebSocketSessionTask<DescribeMissionGroupModelMastersResult>
     {
     private:
@@ -3223,10 +4210,83 @@ private:
         ~DeleteMissionGroupModelMasterTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeMissionTaskModelMastersTask : public detail::Gs2WebSocketSessionTask<DescribeMissionTaskModelMastersResult>
+    class DescribeMissionGroupModelsTask : public detail::Gs2WebSocketSessionTask<DescribeMissionGroupModelsResult>
     {
     private:
-        DescribeMissionTaskModelMastersRequest& m_Request;
+        DescribeMissionGroupModelsRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("mission");
+            writer.writePropertyName("component");
+            writer.writeCharArray("missionGroupModel");
+            writer.writePropertyName("function");
+            writer.writeCharArray("describeMissionGroupModels");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        DescribeMissionGroupModelsTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            DescribeMissionGroupModelsRequest& request,
+            Gs2WebSocketSessionTask<DescribeMissionGroupModelsResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeMissionGroupModelsResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~DescribeMissionGroupModelsTask() GS2_OVERRIDE = default;
+    };
+
+    class GetMissionGroupModelTask : public detail::Gs2WebSocketSessionTask<GetMissionGroupModelResult>
+    {
+    private:
+        GetMissionGroupModelRequest& m_Request;
 
         void sendImpl(
             const StringHolder& clientId,
@@ -3253,16 +4313,6 @@ private:
                 writer.writePropertyName("missionGroupName");
                 writer.writeCharArray(*m_Request.getMissionGroupName());
             }
-            if (m_Request.getPageToken())
-            {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
-            }
             if (m_Request.getRequestId())
             {
                 writer.writePropertyName("xGs2RequestId");
@@ -3279,9 +4329,9 @@ private:
             writer.writePropertyName("service");
             writer.writeCharArray("mission");
             writer.writePropertyName("component");
-            writer.writeCharArray("missionTaskModelMaster");
+            writer.writeCharArray("missionGroupModel");
             writer.writePropertyName("function");
-            writer.writeCharArray("describeMissionTaskModelMasters");
+            writer.writeCharArray("getMissionGroupModel");
             writer.writePropertyName("contentType");
             writer.writeCharArray("application/json");
             writer.writePropertyName("requestId");
@@ -3299,1122 +4349,152 @@ private:
         }
 
     public:
-        DescribeMissionTaskModelMastersTask(
+        GetMissionGroupModelTask(
             Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeMissionTaskModelMastersRequest& request,
-            Gs2WebSocketSessionTask<DescribeMissionTaskModelMastersResult>::CallbackType callback
+            GetMissionGroupModelRequest& request,
+            Gs2WebSocketSessionTask<GetMissionGroupModelResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DescribeMissionTaskModelMastersResult>(gs2WebSocketSession, callback),
+            Gs2WebSocketSessionTask<GetMissionGroupModelResult>(gs2WebSocketSession, callback),
             m_Request(request)
         {}
 
-        ~DescribeMissionTaskModelMastersTask() GS2_OVERRIDE = default;
-    };
-
-    class CreateMissionTaskModelMasterTask : public detail::Gs2WebSocketSessionTask<CreateMissionTaskModelMasterResult>
-    {
-    private:
-        CreateMissionTaskModelMasterRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getMissionGroupName())
-            {
-                writer.writePropertyName("missionGroupName");
-                writer.writeCharArray(*m_Request.getMissionGroupName());
-            }
-            if (m_Request.getName())
-            {
-                writer.writePropertyName("name");
-                writer.writeCharArray(*m_Request.getName());
-            }
-            if (m_Request.getMetadata())
-            {
-                writer.writePropertyName("metadata");
-                writer.writeCharArray(*m_Request.getMetadata());
-            }
-            if (m_Request.getDescription())
-            {
-                writer.writePropertyName("description");
-                writer.writeCharArray(*m_Request.getDescription());
-            }
-            if (m_Request.getCounterName())
-            {
-                writer.writePropertyName("counterName");
-                writer.writeCharArray(*m_Request.getCounterName());
-            }
-            if (m_Request.getResetType())
-            {
-                writer.writePropertyName("resetType");
-                writer.writeCharArray(*m_Request.getResetType());
-            }
-            if (m_Request.getTargetValue())
-            {
-                writer.writePropertyName("targetValue");
-                writer.writeInt64(*m_Request.getTargetValue());
-            }
-            if (m_Request.getCompleteAcquireActions())
-            {
-                writer.writePropertyName("completeAcquireActions");
-                writer.writeArrayStart();
-                auto& list = *m_Request.getCompleteAcquireActions();
-                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-                {
-                    write(writer, list[i]);
-                }
-                writer.writeArrayEnd();
-            }
-            if (m_Request.getChallengePeriodEventId())
-            {
-                writer.writePropertyName("challengePeriodEventId");
-                writer.writeCharArray(*m_Request.getChallengePeriodEventId());
-            }
-            if (m_Request.getPremiseMissionTaskName())
-            {
-                writer.writePropertyName("premiseMissionTaskName");
-                writer.writeCharArray(*m_Request.getPremiseMissionTaskName());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("missionTaskModelMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("createMissionTaskModelMaster");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        CreateMissionTaskModelMasterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            CreateMissionTaskModelMasterRequest& request,
-            Gs2WebSocketSessionTask<CreateMissionTaskModelMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<CreateMissionTaskModelMasterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~CreateMissionTaskModelMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class GetMissionTaskModelMasterTask : public detail::Gs2WebSocketSessionTask<GetMissionTaskModelMasterResult>
-    {
-    private:
-        GetMissionTaskModelMasterRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getMissionGroupName())
-            {
-                writer.writePropertyName("missionGroupName");
-                writer.writeCharArray(*m_Request.getMissionGroupName());
-            }
-            if (m_Request.getMissionTaskName())
-            {
-                writer.writePropertyName("missionTaskName");
-                writer.writeCharArray(*m_Request.getMissionTaskName());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("missionTaskModelMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getMissionTaskModelMaster");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        GetMissionTaskModelMasterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetMissionTaskModelMasterRequest& request,
-            Gs2WebSocketSessionTask<GetMissionTaskModelMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<GetMissionTaskModelMasterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~GetMissionTaskModelMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class UpdateMissionTaskModelMasterTask : public detail::Gs2WebSocketSessionTask<UpdateMissionTaskModelMasterResult>
-    {
-    private:
-        UpdateMissionTaskModelMasterRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getMissionGroupName())
-            {
-                writer.writePropertyName("missionGroupName");
-                writer.writeCharArray(*m_Request.getMissionGroupName());
-            }
-            if (m_Request.getMissionTaskName())
-            {
-                writer.writePropertyName("missionTaskName");
-                writer.writeCharArray(*m_Request.getMissionTaskName());
-            }
-            if (m_Request.getMetadata())
-            {
-                writer.writePropertyName("metadata");
-                writer.writeCharArray(*m_Request.getMetadata());
-            }
-            if (m_Request.getDescription())
-            {
-                writer.writePropertyName("description");
-                writer.writeCharArray(*m_Request.getDescription());
-            }
-            if (m_Request.getCounterName())
-            {
-                writer.writePropertyName("counterName");
-                writer.writeCharArray(*m_Request.getCounterName());
-            }
-            if (m_Request.getResetType())
-            {
-                writer.writePropertyName("resetType");
-                writer.writeCharArray(*m_Request.getResetType());
-            }
-            if (m_Request.getTargetValue())
-            {
-                writer.writePropertyName("targetValue");
-                writer.writeInt64(*m_Request.getTargetValue());
-            }
-            if (m_Request.getCompleteAcquireActions())
-            {
-                writer.writePropertyName("completeAcquireActions");
-                writer.writeArrayStart();
-                auto& list = *m_Request.getCompleteAcquireActions();
-                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-                {
-                    write(writer, list[i]);
-                }
-                writer.writeArrayEnd();
-            }
-            if (m_Request.getChallengePeriodEventId())
-            {
-                writer.writePropertyName("challengePeriodEventId");
-                writer.writeCharArray(*m_Request.getChallengePeriodEventId());
-            }
-            if (m_Request.getPremiseMissionTaskName())
-            {
-                writer.writePropertyName("premiseMissionTaskName");
-                writer.writeCharArray(*m_Request.getPremiseMissionTaskName());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("missionTaskModelMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("updateMissionTaskModelMaster");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        UpdateMissionTaskModelMasterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            UpdateMissionTaskModelMasterRequest& request,
-            Gs2WebSocketSessionTask<UpdateMissionTaskModelMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<UpdateMissionTaskModelMasterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~UpdateMissionTaskModelMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class DeleteMissionTaskModelMasterTask : public detail::Gs2WebSocketSessionTask<DeleteMissionTaskModelMasterResult>
-    {
-    private:
-        DeleteMissionTaskModelMasterRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getMissionGroupName())
-            {
-                writer.writePropertyName("missionGroupName");
-                writer.writeCharArray(*m_Request.getMissionGroupName());
-            }
-            if (m_Request.getMissionTaskName())
-            {
-                writer.writePropertyName("missionTaskName");
-                writer.writeCharArray(*m_Request.getMissionTaskName());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("missionTaskModelMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("deleteMissionTaskModelMaster");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        DeleteMissionTaskModelMasterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DeleteMissionTaskModelMasterRequest& request,
-            Gs2WebSocketSessionTask<DeleteMissionTaskModelMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DeleteMissionTaskModelMasterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~DeleteMissionTaskModelMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeCountersTask : public detail::Gs2WebSocketSessionTask<DescribeCountersResult>
-    {
-    private:
-        DescribeCountersRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getPageToken())
-            {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeCounters");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        DescribeCountersTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeCountersRequest& request,
-            Gs2WebSocketSessionTask<DescribeCountersResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeCountersResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~DescribeCountersTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeCountersByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeCountersByUserIdResult>
-    {
-    private:
-        DescribeCountersByUserIdRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getUserId())
-            {
-                writer.writePropertyName("userId");
-                writer.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getPageToken())
-            {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeCountersByUserId");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        DescribeCountersByUserIdTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeCountersByUserIdRequest& request,
-            Gs2WebSocketSessionTask<DescribeCountersByUserIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeCountersByUserIdResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~DescribeCountersByUserIdTask() GS2_OVERRIDE = default;
-    };
-
-    class IncreaseCounterByUserIdTask : public detail::Gs2WebSocketSessionTask<IncreaseCounterByUserIdResult>
-    {
-    private:
-        IncreaseCounterByUserIdRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getCounterName())
-            {
-                writer.writePropertyName("counterName");
-                writer.writeCharArray(*m_Request.getCounterName());
-            }
-            if (m_Request.getUserId())
-            {
-                writer.writePropertyName("userId");
-                writer.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getValue())
-            {
-                writer.writePropertyName("value");
-                writer.writeInt64(*m_Request.getValue());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("increaseCounterByUserId");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        IncreaseCounterByUserIdTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            IncreaseCounterByUserIdRequest& request,
-            Gs2WebSocketSessionTask<IncreaseCounterByUserIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<IncreaseCounterByUserIdResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~IncreaseCounterByUserIdTask() GS2_OVERRIDE = default;
-    };
-
-    class GetCounterTask : public detail::Gs2WebSocketSessionTask<GetCounterResult>
-    {
-    private:
-        GetCounterRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getCounterName())
-            {
-                writer.writePropertyName("counterName");
-                writer.writeCharArray(*m_Request.getCounterName());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getCounter");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        GetCounterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetCounterRequest& request,
-            Gs2WebSocketSessionTask<GetCounterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<GetCounterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~GetCounterTask() GS2_OVERRIDE = default;
-    };
-
-    class GetCounterByUserIdTask : public detail::Gs2WebSocketSessionTask<GetCounterByUserIdResult>
-    {
-    private:
-        GetCounterByUserIdRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getCounterName())
-            {
-                writer.writePropertyName("counterName");
-                writer.writeCharArray(*m_Request.getCounterName());
-            }
-            if (m_Request.getUserId())
-            {
-                writer.writePropertyName("userId");
-                writer.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getCounterByUserId");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        GetCounterByUserIdTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetCounterByUserIdRequest& request,
-            Gs2WebSocketSessionTask<GetCounterByUserIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<GetCounterByUserIdResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~GetCounterByUserIdTask() GS2_OVERRIDE = default;
-    };
-
-    class DeleteCounterByUserIdTask : public detail::Gs2WebSocketSessionTask<DeleteCounterByUserIdResult>
-    {
-    private:
-        DeleteCounterByUserIdRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getUserId())
-            {
-                writer.writePropertyName("userId");
-                writer.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getCounterName())
-            {
-                writer.writePropertyName("counterName");
-                writer.writeCharArray(*m_Request.getCounterName());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("deleteCounterByUserId");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        DeleteCounterByUserIdTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DeleteCounterByUserIdRequest& request,
-            Gs2WebSocketSessionTask<DeleteCounterByUserIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DeleteCounterByUserIdResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~DeleteCounterByUserIdTask() GS2_OVERRIDE = default;
-    };
-
-    class IncreaseByStampSheetTask : public detail::Gs2WebSocketSessionTask<IncreaseByStampSheetResult>
-    {
-    private:
-        IncreaseByStampSheetRequest& m_Request;
-
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
-        {
-            detail::json::JsonWriter writer;
-
-            writer.writeObjectStart();
-
-            if (m_Request.getContextStack())
-            {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getStampSheet())
-            {
-                writer.writePropertyName("stampSheet");
-                writer.writeCharArray(*m_Request.getStampSheet());
-            }
-            if (m_Request.getKeyId())
-            {
-                writer.writePropertyName("keyId");
-                writer.writeCharArray(*m_Request.getKeyId());
-            }
-            if (m_Request.getRequestId())
-            {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("mission");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("increaseByStampSheet");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
-        }
-
-    public:
-        IncreaseByStampSheetTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            IncreaseByStampSheetRequest& request,
-            Gs2WebSocketSessionTask<IncreaseByStampSheetResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<IncreaseByStampSheetResult>(gs2WebSocketSession, callback),
-            m_Request(request)
-        {}
-
-        ~IncreaseByStampSheetTask() GS2_OVERRIDE = default;
+        ~GetMissionGroupModelTask() GS2_OVERRIDE = default;
     };
 
 private:
-    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    static void write(detail::json::JsonWriter& writer, const CounterModel& obj)
     {
         writer.writeObjectStart();
-        if (obj.getGitHubApiKeyId())
+        if (obj.getCounterId())
         {
-            writer.writePropertyName("gitHubApiKeyId");
-            writer.writeCharArray(*obj.getGitHubApiKeyId());
+            writer.writePropertyName("counterId");
+            writer.writeCharArray(*obj.getCounterId());
         }
-        if (obj.getRepositoryName())
+        if (obj.getName())
         {
-            writer.writePropertyName("repositoryName");
-            writer.writeCharArray(*obj.getRepositoryName());
+            writer.writePropertyName("name");
+            writer.writeCharArray(*obj.getName());
         }
-        if (obj.getSourcePath())
+        if (obj.getMetadata())
         {
-            writer.writePropertyName("sourcePath");
-            writer.writeCharArray(*obj.getSourcePath());
+            writer.writePropertyName("metadata");
+            writer.writeCharArray(*obj.getMetadata());
         }
-        if (obj.getReferenceType())
+        if (obj.getScopes())
         {
-            writer.writePropertyName("referenceType");
-            writer.writeCharArray(*obj.getReferenceType());
+            writer.writePropertyName("scopes");
+            writer.writeArrayStart();
+            auto& list = *obj.getScopes();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(writer, list[i]);
+            }
+            writer.writeArrayEnd();
         }
-        if (obj.getCommitHash())
+        if (obj.getChallengePeriodEventId())
         {
-            writer.writePropertyName("commitHash");
-            writer.writeCharArray(*obj.getCommitHash());
-        }
-        if (obj.getBranchName())
-        {
-            writer.writePropertyName("branchName");
-            writer.writeCharArray(*obj.getBranchName());
-        }
-        if (obj.getTagName())
-        {
-            writer.writePropertyName("tagName");
-            writer.writeCharArray(*obj.getTagName());
+            writer.writePropertyName("challengePeriodEventId");
+            writer.writeCharArray(*obj.getChallengePeriodEventId());
         }
         writer.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const AcquireAction& obj)
+    static void write(detail::json::JsonWriter& writer, const Complete& obj)
     {
         writer.writeObjectStart();
-        if (obj.getAction())
+        if (obj.getCompleteId())
         {
-            writer.writePropertyName("action");
-            writer.writeCharArray(*obj.getAction());
+            writer.writePropertyName("completeId");
+            writer.writeCharArray(*obj.getCompleteId());
         }
-        if (obj.getRequest())
+        if (obj.getUserId())
         {
-            writer.writePropertyName("request");
-            writer.writeCharArray(*obj.getRequest());
+            writer.writePropertyName("userId");
+            writer.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getMissionGroupName())
+        {
+            writer.writePropertyName("missionGroupName");
+            writer.writeCharArray(*obj.getMissionGroupName());
+        }
+        if (obj.getCompletedMissionTaskNames())
+        {
+            writer.writePropertyName("completedMissionTaskNames");
+            writer.writeArrayStart();
+            auto& list = *obj.getCompletedMissionTaskNames();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                writer.writeCharArray(list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        if (obj.getReceivedMissionTaskNames())
+        {
+            writer.writePropertyName("receivedMissionTaskNames");
+            writer.writeArrayStart();
+            auto& list = *obj.getReceivedMissionTaskNames();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                writer.writeCharArray(list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        if (obj.getCreatedAt())
+        {
+            writer.writePropertyName("createdAt");
+            writer.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            writer.writePropertyName("updatedAt");
+            writer.writeInt64(*obj.getUpdatedAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const NotificationSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getGatewayNamespaceId())
+        {
+            writer.writePropertyName("gatewayNamespaceId");
+            writer.writeCharArray(*obj.getGatewayNamespaceId());
+        }
+        if (obj.getEnableTransferMobileNotification())
+        {
+            writer.writePropertyName("enableTransferMobileNotification");
+            writer.writeBool(*obj.getEnableTransferMobileNotification());
+        }
+        if (obj.getSound())
+        {
+            writer.writePropertyName("sound");
+            writer.writeCharArray(*obj.getSound());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const CounterScopeModel& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getResetType())
+        {
+            writer.writePropertyName("resetType");
+            writer.writeCharArray(*obj.getResetType());
+        }
+        if (obj.getResetDayOfMonth())
+        {
+            writer.writePropertyName("resetDayOfMonth");
+            writer.writeInt32(*obj.getResetDayOfMonth());
+        }
+        if (obj.getResetDayOfWeek())
+        {
+            writer.writePropertyName("resetDayOfWeek");
+            writer.writeCharArray(*obj.getResetDayOfWeek());
+        }
+        if (obj.getResetHour())
+        {
+            writer.writePropertyName("resetHour");
+            writer.writeInt32(*obj.getResetHour());
         }
         writer.writeObjectEnd();
     }
@@ -4476,80 +4556,6 @@ private:
         writer.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const CurrentMissionMaster& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getNamespaceName())
-        {
-            writer.writePropertyName("namespaceName");
-            writer.writeCharArray(*obj.getNamespaceName());
-        }
-        if (obj.getSettings())
-        {
-            writer.writePropertyName("settings");
-            writer.writeCharArray(*obj.getSettings());
-        }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const NotificationSetting& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getGatewayNamespaceId())
-        {
-            writer.writePropertyName("gatewayNamespaceId");
-            writer.writeCharArray(*obj.getGatewayNamespaceId());
-        }
-        if (obj.getEnableTransferMobileNotification())
-        {
-            writer.writePropertyName("enableTransferMobileNotification");
-            writer.writeBool(*obj.getEnableTransferMobileNotification());
-        }
-        if (obj.getSound())
-        {
-            writer.writePropertyName("sound");
-            writer.writeCharArray(*obj.getSound());
-        }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const CounterModel& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getCounterId())
-        {
-            writer.writePropertyName("counterId");
-            writer.writeCharArray(*obj.getCounterId());
-        }
-        if (obj.getName())
-        {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
-        }
-        if (obj.getMetadata())
-        {
-            writer.writePropertyName("metadata");
-            writer.writeCharArray(*obj.getMetadata());
-        }
-        if (obj.getScopes())
-        {
-            writer.writePropertyName("scopes");
-            writer.writeArrayStart();
-            auto& list = *obj.getScopes();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        if (obj.getChallengePeriodEventId())
-        {
-            writer.writePropertyName("challengePeriodEventId");
-            writer.writeCharArray(*obj.getChallengePeriodEventId());
-        }
-        writer.writeObjectEnd();
-    }
-
     static void write(detail::json::JsonWriter& writer, const ScopedValue& obj)
     {
         writer.writeObjectStart();
@@ -4571,45 +4577,106 @@ private:
         writer.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Complete& obj)
+    static void write(detail::json::JsonWriter& writer, const Counter& obj)
     {
         writer.writeObjectStart();
-        if (obj.getCompleteId())
+        if (obj.getCounterId())
         {
-            writer.writePropertyName("completeId");
-            writer.writeCharArray(*obj.getCompleteId());
+            writer.writePropertyName("counterId");
+            writer.writeCharArray(*obj.getCounterId());
         }
         if (obj.getUserId())
         {
             writer.writePropertyName("userId");
             writer.writeCharArray(*obj.getUserId());
         }
-        if (obj.getMissionGroupName())
+        if (obj.getName())
         {
-            writer.writePropertyName("missionGroupName");
-            writer.writeCharArray(*obj.getMissionGroupName());
+            writer.writePropertyName("name");
+            writer.writeCharArray(*obj.getName());
         }
-        if (obj.getCompletedMissionTaskNames())
+        if (obj.getValues())
         {
-            writer.writePropertyName("completedMissionTaskNames");
+            writer.writePropertyName("values");
             writer.writeArrayStart();
-            auto& list = *obj.getCompletedMissionTaskNames();
+            auto& list = *obj.getValues();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.writeCharArray(list[i]);
+                write(writer, list[i]);
             }
             writer.writeArrayEnd();
         }
-        if (obj.getReceivedMissionTaskNames())
+        if (obj.getCreatedAt())
         {
-            writer.writePropertyName("receivedMissionTaskNames");
+            writer.writePropertyName("createdAt");
+            writer.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            writer.writePropertyName("updatedAt");
+            writer.writeInt64(*obj.getUpdatedAt());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const MissionTaskModelMaster& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getMissionTaskId())
+        {
+            writer.writePropertyName("missionTaskId");
+            writer.writeCharArray(*obj.getMissionTaskId());
+        }
+        if (obj.getName())
+        {
+            writer.writePropertyName("name");
+            writer.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            writer.writePropertyName("metadata");
+            writer.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getDescription())
+        {
+            writer.writePropertyName("description");
+            writer.writeCharArray(*obj.getDescription());
+        }
+        if (obj.getCounterName())
+        {
+            writer.writePropertyName("counterName");
+            writer.writeCharArray(*obj.getCounterName());
+        }
+        if (obj.getResetType())
+        {
+            writer.writePropertyName("resetType");
+            writer.writeCharArray(*obj.getResetType());
+        }
+        if (obj.getTargetValue())
+        {
+            writer.writePropertyName("targetValue");
+            writer.writeInt64(*obj.getTargetValue());
+        }
+        if (obj.getCompleteAcquireActions())
+        {
+            writer.writePropertyName("completeAcquireActions");
             writer.writeArrayStart();
-            auto& list = *obj.getReceivedMissionTaskNames();
+            auto& list = *obj.getCompleteAcquireActions();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.writeCharArray(list[i]);
+                write(writer, list[i]);
             }
             writer.writeArrayEnd();
+        }
+        if (obj.getChallengePeriodEventId())
+        {
+            writer.writePropertyName("challengePeriodEventId");
+            writer.writeCharArray(*obj.getChallengePeriodEventId());
+        }
+        if (obj.getPremiseMissionTaskName())
+        {
+            writer.writePropertyName("premiseMissionTaskName");
+            writer.writeCharArray(*obj.getPremiseMissionTaskName());
         }
         if (obj.getCreatedAt())
         {
@@ -4636,6 +4703,53 @@ private:
         {
             writer.writePropertyName("value");
             writer.writeCharArray(*obj.getValue());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const CurrentMissionMaster& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getNamespaceName())
+        {
+            writer.writePropertyName("namespaceName");
+            writer.writeCharArray(*obj.getNamespaceName());
+        }
+        if (obj.getSettings())
+        {
+            writer.writePropertyName("settings");
+            writer.writeCharArray(*obj.getSettings());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const ResponseCache& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getRegion())
+        {
+            writer.writePropertyName("region");
+            writer.writeCharArray(*obj.getRegion());
+        }
+        if (obj.getOwnerId())
+        {
+            writer.writePropertyName("ownerId");
+            writer.writeCharArray(*obj.getOwnerId());
+        }
+        if (obj.getResponseCacheId())
+        {
+            writer.writePropertyName("responseCacheId");
+            writer.writeCharArray(*obj.getResponseCacheId());
+        }
+        if (obj.getRequestHash())
+        {
+            writer.writePropertyName("requestHash");
+            writer.writeCharArray(*obj.getRequestHash());
+        }
+        if (obj.getResult())
+        {
+            writer.writePropertyName("result");
+            writer.writeCharArray(*obj.getResult());
         }
         writer.writeObjectEnd();
     }
@@ -4788,65 +4902,18 @@ private:
         writer.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const MissionGroupModel& obj)
+    static void write(detail::json::JsonWriter& writer, const AcquireAction& obj)
     {
         writer.writeObjectStart();
-        if (obj.getMissionGroupId())
+        if (obj.getAction())
         {
-            writer.writePropertyName("missionGroupId");
-            writer.writeCharArray(*obj.getMissionGroupId());
+            writer.writePropertyName("action");
+            writer.writeCharArray(*obj.getAction());
         }
-        if (obj.getName())
+        if (obj.getRequest())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
-        }
-        if (obj.getMetadata())
-        {
-            writer.writePropertyName("metadata");
-            writer.writeCharArray(*obj.getMetadata());
-        }
-        if (obj.getTasks())
-        {
-            writer.writePropertyName("tasks");
-            writer.writeArrayStart();
-            auto& list = *obj.getTasks();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        if (obj.getCompleteNotificationNamespaceId())
-        {
-            writer.writePropertyName("completeNotificationNamespaceId");
-            writer.writeCharArray(*obj.getCompleteNotificationNamespaceId());
-        }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const CounterScopeModel& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getResetType())
-        {
-            writer.writePropertyName("resetType");
-            writer.writeCharArray(*obj.getResetType());
-        }
-        if (obj.getResetDayOfMonth())
-        {
-            writer.writePropertyName("resetDayOfMonth");
-            writer.writeInt32(*obj.getResetDayOfMonth());
-        }
-        if (obj.getResetDayOfWeek())
-        {
-            writer.writePropertyName("resetDayOfWeek");
-            writer.writeCharArray(*obj.getResetDayOfWeek());
-        }
-        if (obj.getResetHour())
-        {
-            writer.writePropertyName("resetHour");
-            writer.writeInt32(*obj.getResetHour());
+            writer.writePropertyName("request");
+            writer.writeCharArray(*obj.getRequest());
         }
         writer.writeObjectEnd();
     }
@@ -4892,13 +4959,13 @@ private:
         writer.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const MissionTaskModelMaster& obj)
+    static void write(detail::json::JsonWriter& writer, const MissionGroupModel& obj)
     {
         writer.writeObjectStart();
-        if (obj.getMissionTaskId())
+        if (obj.getMissionGroupId())
         {
-            writer.writePropertyName("missionTaskId");
-            writer.writeCharArray(*obj.getMissionTaskId());
+            writer.writePropertyName("missionGroupId");
+            writer.writeCharArray(*obj.getMissionGroupId());
         }
         if (obj.getName())
         {
@@ -4910,129 +4977,62 @@ private:
             writer.writePropertyName("metadata");
             writer.writeCharArray(*obj.getMetadata());
         }
-        if (obj.getDescription())
+        if (obj.getTasks())
         {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*obj.getDescription());
-        }
-        if (obj.getCounterName())
-        {
-            writer.writePropertyName("counterName");
-            writer.writeCharArray(*obj.getCounterName());
-        }
-        if (obj.getResetType())
-        {
-            writer.writePropertyName("resetType");
-            writer.writeCharArray(*obj.getResetType());
-        }
-        if (obj.getTargetValue())
-        {
-            writer.writePropertyName("targetValue");
-            writer.writeInt64(*obj.getTargetValue());
-        }
-        if (obj.getCompleteAcquireActions())
-        {
-            writer.writePropertyName("completeAcquireActions");
+            writer.writePropertyName("tasks");
             writer.writeArrayStart();
-            auto& list = *obj.getCompleteAcquireActions();
+            auto& list = *obj.getTasks();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
                 write(writer, list[i]);
             }
             writer.writeArrayEnd();
         }
-        if (obj.getChallengePeriodEventId())
+        if (obj.getCompleteNotificationNamespaceId())
         {
-            writer.writePropertyName("challengePeriodEventId");
-            writer.writeCharArray(*obj.getChallengePeriodEventId());
-        }
-        if (obj.getPremiseMissionTaskName())
-        {
-            writer.writePropertyName("premiseMissionTaskName");
-            writer.writeCharArray(*obj.getPremiseMissionTaskName());
-        }
-        if (obj.getCreatedAt())
-        {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
-        }
-        if (obj.getUpdatedAt())
-        {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            writer.writePropertyName("completeNotificationNamespaceId");
+            writer.writeCharArray(*obj.getCompleteNotificationNamespaceId());
         }
         writer.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Counter& obj)
+    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
     {
         writer.writeObjectStart();
-        if (obj.getCounterId())
+        if (obj.getGitHubApiKeyId())
         {
-            writer.writePropertyName("counterId");
-            writer.writeCharArray(*obj.getCounterId());
+            writer.writePropertyName("gitHubApiKeyId");
+            writer.writeCharArray(*obj.getGitHubApiKeyId());
         }
-        if (obj.getUserId())
+        if (obj.getRepositoryName())
         {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*obj.getUserId());
+            writer.writePropertyName("repositoryName");
+            writer.writeCharArray(*obj.getRepositoryName());
         }
-        if (obj.getName())
+        if (obj.getSourcePath())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            writer.writePropertyName("sourcePath");
+            writer.writeCharArray(*obj.getSourcePath());
         }
-        if (obj.getValues())
+        if (obj.getReferenceType())
         {
-            writer.writePropertyName("values");
-            writer.writeArrayStart();
-            auto& list = *obj.getValues();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
+            writer.writePropertyName("referenceType");
+            writer.writeCharArray(*obj.getReferenceType());
         }
-        if (obj.getCreatedAt())
+        if (obj.getCommitHash())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            writer.writePropertyName("commitHash");
+            writer.writeCharArray(*obj.getCommitHash());
         }
-        if (obj.getUpdatedAt())
+        if (obj.getBranchName())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            writer.writePropertyName("branchName");
+            writer.writeCharArray(*obj.getBranchName());
         }
-        writer.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& writer, const ResponseCache& obj)
-    {
-        writer.writeObjectStart();
-        if (obj.getRegion())
+        if (obj.getTagName())
         {
-            writer.writePropertyName("region");
-            writer.writeCharArray(*obj.getRegion());
-        }
-        if (obj.getOwnerId())
-        {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
-        }
-        if (obj.getResponseCacheId())
-        {
-            writer.writePropertyName("responseCacheId");
-            writer.writeCharArray(*obj.getResponseCacheId());
-        }
-        if (obj.getRequestHash())
-        {
-            writer.writePropertyName("requestHash");
-            writer.writeCharArray(*obj.getRequestHash());
-        }
-        if (obj.getResult())
-        {
-            writer.writePropertyName("result");
-            writer.writeCharArray(*obj.getResult());
+            writer.writePropertyName("tagName");
+            writer.writeCharArray(*obj.getTagName());
         }
         writer.writeObjectEnd();
     }
@@ -5051,84 +5051,12 @@ public:
     }
 
 	/**
-	 * ミッションタスクの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeMissionTaskModels(std::function<void(AsyncDescribeMissionTaskModelsResult&)> callback, DescribeMissionTaskModelsRequest& request)
-    {
-        DescribeMissionTaskModelsTask& task = *new DescribeMissionTaskModelsTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ミッションタスクを取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getMissionTaskModel(std::function<void(AsyncGetMissionTaskModelResult&)> callback, GetMissionTaskModelRequest& request)
-    {
-        GetMissionTaskModelTask& task = *new GetMissionTaskModelTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * 現在有効なミッションのマスターデータをエクスポートします<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
-    {
-        ExportMasterTask& task = *new ExportMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * 現在有効な現在有効なミッションを取得します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getCurrentMissionMaster(std::function<void(AsyncGetCurrentMissionMasterResult&)> callback, GetCurrentMissionMasterRequest& request)
-    {
-        GetCurrentMissionMasterTask& task = *new GetCurrentMissionMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * 現在有効な現在有効なミッションを更新します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateCurrentMissionMaster(std::function<void(AsyncUpdateCurrentMissionMasterResult&)> callback, UpdateCurrentMissionMasterRequest& request)
-    {
-        UpdateCurrentMissionMasterTask& task = *new UpdateCurrentMissionMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * 現在有効な現在有効なミッションを更新します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateCurrentMissionMasterFromGitHub(std::function<void(AsyncUpdateCurrentMissionMasterFromGitHubResult&)> callback, UpdateCurrentMissionMasterFromGitHubRequest& request)
-    {
-        UpdateCurrentMissionMasterFromGitHubTask& task = *new UpdateCurrentMissionMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
 	 * カウンターの種類の一覧を取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCounterModels(std::function<void(AsyncDescribeCounterModelsResult&)> callback, DescribeCounterModelsRequest& request)
+    void describeCounterModels(DescribeCounterModelsRequest& request, std::function<void(AsyncDescribeCounterModelsResult&)> callback)
     {
         DescribeCounterModelsTask& task = *new DescribeCounterModelsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5140,7 +5068,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCounterModel(std::function<void(AsyncGetCounterModelResult&)> callback, GetCounterModelRequest& request)
+    void getCounterModel(GetCounterModelRequest& request, std::function<void(AsyncGetCounterModelResult&)> callback)
     {
         GetCounterModelTask& task = *new GetCounterModelTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5152,7 +5080,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCompletes(std::function<void(AsyncDescribeCompletesResult&)> callback, DescribeCompletesRequest& request)
+    void describeCompletes(DescribeCompletesRequest& request, std::function<void(AsyncDescribeCompletesResult&)> callback)
     {
         DescribeCompletesTask& task = *new DescribeCompletesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5164,7 +5092,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCompletesByUserId(std::function<void(AsyncDescribeCompletesByUserIdResult&)> callback, DescribeCompletesByUserIdRequest& request)
+    void describeCompletesByUserId(DescribeCompletesByUserIdRequest& request, std::function<void(AsyncDescribeCompletesByUserIdResult&)> callback)
     {
         DescribeCompletesByUserIdTask& task = *new DescribeCompletesByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5176,7 +5104,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void complete(std::function<void(AsyncCompleteResult&)> callback, CompleteRequest& request)
+    void complete(CompleteRequest& request, std::function<void(AsyncCompleteResult&)> callback)
     {
         CompleteTask& task = *new CompleteTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5188,7 +5116,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void completeByUserId(std::function<void(AsyncCompleteByUserIdResult&)> callback, CompleteByUserIdRequest& request)
+    void completeByUserId(CompleteByUserIdRequest& request, std::function<void(AsyncCompleteByUserIdResult&)> callback)
     {
         CompleteByUserIdTask& task = *new CompleteByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5200,7 +5128,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void receiveByUserId(std::function<void(AsyncReceiveByUserIdResult&)> callback, ReceiveByUserIdRequest& request)
+    void receiveByUserId(ReceiveByUserIdRequest& request, std::function<void(AsyncReceiveByUserIdResult&)> callback)
     {
         ReceiveByUserIdTask& task = *new ReceiveByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5212,7 +5140,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getComplete(std::function<void(AsyncGetCompleteResult&)> callback, GetCompleteRequest& request)
+    void getComplete(GetCompleteRequest& request, std::function<void(AsyncGetCompleteResult&)> callback)
     {
         GetCompleteTask& task = *new GetCompleteTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5224,7 +5152,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCompleteByUserId(std::function<void(AsyncGetCompleteByUserIdResult&)> callback, GetCompleteByUserIdRequest& request)
+    void getCompleteByUserId(GetCompleteByUserIdRequest& request, std::function<void(AsyncGetCompleteByUserIdResult&)> callback)
     {
         GetCompleteByUserIdTask& task = *new GetCompleteByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5236,7 +5164,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteCompleteByUserId(std::function<void(AsyncDeleteCompleteByUserIdResult&)> callback, DeleteCompleteByUserIdRequest& request)
+    void deleteCompleteByUserId(DeleteCompleteByUserIdRequest& request, std::function<void(AsyncDeleteCompleteByUserIdResult&)> callback)
     {
         DeleteCompleteByUserIdTask& task = *new DeleteCompleteByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5248,285 +5176,33 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void receiveByStampTask(std::function<void(AsyncReceiveByStampTaskResult&)> callback, ReceiveByStampTaskRequest& request)
+    void receiveByStampTask(ReceiveByStampTaskRequest& request, std::function<void(AsyncReceiveByStampTaskResult&)> callback)
     {
         ReceiveByStampTaskTask& task = *new ReceiveByStampTaskTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 
 	/**
-	 * カウンターの種類マスターの一覧を取得<br>
+	 * ミッションタスクの一覧を取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCounterModelMasters(std::function<void(AsyncDescribeCounterModelMastersResult&)> callback, DescribeCounterModelMastersRequest& request)
+    void describeMissionTaskModels(DescribeMissionTaskModelsRequest& request, std::function<void(AsyncDescribeMissionTaskModelsResult&)> callback)
     {
-        DescribeCounterModelMastersTask& task = *new DescribeCounterModelMastersTask(getGs2WebSocketSession(), request, callback);
+        DescribeMissionTaskModelsTask& task = *new DescribeMissionTaskModelsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 
 	/**
-	 * カウンターの種類マスターを新規作成<br>
+	 * ミッションタスクを取得<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createCounterModelMaster(std::function<void(AsyncCreateCounterModelMasterResult&)> callback, CreateCounterModelMasterRequest& request)
+    void getMissionTaskModel(GetMissionTaskModelRequest& request, std::function<void(AsyncGetMissionTaskModelResult&)> callback)
     {
-        CreateCounterModelMasterTask& task = *new CreateCounterModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * カウンターの種類マスターを取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getCounterModelMaster(std::function<void(AsyncGetCounterModelMasterResult&)> callback, GetCounterModelMasterRequest& request)
-    {
-        GetCounterModelMasterTask& task = *new GetCounterModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * カウンターの種類マスターを更新<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateCounterModelMaster(std::function<void(AsyncUpdateCounterModelMasterResult&)> callback, UpdateCounterModelMasterRequest& request)
-    {
-        UpdateCounterModelMasterTask& task = *new UpdateCounterModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * カウンターの種類マスターを削除<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteCounterModelMaster(std::function<void(AsyncDeleteCounterModelMasterResult&)> callback, DeleteCounterModelMasterRequest& request)
-    {
-        DeleteCounterModelMasterTask& task = *new DeleteCounterModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ネームスペースの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
-    {
-        DescribeNamespacesTask& task = *new DescribeNamespacesTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ネームスペースを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
-    {
-        CreateNamespaceTask& task = *new CreateNamespaceTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ネームスペースの状態を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
-    {
-        GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ネームスペースを取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
-    {
-        GetNamespaceTask& task = *new GetNamespaceTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ネームスペースを更新<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
-    {
-        UpdateNamespaceTask& task = *new UpdateNamespaceTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ネームスペースを削除<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
-    {
-        DeleteNamespaceTask& task = *new DeleteNamespaceTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ミッショングループの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeMissionGroupModels(std::function<void(AsyncDescribeMissionGroupModelsResult&)> callback, DescribeMissionGroupModelsRequest& request)
-    {
-        DescribeMissionGroupModelsTask& task = *new DescribeMissionGroupModelsTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ミッショングループを取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getMissionGroupModel(std::function<void(AsyncGetMissionGroupModelResult&)> callback, GetMissionGroupModelRequest& request)
-    {
-        GetMissionGroupModelTask& task = *new GetMissionGroupModelTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ミッショングループマスターの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeMissionGroupModelMasters(std::function<void(AsyncDescribeMissionGroupModelMastersResult&)> callback, DescribeMissionGroupModelMastersRequest& request)
-    {
-        DescribeMissionGroupModelMastersTask& task = *new DescribeMissionGroupModelMastersTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ミッショングループマスターを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void createMissionGroupModelMaster(std::function<void(AsyncCreateMissionGroupModelMasterResult&)> callback, CreateMissionGroupModelMasterRequest& request)
-    {
-        CreateMissionGroupModelMasterTask& task = *new CreateMissionGroupModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ミッショングループマスターを取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getMissionGroupModelMaster(std::function<void(AsyncGetMissionGroupModelMasterResult&)> callback, GetMissionGroupModelMasterRequest& request)
-    {
-        GetMissionGroupModelMasterTask& task = *new GetMissionGroupModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ミッショングループマスターを更新<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateMissionGroupModelMaster(std::function<void(AsyncUpdateMissionGroupModelMasterResult&)> callback, UpdateMissionGroupModelMasterRequest& request)
-    {
-        UpdateMissionGroupModelMasterTask& task = *new UpdateMissionGroupModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ミッショングループマスターを削除<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteMissionGroupModelMaster(std::function<void(AsyncDeleteMissionGroupModelMasterResult&)> callback, DeleteMissionGroupModelMasterRequest& request)
-    {
-        DeleteMissionGroupModelMasterTask& task = *new DeleteMissionGroupModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ミッションタスクマスターの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeMissionTaskModelMasters(std::function<void(AsyncDescribeMissionTaskModelMastersResult&)> callback, DescribeMissionTaskModelMastersRequest& request)
-    {
-        DescribeMissionTaskModelMastersTask& task = *new DescribeMissionTaskModelMastersTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ミッションタスクマスターを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void createMissionTaskModelMaster(std::function<void(AsyncCreateMissionTaskModelMasterResult&)> callback, CreateMissionTaskModelMasterRequest& request)
-    {
-        CreateMissionTaskModelMasterTask& task = *new CreateMissionTaskModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ミッションタスクマスターを取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getMissionTaskModelMaster(std::function<void(AsyncGetMissionTaskModelMasterResult&)> callback, GetMissionTaskModelMasterRequest& request)
-    {
-        GetMissionTaskModelMasterTask& task = *new GetMissionTaskModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ミッションタスクマスターを更新<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateMissionTaskModelMaster(std::function<void(AsyncUpdateMissionTaskModelMasterResult&)> callback, UpdateMissionTaskModelMasterRequest& request)
-    {
-        UpdateMissionTaskModelMasterTask& task = *new UpdateMissionTaskModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
-    }
-
-	/**
-	 * ミッションタスクマスターを削除<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteMissionTaskModelMaster(std::function<void(AsyncDeleteMissionTaskModelMasterResult&)> callback, DeleteMissionTaskModelMasterRequest& request)
-    {
-        DeleteMissionTaskModelMasterTask& task = *new DeleteMissionTaskModelMasterTask(getGs2WebSocketSession(), request, callback);
+        GetMissionTaskModelTask& task = *new GetMissionTaskModelTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 
@@ -5536,7 +5212,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCounters(std::function<void(AsyncDescribeCountersResult&)> callback, DescribeCountersRequest& request)
+    void describeCounters(DescribeCountersRequest& request, std::function<void(AsyncDescribeCountersResult&)> callback)
     {
         DescribeCountersTask& task = *new DescribeCountersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5548,7 +5224,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCountersByUserId(std::function<void(AsyncDescribeCountersByUserIdResult&)> callback, DescribeCountersByUserIdRequest& request)
+    void describeCountersByUserId(DescribeCountersByUserIdRequest& request, std::function<void(AsyncDescribeCountersByUserIdResult&)> callback)
     {
         DescribeCountersByUserIdTask& task = *new DescribeCountersByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5560,7 +5236,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void increaseCounterByUserId(std::function<void(AsyncIncreaseCounterByUserIdResult&)> callback, IncreaseCounterByUserIdRequest& request)
+    void increaseCounterByUserId(IncreaseCounterByUserIdRequest& request, std::function<void(AsyncIncreaseCounterByUserIdResult&)> callback)
     {
         IncreaseCounterByUserIdTask& task = *new IncreaseCounterByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5572,7 +5248,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCounter(std::function<void(AsyncGetCounterResult&)> callback, GetCounterRequest& request)
+    void getCounter(GetCounterRequest& request, std::function<void(AsyncGetCounterResult&)> callback)
     {
         GetCounterTask& task = *new GetCounterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5584,7 +5260,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCounterByUserId(std::function<void(AsyncGetCounterByUserIdResult&)> callback, GetCounterByUserIdRequest& request)
+    void getCounterByUserId(GetCounterByUserIdRequest& request, std::function<void(AsyncGetCounterByUserIdResult&)> callback)
     {
         GetCounterByUserIdTask& task = *new GetCounterByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5596,7 +5272,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteCounterByUserId(std::function<void(AsyncDeleteCounterByUserIdResult&)> callback, DeleteCounterByUserIdRequest& request)
+    void deleteCounterByUserId(DeleteCounterByUserIdRequest& request, std::function<void(AsyncDeleteCounterByUserIdResult&)> callback)
     {
         DeleteCounterByUserIdTask& task = *new DeleteCounterByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -5608,9 +5284,333 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void increaseByStampSheet(std::function<void(AsyncIncreaseByStampSheetResult&)> callback, IncreaseByStampSheetRequest& request)
+    void increaseByStampSheet(IncreaseByStampSheetRequest& request, std::function<void(AsyncIncreaseByStampSheetResult&)> callback)
     {
         IncreaseByStampSheetTask& task = *new IncreaseByStampSheetTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ミッションタスクマスターの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeMissionTaskModelMasters(DescribeMissionTaskModelMastersRequest& request, std::function<void(AsyncDescribeMissionTaskModelMastersResult&)> callback)
+    {
+        DescribeMissionTaskModelMastersTask& task = *new DescribeMissionTaskModelMastersTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ミッションタスクマスターを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createMissionTaskModelMaster(CreateMissionTaskModelMasterRequest& request, std::function<void(AsyncCreateMissionTaskModelMasterResult&)> callback)
+    {
+        CreateMissionTaskModelMasterTask& task = *new CreateMissionTaskModelMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ミッションタスクマスターを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getMissionTaskModelMaster(GetMissionTaskModelMasterRequest& request, std::function<void(AsyncGetMissionTaskModelMasterResult&)> callback)
+    {
+        GetMissionTaskModelMasterTask& task = *new GetMissionTaskModelMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ミッションタスクマスターを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateMissionTaskModelMaster(UpdateMissionTaskModelMasterRequest& request, std::function<void(AsyncUpdateMissionTaskModelMasterResult&)> callback)
+    {
+        UpdateMissionTaskModelMasterTask& task = *new UpdateMissionTaskModelMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ミッションタスクマスターを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteMissionTaskModelMaster(DeleteMissionTaskModelMasterRequest& request, std::function<void(AsyncDeleteMissionTaskModelMasterResult&)> callback)
+    {
+        DeleteMissionTaskModelMasterTask& task = *new DeleteMissionTaskModelMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * 現在有効なミッションのマスターデータをエクスポートします<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void exportMaster(ExportMasterRequest& request, std::function<void(AsyncExportMasterResult&)> callback)
+    {
+        ExportMasterTask& task = *new ExportMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * 現在有効な現在有効なミッションを取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getCurrentMissionMaster(GetCurrentMissionMasterRequest& request, std::function<void(AsyncGetCurrentMissionMasterResult&)> callback)
+    {
+        GetCurrentMissionMasterTask& task = *new GetCurrentMissionMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * 現在有効な現在有効なミッションを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentMissionMaster(UpdateCurrentMissionMasterRequest& request, std::function<void(AsyncUpdateCurrentMissionMasterResult&)> callback)
+    {
+        UpdateCurrentMissionMasterTask& task = *new UpdateCurrentMissionMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * 現在有効な現在有効なミッションを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentMissionMasterFromGitHub(UpdateCurrentMissionMasterFromGitHubRequest& request, std::function<void(AsyncUpdateCurrentMissionMasterFromGitHubResult&)> callback)
+    {
+        UpdateCurrentMissionMasterFromGitHubTask& task = *new UpdateCurrentMissionMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * カウンターの種類マスターの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeCounterModelMasters(DescribeCounterModelMastersRequest& request, std::function<void(AsyncDescribeCounterModelMastersResult&)> callback)
+    {
+        DescribeCounterModelMastersTask& task = *new DescribeCounterModelMastersTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * カウンターの種類マスターを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createCounterModelMaster(CreateCounterModelMasterRequest& request, std::function<void(AsyncCreateCounterModelMasterResult&)> callback)
+    {
+        CreateCounterModelMasterTask& task = *new CreateCounterModelMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * カウンターの種類マスターを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getCounterModelMaster(GetCounterModelMasterRequest& request, std::function<void(AsyncGetCounterModelMasterResult&)> callback)
+    {
+        GetCounterModelMasterTask& task = *new GetCounterModelMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * カウンターの種類マスターを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCounterModelMaster(UpdateCounterModelMasterRequest& request, std::function<void(AsyncUpdateCounterModelMasterResult&)> callback)
+    {
+        UpdateCounterModelMasterTask& task = *new UpdateCounterModelMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * カウンターの種類マスターを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteCounterModelMaster(DeleteCounterModelMasterRequest& request, std::function<void(AsyncDeleteCounterModelMasterResult&)> callback)
+    {
+        DeleteCounterModelMasterTask& task = *new DeleteCounterModelMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ネームスペースの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
+    {
+        DescribeNamespacesTask& task = *new DescribeNamespacesTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ネームスペースを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
+    {
+        CreateNamespaceTask& task = *new CreateNamespaceTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ネームスペースの状態を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
+    {
+        GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ネームスペースを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
+    {
+        GetNamespaceTask& task = *new GetNamespaceTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ネームスペースを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
+    {
+        UpdateNamespaceTask& task = *new UpdateNamespaceTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ネームスペースを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
+    {
+        DeleteNamespaceTask& task = *new DeleteNamespaceTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ミッショングループマスターの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeMissionGroupModelMasters(DescribeMissionGroupModelMastersRequest& request, std::function<void(AsyncDescribeMissionGroupModelMastersResult&)> callback)
+    {
+        DescribeMissionGroupModelMastersTask& task = *new DescribeMissionGroupModelMastersTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ミッショングループマスターを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createMissionGroupModelMaster(CreateMissionGroupModelMasterRequest& request, std::function<void(AsyncCreateMissionGroupModelMasterResult&)> callback)
+    {
+        CreateMissionGroupModelMasterTask& task = *new CreateMissionGroupModelMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ミッショングループマスターを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getMissionGroupModelMaster(GetMissionGroupModelMasterRequest& request, std::function<void(AsyncGetMissionGroupModelMasterResult&)> callback)
+    {
+        GetMissionGroupModelMasterTask& task = *new GetMissionGroupModelMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ミッショングループマスターを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateMissionGroupModelMaster(UpdateMissionGroupModelMasterRequest& request, std::function<void(AsyncUpdateMissionGroupModelMasterResult&)> callback)
+    {
+        UpdateMissionGroupModelMasterTask& task = *new UpdateMissionGroupModelMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ミッショングループマスターを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteMissionGroupModelMaster(DeleteMissionGroupModelMasterRequest& request, std::function<void(AsyncDeleteMissionGroupModelMasterResult&)> callback)
+    {
+        DeleteMissionGroupModelMasterTask& task = *new DeleteMissionGroupModelMasterTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ミッショングループの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeMissionGroupModels(DescribeMissionGroupModelsRequest& request, std::function<void(AsyncDescribeMissionGroupModelsResult&)> callback)
+    {
+        DescribeMissionGroupModelsTask& task = *new DescribeMissionGroupModelsTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ミッショングループを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getMissionGroupModel(GetMissionGroupModelRequest& request, std::function<void(AsyncGetMissionGroupModelResult&)> callback)
+    {
+        GetMissionGroupModelTask& task = *new GetMissionGroupModelTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 

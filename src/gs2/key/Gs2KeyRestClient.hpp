@@ -223,7 +223,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeNamespacesResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -270,7 +270,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -319,7 +319,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceStatusResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -356,7 +356,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -393,7 +393,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateNamespaceResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -441,7 +441,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -483,7 +483,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeKeys(std::function<void(AsyncDescribeKeysResult&)> callback, DescribeKeysRequest& request)
+    void describeKeys(DescribeKeysRequest& request, std::function<void(AsyncDescribeKeysResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeKeysResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -534,7 +534,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createKey(std::function<void(AsyncCreateKeyResult&)> callback, CreateKeyRequest& request)
+    void createKey(CreateKeyRequest& request, std::function<void(AsyncCreateKeyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateKeyResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -587,7 +587,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateKey(std::function<void(AsyncUpdateKeyResult&)> callback, UpdateKeyRequest& request)
+    void updateKey(UpdateKeyRequest& request, std::function<void(AsyncUpdateKeyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateKeyResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -639,7 +639,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getKey(std::function<void(AsyncGetKeyResult&)> callback, GetKeyRequest& request)
+    void getKey(GetKeyRequest& request, std::function<void(AsyncGetKeyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetKeyResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -680,7 +680,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteKey(std::function<void(AsyncDeleteKeyResult&)> callback, DeleteKeyRequest& request)
+    void deleteKey(DeleteKeyRequest& request, std::function<void(AsyncDeleteKeyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -726,7 +726,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void encrypt(std::function<void(AsyncEncryptResult&)> callback, EncryptRequest& request)
+    void encrypt(EncryptRequest& request, std::function<void(AsyncEncryptResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<EncryptResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -778,7 +778,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void decrypt(std::function<void(AsyncDecryptResult&)> callback, DecryptRequest& request)
+    void decrypt(DecryptRequest& request, std::function<void(AsyncDecryptResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DecryptResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -830,7 +830,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeGitHubApiKeys(std::function<void(AsyncDescribeGitHubApiKeysResult&)> callback, DescribeGitHubApiKeysRequest& request)
+    void describeGitHubApiKeys(DescribeGitHubApiKeysRequest& request, std::function<void(AsyncDescribeGitHubApiKeysResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeGitHubApiKeysResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -881,7 +881,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createGitHubApiKey(std::function<void(AsyncCreateGitHubApiKeyResult&)> callback, CreateGitHubApiKeyRequest& request)
+    void createGitHubApiKey(CreateGitHubApiKeyRequest& request, std::function<void(AsyncCreateGitHubApiKeyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateGitHubApiKeyResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -944,7 +944,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateGitHubApiKey(std::function<void(AsyncUpdateGitHubApiKeyResult&)> callback, UpdateGitHubApiKeyRequest& request)
+    void updateGitHubApiKey(UpdateGitHubApiKeyRequest& request, std::function<void(AsyncUpdateGitHubApiKeyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateGitHubApiKeyResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1006,7 +1006,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getGitHubApiKey(std::function<void(AsyncGetGitHubApiKeyResult&)> callback, GetGitHubApiKeyRequest& request)
+    void getGitHubApiKey(GetGitHubApiKeyRequest& request, std::function<void(AsyncGetGitHubApiKeyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetGitHubApiKeyResult>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
@@ -1047,7 +1047,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteGitHubApiKey(std::function<void(AsyncDeleteGitHubApiKeyResult&)> callback, DeleteGitHubApiKeyRequest& request)
+    void deleteGitHubApiKey(DeleteGitHubApiKeyRequest& request, std::function<void(AsyncDeleteGitHubApiKeyResult&)> callback)
     {
         auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
         auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();

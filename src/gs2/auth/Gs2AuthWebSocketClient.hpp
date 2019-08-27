@@ -268,7 +268,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void login(std::function<void(AsyncLoginResult&)> callback, LoginRequest& request)
+    void login(LoginRequest& request, std::function<void(AsyncLoginResult&)> callback)
     {
         LoginTask& task = *new LoginTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -281,7 +281,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void loginBySignature(std::function<void(AsyncLoginBySignatureResult&)> callback, LoginBySignatureRequest& request)
+    void loginBySignature(LoginBySignatureRequest& request, std::function<void(AsyncLoginBySignatureResult&)> callback)
     {
         LoginBySignatureTask& task = *new LoginBySignatureTask(getGs2WebSocketSession(), request, callback);
         task.execute();

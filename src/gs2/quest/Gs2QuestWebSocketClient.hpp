@@ -4451,7 +4451,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(std::function<void(AsyncDescribeNamespacesResult&)> callback, DescribeNamespacesRequest& request)
+    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
     {
         DescribeNamespacesTask& task = *new DescribeNamespacesTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4463,7 +4463,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(std::function<void(AsyncCreateNamespaceResult&)> callback, CreateNamespaceRequest& request)
+    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
     {
         CreateNamespaceTask& task = *new CreateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4475,7 +4475,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(std::function<void(AsyncGetNamespaceStatusResult&)> callback, GetNamespaceStatusRequest& request)
+    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
     {
         GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4487,7 +4487,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(std::function<void(AsyncGetNamespaceResult&)> callback, GetNamespaceRequest& request)
+    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
     {
         GetNamespaceTask& task = *new GetNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4499,7 +4499,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(std::function<void(AsyncUpdateNamespaceResult&)> callback, UpdateNamespaceRequest& request)
+    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
     {
         UpdateNamespaceTask& task = *new UpdateNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4511,7 +4511,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(std::function<void(AsyncDeleteNamespaceResult&)> callback, DeleteNamespaceRequest& request)
+    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
     {
         DeleteNamespaceTask& task = *new DeleteNamespaceTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4523,7 +4523,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeQuestGroupModelMasters(std::function<void(AsyncDescribeQuestGroupModelMastersResult&)> callback, DescribeQuestGroupModelMastersRequest& request)
+    void describeQuestGroupModelMasters(DescribeQuestGroupModelMastersRequest& request, std::function<void(AsyncDescribeQuestGroupModelMastersResult&)> callback)
     {
         DescribeQuestGroupModelMastersTask& task = *new DescribeQuestGroupModelMastersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4535,7 +4535,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createQuestGroupModelMaster(std::function<void(AsyncCreateQuestGroupModelMasterResult&)> callback, CreateQuestGroupModelMasterRequest& request)
+    void createQuestGroupModelMaster(CreateQuestGroupModelMasterRequest& request, std::function<void(AsyncCreateQuestGroupModelMasterResult&)> callback)
     {
         CreateQuestGroupModelMasterTask& task = *new CreateQuestGroupModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4547,7 +4547,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getQuestGroupModelMaster(std::function<void(AsyncGetQuestGroupModelMasterResult&)> callback, GetQuestGroupModelMasterRequest& request)
+    void getQuestGroupModelMaster(GetQuestGroupModelMasterRequest& request, std::function<void(AsyncGetQuestGroupModelMasterResult&)> callback)
     {
         GetQuestGroupModelMasterTask& task = *new GetQuestGroupModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4559,7 +4559,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateQuestGroupModelMaster(std::function<void(AsyncUpdateQuestGroupModelMasterResult&)> callback, UpdateQuestGroupModelMasterRequest& request)
+    void updateQuestGroupModelMaster(UpdateQuestGroupModelMasterRequest& request, std::function<void(AsyncUpdateQuestGroupModelMasterResult&)> callback)
     {
         UpdateQuestGroupModelMasterTask& task = *new UpdateQuestGroupModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4571,7 +4571,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteQuestGroupModelMaster(std::function<void(AsyncDeleteQuestGroupModelMasterResult&)> callback, DeleteQuestGroupModelMasterRequest& request)
+    void deleteQuestGroupModelMaster(DeleteQuestGroupModelMasterRequest& request, std::function<void(AsyncDeleteQuestGroupModelMasterResult&)> callback)
     {
         DeleteQuestGroupModelMasterTask& task = *new DeleteQuestGroupModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4583,7 +4583,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeQuestModelMasters(std::function<void(AsyncDescribeQuestModelMastersResult&)> callback, DescribeQuestModelMastersRequest& request)
+    void describeQuestModelMasters(DescribeQuestModelMastersRequest& request, std::function<void(AsyncDescribeQuestModelMastersResult&)> callback)
     {
         DescribeQuestModelMastersTask& task = *new DescribeQuestModelMastersTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4595,7 +4595,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createQuestModelMaster(std::function<void(AsyncCreateQuestModelMasterResult&)> callback, CreateQuestModelMasterRequest& request)
+    void createQuestModelMaster(CreateQuestModelMasterRequest& request, std::function<void(AsyncCreateQuestModelMasterResult&)> callback)
     {
         CreateQuestModelMasterTask& task = *new CreateQuestModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4607,7 +4607,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getQuestModelMaster(std::function<void(AsyncGetQuestModelMasterResult&)> callback, GetQuestModelMasterRequest& request)
+    void getQuestModelMaster(GetQuestModelMasterRequest& request, std::function<void(AsyncGetQuestModelMasterResult&)> callback)
     {
         GetQuestModelMasterTask& task = *new GetQuestModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4619,7 +4619,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateQuestModelMaster(std::function<void(AsyncUpdateQuestModelMasterResult&)> callback, UpdateQuestModelMasterRequest& request)
+    void updateQuestModelMaster(UpdateQuestModelMasterRequest& request, std::function<void(AsyncUpdateQuestModelMasterResult&)> callback)
     {
         UpdateQuestModelMasterTask& task = *new UpdateQuestModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4631,7 +4631,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteQuestModelMaster(std::function<void(AsyncDeleteQuestModelMasterResult&)> callback, DeleteQuestModelMasterRequest& request)
+    void deleteQuestModelMaster(DeleteQuestModelMasterRequest& request, std::function<void(AsyncDeleteQuestModelMasterResult&)> callback)
     {
         DeleteQuestModelMasterTask& task = *new DeleteQuestModelMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4643,7 +4643,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void exportMaster(std::function<void(AsyncExportMasterResult&)> callback, ExportMasterRequest& request)
+    void exportMaster(ExportMasterRequest& request, std::function<void(AsyncExportMasterResult&)> callback)
     {
         ExportMasterTask& task = *new ExportMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4655,7 +4655,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCurrentQuestMaster(std::function<void(AsyncGetCurrentQuestMasterResult&)> callback, GetCurrentQuestMasterRequest& request)
+    void getCurrentQuestMaster(GetCurrentQuestMasterRequest& request, std::function<void(AsyncGetCurrentQuestMasterResult&)> callback)
     {
         GetCurrentQuestMasterTask& task = *new GetCurrentQuestMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4667,7 +4667,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentQuestMaster(std::function<void(AsyncUpdateCurrentQuestMasterResult&)> callback, UpdateCurrentQuestMasterRequest& request)
+    void updateCurrentQuestMaster(UpdateCurrentQuestMasterRequest& request, std::function<void(AsyncUpdateCurrentQuestMasterResult&)> callback)
     {
         UpdateCurrentQuestMasterTask& task = *new UpdateCurrentQuestMasterTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4679,7 +4679,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentQuestMasterFromGitHub(std::function<void(AsyncUpdateCurrentQuestMasterFromGitHubResult&)> callback, UpdateCurrentQuestMasterFromGitHubRequest& request)
+    void updateCurrentQuestMasterFromGitHub(UpdateCurrentQuestMasterFromGitHubRequest& request, std::function<void(AsyncUpdateCurrentQuestMasterFromGitHubResult&)> callback)
     {
         UpdateCurrentQuestMasterFromGitHubTask& task = *new UpdateCurrentQuestMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4691,7 +4691,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeProgressesByUserId(std::function<void(AsyncDescribeProgressesByUserIdResult&)> callback, DescribeProgressesByUserIdRequest& request)
+    void describeProgressesByUserId(DescribeProgressesByUserIdRequest& request, std::function<void(AsyncDescribeProgressesByUserIdResult&)> callback)
     {
         DescribeProgressesByUserIdTask& task = *new DescribeProgressesByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4703,7 +4703,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createProgressByUserId(std::function<void(AsyncCreateProgressByUserIdResult&)> callback, CreateProgressByUserIdRequest& request)
+    void createProgressByUserId(CreateProgressByUserIdRequest& request, std::function<void(AsyncCreateProgressByUserIdResult&)> callback)
     {
         CreateProgressByUserIdTask& task = *new CreateProgressByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4715,7 +4715,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getProgress(std::function<void(AsyncGetProgressResult&)> callback, GetProgressRequest& request)
+    void getProgress(GetProgressRequest& request, std::function<void(AsyncGetProgressResult&)> callback)
     {
         GetProgressTask& task = *new GetProgressTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4727,7 +4727,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getProgressByUserId(std::function<void(AsyncGetProgressByUserIdResult&)> callback, GetProgressByUserIdRequest& request)
+    void getProgressByUserId(GetProgressByUserIdRequest& request, std::function<void(AsyncGetProgressByUserIdResult&)> callback)
     {
         GetProgressByUserIdTask& task = *new GetProgressByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4758,7 +4758,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void start(std::function<void(AsyncStartResult&)> callback, StartRequest& request)
+    void start(StartRequest& request, std::function<void(AsyncStartResult&)> callback)
     {
         StartTask& task = *new StartTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4789,7 +4789,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void startByUserId(std::function<void(AsyncStartByUserIdResult&)> callback, StartByUserIdRequest& request)
+    void startByUserId(StartByUserIdRequest& request, std::function<void(AsyncStartByUserIdResult&)> callback)
     {
         StartByUserIdTask& task = *new StartByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4804,7 +4804,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void end(std::function<void(AsyncEndResult&)> callback, EndRequest& request)
+    void end(EndRequest& request, std::function<void(AsyncEndResult&)> callback)
     {
         EndTask& task = *new EndTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4819,7 +4819,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void endByUserId(std::function<void(AsyncEndByUserIdResult&)> callback, EndByUserIdRequest& request)
+    void endByUserId(EndByUserIdRequest& request, std::function<void(AsyncEndByUserIdResult&)> callback)
     {
         EndByUserIdTask& task = *new EndByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4831,7 +4831,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteProgress(std::function<void(AsyncDeleteProgressResult&)> callback, DeleteProgressRequest& request)
+    void deleteProgress(DeleteProgressRequest& request, std::function<void(AsyncDeleteProgressResult&)> callback)
     {
         DeleteProgressTask& task = *new DeleteProgressTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4843,7 +4843,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteProgressByUserId(std::function<void(AsyncDeleteProgressByUserIdResult&)> callback, DeleteProgressByUserIdRequest& request)
+    void deleteProgressByUserId(DeleteProgressByUserIdRequest& request, std::function<void(AsyncDeleteProgressByUserIdResult&)> callback)
     {
         DeleteProgressByUserIdTask& task = *new DeleteProgressByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4855,7 +4855,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createProgressByStampSheet(std::function<void(AsyncCreateProgressByStampSheetResult&)> callback, CreateProgressByStampSheetRequest& request)
+    void createProgressByStampSheet(CreateProgressByStampSheetRequest& request, std::function<void(AsyncCreateProgressByStampSheetResult&)> callback)
     {
         CreateProgressByStampSheetTask& task = *new CreateProgressByStampSheetTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4867,7 +4867,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCompletedQuestLists(std::function<void(AsyncDescribeCompletedQuestListsResult&)> callback, DescribeCompletedQuestListsRequest& request)
+    void describeCompletedQuestLists(DescribeCompletedQuestListsRequest& request, std::function<void(AsyncDescribeCompletedQuestListsResult&)> callback)
     {
         DescribeCompletedQuestListsTask& task = *new DescribeCompletedQuestListsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4879,7 +4879,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCompletedQuestListsByUserId(std::function<void(AsyncDescribeCompletedQuestListsByUserIdResult&)> callback, DescribeCompletedQuestListsByUserIdRequest& request)
+    void describeCompletedQuestListsByUserId(DescribeCompletedQuestListsByUserIdRequest& request, std::function<void(AsyncDescribeCompletedQuestListsByUserIdResult&)> callback)
     {
         DescribeCompletedQuestListsByUserIdTask& task = *new DescribeCompletedQuestListsByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4891,7 +4891,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCompletedQuestList(std::function<void(AsyncGetCompletedQuestListResult&)> callback, GetCompletedQuestListRequest& request)
+    void getCompletedQuestList(GetCompletedQuestListRequest& request, std::function<void(AsyncGetCompletedQuestListResult&)> callback)
     {
         GetCompletedQuestListTask& task = *new GetCompletedQuestListTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4903,7 +4903,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCompletedQuestListByUserId(std::function<void(AsyncGetCompletedQuestListByUserIdResult&)> callback, GetCompletedQuestListByUserIdRequest& request)
+    void getCompletedQuestListByUserId(GetCompletedQuestListByUserIdRequest& request, std::function<void(AsyncGetCompletedQuestListByUserIdResult&)> callback)
     {
         GetCompletedQuestListByUserIdTask& task = *new GetCompletedQuestListByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4915,7 +4915,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteCompletedQuestListByUserId(std::function<void(AsyncDeleteCompletedQuestListByUserIdResult&)> callback, DeleteCompletedQuestListByUserIdRequest& request)
+    void deleteCompletedQuestListByUserId(DeleteCompletedQuestListByUserIdRequest& request, std::function<void(AsyncDeleteCompletedQuestListByUserIdResult&)> callback)
     {
         DeleteCompletedQuestListByUserIdTask& task = *new DeleteCompletedQuestListByUserIdTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4927,7 +4927,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeQuestGroupModels(std::function<void(AsyncDescribeQuestGroupModelsResult&)> callback, DescribeQuestGroupModelsRequest& request)
+    void describeQuestGroupModels(DescribeQuestGroupModelsRequest& request, std::function<void(AsyncDescribeQuestGroupModelsResult&)> callback)
     {
         DescribeQuestGroupModelsTask& task = *new DescribeQuestGroupModelsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4939,7 +4939,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getQuestGroupModel(std::function<void(AsyncGetQuestGroupModelResult&)> callback, GetQuestGroupModelRequest& request)
+    void getQuestGroupModel(GetQuestGroupModelRequest& request, std::function<void(AsyncGetQuestGroupModelResult&)> callback)
     {
         GetQuestGroupModelTask& task = *new GetQuestGroupModelTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4951,7 +4951,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeQuestModels(std::function<void(AsyncDescribeQuestModelsResult&)> callback, DescribeQuestModelsRequest& request)
+    void describeQuestModels(DescribeQuestModelsRequest& request, std::function<void(AsyncDescribeQuestModelsResult&)> callback)
     {
         DescribeQuestModelsTask& task = *new DescribeQuestModelsTask(getGs2WebSocketSession(), request, callback);
         task.execute();
@@ -4963,7 +4963,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getQuestModel(std::function<void(AsyncGetQuestModelResult&)> callback, GetQuestModelRequest& request)
+    void getQuestModel(GetQuestModelRequest& request, std::function<void(AsyncGetQuestModelResult&)> callback)
     {
         GetQuestModelTask& task = *new GetQuestModelTask(getGs2WebSocketSession(), request, callback);
         task.execute();
