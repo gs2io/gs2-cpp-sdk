@@ -83,6 +83,18 @@ public:
         ensureData().error = std::move(error);
     }
 
+    AsyncResult(T&& result) :
+        m_pData(nullptr)
+    {
+        ensureData().result.emplace(std::move(result));
+    }
+
+    AsyncResult(Gs2ClientException&& error) :
+        m_pData(nullptr)
+    {
+        ensureData().error = std::move(error);
+    }
+
     AsyncResult(const AsyncResult& asyncResult) :
         Gs2Object(asyncResult),
         m_pData(asyncResult.m_pData != nullptr ? new Data(*asyncResult.m_pData) : nullptr)
