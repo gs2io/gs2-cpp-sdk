@@ -79,7 +79,7 @@ private:
     {
         T result;
         gs2Response.exportTo(result.getModel());
-        AsyncResult<T> asyncResult(result, gs2Response.getGs2ClientException());
+        AsyncResult<T> asyncResult(std::move(result), std::move(gs2Response.getGs2ClientException()));
         m_Callback(asyncResult);
     }
 
@@ -103,7 +103,7 @@ private:
 
     void triggerUserCallback(Gs2Response& gs2Response) GS2_OVERRIDE
     {
-        AsyncResult<void> asyncResult(gs2Response.getGs2ClientException());
+        AsyncResult<void> asyncResult(std::move(gs2Response.getGs2ClientException()));
         m_Callback(asyncResult);
     }
 

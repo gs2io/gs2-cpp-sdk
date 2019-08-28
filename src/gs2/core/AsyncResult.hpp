@@ -76,7 +76,7 @@ public:
         m_pData(nullptr)
     {}
 
-    AsyncResult(T& result, optional<Gs2ClientException>& error) :
+    AsyncResult(T&& result, optional<Gs2ClientException>&& error) :
         m_pData(nullptr)
     {
         ensureData().result.emplace(std::move(result));
@@ -197,13 +197,13 @@ public:
         m_pData(nullptr)
     {}
 
-    AsyncResult(optional<Gs2ClientException>& error) :
+    AsyncResult(optional<Gs2ClientException>&& error) :
         m_pData(nullptr)
     {
         ensureData().error = std::move(error);
     }
 
-    AsyncResult(Gs2ClientException& error) :
+    AsyncResult(Gs2ClientException&& error) :
         m_pData(nullptr)
     {
         ensureData().error = std::move(error);
