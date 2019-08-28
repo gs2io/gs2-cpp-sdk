@@ -27,92 +27,6 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::ListMissionTaskModels(
-    std::function<void(AsyncEzListMissionTaskModelsResult&)> callback,
-    const Char* namespaceName,
-    const Char* missionGroupName
-)
-{
-    gs2::mission::DescribeMissionTaskModelsRequest request;
-    request.setNamespaceName(namespaceName);
-    request.setMissionGroupName(missionGroupName);
-    m_Client.describeMissionTaskModels(
-        request,
-        [callback](gs2::mission::AsyncDescribeMissionTaskModelsResult& r)
-        {
-            if (r.getError())
-            {
-                EzListMissionTaskModelsResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzListMissionTaskModelsResult> asyncResult(ezResult, gs2ClientException);
-                callback(asyncResult);
-            }
-            else
-            {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzListMissionTaskModelsResult::isConvertible(*r.getResult()))
-                {
-                    EzListMissionTaskModelsResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzListMissionTaskModelsResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzListMissionTaskModelsResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzListMissionTaskModelsResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-            }
-        }
-    );
-}
-
-void Client::GetMissionTaskModel(
-    std::function<void(AsyncEzGetMissionTaskModelResult&)> callback,
-    const Char* namespaceName,
-    const Char* missionGroupName,
-    const Char* missionTaskName
-)
-{
-    gs2::mission::GetMissionTaskModelRequest request;
-    request.setNamespaceName(namespaceName);
-    request.setMissionGroupName(missionGroupName);
-    request.setMissionTaskName(missionTaskName);
-    m_Client.getMissionTaskModel(
-        request,
-        [callback](gs2::mission::AsyncGetMissionTaskModelResult& r)
-        {
-            if (r.getError())
-            {
-                EzGetMissionTaskModelResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzGetMissionTaskModelResult> asyncResult(ezResult, gs2ClientException);
-                callback(asyncResult);
-            }
-            else
-            {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzGetMissionTaskModelResult::isConvertible(*r.getResult()))
-                {
-                    EzGetMissionTaskModelResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzGetMissionTaskModelResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzGetMissionTaskModelResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzGetMissionTaskModelResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-            }
-        }
-    );
-}
-
 void Client::ListMissionGroupModels(
     std::function<void(AsyncEzListMissionGroupModelsResult&)> callback,
     const Char* namespaceName
@@ -126,28 +40,22 @@ void Client::ListMissionGroupModels(
         {
             if (r.getError())
             {
+                auto gs2ClientException = *r.getError();
+                AsyncEzListMissionGroupModelsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzListMissionGroupModelsResult::isConvertible(*r.getResult()))
+            {
                 EzListMissionGroupModelsResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzListMissionGroupModelsResult> asyncResult(ezResult, gs2ClientException);
+                AsyncEzListMissionGroupModelsResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzListMissionGroupModelsResult::isConvertible(*r.getResult()))
-                {
-                    EzListMissionGroupModelsResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzListMissionGroupModelsResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzListMissionGroupModelsResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzListMissionGroupModelsResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzListMissionGroupModelsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
         }
     );
@@ -168,28 +76,22 @@ void Client::GetMissionGroupModel(
         {
             if (r.getError())
             {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetMissionGroupModelResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetMissionGroupModelResult::isConvertible(*r.getResult()))
+            {
                 EzGetMissionGroupModelResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzGetMissionGroupModelResult> asyncResult(ezResult, gs2ClientException);
+                AsyncEzGetMissionGroupModelResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzGetMissionGroupModelResult::isConvertible(*r.getResult()))
-                {
-                    EzGetMissionGroupModelResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzGetMissionGroupModelResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzGetMissionGroupModelResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzGetMissionGroupModelResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetMissionGroupModelResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
         }
     );
@@ -208,28 +110,22 @@ void Client::ListCounterModels(
         {
             if (r.getError())
             {
+                auto gs2ClientException = *r.getError();
+                AsyncEzListCounterModelsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzListCounterModelsResult::isConvertible(*r.getResult()))
+            {
                 EzListCounterModelsResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzListCounterModelsResult> asyncResult(ezResult, gs2ClientException);
+                AsyncEzListCounterModelsResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzListCounterModelsResult::isConvertible(*r.getResult()))
-                {
-                    EzListCounterModelsResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzListCounterModelsResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzListCounterModelsResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzListCounterModelsResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzListCounterModelsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
         }
     );
@@ -250,28 +146,22 @@ void Client::GetCounterModel(
         {
             if (r.getError())
             {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetCounterModelResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetCounterModelResult::isConvertible(*r.getResult()))
+            {
                 EzGetCounterModelResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzGetCounterModelResult> asyncResult(ezResult, gs2ClientException);
+                AsyncEzGetCounterModelResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzGetCounterModelResult::isConvertible(*r.getResult()))
-                {
-                    EzGetCounterModelResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzGetCounterModelResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzGetCounterModelResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzGetCounterModelResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetCounterModelResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
         }
     );
@@ -302,28 +192,22 @@ void Client::ListCompletes(
         {
             if (r.getError())
             {
+                auto gs2ClientException = *r.getError();
+                AsyncEzListCompletesResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzListCompletesResult::isConvertible(*r.getResult()))
+            {
                 EzListCompletesResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzListCompletesResult> asyncResult(ezResult, gs2ClientException);
+                AsyncEzListCompletesResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzListCompletesResult::isConvertible(*r.getResult()))
-                {
-                    EzListCompletesResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzListCompletesResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzListCompletesResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzListCompletesResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzListCompletesResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
         }
     );
@@ -346,28 +230,22 @@ void Client::GetComplete(
         {
             if (r.getError())
             {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetCompleteResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetCompleteResult::isConvertible(*r.getResult()))
+            {
                 EzGetCompleteResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzGetCompleteResult> asyncResult(ezResult, gs2ClientException);
+                AsyncEzGetCompleteResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzGetCompleteResult::isConvertible(*r.getResult()))
-                {
-                    EzGetCompleteResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzGetCompleteResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzGetCompleteResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzGetCompleteResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetCompleteResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
         }
     );
@@ -392,28 +270,96 @@ void Client::ReceiveRewards(
         {
             if (r.getError())
             {
+                auto gs2ClientException = *r.getError();
+                AsyncEzReceiveRewardsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzReceiveRewardsResult::isConvertible(*r.getResult()))
+            {
                 EzReceiveRewardsResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzReceiveRewardsResult> asyncResult(ezResult, gs2ClientException);
+                AsyncEzReceiveRewardsResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzReceiveRewardsResult::isConvertible(*r.getResult()))
-                {
-                    EzReceiveRewardsResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzReceiveRewardsResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzReceiveRewardsResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzReceiveRewardsResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzReceiveRewardsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::ListMissionTaskModels(
+    std::function<void(AsyncEzListMissionTaskModelsResult&)> callback,
+    const Char* namespaceName,
+    const Char* missionGroupName
+)
+{
+    gs2::mission::DescribeMissionTaskModelsRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setMissionGroupName(missionGroupName);
+    m_Client.describeMissionTaskModels(
+        request,
+        [callback](gs2::mission::AsyncDescribeMissionTaskModelsResult& r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzListMissionTaskModelsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzListMissionTaskModelsResult::isConvertible(*r.getResult()))
+            {
+                EzListMissionTaskModelsResult ezResult(*r.getResult());
+                AsyncEzListMissionTaskModelsResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzListMissionTaskModelsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::GetMissionTaskModel(
+    std::function<void(AsyncEzGetMissionTaskModelResult&)> callback,
+    const Char* namespaceName,
+    const Char* missionGroupName,
+    const Char* missionTaskName
+)
+{
+    gs2::mission::GetMissionTaskModelRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setMissionGroupName(missionGroupName);
+    request.setMissionTaskName(missionTaskName);
+    m_Client.getMissionTaskModel(
+        request,
+        [callback](gs2::mission::AsyncGetMissionTaskModelResult& r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetMissionTaskModelResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetMissionTaskModelResult::isConvertible(*r.getResult()))
+            {
+                EzGetMissionTaskModelResult ezResult(*r.getResult());
+                AsyncEzGetMissionTaskModelResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetMissionTaskModelResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
         }
     );

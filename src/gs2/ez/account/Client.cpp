@@ -40,28 +40,22 @@ void Client::Create(
         {
             if (r.getError())
             {
+                auto gs2ClientException = *r.getError();
+                AsyncEzCreateResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzCreateResult::isConvertible(*r.getResult()))
+            {
                 EzCreateResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzCreateResult> asyncResult(ezResult, gs2ClientException);
+                AsyncEzCreateResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzCreateResult::isConvertible(*r.getResult()))
-                {
-                    EzCreateResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzCreateResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzCreateResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzCreateResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzCreateResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
         }
     );
@@ -86,28 +80,22 @@ void Client::Authentication(
         {
             if (r.getError())
             {
+                auto gs2ClientException = *r.getError();
+                AsyncEzAuthenticationResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzAuthenticationResult::isConvertible(*r.getResult()))
+            {
                 EzAuthenticationResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzAuthenticationResult> asyncResult(ezResult, gs2ClientException);
+                AsyncEzAuthenticationResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzAuthenticationResult::isConvertible(*r.getResult()))
-                {
-                    EzAuthenticationResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzAuthenticationResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzAuthenticationResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzAuthenticationResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzAuthenticationResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
         }
     );
@@ -134,28 +122,22 @@ void Client::AddTakeOverSetting(
         {
             if (r.getError())
             {
+                auto gs2ClientException = *r.getError();
+                AsyncEzAddTakeOverSettingResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzAddTakeOverSettingResult::isConvertible(*r.getResult()))
+            {
                 EzAddTakeOverSettingResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzAddTakeOverSettingResult> asyncResult(ezResult, gs2ClientException);
+                AsyncEzAddTakeOverSettingResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzAddTakeOverSettingResult::isConvertible(*r.getResult()))
-                {
-                    EzAddTakeOverSettingResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzAddTakeOverSettingResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzAddTakeOverSettingResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzAddTakeOverSettingResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzAddTakeOverSettingResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
         }
     );
@@ -186,28 +168,22 @@ void Client::ListTakeOverSettings(
         {
             if (r.getError())
             {
+                auto gs2ClientException = *r.getError();
+                AsyncEzListTakeOverSettingsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzListTakeOverSettingsResult::isConvertible(*r.getResult()))
+            {
                 EzListTakeOverSettingsResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzListTakeOverSettingsResult> asyncResult(ezResult, gs2ClientException);
+                AsyncEzListTakeOverSettingsResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzListTakeOverSettingsResult::isConvertible(*r.getResult()))
-                {
-                    EzListTakeOverSettingsResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzListTakeOverSettingsResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzListTakeOverSettingsResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzListTakeOverSettingsResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzListTakeOverSettingsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
         }
     );
@@ -234,28 +210,22 @@ void Client::UpdateTakeOverSetting(
         {
             if (r.getError())
             {
+                auto gs2ClientException = *r.getError();
+                AsyncEzUpdateTakeOverSettingResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzUpdateTakeOverSettingResult::isConvertible(*r.getResult()))
+            {
                 EzUpdateTakeOverSettingResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzUpdateTakeOverSettingResult> asyncResult(ezResult, gs2ClientException);
+                AsyncEzUpdateTakeOverSettingResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzUpdateTakeOverSettingResult::isConvertible(*r.getResult()))
-                {
-                    EzUpdateTakeOverSettingResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzUpdateTakeOverSettingResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzUpdateTakeOverSettingResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzUpdateTakeOverSettingResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzUpdateTakeOverSettingResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
         }
     );
@@ -278,14 +248,13 @@ void Client::DeleteTakeOverSetting(
         {
             if (r.getError())
             {
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<void> asyncResult(gs2ClientException);
+                auto gs2ClientException = *r.getError();
+                AsyncEzDeleteTakeOverSettingResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
             else
             {
-                optional<Gs2ClientException> gs2ClientException;
-                gs2::AsyncResult<void> asyncResult(gs2ClientException);
+                AsyncEzDeleteTakeOverSettingResult asyncResult;
                 callback(asyncResult);
             }
         }
@@ -311,28 +280,22 @@ void Client::DoTakeOver(
         {
             if (r.getError())
             {
+                auto gs2ClientException = *r.getError();
+                AsyncEzDoTakeOverResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzDoTakeOverResult::isConvertible(*r.getResult()))
+            {
                 EzDoTakeOverResult ezResult(*r.getResult());
-                auto gs2ClientException = r.getError();
-                gs2::AsyncResult<EzDoTakeOverResult> asyncResult(ezResult, gs2ClientException);
+                AsyncEzDoTakeOverResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
-                optional<Gs2ClientException> gs2ClientException;
-                if (r.getResult() && EzDoTakeOverResult::isConvertible(*r.getResult()))
-                {
-                    EzDoTakeOverResult ezResult(*r.getResult());
-                    gs2::AsyncResult<EzDoTakeOverResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
-                else
-                {
-                    EzDoTakeOverResult ezResult(*r.getResult());
-                    gs2ClientException.emplace();
-                    gs2ClientException->setType(Gs2ClientException::UnknownException);
-                    gs2::AsyncResult<EzDoTakeOverResult> asyncResult(ezResult, gs2ClientException);
-                    callback(asyncResult);
-                }
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzDoTakeOverResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
         }
     );
