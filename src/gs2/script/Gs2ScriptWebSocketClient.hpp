@@ -55,21 +55,6 @@
 
 namespace gs2 { namespace script {
 
-typedef AsyncResult<DescribeNamespacesResult> AsyncDescribeNamespacesResult;
-typedef AsyncResult<CreateNamespaceResult> AsyncCreateNamespaceResult;
-typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
-typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
-typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
-typedef AsyncResult<void> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeScriptsResult> AsyncDescribeScriptsResult;
-typedef AsyncResult<CreateScriptResult> AsyncCreateScriptResult;
-typedef AsyncResult<CreateScriptFromGitHubResult> AsyncCreateScriptFromGitHubResult;
-typedef AsyncResult<GetScriptResult> AsyncGetScriptResult;
-typedef AsyncResult<UpdateScriptResult> AsyncUpdateScriptResult;
-typedef AsyncResult<UpdateScriptFromGitHubResult> AsyncUpdateScriptFromGitHubResult;
-typedef AsyncResult<void> AsyncDeleteScriptResult;
-typedef AsyncResult<DebugInvokeResult> AsyncDebugInvokeResult;
-
 /**
  * GS2 Script API クライアント
  *

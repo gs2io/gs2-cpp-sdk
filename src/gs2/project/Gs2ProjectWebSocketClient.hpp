@@ -55,21 +55,6 @@
 
 namespace gs2 { namespace project {
 
-typedef AsyncResult<CreateAccountResult> AsyncCreateAccountResult;
-typedef AsyncResult<VerifyResult> AsyncVerifyResult;
-typedef AsyncResult<SignInResult> AsyncSignInResult;
-typedef AsyncResult<IssueAccountTokenResult> AsyncIssueAccountTokenResult;
-typedef AsyncResult<ForgetResult> AsyncForgetResult;
-typedef AsyncResult<IssuePasswordResult> AsyncIssuePasswordResult;
-typedef AsyncResult<UpdateAccountResult> AsyncUpdateAccountResult;
-typedef AsyncResult<void> AsyncDeleteAccountResult;
-typedef AsyncResult<DescribeProjectsResult> AsyncDescribeProjectsResult;
-typedef AsyncResult<CreateProjectResult> AsyncCreateProjectResult;
-typedef AsyncResult<GetProjectResult> AsyncGetProjectResult;
-typedef AsyncResult<GetProjectTokenResult> AsyncGetProjectTokenResult;
-typedef AsyncResult<UpdateProjectResult> AsyncUpdateProjectResult;
-typedef AsyncResult<DeleteProjectResult> AsyncDeleteProjectResult;
-
 /**
  * GS2 Project API クライアント
  *

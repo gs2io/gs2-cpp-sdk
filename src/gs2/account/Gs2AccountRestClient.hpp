@@ -73,30 +73,6 @@
 
 namespace gs2 { namespace account {
 
-typedef AsyncResult<DescribeNamespacesResult> AsyncDescribeNamespacesResult;
-typedef AsyncResult<CreateNamespaceResult> AsyncCreateNamespaceResult;
-typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
-typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
-typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
-typedef AsyncResult<void> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeAccountsResult> AsyncDescribeAccountsResult;
-typedef AsyncResult<CreateAccountResult> AsyncCreateAccountResult;
-typedef AsyncResult<UpdateTimeOffsetResult> AsyncUpdateTimeOffsetResult;
-typedef AsyncResult<GetAccountResult> AsyncGetAccountResult;
-typedef AsyncResult<void> AsyncDeleteAccountResult;
-typedef AsyncResult<AuthenticationResult> AsyncAuthenticationResult;
-typedef AsyncResult<DescribeTakeOversResult> AsyncDescribeTakeOversResult;
-typedef AsyncResult<DescribeTakeOversByUserIdResult> AsyncDescribeTakeOversByUserIdResult;
-typedef AsyncResult<CreateTakeOverResult> AsyncCreateTakeOverResult;
-typedef AsyncResult<CreateTakeOverByUserIdResult> AsyncCreateTakeOverByUserIdResult;
-typedef AsyncResult<GetTakeOverResult> AsyncGetTakeOverResult;
-typedef AsyncResult<GetTakeOverByUserIdResult> AsyncGetTakeOverByUserIdResult;
-typedef AsyncResult<UpdateTakeOverResult> AsyncUpdateTakeOverResult;
-typedef AsyncResult<UpdateTakeOverByUserIdResult> AsyncUpdateTakeOverByUserIdResult;
-typedef AsyncResult<void> AsyncDeleteTakeOverResult;
-typedef AsyncResult<void> AsyncDeleteTakeOverByUserIdentifierResult;
-typedef AsyncResult<DoTakeOverResult> AsyncDoTakeOverResult;
-
 /**
  * GS2 Account API クライアント
  *

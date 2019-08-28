@@ -77,32 +77,6 @@
 
 namespace gs2 { namespace limit {
 
-typedef AsyncResult<DescribeNamespacesResult> AsyncDescribeNamespacesResult;
-typedef AsyncResult<CreateNamespaceResult> AsyncCreateNamespaceResult;
-typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
-typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
-typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
-typedef AsyncResult<DeleteNamespaceResult> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeCountersResult> AsyncDescribeCountersResult;
-typedef AsyncResult<DescribeCountersByUserIdResult> AsyncDescribeCountersByUserIdResult;
-typedef AsyncResult<GetCounterResult> AsyncGetCounterResult;
-typedef AsyncResult<GetCounterByUserIdResult> AsyncGetCounterByUserIdResult;
-typedef AsyncResult<CountUpByUserIdResult> AsyncCountUpByUserIdResult;
-typedef AsyncResult<DeleteCounterByUserIdResult> AsyncDeleteCounterByUserIdResult;
-typedef AsyncResult<CountUpByStampTaskResult> AsyncCountUpByStampTaskResult;
-typedef AsyncResult<DeleteByStampSheetResult> AsyncDeleteByStampSheetResult;
-typedef AsyncResult<DescribeLimitModelMastersResult> AsyncDescribeLimitModelMastersResult;
-typedef AsyncResult<CreateLimitModelMasterResult> AsyncCreateLimitModelMasterResult;
-typedef AsyncResult<GetLimitModelMasterResult> AsyncGetLimitModelMasterResult;
-typedef AsyncResult<UpdateLimitModelMasterResult> AsyncUpdateLimitModelMasterResult;
-typedef AsyncResult<DeleteLimitModelMasterResult> AsyncDeleteLimitModelMasterResult;
-typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
-typedef AsyncResult<GetCurrentLimitMasterResult> AsyncGetCurrentLimitMasterResult;
-typedef AsyncResult<UpdateCurrentLimitMasterResult> AsyncUpdateCurrentLimitMasterResult;
-typedef AsyncResult<UpdateCurrentLimitMasterFromGitHubResult> AsyncUpdateCurrentLimitMasterFromGitHubResult;
-typedef AsyncResult<DescribeLimitModelsResult> AsyncDescribeLimitModelsResult;
-typedef AsyncResult<GetLimitModelResult> AsyncGetLimitModelResult;
-
 /**
  * GS2 Limit API クライアント
  *

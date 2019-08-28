@@ -59,23 +59,6 @@
 
 namespace gs2 { namespace jobQueue {
 
-typedef AsyncResult<DescribeNamespacesResult> AsyncDescribeNamespacesResult;
-typedef AsyncResult<CreateNamespaceResult> AsyncCreateNamespaceResult;
-typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
-typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
-typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
-typedef AsyncResult<DeleteNamespaceResult> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeJobsByUserIdResult> AsyncDescribeJobsByUserIdResult;
-typedef AsyncResult<GetJobByUserIdResult> AsyncGetJobByUserIdResult;
-typedef AsyncResult<PushByUserIdResult> AsyncPushByUserIdResult;
-typedef AsyncResult<RunResult> AsyncRunResult;
-typedef AsyncResult<RunByUserIdResult> AsyncRunByUserIdResult;
-typedef AsyncResult<DeleteJobByUserIdResult> AsyncDeleteJobByUserIdResult;
-typedef AsyncResult<PushByStampSheetResult> AsyncPushByStampSheetResult;
-typedef AsyncResult<DescribeDeadLetterJobsByUserIdResult> AsyncDescribeDeadLetterJobsByUserIdResult;
-typedef AsyncResult<GetDeadLetterJobByUserIdResult> AsyncGetDeadLetterJobByUserIdResult;
-typedef AsyncResult<DeleteDeadLetterJobByUserIdResult> AsyncDeleteDeadLetterJobByUserIdResult;
-
 /**
  * GS2 JobQueue API クライアント
  *

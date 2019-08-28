@@ -95,37 +95,6 @@
 
 namespace gs2 { namespace lottery {
 
-typedef AsyncResult<DescribeNamespacesResult> AsyncDescribeNamespacesResult;
-typedef AsyncResult<CreateNamespaceResult> AsyncCreateNamespaceResult;
-typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
-typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
-typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
-typedef AsyncResult<DeleteNamespaceResult> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeLotteryModelMastersResult> AsyncDescribeLotteryModelMastersResult;
-typedef AsyncResult<CreateLotteryModelMasterResult> AsyncCreateLotteryModelMasterResult;
-typedef AsyncResult<GetLotteryModelMasterResult> AsyncGetLotteryModelMasterResult;
-typedef AsyncResult<UpdateLotteryModelMasterResult> AsyncUpdateLotteryModelMasterResult;
-typedef AsyncResult<DeleteLotteryModelMasterResult> AsyncDeleteLotteryModelMasterResult;
-typedef AsyncResult<DescribePrizeTableMastersResult> AsyncDescribePrizeTableMastersResult;
-typedef AsyncResult<CreatePrizeTableMasterResult> AsyncCreatePrizeTableMasterResult;
-typedef AsyncResult<GetPrizeTableMasterResult> AsyncGetPrizeTableMasterResult;
-typedef AsyncResult<UpdatePrizeTableMasterResult> AsyncUpdatePrizeTableMasterResult;
-typedef AsyncResult<DeletePrizeTableMasterResult> AsyncDeletePrizeTableMasterResult;
-typedef AsyncResult<DescribeBoxesResult> AsyncDescribeBoxesResult;
-typedef AsyncResult<DescribeBoxesByUserIdResult> AsyncDescribeBoxesByUserIdResult;
-typedef AsyncResult<GetBoxResult> AsyncGetBoxResult;
-typedef AsyncResult<GetBoxByUserIdResult> AsyncGetBoxByUserIdResult;
-typedef AsyncResult<void> AsyncResetBoxResult;
-typedef AsyncResult<void> AsyncResetBoxByUserIdResult;
-typedef AsyncResult<DescribeLotteryModelsResult> AsyncDescribeLotteryModelsResult;
-typedef AsyncResult<GetLotteryModelResult> AsyncGetLotteryModelResult;
-typedef AsyncResult<DescribePrizeTablesResult> AsyncDescribePrizeTablesResult;
-typedef AsyncResult<GetPrizeTableResult> AsyncGetPrizeTableResult;
-typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
-typedef AsyncResult<GetCurrentLotteryMasterResult> AsyncGetCurrentLotteryMasterResult;
-typedef AsyncResult<UpdateCurrentLotteryMasterResult> AsyncUpdateCurrentLotteryMasterResult;
-typedef AsyncResult<UpdateCurrentLotteryMasterFromGitHubResult> AsyncUpdateCurrentLotteryMasterFromGitHubResult;
-
 /**
  * GS2 Lottery API クライアント
  *

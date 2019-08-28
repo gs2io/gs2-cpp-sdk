@@ -63,25 +63,6 @@
 
 namespace gs2 { namespace key {
 
-typedef AsyncResult<DescribeNamespacesResult> AsyncDescribeNamespacesResult;
-typedef AsyncResult<CreateNamespaceResult> AsyncCreateNamespaceResult;
-typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
-typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
-typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
-typedef AsyncResult<void> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeKeysResult> AsyncDescribeKeysResult;
-typedef AsyncResult<CreateKeyResult> AsyncCreateKeyResult;
-typedef AsyncResult<UpdateKeyResult> AsyncUpdateKeyResult;
-typedef AsyncResult<GetKeyResult> AsyncGetKeyResult;
-typedef AsyncResult<void> AsyncDeleteKeyResult;
-typedef AsyncResult<EncryptResult> AsyncEncryptResult;
-typedef AsyncResult<DecryptResult> AsyncDecryptResult;
-typedef AsyncResult<DescribeGitHubApiKeysResult> AsyncDescribeGitHubApiKeysResult;
-typedef AsyncResult<CreateGitHubApiKeyResult> AsyncCreateGitHubApiKeyResult;
-typedef AsyncResult<UpdateGitHubApiKeyResult> AsyncUpdateGitHubApiKeyResult;
-typedef AsyncResult<GetGitHubApiKeyResult> AsyncGetGitHubApiKeyResult;
-typedef AsyncResult<void> AsyncDeleteGitHubApiKeyResult;
-
 /**
  * GS2 Key API クライアント
  *

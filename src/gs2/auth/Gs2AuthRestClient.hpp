@@ -31,9 +31,6 @@
 
 namespace gs2 { namespace auth {
 
-typedef AsyncResult<LoginResult> AsyncLoginResult;
-typedef AsyncResult<LoginBySignatureResult> AsyncLoginBySignatureResult;
-
 /**
  * GS2 Auth API クライアント
  *

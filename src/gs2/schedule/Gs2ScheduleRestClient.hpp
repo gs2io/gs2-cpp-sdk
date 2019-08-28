@@ -83,35 +83,6 @@
 
 namespace gs2 { namespace schedule {
 
-typedef AsyncResult<DescribeNamespacesResult> AsyncDescribeNamespacesResult;
-typedef AsyncResult<CreateNamespaceResult> AsyncCreateNamespaceResult;
-typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
-typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
-typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
-typedef AsyncResult<DeleteNamespaceResult> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeEventMastersResult> AsyncDescribeEventMastersResult;
-typedef AsyncResult<CreateEventMasterResult> AsyncCreateEventMasterResult;
-typedef AsyncResult<GetEventMasterResult> AsyncGetEventMasterResult;
-typedef AsyncResult<UpdateEventMasterResult> AsyncUpdateEventMasterResult;
-typedef AsyncResult<DeleteEventMasterResult> AsyncDeleteEventMasterResult;
-typedef AsyncResult<DescribeTriggersResult> AsyncDescribeTriggersResult;
-typedef AsyncResult<DescribeTriggersByUserIdResult> AsyncDescribeTriggersByUserIdResult;
-typedef AsyncResult<GetTriggerResult> AsyncGetTriggerResult;
-typedef AsyncResult<GetTriggerByUserIdResult> AsyncGetTriggerByUserIdResult;
-typedef AsyncResult<TriggerByUserIdResult> AsyncTriggerByUserIdResult;
-typedef AsyncResult<DeleteTriggerResult> AsyncDeleteTriggerResult;
-typedef AsyncResult<DeleteTriggerByUserIdResult> AsyncDeleteTriggerByUserIdResult;
-typedef AsyncResult<DescribeEventsResult> AsyncDescribeEventsResult;
-typedef AsyncResult<DescribeEventsByUserIdResult> AsyncDescribeEventsByUserIdResult;
-typedef AsyncResult<DescribeRawEventsResult> AsyncDescribeRawEventsResult;
-typedef AsyncResult<GetEventResult> AsyncGetEventResult;
-typedef AsyncResult<GetEventByUserIdResult> AsyncGetEventByUserIdResult;
-typedef AsyncResult<GetRawEventResult> AsyncGetRawEventResult;
-typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
-typedef AsyncResult<GetCurrentEventMasterResult> AsyncGetCurrentEventMasterResult;
-typedef AsyncResult<UpdateCurrentEventMasterResult> AsyncUpdateCurrentEventMasterResult;
-typedef AsyncResult<UpdateCurrentEventMasterFromGitHubResult> AsyncUpdateCurrentEventMasterFromGitHubResult;
-
 /**
  * GS2 Schedule API クライアント
  *

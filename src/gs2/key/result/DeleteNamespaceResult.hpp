@@ -18,6 +18,7 @@
 #define GS2_KEY_CONTROL_DELETENAMESPACERESULT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
@@ -28,123 +29,7 @@
 namespace gs2 { namespace key
 {
 
-/**
- * ネームスペースを削除 のレスポンスモデル
- *
- * @author Game Server Services, Inc.
- */
-class DeleteNamespaceResult : public Gs2Object
-{
-private:
-    class Data : public detail::json::IModel
-    {
-    public:
-
-        Data()
-        {}
-
-        Data(const Data& data) :
-            detail::json::IModel(data)
-        {}
-
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data))
-        {}
-
-        virtual ~Data() = default;
-
-        // TODO:
-        Data& operator=(const Data&) = delete;
-        Data& operator=(Data&&) = delete;
-
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-        }
-    };
-
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
-
-public:
-    DeleteNamespaceResult() :
-        m_pData(nullptr)
-    {}
-
-    DeleteNamespaceResult(const DeleteNamespaceResult& deleteNamespaceResult) :
-        Gs2Object(deleteNamespaceResult),
-        m_pData(deleteNamespaceResult.m_pData != nullptr ? new Data(*deleteNamespaceResult.m_pData) : nullptr)
-    {}
-
-    DeleteNamespaceResult(DeleteNamespaceResult&& deleteNamespaceResult) :
-        Gs2Object(std::move(deleteNamespaceResult)),
-        m_pData(deleteNamespaceResult.m_pData)
-    {
-        deleteNamespaceResult.m_pData = nullptr;
-    }
-
-    ~DeleteNamespaceResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DeleteNamespaceResult& operator=(const DeleteNamespaceResult& deleteNamespaceResult)
-    {
-        Gs2Object::operator=(deleteNamespaceResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*deleteNamespaceResult.m_pData);
-
-        return *this;
-    }
-
-    DeleteNamespaceResult& operator=(DeleteNamespaceResult&& deleteNamespaceResult)
-    {
-        Gs2Object::operator=(std::move(deleteNamespaceResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = deleteNamespaceResult.m_pData;
-        deleteNamespaceResult.m_pData = nullptr;
-
-        return *this;
-    }
-
-    const DeleteNamespaceResult* operator->() const
-    {
-        return this;
-    }
-
-    DeleteNamespaceResult* operator->()
-    {
-        return this;
-    }
-
-    detail::json::IModel& getModel()
-    {
-        return ensureData();
-    }
-};
+typedef AsyncResult<void> AsyncDeleteNamespaceResult;
 
 } }
 

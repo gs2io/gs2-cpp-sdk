@@ -65,26 +65,6 @@
 
 namespace gs2 { namespace identifier {
 
-typedef AsyncResult<DescribeUsersResult> AsyncDescribeUsersResult;
-typedef AsyncResult<CreateUserResult> AsyncCreateUserResult;
-typedef AsyncResult<UpdateUserResult> AsyncUpdateUserResult;
-typedef AsyncResult<GetUserResult> AsyncGetUserResult;
-typedef AsyncResult<void> AsyncDeleteUserResult;
-typedef AsyncResult<DescribeSecurityPoliciesResult> AsyncDescribeSecurityPoliciesResult;
-typedef AsyncResult<DescribeCommonSecurityPoliciesResult> AsyncDescribeCommonSecurityPoliciesResult;
-typedef AsyncResult<CreateSecurityPolicyResult> AsyncCreateSecurityPolicyResult;
-typedef AsyncResult<UpdateSecurityPolicyResult> AsyncUpdateSecurityPolicyResult;
-typedef AsyncResult<GetSecurityPolicyResult> AsyncGetSecurityPolicyResult;
-typedef AsyncResult<void> AsyncDeleteSecurityPolicyResult;
-typedef AsyncResult<DescribeIdentifiersResult> AsyncDescribeIdentifiersResult;
-typedef AsyncResult<CreateIdentifierResult> AsyncCreateIdentifierResult;
-typedef AsyncResult<GetIdentifierResult> AsyncGetIdentifierResult;
-typedef AsyncResult<void> AsyncDeleteIdentifierResult;
-typedef AsyncResult<GetHasSecurityPolicyResult> AsyncGetHasSecurityPolicyResult;
-typedef AsyncResult<AttachSecurityPolicyResult> AsyncAttachSecurityPolicyResult;
-typedef AsyncResult<DetachSecurityPolicyResult> AsyncDetachSecurityPolicyResult;
-typedef AsyncResult<LoginResult> AsyncLoginResult;
-
 /**
  * GS2 Identifier API クライアント
  *

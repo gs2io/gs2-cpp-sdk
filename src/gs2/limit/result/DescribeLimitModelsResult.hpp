@@ -18,6 +18,7 @@
 #define GS2_LIMIT_CONTROL_DESCRIBELIMITMODELSRESULT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
@@ -181,6 +182,8 @@ public:
         return ensureData();
     }
 };
+
+typedef AsyncResult<DescribeLimitModelsResult> AsyncDescribeLimitModelsResult;
 
 } }
 

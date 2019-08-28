@@ -67,27 +67,6 @@
 
 namespace gs2 { namespace gateway {
 
-typedef AsyncResult<DescribeNamespacesResult> AsyncDescribeNamespacesResult;
-typedef AsyncResult<CreateNamespaceResult> AsyncCreateNamespaceResult;
-typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
-typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
-typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
-typedef AsyncResult<void> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeWebSocketSessionsResult> AsyncDescribeWebSocketSessionsResult;
-typedef AsyncResult<DescribeWebSocketSessionsByUserIdResult> AsyncDescribeWebSocketSessionsByUserIdResult;
-typedef AsyncResult<SetUserIdResult> AsyncSetUserIdResult;
-typedef AsyncResult<SetUserIdByUserIdResult> AsyncSetUserIdByUserIdResult;
-typedef AsyncResult<GetWebSocketSessionResult> AsyncGetWebSocketSessionResult;
-typedef AsyncResult<GetWebSocketSessionByConnectionIdResult> AsyncGetWebSocketSessionByConnectionIdResult;
-typedef AsyncResult<SendNotificationResult> AsyncSendNotificationResult;
-typedef AsyncResult<SetFirebaseTokenResult> AsyncSetFirebaseTokenResult;
-typedef AsyncResult<SetFirebaseTokenByUserIdResult> AsyncSetFirebaseTokenByUserIdResult;
-typedef AsyncResult<GetFirebaseTokenResult> AsyncGetFirebaseTokenResult;
-typedef AsyncResult<GetFirebaseTokenByUserIdResult> AsyncGetFirebaseTokenByUserIdResult;
-typedef AsyncResult<DeleteFirebaseTokenResult> AsyncDeleteFirebaseTokenResult;
-typedef AsyncResult<DeleteFirebaseTokenByUserIdResult> AsyncDeleteFirebaseTokenByUserIdResult;
-typedef AsyncResult<void> AsyncSendMobileNotificationByUserIdResult;
-
 /**
  * GS2 Gateway API クライアント
  *

@@ -18,6 +18,7 @@
 #define GS2_PROJECT_CONTROL_DELETEACCOUNTRESULT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
@@ -28,123 +29,7 @@
 namespace gs2 { namespace project
 {
 
-/**
- * GS2アカウントを削除します のレスポンスモデル
- *
- * @author Game Server Services, Inc.
- */
-class DeleteAccountResult : public Gs2Object
-{
-private:
-    class Data : public detail::json::IModel
-    {
-    public:
-
-        Data()
-        {}
-
-        Data(const Data& data) :
-            detail::json::IModel(data)
-        {}
-
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data))
-        {}
-
-        virtual ~Data() = default;
-
-        // TODO:
-        Data& operator=(const Data&) = delete;
-        Data& operator=(Data&&) = delete;
-
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-        }
-    };
-
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
-
-public:
-    DeleteAccountResult() :
-        m_pData(nullptr)
-    {}
-
-    DeleteAccountResult(const DeleteAccountResult& deleteAccountResult) :
-        Gs2Object(deleteAccountResult),
-        m_pData(deleteAccountResult.m_pData != nullptr ? new Data(*deleteAccountResult.m_pData) : nullptr)
-    {}
-
-    DeleteAccountResult(DeleteAccountResult&& deleteAccountResult) :
-        Gs2Object(std::move(deleteAccountResult)),
-        m_pData(deleteAccountResult.m_pData)
-    {
-        deleteAccountResult.m_pData = nullptr;
-    }
-
-    ~DeleteAccountResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DeleteAccountResult& operator=(const DeleteAccountResult& deleteAccountResult)
-    {
-        Gs2Object::operator=(deleteAccountResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*deleteAccountResult.m_pData);
-
-        return *this;
-    }
-
-    DeleteAccountResult& operator=(DeleteAccountResult&& deleteAccountResult)
-    {
-        Gs2Object::operator=(std::move(deleteAccountResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = deleteAccountResult.m_pData;
-        deleteAccountResult.m_pData = nullptr;
-
-        return *this;
-    }
-
-    const DeleteAccountResult* operator->() const
-    {
-        return this;
-    }
-
-    DeleteAccountResult* operator->()
-    {
-        return this;
-    }
-
-    detail::json::IModel& getModel()
-    {
-        return ensureData();
-    }
-};
+typedef AsyncResult<void> AsyncDeleteAccountResult;
 
 } }
 

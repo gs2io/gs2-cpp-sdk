@@ -69,28 +69,6 @@
 
 namespace gs2 { namespace money {
 
-typedef AsyncResult<DescribeNamespacesResult> AsyncDescribeNamespacesResult;
-typedef AsyncResult<CreateNamespaceResult> AsyncCreateNamespaceResult;
-typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
-typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
-typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
-typedef AsyncResult<void> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeWalletsResult> AsyncDescribeWalletsResult;
-typedef AsyncResult<DescribeWalletsByUserIdResult> AsyncDescribeWalletsByUserIdResult;
-typedef AsyncResult<QueryWalletsResult> AsyncQueryWalletsResult;
-typedef AsyncResult<GetWalletResult> AsyncGetWalletResult;
-typedef AsyncResult<GetWalletByUserIdResult> AsyncGetWalletByUserIdResult;
-typedef AsyncResult<DepositByUserIdResult> AsyncDepositByUserIdResult;
-typedef AsyncResult<WithdrawResult> AsyncWithdrawResult;
-typedef AsyncResult<WithdrawByUserIdResult> AsyncWithdrawByUserIdResult;
-typedef AsyncResult<DepositByStampSheetResult> AsyncDepositByStampSheetResult;
-typedef AsyncResult<WithdrawByStampTaskResult> AsyncWithdrawByStampTaskResult;
-typedef AsyncResult<DescribeWalletDetailsByUserIdResult> AsyncDescribeWalletDetailsByUserIdResult;
-typedef AsyncResult<DescribeReceiptsResult> AsyncDescribeReceiptsResult;
-typedef AsyncResult<GetByUserIdAndTransactionIdResult> AsyncGetByUserIdAndTransactionIdResult;
-typedef AsyncResult<RecordReceiptResult> AsyncRecordReceiptResult;
-typedef AsyncResult<RecordReceiptByStampTaskResult> AsyncRecordReceiptByStampTaskResult;
-
 /**
  * GS2 Money API クライアント
  *

@@ -67,24 +67,6 @@
 
 namespace gs2 { namespace distributor {
 
-typedef AsyncResult<DescribeNamespacesResult> AsyncDescribeNamespacesResult;
-typedef AsyncResult<CreateNamespaceResult> AsyncCreateNamespaceResult;
-typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
-typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
-typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
-typedef AsyncResult<DeleteNamespaceResult> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeDistributorModelMastersResult> AsyncDescribeDistributorModelMastersResult;
-typedef AsyncResult<CreateDistributorModelMasterResult> AsyncCreateDistributorModelMasterResult;
-typedef AsyncResult<GetDistributorModelMasterResult> AsyncGetDistributorModelMasterResult;
-typedef AsyncResult<UpdateDistributorModelMasterResult> AsyncUpdateDistributorModelMasterResult;
-typedef AsyncResult<DeleteDistributorModelMasterResult> AsyncDeleteDistributorModelMasterResult;
-typedef AsyncResult<DescribeDistributorModelsResult> AsyncDescribeDistributorModelsResult;
-typedef AsyncResult<GetDistributorModelResult> AsyncGetDistributorModelResult;
-typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
-typedef AsyncResult<GetCurrentDistributorMasterResult> AsyncGetCurrentDistributorMasterResult;
-typedef AsyncResult<UpdateCurrentDistributorMasterResult> AsyncUpdateCurrentDistributorMasterResult;
-typedef AsyncResult<UpdateCurrentDistributorMasterFromGitHubResult> AsyncUpdateCurrentDistributorMasterFromGitHubResult;
-
 /**
  * GS2 Distributor API クライアント
  *

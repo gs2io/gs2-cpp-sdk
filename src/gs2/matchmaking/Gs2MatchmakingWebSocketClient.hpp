@@ -61,24 +61,6 @@
 
 namespace gs2 { namespace matchmaking {
 
-typedef AsyncResult<DescribeNamespacesResult> AsyncDescribeNamespacesResult;
-typedef AsyncResult<CreateNamespaceResult> AsyncCreateNamespaceResult;
-typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
-typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
-typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
-typedef AsyncResult<DeleteNamespaceResult> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeGatheringsResult> AsyncDescribeGatheringsResult;
-typedef AsyncResult<CreateGatheringResult> AsyncCreateGatheringResult;
-typedef AsyncResult<CreateGatheringByUserIdResult> AsyncCreateGatheringByUserIdResult;
-typedef AsyncResult<UpdateGatheringResult> AsyncUpdateGatheringResult;
-typedef AsyncResult<UpdateGatheringByUserIdResult> AsyncUpdateGatheringByUserIdResult;
-typedef AsyncResult<DoMatchmakingByPlayerResult> AsyncDoMatchmakingByPlayerResult;
-typedef AsyncResult<DoMatchmakingResult> AsyncDoMatchmakingResult;
-typedef AsyncResult<GetGatheringResult> AsyncGetGatheringResult;
-typedef AsyncResult<CancelMatchmakingResult> AsyncCancelMatchmakingResult;
-typedef AsyncResult<CancelMatchmakingByUserIdResult> AsyncCancelMatchmakingByUserIdResult;
-typedef AsyncResult<DeleteGatheringResult> AsyncDeleteGatheringResult;
-
 /**
  * GS2 Matchmaking API クライアント
  *

@@ -57,22 +57,6 @@
 
 namespace gs2 { namespace deploy {
 
-typedef AsyncResult<DescribeStacksResult> AsyncDescribeStacksResult;
-typedef AsyncResult<CreateStackResult> AsyncCreateStackResult;
-typedef AsyncResult<CreateStackFromGitHubResult> AsyncCreateStackFromGitHubResult;
-typedef AsyncResult<GetStackStatusResult> AsyncGetStackStatusResult;
-typedef AsyncResult<GetStackResult> AsyncGetStackResult;
-typedef AsyncResult<UpdateStackResult> AsyncUpdateStackResult;
-typedef AsyncResult<UpdateStackFromGitHubResult> AsyncUpdateStackFromGitHubResult;
-typedef AsyncResult<DeleteStackResult> AsyncDeleteStackResult;
-typedef AsyncResult<ForceDeleteStackResult> AsyncForceDeleteStackResult;
-typedef AsyncResult<DescribeResourcesResult> AsyncDescribeResourcesResult;
-typedef AsyncResult<GetResourceResult> AsyncGetResourceResult;
-typedef AsyncResult<DescribeEventsResult> AsyncDescribeEventsResult;
-typedef AsyncResult<GetEventResult> AsyncGetEventResult;
-typedef AsyncResult<DescribeOutputsResult> AsyncDescribeOutputsResult;
-typedef AsyncResult<GetOutputResult> AsyncGetOutputResult;
-
 /**
  * GS2 Deploy API クライアント
  *

@@ -18,6 +18,7 @@
 #define GS2_ACCOUNT_CONTROL_DELETETAKEOVERBYUSERIDENTIFIERRESULT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
@@ -28,123 +29,7 @@
 namespace gs2 { namespace account
 {
 
-/**
- * 引き継ぎ設定を削除 のレスポンスモデル
- *
- * @author Game Server Services, Inc.
- */
-class DeleteTakeOverByUserIdentifierResult : public Gs2Object
-{
-private:
-    class Data : public detail::json::IModel
-    {
-    public:
-
-        Data()
-        {}
-
-        Data(const Data& data) :
-            detail::json::IModel(data)
-        {}
-
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data))
-        {}
-
-        virtual ~Data() = default;
-
-        // TODO:
-        Data& operator=(const Data&) = delete;
-        Data& operator=(Data&&) = delete;
-
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-        }
-    };
-
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
-
-public:
-    DeleteTakeOverByUserIdentifierResult() :
-        m_pData(nullptr)
-    {}
-
-    DeleteTakeOverByUserIdentifierResult(const DeleteTakeOverByUserIdentifierResult& deleteTakeOverByUserIdentifierResult) :
-        Gs2Object(deleteTakeOverByUserIdentifierResult),
-        m_pData(deleteTakeOverByUserIdentifierResult.m_pData != nullptr ? new Data(*deleteTakeOverByUserIdentifierResult.m_pData) : nullptr)
-    {}
-
-    DeleteTakeOverByUserIdentifierResult(DeleteTakeOverByUserIdentifierResult&& deleteTakeOverByUserIdentifierResult) :
-        Gs2Object(std::move(deleteTakeOverByUserIdentifierResult)),
-        m_pData(deleteTakeOverByUserIdentifierResult.m_pData)
-    {
-        deleteTakeOverByUserIdentifierResult.m_pData = nullptr;
-    }
-
-    ~DeleteTakeOverByUserIdentifierResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DeleteTakeOverByUserIdentifierResult& operator=(const DeleteTakeOverByUserIdentifierResult& deleteTakeOverByUserIdentifierResult)
-    {
-        Gs2Object::operator=(deleteTakeOverByUserIdentifierResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*deleteTakeOverByUserIdentifierResult.m_pData);
-
-        return *this;
-    }
-
-    DeleteTakeOverByUserIdentifierResult& operator=(DeleteTakeOverByUserIdentifierResult&& deleteTakeOverByUserIdentifierResult)
-    {
-        Gs2Object::operator=(std::move(deleteTakeOverByUserIdentifierResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = deleteTakeOverByUserIdentifierResult.m_pData;
-        deleteTakeOverByUserIdentifierResult.m_pData = nullptr;
-
-        return *this;
-    }
-
-    const DeleteTakeOverByUserIdentifierResult* operator->() const
-    {
-        return this;
-    }
-
-    DeleteTakeOverByUserIdentifierResult* operator->()
-    {
-        return this;
-    }
-
-    detail::json::IModel& getModel()
-    {
-        return ensureData();
-    }
-};
+typedef AsyncResult<void> AsyncDeleteTakeOverByUserIdentifierResult;
 
 } }
 

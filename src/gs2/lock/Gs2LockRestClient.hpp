@@ -57,22 +57,6 @@
 
 namespace gs2 { namespace lock {
 
-typedef AsyncResult<DescribeNamespacesResult> AsyncDescribeNamespacesResult;
-typedef AsyncResult<CreateNamespaceResult> AsyncCreateNamespaceResult;
-typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
-typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
-typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
-typedef AsyncResult<DeleteNamespaceResult> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeMutexesResult> AsyncDescribeMutexesResult;
-typedef AsyncResult<DescribeMutexesByUserIdResult> AsyncDescribeMutexesByUserIdResult;
-typedef AsyncResult<LockResult> AsyncLockResult;
-typedef AsyncResult<LockByUserIdResult> AsyncLockByUserIdResult;
-typedef AsyncResult<UnlockResult> AsyncUnlockResult;
-typedef AsyncResult<UnlockByUserIdResult> AsyncUnlockByUserIdResult;
-typedef AsyncResult<GetMutexResult> AsyncGetMutexResult;
-typedef AsyncResult<GetMutexByUserIdResult> AsyncGetMutexByUserIdResult;
-typedef AsyncResult<DeleteMutexByUserIdResult> AsyncDeleteMutexByUserIdResult;
-
 /**
  * GS2 Lock API クライアント
  *

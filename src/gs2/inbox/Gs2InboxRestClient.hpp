@@ -63,25 +63,6 @@
 
 namespace gs2 { namespace inbox {
 
-typedef AsyncResult<DescribeNamespacesResult> AsyncDescribeNamespacesResult;
-typedef AsyncResult<CreateNamespaceResult> AsyncCreateNamespaceResult;
-typedef AsyncResult<GetNamespaceStatusResult> AsyncGetNamespaceStatusResult;
-typedef AsyncResult<GetNamespaceResult> AsyncGetNamespaceResult;
-typedef AsyncResult<UpdateNamespaceResult> AsyncUpdateNamespaceResult;
-typedef AsyncResult<void> AsyncDeleteNamespaceResult;
-typedef AsyncResult<DescribeMessagesResult> AsyncDescribeMessagesResult;
-typedef AsyncResult<DescribeMessagesByUserIdResult> AsyncDescribeMessagesByUserIdResult;
-typedef AsyncResult<SendMessageByUserIdResult> AsyncSendMessageByUserIdResult;
-typedef AsyncResult<GetMessageResult> AsyncGetMessageResult;
-typedef AsyncResult<GetMessageByUserIdResult> AsyncGetMessageByUserIdResult;
-typedef AsyncResult<OpenMessageResult> AsyncOpenMessageResult;
-typedef AsyncResult<OpenMessageByUserIdResult> AsyncOpenMessageByUserIdResult;
-typedef AsyncResult<ReadMessageResult> AsyncReadMessageResult;
-typedef AsyncResult<ReadMessageByUserIdResult> AsyncReadMessageByUserIdResult;
-typedef AsyncResult<void> AsyncDeleteMessageResult;
-typedef AsyncResult<void> AsyncDeleteMessageByUserIdResult;
-typedef AsyncResult<OpenByStampTaskResult> AsyncOpenByStampTaskResult;
-
 /**
  * GS2 Inbox API クライアント
  *

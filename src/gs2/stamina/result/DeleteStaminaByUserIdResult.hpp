@@ -18,6 +18,7 @@
 #define GS2_STAMINA_CONTROL_DELETESTAMINABYUSERIDRESULT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
@@ -28,123 +29,7 @@
 namespace gs2 { namespace stamina
 {
 
-/**
- * ユーザIDを指定してスタミナを削除 のレスポンスモデル
- *
- * @author Game Server Services, Inc.
- */
-class DeleteStaminaByUserIdResult : public Gs2Object
-{
-private:
-    class Data : public detail::json::IModel
-    {
-    public:
-
-        Data()
-        {}
-
-        Data(const Data& data) :
-            detail::json::IModel(data)
-        {}
-
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data))
-        {}
-
-        virtual ~Data() = default;
-
-        // TODO:
-        Data& operator=(const Data&) = delete;
-        Data& operator=(Data&&) = delete;
-
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-        }
-    };
-
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
-
-public:
-    DeleteStaminaByUserIdResult() :
-        m_pData(nullptr)
-    {}
-
-    DeleteStaminaByUserIdResult(const DeleteStaminaByUserIdResult& deleteStaminaByUserIdResult) :
-        Gs2Object(deleteStaminaByUserIdResult),
-        m_pData(deleteStaminaByUserIdResult.m_pData != nullptr ? new Data(*deleteStaminaByUserIdResult.m_pData) : nullptr)
-    {}
-
-    DeleteStaminaByUserIdResult(DeleteStaminaByUserIdResult&& deleteStaminaByUserIdResult) :
-        Gs2Object(std::move(deleteStaminaByUserIdResult)),
-        m_pData(deleteStaminaByUserIdResult.m_pData)
-    {
-        deleteStaminaByUserIdResult.m_pData = nullptr;
-    }
-
-    ~DeleteStaminaByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DeleteStaminaByUserIdResult& operator=(const DeleteStaminaByUserIdResult& deleteStaminaByUserIdResult)
-    {
-        Gs2Object::operator=(deleteStaminaByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*deleteStaminaByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    DeleteStaminaByUserIdResult& operator=(DeleteStaminaByUserIdResult&& deleteStaminaByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(deleteStaminaByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = deleteStaminaByUserIdResult.m_pData;
-        deleteStaminaByUserIdResult.m_pData = nullptr;
-
-        return *this;
-    }
-
-    const DeleteStaminaByUserIdResult* operator->() const
-    {
-        return this;
-    }
-
-    DeleteStaminaByUserIdResult* operator->()
-    {
-        return this;
-    }
-
-    detail::json::IModel& getModel()
-    {
-        return ensureData();
-    }
-};
+typedef AsyncResult<void> AsyncDeleteStaminaByUserIdResult;
 
 } }
 
