@@ -40,6 +40,9 @@
 #include "request/GetCurrentDistributorMasterRequest.hpp"
 #include "request/UpdateCurrentDistributorMasterRequest.hpp"
 #include "request/UpdateCurrentDistributorMasterFromGitHubRequest.hpp"
+#include "request/DistributeRequest.hpp"
+#include "request/RunStampTaskRequest.hpp"
+#include "request/RunStampSheetRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -57,6 +60,9 @@
 #include "result/GetCurrentDistributorMasterResult.hpp"
 #include "result/UpdateCurrentDistributorMasterResult.hpp"
 #include "result/UpdateCurrentDistributorMasterFromGitHubResult.hpp"
+#include "result/DistributeResult.hpp"
+#include "result/RunStampTaskResult.hpp"
+#include "result/RunStampSheetResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace distributor {
