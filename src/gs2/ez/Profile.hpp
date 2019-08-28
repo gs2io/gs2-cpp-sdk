@@ -49,12 +49,12 @@ public:
 
     void login(IAuthenticator& authenticator, LoginCallbackType callback);
 
-    const Gs2Session& getGs2Session() const
+    const Gs2RestSession& getGs2Session() const
     {
         return m_Gs2Session;
     }
 
-    Gs2Session& getGs2Session()
+    Gs2RestSession& getGs2Session()
     {
         return m_Gs2Session;
     }
