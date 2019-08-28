@@ -52,7 +52,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">カテゴリー名</param>
     void ListInventoryModels(
-        std::function<void(gs2::AsyncResult<EzListInventoryModelsResult>&)> callback,
+        std::function<void(AsyncEzListInventoryModelsResult&)> callback,
         const Char* namespaceName
     );
 
@@ -64,7 +64,7 @@ public:
     /// <param name="namespaceName">カテゴリー名</param>
     /// <param name="inventoryName">インベントリの種類名</param>
     void GetInventoryModel(
-        std::function<void(gs2::AsyncResult<EzGetInventoryModelResult>&)> callback,
+        std::function<void(AsyncEzGetInventoryModelResult&)> callback,
         const Char* namespaceName,
         const Char* inventoryName
     );
@@ -77,7 +77,7 @@ public:
     /// <param name="namespaceName">カテゴリー名</param>
     /// <param name="inventoryName">インベントリの種類名</param>
     void ListItemModels(
-        std::function<void(gs2::AsyncResult<EzListItemModelsResult>&)> callback,
+        std::function<void(AsyncEzListItemModelsResult&)> callback,
         const Char* namespaceName,
         const Char* inventoryName
     );
@@ -91,7 +91,7 @@ public:
     /// <param name="inventoryName">インベントリの種類名</param>
     /// <param name="itemName">アイテムモデルの種類名</param>
     void GetItemModel(
-        std::function<void(gs2::AsyncResult<EzGetItemModelResult>&)> callback,
+        std::function<void(AsyncEzGetItemModelResult&)> callback,
         const Char* namespaceName,
         const Char* inventoryName,
         const Char* itemName
@@ -110,7 +110,7 @@ public:
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
     void ListInventories(
-        std::function<void(gs2::AsyncResult<EzListInventoriesResult>&)> callback,
+        std::function<void(AsyncEzListInventoriesResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* pageToken=nullptr,
@@ -127,7 +127,7 @@ public:
     /// <param name="namespaceName">カテゴリー名</param>
     /// <param name="inventoryName">インベントリの種類名</param>
     void GetInventory(
-        std::function<void(gs2::AsyncResult<EzGetInventoryResult>&)> callback,
+        std::function<void(AsyncEzGetInventoryResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* inventoryName
@@ -145,7 +145,7 @@ public:
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
     void ListItems(
-        std::function<void(gs2::AsyncResult<EzListItemsResult>&)> callback,
+        std::function<void(AsyncEzListItemsResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* inventoryName,
@@ -169,7 +169,7 @@ public:
     /// <param name="inventoryName">インベントリの種類名</param>
     /// <param name="itemName">アイテムモデルの種類名</param>
     void GetItem(
-        std::function<void(gs2::AsyncResult<EzGetItemResult>&)> callback,
+        std::function<void(AsyncEzGetItemResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* inventoryName,
@@ -196,7 +196,7 @@ public:
     /// <param name="itemName">アイテムマスターの名前</param>
     /// <param name="consumeCount">消費する量</param>
     void Consume(
-        std::function<void(gs2::AsyncResult<EzConsumeResult>&)> callback,
+        std::function<void(AsyncEzConsumeResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* inventoryName,

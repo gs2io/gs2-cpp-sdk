@@ -56,7 +56,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
     void Create(
-        std::function<void(gs2::AsyncResult<EzCreateResult>&)> callback,
+        std::function<void(AsyncEzCreateResult&)> callback,
         const Char* namespaceName
     );
 
@@ -76,7 +76,7 @@ public:
     /// <param name="keyId">認証トークンの暗号化に使用する暗号鍵 のGRN</param>
     /// <param name="password">パスワード</param>
     void Authentication(
-        std::function<void(gs2::AsyncResult<EzAuthenticationResult>&)> callback,
+        std::function<void(AsyncEzAuthenticationResult&)> callback,
         const Char* namespaceName,
         const Char* userId,
         const Char* keyId,
@@ -102,7 +102,7 @@ public:
     /// <param name="userIdentifier">引き継ぎ用ユーザーID</param>
     /// <param name="password">パスワード</param>
     void AddTakeOverSetting(
-        std::function<void(gs2::AsyncResult<EzAddTakeOverSettingResult>&)> callback,
+        std::function<void(AsyncEzAddTakeOverSettingResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         Int32 type,
@@ -124,7 +124,7 @@ public:
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
     void ListTakeOverSettings(
-        std::function<void(gs2::AsyncResult<EzListTakeOverSettingsResult>&)> callback,
+        std::function<void(AsyncEzListTakeOverSettingsResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* pageToken=nullptr,
@@ -150,7 +150,7 @@ public:
     /// <param name="oldPassword">古いパスワード</param>
     /// <param name="password">新しいパスワード</param>
     void UpdateTakeOverSetting(
-        std::function<void(gs2::AsyncResult<EzUpdateTakeOverSettingResult>&)> callback,
+        std::function<void(AsyncEzUpdateTakeOverSettingResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         Int32 type,
@@ -170,7 +170,7 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="type">スロット番号</param>
     void DeleteTakeOverSetting(
-        std::function<void(gs2::AsyncResult<void>&)> callback,
+        std::function<void(AsyncEzDeleteTakeOverSettingResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         Int32 type
@@ -189,7 +189,7 @@ public:
     /// <param name="userIdentifier">引き継ぎ用ユーザーID</param>
     /// <param name="password">パスワード</param>
     void DoTakeOver(
-        std::function<void(gs2::AsyncResult<EzDoTakeOverResult>&)> callback,
+        std::function<void(AsyncEzDoTakeOverResult&)> callback,
         const Char* namespaceName,
         Int32 type,
         const Char* userIdentifier,

@@ -49,7 +49,7 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     void ListTriggers(
-        std::function<void(gs2::AsyncResult<EzListTriggersResult>&)> callback,
+        std::function<void(AsyncEzListTriggersResult&)> callback,
         GameSession& session,
         const Char* namespaceName
     );
@@ -64,7 +64,7 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="triggerName">トリガーの名前</param>
     void GetTrigger(
-        std::function<void(gs2::AsyncResult<EzGetTriggerResult>&)> callback,
+        std::function<void(AsyncEzGetTriggerResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* triggerName
@@ -79,7 +79,7 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     void ListEvents(
-        std::function<void(gs2::AsyncResult<EzListEventsResult>&)> callback,
+        std::function<void(AsyncEzListEventsResult&)> callback,
         GameSession& session,
         const Char* namespaceName
     );
@@ -94,7 +94,7 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="eventName">イベントの種類名</param>
     void GetEvent(
-        std::function<void(gs2::AsyncResult<EzGetEventResult>&)> callback,
+        std::function<void(AsyncEzGetEventResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* eventName

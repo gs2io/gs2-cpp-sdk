@@ -55,7 +55,7 @@ public:
     /// <param name="transactionId">ロックを取得するトランザクションID</param>
     /// <param name="ttl">ロックを取得する期限（秒）</param>
     void Lock(
-        std::function<void(gs2::AsyncResult<EzLockResult>&)> callback,
+        std::function<void(AsyncEzLockResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* propertyId,
@@ -77,7 +77,7 @@ public:
     /// <param name="propertyId">プロパティID</param>
     /// <param name="transactionId">ロックを取得したトランザクションID</param>
     void Unlock(
-        std::function<void(gs2::AsyncResult<EzUnlockResult>&)> callback,
+        std::function<void(AsyncEzUnlockResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* propertyId,

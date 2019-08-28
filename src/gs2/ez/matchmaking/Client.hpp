@@ -56,7 +56,7 @@ public:
     /// <param name="capacityOfRoles">参加者</param>
     /// <param name="allowUserIds">参加を許可するユーザIDリスト</param>
     void CreateGathering(
-        std::function<void(gs2::AsyncResult<EzCreateGatheringResult>&)> callback,
+        std::function<void(AsyncEzCreateGatheringResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         EzPlayer player,
@@ -76,7 +76,7 @@ public:
     /// <param name="gatheringName">ギャザリング名</param>
     /// <param name="attributeRanges">募集条件</param>
     void UpdateGathering(
-        std::function<void(gs2::AsyncResult<EzUpdateGatheringResult>&)> callback,
+        std::function<void(AsyncEzUpdateGatheringResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* gatheringName,
@@ -98,7 +98,7 @@ public:
     /// <param name="player">自身のプレイヤー情報</param>
     /// <param name="matchmakingContextToken">検索の再開に使用する マッチメイキングの状態を保持するトークン</param>
     void DoMatchmaking(
-        std::function<void(gs2::AsyncResult<EzDoMatchmakingResult>&)> callback,
+        std::function<void(AsyncEzDoMatchmakingResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         EzPlayer player,
@@ -113,7 +113,7 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="gatheringName">ギャザリング名</param>
     void GetGathering(
-        std::function<void(gs2::AsyncResult<EzGetGatheringResult>&)> callback,
+        std::function<void(AsyncEzGetGatheringResult&)> callback,
         const Char* namespaceName,
         const Char* gatheringName
     );
@@ -130,7 +130,7 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="gatheringName">ギャザリング名</param>
     void CancelMatchmaking(
-        std::function<void(gs2::AsyncResult<EzCancelMatchmakingResult>&)> callback,
+        std::function<void(AsyncEzCancelMatchmakingResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* gatheringName

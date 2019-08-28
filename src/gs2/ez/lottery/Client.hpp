@@ -51,7 +51,7 @@ public:
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
     void DescribeBoxes(
-        std::function<void(gs2::AsyncResult<EzDescribeBoxesResult>&)> callback,
+        std::function<void(AsyncEzDescribeBoxesResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* pageToken=nullptr,
@@ -68,7 +68,7 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="lotteryName">抽選モデルの種類名</param>
     void GetBox(
-        std::function<void(gs2::AsyncResult<EzGetBoxResult>&)> callback,
+        std::function<void(AsyncEzGetBoxResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* lotteryName
@@ -84,7 +84,7 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="lotteryName">抽選モデルの種類名</param>
     void ResetBox(
-        std::function<void(gs2::AsyncResult<void>&)> callback,
+        std::function<void(AsyncEzResetBoxResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* lotteryName
@@ -100,7 +100,7 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="lotteryName">抽選モデルの種類名</param>
     void ListProbabilities(
-        std::function<void(gs2::AsyncResult<EzListProbabilitiesResult>&)> callback,
+        std::function<void(AsyncEzListProbabilitiesResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         const Char* lotteryName

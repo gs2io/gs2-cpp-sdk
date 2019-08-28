@@ -51,7 +51,7 @@ public:
     /// <param name="body">アカウント認証情報の署名対象</param>
     /// <param name="signature">署名</param>
     void Login(
-        std::function<void(gs2::AsyncResult<EzLoginResult>&)> callback,
+        std::function<void(AsyncEzLoginResult&)> callback,
         const Char* userId,
         const Char* keyId,
         const Char* body,

@@ -48,7 +48,7 @@ public:
     /// <param name="namespaceName">ネームスペースの名前</param>
     /// <param name="slot">スロット番号</param>
     void Get(
-        std::function<void(gs2::AsyncResult<EzGetResult>&)> callback,
+        std::function<void(AsyncEzGetResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         Int32 slot
@@ -66,7 +66,7 @@ public:
     /// <param name="count">消費する課金通貨の数量</param>
     /// <param name="paidOnly">有償課金通貨のみを対象とするか</param>
     void Withdraw(
-        std::function<void(gs2::AsyncResult<EzWithdrawResult>&)> callback,
+        std::function<void(AsyncEzWithdrawResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
         Int32 slot,
