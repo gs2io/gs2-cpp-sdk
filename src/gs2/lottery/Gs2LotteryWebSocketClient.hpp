@@ -2353,6 +2353,369 @@ private:
         ~GetPrizeTableTask() GS2_OVERRIDE = default;
     };
 
+    class DrawByUserIdTask : public detail::Gs2WebSocketSessionTask<DrawByUserIdResult>
+    {
+    private:
+        DrawByUserIdRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getLotteryName())
+            {
+                writer.writePropertyName("lotteryName");
+                writer.writeCharArray(*m_Request.getLotteryName());
+            }
+            if (m_Request.getUserId())
+            {
+                writer.writePropertyName("userId");
+                writer.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getCount())
+            {
+                writer.writePropertyName("count");
+                writer.writeInt32(*m_Request.getCount());
+            }
+            if (m_Request.getConfig())
+            {
+                writer.writePropertyName("config");
+                writer.writeArrayStart();
+                auto& list = *m_Request.getConfig();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(writer, list[i]);
+                }
+                writer.writeArrayEnd();
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("lottery");
+            writer.writePropertyName("component");
+            writer.writeCharArray("lottery");
+            writer.writePropertyName("function");
+            writer.writeCharArray("drawByUserId");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        DrawByUserIdTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            DrawByUserIdRequest& request,
+            Gs2WebSocketSessionTask<DrawByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DrawByUserIdResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~DrawByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeProbabilitiesTask : public detail::Gs2WebSocketSessionTask<DescribeProbabilitiesResult>
+    {
+    private:
+        DescribeProbabilitiesRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getLotteryName())
+            {
+                writer.writePropertyName("lotteryName");
+                writer.writeCharArray(*m_Request.getLotteryName());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("lottery");
+            writer.writePropertyName("component");
+            writer.writeCharArray("lottery");
+            writer.writePropertyName("function");
+            writer.writeCharArray("describeProbabilities");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        DescribeProbabilitiesTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            DescribeProbabilitiesRequest& request,
+            Gs2WebSocketSessionTask<DescribeProbabilitiesResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeProbabilitiesResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~DescribeProbabilitiesTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeProbabilitiesByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeProbabilitiesByUserIdResult>
+    {
+    private:
+        DescribeProbabilitiesByUserIdRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getLotteryName())
+            {
+                writer.writePropertyName("lotteryName");
+                writer.writeCharArray(*m_Request.getLotteryName());
+            }
+            if (m_Request.getUserId())
+            {
+                writer.writePropertyName("userId");
+                writer.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("lottery");
+            writer.writePropertyName("component");
+            writer.writeCharArray("lottery");
+            writer.writePropertyName("function");
+            writer.writeCharArray("describeProbabilitiesByUserId");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        DescribeProbabilitiesByUserIdTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            DescribeProbabilitiesByUserIdRequest& request,
+            Gs2WebSocketSessionTask<DescribeProbabilitiesByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeProbabilitiesByUserIdResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~DescribeProbabilitiesByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class DrawByStampSheetTask : public detail::Gs2WebSocketSessionTask<DrawByStampSheetResult>
+    {
+    private:
+        DrawByStampSheetRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                writer.writePropertyName("stampSheet");
+                writer.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                writer.writePropertyName("keyId");
+                writer.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("lottery");
+            writer.writePropertyName("component");
+            writer.writeCharArray("lottery");
+            writer.writePropertyName("function");
+            writer.writeCharArray("drawByStampSheet");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        DrawByStampSheetTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            DrawByStampSheetRequest& request,
+            Gs2WebSocketSessionTask<DrawByStampSheetResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DrawByStampSheetResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~DrawByStampSheetTask() GS2_OVERRIDE = default;
+    };
+
     class ExportMasterTask : public detail::Gs2WebSocketSessionTask<ExportMasterResult>
     {
     private:
@@ -3496,6 +3859,60 @@ public:
     void getPrizeTable(GetPrizeTableRequest& request, std::function<void(AsyncGetPrizeTableResult&)> callback)
     {
         GetPrizeTableTask& task = *new GetPrizeTableTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * ユーザIDを指定して抽選を実行<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void drawByUserId(DrawByUserIdRequest& request, std::function<void(AsyncDrawByUserIdResult&)> callback)
+    {
+        DrawByUserIdTask& task = *new DrawByUserIdTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * 排出確率を取得<br>
+	 *   <br>
+	 *   通常抽選ではすべてのゲームプレイヤーに対して同じ確率を応答します。<br>
+	 *   ボックス抽選ではボックスの中身の残りを考慮したゲームプレイヤーごとに異なる確率を応答します。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeProbabilities(DescribeProbabilitiesRequest& request, std::function<void(AsyncDescribeProbabilitiesResult&)> callback)
+    {
+        DescribeProbabilitiesTask& task = *new DescribeProbabilitiesTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * 排出確率を取得<br>
+	 *   <br>
+	 *   通常抽選ではすべてのゲームプレイヤーに対して同じ確率を応答します。<br>
+	 *   ボックス抽選ではボックスの中身の残りを考慮したゲームプレイヤーごとに異なる確率を応答します。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeProbabilitiesByUserId(DescribeProbabilitiesByUserIdRequest& request, std::function<void(AsyncDescribeProbabilitiesByUserIdResult&)> callback)
+    {
+        DescribeProbabilitiesByUserIdTask& task = *new DescribeProbabilitiesByUserIdTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * スタンプシートを使用して抽選処理を実行<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void drawByStampSheet(DrawByStampSheetRequest& request, std::function<void(AsyncDrawByStampSheetResult&)> callback)
+    {
+        DrawByStampSheetTask& task = *new DrawByStampSheetTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 

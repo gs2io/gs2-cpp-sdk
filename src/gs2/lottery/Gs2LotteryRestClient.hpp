@@ -49,6 +49,10 @@
 #include "request/GetLotteryModelRequest.hpp"
 #include "request/DescribePrizeTablesRequest.hpp"
 #include "request/GetPrizeTableRequest.hpp"
+#include "request/DrawByUserIdRequest.hpp"
+#include "request/DescribeProbabilitiesRequest.hpp"
+#include "request/DescribeProbabilitiesByUserIdRequest.hpp"
+#include "request/DrawByStampSheetRequest.hpp"
 #include "request/ExportMasterRequest.hpp"
 #include "request/GetCurrentLotteryMasterRequest.hpp"
 #include "request/UpdateCurrentLotteryMasterRequest.hpp"
@@ -79,6 +83,10 @@
 #include "result/GetLotteryModelResult.hpp"
 #include "result/DescribePrizeTablesResult.hpp"
 #include "result/GetPrizeTableResult.hpp"
+#include "result/DrawByUserIdResult.hpp"
+#include "result/DescribeProbabilitiesResult.hpp"
+#include "result/DescribeProbabilitiesByUserIdResult.hpp"
+#include "result/DrawByStampSheetResult.hpp"
 #include "result/ExportMasterResult.hpp"
 #include "result/GetCurrentLotteryMasterResult.hpp"
 #include "result/UpdateCurrentLotteryMasterResult.hpp"
@@ -113,6 +121,10 @@ typedef AsyncResult<DescribeLotteryModelsResult> AsyncDescribeLotteryModelsResul
 typedef AsyncResult<GetLotteryModelResult> AsyncGetLotteryModelResult;
 typedef AsyncResult<DescribePrizeTablesResult> AsyncDescribePrizeTablesResult;
 typedef AsyncResult<GetPrizeTableResult> AsyncGetPrizeTableResult;
+typedef AsyncResult<DrawByUserIdResult> AsyncDrawByUserIdResult;
+typedef AsyncResult<DescribeProbabilitiesResult> AsyncDescribeProbabilitiesResult;
+typedef AsyncResult<DescribeProbabilitiesByUserIdResult> AsyncDescribeProbabilitiesByUserIdResult;
+typedef AsyncResult<DrawByStampSheetResult> AsyncDrawByStampSheetResult;
 typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
 typedef AsyncResult<GetCurrentLotteryMasterResult> AsyncGetCurrentLotteryMasterResult;
 typedef AsyncResult<UpdateCurrentLotteryMasterResult> AsyncUpdateCurrentLotteryMasterResult;
@@ -2002,6 +2014,240 @@ public:
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * ユーザIDを指定して抽選を実行<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void drawByUserId(DrawByUserIdRequest& request, std::function<void(AsyncDrawByUserIdResult&)> callback)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DrawByUserIdResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "lottery");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/user/{userId}/lottery/{lotteryName}/draw";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getLotteryName();
+            url.replace("{lotteryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getUserId();
+            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getCount();
+            if (value.has_value())
+            {
+                detail::StringVariable urlSafeValue(*value);
+                url.replace("{count}", urlSafeValue.c_str());
+            }
+            else
+            {
+                url.replace("{count}", "null");
+            }
+        }
+        httpRequest.SetURL(url.c_str());
+        detail::json::JsonWriter writer;
+
+        writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
+        if (request.getConfig())
+        {
+            writer.writePropertyName("config");
+            writer.writeArrayStart();
+            auto& list = *request.getConfig();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(writer, list[i]);
+            }
+            writer.writeArrayEnd();
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * 排出確率を取得<br>
+	 *   <br>
+	 *   通常抽選ではすべてのゲームプレイヤーに対して同じ確率を応答します。<br>
+	 *   ボックス抽選ではボックスの中身の残りを考慮したゲームプレイヤーごとに異なる確率を応答します。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeProbabilities(DescribeProbabilitiesRequest& request, std::function<void(AsyncDescribeProbabilitiesResult&)> callback)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeProbabilitiesResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "lottery");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/user/me/lottery/{lotteryName}/probability";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getLotteryName();
+            url.replace("{lotteryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * 排出確率を取得<br>
+	 *   <br>
+	 *   通常抽選ではすべてのゲームプレイヤーに対して同じ確率を応答します。<br>
+	 *   ボックス抽選ではボックスの中身の残りを考慮したゲームプレイヤーごとに異なる確率を応答します。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeProbabilitiesByUserId(DescribeProbabilitiesByUserIdRequest& request, std::function<void(AsyncDescribeProbabilitiesByUserIdResult&)> callback)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeProbabilitiesByUserIdResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("GET");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "lottery");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/user/{userId}/lottery/{lotteryName}/probability";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getLotteryName();
+            url.replace("{lotteryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getUserId();
+            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+
+        Char joint[] = { '?', '\0' };
+        if (request.getContextStack())
+        {
+            url += joint;
+            url += "contextStack=";
+            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        httpRequest.SetURL(url.c_str());
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * スタンプシートを使用して抽選処理を実行<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void drawByStampSheet(DrawByStampSheetRequest& request, std::function<void(AsyncDrawByStampSheetResult&)> callback)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DrawByStampSheetResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "lottery");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/stamp/draw";
+        {
+            auto& value = request.getStampSheet();
+            url.replace("{stampSheet}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        detail::json::JsonWriter writer;
+
+        writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.writeCharArray(*request.getKeyId());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
         }
         gs2RestSessionTask.execute();
     }

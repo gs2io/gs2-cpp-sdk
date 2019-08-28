@@ -1452,6 +1452,285 @@ private:
         ~UpdateCurrentDistributorMasterFromGitHubTask() GS2_OVERRIDE = default;
     };
 
+    class DistributeTask : public detail::Gs2WebSocketSessionTask<DistributeResult>
+    {
+    private:
+        DistributeRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getDistributorName())
+            {
+                writer.writePropertyName("distributorName");
+                writer.writeCharArray(*m_Request.getDistributorName());
+            }
+            if (m_Request.getDistributeResource())
+            {
+                writer.writePropertyName("distributeResource");
+                write(writer, *m_Request.getDistributeResource());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                writer.writePropertyName("xGs2AccessToken");
+                writer.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("distributor");
+            writer.writePropertyName("component");
+            writer.writeCharArray("distribute");
+            writer.writePropertyName("function");
+            writer.writeCharArray("distribute");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        DistributeTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            DistributeRequest& request,
+            Gs2WebSocketSessionTask<DistributeResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DistributeResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~DistributeTask() GS2_OVERRIDE = default;
+    };
+
+    class RunStampTaskTask : public detail::Gs2WebSocketSessionTask<RunStampTaskResult>
+    {
+    private:
+        RunStampTaskRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getDistributorName())
+            {
+                writer.writePropertyName("distributorName");
+                writer.writeCharArray(*m_Request.getDistributorName());
+            }
+            if (m_Request.getStampTask())
+            {
+                writer.writePropertyName("stampTask");
+                writer.writeCharArray(*m_Request.getStampTask());
+            }
+            if (m_Request.getKeyId())
+            {
+                writer.writePropertyName("keyId");
+                writer.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("distributor");
+            writer.writePropertyName("component");
+            writer.writeCharArray("distribute");
+            writer.writePropertyName("function");
+            writer.writeCharArray("runStampTask");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        RunStampTaskTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            RunStampTaskRequest& request,
+            Gs2WebSocketSessionTask<RunStampTaskResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<RunStampTaskResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~RunStampTaskTask() GS2_OVERRIDE = default;
+    };
+
+    class RunStampSheetTask : public detail::Gs2WebSocketSessionTask<RunStampSheetResult>
+    {
+    private:
+        RunStampSheetRequest& m_Request;
+
+        void sendImpl(
+            const StringHolder& clientId,
+            const StringHolder& projectToken,
+            const detail::Gs2SessionTaskId& gs2SessionTaskId
+        ) GS2_OVERRIDE
+        {
+            detail::json::JsonWriter writer;
+
+            writer.writeObjectStart();
+
+            if (m_Request.getContextStack())
+            {
+                writer.writePropertyName("contextStack");
+                writer.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                writer.writePropertyName("namespaceName");
+                writer.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getDistributorName())
+            {
+                writer.writePropertyName("distributorName");
+                writer.writeCharArray(*m_Request.getDistributorName());
+            }
+            if (m_Request.getStampSheet())
+            {
+                writer.writePropertyName("stampSheet");
+                writer.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                writer.writePropertyName("keyId");
+                writer.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                writer.writePropertyName("xGs2RequestId");
+                writer.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                writer.writePropertyName("xGs2DuplicationAvoider");
+                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+
+            writer.writePropertyName("xGs2ClientId");
+            writer.writeCharArray(clientId);
+            writer.writePropertyName("xGs2ProjectToken");
+            writer.writeCharArray(projectToken);
+
+            writer.writePropertyName("x_gs2");
+            writer.writeObjectStart();
+            writer.writePropertyName("service");
+            writer.writeCharArray("distributor");
+            writer.writePropertyName("component");
+            writer.writeCharArray("distribute");
+            writer.writePropertyName("function");
+            writer.writeCharArray("runStampSheet");
+            writer.writePropertyName("contentType");
+            writer.writeCharArray("application/json");
+            writer.writePropertyName("requestId");
+            {
+                char buffer[16];
+                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
+                writer.writeCharArray(buffer);
+            }
+            writer.writeObjectEnd();
+
+            writer.writeObjectEnd();
+
+            auto body = writer.toString();
+            send(body);
+        }
+
+    public:
+        RunStampSheetTask(
+            Gs2WebSocketSession& gs2WebSocketSession,
+            RunStampSheetRequest& request,
+            Gs2WebSocketSessionTask<RunStampSheetResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<RunStampSheetResult>(gs2WebSocketSession, callback),
+            m_Request(request)
+        {}
+
+        ~RunStampSheetTask() GS2_OVERRIDE = default;
+    };
+
 private:
     static void write(detail::json::JsonWriter& writer, const Namespace& obj)
     {
@@ -1906,6 +2185,42 @@ public:
     void updateCurrentDistributorMasterFromGitHub(UpdateCurrentDistributorMasterFromGitHubRequest& request, std::function<void(AsyncUpdateCurrentDistributorMasterFromGitHubResult&)> callback)
     {
         UpdateCurrentDistributorMasterFromGitHubTask& task = *new UpdateCurrentDistributorMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * 所持品を配布する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void distribute(DistributeRequest& request, std::function<void(AsyncDistributeResult&)> callback)
+    {
+        DistributeTask& task = *new DistributeTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * スタンプシートのタスクを実行する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void runStampTask(RunStampTaskRequest& request, std::function<void(AsyncRunStampTaskResult&)> callback)
+    {
+        RunStampTaskTask& task = *new RunStampTaskTask(getGs2WebSocketSession(), request, callback);
+        task.execute();
+    }
+
+	/**
+	 * スタンプシートの完了を報告する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void runStampSheet(RunStampSheetRequest& request, std::function<void(AsyncRunStampSheetResult&)> callback)
+    {
+        RunStampSheetTask& task = *new RunStampSheetTask(getGs2WebSocketSession(), request, callback);
         task.execute();
     }
 

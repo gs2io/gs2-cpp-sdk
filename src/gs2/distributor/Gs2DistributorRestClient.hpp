@@ -40,6 +40,9 @@
 #include "request/GetCurrentDistributorMasterRequest.hpp"
 #include "request/UpdateCurrentDistributorMasterRequest.hpp"
 #include "request/UpdateCurrentDistributorMasterFromGitHubRequest.hpp"
+#include "request/DistributeRequest.hpp"
+#include "request/RunStampTaskRequest.hpp"
+#include "request/RunStampSheetRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -57,6 +60,9 @@
 #include "result/GetCurrentDistributorMasterResult.hpp"
 #include "result/UpdateCurrentDistributorMasterResult.hpp"
 #include "result/UpdateCurrentDistributorMasterFromGitHubResult.hpp"
+#include "result/DistributeResult.hpp"
+#include "result/RunStampTaskResult.hpp"
+#include "result/RunStampSheetResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace distributor {
@@ -78,6 +84,9 @@ typedef AsyncResult<ExportMasterResult> AsyncExportMasterResult;
 typedef AsyncResult<GetCurrentDistributorMasterResult> AsyncGetCurrentDistributorMasterResult;
 typedef AsyncResult<UpdateCurrentDistributorMasterResult> AsyncUpdateCurrentDistributorMasterResult;
 typedef AsyncResult<UpdateCurrentDistributorMasterFromGitHubResult> AsyncUpdateCurrentDistributorMasterFromGitHubResult;
+typedef AsyncResult<DistributeResult> AsyncDistributeResult;
+typedef AsyncResult<RunStampTaskResult> AsyncRunStampTaskResult;
+typedef AsyncResult<RunStampSheetResult> AsyncRunStampSheetResult;
 
 /**
  * GS2 Distributor API クライアント
@@ -1139,6 +1148,188 @@ public:
         if (request.getRequestId())
         {
             httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * 所持品を配布する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void distribute(DistributeRequest& request, std::function<void(AsyncDistributeResult&)> callback)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DistributeResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "distributor");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/distributor/{distributorName}/distribute";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getDistributorName();
+            url.replace("{distributorName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        detail::json::JsonWriter writer;
+
+        writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
+        if (request.getDistributeResource())
+        {
+            writer.writePropertyName("distributeResource");
+            write(writer, *request.getDistributeResource());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getAccessToken())
+        {
+            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * スタンプシートのタスクを実行する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void runStampTask(RunStampTaskRequest& request, std::function<void(AsyncRunStampTaskResult&)> callback)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<RunStampTaskResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "distributor");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/distributor/{distributorName}/distribute/stamp/task/run";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getDistributorName();
+            url.replace("{distributorName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        detail::json::JsonWriter writer;
+
+        writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
+        if (request.getStampTask())
+        {
+            writer.writePropertyName("stampTask");
+            writer.writeCharArray(*request.getStampTask());
+        }
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.writeCharArray(*request.getKeyId());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
+        }
+        gs2RestSessionTask.execute();
+    }
+
+	/**
+	 * スタンプシートの完了を報告する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void runStampSheet(RunStampSheetRequest& request, std::function<void(AsyncRunStampSheetResult&)> callback)
+    {
+        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<RunStampSheetResult>(getGs2RestSession(), callback);
+        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
+        httpRequest.SetVerb("POST");
+        detail::StringVariable url(Gs2RestSession::EndpointHost);
+        url.replace("{service}", "distributor");
+        url.replace("{region}", getGs2RestSession().getRegion().getName());
+        url += "/{namespaceName}/distributor/{distributorName}/distribute/stamp/sheet/run";
+        {
+            auto& value = request.getNamespaceName();
+            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        {
+            auto& value = request.getDistributorName();
+            url.replace("{distributorName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+        }
+        httpRequest.SetURL(url.c_str());
+        detail::json::JsonWriter writer;
+
+        writer.writeObjectStart();
+        if (request.getContextStack())
+        {
+            writer.writePropertyName("contextStack");
+            writer.writeCharArray(*request.getContextStack());
+        }
+        if (request.getStampSheet())
+        {
+            writer.writePropertyName("stampSheet");
+            writer.writeCharArray(*request.getStampSheet());
+        }
+        if (request.getKeyId())
+        {
+            writer.writePropertyName("keyId");
+            writer.writeCharArray(*request.getKeyId());
+        }
+        writer.writeObjectEnd();
+        {
+            auto body = writer.toString();
+            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+            httpRequest.SetContent(content);
+        }
+        httpRequest.SetHeader("Content-Type", "application/json");
+
+        if (request.getRequestId())
+        {
+            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
+        }
+        if (request.getDuplicationAvoider())
+        {
+            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
         }
         gs2RestSessionTask.execute();
     }
