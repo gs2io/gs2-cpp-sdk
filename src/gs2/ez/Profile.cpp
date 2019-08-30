@@ -29,7 +29,7 @@ Profile::Profile(const Char clientId[], const Char clientSecret[], IReopener& re
 
 void Profile::initialize(InitializeCallbackType callback)
 {
-    m_Reopener.reopen(m_Gs2Session, callback);
+    m_Reopener.reopen(callback, m_Gs2Session);
 }
 
 void Profile::finalize(FinalizeCallbackType callback)
@@ -37,7 +37,7 @@ void Profile::finalize(FinalizeCallbackType callback)
     m_Gs2Session.close(callback);
 }
 
-void Profile::login(IAuthenticator& authenticator, LoginCallbackType callback)
+void Profile::login(LoginCallbackType callback, IAuthenticator& authenticator)
 {
     authenticator.authentication(callback);
 }

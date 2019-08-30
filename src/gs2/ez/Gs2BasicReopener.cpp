@@ -19,7 +19,7 @@
 
 namespace gs2 { namespace ez {
 
-void Gs2BasicReopener::reopen(gs2::Gs2RestSession& gs2Session, gs2::Gs2Session::OpenCallbackType callback)
+void Gs2BasicReopener::reopen(gs2::Gs2Session::OpenCallbackType callback, gs2::Gs2RestSession& gs2Session)
 {
     gs2Session.open(callback);
 }

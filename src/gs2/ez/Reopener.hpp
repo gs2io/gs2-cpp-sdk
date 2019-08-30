@@ -30,7 +30,7 @@ namespace ez {
 class IReopener
 {
 public:
-    virtual void reopen(gs2::Gs2RestSession& session, gs2::Gs2Session::OpenCallbackType callback) = 0;
+    virtual void reopen(gs2::Gs2Session::OpenCallbackType callback, gs2::Gs2RestSession& session) = 0;
 };
 
 }

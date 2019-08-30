@@ -36,9 +36,9 @@ private:
     Gs2RestSession m_Gs2Session;
 
 public:
-    typedef std::function<void(gs2::AsyncResult<void>)> InitializeCallbackType;
+    typedef std::function<void(gs2::AsyncResult<void>&)> InitializeCallbackType;
     typedef std::function<void()> FinalizeCallbackType;
-    typedef std::function<void(gs2::AsyncResult<gs2::auth::AccessToken>)> LoginCallbackType;
+    typedef std::function<void(gs2::AsyncResult<gs2::auth::AccessToken>&)> LoginCallbackType;
 
 public:
     Profile(const Char clientId[], const Char clientSecret[], IReopener& reopener);
@@ -47,7 +47,7 @@ public:
 
     void finalize(FinalizeCallbackType callback);
 
-    void login(IAuthenticator& authenticator, LoginCallbackType callback);
+    void login(LoginCallbackType callback, IAuthenticator& authenticator);
 
     const Gs2RestSession& getGs2Session() const
     {
