@@ -30,11 +30,11 @@ private:
     /** 引き継ぎ設定のリスト */
     List<EzTakeOver> m_Items;
     /** リストの続きを取得するためのページトークン */
-    StringHolder m_NextPageToken;
+    optional<StringHolder> m_NextPageToken;
 
 public:
     EzListTakeOverSettingsResult(const gs2::account::DescribeTakeOversResult& result) :
-        m_NextPageToken(*result.getNextPageToken())
+        m_NextPageToken(result.getNextPageToken())
     {
         {
             auto& list = *result.getItems();
@@ -48,8 +48,7 @@ public:
     static bool isConvertible(const gs2::account::DescribeTakeOversResult& result)
     {
         return
-            result.getItems().has_value() &&
-            result.getNextPageToken().has_value();
+            result.getItems().has_value();
     }
 
     // ========================================
@@ -66,12 +65,12 @@ public:
         return m_Items;
     }
 
-    const gs2::StringHolder& getNextPageToken() const
+    const optional<gs2::StringHolder>& getNextPageToken() const
     {
         return m_NextPageToken;
     }
 
-    gs2::StringHolder& getNextPageToken()
+    optional<gs2::StringHolder>& getNextPageToken()
     {
         return m_NextPageToken;
     }
