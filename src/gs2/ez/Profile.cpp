@@ -40,7 +40,7 @@ void Profile::finalize(FinalizeCallbackType callback)
 void Profile::login(LoginCallbackType callback, IAuthenticator& authenticator)
 {
     authenticator.authentication(
-        [&](gs2::AsyncResult<gs2::auth::AccessToken>& r)
+        [callback](gs2::AsyncResult<gs2::auth::AccessToken>& r)
         {
             if (r.getError())
             {
