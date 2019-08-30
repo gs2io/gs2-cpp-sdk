@@ -28,8 +28,14 @@ private:
     gs2::auth::AccessToken m_AccessToken;
 
 public:
+    GameSession() = default;
+
     GameSession(const gs2::auth::AccessToken& accessToken) :
         m_AccessToken(accessToken)
+    {}
+
+    GameSession(gs2::auth::AccessToken&& accessToken) :
+        m_AccessToken(std::move(accessToken))
     {}
 
     const gs2::auth::AccessToken& getAccessToken() const

@@ -21,7 +21,7 @@
 #include "../core/AsyncResult.hpp"
 #include "../core/model/BasicGs2Credential.hpp"
 #include "../core/network/Gs2RestSession.hpp"
-#include "../auth/model/AccessToken.hpp"
+#include "GameSession.hpp"
 
 namespace gs2 { namespace ez {
 
@@ -38,7 +38,7 @@ private:
 public:
     typedef std::function<void(gs2::AsyncResult<void>&)> InitializeCallbackType;
     typedef std::function<void()> FinalizeCallbackType;
-    typedef std::function<void(gs2::AsyncResult<gs2::auth::AccessToken>&)> LoginCallbackType;
+    typedef std::function<void(gs2::AsyncResult<GameSession>&)> LoginCallbackType;
 
 public:
     Profile(const Char clientId[], const Char clientSecret[], IReopener& reopener);

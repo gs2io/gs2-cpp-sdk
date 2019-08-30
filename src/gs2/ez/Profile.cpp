@@ -39,7 +39,29 @@ void Profile::finalize(FinalizeCallbackType callback)
 
 void Profile::login(LoginCallbackType callback, IAuthenticator& authenticator)
 {
-    authenticator.authentication(callback);
+    authenticator.authentication(
+        [&](gs2::AsyncResult<gs2::auth::AccessToken>& r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                gs2::AsyncResult<GameSession> asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult())
+            {
+                gs2::AsyncResult<GameSession> asyncResult(std::move(*r.getResult()));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
+                gs2::AsyncResult<GameSession> asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
 }
 
 }}

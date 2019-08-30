@@ -27,7 +27,10 @@ namespace gs2 { namespace ez {
 class IAuthenticator
 {
 public:
-    virtual void authentication(std::function<void(gs2::AsyncResult<gs2::auth::AccessToken>)> callback) = 0;
+    typedef std::function<void(gs2::AsyncResult<gs2::auth::AccessToken>&)> AuthenticationCallback;
+
+public:
+    virtual void authentication(AuthenticationCallback callback) = 0;
 };
 
 }}

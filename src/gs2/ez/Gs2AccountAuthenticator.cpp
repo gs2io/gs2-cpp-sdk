@@ -49,7 +49,7 @@ Gs2AccountAuthenticator::Gs2AccountAuthenticator(
 {
 }
 
-void Gs2AccountAuthenticator::authentication(std::function<void(gs2::AsyncResult<gs2::auth::AccessToken>)> callback)
+void Gs2AccountAuthenticator::authentication(AuthenticationCallback callback)
 {
     gs2::account::Gs2AccountRestClient accountClient(m_Gs2Session);
     gs2::account::AuthenticationRequest authenticationRequest;
@@ -64,7 +64,8 @@ void Gs2AccountAuthenticator::authentication(std::function<void(gs2::AsyncResult
             if (asyncAuthenticationResult.getError())
             {
                 auto gs2ClientException = *asyncAuthenticationResult.getError();    // TODO: move
-                callback(gs2::AsyncResult<gs2::auth::AccessToken>(std::move(gs2ClientException)));
+                gs2::AsyncResult<gs2::auth::AccessToken> asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
             else if (asyncAuthenticationResult.getResult() && isValid(*asyncAuthenticationResult.getResult()))
             {
@@ -82,7 +83,8 @@ void Gs2AccountAuthenticator::authentication(std::function<void(gs2::AsyncResult
                         if (asyncLoginBySignatureResult.getError())
                         {
                             auto gs2ClientException = *asyncLoginBySignatureResult.getError();  // TODO: move
-                            callback(gs2::AsyncResult<gs2::auth::AccessToken>(std::move(gs2ClientException)));
+                            gs2::AsyncResult<gs2::auth::AccessToken> asyncResult(std::move(gs2ClientException));
+                            callback(asyncResult);
                         }
                         else if (asyncLoginBySignatureResult.getResult() && isValid(*asyncLoginBySignatureResult.getResult()))
                         {
@@ -91,13 +93,15 @@ void Gs2AccountAuthenticator::authentication(std::function<void(gs2::AsyncResult
                             accessToken.setToken(*loginBySignatureResult.getToken());
                             accessToken.setExpire(*loginBySignatureResult.getExpire());
                             accessToken.setUserId(*loginBySignatureResult.getUserId());
-                            callback(gs2::AsyncResult<gs2::auth::AccessToken>(std::move(accessToken)));
+                            gs2::AsyncResult<gs2::auth::AccessToken> asyncResult(std::move(accessToken));
+                            callback(asyncResult);
                         }
                         else
                         {
                             Gs2ClientException gs2ClientException;
                             gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-                            callback(gs2::AsyncResult<gs2::auth::AccessToken>(std::move(gs2ClientException)));
+                            gs2::AsyncResult<gs2::auth::AccessToken> asyncResult(std::move(gs2ClientException));
+                            callback(asyncResult);
                         }
                     }
                 );
@@ -106,7 +110,8 @@ void Gs2AccountAuthenticator::authentication(std::function<void(gs2::AsyncResult
             {
                 Gs2ClientException gs2ClientException;
                 gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-                callback(gs2::AsyncResult<gs2::auth::AccessToken>(std::move(gs2ClientException)));
+                gs2::AsyncResult<gs2::auth::AccessToken> asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
             }
         }
     );

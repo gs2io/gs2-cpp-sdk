@@ -44,7 +44,7 @@ public:
         const Char password[]
     );
 
-    void authentication(std::function<void(gs2::AsyncResult<gs2::auth::AccessToken>)> callback) GS2_OVERRIDE;
+    void authentication(AuthenticationCallback callback) GS2_OVERRIDE;
 };
 
 }}
