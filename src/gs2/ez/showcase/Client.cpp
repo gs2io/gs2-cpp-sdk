@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::List(
+void Client::list(
     std::function<void(AsyncEzListResult&)> callback,
     GameSession& session,
     const Char* namespaceName
@@ -63,7 +63,7 @@ void Client::List(
     );
 }
 
-void Client::Buy(
+void Client::buy(
     std::function<void(AsyncEzBuyResult&)> callback,
     GameSession& session,
     const Char* namespaceName,

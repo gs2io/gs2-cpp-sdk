@@ -50,7 +50,7 @@ public:
     /// <param name="keyId">署名の作成に使用した暗号鍵 のGRN</param>
     /// <param name="body">アカウント認証情報の署名対象</param>
     /// <param name="signature">署名</param>
-    void Login(
+    void login(
         std::function<void(AsyncEzLoginResult&)> callback,
         const Char* userId,
         const Char* keyId,

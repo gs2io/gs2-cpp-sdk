@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::Run(
+void Client::run(
     std::function<void(AsyncEzRunResult&)> callback,
     GameSession& session,
     const Char* namespaceName

@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::DescribeBoxes(
+void Client::describeBoxes(
     std::function<void(AsyncEzDescribeBoxesResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -73,7 +73,7 @@ void Client::DescribeBoxes(
     );
 }
 
-void Client::GetBox(
+void Client::getBox(
     std::function<void(AsyncEzGetBoxResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -111,7 +111,7 @@ void Client::GetBox(
     );
 }
 
-void Client::ResetBox(
+void Client::resetBox(
     std::function<void(AsyncEzResetBoxResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -141,7 +141,7 @@ void Client::ResetBox(
     );
 }
 
-void Client::ListProbabilities(
+void Client::listProbabilities(
     std::function<void(AsyncEzListProbabilitiesResult&)> callback,
     GameSession& session,
     const Char* namespaceName,

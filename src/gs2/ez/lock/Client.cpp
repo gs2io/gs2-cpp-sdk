@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::Lock(
+void Client::lock(
     std::function<void(AsyncEzLockResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -69,7 +69,7 @@ void Client::Lock(
     );
 }
 
-void Client::Unlock(
+void Client::unlock(
     std::function<void(AsyncEzUnlockResult&)> callback,
     GameSession& session,
     const Char* namespaceName,

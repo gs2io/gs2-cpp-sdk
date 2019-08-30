@@ -49,7 +49,7 @@ public:
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
-    void Run(
+    void run(
         std::function<void(AsyncEzRunResult&)> callback,
         GameSession& session,
         const Char* namespaceName

@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::ListStaminaModels(
+void Client::listStaminaModels(
     std::function<void(AsyncEzListStaminaModelsResult&)> callback,
     const Char* namespaceName
 )
@@ -61,7 +61,7 @@ void Client::ListStaminaModels(
     );
 }
 
-void Client::GetStaminaModel(
+void Client::getStaminaModel(
     std::function<void(AsyncEzGetStaminaModelResult&)> callback,
     const Char* namespaceName,
     const Char* staminaName
@@ -97,7 +97,7 @@ void Client::GetStaminaModel(
     );
 }
 
-void Client::GetStamina(
+void Client::getStamina(
     std::function<void(AsyncEzGetStaminaResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -135,7 +135,7 @@ void Client::GetStamina(
     );
 }
 
-void Client::Consume(
+void Client::consume(
     std::function<void(AsyncEzConsumeResult&)> callback,
     GameSession& session,
     const Char* namespaceName,

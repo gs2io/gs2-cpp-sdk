@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::Login(
+void Client::login(
     std::function<void(AsyncEzLoginResult&)> callback,
     const Char* userId,
     const Char* keyId,

@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::Get(
+void Client::get(
     std::function<void(AsyncEzGetResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -65,7 +65,7 @@ void Client::Get(
     );
 }
 
-void Client::Withdraw(
+void Client::withdraw(
     std::function<void(AsyncEzWithdrawResult&)> callback,
     GameSession& session,
     const Char* namespaceName,

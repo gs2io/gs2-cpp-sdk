@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::ListDistributorModels(
+void Client::listDistributorModels(
     std::function<void(AsyncEzListDistributorModelsResult&)> callback,
     const Char* namespaceName
 )
@@ -61,7 +61,7 @@ void Client::ListDistributorModels(
     );
 }
 
-void Client::GetDistributorModel(
+void Client::getDistributorModel(
     std::function<void(AsyncEzGetDistributorModelResult&)> callback,
     const Char* namespaceName,
     const Char* distributorName
@@ -97,7 +97,7 @@ void Client::GetDistributorModel(
     );
 }
 
-void Client::RunStampTask(
+void Client::runStampTask(
     std::function<void(AsyncEzRunStampTaskResult&)> callback,
     const Char* namespaceName,
     const Char* distributorName,
@@ -142,7 +142,7 @@ void Client::RunStampTask(
     );
 }
 
-void Client::RunStampSheet(
+void Client::runStampSheet(
     std::function<void(AsyncEzRunStampSheetResult&)> callback,
     const Char* namespaceName,
     const Char* distributorName,

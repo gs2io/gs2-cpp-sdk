@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::ListCounters(
+void Client::listCounters(
     std::function<void(AsyncEzListCountersResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -68,7 +68,7 @@ void Client::ListCounters(
     );
 }
 
-void Client::GetCounter(
+void Client::getCounter(
     std::function<void(AsyncEzGetCounterResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -108,7 +108,7 @@ void Client::GetCounter(
     );
 }
 
-void Client::ListLimitModels(
+void Client::listLimitModels(
     std::function<void(AsyncEzListLimitModelsResult&)> callback,
     const Char* namespaceName
 )
@@ -142,7 +142,7 @@ void Client::ListLimitModels(
     );
 }
 
-void Client::GetLimitModel(
+void Client::getLimitModel(
     std::function<void(AsyncEzGetLimitModelResult&)> callback,
     const Char* namespaceName,
     const Char* limitName

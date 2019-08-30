@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::ListInventoryModels(
+void Client::listInventoryModels(
     std::function<void(AsyncEzListInventoryModelsResult&)> callback,
     const Char* namespaceName
 )
@@ -61,7 +61,7 @@ void Client::ListInventoryModels(
     );
 }
 
-void Client::GetInventoryModel(
+void Client::getInventoryModel(
     std::function<void(AsyncEzGetInventoryModelResult&)> callback,
     const Char* namespaceName,
     const Char* inventoryName
@@ -97,7 +97,7 @@ void Client::GetInventoryModel(
     );
 }
 
-void Client::ListItemModels(
+void Client::listItemModels(
     std::function<void(AsyncEzListItemModelsResult&)> callback,
     const Char* namespaceName,
     const Char* inventoryName
@@ -133,7 +133,7 @@ void Client::ListItemModels(
     );
 }
 
-void Client::GetItemModel(
+void Client::getItemModel(
     std::function<void(AsyncEzGetItemModelResult&)> callback,
     const Char* namespaceName,
     const Char* inventoryName,
@@ -171,7 +171,7 @@ void Client::GetItemModel(
     );
 }
 
-void Client::ListInventories(
+void Client::listInventories(
     std::function<void(AsyncEzListInventoriesResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -217,7 +217,7 @@ void Client::ListInventories(
     );
 }
 
-void Client::GetInventory(
+void Client::getInventory(
     std::function<void(AsyncEzGetInventoryResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -255,7 +255,7 @@ void Client::GetInventory(
     );
 }
 
-void Client::ListItems(
+void Client::listItems(
     std::function<void(AsyncEzListItemsResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -303,7 +303,7 @@ void Client::ListItems(
     );
 }
 
-void Client::GetItem(
+void Client::getItem(
     std::function<void(AsyncEzGetItemResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -343,7 +343,7 @@ void Client::GetItem(
     );
 }
 
-void Client::Consume(
+void Client::consume(
     std::function<void(AsyncEzConsumeResult&)> callback,
     GameSession& session,
     const Char* namespaceName,

@@ -50,7 +50,7 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
-    void DescribeBoxes(
+    void describeBoxes(
         std::function<void(AsyncEzDescribeBoxesResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -67,7 +67,7 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="lotteryName">抽選モデルの種類名</param>
-    void GetBox(
+    void getBox(
         std::function<void(AsyncEzGetBoxResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -83,7 +83,7 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="lotteryName">抽選モデルの種類名</param>
-    void ResetBox(
+    void resetBox(
         std::function<void(AsyncEzResetBoxResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -99,7 +99,7 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="lotteryName">抽選モデルの種類名</param>
-    void ListProbabilities(
+    void listProbabilities(
         std::function<void(AsyncEzListProbabilitiesResult&)> callback,
         GameSession& session,
         const Char* namespaceName,

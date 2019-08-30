@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::ListTriggers(
+void Client::listTriggers(
     std::function<void(AsyncEzListTriggersResult&)> callback,
     GameSession& session,
     const Char* namespaceName
@@ -63,7 +63,7 @@ void Client::ListTriggers(
     );
 }
 
-void Client::GetTrigger(
+void Client::getTrigger(
     std::function<void(AsyncEzGetTriggerResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -101,7 +101,7 @@ void Client::GetTrigger(
     );
 }
 
-void Client::ListEvents(
+void Client::listEvents(
     std::function<void(AsyncEzListEventsResult&)> callback,
     GameSession& session,
     const Char* namespaceName
@@ -137,7 +137,7 @@ void Client::ListEvents(
     );
 }
 
-void Client::GetEvent(
+void Client::getEvent(
     std::function<void(AsyncEzGetEventResult&)> callback,
     GameSession& session,
     const Char* namespaceName,

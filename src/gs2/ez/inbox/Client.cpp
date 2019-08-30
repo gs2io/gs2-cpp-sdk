@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::List(
+void Client::list(
     std::function<void(AsyncEzListResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -73,7 +73,7 @@ void Client::List(
     );
 }
 
-void Client::Read(
+void Client::read(
     std::function<void(AsyncEzReadResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -114,7 +114,7 @@ void Client::Read(
     );
 }
 
-void Client::Delete(
+void Client::delete_(
     std::function<void(AsyncEzDeleteResult&)> callback,
     GameSession& session,
     const Char* namespaceName,

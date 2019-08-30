@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::CreateGathering(
+void Client::createGathering(
     std::function<void(AsyncEzCreateGatheringResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -86,7 +86,7 @@ void Client::CreateGathering(
     );
 }
 
-void Client::UpdateGathering(
+void Client::updateGathering(
     std::function<void(AsyncEzUpdateGatheringResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -134,7 +134,7 @@ void Client::UpdateGathering(
     );
 }
 
-void Client::DoMatchmaking(
+void Client::doMatchmaking(
     std::function<void(AsyncEzDoMatchmakingResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -177,7 +177,7 @@ void Client::DoMatchmaking(
     );
 }
 
-void Client::GetGathering(
+void Client::getGathering(
     std::function<void(AsyncEzGetGatheringResult&)> callback,
     const Char* namespaceName,
     const Char* gatheringName
@@ -213,7 +213,7 @@ void Client::GetGathering(
     );
 }
 
-void Client::CancelMatchmaking(
+void Client::cancelMatchmaking(
     std::function<void(AsyncEzCancelMatchmakingResult&)> callback,
     GameSession& session,
     const Char* namespaceName,

@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::Start(
+void Client::start(
     std::function<void(AsyncEzStartResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -72,7 +72,7 @@ void Client::Start(
     );
 }
 
-void Client::End(
+void Client::end(
     std::function<void(AsyncEzEndResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -125,7 +125,7 @@ void Client::End(
     );
 }
 
-void Client::Delete(
+void Client::delete_(
     std::function<void(AsyncEzDeleteResult&)> callback,
     GameSession& session,
     const Char* namespaceName
@@ -161,7 +161,7 @@ void Client::Delete(
     );
 }
 
-void Client::DescribeCompletedQuestLists(
+void Client::describeCompletedQuestLists(
     std::function<void(AsyncEzDescribeCompletedQuestListsResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -207,7 +207,7 @@ void Client::DescribeCompletedQuestLists(
     );
 }
 
-void Client::GetCompletedQuestList(
+void Client::getCompletedQuestList(
     std::function<void(AsyncEzGetCompletedQuestListResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -245,7 +245,7 @@ void Client::GetCompletedQuestList(
     );
 }
 
-void Client::ListQuestGroups(
+void Client::listQuestGroups(
     std::function<void(AsyncEzListQuestGroupsResult&)> callback,
     const Char* namespaceName
 )
@@ -279,7 +279,7 @@ void Client::ListQuestGroups(
     );
 }
 
-void Client::GetQuestGroup(
+void Client::getQuestGroup(
     std::function<void(AsyncEzGetQuestGroupResult&)> callback,
     const Char* namespaceName,
     const Char* questGroupName
@@ -315,7 +315,7 @@ void Client::GetQuestGroup(
     );
 }
 
-void Client::ListQuests(
+void Client::listQuests(
     std::function<void(AsyncEzListQuestsResult&)> callback,
     const Char* namespaceName,
     const Char* questGroupName
@@ -351,7 +351,7 @@ void Client::ListQuests(
     );
 }
 
-void Client::GetQuest(
+void Client::getQuest(
     std::function<void(AsyncEzGetQuestResult&)> callback,
     const Char* namespaceName,
     const Char* questGroupName,

@@ -55,7 +55,7 @@ public:
     /// <param name="attributeRanges">募集条件</param>
     /// <param name="capacityOfRoles">参加者</param>
     /// <param name="allowUserIds">参加を許可するユーザIDリスト</param>
-    void CreateGathering(
+    void createGathering(
         std::function<void(AsyncEzCreateGatheringResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -75,7 +75,7 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="gatheringName">ギャザリング名</param>
     /// <param name="attributeRanges">募集条件</param>
-    void UpdateGathering(
+    void updateGathering(
         std::function<void(AsyncEzUpdateGatheringResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -97,7 +97,7 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="player">自身のプレイヤー情報</param>
     /// <param name="matchmakingContextToken">検索の再開に使用する マッチメイキングの状態を保持するトークン</param>
-    void DoMatchmaking(
+    void doMatchmaking(
         std::function<void(AsyncEzDoMatchmakingResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -112,7 +112,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="gatheringName">ギャザリング名</param>
-    void GetGathering(
+    void getGathering(
         std::function<void(AsyncEzGetGatheringResult&)> callback,
         const Char* namespaceName,
         const Char* gatheringName
@@ -129,7 +129,7 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="gatheringName">ギャザリング名</param>
-    void CancelMatchmaking(
+    void cancelMatchmaking(
         std::function<void(AsyncEzCancelMatchmakingResult&)> callback,
         GameSession& session,
         const Char* namespaceName,

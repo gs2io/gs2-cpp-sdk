@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::ListExperienceModels(
+void Client::listExperienceModels(
     std::function<void(AsyncEzListExperienceModelsResult&)> callback,
     const Char* namespaceName
 )
@@ -61,7 +61,7 @@ void Client::ListExperienceModels(
     );
 }
 
-void Client::GetExperienceModel(
+void Client::getExperienceModel(
     std::function<void(AsyncEzGetExperienceModelResult&)> callback,
     const Char* namespaceName,
     const Char* experienceName
@@ -97,7 +97,7 @@ void Client::GetExperienceModel(
     );
 }
 
-void Client::ListStatuses(
+void Client::listStatuses(
     std::function<void(AsyncEzListStatusesResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -148,7 +148,7 @@ void Client::ListStatuses(
     );
 }
 
-void Client::GetStatus(
+void Client::getStatus(
     std::function<void(AsyncEzGetStatusResult&)> callback,
     GameSession& session,
     const Char* namespaceName,

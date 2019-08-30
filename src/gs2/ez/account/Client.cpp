@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::Create(
+void Client::create(
     std::function<void(AsyncEzCreateResult&)> callback,
     const Char* namespaceName
 )
@@ -61,7 +61,7 @@ void Client::Create(
     );
 }
 
-void Client::Authentication(
+void Client::authentication(
     std::function<void(AsyncEzAuthenticationResult&)> callback,
     const Char* namespaceName,
     const Char* userId,
@@ -101,7 +101,7 @@ void Client::Authentication(
     );
 }
 
-void Client::AddTakeOverSetting(
+void Client::addTakeOverSetting(
     std::function<void(AsyncEzAddTakeOverSettingResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -143,7 +143,7 @@ void Client::AddTakeOverSetting(
     );
 }
 
-void Client::ListTakeOverSettings(
+void Client::listTakeOverSettings(
     std::function<void(AsyncEzListTakeOverSettingsResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -189,7 +189,7 @@ void Client::ListTakeOverSettings(
     );
 }
 
-void Client::UpdateTakeOverSetting(
+void Client::updateTakeOverSetting(
     std::function<void(AsyncEzUpdateTakeOverSettingResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -231,7 +231,7 @@ void Client::UpdateTakeOverSetting(
     );
 }
 
-void Client::DeleteTakeOverSetting(
+void Client::deleteTakeOverSetting(
     std::function<void(AsyncEzDeleteTakeOverSettingResult&)> callback,
     GameSession& session,
     const Char* namespaceName,
@@ -261,7 +261,7 @@ void Client::DeleteTakeOverSetting(
     );
 }
 
-void Client::DoTakeOver(
+void Client::doTakeOver(
     std::function<void(AsyncEzDoTakeOverResult&)> callback,
     const Char* namespaceName,
     Int32 type,

@@ -46,7 +46,7 @@ public:
     ///
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
-    void ListDistributorModels(
+    void listDistributorModels(
         std::function<void(AsyncEzListDistributorModelsResult&)> callback,
         const Char* namespaceName
     );
@@ -58,7 +58,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="distributorName">配信設定名</param>
-    void GetDistributorModel(
+    void getDistributorModel(
         std::function<void(AsyncEzGetDistributorModelResult&)> callback,
         const Char* namespaceName,
         const Char* distributorName
@@ -74,7 +74,7 @@ public:
     /// <param name="stampTask">実行するスタンプタスク</param>
     /// <param name="keyId">スタンプシートの暗号化に使用した暗号鍵GRN</param>
     /// <param name="contextStack">スタンプシートの実行状況を記録するスタックメモリ</param>
-    void RunStampTask(
+    void runStampTask(
         std::function<void(AsyncEzRunStampTaskResult&)> callback,
         const Char* namespaceName,
         const Char* distributorName,
@@ -93,7 +93,7 @@ public:
     /// <param name="stampSheet">実行するスタンプタスク</param>
     /// <param name="keyId">スタンプシートの暗号化に使用した暗号鍵GRN</param>
     /// <param name="contextStack">スタンプシートの実行状況を記録するスタックメモリ</param>
-    void RunStampSheet(
+    void runStampSheet(
         std::function<void(AsyncEzRunStampSheetResult&)> callback,
         const Char* namespaceName,
         const Char* distributorName,

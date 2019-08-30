@@ -27,7 +27,7 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::SetUserId(
+void Client::setUserId(
     std::function<void(AsyncEzSetUserIdResult&)> callback,
     GameSession& session,
     const Char* namespaceName,

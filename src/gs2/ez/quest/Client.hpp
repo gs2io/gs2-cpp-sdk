@@ -66,7 +66,7 @@ public:
     /// <param name="questGroupName">クエストグループ名</param>
     /// <param name="questName">クエストモデル名</param>
     /// <param name="force">すでに開始しているクエストがある場合にそれを破棄して開始するか</param>
-    void Start(
+    void start(
         std::function<void(AsyncEzStartResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -91,7 +91,7 @@ public:
     /// <param name="rewards">実際にクエストで得た報酬</param>
     /// <param name="transactionId">トランザクションID</param>
     /// <param name="isComplete">クエストをクリアしたか</param>
-    void End(
+    void end(
         std::function<void(AsyncEzEndResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -110,7 +110,7 @@ public:
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">カテゴリ名</param>
-    void Delete(
+    void delete_(
         std::function<void(AsyncEzDeleteResult&)> callback,
         GameSession& session,
         const Char* namespaceName
@@ -129,7 +129,7 @@ public:
     /// <param name="namespaceName">カテゴリ名</param>
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
-    void DescribeCompletedQuestLists(
+    void describeCompletedQuestLists(
         std::function<void(AsyncEzDescribeCompletedQuestListsResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -146,7 +146,7 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">カテゴリ名</param>
     /// <param name="questGroupName">クエストグループモデル名</param>
-    void GetCompletedQuestList(
+    void getCompletedQuestList(
         std::function<void(AsyncEzGetCompletedQuestListResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -159,7 +159,7 @@ public:
     ///
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">カテゴリ名</param>
-    void ListQuestGroups(
+    void listQuestGroups(
         std::function<void(AsyncEzListQuestGroupsResult&)> callback,
         const Char* namespaceName
     );
@@ -171,7 +171,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">カテゴリ名</param>
     /// <param name="questGroupName">クエストグループモデル名</param>
-    void GetQuestGroup(
+    void getQuestGroup(
         std::function<void(AsyncEzGetQuestGroupResult&)> callback,
         const Char* namespaceName,
         const Char* questGroupName
@@ -184,7 +184,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">カテゴリ名</param>
     /// <param name="questGroupName">クエストグループモデル名</param>
-    void ListQuests(
+    void listQuests(
         std::function<void(AsyncEzListQuestsResult&)> callback,
         const Char* namespaceName,
         const Char* questGroupName
@@ -198,7 +198,7 @@ public:
     /// <param name="namespaceName">カテゴリ名</param>
     /// <param name="questGroupName">クエストグループモデル名</param>
     /// <param name="questName">クエスト名</param>
-    void GetQuest(
+    void getQuest(
         std::function<void(AsyncEzGetQuestResult&)> callback,
         const Char* namespaceName,
         const Char* questGroupName,

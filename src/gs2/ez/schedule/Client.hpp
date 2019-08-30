@@ -48,7 +48,7 @@ public:
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
-    void ListTriggers(
+    void listTriggers(
         std::function<void(AsyncEzListTriggersResult&)> callback,
         GameSession& session,
         const Char* namespaceName
@@ -63,7 +63,7 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="triggerName">トリガーの名前</param>
-    void GetTrigger(
+    void getTrigger(
         std::function<void(AsyncEzGetTriggerResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -78,7 +78,7 @@ public:
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
-    void ListEvents(
+    void listEvents(
         std::function<void(AsyncEzListEventsResult&)> callback,
         GameSession& session,
         const Char* namespaceName
@@ -93,7 +93,7 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="eventName">イベントの種類名</param>
-    void GetEvent(
+    void getEvent(
         std::function<void(AsyncEzGetEventResult&)> callback,
         GameSession& session,
         const Char* namespaceName,

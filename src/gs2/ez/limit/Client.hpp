@@ -51,7 +51,7 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="limitName">回数制限の種類の名前</param>
-    void ListCounters(
+    void listCounters(
         std::function<void(AsyncEzListCountersResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -68,7 +68,7 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="limitName">回数制限の種類の名前</param>
     /// <param name="counterName">カウンターの名前</param>
-    void GetCounter(
+    void getCounter(
         std::function<void(AsyncEzGetCounterResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -85,7 +85,7 @@ public:
     ///
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
-    void ListLimitModels(
+    void listLimitModels(
         std::function<void(AsyncEzListLimitModelsResult&)> callback,
         const Char* namespaceName
     );
@@ -100,7 +100,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="limitName">回数制限の種類名</param>
-    void GetLimitModel(
+    void getLimitModel(
         std::function<void(AsyncEzGetLimitModelResult&)> callback,
         const Char* namespaceName,
         const Char* limitName

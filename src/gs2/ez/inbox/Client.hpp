@@ -51,7 +51,7 @@ public:
     /// <param name="namespaceName">プレゼントボックス名</param>
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
-    void List(
+    void list(
         std::function<void(AsyncEzListResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -68,7 +68,7 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">プレゼントボックス名</param>
     /// <param name="messageName">メッセージID</param>
-    void Read(
+    void read(
         std::function<void(AsyncEzReadResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -86,7 +86,7 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">プレゼントボックス名</param>
     /// <param name="messageName">メッセージID</param>
-    void Delete(
+    void delete_(
         std::function<void(AsyncEzDeleteResult&)> callback,
         GameSession& session,
         const Char* namespaceName,

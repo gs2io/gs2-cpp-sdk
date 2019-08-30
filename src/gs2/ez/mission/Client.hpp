@@ -18,6 +18,8 @@
 #define GS2_EZ_MISSION_GS2MISSIONRESTCLIENT_HPP_
 
 #include <gs2/mission/Gs2MissionRestClient.hpp>
+#include "result/EzListMissionTaskModelsResult.hpp"
+#include "result/EzGetMissionTaskModelResult.hpp"
 #include "result/EzListMissionGroupModelsResult.hpp"
 #include "result/EzGetMissionGroupModelResult.hpp"
 #include "result/EzListCounterModelsResult.hpp"
@@ -25,8 +27,6 @@
 #include "result/EzListCompletesResult.hpp"
 #include "result/EzGetCompleteResult.hpp"
 #include "result/EzReceiveRewardsResult.hpp"
-#include "result/EzListMissionTaskModelsResult.hpp"
-#include "result/EzGetMissionTaskModelResult.hpp"
 
 
 namespace gs2 { namespace ez {
@@ -46,12 +46,40 @@ public:
     Client(gs2::ez::Profile& profile);
 
     /// <summary>
+    ///  ミッションタスクモデルの一覧を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="missionGroupName">グループ名</param>
+    void listMissionTaskModels(
+        std::function<void(AsyncEzListMissionTaskModelsResult&)> callback,
+        const Char* namespaceName,
+        const Char* missionGroupName
+    );
+
+    /// <summary>
+    ///  ミッションタスク名を指定してミッションタスクモデルを取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="missionGroupName">グループ名</param>
+    /// <param name="missionTaskName">タスク名</param>
+    void getMissionTaskModel(
+        std::function<void(AsyncEzGetMissionTaskModelResult&)> callback,
+        const Char* namespaceName,
+        const Char* missionGroupName,
+        const Char* missionTaskName
+    );
+
+    /// <summary>
     ///  ミッショングループモデルの一覧を取得<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
-    void ListMissionGroupModels(
+    void listMissionGroupModels(
         std::function<void(AsyncEzListMissionGroupModelsResult&)> callback,
         const Char* namespaceName
     );
@@ -63,7 +91,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="missionGroupName">グループ名</param>
-    void GetMissionGroupModel(
+    void getMissionGroupModel(
         std::function<void(AsyncEzGetMissionGroupModelResult&)> callback,
         const Char* namespaceName,
         const Char* missionGroupName
@@ -75,7 +103,7 @@ public:
     ///
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
-    void ListCounterModels(
+    void listCounterModels(
         std::function<void(AsyncEzListCounterModelsResult&)> callback,
         const Char* namespaceName
     );
@@ -87,7 +115,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="counterName">カウンター名</param>
-    void GetCounterModel(
+    void getCounterModel(
         std::function<void(AsyncEzGetCounterModelResult&)> callback,
         const Char* namespaceName,
         const Char* counterName
@@ -103,7 +131,7 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
-    void ListCompletes(
+    void listCompletes(
         std::function<void(AsyncEzListCompletesResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -120,7 +148,7 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="missionGroupName">ミッショングループ名</param>
-    void GetComplete(
+    void getComplete(
         std::function<void(AsyncEzGetCompleteResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -137,37 +165,9 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="missionGroupName">ミッショングループ名</param>
     /// <param name="missionTaskName">タスク名</param>
-    void ReceiveRewards(
+    void receiveRewards(
         std::function<void(AsyncEzReceiveRewardsResult&)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* missionGroupName,
-        const Char* missionTaskName
-    );
-
-    /// <summary>
-    ///  ミッションタスクモデルの一覧を取得<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="missionGroupName">グループ名</param>
-    void ListMissionTaskModels(
-        std::function<void(AsyncEzListMissionTaskModelsResult&)> callback,
-        const Char* namespaceName,
-        const Char* missionGroupName
-    );
-
-    /// <summary>
-    ///  ミッションタスク名を指定してミッションタスクモデルを取得<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="missionGroupName">グループ名</param>
-    /// <param name="missionTaskName">タスク名</param>
-    void GetMissionTaskModel(
-        std::function<void(AsyncEzGetMissionTaskModelResult&)> callback,
         const Char* namespaceName,
         const Char* missionGroupName,
         const Char* missionTaskName

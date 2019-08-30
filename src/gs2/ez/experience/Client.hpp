@@ -49,7 +49,7 @@ public:
     ///
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
-    void ListExperienceModels(
+    void listExperienceModels(
         std::function<void(AsyncEzListExperienceModelsResult&)> callback,
         const Char* namespaceName
     );
@@ -63,7 +63,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="experienceName">経験値の種類名</param>
-    void GetExperienceModel(
+    void getExperienceModel(
         std::function<void(AsyncEzGetExperienceModelResult&)> callback,
         const Char* namespaceName,
         const Char* experienceName
@@ -82,7 +82,7 @@ public:
     /// <param name="experienceName">経験値の種類名</param>
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
-    void ListStatuses(
+    void listStatuses(
         std::function<void(AsyncEzListStatusesResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
@@ -101,7 +101,7 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="experienceName">経験値の種類の名前</param>
     /// <param name="propertyId">プロパティID</param>
-    void GetStatus(
+    void getStatus(
         std::function<void(AsyncEzGetStatusResult&)> callback,
         GameSession& session,
         const Char* namespaceName,
