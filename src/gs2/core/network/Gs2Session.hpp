@@ -22,6 +22,7 @@
 #include "../external/optional/optional.hpp"
 #include "../model/BasicGs2Credential.hpp"
 #include "../model/Region.hpp"
+#include "../model/NotificationMessage.hpp"
 #include "../util/IntrusiveList.hpp"
 #include "../util/StringHolder.hpp"
 #include "Gs2SessionTaskId.hpp"
@@ -41,6 +42,7 @@ class Gs2Session : public Gs2Object
 public:
     typedef std::function<void(AsyncResult<void>&)> OpenCallbackType;
     typedef std::function<void()> CloseCallbackType;
+    typedef std::function<void(NotificationMessage)> NotificationMessageCallbackType;
 
 private:
     enum class State {

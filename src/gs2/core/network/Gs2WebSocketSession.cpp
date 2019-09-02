@@ -109,6 +109,12 @@ void Gs2WebSocketSession::WebSocket::onMessage(detail::Gs2WebSocketResponse& gs2
         if (gs2WebSocketResponse.getGs2SessionTaskId() == detail::Gs2SessionTaskId::InvalidIdValue)
         {
             // API 応答以外のメッセージ
+            if (m_Gs2WebSocketSession.m_OnNotificationMessage)
+            {
+                NotificationMessage notificationMessage;
+                gs2WebSocketResponse.exportTo(notificationMessage.getModel());
+                m_Gs2WebSocketSession.m_OnNotificationMessage(notificationMessage);
+            }
         }
         else
         {
@@ -182,6 +188,11 @@ void Gs2WebSocketSession::WebSocket::onError(gs2::Gs2ClientException& gs2ClientE
         m_Gs2WebSocketSession.cancelTasksCallback(gs2ClientException);
         break;
     }
+}
+
+void Gs2WebSocketSession::setOnNotificationMessage(NotificationMessageCallbackType callback)
+{
+    m_OnNotificationMessage = callback;
 }
 
 bool Gs2WebSocketSession::openImpl()

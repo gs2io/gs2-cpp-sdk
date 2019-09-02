@@ -65,6 +65,8 @@ private:
     WebSocket m_WebSocket;
     Gs2ClientException m_LastGs2ClientException;
 
+    NotificationMessageCallbackType m_OnNotificationMessage;
+
     void send(const Char message[])
     {
         m_WebSocket.send(message);
@@ -90,6 +92,8 @@ public:
     {}
 
     ~Gs2WebSocketSession() GS2_OVERRIDE = default;
+
+    void setOnNotificationMessage(NotificationMessageCallbackType callback);
 
 private:
     bool openImpl() GS2_OVERRIDE;
