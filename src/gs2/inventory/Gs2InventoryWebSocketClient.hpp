@@ -231,45 +231,20 @@ private:
                 writer.writePropertyName("description");
                 writer.writeCharArray(*m_Request.getDescription());
             }
-            if (m_Request.getAcquireTriggerScriptId())
+            if (m_Request.getAcquireScript())
             {
-                writer.writePropertyName("acquireTriggerScriptId");
-                writer.writeCharArray(*m_Request.getAcquireTriggerScriptId());
+                writer.writePropertyName("acquireScript");
+                write(writer, *m_Request.getAcquireScript());
             }
-            if (m_Request.getAcquireDoneTriggerScriptId())
+            if (m_Request.getOverflowScript())
             {
-                writer.writePropertyName("acquireDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getAcquireDoneTriggerScriptId());
+                writer.writePropertyName("overflowScript");
+                write(writer, *m_Request.getOverflowScript());
             }
-            if (m_Request.getAcquireDoneTriggerQueueNamespaceId())
+            if (m_Request.getConsumeScript())
             {
-                writer.writePropertyName("acquireDoneTriggerQueueNamespaceId");
-                writer.writeCharArray(*m_Request.getAcquireDoneTriggerQueueNamespaceId());
-            }
-            if (m_Request.getOverflowTriggerScriptId())
-            {
-                writer.writePropertyName("overflowTriggerScriptId");
-                writer.writeCharArray(*m_Request.getOverflowTriggerScriptId());
-            }
-            if (m_Request.getOverflowTriggerQueueNamespaceId())
-            {
-                writer.writePropertyName("overflowTriggerQueueNamespaceId");
-                writer.writeCharArray(*m_Request.getOverflowTriggerQueueNamespaceId());
-            }
-            if (m_Request.getConsumeTriggerScriptId())
-            {
-                writer.writePropertyName("consumeTriggerScriptId");
-                writer.writeCharArray(*m_Request.getConsumeTriggerScriptId());
-            }
-            if (m_Request.getConsumeDoneTriggerScriptId())
-            {
-                writer.writePropertyName("consumeDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getConsumeDoneTriggerScriptId());
-            }
-            if (m_Request.getConsumeDoneTriggerQueueNamespaceId())
-            {
-                writer.writePropertyName("consumeDoneTriggerQueueNamespaceId");
-                writer.writeCharArray(*m_Request.getConsumeDoneTriggerQueueNamespaceId());
+                writer.writePropertyName("consumeScript");
+                write(writer, *m_Request.getConsumeScript());
             }
             if (m_Request.getRequestId())
             {
@@ -495,45 +470,20 @@ private:
                 writer.writePropertyName("description");
                 writer.writeCharArray(*m_Request.getDescription());
             }
-            if (m_Request.getAcquireTriggerScriptId())
+            if (m_Request.getAcquireScript())
             {
-                writer.writePropertyName("acquireTriggerScriptId");
-                writer.writeCharArray(*m_Request.getAcquireTriggerScriptId());
+                writer.writePropertyName("acquireScript");
+                write(writer, *m_Request.getAcquireScript());
             }
-            if (m_Request.getAcquireDoneTriggerScriptId())
+            if (m_Request.getOverflowScript())
             {
-                writer.writePropertyName("acquireDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getAcquireDoneTriggerScriptId());
+                writer.writePropertyName("overflowScript");
+                write(writer, *m_Request.getOverflowScript());
             }
-            if (m_Request.getAcquireDoneTriggerQueueNamespaceId())
+            if (m_Request.getConsumeScript())
             {
-                writer.writePropertyName("acquireDoneTriggerQueueNamespaceId");
-                writer.writeCharArray(*m_Request.getAcquireDoneTriggerQueueNamespaceId());
-            }
-            if (m_Request.getOverflowTriggerScriptId())
-            {
-                writer.writePropertyName("overflowTriggerScriptId");
-                writer.writeCharArray(*m_Request.getOverflowTriggerScriptId());
-            }
-            if (m_Request.getOverflowTriggerQueueNamespaceId())
-            {
-                writer.writePropertyName("overflowTriggerQueueNamespaceId");
-                writer.writeCharArray(*m_Request.getOverflowTriggerQueueNamespaceId());
-            }
-            if (m_Request.getConsumeTriggerScriptId())
-            {
-                writer.writePropertyName("consumeTriggerScriptId");
-                writer.writeCharArray(*m_Request.getConsumeTriggerScriptId());
-            }
-            if (m_Request.getConsumeDoneTriggerScriptId())
-            {
-                writer.writePropertyName("consumeDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getConsumeDoneTriggerScriptId());
-            }
-            if (m_Request.getConsumeDoneTriggerQueueNamespaceId())
-            {
-                writer.writePropertyName("consumeDoneTriggerQueueNamespaceId");
-                writer.writeCharArray(*m_Request.getConsumeDoneTriggerQueueNamespaceId());
+                writer.writePropertyName("consumeScript");
+                write(writer, *m_Request.getConsumeScript());
             }
             if (m_Request.getRequestId())
             {
@@ -3966,45 +3916,20 @@ private:
             writer.writePropertyName("description");
             writer.writeCharArray(*obj.getDescription());
         }
-        if (obj.getAcquireTriggerScriptId())
+        if (obj.getAcquireScript())
         {
-            writer.writePropertyName("acquireTriggerScriptId");
-            writer.writeCharArray(*obj.getAcquireTriggerScriptId());
+            writer.writePropertyName("acquireScript");
+            write(writer, *obj.getAcquireScript());
         }
-        if (obj.getAcquireDoneTriggerScriptId())
+        if (obj.getOverflowScript())
         {
-            writer.writePropertyName("acquireDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getAcquireDoneTriggerScriptId());
+            writer.writePropertyName("overflowScript");
+            write(writer, *obj.getOverflowScript());
         }
-        if (obj.getAcquireDoneTriggerQueueNamespaceId())
+        if (obj.getConsumeScript())
         {
-            writer.writePropertyName("acquireDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*obj.getAcquireDoneTriggerQueueNamespaceId());
-        }
-        if (obj.getOverflowTriggerScriptId())
-        {
-            writer.writePropertyName("overflowTriggerScriptId");
-            writer.writeCharArray(*obj.getOverflowTriggerScriptId());
-        }
-        if (obj.getOverflowTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("overflowTriggerQueueNamespaceId");
-            writer.writeCharArray(*obj.getOverflowTriggerQueueNamespaceId());
-        }
-        if (obj.getConsumeTriggerScriptId())
-        {
-            writer.writePropertyName("consumeTriggerScriptId");
-            writer.writeCharArray(*obj.getConsumeTriggerScriptId());
-        }
-        if (obj.getConsumeDoneTriggerScriptId())
-        {
-            writer.writePropertyName("consumeDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getConsumeDoneTriggerScriptId());
-        }
-        if (obj.getConsumeDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("consumeDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*obj.getConsumeDoneTriggerQueueNamespaceId());
+            writer.writePropertyName("consumeScript");
+            write(writer, *obj.getConsumeScript());
         }
         if (obj.getCreatedAt())
         {
@@ -4375,6 +4300,27 @@ private:
         {
             writer.writePropertyName("tagName");
             writer.writeCharArray(*obj.getTagName());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const ScriptSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getTriggerScriptId())
+        {
+            writer.writePropertyName("triggerScriptId");
+            writer.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerScriptId())
+        {
+            writer.writePropertyName("doneTriggerScriptId");
+            writer.writeCharArray(*obj.getDoneTriggerScriptId());
+        }
+        if (obj.getDoneTriggerQueueNamespaceId())
+        {
+            writer.writePropertyName("doneTriggerQueueNamespaceId");
+            writer.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
         }
         writer.writeObjectEnd();
     }

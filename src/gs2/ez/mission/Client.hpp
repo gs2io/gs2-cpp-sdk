@@ -18,15 +18,15 @@
 #define GS2_EZ_MISSION_GS2MISSIONRESTCLIENT_HPP_
 
 #include <gs2/mission/Gs2MissionRestClient.hpp>
+#include "result/EzListMissionTaskModelsResult.hpp"
+#include "result/EzGetMissionTaskModelResult.hpp"
+#include "result/EzListCompletesResult.hpp"
+#include "result/EzGetCompleteResult.hpp"
+#include "result/EzReceiveRewardsResult.hpp"
 #include "result/EzListMissionGroupModelsResult.hpp"
 #include "result/EzGetMissionGroupModelResult.hpp"
 #include "result/EzListCounterModelsResult.hpp"
 #include "result/EzGetCounterModelResult.hpp"
-#include "result/EzListCompletesResult.hpp"
-#include "result/EzGetCompleteResult.hpp"
-#include "result/EzReceiveRewardsResult.hpp"
-#include "result/EzListMissionTaskModelsResult.hpp"
-#include "result/EzGetMissionTaskModelResult.hpp"
 
 
 namespace gs2 { namespace ez {
@@ -46,51 +46,31 @@ public:
     Client(gs2::ez::Profile& profile);
 
     /// <summary>
-    ///  ミッショングループモデルの一覧を取得<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    void listMissionGroupModels(
-        std::function<void(AsyncEzListMissionGroupModelsResult&)> callback,
-        const Char* namespaceName
-    );
-
-    /// <summary>
-    ///  ミッショングループ名を指定してミッショングループモデルを取得<br />
+    ///  ミッションタスクモデルの一覧を取得<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="missionGroupName">グループ名</param>
-    void getMissionGroupModel(
-        std::function<void(AsyncEzGetMissionGroupModelResult&)> callback,
+    void listMissionTaskModels(
+        std::function<void(AsyncEzListMissionTaskModelsResult&)> callback,
         const Char* namespaceName,
         const Char* missionGroupName
     );
 
     /// <summary>
-    ///  カウンターの種類を認証<br />
+    ///  ミッションタスク名を指定してミッションタスクモデルを取得<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
-    void listCounterModels(
-        std::function<void(AsyncEzListCounterModelsResult&)> callback,
-        const Char* namespaceName
-    );
-
-    /// <summary>
-    ///  カウンターの種類を認証<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="counterName">カウンター名</param>
-    void getCounterModel(
-        std::function<void(AsyncEzGetCounterModelResult&)> callback,
+    /// <param name="missionGroupName">グループ名</param>
+    /// <param name="missionTaskName">タスク名</param>
+    void getMissionTaskModel(
+        std::function<void(AsyncEzGetMissionTaskModelResult&)> callback,
         const Char* namespaceName,
-        const Char* counterName
+        const Char* missionGroupName,
+        const Char* missionTaskName
     );
 
     /// <summary>
@@ -146,31 +126,51 @@ public:
     );
 
     /// <summary>
-    ///  ミッションタスクモデルの一覧を取得<br />
+    ///  ミッショングループモデルの一覧を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    void listMissionGroupModels(
+        std::function<void(AsyncEzListMissionGroupModelsResult&)> callback,
+        const Char* namespaceName
+    );
+
+    /// <summary>
+    ///  ミッショングループ名を指定してミッショングループモデルを取得<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="missionGroupName">グループ名</param>
-    void listMissionTaskModels(
-        std::function<void(AsyncEzListMissionTaskModelsResult&)> callback,
+    void getMissionGroupModel(
+        std::function<void(AsyncEzGetMissionGroupModelResult&)> callback,
         const Char* namespaceName,
         const Char* missionGroupName
     );
 
     /// <summary>
-    ///  ミッションタスク名を指定してミッションタスクモデルを取得<br />
+    ///  カウンターの種類を認証<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="missionGroupName">グループ名</param>
-    /// <param name="missionTaskName">タスク名</param>
-    void getMissionTaskModel(
-        std::function<void(AsyncEzGetMissionTaskModelResult&)> callback,
+    void listCounterModels(
+        std::function<void(AsyncEzListCounterModelsResult&)> callback,
+        const Char* namespaceName
+    );
+
+    /// <summary>
+    ///  カウンターの種類を認証<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="counterName">カウンター名</param>
+    void getCounterModel(
+        std::function<void(AsyncEzGetCounterModelResult&)> callback,
         const Char* namespaceName,
-        const Char* missionGroupName,
-        const Char* missionTaskName
+        const Char* counterName
     );
 };
 

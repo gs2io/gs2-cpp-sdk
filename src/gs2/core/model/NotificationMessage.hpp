@@ -232,6 +232,18 @@ public:
     }
 
 
+    template<typename T>
+    optional<T> getPayload() const
+    {
+        optional<T> out;
+        if (getPayload())
+        {
+            out.emplace();
+            json::JsonParser::parse(&model.getModel(), getPayload());
+        }
+        return out;
+    }
+
     detail::json::IModel& getModel()
     {
         return ensureData();

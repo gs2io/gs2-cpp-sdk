@@ -3377,6 +3377,11 @@ private:
     static void write(detail::json::JsonWriter& writer, const Prize& obj)
     {
         writer.writeObjectStart();
+        if (obj.getPrizeId())
+        {
+            writer.writePropertyName("prizeId");
+            writer.writeCharArray(*obj.getPrizeId());
+        }
         if (obj.getType())
         {
             writer.writePropertyName("type");

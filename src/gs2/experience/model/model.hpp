@@ -27,5 +27,6 @@
 #include "Status.hpp"
 #include "ResponseCache.hpp"
 #include "GitHubCheckoutSetting.hpp"
+#include "ScriptSetting.hpp"
 
 #endif //GS2_EXPERIENCE_MODEL_MODEL_HPP_

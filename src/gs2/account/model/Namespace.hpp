@@ -23,6 +23,10 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
 #include <cstring>
 
 namespace gs2 { namespace account {
@@ -51,30 +55,14 @@ private:
         optional<StringHolder> description;
         /** アカウント引き継ぎ時にパスワードを変更するか */
         optional<Bool> changePasswordIfTakeOver;
-        /** アカウント新規作成時 に実行されるスクリプト のGRN */
-        optional<StringHolder> createAccountTriggerScriptId;
-        /** アカウント新規作成完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> createAccountDoneTriggerScriptId;
-        /** アカウント新規作成完了時 にジョブが登録されるネームスペース のGRN */
-        optional<StringHolder> createAccountDoneTriggerQueueNamespaceId;
-        /** 認証時 に実行されるスクリプト のGRN */
-        optional<StringHolder> authenticationTriggerScriptId;
-        /** 認証完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> authenticationDoneTriggerScriptId;
-        /** 認証完了時 にジョブが登録されるネームスペース のGRN */
-        optional<StringHolder> authenticationDoneTriggerQueueNamespaceId;
-        /** 引き継ぎ情報登録時 に実行されるスクリプト のGRN */
-        optional<StringHolder> createTakeOverTriggerScriptId;
-        /** 引き継ぎ情報登録完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> createTakeOverDoneTriggerScriptId;
-        /** 引き継ぎ情報登録完了時 にジョブが登録されるネームスペース のGRN */
-        optional<StringHolder> createTakeOverDoneTriggerQueueNamespaceId;
-        /** 引き継ぎ実行時 に実行されるスクリプト のGRN */
-        optional<StringHolder> doTakeOverTriggerScriptId;
-        /** 引き継ぎ実行完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> doTakeOverDoneTriggerScriptId;
-        /** 引き継ぎ実行完了時 にジョブが登録されるネームスペース のGRN */
-        optional<StringHolder> doTakeOverDoneTriggerQueueNamespaceId;
+        /** アカウント新規作成したときに実行するスクリプト */
+        optional<ScriptSetting> createAccountScript;
+        /** 認証したときに実行するスクリプト */
+        optional<ScriptSetting> authenticationScript;
+        /** 引き継ぎ情報登録したときに実行するスクリプト */
+        optional<ScriptSetting> createTakeOverScript;
+        /** 引き継ぎ実行したときに実行するスクリプト */
+        optional<ScriptSetting> doTakeOverScript;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -90,18 +78,10 @@ private:
             name(data.name),
             description(data.description),
             changePasswordIfTakeOver(data.changePasswordIfTakeOver),
-            createAccountTriggerScriptId(data.createAccountTriggerScriptId),
-            createAccountDoneTriggerScriptId(data.createAccountDoneTriggerScriptId),
-            createAccountDoneTriggerQueueNamespaceId(data.createAccountDoneTriggerQueueNamespaceId),
-            authenticationTriggerScriptId(data.authenticationTriggerScriptId),
-            authenticationDoneTriggerScriptId(data.authenticationDoneTriggerScriptId),
-            authenticationDoneTriggerQueueNamespaceId(data.authenticationDoneTriggerQueueNamespaceId),
-            createTakeOverTriggerScriptId(data.createTakeOverTriggerScriptId),
-            createTakeOverDoneTriggerScriptId(data.createTakeOverDoneTriggerScriptId),
-            createTakeOverDoneTriggerQueueNamespaceId(data.createTakeOverDoneTriggerQueueNamespaceId),
-            doTakeOverTriggerScriptId(data.doTakeOverTriggerScriptId),
-            doTakeOverDoneTriggerScriptId(data.doTakeOverDoneTriggerScriptId),
-            doTakeOverDoneTriggerQueueNamespaceId(data.doTakeOverDoneTriggerQueueNamespaceId),
+            createAccountScript(data.createAccountScript),
+            authenticationScript(data.authenticationScript),
+            createTakeOverScript(data.createTakeOverScript),
+            doTakeOverScript(data.doTakeOverScript),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {}
@@ -113,18 +93,10 @@ private:
             name(std::move(data.name)),
             description(std::move(data.description)),
             changePasswordIfTakeOver(std::move(data.changePasswordIfTakeOver)),
-            createAccountTriggerScriptId(std::move(data.createAccountTriggerScriptId)),
-            createAccountDoneTriggerScriptId(std::move(data.createAccountDoneTriggerScriptId)),
-            createAccountDoneTriggerQueueNamespaceId(std::move(data.createAccountDoneTriggerQueueNamespaceId)),
-            authenticationTriggerScriptId(std::move(data.authenticationTriggerScriptId)),
-            authenticationDoneTriggerScriptId(std::move(data.authenticationDoneTriggerScriptId)),
-            authenticationDoneTriggerQueueNamespaceId(std::move(data.authenticationDoneTriggerQueueNamespaceId)),
-            createTakeOverTriggerScriptId(std::move(data.createTakeOverTriggerScriptId)),
-            createTakeOverDoneTriggerScriptId(std::move(data.createTakeOverDoneTriggerScriptId)),
-            createTakeOverDoneTriggerQueueNamespaceId(std::move(data.createTakeOverDoneTriggerQueueNamespaceId)),
-            doTakeOverTriggerScriptId(std::move(data.doTakeOverTriggerScriptId)),
-            doTakeOverDoneTriggerScriptId(std::move(data.doTakeOverDoneTriggerScriptId)),
-            doTakeOverDoneTriggerQueueNamespaceId(std::move(data.doTakeOverDoneTriggerQueueNamespaceId)),
+            createAccountScript(std::move(data.createAccountScript)),
+            authenticationScript(std::move(data.authenticationScript)),
+            createTakeOverScript(std::move(data.createTakeOverScript)),
+            doTakeOverScript(std::move(data.doTakeOverScript)),
             createdAt(std::move(data.createdAt)),
             updatedAt(std::move(data.updatedAt))
         {}
@@ -167,76 +139,36 @@ private:
                     this->changePasswordIfTakeOver = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name_, "createAccountTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "createAccountScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->createAccountTriggerScriptId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->createAccountScript.emplace();
+                    detail::json::JsonParser::parse(&this->createAccountScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "createAccountDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "authenticationScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->createAccountDoneTriggerScriptId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->authenticationScript.emplace();
+                    detail::json::JsonParser::parse(&this->authenticationScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "createAccountDoneTriggerQueueNamespaceId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "createTakeOverScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->createAccountDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->createTakeOverScript.emplace();
+                    detail::json::JsonParser::parse(&this->createTakeOverScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "authenticationTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "doTakeOverScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->authenticationTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "authenticationDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->authenticationDoneTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "authenticationDoneTriggerQueueNamespaceId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->authenticationDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "createTakeOverTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->createTakeOverTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "createTakeOverDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->createTakeOverDoneTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "createTakeOverDoneTriggerQueueNamespaceId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->createTakeOverDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "doTakeOverTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->doTakeOverTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "doTakeOverDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->doTakeOverDoneTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "doTakeOverDoneTriggerQueueNamespaceId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->doTakeOverDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->doTakeOverScript.emplace();
+                    detail::json::JsonParser::parse(&this->doTakeOverScript->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0) {
@@ -487,374 +419,126 @@ public:
     }
 
     /**
-     * アカウント新規作成時 に実行されるスクリプト のGRNを取得
+     * アカウント新規作成したときに実行するスクリプトを取得
      *
-     * @return アカウント新規作成時 に実行されるスクリプト のGRN
+     * @return アカウント新規作成したときに実行するスクリプト
      */
-    const optional<StringHolder>& getCreateAccountTriggerScriptId() const
+    const optional<ScriptSetting>& getCreateAccountScript() const
     {
-        return ensureData().createAccountTriggerScriptId;
+        return ensureData().createAccountScript;
     }
 
     /**
-     * アカウント新規作成時 に実行されるスクリプト のGRNを設定
+     * アカウント新規作成したときに実行するスクリプトを設定
      *
-     * @param createAccountTriggerScriptId アカウント新規作成時 に実行されるスクリプト のGRN
+     * @param createAccountScript アカウント新規作成したときに実行するスクリプト
      */
-    void setCreateAccountTriggerScriptId(const Char* createAccountTriggerScriptId)
+    void setCreateAccountScript(const ScriptSetting& createAccountScript)
     {
-        ensureData().createAccountTriggerScriptId.emplace(createAccountTriggerScriptId);
+        ensureData().createAccountScript.emplace(createAccountScript);
     }
 
     /**
-     * アカウント新規作成時 に実行されるスクリプト のGRNを設定
+     * アカウント新規作成したときに実行するスクリプトを設定
      *
-     * @param createAccountTriggerScriptId アカウント新規作成時 に実行されるスクリプト のGRN
+     * @param createAccountScript アカウント新規作成したときに実行するスクリプト
      */
-    Namespace& withCreateAccountTriggerScriptId(const Char* createAccountTriggerScriptId)
+    Namespace& withCreateAccountScript(const ScriptSetting& createAccountScript)
     {
-        setCreateAccountTriggerScriptId(createAccountTriggerScriptId);
+        setCreateAccountScript(createAccountScript);
         return *this;
     }
 
     /**
-     * アカウント新規作成完了時 に実行されるスクリプト のGRNを取得
+     * 認証したときに実行するスクリプトを取得
      *
-     * @return アカウント新規作成完了時 に実行されるスクリプト のGRN
+     * @return 認証したときに実行するスクリプト
      */
-    const optional<StringHolder>& getCreateAccountDoneTriggerScriptId() const
+    const optional<ScriptSetting>& getAuthenticationScript() const
     {
-        return ensureData().createAccountDoneTriggerScriptId;
+        return ensureData().authenticationScript;
     }
 
     /**
-     * アカウント新規作成完了時 に実行されるスクリプト のGRNを設定
+     * 認証したときに実行するスクリプトを設定
      *
-     * @param createAccountDoneTriggerScriptId アカウント新規作成完了時 に実行されるスクリプト のGRN
+     * @param authenticationScript 認証したときに実行するスクリプト
      */
-    void setCreateAccountDoneTriggerScriptId(const Char* createAccountDoneTriggerScriptId)
+    void setAuthenticationScript(const ScriptSetting& authenticationScript)
     {
-        ensureData().createAccountDoneTriggerScriptId.emplace(createAccountDoneTriggerScriptId);
+        ensureData().authenticationScript.emplace(authenticationScript);
     }
 
     /**
-     * アカウント新規作成完了時 に実行されるスクリプト のGRNを設定
+     * 認証したときに実行するスクリプトを設定
      *
-     * @param createAccountDoneTriggerScriptId アカウント新規作成完了時 に実行されるスクリプト のGRN
+     * @param authenticationScript 認証したときに実行するスクリプト
      */
-    Namespace& withCreateAccountDoneTriggerScriptId(const Char* createAccountDoneTriggerScriptId)
+    Namespace& withAuthenticationScript(const ScriptSetting& authenticationScript)
     {
-        setCreateAccountDoneTriggerScriptId(createAccountDoneTriggerScriptId);
+        setAuthenticationScript(authenticationScript);
         return *this;
     }
 
     /**
-     * アカウント新規作成完了時 にジョブが登録されるネームスペース のGRNを取得
+     * 引き継ぎ情報登録したときに実行するスクリプトを取得
      *
-     * @return アカウント新規作成完了時 にジョブが登録されるネームスペース のGRN
+     * @return 引き継ぎ情報登録したときに実行するスクリプト
      */
-    const optional<StringHolder>& getCreateAccountDoneTriggerQueueNamespaceId() const
+    const optional<ScriptSetting>& getCreateTakeOverScript() const
     {
-        return ensureData().createAccountDoneTriggerQueueNamespaceId;
+        return ensureData().createTakeOverScript;
     }
 
     /**
-     * アカウント新規作成完了時 にジョブが登録されるネームスペース のGRNを設定
+     * 引き継ぎ情報登録したときに実行するスクリプトを設定
      *
-     * @param createAccountDoneTriggerQueueNamespaceId アカウント新規作成完了時 にジョブが登録されるネームスペース のGRN
+     * @param createTakeOverScript 引き継ぎ情報登録したときに実行するスクリプト
      */
-    void setCreateAccountDoneTriggerQueueNamespaceId(const Char* createAccountDoneTriggerQueueNamespaceId)
+    void setCreateTakeOverScript(const ScriptSetting& createTakeOverScript)
     {
-        ensureData().createAccountDoneTriggerQueueNamespaceId.emplace(createAccountDoneTriggerQueueNamespaceId);
+        ensureData().createTakeOverScript.emplace(createTakeOverScript);
     }
 
     /**
-     * アカウント新規作成完了時 にジョブが登録されるネームスペース のGRNを設定
+     * 引き継ぎ情報登録したときに実行するスクリプトを設定
      *
-     * @param createAccountDoneTriggerQueueNamespaceId アカウント新規作成完了時 にジョブが登録されるネームスペース のGRN
+     * @param createTakeOverScript 引き継ぎ情報登録したときに実行するスクリプト
      */
-    Namespace& withCreateAccountDoneTriggerQueueNamespaceId(const Char* createAccountDoneTriggerQueueNamespaceId)
+    Namespace& withCreateTakeOverScript(const ScriptSetting& createTakeOverScript)
     {
-        setCreateAccountDoneTriggerQueueNamespaceId(createAccountDoneTriggerQueueNamespaceId);
+        setCreateTakeOverScript(createTakeOverScript);
         return *this;
     }
 
     /**
-     * 認証時 に実行されるスクリプト のGRNを取得
+     * 引き継ぎ実行したときに実行するスクリプトを取得
      *
-     * @return 認証時 に実行されるスクリプト のGRN
+     * @return 引き継ぎ実行したときに実行するスクリプト
      */
-    const optional<StringHolder>& getAuthenticationTriggerScriptId() const
+    const optional<ScriptSetting>& getDoTakeOverScript() const
     {
-        return ensureData().authenticationTriggerScriptId;
+        return ensureData().doTakeOverScript;
     }
 
     /**
-     * 認証時 に実行されるスクリプト のGRNを設定
+     * 引き継ぎ実行したときに実行するスクリプトを設定
      *
-     * @param authenticationTriggerScriptId 認証時 に実行されるスクリプト のGRN
+     * @param doTakeOverScript 引き継ぎ実行したときに実行するスクリプト
      */
-    void setAuthenticationTriggerScriptId(const Char* authenticationTriggerScriptId)
+    void setDoTakeOverScript(const ScriptSetting& doTakeOverScript)
     {
-        ensureData().authenticationTriggerScriptId.emplace(authenticationTriggerScriptId);
+        ensureData().doTakeOverScript.emplace(doTakeOverScript);
     }
 
     /**
-     * 認証時 に実行されるスクリプト のGRNを設定
+     * 引き継ぎ実行したときに実行するスクリプトを設定
      *
-     * @param authenticationTriggerScriptId 認証時 に実行されるスクリプト のGRN
+     * @param doTakeOverScript 引き継ぎ実行したときに実行するスクリプト
      */
-    Namespace& withAuthenticationTriggerScriptId(const Char* authenticationTriggerScriptId)
+    Namespace& withDoTakeOverScript(const ScriptSetting& doTakeOverScript)
     {
-        setAuthenticationTriggerScriptId(authenticationTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * 認証完了時 に実行されるスクリプト のGRNを取得
-     *
-     * @return 認証完了時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getAuthenticationDoneTriggerScriptId() const
-    {
-        return ensureData().authenticationDoneTriggerScriptId;
-    }
-
-    /**
-     * 認証完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param authenticationDoneTriggerScriptId 認証完了時 に実行されるスクリプト のGRN
-     */
-    void setAuthenticationDoneTriggerScriptId(const Char* authenticationDoneTriggerScriptId)
-    {
-        ensureData().authenticationDoneTriggerScriptId.emplace(authenticationDoneTriggerScriptId);
-    }
-
-    /**
-     * 認証完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param authenticationDoneTriggerScriptId 認証完了時 に実行されるスクリプト のGRN
-     */
-    Namespace& withAuthenticationDoneTriggerScriptId(const Char* authenticationDoneTriggerScriptId)
-    {
-        setAuthenticationDoneTriggerScriptId(authenticationDoneTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * 認証完了時 にジョブが登録されるネームスペース のGRNを取得
-     *
-     * @return 認証完了時 にジョブが登録されるネームスペース のGRN
-     */
-    const optional<StringHolder>& getAuthenticationDoneTriggerQueueNamespaceId() const
-    {
-        return ensureData().authenticationDoneTriggerQueueNamespaceId;
-    }
-
-    /**
-     * 認証完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param authenticationDoneTriggerQueueNamespaceId 認証完了時 にジョブが登録されるネームスペース のGRN
-     */
-    void setAuthenticationDoneTriggerQueueNamespaceId(const Char* authenticationDoneTriggerQueueNamespaceId)
-    {
-        ensureData().authenticationDoneTriggerQueueNamespaceId.emplace(authenticationDoneTriggerQueueNamespaceId);
-    }
-
-    /**
-     * 認証完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param authenticationDoneTriggerQueueNamespaceId 認証完了時 にジョブが登録されるネームスペース のGRN
-     */
-    Namespace& withAuthenticationDoneTriggerQueueNamespaceId(const Char* authenticationDoneTriggerQueueNamespaceId)
-    {
-        setAuthenticationDoneTriggerQueueNamespaceId(authenticationDoneTriggerQueueNamespaceId);
-        return *this;
-    }
-
-    /**
-     * 引き継ぎ情報登録時 に実行されるスクリプト のGRNを取得
-     *
-     * @return 引き継ぎ情報登録時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getCreateTakeOverTriggerScriptId() const
-    {
-        return ensureData().createTakeOverTriggerScriptId;
-    }
-
-    /**
-     * 引き継ぎ情報登録時 に実行されるスクリプト のGRNを設定
-     *
-     * @param createTakeOverTriggerScriptId 引き継ぎ情報登録時 に実行されるスクリプト のGRN
-     */
-    void setCreateTakeOverTriggerScriptId(const Char* createTakeOverTriggerScriptId)
-    {
-        ensureData().createTakeOverTriggerScriptId.emplace(createTakeOverTriggerScriptId);
-    }
-
-    /**
-     * 引き継ぎ情報登録時 に実行されるスクリプト のGRNを設定
-     *
-     * @param createTakeOverTriggerScriptId 引き継ぎ情報登録時 に実行されるスクリプト のGRN
-     */
-    Namespace& withCreateTakeOverTriggerScriptId(const Char* createTakeOverTriggerScriptId)
-    {
-        setCreateTakeOverTriggerScriptId(createTakeOverTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * 引き継ぎ情報登録完了時 に実行されるスクリプト のGRNを取得
-     *
-     * @return 引き継ぎ情報登録完了時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getCreateTakeOverDoneTriggerScriptId() const
-    {
-        return ensureData().createTakeOverDoneTriggerScriptId;
-    }
-
-    /**
-     * 引き継ぎ情報登録完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param createTakeOverDoneTriggerScriptId 引き継ぎ情報登録完了時 に実行されるスクリプト のGRN
-     */
-    void setCreateTakeOverDoneTriggerScriptId(const Char* createTakeOverDoneTriggerScriptId)
-    {
-        ensureData().createTakeOverDoneTriggerScriptId.emplace(createTakeOverDoneTriggerScriptId);
-    }
-
-    /**
-     * 引き継ぎ情報登録完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param createTakeOverDoneTriggerScriptId 引き継ぎ情報登録完了時 に実行されるスクリプト のGRN
-     */
-    Namespace& withCreateTakeOverDoneTriggerScriptId(const Char* createTakeOverDoneTriggerScriptId)
-    {
-        setCreateTakeOverDoneTriggerScriptId(createTakeOverDoneTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * 引き継ぎ情報登録完了時 にジョブが登録されるネームスペース のGRNを取得
-     *
-     * @return 引き継ぎ情報登録完了時 にジョブが登録されるネームスペース のGRN
-     */
-    const optional<StringHolder>& getCreateTakeOverDoneTriggerQueueNamespaceId() const
-    {
-        return ensureData().createTakeOverDoneTriggerQueueNamespaceId;
-    }
-
-    /**
-     * 引き継ぎ情報登録完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param createTakeOverDoneTriggerQueueNamespaceId 引き継ぎ情報登録完了時 にジョブが登録されるネームスペース のGRN
-     */
-    void setCreateTakeOverDoneTriggerQueueNamespaceId(const Char* createTakeOverDoneTriggerQueueNamespaceId)
-    {
-        ensureData().createTakeOverDoneTriggerQueueNamespaceId.emplace(createTakeOverDoneTriggerQueueNamespaceId);
-    }
-
-    /**
-     * 引き継ぎ情報登録完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param createTakeOverDoneTriggerQueueNamespaceId 引き継ぎ情報登録完了時 にジョブが登録されるネームスペース のGRN
-     */
-    Namespace& withCreateTakeOverDoneTriggerQueueNamespaceId(const Char* createTakeOverDoneTriggerQueueNamespaceId)
-    {
-        setCreateTakeOverDoneTriggerQueueNamespaceId(createTakeOverDoneTriggerQueueNamespaceId);
-        return *this;
-    }
-
-    /**
-     * 引き継ぎ実行時 に実行されるスクリプト のGRNを取得
-     *
-     * @return 引き継ぎ実行時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getDoTakeOverTriggerScriptId() const
-    {
-        return ensureData().doTakeOverTriggerScriptId;
-    }
-
-    /**
-     * 引き継ぎ実行時 に実行されるスクリプト のGRNを設定
-     *
-     * @param doTakeOverTriggerScriptId 引き継ぎ実行時 に実行されるスクリプト のGRN
-     */
-    void setDoTakeOverTriggerScriptId(const Char* doTakeOverTriggerScriptId)
-    {
-        ensureData().doTakeOverTriggerScriptId.emplace(doTakeOverTriggerScriptId);
-    }
-
-    /**
-     * 引き継ぎ実行時 に実行されるスクリプト のGRNを設定
-     *
-     * @param doTakeOverTriggerScriptId 引き継ぎ実行時 に実行されるスクリプト のGRN
-     */
-    Namespace& withDoTakeOverTriggerScriptId(const Char* doTakeOverTriggerScriptId)
-    {
-        setDoTakeOverTriggerScriptId(doTakeOverTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * 引き継ぎ実行完了時 に実行されるスクリプト のGRNを取得
-     *
-     * @return 引き継ぎ実行完了時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getDoTakeOverDoneTriggerScriptId() const
-    {
-        return ensureData().doTakeOverDoneTriggerScriptId;
-    }
-
-    /**
-     * 引き継ぎ実行完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param doTakeOverDoneTriggerScriptId 引き継ぎ実行完了時 に実行されるスクリプト のGRN
-     */
-    void setDoTakeOverDoneTriggerScriptId(const Char* doTakeOverDoneTriggerScriptId)
-    {
-        ensureData().doTakeOverDoneTriggerScriptId.emplace(doTakeOverDoneTriggerScriptId);
-    }
-
-    /**
-     * 引き継ぎ実行完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param doTakeOverDoneTriggerScriptId 引き継ぎ実行完了時 に実行されるスクリプト のGRN
-     */
-    Namespace& withDoTakeOverDoneTriggerScriptId(const Char* doTakeOverDoneTriggerScriptId)
-    {
-        setDoTakeOverDoneTriggerScriptId(doTakeOverDoneTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * 引き継ぎ実行完了時 にジョブが登録されるネームスペース のGRNを取得
-     *
-     * @return 引き継ぎ実行完了時 にジョブが登録されるネームスペース のGRN
-     */
-    const optional<StringHolder>& getDoTakeOverDoneTriggerQueueNamespaceId() const
-    {
-        return ensureData().doTakeOverDoneTriggerQueueNamespaceId;
-    }
-
-    /**
-     * 引き継ぎ実行完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param doTakeOverDoneTriggerQueueNamespaceId 引き継ぎ実行完了時 にジョブが登録されるネームスペース のGRN
-     */
-    void setDoTakeOverDoneTriggerQueueNamespaceId(const Char* doTakeOverDoneTriggerQueueNamespaceId)
-    {
-        ensureData().doTakeOverDoneTriggerQueueNamespaceId.emplace(doTakeOverDoneTriggerQueueNamespaceId);
-    }
-
-    /**
-     * 引き継ぎ実行完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param doTakeOverDoneTriggerQueueNamespaceId 引き継ぎ実行完了時 にジョブが登録されるネームスペース のGRN
-     */
-    Namespace& withDoTakeOverDoneTriggerQueueNamespaceId(const Char* doTakeOverDoneTriggerQueueNamespaceId)
-    {
-        setDoTakeOverDoneTriggerQueueNamespaceId(doTakeOverDoneTriggerQueueNamespaceId);
+        setDoTakeOverScript(doTakeOverScript);
         return *this;
     }
 
@@ -955,51 +639,19 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createAccountTriggerScriptId != lhr.m_pData->createAccountTriggerScriptId)
+        if (lhs.m_pData->createAccountScript != lhr.m_pData->createAccountScript)
         {
             return true;
         }
-        if (lhs.m_pData->createAccountDoneTriggerScriptId != lhr.m_pData->createAccountDoneTriggerScriptId)
+        if (lhs.m_pData->authenticationScript != lhr.m_pData->authenticationScript)
         {
             return true;
         }
-        if (lhs.m_pData->createAccountDoneTriggerQueueNamespaceId != lhr.m_pData->createAccountDoneTriggerQueueNamespaceId)
+        if (lhs.m_pData->createTakeOverScript != lhr.m_pData->createTakeOverScript)
         {
             return true;
         }
-        if (lhs.m_pData->authenticationTriggerScriptId != lhr.m_pData->authenticationTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->authenticationDoneTriggerScriptId != lhr.m_pData->authenticationDoneTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->authenticationDoneTriggerQueueNamespaceId != lhr.m_pData->authenticationDoneTriggerQueueNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createTakeOverTriggerScriptId != lhr.m_pData->createTakeOverTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createTakeOverDoneTriggerScriptId != lhr.m_pData->createTakeOverDoneTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createTakeOverDoneTriggerQueueNamespaceId != lhr.m_pData->createTakeOverDoneTriggerQueueNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->doTakeOverTriggerScriptId != lhr.m_pData->doTakeOverTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->doTakeOverDoneTriggerScriptId != lhr.m_pData->doTakeOverDoneTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->doTakeOverDoneTriggerQueueNamespaceId != lhr.m_pData->doTakeOverDoneTriggerQueueNamespaceId)
+        if (lhs.m_pData->doTakeOverScript != lhr.m_pData->doTakeOverScript)
         {
             return true;
         }

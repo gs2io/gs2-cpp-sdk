@@ -837,7 +837,7 @@ public:
         detail::StringVariable url(Gs2RestSession::EndpointHost);
         url.replace("{service}", "script");
         url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/script/debug/invoke";
+        url += "/debug/invoke";
         httpRequest.SetURL(url.c_str());
         detail::json::JsonWriter writer;
 

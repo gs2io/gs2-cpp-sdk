@@ -29,6 +29,7 @@
 #include "Reward.hpp"
 #include "Config.hpp"
 #include "GitHubCheckoutSetting.hpp"
+#include "ScriptSetting.hpp"
 #include "Progress.hpp"
 #include "CompletedQuestList.hpp"
 #include "QuestGroupModel.hpp"

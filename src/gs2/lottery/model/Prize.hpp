@@ -42,6 +42,8 @@ private:
     class Data : public detail::json::IModel
     {
     public:
+        /** 景品ID */
+        optional<StringHolder> prizeId;
         /** 景品の種類 */
         optional<StringHolder> type;
         /** 景品の入手アクションリスト */
@@ -56,6 +58,7 @@ private:
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            prizeId(data.prizeId),
             type(data.type),
             acquireActions(data.acquireActions),
             prizeTableName(data.prizeTableName),
@@ -64,6 +67,7 @@ private:
 
         Data(Data&& data) :
             detail::json::IModel(std::move(data)),
+            prizeId(std::move(data.prizeId)),
             type(std::move(data.type)),
             acquireActions(std::move(data.acquireActions)),
             prizeTableName(std::move(data.prizeTableName)),
@@ -78,7 +82,13 @@ private:
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "type") == 0) {
+            if (std::strcmp(name_, "prizeId") == 0) {
+                if (jsonValue.IsString())
+                {
+                    this->prizeId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "type") == 0) {
                 if (jsonValue.IsString())
                 {
                     this->type.emplace(jsonValue.GetString());
@@ -188,6 +198,37 @@ public:
     {
         return this;
     }
+    /**
+     * 景品IDを取得
+     *
+     * @return 景品ID
+     */
+    const optional<StringHolder>& getPrizeId() const
+    {
+        return ensureData().prizeId;
+    }
+
+    /**
+     * 景品IDを設定
+     *
+     * @param prizeId 景品ID
+     */
+    void setPrizeId(const Char* prizeId)
+    {
+        ensureData().prizeId.emplace(prizeId);
+    }
+
+    /**
+     * 景品IDを設定
+     *
+     * @param prizeId 景品ID
+     */
+    Prize& withPrizeId(const Char* prizeId)
+    {
+        setPrizeId(prizeId);
+        return *this;
+    }
+
     /**
      * 景品の種類を取得
      *
@@ -324,6 +365,10 @@ inline bool operator!=(const Prize& lhs, const Prize& lhr)
     if (lhs.m_pData != lhr.m_pData)
     {
         if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        {
+            return true;
+        }
+        if (lhs.m_pData->prizeId != lhr.m_pData->prizeId)
         {
             return true;
         }

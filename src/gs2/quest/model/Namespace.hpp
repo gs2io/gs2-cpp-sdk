@@ -23,6 +23,9 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
 #include <cstring>
 
 namespace gs2 { namespace quest {
@@ -49,24 +52,12 @@ private:
         optional<StringHolder> name;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
-        /** クエスト開始時 に実行されるスクリプト のGRN */
-        optional<StringHolder> startQuestTriggerScriptId;
-        /** クエスト開始完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> startQuestDoneTriggerScriptId;
-        /** クエスト開始完了時 に通知するジョブを追加するキューのネームスペース のGRN */
-        optional<StringHolder> startQuestDoneTriggerQueueNamespaceId;
-        /** クエストクリア時 に実行されるスクリプト のGRN */
-        optional<StringHolder> completeQuestTriggerScriptId;
-        /** クエストクリア完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> completeQuestDoneTriggerScriptId;
-        /** クエストクリア完了時 に通知するジョブを追加するキューのネームスペース のGRN */
-        optional<StringHolder> completeQuestDoneTriggerQueueNamespaceId;
-        /** クエスト失敗時 に実行されるスクリプト のGRN */
-        optional<StringHolder> failedQuestTriggerScriptId;
-        /** クエスト失敗完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> failedQuestDoneTriggerScriptId;
-        /** クエスト失敗完了時 に通知するジョブを追加するキューのネームスペース のGRN */
-        optional<StringHolder> failedQuestDoneTriggerQueueNamespaceId;
+        /** クエスト開始したときに実行するスクリプト */
+        optional<ScriptSetting> startQuestScript;
+        /** クエストクリアしたときに実行するスクリプト */
+        optional<ScriptSetting> completeQuestScript;
+        /** クエスト失敗したときに実行するスクリプト */
+        optional<ScriptSetting> failedQuestScript;
         /** 報酬付与処理をジョブとして追加するキューのネームスペース のGRN */
         optional<StringHolder> queueNamespaceId;
         /** 報酬付与処理のスタンプシートで使用する暗号鍵GRN */
@@ -85,15 +76,9 @@ private:
             ownerId(data.ownerId),
             name(data.name),
             description(data.description),
-            startQuestTriggerScriptId(data.startQuestTriggerScriptId),
-            startQuestDoneTriggerScriptId(data.startQuestDoneTriggerScriptId),
-            startQuestDoneTriggerQueueNamespaceId(data.startQuestDoneTriggerQueueNamespaceId),
-            completeQuestTriggerScriptId(data.completeQuestTriggerScriptId),
-            completeQuestDoneTriggerScriptId(data.completeQuestDoneTriggerScriptId),
-            completeQuestDoneTriggerQueueNamespaceId(data.completeQuestDoneTriggerQueueNamespaceId),
-            failedQuestTriggerScriptId(data.failedQuestTriggerScriptId),
-            failedQuestDoneTriggerScriptId(data.failedQuestDoneTriggerScriptId),
-            failedQuestDoneTriggerQueueNamespaceId(data.failedQuestDoneTriggerQueueNamespaceId),
+            startQuestScript(data.startQuestScript),
+            completeQuestScript(data.completeQuestScript),
+            failedQuestScript(data.failedQuestScript),
             queueNamespaceId(data.queueNamespaceId),
             keyId(data.keyId),
             createdAt(data.createdAt),
@@ -106,15 +91,9 @@ private:
             ownerId(std::move(data.ownerId)),
             name(std::move(data.name)),
             description(std::move(data.description)),
-            startQuestTriggerScriptId(std::move(data.startQuestTriggerScriptId)),
-            startQuestDoneTriggerScriptId(std::move(data.startQuestDoneTriggerScriptId)),
-            startQuestDoneTriggerQueueNamespaceId(std::move(data.startQuestDoneTriggerQueueNamespaceId)),
-            completeQuestTriggerScriptId(std::move(data.completeQuestTriggerScriptId)),
-            completeQuestDoneTriggerScriptId(std::move(data.completeQuestDoneTriggerScriptId)),
-            completeQuestDoneTriggerQueueNamespaceId(std::move(data.completeQuestDoneTriggerQueueNamespaceId)),
-            failedQuestTriggerScriptId(std::move(data.failedQuestTriggerScriptId)),
-            failedQuestDoneTriggerScriptId(std::move(data.failedQuestDoneTriggerScriptId)),
-            failedQuestDoneTriggerQueueNamespaceId(std::move(data.failedQuestDoneTriggerQueueNamespaceId)),
+            startQuestScript(std::move(data.startQuestScript)),
+            completeQuestScript(std::move(data.completeQuestScript)),
+            failedQuestScript(std::move(data.failedQuestScript)),
             queueNamespaceId(std::move(data.queueNamespaceId)),
             keyId(std::move(data.keyId)),
             createdAt(std::move(data.createdAt)),
@@ -153,58 +132,28 @@ private:
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "startQuestTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "startQuestScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->startQuestTriggerScriptId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->startQuestScript.emplace();
+                    detail::json::JsonParser::parse(&this->startQuestScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "startQuestDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "completeQuestScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->startQuestDoneTriggerScriptId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->completeQuestScript.emplace();
+                    detail::json::JsonParser::parse(&this->completeQuestScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "startQuestDoneTriggerQueueNamespaceId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "failedQuestScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->startQuestDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "completeQuestTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->completeQuestTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "completeQuestDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->completeQuestDoneTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "completeQuestDoneTriggerQueueNamespaceId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->completeQuestDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "failedQuestTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->failedQuestTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "failedQuestDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->failedQuestDoneTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "failedQuestDoneTriggerQueueNamespaceId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->failedQuestDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->failedQuestScript.emplace();
+                    detail::json::JsonParser::parse(&this->failedQuestScript->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name_, "queueNamespaceId") == 0) {
@@ -436,281 +385,95 @@ public:
     }
 
     /**
-     * クエスト開始時 に実行されるスクリプト のGRNを取得
+     * クエスト開始したときに実行するスクリプトを取得
      *
-     * @return クエスト開始時 に実行されるスクリプト のGRN
+     * @return クエスト開始したときに実行するスクリプト
      */
-    const optional<StringHolder>& getStartQuestTriggerScriptId() const
+    const optional<ScriptSetting>& getStartQuestScript() const
     {
-        return ensureData().startQuestTriggerScriptId;
+        return ensureData().startQuestScript;
     }
 
     /**
-     * クエスト開始時 に実行されるスクリプト のGRNを設定
+     * クエスト開始したときに実行するスクリプトを設定
      *
-     * @param startQuestTriggerScriptId クエスト開始時 に実行されるスクリプト のGRN
+     * @param startQuestScript クエスト開始したときに実行するスクリプト
      */
-    void setStartQuestTriggerScriptId(const Char* startQuestTriggerScriptId)
+    void setStartQuestScript(const ScriptSetting& startQuestScript)
     {
-        ensureData().startQuestTriggerScriptId.emplace(startQuestTriggerScriptId);
+        ensureData().startQuestScript.emplace(startQuestScript);
     }
 
     /**
-     * クエスト開始時 に実行されるスクリプト のGRNを設定
+     * クエスト開始したときに実行するスクリプトを設定
      *
-     * @param startQuestTriggerScriptId クエスト開始時 に実行されるスクリプト のGRN
+     * @param startQuestScript クエスト開始したときに実行するスクリプト
      */
-    Namespace& withStartQuestTriggerScriptId(const Char* startQuestTriggerScriptId)
+    Namespace& withStartQuestScript(const ScriptSetting& startQuestScript)
     {
-        setStartQuestTriggerScriptId(startQuestTriggerScriptId);
+        setStartQuestScript(startQuestScript);
         return *this;
     }
 
     /**
-     * クエスト開始完了時 に実行されるスクリプト のGRNを取得
+     * クエストクリアしたときに実行するスクリプトを取得
      *
-     * @return クエスト開始完了時 に実行されるスクリプト のGRN
+     * @return クエストクリアしたときに実行するスクリプト
      */
-    const optional<StringHolder>& getStartQuestDoneTriggerScriptId() const
+    const optional<ScriptSetting>& getCompleteQuestScript() const
     {
-        return ensureData().startQuestDoneTriggerScriptId;
+        return ensureData().completeQuestScript;
     }
 
     /**
-     * クエスト開始完了時 に実行されるスクリプト のGRNを設定
+     * クエストクリアしたときに実行するスクリプトを設定
      *
-     * @param startQuestDoneTriggerScriptId クエスト開始完了時 に実行されるスクリプト のGRN
+     * @param completeQuestScript クエストクリアしたときに実行するスクリプト
      */
-    void setStartQuestDoneTriggerScriptId(const Char* startQuestDoneTriggerScriptId)
+    void setCompleteQuestScript(const ScriptSetting& completeQuestScript)
     {
-        ensureData().startQuestDoneTriggerScriptId.emplace(startQuestDoneTriggerScriptId);
+        ensureData().completeQuestScript.emplace(completeQuestScript);
     }
 
     /**
-     * クエスト開始完了時 に実行されるスクリプト のGRNを設定
+     * クエストクリアしたときに実行するスクリプトを設定
      *
-     * @param startQuestDoneTriggerScriptId クエスト開始完了時 に実行されるスクリプト のGRN
+     * @param completeQuestScript クエストクリアしたときに実行するスクリプト
      */
-    Namespace& withStartQuestDoneTriggerScriptId(const Char* startQuestDoneTriggerScriptId)
+    Namespace& withCompleteQuestScript(const ScriptSetting& completeQuestScript)
     {
-        setStartQuestDoneTriggerScriptId(startQuestDoneTriggerScriptId);
+        setCompleteQuestScript(completeQuestScript);
         return *this;
     }
 
     /**
-     * クエスト開始完了時 に通知するジョブを追加するキューのネームスペース のGRNを取得
+     * クエスト失敗したときに実行するスクリプトを取得
      *
-     * @return クエスト開始完了時 に通知するジョブを追加するキューのネームスペース のGRN
+     * @return クエスト失敗したときに実行するスクリプト
      */
-    const optional<StringHolder>& getStartQuestDoneTriggerQueueNamespaceId() const
+    const optional<ScriptSetting>& getFailedQuestScript() const
     {
-        return ensureData().startQuestDoneTriggerQueueNamespaceId;
+        return ensureData().failedQuestScript;
     }
 
     /**
-     * クエスト開始完了時 に通知するジョブを追加するキューのネームスペース のGRNを設定
+     * クエスト失敗したときに実行するスクリプトを設定
      *
-     * @param startQuestDoneTriggerQueueNamespaceId クエスト開始完了時 に通知するジョブを追加するキューのネームスペース のGRN
+     * @param failedQuestScript クエスト失敗したときに実行するスクリプト
      */
-    void setStartQuestDoneTriggerQueueNamespaceId(const Char* startQuestDoneTriggerQueueNamespaceId)
+    void setFailedQuestScript(const ScriptSetting& failedQuestScript)
     {
-        ensureData().startQuestDoneTriggerQueueNamespaceId.emplace(startQuestDoneTriggerQueueNamespaceId);
+        ensureData().failedQuestScript.emplace(failedQuestScript);
     }
 
     /**
-     * クエスト開始完了時 に通知するジョブを追加するキューのネームスペース のGRNを設定
+     * クエスト失敗したときに実行するスクリプトを設定
      *
-     * @param startQuestDoneTriggerQueueNamespaceId クエスト開始完了時 に通知するジョブを追加するキューのネームスペース のGRN
+     * @param failedQuestScript クエスト失敗したときに実行するスクリプト
      */
-    Namespace& withStartQuestDoneTriggerQueueNamespaceId(const Char* startQuestDoneTriggerQueueNamespaceId)
+    Namespace& withFailedQuestScript(const ScriptSetting& failedQuestScript)
     {
-        setStartQuestDoneTriggerQueueNamespaceId(startQuestDoneTriggerQueueNamespaceId);
-        return *this;
-    }
-
-    /**
-     * クエストクリア時 に実行されるスクリプト のGRNを取得
-     *
-     * @return クエストクリア時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getCompleteQuestTriggerScriptId() const
-    {
-        return ensureData().completeQuestTriggerScriptId;
-    }
-
-    /**
-     * クエストクリア時 に実行されるスクリプト のGRNを設定
-     *
-     * @param completeQuestTriggerScriptId クエストクリア時 に実行されるスクリプト のGRN
-     */
-    void setCompleteQuestTriggerScriptId(const Char* completeQuestTriggerScriptId)
-    {
-        ensureData().completeQuestTriggerScriptId.emplace(completeQuestTriggerScriptId);
-    }
-
-    /**
-     * クエストクリア時 に実行されるスクリプト のGRNを設定
-     *
-     * @param completeQuestTriggerScriptId クエストクリア時 に実行されるスクリプト のGRN
-     */
-    Namespace& withCompleteQuestTriggerScriptId(const Char* completeQuestTriggerScriptId)
-    {
-        setCompleteQuestTriggerScriptId(completeQuestTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * クエストクリア完了時 に実行されるスクリプト のGRNを取得
-     *
-     * @return クエストクリア完了時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getCompleteQuestDoneTriggerScriptId() const
-    {
-        return ensureData().completeQuestDoneTriggerScriptId;
-    }
-
-    /**
-     * クエストクリア完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param completeQuestDoneTriggerScriptId クエストクリア完了時 に実行されるスクリプト のGRN
-     */
-    void setCompleteQuestDoneTriggerScriptId(const Char* completeQuestDoneTriggerScriptId)
-    {
-        ensureData().completeQuestDoneTriggerScriptId.emplace(completeQuestDoneTriggerScriptId);
-    }
-
-    /**
-     * クエストクリア完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param completeQuestDoneTriggerScriptId クエストクリア完了時 に実行されるスクリプト のGRN
-     */
-    Namespace& withCompleteQuestDoneTriggerScriptId(const Char* completeQuestDoneTriggerScriptId)
-    {
-        setCompleteQuestDoneTriggerScriptId(completeQuestDoneTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * クエストクリア完了時 に通知するジョブを追加するキューのネームスペース のGRNを取得
-     *
-     * @return クエストクリア完了時 に通知するジョブを追加するキューのネームスペース のGRN
-     */
-    const optional<StringHolder>& getCompleteQuestDoneTriggerQueueNamespaceId() const
-    {
-        return ensureData().completeQuestDoneTriggerQueueNamespaceId;
-    }
-
-    /**
-     * クエストクリア完了時 に通知するジョブを追加するキューのネームスペース のGRNを設定
-     *
-     * @param completeQuestDoneTriggerQueueNamespaceId クエストクリア完了時 に通知するジョブを追加するキューのネームスペース のGRN
-     */
-    void setCompleteQuestDoneTriggerQueueNamespaceId(const Char* completeQuestDoneTriggerQueueNamespaceId)
-    {
-        ensureData().completeQuestDoneTriggerQueueNamespaceId.emplace(completeQuestDoneTriggerQueueNamespaceId);
-    }
-
-    /**
-     * クエストクリア完了時 に通知するジョブを追加するキューのネームスペース のGRNを設定
-     *
-     * @param completeQuestDoneTriggerQueueNamespaceId クエストクリア完了時 に通知するジョブを追加するキューのネームスペース のGRN
-     */
-    Namespace& withCompleteQuestDoneTriggerQueueNamespaceId(const Char* completeQuestDoneTriggerQueueNamespaceId)
-    {
-        setCompleteQuestDoneTriggerQueueNamespaceId(completeQuestDoneTriggerQueueNamespaceId);
-        return *this;
-    }
-
-    /**
-     * クエスト失敗時 に実行されるスクリプト のGRNを取得
-     *
-     * @return クエスト失敗時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getFailedQuestTriggerScriptId() const
-    {
-        return ensureData().failedQuestTriggerScriptId;
-    }
-
-    /**
-     * クエスト失敗時 に実行されるスクリプト のGRNを設定
-     *
-     * @param failedQuestTriggerScriptId クエスト失敗時 に実行されるスクリプト のGRN
-     */
-    void setFailedQuestTriggerScriptId(const Char* failedQuestTriggerScriptId)
-    {
-        ensureData().failedQuestTriggerScriptId.emplace(failedQuestTriggerScriptId);
-    }
-
-    /**
-     * クエスト失敗時 に実行されるスクリプト のGRNを設定
-     *
-     * @param failedQuestTriggerScriptId クエスト失敗時 に実行されるスクリプト のGRN
-     */
-    Namespace& withFailedQuestTriggerScriptId(const Char* failedQuestTriggerScriptId)
-    {
-        setFailedQuestTriggerScriptId(failedQuestTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * クエスト失敗完了時 に実行されるスクリプト のGRNを取得
-     *
-     * @return クエスト失敗完了時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getFailedQuestDoneTriggerScriptId() const
-    {
-        return ensureData().failedQuestDoneTriggerScriptId;
-    }
-
-    /**
-     * クエスト失敗完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param failedQuestDoneTriggerScriptId クエスト失敗完了時 に実行されるスクリプト のGRN
-     */
-    void setFailedQuestDoneTriggerScriptId(const Char* failedQuestDoneTriggerScriptId)
-    {
-        ensureData().failedQuestDoneTriggerScriptId.emplace(failedQuestDoneTriggerScriptId);
-    }
-
-    /**
-     * クエスト失敗完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param failedQuestDoneTriggerScriptId クエスト失敗完了時 に実行されるスクリプト のGRN
-     */
-    Namespace& withFailedQuestDoneTriggerScriptId(const Char* failedQuestDoneTriggerScriptId)
-    {
-        setFailedQuestDoneTriggerScriptId(failedQuestDoneTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * クエスト失敗完了時 に通知するジョブを追加するキューのネームスペース のGRNを取得
-     *
-     * @return クエスト失敗完了時 に通知するジョブを追加するキューのネームスペース のGRN
-     */
-    const optional<StringHolder>& getFailedQuestDoneTriggerQueueNamespaceId() const
-    {
-        return ensureData().failedQuestDoneTriggerQueueNamespaceId;
-    }
-
-    /**
-     * クエスト失敗完了時 に通知するジョブを追加するキューのネームスペース のGRNを設定
-     *
-     * @param failedQuestDoneTriggerQueueNamespaceId クエスト失敗完了時 に通知するジョブを追加するキューのネームスペース のGRN
-     */
-    void setFailedQuestDoneTriggerQueueNamespaceId(const Char* failedQuestDoneTriggerQueueNamespaceId)
-    {
-        ensureData().failedQuestDoneTriggerQueueNamespaceId.emplace(failedQuestDoneTriggerQueueNamespaceId);
-    }
-
-    /**
-     * クエスト失敗完了時 に通知するジョブを追加するキューのネームスペース のGRNを設定
-     *
-     * @param failedQuestDoneTriggerQueueNamespaceId クエスト失敗完了時 に通知するジョブを追加するキューのネームスペース のGRN
-     */
-    Namespace& withFailedQuestDoneTriggerQueueNamespaceId(const Char* failedQuestDoneTriggerQueueNamespaceId)
-    {
-        setFailedQuestDoneTriggerQueueNamespaceId(failedQuestDoneTriggerQueueNamespaceId);
+        setFailedQuestScript(failedQuestScript);
         return *this;
     }
 
@@ -869,39 +632,15 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->startQuestTriggerScriptId != lhr.m_pData->startQuestTriggerScriptId)
+        if (lhs.m_pData->startQuestScript != lhr.m_pData->startQuestScript)
         {
             return true;
         }
-        if (lhs.m_pData->startQuestDoneTriggerScriptId != lhr.m_pData->startQuestDoneTriggerScriptId)
+        if (lhs.m_pData->completeQuestScript != lhr.m_pData->completeQuestScript)
         {
             return true;
         }
-        if (lhs.m_pData->startQuestDoneTriggerQueueNamespaceId != lhr.m_pData->startQuestDoneTriggerQueueNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->completeQuestTriggerScriptId != lhr.m_pData->completeQuestTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->completeQuestDoneTriggerScriptId != lhr.m_pData->completeQuestDoneTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->completeQuestDoneTriggerQueueNamespaceId != lhr.m_pData->completeQuestDoneTriggerQueueNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->failedQuestTriggerScriptId != lhr.m_pData->failedQuestTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->failedQuestDoneTriggerScriptId != lhr.m_pData->failedQuestDoneTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->failedQuestDoneTriggerQueueNamespaceId != lhr.m_pData->failedQuestDoneTriggerQueueNamespaceId)
+        if (lhs.m_pData->failedQuestScript != lhr.m_pData->failedQuestScript)
         {
             return true;
         }

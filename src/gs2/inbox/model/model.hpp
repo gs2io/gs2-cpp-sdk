@@ -22,6 +22,7 @@
 #include "Message.hpp"
 #include "ResponseCache.hpp"
 #include "Config.hpp"
+#include "ScriptSetting.hpp"
 #include "NotificationSetting.hpp"
 #include "AcquireAction.hpp"
 

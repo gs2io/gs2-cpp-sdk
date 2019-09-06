@@ -14,18 +14,10 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_JOBQUEUE_MODEL_MODEL_HPP_
-#define GS2_JOBQUEUE_MODEL_MODEL_HPP_
+#ifndef GS2_JOBQUEUE_MODEL_NOTIFICATION_HPP_
+#define GS2_JOBQUEUE_MODEL_NOTIFICATION_HPP_
 
 #include <gs2/core/common.hpp>
-#include "notification.hpp"
-#include "Namespace.hpp"
-#include "Job.hpp"
-#include "JobResult.hpp"
-#include "DeadLetterJob.hpp"
-#include "ResponseCache.hpp"
-#include "NotificationSetting.hpp"
-#include "JobEntry.hpp"
-#include "JobResultBody.hpp"
+#include "PushNotification.hpp"
 
-#endif //GS2_JOBQUEUE_MODEL_MODEL_HPP_
+#endif //GS2_JOBQUEUE_MODEL_NOTIFICATION_HPP_

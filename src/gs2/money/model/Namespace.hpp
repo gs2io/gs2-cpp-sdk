@@ -23,6 +23,9 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
 #include <cstring>
 
 namespace gs2 { namespace money {
@@ -61,24 +64,12 @@ private:
         optional<StringHolder> googleKey;
         /** UnityEditorが出力する偽のレシートで決済できるようにするか */
         optional<Bool> enableFakeReceipt;
-        /** ウォレット新規作成時 に実行されるスクリプト のGRN */
-        optional<StringHolder> createWalletTriggerScriptId;
-        /** ウォレット新規作成完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> createWalletDoneTriggerScriptId;
-        /** ウォレット新規作成完了時 にジョブを登録するネームスペース のGRN */
-        optional<StringHolder> createWalletDoneTriggerNamespaceId;
-        /** ウォレット残高加算時 に実行されるスクリプト のGRN */
-        optional<StringHolder> depositTriggerScriptId;
-        /** ウォレット残高加算完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> depositDoneTriggerScriptId;
-        /** ウォレット残高加算完了時 にジョブを登録するネームスペース のGRN */
-        optional<StringHolder> depositDoneTriggerNamespaceId;
-        /** ウォレット残高消費時 に実行されるスクリプト のGRN */
-        optional<StringHolder> withdrawTriggerScriptId;
-        /** ウォレット残高消費完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> withdrawDoneTriggerScriptId;
-        /** ウォレット残高消費完了時 にジョブを登録するネームスペース のGRN */
-        optional<StringHolder> withdrawDoneTriggerNamespaceId;
+        /** ウォレット新規作成したときに実行するスクリプト */
+        optional<ScriptSetting> createWalletScript;
+        /** ウォレット残高加算したときに実行するスクリプト */
+        optional<ScriptSetting> depositScript;
+        /** ウォレット残高消費したときに実行するスクリプト */
+        optional<ScriptSetting> withdrawScript;
         /** 未使用残高 */
         optional<Double> balance;
         /** 作成日時 */
@@ -101,15 +92,9 @@ private:
             appleKey(data.appleKey),
             googleKey(data.googleKey),
             enableFakeReceipt(data.enableFakeReceipt),
-            createWalletTriggerScriptId(data.createWalletTriggerScriptId),
-            createWalletDoneTriggerScriptId(data.createWalletDoneTriggerScriptId),
-            createWalletDoneTriggerNamespaceId(data.createWalletDoneTriggerNamespaceId),
-            depositTriggerScriptId(data.depositTriggerScriptId),
-            depositDoneTriggerScriptId(data.depositDoneTriggerScriptId),
-            depositDoneTriggerNamespaceId(data.depositDoneTriggerNamespaceId),
-            withdrawTriggerScriptId(data.withdrawTriggerScriptId),
-            withdrawDoneTriggerScriptId(data.withdrawDoneTriggerScriptId),
-            withdrawDoneTriggerNamespaceId(data.withdrawDoneTriggerNamespaceId),
+            createWalletScript(data.createWalletScript),
+            depositScript(data.depositScript),
+            withdrawScript(data.withdrawScript),
             balance(data.balance),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
@@ -127,15 +112,9 @@ private:
             appleKey(std::move(data.appleKey)),
             googleKey(std::move(data.googleKey)),
             enableFakeReceipt(std::move(data.enableFakeReceipt)),
-            createWalletTriggerScriptId(std::move(data.createWalletTriggerScriptId)),
-            createWalletDoneTriggerScriptId(std::move(data.createWalletDoneTriggerScriptId)),
-            createWalletDoneTriggerNamespaceId(std::move(data.createWalletDoneTriggerNamespaceId)),
-            depositTriggerScriptId(std::move(data.depositTriggerScriptId)),
-            depositDoneTriggerScriptId(std::move(data.depositDoneTriggerScriptId)),
-            depositDoneTriggerNamespaceId(std::move(data.depositDoneTriggerNamespaceId)),
-            withdrawTriggerScriptId(std::move(data.withdrawTriggerScriptId)),
-            withdrawDoneTriggerScriptId(std::move(data.withdrawDoneTriggerScriptId)),
-            withdrawDoneTriggerNamespaceId(std::move(data.withdrawDoneTriggerNamespaceId)),
+            createWalletScript(std::move(data.createWalletScript)),
+            depositScript(std::move(data.depositScript)),
+            withdrawScript(std::move(data.withdrawScript)),
             balance(std::move(data.balance)),
             createdAt(std::move(data.createdAt)),
             updatedAt(std::move(data.updatedAt))
@@ -209,58 +188,28 @@ private:
                     this->enableFakeReceipt = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name_, "createWalletTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "createWalletScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->createWalletTriggerScriptId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->createWalletScript.emplace();
+                    detail::json::JsonParser::parse(&this->createWalletScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "createWalletDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "depositScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->createWalletDoneTriggerScriptId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->depositScript.emplace();
+                    detail::json::JsonParser::parse(&this->depositScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "createWalletDoneTriggerNamespaceId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "withdrawScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->createWalletDoneTriggerNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "depositTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->depositTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "depositDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->depositDoneTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "depositDoneTriggerNamespaceId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->depositDoneTriggerNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "withdrawTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->withdrawTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "withdrawDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->withdrawDoneTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "withdrawDoneTriggerNamespaceId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->withdrawDoneTriggerNamespaceId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->withdrawScript.emplace();
+                    detail::json::JsonParser::parse(&this->withdrawScript->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name_, "balance") == 0) {
@@ -672,281 +621,95 @@ public:
     }
 
     /**
-     * ウォレット新規作成時 に実行されるスクリプト のGRNを取得
+     * ウォレット新規作成したときに実行するスクリプトを取得
      *
-     * @return ウォレット新規作成時 に実行されるスクリプト のGRN
+     * @return ウォレット新規作成したときに実行するスクリプト
      */
-    const optional<StringHolder>& getCreateWalletTriggerScriptId() const
+    const optional<ScriptSetting>& getCreateWalletScript() const
     {
-        return ensureData().createWalletTriggerScriptId;
+        return ensureData().createWalletScript;
     }
 
     /**
-     * ウォレット新規作成時 に実行されるスクリプト のGRNを設定
+     * ウォレット新規作成したときに実行するスクリプトを設定
      *
-     * @param createWalletTriggerScriptId ウォレット新規作成時 に実行されるスクリプト のGRN
+     * @param createWalletScript ウォレット新規作成したときに実行するスクリプト
      */
-    void setCreateWalletTriggerScriptId(const Char* createWalletTriggerScriptId)
+    void setCreateWalletScript(const ScriptSetting& createWalletScript)
     {
-        ensureData().createWalletTriggerScriptId.emplace(createWalletTriggerScriptId);
+        ensureData().createWalletScript.emplace(createWalletScript);
     }
 
     /**
-     * ウォレット新規作成時 に実行されるスクリプト のGRNを設定
+     * ウォレット新規作成したときに実行するスクリプトを設定
      *
-     * @param createWalletTriggerScriptId ウォレット新規作成時 に実行されるスクリプト のGRN
+     * @param createWalletScript ウォレット新規作成したときに実行するスクリプト
      */
-    Namespace& withCreateWalletTriggerScriptId(const Char* createWalletTriggerScriptId)
+    Namespace& withCreateWalletScript(const ScriptSetting& createWalletScript)
     {
-        setCreateWalletTriggerScriptId(createWalletTriggerScriptId);
+        setCreateWalletScript(createWalletScript);
         return *this;
     }
 
     /**
-     * ウォレット新規作成完了時 に実行されるスクリプト のGRNを取得
+     * ウォレット残高加算したときに実行するスクリプトを取得
      *
-     * @return ウォレット新規作成完了時 に実行されるスクリプト のGRN
+     * @return ウォレット残高加算したときに実行するスクリプト
      */
-    const optional<StringHolder>& getCreateWalletDoneTriggerScriptId() const
+    const optional<ScriptSetting>& getDepositScript() const
     {
-        return ensureData().createWalletDoneTriggerScriptId;
+        return ensureData().depositScript;
     }
 
     /**
-     * ウォレット新規作成完了時 に実行されるスクリプト のGRNを設定
+     * ウォレット残高加算したときに実行するスクリプトを設定
      *
-     * @param createWalletDoneTriggerScriptId ウォレット新規作成完了時 に実行されるスクリプト のGRN
+     * @param depositScript ウォレット残高加算したときに実行するスクリプト
      */
-    void setCreateWalletDoneTriggerScriptId(const Char* createWalletDoneTriggerScriptId)
+    void setDepositScript(const ScriptSetting& depositScript)
     {
-        ensureData().createWalletDoneTriggerScriptId.emplace(createWalletDoneTriggerScriptId);
+        ensureData().depositScript.emplace(depositScript);
     }
 
     /**
-     * ウォレット新規作成完了時 に実行されるスクリプト のGRNを設定
+     * ウォレット残高加算したときに実行するスクリプトを設定
      *
-     * @param createWalletDoneTriggerScriptId ウォレット新規作成完了時 に実行されるスクリプト のGRN
+     * @param depositScript ウォレット残高加算したときに実行するスクリプト
      */
-    Namespace& withCreateWalletDoneTriggerScriptId(const Char* createWalletDoneTriggerScriptId)
+    Namespace& withDepositScript(const ScriptSetting& depositScript)
     {
-        setCreateWalletDoneTriggerScriptId(createWalletDoneTriggerScriptId);
+        setDepositScript(depositScript);
         return *this;
     }
 
     /**
-     * ウォレット新規作成完了時 にジョブを登録するネームスペース のGRNを取得
+     * ウォレット残高消費したときに実行するスクリプトを取得
      *
-     * @return ウォレット新規作成完了時 にジョブを登録するネームスペース のGRN
+     * @return ウォレット残高消費したときに実行するスクリプト
      */
-    const optional<StringHolder>& getCreateWalletDoneTriggerNamespaceId() const
+    const optional<ScriptSetting>& getWithdrawScript() const
     {
-        return ensureData().createWalletDoneTriggerNamespaceId;
+        return ensureData().withdrawScript;
     }
 
     /**
-     * ウォレット新規作成完了時 にジョブを登録するネームスペース のGRNを設定
+     * ウォレット残高消費したときに実行するスクリプトを設定
      *
-     * @param createWalletDoneTriggerNamespaceId ウォレット新規作成完了時 にジョブを登録するネームスペース のGRN
+     * @param withdrawScript ウォレット残高消費したときに実行するスクリプト
      */
-    void setCreateWalletDoneTriggerNamespaceId(const Char* createWalletDoneTriggerNamespaceId)
+    void setWithdrawScript(const ScriptSetting& withdrawScript)
     {
-        ensureData().createWalletDoneTriggerNamespaceId.emplace(createWalletDoneTriggerNamespaceId);
+        ensureData().withdrawScript.emplace(withdrawScript);
     }
 
     /**
-     * ウォレット新規作成完了時 にジョブを登録するネームスペース のGRNを設定
+     * ウォレット残高消費したときに実行するスクリプトを設定
      *
-     * @param createWalletDoneTriggerNamespaceId ウォレット新規作成完了時 にジョブを登録するネームスペース のGRN
+     * @param withdrawScript ウォレット残高消費したときに実行するスクリプト
      */
-    Namespace& withCreateWalletDoneTriggerNamespaceId(const Char* createWalletDoneTriggerNamespaceId)
+    Namespace& withWithdrawScript(const ScriptSetting& withdrawScript)
     {
-        setCreateWalletDoneTriggerNamespaceId(createWalletDoneTriggerNamespaceId);
-        return *this;
-    }
-
-    /**
-     * ウォレット残高加算時 に実行されるスクリプト のGRNを取得
-     *
-     * @return ウォレット残高加算時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getDepositTriggerScriptId() const
-    {
-        return ensureData().depositTriggerScriptId;
-    }
-
-    /**
-     * ウォレット残高加算時 に実行されるスクリプト のGRNを設定
-     *
-     * @param depositTriggerScriptId ウォレット残高加算時 に実行されるスクリプト のGRN
-     */
-    void setDepositTriggerScriptId(const Char* depositTriggerScriptId)
-    {
-        ensureData().depositTriggerScriptId.emplace(depositTriggerScriptId);
-    }
-
-    /**
-     * ウォレット残高加算時 に実行されるスクリプト のGRNを設定
-     *
-     * @param depositTriggerScriptId ウォレット残高加算時 に実行されるスクリプト のGRN
-     */
-    Namespace& withDepositTriggerScriptId(const Char* depositTriggerScriptId)
-    {
-        setDepositTriggerScriptId(depositTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * ウォレット残高加算完了時 に実行されるスクリプト のGRNを取得
-     *
-     * @return ウォレット残高加算完了時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getDepositDoneTriggerScriptId() const
-    {
-        return ensureData().depositDoneTriggerScriptId;
-    }
-
-    /**
-     * ウォレット残高加算完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param depositDoneTriggerScriptId ウォレット残高加算完了時 に実行されるスクリプト のGRN
-     */
-    void setDepositDoneTriggerScriptId(const Char* depositDoneTriggerScriptId)
-    {
-        ensureData().depositDoneTriggerScriptId.emplace(depositDoneTriggerScriptId);
-    }
-
-    /**
-     * ウォレット残高加算完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param depositDoneTriggerScriptId ウォレット残高加算完了時 に実行されるスクリプト のGRN
-     */
-    Namespace& withDepositDoneTriggerScriptId(const Char* depositDoneTriggerScriptId)
-    {
-        setDepositDoneTriggerScriptId(depositDoneTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * ウォレット残高加算完了時 にジョブを登録するネームスペース のGRNを取得
-     *
-     * @return ウォレット残高加算完了時 にジョブを登録するネームスペース のGRN
-     */
-    const optional<StringHolder>& getDepositDoneTriggerNamespaceId() const
-    {
-        return ensureData().depositDoneTriggerNamespaceId;
-    }
-
-    /**
-     * ウォレット残高加算完了時 にジョブを登録するネームスペース のGRNを設定
-     *
-     * @param depositDoneTriggerNamespaceId ウォレット残高加算完了時 にジョブを登録するネームスペース のGRN
-     */
-    void setDepositDoneTriggerNamespaceId(const Char* depositDoneTriggerNamespaceId)
-    {
-        ensureData().depositDoneTriggerNamespaceId.emplace(depositDoneTriggerNamespaceId);
-    }
-
-    /**
-     * ウォレット残高加算完了時 にジョブを登録するネームスペース のGRNを設定
-     *
-     * @param depositDoneTriggerNamespaceId ウォレット残高加算完了時 にジョブを登録するネームスペース のGRN
-     */
-    Namespace& withDepositDoneTriggerNamespaceId(const Char* depositDoneTriggerNamespaceId)
-    {
-        setDepositDoneTriggerNamespaceId(depositDoneTriggerNamespaceId);
-        return *this;
-    }
-
-    /**
-     * ウォレット残高消費時 に実行されるスクリプト のGRNを取得
-     *
-     * @return ウォレット残高消費時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getWithdrawTriggerScriptId() const
-    {
-        return ensureData().withdrawTriggerScriptId;
-    }
-
-    /**
-     * ウォレット残高消費時 に実行されるスクリプト のGRNを設定
-     *
-     * @param withdrawTriggerScriptId ウォレット残高消費時 に実行されるスクリプト のGRN
-     */
-    void setWithdrawTriggerScriptId(const Char* withdrawTriggerScriptId)
-    {
-        ensureData().withdrawTriggerScriptId.emplace(withdrawTriggerScriptId);
-    }
-
-    /**
-     * ウォレット残高消費時 に実行されるスクリプト のGRNを設定
-     *
-     * @param withdrawTriggerScriptId ウォレット残高消費時 に実行されるスクリプト のGRN
-     */
-    Namespace& withWithdrawTriggerScriptId(const Char* withdrawTriggerScriptId)
-    {
-        setWithdrawTriggerScriptId(withdrawTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * ウォレット残高消費完了時 に実行されるスクリプト のGRNを取得
-     *
-     * @return ウォレット残高消費完了時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getWithdrawDoneTriggerScriptId() const
-    {
-        return ensureData().withdrawDoneTriggerScriptId;
-    }
-
-    /**
-     * ウォレット残高消費完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param withdrawDoneTriggerScriptId ウォレット残高消費完了時 に実行されるスクリプト のGRN
-     */
-    void setWithdrawDoneTriggerScriptId(const Char* withdrawDoneTriggerScriptId)
-    {
-        ensureData().withdrawDoneTriggerScriptId.emplace(withdrawDoneTriggerScriptId);
-    }
-
-    /**
-     * ウォレット残高消費完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param withdrawDoneTriggerScriptId ウォレット残高消費完了時 に実行されるスクリプト のGRN
-     */
-    Namespace& withWithdrawDoneTriggerScriptId(const Char* withdrawDoneTriggerScriptId)
-    {
-        setWithdrawDoneTriggerScriptId(withdrawDoneTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * ウォレット残高消費完了時 にジョブを登録するネームスペース のGRNを取得
-     *
-     * @return ウォレット残高消費完了時 にジョブを登録するネームスペース のGRN
-     */
-    const optional<StringHolder>& getWithdrawDoneTriggerNamespaceId() const
-    {
-        return ensureData().withdrawDoneTriggerNamespaceId;
-    }
-
-    /**
-     * ウォレット残高消費完了時 にジョブを登録するネームスペース のGRNを設定
-     *
-     * @param withdrawDoneTriggerNamespaceId ウォレット残高消費完了時 にジョブを登録するネームスペース のGRN
-     */
-    void setWithdrawDoneTriggerNamespaceId(const Char* withdrawDoneTriggerNamespaceId)
-    {
-        ensureData().withdrawDoneTriggerNamespaceId.emplace(withdrawDoneTriggerNamespaceId);
-    }
-
-    /**
-     * ウォレット残高消費完了時 にジョブを登録するネームスペース のGRNを設定
-     *
-     * @param withdrawDoneTriggerNamespaceId ウォレット残高消費完了時 にジョブを登録するネームスペース のGRN
-     */
-    Namespace& withWithdrawDoneTriggerNamespaceId(const Char* withdrawDoneTriggerNamespaceId)
-    {
-        setWithdrawDoneTriggerNamespaceId(withdrawDoneTriggerNamespaceId);
+        setWithdrawScript(withdrawScript);
         return *this;
     }
 
@@ -1098,39 +861,15 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->createWalletTriggerScriptId != lhr.m_pData->createWalletTriggerScriptId)
+        if (lhs.m_pData->createWalletScript != lhr.m_pData->createWalletScript)
         {
             return true;
         }
-        if (lhs.m_pData->createWalletDoneTriggerScriptId != lhr.m_pData->createWalletDoneTriggerScriptId)
+        if (lhs.m_pData->depositScript != lhr.m_pData->depositScript)
         {
             return true;
         }
-        if (lhs.m_pData->createWalletDoneTriggerNamespaceId != lhr.m_pData->createWalletDoneTriggerNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->depositTriggerScriptId != lhr.m_pData->depositTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->depositDoneTriggerScriptId != lhr.m_pData->depositDoneTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->depositDoneTriggerNamespaceId != lhr.m_pData->depositDoneTriggerNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->withdrawTriggerScriptId != lhr.m_pData->withdrawTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->withdrawDoneTriggerScriptId != lhr.m_pData->withdrawDoneTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->withdrawDoneTriggerNamespaceId != lhr.m_pData->withdrawDoneTriggerNamespaceId)
+        if (lhs.m_pData->withdrawScript != lhr.m_pData->withdrawScript)
         {
             return true;
         }

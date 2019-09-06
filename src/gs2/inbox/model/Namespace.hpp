@@ -23,6 +23,9 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
 #include "NotificationSetting.hpp"
 #include <cstring>
 
@@ -52,24 +55,12 @@ private:
         optional<StringHolder> description;
         /** 開封したメッセージを自動的に削除するか */
         optional<Bool> isAutomaticDeletingEnabled;
-        /** メッセージ受信時 に実行されるスクリプト のGRN */
-        optional<StringHolder> receiveMessageTriggerScriptId;
-        /** メッセージ受信完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> receiveMessageDoneTriggerScriptId;
-        /** メッセージ受信完了時 にジョブが登録されるネームスペース のGRN */
-        optional<StringHolder> receiveMessageDoneTriggerNamespaceId;
-        /** メッセージ開封時 に実行されるスクリプト のGRN */
-        optional<StringHolder> readMessageTriggerScriptId;
-        /** メッセージ開封完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> readMessageDoneTriggerScriptId;
-        /** メッセージ開封完了時 にジョブが登録されるネームスペース のGRN */
-        optional<StringHolder> readMessageDoneTriggerNamespaceId;
-        /** メッセージ削除時 に実行されるスクリプト のGRN */
-        optional<StringHolder> deleteMessageTriggerScriptId;
-        /** メッセージ削除完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> deleteMessageDoneTriggerScriptId;
-        /** メッセージ削除完了時 にジョブが登録されるネームスペース のGRN */
-        optional<StringHolder> deleteMessageDoneTriggerNamespaceId;
+        /** メッセージ受信したときに実行するスクリプト */
+        optional<ScriptSetting> receiveMessageScript;
+        /** メッセージ開封したときに実行するスクリプト */
+        optional<ScriptSetting> readMessageScript;
+        /** メッセージ削除したときに実行するスクリプト */
+        optional<ScriptSetting> deleteMessageScript;
         /** 報酬付与処理をジョブとして追加するキューネームスペース のGRN */
         optional<StringHolder> queueNamespaceId;
         /** 報酬付与処理のスタンプシートで使用する暗号鍵GRN */
@@ -91,15 +82,9 @@ private:
             name(data.name),
             description(data.description),
             isAutomaticDeletingEnabled(data.isAutomaticDeletingEnabled),
-            receiveMessageTriggerScriptId(data.receiveMessageTriggerScriptId),
-            receiveMessageDoneTriggerScriptId(data.receiveMessageDoneTriggerScriptId),
-            receiveMessageDoneTriggerNamespaceId(data.receiveMessageDoneTriggerNamespaceId),
-            readMessageTriggerScriptId(data.readMessageTriggerScriptId),
-            readMessageDoneTriggerScriptId(data.readMessageDoneTriggerScriptId),
-            readMessageDoneTriggerNamespaceId(data.readMessageDoneTriggerNamespaceId),
-            deleteMessageTriggerScriptId(data.deleteMessageTriggerScriptId),
-            deleteMessageDoneTriggerScriptId(data.deleteMessageDoneTriggerScriptId),
-            deleteMessageDoneTriggerNamespaceId(data.deleteMessageDoneTriggerNamespaceId),
+            receiveMessageScript(data.receiveMessageScript),
+            readMessageScript(data.readMessageScript),
+            deleteMessageScript(data.deleteMessageScript),
             queueNamespaceId(data.queueNamespaceId),
             keyId(data.keyId),
             receiveNotification(data.receiveNotification),
@@ -114,15 +99,9 @@ private:
             name(std::move(data.name)),
             description(std::move(data.description)),
             isAutomaticDeletingEnabled(std::move(data.isAutomaticDeletingEnabled)),
-            receiveMessageTriggerScriptId(std::move(data.receiveMessageTriggerScriptId)),
-            receiveMessageDoneTriggerScriptId(std::move(data.receiveMessageDoneTriggerScriptId)),
-            receiveMessageDoneTriggerNamespaceId(std::move(data.receiveMessageDoneTriggerNamespaceId)),
-            readMessageTriggerScriptId(std::move(data.readMessageTriggerScriptId)),
-            readMessageDoneTriggerScriptId(std::move(data.readMessageDoneTriggerScriptId)),
-            readMessageDoneTriggerNamespaceId(std::move(data.readMessageDoneTriggerNamespaceId)),
-            deleteMessageTriggerScriptId(std::move(data.deleteMessageTriggerScriptId)),
-            deleteMessageDoneTriggerScriptId(std::move(data.deleteMessageDoneTriggerScriptId)),
-            deleteMessageDoneTriggerNamespaceId(std::move(data.deleteMessageDoneTriggerNamespaceId)),
+            receiveMessageScript(std::move(data.receiveMessageScript)),
+            readMessageScript(std::move(data.readMessageScript)),
+            deleteMessageScript(std::move(data.deleteMessageScript)),
             queueNamespaceId(std::move(data.queueNamespaceId)),
             keyId(std::move(data.keyId)),
             receiveNotification(std::move(data.receiveNotification)),
@@ -168,58 +147,28 @@ private:
                     this->isAutomaticDeletingEnabled = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name_, "receiveMessageTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "receiveMessageScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->receiveMessageTriggerScriptId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->receiveMessageScript.emplace();
+                    detail::json::JsonParser::parse(&this->receiveMessageScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "receiveMessageDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "readMessageScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->receiveMessageDoneTriggerScriptId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->readMessageScript.emplace();
+                    detail::json::JsonParser::parse(&this->readMessageScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "receiveMessageDoneTriggerNamespaceId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "deleteMessageScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->receiveMessageDoneTriggerNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "readMessageTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->readMessageTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "readMessageDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->readMessageDoneTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "readMessageDoneTriggerNamespaceId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->readMessageDoneTriggerNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "deleteMessageTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->deleteMessageTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "deleteMessageDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->deleteMessageDoneTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "deleteMessageDoneTriggerNamespaceId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->deleteMessageDoneTriggerNamespaceId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->deleteMessageScript.emplace();
+                    detail::json::JsonParser::parse(&this->deleteMessageScript->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name_, "queueNamespaceId") == 0) {
@@ -490,281 +439,95 @@ public:
     }
 
     /**
-     * メッセージ受信時 に実行されるスクリプト のGRNを取得
+     * メッセージ受信したときに実行するスクリプトを取得
      *
-     * @return メッセージ受信時 に実行されるスクリプト のGRN
+     * @return メッセージ受信したときに実行するスクリプト
      */
-    const optional<StringHolder>& getReceiveMessageTriggerScriptId() const
+    const optional<ScriptSetting>& getReceiveMessageScript() const
     {
-        return ensureData().receiveMessageTriggerScriptId;
+        return ensureData().receiveMessageScript;
     }
 
     /**
-     * メッセージ受信時 に実行されるスクリプト のGRNを設定
+     * メッセージ受信したときに実行するスクリプトを設定
      *
-     * @param receiveMessageTriggerScriptId メッセージ受信時 に実行されるスクリプト のGRN
+     * @param receiveMessageScript メッセージ受信したときに実行するスクリプト
      */
-    void setReceiveMessageTriggerScriptId(const Char* receiveMessageTriggerScriptId)
+    void setReceiveMessageScript(const ScriptSetting& receiveMessageScript)
     {
-        ensureData().receiveMessageTriggerScriptId.emplace(receiveMessageTriggerScriptId);
+        ensureData().receiveMessageScript.emplace(receiveMessageScript);
     }
 
     /**
-     * メッセージ受信時 に実行されるスクリプト のGRNを設定
+     * メッセージ受信したときに実行するスクリプトを設定
      *
-     * @param receiveMessageTriggerScriptId メッセージ受信時 に実行されるスクリプト のGRN
+     * @param receiveMessageScript メッセージ受信したときに実行するスクリプト
      */
-    Namespace& withReceiveMessageTriggerScriptId(const Char* receiveMessageTriggerScriptId)
+    Namespace& withReceiveMessageScript(const ScriptSetting& receiveMessageScript)
     {
-        setReceiveMessageTriggerScriptId(receiveMessageTriggerScriptId);
+        setReceiveMessageScript(receiveMessageScript);
         return *this;
     }
 
     /**
-     * メッセージ受信完了時 に実行されるスクリプト のGRNを取得
+     * メッセージ開封したときに実行するスクリプトを取得
      *
-     * @return メッセージ受信完了時 に実行されるスクリプト のGRN
+     * @return メッセージ開封したときに実行するスクリプト
      */
-    const optional<StringHolder>& getReceiveMessageDoneTriggerScriptId() const
+    const optional<ScriptSetting>& getReadMessageScript() const
     {
-        return ensureData().receiveMessageDoneTriggerScriptId;
+        return ensureData().readMessageScript;
     }
 
     /**
-     * メッセージ受信完了時 に実行されるスクリプト のGRNを設定
+     * メッセージ開封したときに実行するスクリプトを設定
      *
-     * @param receiveMessageDoneTriggerScriptId メッセージ受信完了時 に実行されるスクリプト のGRN
+     * @param readMessageScript メッセージ開封したときに実行するスクリプト
      */
-    void setReceiveMessageDoneTriggerScriptId(const Char* receiveMessageDoneTriggerScriptId)
+    void setReadMessageScript(const ScriptSetting& readMessageScript)
     {
-        ensureData().receiveMessageDoneTriggerScriptId.emplace(receiveMessageDoneTriggerScriptId);
+        ensureData().readMessageScript.emplace(readMessageScript);
     }
 
     /**
-     * メッセージ受信完了時 に実行されるスクリプト のGRNを設定
+     * メッセージ開封したときに実行するスクリプトを設定
      *
-     * @param receiveMessageDoneTriggerScriptId メッセージ受信完了時 に実行されるスクリプト のGRN
+     * @param readMessageScript メッセージ開封したときに実行するスクリプト
      */
-    Namespace& withReceiveMessageDoneTriggerScriptId(const Char* receiveMessageDoneTriggerScriptId)
+    Namespace& withReadMessageScript(const ScriptSetting& readMessageScript)
     {
-        setReceiveMessageDoneTriggerScriptId(receiveMessageDoneTriggerScriptId);
+        setReadMessageScript(readMessageScript);
         return *this;
     }
 
     /**
-     * メッセージ受信完了時 にジョブが登録されるネームスペース のGRNを取得
+     * メッセージ削除したときに実行するスクリプトを取得
      *
-     * @return メッセージ受信完了時 にジョブが登録されるネームスペース のGRN
+     * @return メッセージ削除したときに実行するスクリプト
      */
-    const optional<StringHolder>& getReceiveMessageDoneTriggerNamespaceId() const
+    const optional<ScriptSetting>& getDeleteMessageScript() const
     {
-        return ensureData().receiveMessageDoneTriggerNamespaceId;
+        return ensureData().deleteMessageScript;
     }
 
     /**
-     * メッセージ受信完了時 にジョブが登録されるネームスペース のGRNを設定
+     * メッセージ削除したときに実行するスクリプトを設定
      *
-     * @param receiveMessageDoneTriggerNamespaceId メッセージ受信完了時 にジョブが登録されるネームスペース のGRN
+     * @param deleteMessageScript メッセージ削除したときに実行するスクリプト
      */
-    void setReceiveMessageDoneTriggerNamespaceId(const Char* receiveMessageDoneTriggerNamespaceId)
+    void setDeleteMessageScript(const ScriptSetting& deleteMessageScript)
     {
-        ensureData().receiveMessageDoneTriggerNamespaceId.emplace(receiveMessageDoneTriggerNamespaceId);
+        ensureData().deleteMessageScript.emplace(deleteMessageScript);
     }
 
     /**
-     * メッセージ受信完了時 にジョブが登録されるネームスペース のGRNを設定
+     * メッセージ削除したときに実行するスクリプトを設定
      *
-     * @param receiveMessageDoneTriggerNamespaceId メッセージ受信完了時 にジョブが登録されるネームスペース のGRN
+     * @param deleteMessageScript メッセージ削除したときに実行するスクリプト
      */
-    Namespace& withReceiveMessageDoneTriggerNamespaceId(const Char* receiveMessageDoneTriggerNamespaceId)
+    Namespace& withDeleteMessageScript(const ScriptSetting& deleteMessageScript)
     {
-        setReceiveMessageDoneTriggerNamespaceId(receiveMessageDoneTriggerNamespaceId);
-        return *this;
-    }
-
-    /**
-     * メッセージ開封時 に実行されるスクリプト のGRNを取得
-     *
-     * @return メッセージ開封時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getReadMessageTriggerScriptId() const
-    {
-        return ensureData().readMessageTriggerScriptId;
-    }
-
-    /**
-     * メッセージ開封時 に実行されるスクリプト のGRNを設定
-     *
-     * @param readMessageTriggerScriptId メッセージ開封時 に実行されるスクリプト のGRN
-     */
-    void setReadMessageTriggerScriptId(const Char* readMessageTriggerScriptId)
-    {
-        ensureData().readMessageTriggerScriptId.emplace(readMessageTriggerScriptId);
-    }
-
-    /**
-     * メッセージ開封時 に実行されるスクリプト のGRNを設定
-     *
-     * @param readMessageTriggerScriptId メッセージ開封時 に実行されるスクリプト のGRN
-     */
-    Namespace& withReadMessageTriggerScriptId(const Char* readMessageTriggerScriptId)
-    {
-        setReadMessageTriggerScriptId(readMessageTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * メッセージ開封完了時 に実行されるスクリプト のGRNを取得
-     *
-     * @return メッセージ開封完了時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getReadMessageDoneTriggerScriptId() const
-    {
-        return ensureData().readMessageDoneTriggerScriptId;
-    }
-
-    /**
-     * メッセージ開封完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param readMessageDoneTriggerScriptId メッセージ開封完了時 に実行されるスクリプト のGRN
-     */
-    void setReadMessageDoneTriggerScriptId(const Char* readMessageDoneTriggerScriptId)
-    {
-        ensureData().readMessageDoneTriggerScriptId.emplace(readMessageDoneTriggerScriptId);
-    }
-
-    /**
-     * メッセージ開封完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param readMessageDoneTriggerScriptId メッセージ開封完了時 に実行されるスクリプト のGRN
-     */
-    Namespace& withReadMessageDoneTriggerScriptId(const Char* readMessageDoneTriggerScriptId)
-    {
-        setReadMessageDoneTriggerScriptId(readMessageDoneTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * メッセージ開封完了時 にジョブが登録されるネームスペース のGRNを取得
-     *
-     * @return メッセージ開封完了時 にジョブが登録されるネームスペース のGRN
-     */
-    const optional<StringHolder>& getReadMessageDoneTriggerNamespaceId() const
-    {
-        return ensureData().readMessageDoneTriggerNamespaceId;
-    }
-
-    /**
-     * メッセージ開封完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param readMessageDoneTriggerNamespaceId メッセージ開封完了時 にジョブが登録されるネームスペース のGRN
-     */
-    void setReadMessageDoneTriggerNamespaceId(const Char* readMessageDoneTriggerNamespaceId)
-    {
-        ensureData().readMessageDoneTriggerNamespaceId.emplace(readMessageDoneTriggerNamespaceId);
-    }
-
-    /**
-     * メッセージ開封完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param readMessageDoneTriggerNamespaceId メッセージ開封完了時 にジョブが登録されるネームスペース のGRN
-     */
-    Namespace& withReadMessageDoneTriggerNamespaceId(const Char* readMessageDoneTriggerNamespaceId)
-    {
-        setReadMessageDoneTriggerNamespaceId(readMessageDoneTriggerNamespaceId);
-        return *this;
-    }
-
-    /**
-     * メッセージ削除時 に実行されるスクリプト のGRNを取得
-     *
-     * @return メッセージ削除時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getDeleteMessageTriggerScriptId() const
-    {
-        return ensureData().deleteMessageTriggerScriptId;
-    }
-
-    /**
-     * メッセージ削除時 に実行されるスクリプト のGRNを設定
-     *
-     * @param deleteMessageTriggerScriptId メッセージ削除時 に実行されるスクリプト のGRN
-     */
-    void setDeleteMessageTriggerScriptId(const Char* deleteMessageTriggerScriptId)
-    {
-        ensureData().deleteMessageTriggerScriptId.emplace(deleteMessageTriggerScriptId);
-    }
-
-    /**
-     * メッセージ削除時 に実行されるスクリプト のGRNを設定
-     *
-     * @param deleteMessageTriggerScriptId メッセージ削除時 に実行されるスクリプト のGRN
-     */
-    Namespace& withDeleteMessageTriggerScriptId(const Char* deleteMessageTriggerScriptId)
-    {
-        setDeleteMessageTriggerScriptId(deleteMessageTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * メッセージ削除完了時 に実行されるスクリプト のGRNを取得
-     *
-     * @return メッセージ削除完了時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getDeleteMessageDoneTriggerScriptId() const
-    {
-        return ensureData().deleteMessageDoneTriggerScriptId;
-    }
-
-    /**
-     * メッセージ削除完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param deleteMessageDoneTriggerScriptId メッセージ削除完了時 に実行されるスクリプト のGRN
-     */
-    void setDeleteMessageDoneTriggerScriptId(const Char* deleteMessageDoneTriggerScriptId)
-    {
-        ensureData().deleteMessageDoneTriggerScriptId.emplace(deleteMessageDoneTriggerScriptId);
-    }
-
-    /**
-     * メッセージ削除完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param deleteMessageDoneTriggerScriptId メッセージ削除完了時 に実行されるスクリプト のGRN
-     */
-    Namespace& withDeleteMessageDoneTriggerScriptId(const Char* deleteMessageDoneTriggerScriptId)
-    {
-        setDeleteMessageDoneTriggerScriptId(deleteMessageDoneTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * メッセージ削除完了時 にジョブが登録されるネームスペース のGRNを取得
-     *
-     * @return メッセージ削除完了時 にジョブが登録されるネームスペース のGRN
-     */
-    const optional<StringHolder>& getDeleteMessageDoneTriggerNamespaceId() const
-    {
-        return ensureData().deleteMessageDoneTriggerNamespaceId;
-    }
-
-    /**
-     * メッセージ削除完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param deleteMessageDoneTriggerNamespaceId メッセージ削除完了時 にジョブが登録されるネームスペース のGRN
-     */
-    void setDeleteMessageDoneTriggerNamespaceId(const Char* deleteMessageDoneTriggerNamespaceId)
-    {
-        ensureData().deleteMessageDoneTriggerNamespaceId.emplace(deleteMessageDoneTriggerNamespaceId);
-    }
-
-    /**
-     * メッセージ削除完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param deleteMessageDoneTriggerNamespaceId メッセージ削除完了時 にジョブが登録されるネームスペース のGRN
-     */
-    Namespace& withDeleteMessageDoneTriggerNamespaceId(const Char* deleteMessageDoneTriggerNamespaceId)
-    {
-        setDeleteMessageDoneTriggerNamespaceId(deleteMessageDoneTriggerNamespaceId);
+        setDeleteMessageScript(deleteMessageScript);
         return *this;
     }
 
@@ -958,39 +721,15 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->receiveMessageTriggerScriptId != lhr.m_pData->receiveMessageTriggerScriptId)
+        if (lhs.m_pData->receiveMessageScript != lhr.m_pData->receiveMessageScript)
         {
             return true;
         }
-        if (lhs.m_pData->receiveMessageDoneTriggerScriptId != lhr.m_pData->receiveMessageDoneTriggerScriptId)
+        if (lhs.m_pData->readMessageScript != lhr.m_pData->readMessageScript)
         {
             return true;
         }
-        if (lhs.m_pData->receiveMessageDoneTriggerNamespaceId != lhr.m_pData->receiveMessageDoneTriggerNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->readMessageTriggerScriptId != lhr.m_pData->readMessageTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->readMessageDoneTriggerScriptId != lhr.m_pData->readMessageDoneTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->readMessageDoneTriggerNamespaceId != lhr.m_pData->readMessageDoneTriggerNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->deleteMessageTriggerScriptId != lhr.m_pData->deleteMessageTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->deleteMessageDoneTriggerScriptId != lhr.m_pData->deleteMessageDoneTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->deleteMessageDoneTriggerNamespaceId != lhr.m_pData->deleteMessageDoneTriggerNamespaceId)
+        if (lhs.m_pData->deleteMessageScript != lhr.m_pData->deleteMessageScript)
         {
             return true;
         }

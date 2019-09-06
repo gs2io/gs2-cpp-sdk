@@ -23,6 +23,9 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
 #include <cstring>
 
 namespace gs2 { namespace inventory {
@@ -49,22 +52,12 @@ private:
         optional<StringHolder> name;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
-        /** アイテム入手時 に実行されるスクリプト のGRN */
-        optional<StringHolder> acquireTriggerScriptId;
-        /** アイテム入手完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> acquireDoneTriggerScriptId;
-        /** アイテム入手完了時 に通知するジョブを追加する ネームスペース のGRN */
-        optional<StringHolder> acquireDoneTriggerQueueNamespaceId;
-        /** 入手上限に当たって入手できなかった数量を通知する スクリプト のGRN */
-        optional<StringHolder> overflowTriggerScriptId;
-        /** 入手上限に当たって入手できなかった数量を通知するジョブを追加する ネームスペース のGRN */
-        optional<StringHolder> overflowTriggerQueueNamespaceId;
-        /** アイテム消費時 に実行されるスクリプト のGRN */
-        optional<StringHolder> consumeTriggerScriptId;
-        /** アイテム入手完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> consumeDoneTriggerScriptId;
-        /** アイテム入手完了時 に通知するジョブを追加する ネームスペース のGRN */
-        optional<StringHolder> consumeDoneTriggerQueueNamespaceId;
+        /** アイテム入手したときに実行するスクリプト */
+        optional<ScriptSetting> acquireScript;
+        /** 入手上限に当たって入手できなかったときに実行するスクリプト */
+        optional<ScriptSetting> overflowScript;
+        /** アイテム消費するときに実行するスクリプト */
+        optional<ScriptSetting> consumeScript;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -79,14 +72,9 @@ private:
             ownerId(data.ownerId),
             name(data.name),
             description(data.description),
-            acquireTriggerScriptId(data.acquireTriggerScriptId),
-            acquireDoneTriggerScriptId(data.acquireDoneTriggerScriptId),
-            acquireDoneTriggerQueueNamespaceId(data.acquireDoneTriggerQueueNamespaceId),
-            overflowTriggerScriptId(data.overflowTriggerScriptId),
-            overflowTriggerQueueNamespaceId(data.overflowTriggerQueueNamespaceId),
-            consumeTriggerScriptId(data.consumeTriggerScriptId),
-            consumeDoneTriggerScriptId(data.consumeDoneTriggerScriptId),
-            consumeDoneTriggerQueueNamespaceId(data.consumeDoneTriggerQueueNamespaceId),
+            acquireScript(data.acquireScript),
+            overflowScript(data.overflowScript),
+            consumeScript(data.consumeScript),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {}
@@ -97,14 +85,9 @@ private:
             ownerId(std::move(data.ownerId)),
             name(std::move(data.name)),
             description(std::move(data.description)),
-            acquireTriggerScriptId(std::move(data.acquireTriggerScriptId)),
-            acquireDoneTriggerScriptId(std::move(data.acquireDoneTriggerScriptId)),
-            acquireDoneTriggerQueueNamespaceId(std::move(data.acquireDoneTriggerQueueNamespaceId)),
-            overflowTriggerScriptId(std::move(data.overflowTriggerScriptId)),
-            overflowTriggerQueueNamespaceId(std::move(data.overflowTriggerQueueNamespaceId)),
-            consumeTriggerScriptId(std::move(data.consumeTriggerScriptId)),
-            consumeDoneTriggerScriptId(std::move(data.consumeDoneTriggerScriptId)),
-            consumeDoneTriggerQueueNamespaceId(std::move(data.consumeDoneTriggerQueueNamespaceId)),
+            acquireScript(std::move(data.acquireScript)),
+            overflowScript(std::move(data.overflowScript)),
+            consumeScript(std::move(data.consumeScript)),
             createdAt(std::move(data.createdAt)),
             updatedAt(std::move(data.updatedAt))
         {}
@@ -141,52 +124,28 @@ private:
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "acquireTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "acquireScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->acquireTriggerScriptId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->acquireScript.emplace();
+                    detail::json::JsonParser::parse(&this->acquireScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "acquireDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "overflowScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->acquireDoneTriggerScriptId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->overflowScript.emplace();
+                    detail::json::JsonParser::parse(&this->overflowScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "acquireDoneTriggerQueueNamespaceId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "consumeScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->acquireDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "overflowTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->overflowTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "overflowTriggerQueueNamespaceId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->overflowTriggerQueueNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "consumeTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->consumeTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "consumeDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->consumeDoneTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "consumeDoneTriggerQueueNamespaceId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->consumeDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->consumeScript.emplace();
+                    detail::json::JsonParser::parse(&this->consumeScript->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0) {
@@ -406,250 +365,95 @@ public:
     }
 
     /**
-     * アイテム入手時 に実行されるスクリプト のGRNを取得
+     * アイテム入手したときに実行するスクリプトを取得
      *
-     * @return アイテム入手時 に実行されるスクリプト のGRN
+     * @return アイテム入手したときに実行するスクリプト
      */
-    const optional<StringHolder>& getAcquireTriggerScriptId() const
+    const optional<ScriptSetting>& getAcquireScript() const
     {
-        return ensureData().acquireTriggerScriptId;
+        return ensureData().acquireScript;
     }
 
     /**
-     * アイテム入手時 に実行されるスクリプト のGRNを設定
+     * アイテム入手したときに実行するスクリプトを設定
      *
-     * @param acquireTriggerScriptId アイテム入手時 に実行されるスクリプト のGRN
+     * @param acquireScript アイテム入手したときに実行するスクリプト
      */
-    void setAcquireTriggerScriptId(const Char* acquireTriggerScriptId)
+    void setAcquireScript(const ScriptSetting& acquireScript)
     {
-        ensureData().acquireTriggerScriptId.emplace(acquireTriggerScriptId);
+        ensureData().acquireScript.emplace(acquireScript);
     }
 
     /**
-     * アイテム入手時 に実行されるスクリプト のGRNを設定
+     * アイテム入手したときに実行するスクリプトを設定
      *
-     * @param acquireTriggerScriptId アイテム入手時 に実行されるスクリプト のGRN
+     * @param acquireScript アイテム入手したときに実行するスクリプト
      */
-    Namespace& withAcquireTriggerScriptId(const Char* acquireTriggerScriptId)
+    Namespace& withAcquireScript(const ScriptSetting& acquireScript)
     {
-        setAcquireTriggerScriptId(acquireTriggerScriptId);
+        setAcquireScript(acquireScript);
         return *this;
     }
 
     /**
-     * アイテム入手完了時 に実行されるスクリプト のGRNを取得
+     * 入手上限に当たって入手できなかったときに実行するスクリプトを取得
      *
-     * @return アイテム入手完了時 に実行されるスクリプト のGRN
+     * @return 入手上限に当たって入手できなかったときに実行するスクリプト
      */
-    const optional<StringHolder>& getAcquireDoneTriggerScriptId() const
+    const optional<ScriptSetting>& getOverflowScript() const
     {
-        return ensureData().acquireDoneTriggerScriptId;
+        return ensureData().overflowScript;
     }
 
     /**
-     * アイテム入手完了時 に実行されるスクリプト のGRNを設定
+     * 入手上限に当たって入手できなかったときに実行するスクリプトを設定
      *
-     * @param acquireDoneTriggerScriptId アイテム入手完了時 に実行されるスクリプト のGRN
+     * @param overflowScript 入手上限に当たって入手できなかったときに実行するスクリプト
      */
-    void setAcquireDoneTriggerScriptId(const Char* acquireDoneTriggerScriptId)
+    void setOverflowScript(const ScriptSetting& overflowScript)
     {
-        ensureData().acquireDoneTriggerScriptId.emplace(acquireDoneTriggerScriptId);
+        ensureData().overflowScript.emplace(overflowScript);
     }
 
     /**
-     * アイテム入手完了時 に実行されるスクリプト のGRNを設定
+     * 入手上限に当たって入手できなかったときに実行するスクリプトを設定
      *
-     * @param acquireDoneTriggerScriptId アイテム入手完了時 に実行されるスクリプト のGRN
+     * @param overflowScript 入手上限に当たって入手できなかったときに実行するスクリプト
      */
-    Namespace& withAcquireDoneTriggerScriptId(const Char* acquireDoneTriggerScriptId)
+    Namespace& withOverflowScript(const ScriptSetting& overflowScript)
     {
-        setAcquireDoneTriggerScriptId(acquireDoneTriggerScriptId);
+        setOverflowScript(overflowScript);
         return *this;
     }
 
     /**
-     * アイテム入手完了時 に通知するジョブを追加する ネームスペース のGRNを取得
+     * アイテム消費するときに実行するスクリプトを取得
      *
-     * @return アイテム入手完了時 に通知するジョブを追加する ネームスペース のGRN
+     * @return アイテム消費するときに実行するスクリプト
      */
-    const optional<StringHolder>& getAcquireDoneTriggerQueueNamespaceId() const
+    const optional<ScriptSetting>& getConsumeScript() const
     {
-        return ensureData().acquireDoneTriggerQueueNamespaceId;
+        return ensureData().consumeScript;
     }
 
     /**
-     * アイテム入手完了時 に通知するジョブを追加する ネームスペース のGRNを設定
+     * アイテム消費するときに実行するスクリプトを設定
      *
-     * @param acquireDoneTriggerQueueNamespaceId アイテム入手完了時 に通知するジョブを追加する ネームスペース のGRN
+     * @param consumeScript アイテム消費するときに実行するスクリプト
      */
-    void setAcquireDoneTriggerQueueNamespaceId(const Char* acquireDoneTriggerQueueNamespaceId)
+    void setConsumeScript(const ScriptSetting& consumeScript)
     {
-        ensureData().acquireDoneTriggerQueueNamespaceId.emplace(acquireDoneTriggerQueueNamespaceId);
+        ensureData().consumeScript.emplace(consumeScript);
     }
 
     /**
-     * アイテム入手完了時 に通知するジョブを追加する ネームスペース のGRNを設定
+     * アイテム消費するときに実行するスクリプトを設定
      *
-     * @param acquireDoneTriggerQueueNamespaceId アイテム入手完了時 に通知するジョブを追加する ネームスペース のGRN
+     * @param consumeScript アイテム消費するときに実行するスクリプト
      */
-    Namespace& withAcquireDoneTriggerQueueNamespaceId(const Char* acquireDoneTriggerQueueNamespaceId)
+    Namespace& withConsumeScript(const ScriptSetting& consumeScript)
     {
-        setAcquireDoneTriggerQueueNamespaceId(acquireDoneTriggerQueueNamespaceId);
-        return *this;
-    }
-
-    /**
-     * 入手上限に当たって入手できなかった数量を通知する スクリプト のGRNを取得
-     *
-     * @return 入手上限に当たって入手できなかった数量を通知する スクリプト のGRN
-     */
-    const optional<StringHolder>& getOverflowTriggerScriptId() const
-    {
-        return ensureData().overflowTriggerScriptId;
-    }
-
-    /**
-     * 入手上限に当たって入手できなかった数量を通知する スクリプト のGRNを設定
-     *
-     * @param overflowTriggerScriptId 入手上限に当たって入手できなかった数量を通知する スクリプト のGRN
-     */
-    void setOverflowTriggerScriptId(const Char* overflowTriggerScriptId)
-    {
-        ensureData().overflowTriggerScriptId.emplace(overflowTriggerScriptId);
-    }
-
-    /**
-     * 入手上限に当たって入手できなかった数量を通知する スクリプト のGRNを設定
-     *
-     * @param overflowTriggerScriptId 入手上限に当たって入手できなかった数量を通知する スクリプト のGRN
-     */
-    Namespace& withOverflowTriggerScriptId(const Char* overflowTriggerScriptId)
-    {
-        setOverflowTriggerScriptId(overflowTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * 入手上限に当たって入手できなかった数量を通知するジョブを追加する ネームスペース のGRNを取得
-     *
-     * @return 入手上限に当たって入手できなかった数量を通知するジョブを追加する ネームスペース のGRN
-     */
-    const optional<StringHolder>& getOverflowTriggerQueueNamespaceId() const
-    {
-        return ensureData().overflowTriggerQueueNamespaceId;
-    }
-
-    /**
-     * 入手上限に当たって入手できなかった数量を通知するジョブを追加する ネームスペース のGRNを設定
-     *
-     * @param overflowTriggerQueueNamespaceId 入手上限に当たって入手できなかった数量を通知するジョブを追加する ネームスペース のGRN
-     */
-    void setOverflowTriggerQueueNamespaceId(const Char* overflowTriggerQueueNamespaceId)
-    {
-        ensureData().overflowTriggerQueueNamespaceId.emplace(overflowTriggerQueueNamespaceId);
-    }
-
-    /**
-     * 入手上限に当たって入手できなかった数量を通知するジョブを追加する ネームスペース のGRNを設定
-     *
-     * @param overflowTriggerQueueNamespaceId 入手上限に当たって入手できなかった数量を通知するジョブを追加する ネームスペース のGRN
-     */
-    Namespace& withOverflowTriggerQueueNamespaceId(const Char* overflowTriggerQueueNamespaceId)
-    {
-        setOverflowTriggerQueueNamespaceId(overflowTriggerQueueNamespaceId);
-        return *this;
-    }
-
-    /**
-     * アイテム消費時 に実行されるスクリプト のGRNを取得
-     *
-     * @return アイテム消費時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getConsumeTriggerScriptId() const
-    {
-        return ensureData().consumeTriggerScriptId;
-    }
-
-    /**
-     * アイテム消費時 に実行されるスクリプト のGRNを設定
-     *
-     * @param consumeTriggerScriptId アイテム消費時 に実行されるスクリプト のGRN
-     */
-    void setConsumeTriggerScriptId(const Char* consumeTriggerScriptId)
-    {
-        ensureData().consumeTriggerScriptId.emplace(consumeTriggerScriptId);
-    }
-
-    /**
-     * アイテム消費時 に実行されるスクリプト のGRNを設定
-     *
-     * @param consumeTriggerScriptId アイテム消費時 に実行されるスクリプト のGRN
-     */
-    Namespace& withConsumeTriggerScriptId(const Char* consumeTriggerScriptId)
-    {
-        setConsumeTriggerScriptId(consumeTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * アイテム入手完了時 に実行されるスクリプト のGRNを取得
-     *
-     * @return アイテム入手完了時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getConsumeDoneTriggerScriptId() const
-    {
-        return ensureData().consumeDoneTriggerScriptId;
-    }
-
-    /**
-     * アイテム入手完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param consumeDoneTriggerScriptId アイテム入手完了時 に実行されるスクリプト のGRN
-     */
-    void setConsumeDoneTriggerScriptId(const Char* consumeDoneTriggerScriptId)
-    {
-        ensureData().consumeDoneTriggerScriptId.emplace(consumeDoneTriggerScriptId);
-    }
-
-    /**
-     * アイテム入手完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param consumeDoneTriggerScriptId アイテム入手完了時 に実行されるスクリプト のGRN
-     */
-    Namespace& withConsumeDoneTriggerScriptId(const Char* consumeDoneTriggerScriptId)
-    {
-        setConsumeDoneTriggerScriptId(consumeDoneTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * アイテム入手完了時 に通知するジョブを追加する ネームスペース のGRNを取得
-     *
-     * @return アイテム入手完了時 に通知するジョブを追加する ネームスペース のGRN
-     */
-    const optional<StringHolder>& getConsumeDoneTriggerQueueNamespaceId() const
-    {
-        return ensureData().consumeDoneTriggerQueueNamespaceId;
-    }
-
-    /**
-     * アイテム入手完了時 に通知するジョブを追加する ネームスペース のGRNを設定
-     *
-     * @param consumeDoneTriggerQueueNamespaceId アイテム入手完了時 に通知するジョブを追加する ネームスペース のGRN
-     */
-    void setConsumeDoneTriggerQueueNamespaceId(const Char* consumeDoneTriggerQueueNamespaceId)
-    {
-        ensureData().consumeDoneTriggerQueueNamespaceId.emplace(consumeDoneTriggerQueueNamespaceId);
-    }
-
-    /**
-     * アイテム入手完了時 に通知するジョブを追加する ネームスペース のGRNを設定
-     *
-     * @param consumeDoneTriggerQueueNamespaceId アイテム入手完了時 に通知するジョブを追加する ネームスペース のGRN
-     */
-    Namespace& withConsumeDoneTriggerQueueNamespaceId(const Char* consumeDoneTriggerQueueNamespaceId)
-    {
-        setConsumeDoneTriggerQueueNamespaceId(consumeDoneTriggerQueueNamespaceId);
+        setConsumeScript(consumeScript);
         return *this;
     }
 
@@ -746,35 +550,15 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->acquireTriggerScriptId != lhr.m_pData->acquireTriggerScriptId)
+        if (lhs.m_pData->acquireScript != lhr.m_pData->acquireScript)
         {
             return true;
         }
-        if (lhs.m_pData->acquireDoneTriggerScriptId != lhr.m_pData->acquireDoneTriggerScriptId)
+        if (lhs.m_pData->overflowScript != lhr.m_pData->overflowScript)
         {
             return true;
         }
-        if (lhs.m_pData->acquireDoneTriggerQueueNamespaceId != lhr.m_pData->acquireDoneTriggerQueueNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->overflowTriggerScriptId != lhr.m_pData->overflowTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->overflowTriggerQueueNamespaceId != lhr.m_pData->overflowTriggerQueueNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->consumeTriggerScriptId != lhr.m_pData->consumeTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->consumeDoneTriggerScriptId != lhr.m_pData->consumeDoneTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->consumeDoneTriggerQueueNamespaceId != lhr.m_pData->consumeDoneTriggerQueueNamespaceId)
+        if (lhs.m_pData->consumeScript != lhr.m_pData->consumeScript)
         {
             return true;
         }

@@ -22,5 +22,6 @@
 #include "Account.hpp"
 #include "TakeOver.hpp"
 #include "ResponseCache.hpp"
+#include "ScriptSetting.hpp"
 
 #endif //GS2_ACCOUNT_MODEL_MODEL_HPP_

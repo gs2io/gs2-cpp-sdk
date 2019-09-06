@@ -225,50 +225,20 @@ private:
                 writer.writePropertyName("description");
                 writer.writeCharArray(*m_Request.getDescription());
             }
-            if (m_Request.getStartQuestTriggerScriptId())
+            if (m_Request.getStartQuestScript())
             {
-                writer.writePropertyName("startQuestTriggerScriptId");
-                writer.writeCharArray(*m_Request.getStartQuestTriggerScriptId());
+                writer.writePropertyName("startQuestScript");
+                write(writer, *m_Request.getStartQuestScript());
             }
-            if (m_Request.getStartQuestDoneTriggerScriptId())
+            if (m_Request.getCompleteQuestScript())
             {
-                writer.writePropertyName("startQuestDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getStartQuestDoneTriggerScriptId());
+                writer.writePropertyName("completeQuestScript");
+                write(writer, *m_Request.getCompleteQuestScript());
             }
-            if (m_Request.getStartQuestDoneTriggerQueueNamespaceId())
+            if (m_Request.getFailedQuestScript())
             {
-                writer.writePropertyName("startQuestDoneTriggerQueueNamespaceId");
-                writer.writeCharArray(*m_Request.getStartQuestDoneTriggerQueueNamespaceId());
-            }
-            if (m_Request.getCompleteQuestTriggerScriptId())
-            {
-                writer.writePropertyName("completeQuestTriggerScriptId");
-                writer.writeCharArray(*m_Request.getCompleteQuestTriggerScriptId());
-            }
-            if (m_Request.getCompleteQuestDoneTriggerScriptId())
-            {
-                writer.writePropertyName("completeQuestDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getCompleteQuestDoneTriggerScriptId());
-            }
-            if (m_Request.getCompleteQuestDoneTriggerQueueNamespaceId())
-            {
-                writer.writePropertyName("completeQuestDoneTriggerQueueNamespaceId");
-                writer.writeCharArray(*m_Request.getCompleteQuestDoneTriggerQueueNamespaceId());
-            }
-            if (m_Request.getFailedQuestTriggerScriptId())
-            {
-                writer.writePropertyName("failedQuestTriggerScriptId");
-                writer.writeCharArray(*m_Request.getFailedQuestTriggerScriptId());
-            }
-            if (m_Request.getFailedQuestDoneTriggerScriptId())
-            {
-                writer.writePropertyName("failedQuestDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getFailedQuestDoneTriggerScriptId());
-            }
-            if (m_Request.getFailedQuestDoneTriggerQueueNamespaceId())
-            {
-                writer.writePropertyName("failedQuestDoneTriggerQueueNamespaceId");
-                writer.writeCharArray(*m_Request.getFailedQuestDoneTriggerQueueNamespaceId());
+                writer.writePropertyName("failedQuestScript");
+                write(writer, *m_Request.getFailedQuestScript());
             }
             if (m_Request.getQueueNamespaceId())
             {
@@ -504,50 +474,20 @@ private:
                 writer.writePropertyName("description");
                 writer.writeCharArray(*m_Request.getDescription());
             }
-            if (m_Request.getStartQuestTriggerScriptId())
+            if (m_Request.getStartQuestScript())
             {
-                writer.writePropertyName("startQuestTriggerScriptId");
-                writer.writeCharArray(*m_Request.getStartQuestTriggerScriptId());
+                writer.writePropertyName("startQuestScript");
+                write(writer, *m_Request.getStartQuestScript());
             }
-            if (m_Request.getStartQuestDoneTriggerScriptId())
+            if (m_Request.getCompleteQuestScript())
             {
-                writer.writePropertyName("startQuestDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getStartQuestDoneTriggerScriptId());
+                writer.writePropertyName("completeQuestScript");
+                write(writer, *m_Request.getCompleteQuestScript());
             }
-            if (m_Request.getStartQuestDoneTriggerQueueNamespaceId())
+            if (m_Request.getFailedQuestScript())
             {
-                writer.writePropertyName("startQuestDoneTriggerQueueNamespaceId");
-                writer.writeCharArray(*m_Request.getStartQuestDoneTriggerQueueNamespaceId());
-            }
-            if (m_Request.getCompleteQuestTriggerScriptId())
-            {
-                writer.writePropertyName("completeQuestTriggerScriptId");
-                writer.writeCharArray(*m_Request.getCompleteQuestTriggerScriptId());
-            }
-            if (m_Request.getCompleteQuestDoneTriggerScriptId())
-            {
-                writer.writePropertyName("completeQuestDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getCompleteQuestDoneTriggerScriptId());
-            }
-            if (m_Request.getCompleteQuestDoneTriggerQueueNamespaceId())
-            {
-                writer.writePropertyName("completeQuestDoneTriggerQueueNamespaceId");
-                writer.writeCharArray(*m_Request.getCompleteQuestDoneTriggerQueueNamespaceId());
-            }
-            if (m_Request.getFailedQuestTriggerScriptId())
-            {
-                writer.writePropertyName("failedQuestTriggerScriptId");
-                writer.writeCharArray(*m_Request.getFailedQuestTriggerScriptId());
-            }
-            if (m_Request.getFailedQuestDoneTriggerScriptId())
-            {
-                writer.writePropertyName("failedQuestDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getFailedQuestDoneTriggerScriptId());
-            }
-            if (m_Request.getFailedQuestDoneTriggerQueueNamespaceId())
-            {
-                writer.writePropertyName("failedQuestDoneTriggerQueueNamespaceId");
-                writer.writeCharArray(*m_Request.getFailedQuestDoneTriggerQueueNamespaceId());
+                writer.writePropertyName("failedQuestScript");
+                write(writer, *m_Request.getFailedQuestScript());
             }
             if (m_Request.getQueueNamespaceId())
             {
@@ -3802,50 +3742,20 @@ private:
             writer.writePropertyName("description");
             writer.writeCharArray(*obj.getDescription());
         }
-        if (obj.getStartQuestTriggerScriptId())
+        if (obj.getStartQuestScript())
         {
-            writer.writePropertyName("startQuestTriggerScriptId");
-            writer.writeCharArray(*obj.getStartQuestTriggerScriptId());
+            writer.writePropertyName("startQuestScript");
+            write(writer, *obj.getStartQuestScript());
         }
-        if (obj.getStartQuestDoneTriggerScriptId())
+        if (obj.getCompleteQuestScript())
         {
-            writer.writePropertyName("startQuestDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getStartQuestDoneTriggerScriptId());
+            writer.writePropertyName("completeQuestScript");
+            write(writer, *obj.getCompleteQuestScript());
         }
-        if (obj.getStartQuestDoneTriggerQueueNamespaceId())
+        if (obj.getFailedQuestScript())
         {
-            writer.writePropertyName("startQuestDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*obj.getStartQuestDoneTriggerQueueNamespaceId());
-        }
-        if (obj.getCompleteQuestTriggerScriptId())
-        {
-            writer.writePropertyName("completeQuestTriggerScriptId");
-            writer.writeCharArray(*obj.getCompleteQuestTriggerScriptId());
-        }
-        if (obj.getCompleteQuestDoneTriggerScriptId())
-        {
-            writer.writePropertyName("completeQuestDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getCompleteQuestDoneTriggerScriptId());
-        }
-        if (obj.getCompleteQuestDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("completeQuestDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*obj.getCompleteQuestDoneTriggerQueueNamespaceId());
-        }
-        if (obj.getFailedQuestTriggerScriptId())
-        {
-            writer.writePropertyName("failedQuestTriggerScriptId");
-            writer.writeCharArray(*obj.getFailedQuestTriggerScriptId());
-        }
-        if (obj.getFailedQuestDoneTriggerScriptId())
-        {
-            writer.writePropertyName("failedQuestDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getFailedQuestDoneTriggerScriptId());
-        }
-        if (obj.getFailedQuestDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("failedQuestDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*obj.getFailedQuestDoneTriggerQueueNamespaceId());
+            writer.writePropertyName("failedQuestScript");
+            write(writer, *obj.getFailedQuestScript());
         }
         if (obj.getQueueNamespaceId())
         {
@@ -4186,6 +4096,27 @@ private:
         {
             writer.writePropertyName("tagName");
             writer.writeCharArray(*obj.getTagName());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const ScriptSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getTriggerScriptId())
+        {
+            writer.writePropertyName("triggerScriptId");
+            writer.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerScriptId())
+        {
+            writer.writePropertyName("doneTriggerScriptId");
+            writer.writeCharArray(*obj.getDoneTriggerScriptId());
+        }
+        if (obj.getDoneTriggerQueueNamespaceId())
+        {
+            writer.writePropertyName("doneTriggerQueueNamespaceId");
+            writer.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
         }
         writer.writeObjectEnd();
     }

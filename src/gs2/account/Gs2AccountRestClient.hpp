@@ -110,65 +110,25 @@ private:
             writer.writePropertyName("changePasswordIfTakeOver");
             writer.writeBool(*obj.getChangePasswordIfTakeOver());
         }
-        if (obj.getCreateAccountTriggerScriptId())
+        if (obj.getCreateAccountScript())
         {
-            writer.writePropertyName("createAccountTriggerScriptId");
-            writer.writeCharArray(*obj.getCreateAccountTriggerScriptId());
+            writer.writePropertyName("createAccountScript");
+            write(writer, *obj.getCreateAccountScript());
         }
-        if (obj.getCreateAccountDoneTriggerScriptId())
+        if (obj.getAuthenticationScript())
         {
-            writer.writePropertyName("createAccountDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getCreateAccountDoneTriggerScriptId());
+            writer.writePropertyName("authenticationScript");
+            write(writer, *obj.getAuthenticationScript());
         }
-        if (obj.getCreateAccountDoneTriggerQueueNamespaceId())
+        if (obj.getCreateTakeOverScript())
         {
-            writer.writePropertyName("createAccountDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*obj.getCreateAccountDoneTriggerQueueNamespaceId());
+            writer.writePropertyName("createTakeOverScript");
+            write(writer, *obj.getCreateTakeOverScript());
         }
-        if (obj.getAuthenticationTriggerScriptId())
+        if (obj.getDoTakeOverScript())
         {
-            writer.writePropertyName("authenticationTriggerScriptId");
-            writer.writeCharArray(*obj.getAuthenticationTriggerScriptId());
-        }
-        if (obj.getAuthenticationDoneTriggerScriptId())
-        {
-            writer.writePropertyName("authenticationDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getAuthenticationDoneTriggerScriptId());
-        }
-        if (obj.getAuthenticationDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("authenticationDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*obj.getAuthenticationDoneTriggerQueueNamespaceId());
-        }
-        if (obj.getCreateTakeOverTriggerScriptId())
-        {
-            writer.writePropertyName("createTakeOverTriggerScriptId");
-            writer.writeCharArray(*obj.getCreateTakeOverTriggerScriptId());
-        }
-        if (obj.getCreateTakeOverDoneTriggerScriptId())
-        {
-            writer.writePropertyName("createTakeOverDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getCreateTakeOverDoneTriggerScriptId());
-        }
-        if (obj.getCreateTakeOverDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("createTakeOverDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*obj.getCreateTakeOverDoneTriggerQueueNamespaceId());
-        }
-        if (obj.getDoTakeOverTriggerScriptId())
-        {
-            writer.writePropertyName("doTakeOverTriggerScriptId");
-            writer.writeCharArray(*obj.getDoTakeOverTriggerScriptId());
-        }
-        if (obj.getDoTakeOverDoneTriggerScriptId())
-        {
-            writer.writePropertyName("doTakeOverDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getDoTakeOverDoneTriggerScriptId());
-        }
-        if (obj.getDoTakeOverDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("doTakeOverDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*obj.getDoTakeOverDoneTriggerQueueNamespaceId());
+            writer.writePropertyName("doTakeOverScript");
+            write(writer, *obj.getDoTakeOverScript());
         }
         if (obj.getCreatedAt())
         {
@@ -281,6 +241,27 @@ private:
         writer.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& writer, const ScriptSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getTriggerScriptId())
+        {
+            writer.writePropertyName("triggerScriptId");
+            writer.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerScriptId())
+        {
+            writer.writePropertyName("doneTriggerScriptId");
+            writer.writeCharArray(*obj.getDoneTriggerScriptId());
+        }
+        if (obj.getDoneTriggerQueueNamespaceId())
+        {
+            writer.writePropertyName("doneTriggerQueueNamespaceId");
+            writer.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
+        }
+        writer.writeObjectEnd();
+    }
+
 
 
 public:
@@ -380,65 +361,25 @@ public:
             writer.writePropertyName("changePasswordIfTakeOver");
             writer.writeBool(*request.getChangePasswordIfTakeOver());
         }
-        if (request.getCreateAccountTriggerScriptId())
+        if (request.getCreateAccountScript())
         {
-            writer.writePropertyName("createAccountTriggerScriptId");
-            writer.writeCharArray(*request.getCreateAccountTriggerScriptId());
+            writer.writePropertyName("createAccountScript");
+            write(writer, *request.getCreateAccountScript());
         }
-        if (request.getCreateAccountDoneTriggerScriptId())
+        if (request.getAuthenticationScript())
         {
-            writer.writePropertyName("createAccountDoneTriggerScriptId");
-            writer.writeCharArray(*request.getCreateAccountDoneTriggerScriptId());
+            writer.writePropertyName("authenticationScript");
+            write(writer, *request.getAuthenticationScript());
         }
-        if (request.getCreateAccountDoneTriggerQueueNamespaceId())
+        if (request.getCreateTakeOverScript())
         {
-            writer.writePropertyName("createAccountDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getCreateAccountDoneTriggerQueueNamespaceId());
+            writer.writePropertyName("createTakeOverScript");
+            write(writer, *request.getCreateTakeOverScript());
         }
-        if (request.getAuthenticationTriggerScriptId())
+        if (request.getDoTakeOverScript())
         {
-            writer.writePropertyName("authenticationTriggerScriptId");
-            writer.writeCharArray(*request.getAuthenticationTriggerScriptId());
-        }
-        if (request.getAuthenticationDoneTriggerScriptId())
-        {
-            writer.writePropertyName("authenticationDoneTriggerScriptId");
-            writer.writeCharArray(*request.getAuthenticationDoneTriggerScriptId());
-        }
-        if (request.getAuthenticationDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("authenticationDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getAuthenticationDoneTriggerQueueNamespaceId());
-        }
-        if (request.getCreateTakeOverTriggerScriptId())
-        {
-            writer.writePropertyName("createTakeOverTriggerScriptId");
-            writer.writeCharArray(*request.getCreateTakeOverTriggerScriptId());
-        }
-        if (request.getCreateTakeOverDoneTriggerScriptId())
-        {
-            writer.writePropertyName("createTakeOverDoneTriggerScriptId");
-            writer.writeCharArray(*request.getCreateTakeOverDoneTriggerScriptId());
-        }
-        if (request.getCreateTakeOverDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("createTakeOverDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getCreateTakeOverDoneTriggerQueueNamespaceId());
-        }
-        if (request.getDoTakeOverTriggerScriptId())
-        {
-            writer.writePropertyName("doTakeOverTriggerScriptId");
-            writer.writeCharArray(*request.getDoTakeOverTriggerScriptId());
-        }
-        if (request.getDoTakeOverDoneTriggerScriptId())
-        {
-            writer.writePropertyName("doTakeOverDoneTriggerScriptId");
-            writer.writeCharArray(*request.getDoTakeOverDoneTriggerScriptId());
-        }
-        if (request.getDoTakeOverDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("doTakeOverDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getDoTakeOverDoneTriggerQueueNamespaceId());
+            writer.writePropertyName("doTakeOverScript");
+            write(writer, *request.getDoTakeOverScript());
         }
         writer.writeObjectEnd();
         {
@@ -567,65 +508,25 @@ public:
             writer.writePropertyName("changePasswordIfTakeOver");
             writer.writeBool(*request.getChangePasswordIfTakeOver());
         }
-        if (request.getCreateAccountTriggerScriptId())
+        if (request.getCreateAccountScript())
         {
-            writer.writePropertyName("createAccountTriggerScriptId");
-            writer.writeCharArray(*request.getCreateAccountTriggerScriptId());
+            writer.writePropertyName("createAccountScript");
+            write(writer, *request.getCreateAccountScript());
         }
-        if (request.getCreateAccountDoneTriggerScriptId())
+        if (request.getAuthenticationScript())
         {
-            writer.writePropertyName("createAccountDoneTriggerScriptId");
-            writer.writeCharArray(*request.getCreateAccountDoneTriggerScriptId());
+            writer.writePropertyName("authenticationScript");
+            write(writer, *request.getAuthenticationScript());
         }
-        if (request.getCreateAccountDoneTriggerQueueNamespaceId())
+        if (request.getCreateTakeOverScript())
         {
-            writer.writePropertyName("createAccountDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getCreateAccountDoneTriggerQueueNamespaceId());
+            writer.writePropertyName("createTakeOverScript");
+            write(writer, *request.getCreateTakeOverScript());
         }
-        if (request.getAuthenticationTriggerScriptId())
+        if (request.getDoTakeOverScript())
         {
-            writer.writePropertyName("authenticationTriggerScriptId");
-            writer.writeCharArray(*request.getAuthenticationTriggerScriptId());
-        }
-        if (request.getAuthenticationDoneTriggerScriptId())
-        {
-            writer.writePropertyName("authenticationDoneTriggerScriptId");
-            writer.writeCharArray(*request.getAuthenticationDoneTriggerScriptId());
-        }
-        if (request.getAuthenticationDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("authenticationDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getAuthenticationDoneTriggerQueueNamespaceId());
-        }
-        if (request.getCreateTakeOverTriggerScriptId())
-        {
-            writer.writePropertyName("createTakeOverTriggerScriptId");
-            writer.writeCharArray(*request.getCreateTakeOverTriggerScriptId());
-        }
-        if (request.getCreateTakeOverDoneTriggerScriptId())
-        {
-            writer.writePropertyName("createTakeOverDoneTriggerScriptId");
-            writer.writeCharArray(*request.getCreateTakeOverDoneTriggerScriptId());
-        }
-        if (request.getCreateTakeOverDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("createTakeOverDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getCreateTakeOverDoneTriggerQueueNamespaceId());
-        }
-        if (request.getDoTakeOverTriggerScriptId())
-        {
-            writer.writePropertyName("doTakeOverTriggerScriptId");
-            writer.writeCharArray(*request.getDoTakeOverTriggerScriptId());
-        }
-        if (request.getDoTakeOverDoneTriggerScriptId())
-        {
-            writer.writePropertyName("doTakeOverDoneTriggerScriptId");
-            writer.writeCharArray(*request.getDoTakeOverDoneTriggerScriptId());
-        }
-        if (request.getDoTakeOverDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("doTakeOverDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getDoTakeOverDoneTriggerQueueNamespaceId());
+            writer.writePropertyName("doTakeOverScript");
+            write(writer, *request.getDoTakeOverScript());
         }
         writer.writeObjectEnd();
         {

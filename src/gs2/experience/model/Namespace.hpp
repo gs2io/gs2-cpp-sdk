@@ -23,6 +23,9 @@
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
 #include <cstring>
 
 namespace gs2 { namespace experience {
@@ -51,22 +54,12 @@ private:
         optional<StringHolder> description;
         /** ランクキャップ取得時 に実行されるスクリプト のGRN */
         optional<StringHolder> experienceCapScriptId;
-        /** 経験値変化時 に実行されるスクリプト のGRN */
-        optional<StringHolder> changeExperienceTriggerScriptId;
-        /** 経験値変化完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> changeExperienceDoneTriggerScriptId;
-        /** 経験値変化完了時 にジョブが登録されるネームスペース のGRN */
-        optional<StringHolder> changeExperienceDoneTriggerNamespaceId;
-        /** ランク変化時 に実行されるスクリプト のGRN */
-        optional<StringHolder> changeRankTriggerScriptId;
-        /** ランク変化時 にジョブが登録されるネームスペース のGRN */
-        optional<StringHolder> changeRankTriggerNamespaceId;
-        /** ランクキャップ変化時 に実行されるスクリプト のGRN */
-        optional<StringHolder> changeRankCapTriggerScriptId;
-        /** ランクキャップ変化完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> changeRankCapDoneTriggerScriptId;
-        /** ランクキャップ変化完了時 にジョブが登録されるネームスペース のGRN */
-        optional<StringHolder> changeRankCapDoneTriggerNamespaceId;
+        /** 経験値変化したときに実行するスクリプト */
+        optional<ScriptSetting> changeExperienceScript;
+        /** ランク変化したときに実行するスクリプト */
+        optional<ScriptSetting> changeRankScript;
+        /** ランクキャップ変化したときに実行するスクリプト */
+        optional<ScriptSetting> changeRankCapScript;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -82,14 +75,9 @@ private:
             name(data.name),
             description(data.description),
             experienceCapScriptId(data.experienceCapScriptId),
-            changeExperienceTriggerScriptId(data.changeExperienceTriggerScriptId),
-            changeExperienceDoneTriggerScriptId(data.changeExperienceDoneTriggerScriptId),
-            changeExperienceDoneTriggerNamespaceId(data.changeExperienceDoneTriggerNamespaceId),
-            changeRankTriggerScriptId(data.changeRankTriggerScriptId),
-            changeRankTriggerNamespaceId(data.changeRankTriggerNamespaceId),
-            changeRankCapTriggerScriptId(data.changeRankCapTriggerScriptId),
-            changeRankCapDoneTriggerScriptId(data.changeRankCapDoneTriggerScriptId),
-            changeRankCapDoneTriggerNamespaceId(data.changeRankCapDoneTriggerNamespaceId),
+            changeExperienceScript(data.changeExperienceScript),
+            changeRankScript(data.changeRankScript),
+            changeRankCapScript(data.changeRankCapScript),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {}
@@ -101,14 +89,9 @@ private:
             name(std::move(data.name)),
             description(std::move(data.description)),
             experienceCapScriptId(std::move(data.experienceCapScriptId)),
-            changeExperienceTriggerScriptId(std::move(data.changeExperienceTriggerScriptId)),
-            changeExperienceDoneTriggerScriptId(std::move(data.changeExperienceDoneTriggerScriptId)),
-            changeExperienceDoneTriggerNamespaceId(std::move(data.changeExperienceDoneTriggerNamespaceId)),
-            changeRankTriggerScriptId(std::move(data.changeRankTriggerScriptId)),
-            changeRankTriggerNamespaceId(std::move(data.changeRankTriggerNamespaceId)),
-            changeRankCapTriggerScriptId(std::move(data.changeRankCapTriggerScriptId)),
-            changeRankCapDoneTriggerScriptId(std::move(data.changeRankCapDoneTriggerScriptId)),
-            changeRankCapDoneTriggerNamespaceId(std::move(data.changeRankCapDoneTriggerNamespaceId)),
+            changeExperienceScript(std::move(data.changeExperienceScript)),
+            changeRankScript(std::move(data.changeRankScript)),
+            changeRankCapScript(std::move(data.changeRankCapScript)),
             createdAt(std::move(data.createdAt)),
             updatedAt(std::move(data.updatedAt))
         {}
@@ -151,52 +134,28 @@ private:
                     this->experienceCapScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "changeExperienceTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "changeExperienceScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->changeExperienceTriggerScriptId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->changeExperienceScript.emplace();
+                    detail::json::JsonParser::parse(&this->changeExperienceScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "changeExperienceDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "changeRankScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->changeExperienceDoneTriggerScriptId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->changeRankScript.emplace();
+                    detail::json::JsonParser::parse(&this->changeRankScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "changeExperienceDoneTriggerNamespaceId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "changeRankCapScript") == 0) {
+                if (jsonValue.IsObject())
                 {
-                    this->changeExperienceDoneTriggerNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "changeRankTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->changeRankTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "changeRankTriggerNamespaceId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->changeRankTriggerNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "changeRankCapTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->changeRankCapTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "changeRankCapDoneTriggerScriptId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->changeRankCapDoneTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "changeRankCapDoneTriggerNamespaceId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->changeRankCapDoneTriggerNamespaceId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->changeRankCapScript.emplace();
+                    detail::json::JsonParser::parse(&this->changeRankCapScript->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0) {
@@ -447,250 +406,95 @@ public:
     }
 
     /**
-     * 経験値変化時 に実行されるスクリプト のGRNを取得
+     * 経験値変化したときに実行するスクリプトを取得
      *
-     * @return 経験値変化時 に実行されるスクリプト のGRN
+     * @return 経験値変化したときに実行するスクリプト
      */
-    const optional<StringHolder>& getChangeExperienceTriggerScriptId() const
+    const optional<ScriptSetting>& getChangeExperienceScript() const
     {
-        return ensureData().changeExperienceTriggerScriptId;
+        return ensureData().changeExperienceScript;
     }
 
     /**
-     * 経験値変化時 に実行されるスクリプト のGRNを設定
+     * 経験値変化したときに実行するスクリプトを設定
      *
-     * @param changeExperienceTriggerScriptId 経験値変化時 に実行されるスクリプト のGRN
+     * @param changeExperienceScript 経験値変化したときに実行するスクリプト
      */
-    void setChangeExperienceTriggerScriptId(const Char* changeExperienceTriggerScriptId)
+    void setChangeExperienceScript(const ScriptSetting& changeExperienceScript)
     {
-        ensureData().changeExperienceTriggerScriptId.emplace(changeExperienceTriggerScriptId);
+        ensureData().changeExperienceScript.emplace(changeExperienceScript);
     }
 
     /**
-     * 経験値変化時 に実行されるスクリプト のGRNを設定
+     * 経験値変化したときに実行するスクリプトを設定
      *
-     * @param changeExperienceTriggerScriptId 経験値変化時 に実行されるスクリプト のGRN
+     * @param changeExperienceScript 経験値変化したときに実行するスクリプト
      */
-    Namespace& withChangeExperienceTriggerScriptId(const Char* changeExperienceTriggerScriptId)
+    Namespace& withChangeExperienceScript(const ScriptSetting& changeExperienceScript)
     {
-        setChangeExperienceTriggerScriptId(changeExperienceTriggerScriptId);
+        setChangeExperienceScript(changeExperienceScript);
         return *this;
     }
 
     /**
-     * 経験値変化完了時 に実行されるスクリプト のGRNを取得
+     * ランク変化したときに実行するスクリプトを取得
      *
-     * @return 経験値変化完了時 に実行されるスクリプト のGRN
+     * @return ランク変化したときに実行するスクリプト
      */
-    const optional<StringHolder>& getChangeExperienceDoneTriggerScriptId() const
+    const optional<ScriptSetting>& getChangeRankScript() const
     {
-        return ensureData().changeExperienceDoneTriggerScriptId;
+        return ensureData().changeRankScript;
     }
 
     /**
-     * 経験値変化完了時 に実行されるスクリプト のGRNを設定
+     * ランク変化したときに実行するスクリプトを設定
      *
-     * @param changeExperienceDoneTriggerScriptId 経験値変化完了時 に実行されるスクリプト のGRN
+     * @param changeRankScript ランク変化したときに実行するスクリプト
      */
-    void setChangeExperienceDoneTriggerScriptId(const Char* changeExperienceDoneTriggerScriptId)
+    void setChangeRankScript(const ScriptSetting& changeRankScript)
     {
-        ensureData().changeExperienceDoneTriggerScriptId.emplace(changeExperienceDoneTriggerScriptId);
+        ensureData().changeRankScript.emplace(changeRankScript);
     }
 
     /**
-     * 経験値変化完了時 に実行されるスクリプト のGRNを設定
+     * ランク変化したときに実行するスクリプトを設定
      *
-     * @param changeExperienceDoneTriggerScriptId 経験値変化完了時 に実行されるスクリプト のGRN
+     * @param changeRankScript ランク変化したときに実行するスクリプト
      */
-    Namespace& withChangeExperienceDoneTriggerScriptId(const Char* changeExperienceDoneTriggerScriptId)
+    Namespace& withChangeRankScript(const ScriptSetting& changeRankScript)
     {
-        setChangeExperienceDoneTriggerScriptId(changeExperienceDoneTriggerScriptId);
+        setChangeRankScript(changeRankScript);
         return *this;
     }
 
     /**
-     * 経験値変化完了時 にジョブが登録されるネームスペース のGRNを取得
+     * ランクキャップ変化したときに実行するスクリプトを取得
      *
-     * @return 経験値変化完了時 にジョブが登録されるネームスペース のGRN
+     * @return ランクキャップ変化したときに実行するスクリプト
      */
-    const optional<StringHolder>& getChangeExperienceDoneTriggerNamespaceId() const
+    const optional<ScriptSetting>& getChangeRankCapScript() const
     {
-        return ensureData().changeExperienceDoneTriggerNamespaceId;
+        return ensureData().changeRankCapScript;
     }
 
     /**
-     * 経験値変化完了時 にジョブが登録されるネームスペース のGRNを設定
+     * ランクキャップ変化したときに実行するスクリプトを設定
      *
-     * @param changeExperienceDoneTriggerNamespaceId 経験値変化完了時 にジョブが登録されるネームスペース のGRN
+     * @param changeRankCapScript ランクキャップ変化したときに実行するスクリプト
      */
-    void setChangeExperienceDoneTriggerNamespaceId(const Char* changeExperienceDoneTriggerNamespaceId)
+    void setChangeRankCapScript(const ScriptSetting& changeRankCapScript)
     {
-        ensureData().changeExperienceDoneTriggerNamespaceId.emplace(changeExperienceDoneTriggerNamespaceId);
+        ensureData().changeRankCapScript.emplace(changeRankCapScript);
     }
 
     /**
-     * 経験値変化完了時 にジョブが登録されるネームスペース のGRNを設定
+     * ランクキャップ変化したときに実行するスクリプトを設定
      *
-     * @param changeExperienceDoneTriggerNamespaceId 経験値変化完了時 にジョブが登録されるネームスペース のGRN
+     * @param changeRankCapScript ランクキャップ変化したときに実行するスクリプト
      */
-    Namespace& withChangeExperienceDoneTriggerNamespaceId(const Char* changeExperienceDoneTriggerNamespaceId)
+    Namespace& withChangeRankCapScript(const ScriptSetting& changeRankCapScript)
     {
-        setChangeExperienceDoneTriggerNamespaceId(changeExperienceDoneTriggerNamespaceId);
-        return *this;
-    }
-
-    /**
-     * ランク変化時 に実行されるスクリプト のGRNを取得
-     *
-     * @return ランク変化時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getChangeRankTriggerScriptId() const
-    {
-        return ensureData().changeRankTriggerScriptId;
-    }
-
-    /**
-     * ランク変化時 に実行されるスクリプト のGRNを設定
-     *
-     * @param changeRankTriggerScriptId ランク変化時 に実行されるスクリプト のGRN
-     */
-    void setChangeRankTriggerScriptId(const Char* changeRankTriggerScriptId)
-    {
-        ensureData().changeRankTriggerScriptId.emplace(changeRankTriggerScriptId);
-    }
-
-    /**
-     * ランク変化時 に実行されるスクリプト のGRNを設定
-     *
-     * @param changeRankTriggerScriptId ランク変化時 に実行されるスクリプト のGRN
-     */
-    Namespace& withChangeRankTriggerScriptId(const Char* changeRankTriggerScriptId)
-    {
-        setChangeRankTriggerScriptId(changeRankTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * ランク変化時 にジョブが登録されるネームスペース のGRNを取得
-     *
-     * @return ランク変化時 にジョブが登録されるネームスペース のGRN
-     */
-    const optional<StringHolder>& getChangeRankTriggerNamespaceId() const
-    {
-        return ensureData().changeRankTriggerNamespaceId;
-    }
-
-    /**
-     * ランク変化時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param changeRankTriggerNamespaceId ランク変化時 にジョブが登録されるネームスペース のGRN
-     */
-    void setChangeRankTriggerNamespaceId(const Char* changeRankTriggerNamespaceId)
-    {
-        ensureData().changeRankTriggerNamespaceId.emplace(changeRankTriggerNamespaceId);
-    }
-
-    /**
-     * ランク変化時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param changeRankTriggerNamespaceId ランク変化時 にジョブが登録されるネームスペース のGRN
-     */
-    Namespace& withChangeRankTriggerNamespaceId(const Char* changeRankTriggerNamespaceId)
-    {
-        setChangeRankTriggerNamespaceId(changeRankTriggerNamespaceId);
-        return *this;
-    }
-
-    /**
-     * ランクキャップ変化時 に実行されるスクリプト のGRNを取得
-     *
-     * @return ランクキャップ変化時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getChangeRankCapTriggerScriptId() const
-    {
-        return ensureData().changeRankCapTriggerScriptId;
-    }
-
-    /**
-     * ランクキャップ変化時 に実行されるスクリプト のGRNを設定
-     *
-     * @param changeRankCapTriggerScriptId ランクキャップ変化時 に実行されるスクリプト のGRN
-     */
-    void setChangeRankCapTriggerScriptId(const Char* changeRankCapTriggerScriptId)
-    {
-        ensureData().changeRankCapTriggerScriptId.emplace(changeRankCapTriggerScriptId);
-    }
-
-    /**
-     * ランクキャップ変化時 に実行されるスクリプト のGRNを設定
-     *
-     * @param changeRankCapTriggerScriptId ランクキャップ変化時 に実行されるスクリプト のGRN
-     */
-    Namespace& withChangeRankCapTriggerScriptId(const Char* changeRankCapTriggerScriptId)
-    {
-        setChangeRankCapTriggerScriptId(changeRankCapTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * ランクキャップ変化完了時 に実行されるスクリプト のGRNを取得
-     *
-     * @return ランクキャップ変化完了時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getChangeRankCapDoneTriggerScriptId() const
-    {
-        return ensureData().changeRankCapDoneTriggerScriptId;
-    }
-
-    /**
-     * ランクキャップ変化完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param changeRankCapDoneTriggerScriptId ランクキャップ変化完了時 に実行されるスクリプト のGRN
-     */
-    void setChangeRankCapDoneTriggerScriptId(const Char* changeRankCapDoneTriggerScriptId)
-    {
-        ensureData().changeRankCapDoneTriggerScriptId.emplace(changeRankCapDoneTriggerScriptId);
-    }
-
-    /**
-     * ランクキャップ変化完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param changeRankCapDoneTriggerScriptId ランクキャップ変化完了時 に実行されるスクリプト のGRN
-     */
-    Namespace& withChangeRankCapDoneTriggerScriptId(const Char* changeRankCapDoneTriggerScriptId)
-    {
-        setChangeRankCapDoneTriggerScriptId(changeRankCapDoneTriggerScriptId);
-        return *this;
-    }
-
-    /**
-     * ランクキャップ変化完了時 にジョブが登録されるネームスペース のGRNを取得
-     *
-     * @return ランクキャップ変化完了時 にジョブが登録されるネームスペース のGRN
-     */
-    const optional<StringHolder>& getChangeRankCapDoneTriggerNamespaceId() const
-    {
-        return ensureData().changeRankCapDoneTriggerNamespaceId;
-    }
-
-    /**
-     * ランクキャップ変化完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param changeRankCapDoneTriggerNamespaceId ランクキャップ変化完了時 にジョブが登録されるネームスペース のGRN
-     */
-    void setChangeRankCapDoneTriggerNamespaceId(const Char* changeRankCapDoneTriggerNamespaceId)
-    {
-        ensureData().changeRankCapDoneTriggerNamespaceId.emplace(changeRankCapDoneTriggerNamespaceId);
-    }
-
-    /**
-     * ランクキャップ変化完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param changeRankCapDoneTriggerNamespaceId ランクキャップ変化完了時 にジョブが登録されるネームスペース のGRN
-     */
-    Namespace& withChangeRankCapDoneTriggerNamespaceId(const Char* changeRankCapDoneTriggerNamespaceId)
-    {
-        setChangeRankCapDoneTriggerNamespaceId(changeRankCapDoneTriggerNamespaceId);
+        setChangeRankCapScript(changeRankCapScript);
         return *this;
     }
 
@@ -791,35 +595,15 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->changeExperienceTriggerScriptId != lhr.m_pData->changeExperienceTriggerScriptId)
+        if (lhs.m_pData->changeExperienceScript != lhr.m_pData->changeExperienceScript)
         {
             return true;
         }
-        if (lhs.m_pData->changeExperienceDoneTriggerScriptId != lhr.m_pData->changeExperienceDoneTriggerScriptId)
+        if (lhs.m_pData->changeRankScript != lhr.m_pData->changeRankScript)
         {
             return true;
         }
-        if (lhs.m_pData->changeExperienceDoneTriggerNamespaceId != lhr.m_pData->changeExperienceDoneTriggerNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->changeRankTriggerScriptId != lhr.m_pData->changeRankTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->changeRankTriggerNamespaceId != lhr.m_pData->changeRankTriggerNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->changeRankCapTriggerScriptId != lhr.m_pData->changeRankCapTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->changeRankCapDoneTriggerScriptId != lhr.m_pData->changeRankCapDoneTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->changeRankCapDoneTriggerNamespaceId != lhr.m_pData->changeRankCapDoneTriggerNamespaceId)
+        if (lhs.m_pData->changeRankCapScript != lhr.m_pData->changeRankCapScript)
         {
             return true;
         }

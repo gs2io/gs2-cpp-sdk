@@ -217,50 +217,20 @@ private:
                 writer.writePropertyName("enableFakeReceipt");
                 writer.writeBool(*m_Request.getEnableFakeReceipt());
             }
-            if (m_Request.getCreateWalletTriggerScriptId())
+            if (m_Request.getCreateWalletScript())
             {
-                writer.writePropertyName("createWalletTriggerScriptId");
-                writer.writeCharArray(*m_Request.getCreateWalletTriggerScriptId());
+                writer.writePropertyName("createWalletScript");
+                write(writer, *m_Request.getCreateWalletScript());
             }
-            if (m_Request.getCreateWalletDoneTriggerScriptId())
+            if (m_Request.getDepositScript())
             {
-                writer.writePropertyName("createWalletDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getCreateWalletDoneTriggerScriptId());
+                writer.writePropertyName("depositScript");
+                write(writer, *m_Request.getDepositScript());
             }
-            if (m_Request.getCreateWalletDoneTriggerNamespaceId())
+            if (m_Request.getWithdrawScript())
             {
-                writer.writePropertyName("createWalletDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getCreateWalletDoneTriggerNamespaceId());
-            }
-            if (m_Request.getDepositTriggerScriptId())
-            {
-                writer.writePropertyName("depositTriggerScriptId");
-                writer.writeCharArray(*m_Request.getDepositTriggerScriptId());
-            }
-            if (m_Request.getDepositDoneTriggerScriptId())
-            {
-                writer.writePropertyName("depositDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getDepositDoneTriggerScriptId());
-            }
-            if (m_Request.getDepositDoneTriggerNamespaceId())
-            {
-                writer.writePropertyName("depositDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getDepositDoneTriggerNamespaceId());
-            }
-            if (m_Request.getWithdrawTriggerScriptId())
-            {
-                writer.writePropertyName("withdrawTriggerScriptId");
-                writer.writeCharArray(*m_Request.getWithdrawTriggerScriptId());
-            }
-            if (m_Request.getWithdrawDoneTriggerScriptId())
-            {
-                writer.writePropertyName("withdrawDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getWithdrawDoneTriggerScriptId());
-            }
-            if (m_Request.getWithdrawDoneTriggerNamespaceId())
-            {
-                writer.writePropertyName("withdrawDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getWithdrawDoneTriggerNamespaceId());
+                writer.writePropertyName("withdrawScript");
+                write(writer, *m_Request.getWithdrawScript());
             }
             if (m_Request.getRequestId())
             {
@@ -506,50 +476,20 @@ private:
                 writer.writePropertyName("enableFakeReceipt");
                 writer.writeBool(*m_Request.getEnableFakeReceipt());
             }
-            if (m_Request.getCreateWalletTriggerScriptId())
+            if (m_Request.getCreateWalletScript())
             {
-                writer.writePropertyName("createWalletTriggerScriptId");
-                writer.writeCharArray(*m_Request.getCreateWalletTriggerScriptId());
+                writer.writePropertyName("createWalletScript");
+                write(writer, *m_Request.getCreateWalletScript());
             }
-            if (m_Request.getCreateWalletDoneTriggerScriptId())
+            if (m_Request.getDepositScript())
             {
-                writer.writePropertyName("createWalletDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getCreateWalletDoneTriggerScriptId());
+                writer.writePropertyName("depositScript");
+                write(writer, *m_Request.getDepositScript());
             }
-            if (m_Request.getCreateWalletDoneTriggerNamespaceId())
+            if (m_Request.getWithdrawScript())
             {
-                writer.writePropertyName("createWalletDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getCreateWalletDoneTriggerNamespaceId());
-            }
-            if (m_Request.getDepositTriggerScriptId())
-            {
-                writer.writePropertyName("depositTriggerScriptId");
-                writer.writeCharArray(*m_Request.getDepositTriggerScriptId());
-            }
-            if (m_Request.getDepositDoneTriggerScriptId())
-            {
-                writer.writePropertyName("depositDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getDepositDoneTriggerScriptId());
-            }
-            if (m_Request.getDepositDoneTriggerNamespaceId())
-            {
-                writer.writePropertyName("depositDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getDepositDoneTriggerNamespaceId());
-            }
-            if (m_Request.getWithdrawTriggerScriptId())
-            {
-                writer.writePropertyName("withdrawTriggerScriptId");
-                writer.writeCharArray(*m_Request.getWithdrawTriggerScriptId());
-            }
-            if (m_Request.getWithdrawDoneTriggerScriptId())
-            {
-                writer.writePropertyName("withdrawDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getWithdrawDoneTriggerScriptId());
-            }
-            if (m_Request.getWithdrawDoneTriggerNamespaceId())
-            {
-                writer.writePropertyName("withdrawDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getWithdrawDoneTriggerNamespaceId());
+                writer.writePropertyName("withdrawScript");
+                write(writer, *m_Request.getWithdrawScript());
             }
             if (m_Request.getRequestId())
             {
@@ -2111,50 +2051,20 @@ private:
             writer.writePropertyName("enableFakeReceipt");
             writer.writeBool(*obj.getEnableFakeReceipt());
         }
-        if (obj.getCreateWalletTriggerScriptId())
+        if (obj.getCreateWalletScript())
         {
-            writer.writePropertyName("createWalletTriggerScriptId");
-            writer.writeCharArray(*obj.getCreateWalletTriggerScriptId());
+            writer.writePropertyName("createWalletScript");
+            write(writer, *obj.getCreateWalletScript());
         }
-        if (obj.getCreateWalletDoneTriggerScriptId())
+        if (obj.getDepositScript())
         {
-            writer.writePropertyName("createWalletDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getCreateWalletDoneTriggerScriptId());
+            writer.writePropertyName("depositScript");
+            write(writer, *obj.getDepositScript());
         }
-        if (obj.getCreateWalletDoneTriggerNamespaceId())
+        if (obj.getWithdrawScript())
         {
-            writer.writePropertyName("createWalletDoneTriggerNamespaceId");
-            writer.writeCharArray(*obj.getCreateWalletDoneTriggerNamespaceId());
-        }
-        if (obj.getDepositTriggerScriptId())
-        {
-            writer.writePropertyName("depositTriggerScriptId");
-            writer.writeCharArray(*obj.getDepositTriggerScriptId());
-        }
-        if (obj.getDepositDoneTriggerScriptId())
-        {
-            writer.writePropertyName("depositDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getDepositDoneTriggerScriptId());
-        }
-        if (obj.getDepositDoneTriggerNamespaceId())
-        {
-            writer.writePropertyName("depositDoneTriggerNamespaceId");
-            writer.writeCharArray(*obj.getDepositDoneTriggerNamespaceId());
-        }
-        if (obj.getWithdrawTriggerScriptId())
-        {
-            writer.writePropertyName("withdrawTriggerScriptId");
-            writer.writeCharArray(*obj.getWithdrawTriggerScriptId());
-        }
-        if (obj.getWithdrawDoneTriggerScriptId())
-        {
-            writer.writePropertyName("withdrawDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getWithdrawDoneTriggerScriptId());
-        }
-        if (obj.getWithdrawDoneTriggerNamespaceId())
-        {
-            writer.writePropertyName("withdrawDoneTriggerNamespaceId");
-            writer.writeCharArray(*obj.getWithdrawDoneTriggerNamespaceId());
+            writer.writePropertyName("withdrawScript");
+            write(writer, *obj.getWithdrawScript());
         }
         if (obj.getBalance())
         {
@@ -2344,6 +2254,27 @@ private:
         {
             writer.writePropertyName("result");
             writer.writeCharArray(*obj.getResult());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const ScriptSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getTriggerScriptId())
+        {
+            writer.writePropertyName("triggerScriptId");
+            writer.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerScriptId())
+        {
+            writer.writePropertyName("doneTriggerScriptId");
+            writer.writeCharArray(*obj.getDoneTriggerScriptId());
+        }
+        if (obj.getDoneTriggerQueueNamespaceId())
+        {
+            writer.writePropertyName("doneTriggerQueueNamespaceId");
+            writer.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
         }
         writer.writeObjectEnd();
     }

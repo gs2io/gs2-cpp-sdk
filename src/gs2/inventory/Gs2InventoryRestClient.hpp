@@ -145,45 +145,20 @@ private:
             writer.writePropertyName("description");
             writer.writeCharArray(*obj.getDescription());
         }
-        if (obj.getAcquireTriggerScriptId())
+        if (obj.getAcquireScript())
         {
-            writer.writePropertyName("acquireTriggerScriptId");
-            writer.writeCharArray(*obj.getAcquireTriggerScriptId());
+            writer.writePropertyName("acquireScript");
+            write(writer, *obj.getAcquireScript());
         }
-        if (obj.getAcquireDoneTriggerScriptId())
+        if (obj.getOverflowScript())
         {
-            writer.writePropertyName("acquireDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getAcquireDoneTriggerScriptId());
+            writer.writePropertyName("overflowScript");
+            write(writer, *obj.getOverflowScript());
         }
-        if (obj.getAcquireDoneTriggerQueueNamespaceId())
+        if (obj.getConsumeScript())
         {
-            writer.writePropertyName("acquireDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*obj.getAcquireDoneTriggerQueueNamespaceId());
-        }
-        if (obj.getOverflowTriggerScriptId())
-        {
-            writer.writePropertyName("overflowTriggerScriptId");
-            writer.writeCharArray(*obj.getOverflowTriggerScriptId());
-        }
-        if (obj.getOverflowTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("overflowTriggerQueueNamespaceId");
-            writer.writeCharArray(*obj.getOverflowTriggerQueueNamespaceId());
-        }
-        if (obj.getConsumeTriggerScriptId())
-        {
-            writer.writePropertyName("consumeTriggerScriptId");
-            writer.writeCharArray(*obj.getConsumeTriggerScriptId());
-        }
-        if (obj.getConsumeDoneTriggerScriptId())
-        {
-            writer.writePropertyName("consumeDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getConsumeDoneTriggerScriptId());
-        }
-        if (obj.getConsumeDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("consumeDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*obj.getConsumeDoneTriggerQueueNamespaceId());
+            writer.writePropertyName("consumeScript");
+            write(writer, *obj.getConsumeScript());
         }
         if (obj.getCreatedAt())
         {
@@ -558,6 +533,27 @@ private:
         writer.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& writer, const ScriptSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getTriggerScriptId())
+        {
+            writer.writePropertyName("triggerScriptId");
+            writer.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerScriptId())
+        {
+            writer.writePropertyName("doneTriggerScriptId");
+            writer.writeCharArray(*obj.getDoneTriggerScriptId());
+        }
+        if (obj.getDoneTriggerQueueNamespaceId())
+        {
+            writer.writePropertyName("doneTriggerQueueNamespaceId");
+            writer.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
+        }
+        writer.writeObjectEnd();
+    }
+
 
 
 public:
@@ -652,45 +648,20 @@ public:
             writer.writePropertyName("description");
             writer.writeCharArray(*request.getDescription());
         }
-        if (request.getAcquireTriggerScriptId())
+        if (request.getAcquireScript())
         {
-            writer.writePropertyName("acquireTriggerScriptId");
-            writer.writeCharArray(*request.getAcquireTriggerScriptId());
+            writer.writePropertyName("acquireScript");
+            write(writer, *request.getAcquireScript());
         }
-        if (request.getAcquireDoneTriggerScriptId())
+        if (request.getOverflowScript())
         {
-            writer.writePropertyName("acquireDoneTriggerScriptId");
-            writer.writeCharArray(*request.getAcquireDoneTriggerScriptId());
+            writer.writePropertyName("overflowScript");
+            write(writer, *request.getOverflowScript());
         }
-        if (request.getAcquireDoneTriggerQueueNamespaceId())
+        if (request.getConsumeScript())
         {
-            writer.writePropertyName("acquireDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getAcquireDoneTriggerQueueNamespaceId());
-        }
-        if (request.getOverflowTriggerScriptId())
-        {
-            writer.writePropertyName("overflowTriggerScriptId");
-            writer.writeCharArray(*request.getOverflowTriggerScriptId());
-        }
-        if (request.getOverflowTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("overflowTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getOverflowTriggerQueueNamespaceId());
-        }
-        if (request.getConsumeTriggerScriptId())
-        {
-            writer.writePropertyName("consumeTriggerScriptId");
-            writer.writeCharArray(*request.getConsumeTriggerScriptId());
-        }
-        if (request.getConsumeDoneTriggerScriptId())
-        {
-            writer.writePropertyName("consumeDoneTriggerScriptId");
-            writer.writeCharArray(*request.getConsumeDoneTriggerScriptId());
-        }
-        if (request.getConsumeDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("consumeDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getConsumeDoneTriggerQueueNamespaceId());
+            writer.writePropertyName("consumeScript");
+            write(writer, *request.getConsumeScript());
         }
         writer.writeObjectEnd();
         {
@@ -814,45 +785,20 @@ public:
             writer.writePropertyName("description");
             writer.writeCharArray(*request.getDescription());
         }
-        if (request.getAcquireTriggerScriptId())
+        if (request.getAcquireScript())
         {
-            writer.writePropertyName("acquireTriggerScriptId");
-            writer.writeCharArray(*request.getAcquireTriggerScriptId());
+            writer.writePropertyName("acquireScript");
+            write(writer, *request.getAcquireScript());
         }
-        if (request.getAcquireDoneTriggerScriptId())
+        if (request.getOverflowScript())
         {
-            writer.writePropertyName("acquireDoneTriggerScriptId");
-            writer.writeCharArray(*request.getAcquireDoneTriggerScriptId());
+            writer.writePropertyName("overflowScript");
+            write(writer, *request.getOverflowScript());
         }
-        if (request.getAcquireDoneTriggerQueueNamespaceId())
+        if (request.getConsumeScript())
         {
-            writer.writePropertyName("acquireDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getAcquireDoneTriggerQueueNamespaceId());
-        }
-        if (request.getOverflowTriggerScriptId())
-        {
-            writer.writePropertyName("overflowTriggerScriptId");
-            writer.writeCharArray(*request.getOverflowTriggerScriptId());
-        }
-        if (request.getOverflowTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("overflowTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getOverflowTriggerQueueNamespaceId());
-        }
-        if (request.getConsumeTriggerScriptId())
-        {
-            writer.writePropertyName("consumeTriggerScriptId");
-            writer.writeCharArray(*request.getConsumeTriggerScriptId());
-        }
-        if (request.getConsumeDoneTriggerScriptId())
-        {
-            writer.writePropertyName("consumeDoneTriggerScriptId");
-            writer.writeCharArray(*request.getConsumeDoneTriggerScriptId());
-        }
-        if (request.getConsumeDoneTriggerQueueNamespaceId())
-        {
-            writer.writePropertyName("consumeDoneTriggerQueueNamespaceId");
-            writer.writeCharArray(*request.getConsumeDoneTriggerQueueNamespaceId());
+            writer.writePropertyName("consumeScript");
+            write(writer, *request.getConsumeScript());
         }
         writer.writeObjectEnd();
         {
@@ -2534,18 +2480,6 @@ public:
             auto& value = request.getItemName();
             url.replace("{itemName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
-        {
-            auto& value = request.getExpiresAt();
-            if (value.has_value())
-            {
-                detail::StringVariable urlSafeValue(*value);
-                url.replace("{expiresAt}", urlSafeValue.c_str());
-            }
-            else
-            {
-                url.replace("{expiresAt}", "null");
-            }
-        }
 
         Char joint[] = { '?', '\0' };
         if (request.getContextStack())
@@ -2553,6 +2487,13 @@ public:
             url += joint;
             url += "contextStack=";
             url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getExpiresAt())
+        {
+            url += joint;
+            url += "expiresAt=";
+            url += detail::StringVariable(*request.getExpiresAt()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());
@@ -2806,18 +2747,6 @@ public:
             auto& value = request.getItemName();
             url.replace("{itemName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
         }
-        {
-            auto& value = request.getExpiresAt();
-            if (value.has_value())
-            {
-                detail::StringVariable urlSafeValue(*value);
-                url.replace("{expiresAt}", urlSafeValue.c_str());
-            }
-            else
-            {
-                url.replace("{expiresAt}", "null");
-            }
-        }
 
         Char joint[] = { '?', '\0' };
         if (request.getContextStack())
@@ -2825,6 +2754,13 @@ public:
             url += joint;
             url += "contextStack=";
             url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+            joint[0] = '&';
+        }
+        if (request.getExpiresAt())
+        {
+            url += joint;
+            url += "expiresAt=";
+            url += detail::StringVariable(*request.getExpiresAt()).c_str();
             joint[0] = '&';
         }
         httpRequest.SetURL(url.c_str());

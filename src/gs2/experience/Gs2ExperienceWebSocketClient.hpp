@@ -220,45 +220,20 @@ private:
                 writer.writePropertyName("experienceCapScriptId");
                 writer.writeCharArray(*m_Request.getExperienceCapScriptId());
             }
-            if (m_Request.getChangeExperienceTriggerScriptId())
+            if (m_Request.getChangeExperienceScript())
             {
-                writer.writePropertyName("changeExperienceTriggerScriptId");
-                writer.writeCharArray(*m_Request.getChangeExperienceTriggerScriptId());
+                writer.writePropertyName("changeExperienceScript");
+                write(writer, *m_Request.getChangeExperienceScript());
             }
-            if (m_Request.getChangeExperienceDoneTriggerScriptId())
+            if (m_Request.getChangeRankScript())
             {
-                writer.writePropertyName("changeExperienceDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getChangeExperienceDoneTriggerScriptId());
+                writer.writePropertyName("changeRankScript");
+                write(writer, *m_Request.getChangeRankScript());
             }
-            if (m_Request.getChangeExperienceDoneTriggerNamespaceId())
+            if (m_Request.getChangeRankCapScript())
             {
-                writer.writePropertyName("changeExperienceDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getChangeExperienceDoneTriggerNamespaceId());
-            }
-            if (m_Request.getChangeRankTriggerScriptId())
-            {
-                writer.writePropertyName("changeRankTriggerScriptId");
-                writer.writeCharArray(*m_Request.getChangeRankTriggerScriptId());
-            }
-            if (m_Request.getChangeRankTriggerNamespaceId())
-            {
-                writer.writePropertyName("changeRankTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getChangeRankTriggerNamespaceId());
-            }
-            if (m_Request.getChangeRankCapTriggerScriptId())
-            {
-                writer.writePropertyName("changeRankCapTriggerScriptId");
-                writer.writeCharArray(*m_Request.getChangeRankCapTriggerScriptId());
-            }
-            if (m_Request.getChangeRankCapDoneTriggerScriptId())
-            {
-                writer.writePropertyName("changeRankCapDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getChangeRankCapDoneTriggerScriptId());
-            }
-            if (m_Request.getChangeRankCapDoneTriggerNamespaceId())
-            {
-                writer.writePropertyName("changeRankCapDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getChangeRankCapDoneTriggerNamespaceId());
+                writer.writePropertyName("changeRankCapScript");
+                write(writer, *m_Request.getChangeRankCapScript());
             }
             if (m_Request.getRequestId())
             {
@@ -489,45 +464,20 @@ private:
                 writer.writePropertyName("experienceCapScriptId");
                 writer.writeCharArray(*m_Request.getExperienceCapScriptId());
             }
-            if (m_Request.getChangeExperienceTriggerScriptId())
+            if (m_Request.getChangeExperienceScript())
             {
-                writer.writePropertyName("changeExperienceTriggerScriptId");
-                writer.writeCharArray(*m_Request.getChangeExperienceTriggerScriptId());
+                writer.writePropertyName("changeExperienceScript");
+                write(writer, *m_Request.getChangeExperienceScript());
             }
-            if (m_Request.getChangeExperienceDoneTriggerScriptId())
+            if (m_Request.getChangeRankScript())
             {
-                writer.writePropertyName("changeExperienceDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getChangeExperienceDoneTriggerScriptId());
+                writer.writePropertyName("changeRankScript");
+                write(writer, *m_Request.getChangeRankScript());
             }
-            if (m_Request.getChangeExperienceDoneTriggerNamespaceId())
+            if (m_Request.getChangeRankCapScript())
             {
-                writer.writePropertyName("changeExperienceDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getChangeExperienceDoneTriggerNamespaceId());
-            }
-            if (m_Request.getChangeRankTriggerScriptId())
-            {
-                writer.writePropertyName("changeRankTriggerScriptId");
-                writer.writeCharArray(*m_Request.getChangeRankTriggerScriptId());
-            }
-            if (m_Request.getChangeRankTriggerNamespaceId())
-            {
-                writer.writePropertyName("changeRankTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getChangeRankTriggerNamespaceId());
-            }
-            if (m_Request.getChangeRankCapTriggerScriptId())
-            {
-                writer.writePropertyName("changeRankCapTriggerScriptId");
-                writer.writeCharArray(*m_Request.getChangeRankCapTriggerScriptId());
-            }
-            if (m_Request.getChangeRankCapDoneTriggerScriptId())
-            {
-                writer.writePropertyName("changeRankCapDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getChangeRankCapDoneTriggerScriptId());
-            }
-            if (m_Request.getChangeRankCapDoneTriggerNamespaceId())
-            {
-                writer.writePropertyName("changeRankCapDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getChangeRankCapDoneTriggerNamespaceId());
+                writer.writePropertyName("changeRankCapScript");
+                write(writer, *m_Request.getChangeRankCapScript());
             }
             if (m_Request.getRequestId())
             {
@@ -3238,45 +3188,20 @@ private:
             writer.writePropertyName("experienceCapScriptId");
             writer.writeCharArray(*obj.getExperienceCapScriptId());
         }
-        if (obj.getChangeExperienceTriggerScriptId())
+        if (obj.getChangeExperienceScript())
         {
-            writer.writePropertyName("changeExperienceTriggerScriptId");
-            writer.writeCharArray(*obj.getChangeExperienceTriggerScriptId());
+            writer.writePropertyName("changeExperienceScript");
+            write(writer, *obj.getChangeExperienceScript());
         }
-        if (obj.getChangeExperienceDoneTriggerScriptId())
+        if (obj.getChangeRankScript())
         {
-            writer.writePropertyName("changeExperienceDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getChangeExperienceDoneTriggerScriptId());
+            writer.writePropertyName("changeRankScript");
+            write(writer, *obj.getChangeRankScript());
         }
-        if (obj.getChangeExperienceDoneTriggerNamespaceId())
+        if (obj.getChangeRankCapScript())
         {
-            writer.writePropertyName("changeExperienceDoneTriggerNamespaceId");
-            writer.writeCharArray(*obj.getChangeExperienceDoneTriggerNamespaceId());
-        }
-        if (obj.getChangeRankTriggerScriptId())
-        {
-            writer.writePropertyName("changeRankTriggerScriptId");
-            writer.writeCharArray(*obj.getChangeRankTriggerScriptId());
-        }
-        if (obj.getChangeRankTriggerNamespaceId())
-        {
-            writer.writePropertyName("changeRankTriggerNamespaceId");
-            writer.writeCharArray(*obj.getChangeRankTriggerNamespaceId());
-        }
-        if (obj.getChangeRankCapTriggerScriptId())
-        {
-            writer.writePropertyName("changeRankCapTriggerScriptId");
-            writer.writeCharArray(*obj.getChangeRankCapTriggerScriptId());
-        }
-        if (obj.getChangeRankCapDoneTriggerScriptId())
-        {
-            writer.writePropertyName("changeRankCapDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getChangeRankCapDoneTriggerScriptId());
-        }
-        if (obj.getChangeRankCapDoneTriggerNamespaceId())
-        {
-            writer.writePropertyName("changeRankCapDoneTriggerNamespaceId");
-            writer.writeCharArray(*obj.getChangeRankCapDoneTriggerNamespaceId());
+            writer.writePropertyName("changeRankCapScript");
+            write(writer, *obj.getChangeRankCapScript());
         }
         if (obj.getCreatedAt())
         {
@@ -3597,6 +3522,27 @@ private:
         {
             writer.writePropertyName("tagName");
             writer.writeCharArray(*obj.getTagName());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const ScriptSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getTriggerScriptId())
+        {
+            writer.writePropertyName("triggerScriptId");
+            writer.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerScriptId())
+        {
+            writer.writePropertyName("doneTriggerScriptId");
+            writer.writeCharArray(*obj.getDoneTriggerScriptId());
+        }
+        if (obj.getDoneTriggerQueueNamespaceId())
+        {
+            writer.writePropertyName("doneTriggerQueueNamespaceId");
+            writer.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
         }
         writer.writeObjectEnd();
     }

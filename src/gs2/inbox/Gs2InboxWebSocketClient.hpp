@@ -186,50 +186,20 @@ private:
                 writer.writePropertyName("isAutomaticDeletingEnabled");
                 writer.writeBool(*m_Request.getIsAutomaticDeletingEnabled());
             }
-            if (m_Request.getReceiveMessageTriggerScriptId())
+            if (m_Request.getReceiveMessageScript())
             {
-                writer.writePropertyName("receiveMessageTriggerScriptId");
-                writer.writeCharArray(*m_Request.getReceiveMessageTriggerScriptId());
+                writer.writePropertyName("receiveMessageScript");
+                write(writer, *m_Request.getReceiveMessageScript());
             }
-            if (m_Request.getReceiveMessageDoneTriggerScriptId())
+            if (m_Request.getReadMessageScript())
             {
-                writer.writePropertyName("receiveMessageDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getReceiveMessageDoneTriggerScriptId());
+                writer.writePropertyName("readMessageScript");
+                write(writer, *m_Request.getReadMessageScript());
             }
-            if (m_Request.getReceiveMessageDoneTriggerNamespaceId())
+            if (m_Request.getDeleteMessageScript())
             {
-                writer.writePropertyName("receiveMessageDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getReceiveMessageDoneTriggerNamespaceId());
-            }
-            if (m_Request.getReadMessageTriggerScriptId())
-            {
-                writer.writePropertyName("readMessageTriggerScriptId");
-                writer.writeCharArray(*m_Request.getReadMessageTriggerScriptId());
-            }
-            if (m_Request.getReadMessageDoneTriggerScriptId())
-            {
-                writer.writePropertyName("readMessageDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getReadMessageDoneTriggerScriptId());
-            }
-            if (m_Request.getReadMessageDoneTriggerNamespaceId())
-            {
-                writer.writePropertyName("readMessageDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getReadMessageDoneTriggerNamespaceId());
-            }
-            if (m_Request.getDeleteMessageTriggerScriptId())
-            {
-                writer.writePropertyName("deleteMessageTriggerScriptId");
-                writer.writeCharArray(*m_Request.getDeleteMessageTriggerScriptId());
-            }
-            if (m_Request.getDeleteMessageDoneTriggerScriptId())
-            {
-                writer.writePropertyName("deleteMessageDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getDeleteMessageDoneTriggerScriptId());
-            }
-            if (m_Request.getDeleteMessageDoneTriggerNamespaceId())
-            {
-                writer.writePropertyName("deleteMessageDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getDeleteMessageDoneTriggerNamespaceId());
+                writer.writePropertyName("deleteMessageScript");
+                write(writer, *m_Request.getDeleteMessageScript());
             }
             if (m_Request.getQueueNamespaceId())
             {
@@ -475,50 +445,20 @@ private:
                 writer.writePropertyName("isAutomaticDeletingEnabled");
                 writer.writeBool(*m_Request.getIsAutomaticDeletingEnabled());
             }
-            if (m_Request.getReceiveMessageTriggerScriptId())
+            if (m_Request.getReceiveMessageScript())
             {
-                writer.writePropertyName("receiveMessageTriggerScriptId");
-                writer.writeCharArray(*m_Request.getReceiveMessageTriggerScriptId());
+                writer.writePropertyName("receiveMessageScript");
+                write(writer, *m_Request.getReceiveMessageScript());
             }
-            if (m_Request.getReceiveMessageDoneTriggerScriptId())
+            if (m_Request.getReadMessageScript())
             {
-                writer.writePropertyName("receiveMessageDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getReceiveMessageDoneTriggerScriptId());
+                writer.writePropertyName("readMessageScript");
+                write(writer, *m_Request.getReadMessageScript());
             }
-            if (m_Request.getReceiveMessageDoneTriggerNamespaceId())
+            if (m_Request.getDeleteMessageScript())
             {
-                writer.writePropertyName("receiveMessageDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getReceiveMessageDoneTriggerNamespaceId());
-            }
-            if (m_Request.getReadMessageTriggerScriptId())
-            {
-                writer.writePropertyName("readMessageTriggerScriptId");
-                writer.writeCharArray(*m_Request.getReadMessageTriggerScriptId());
-            }
-            if (m_Request.getReadMessageDoneTriggerScriptId())
-            {
-                writer.writePropertyName("readMessageDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getReadMessageDoneTriggerScriptId());
-            }
-            if (m_Request.getReadMessageDoneTriggerNamespaceId())
-            {
-                writer.writePropertyName("readMessageDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getReadMessageDoneTriggerNamespaceId());
-            }
-            if (m_Request.getDeleteMessageTriggerScriptId())
-            {
-                writer.writePropertyName("deleteMessageTriggerScriptId");
-                writer.writeCharArray(*m_Request.getDeleteMessageTriggerScriptId());
-            }
-            if (m_Request.getDeleteMessageDoneTriggerScriptId())
-            {
-                writer.writePropertyName("deleteMessageDoneTriggerScriptId");
-                writer.writeCharArray(*m_Request.getDeleteMessageDoneTriggerScriptId());
-            }
-            if (m_Request.getDeleteMessageDoneTriggerNamespaceId())
-            {
-                writer.writePropertyName("deleteMessageDoneTriggerNamespaceId");
-                writer.writeCharArray(*m_Request.getDeleteMessageDoneTriggerNamespaceId());
+                writer.writePropertyName("deleteMessageScript");
+                write(writer, *m_Request.getDeleteMessageScript());
             }
             if (m_Request.getQueueNamespaceId())
             {
@@ -1779,50 +1719,20 @@ private:
             writer.writePropertyName("isAutomaticDeletingEnabled");
             writer.writeBool(*obj.getIsAutomaticDeletingEnabled());
         }
-        if (obj.getReceiveMessageTriggerScriptId())
+        if (obj.getReceiveMessageScript())
         {
-            writer.writePropertyName("receiveMessageTriggerScriptId");
-            writer.writeCharArray(*obj.getReceiveMessageTriggerScriptId());
+            writer.writePropertyName("receiveMessageScript");
+            write(writer, *obj.getReceiveMessageScript());
         }
-        if (obj.getReceiveMessageDoneTriggerScriptId())
+        if (obj.getReadMessageScript())
         {
-            writer.writePropertyName("receiveMessageDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getReceiveMessageDoneTriggerScriptId());
+            writer.writePropertyName("readMessageScript");
+            write(writer, *obj.getReadMessageScript());
         }
-        if (obj.getReceiveMessageDoneTriggerNamespaceId())
+        if (obj.getDeleteMessageScript())
         {
-            writer.writePropertyName("receiveMessageDoneTriggerNamespaceId");
-            writer.writeCharArray(*obj.getReceiveMessageDoneTriggerNamespaceId());
-        }
-        if (obj.getReadMessageTriggerScriptId())
-        {
-            writer.writePropertyName("readMessageTriggerScriptId");
-            writer.writeCharArray(*obj.getReadMessageTriggerScriptId());
-        }
-        if (obj.getReadMessageDoneTriggerScriptId())
-        {
-            writer.writePropertyName("readMessageDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getReadMessageDoneTriggerScriptId());
-        }
-        if (obj.getReadMessageDoneTriggerNamespaceId())
-        {
-            writer.writePropertyName("readMessageDoneTriggerNamespaceId");
-            writer.writeCharArray(*obj.getReadMessageDoneTriggerNamespaceId());
-        }
-        if (obj.getDeleteMessageTriggerScriptId())
-        {
-            writer.writePropertyName("deleteMessageTriggerScriptId");
-            writer.writeCharArray(*obj.getDeleteMessageTriggerScriptId());
-        }
-        if (obj.getDeleteMessageDoneTriggerScriptId())
-        {
-            writer.writePropertyName("deleteMessageDoneTriggerScriptId");
-            writer.writeCharArray(*obj.getDeleteMessageDoneTriggerScriptId());
-        }
-        if (obj.getDeleteMessageDoneTriggerNamespaceId())
-        {
-            writer.writePropertyName("deleteMessageDoneTriggerNamespaceId");
-            writer.writeCharArray(*obj.getDeleteMessageDoneTriggerNamespaceId());
+            writer.writePropertyName("deleteMessageScript");
+            write(writer, *obj.getDeleteMessageScript());
         }
         if (obj.getQueueNamespaceId())
         {
@@ -1947,6 +1857,27 @@ private:
         {
             writer.writePropertyName("value");
             writer.writeCharArray(*obj.getValue());
+        }
+        writer.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& writer, const ScriptSetting& obj)
+    {
+        writer.writeObjectStart();
+        if (obj.getTriggerScriptId())
+        {
+            writer.writePropertyName("triggerScriptId");
+            writer.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerScriptId())
+        {
+            writer.writePropertyName("doneTriggerScriptId");
+            writer.writeCharArray(*obj.getDoneTriggerScriptId());
+        }
+        if (obj.getDoneTriggerQueueNamespaceId())
+        {
+            writer.writePropertyName("doneTriggerQueueNamespaceId");
+            writer.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
         }
         writer.writeObjectEnd();
     }
