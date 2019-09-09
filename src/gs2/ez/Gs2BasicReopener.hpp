@@ -25,7 +25,7 @@ namespace gs2 { namespace ez {
 class Gs2BasicReopener : public IReopener, public gs2::Gs2Object
 {
 public:
-    void reopen(gs2::Gs2Session::OpenCallbackType callback, gs2::Gs2RestSession& gs2Session) GS2_OVERRIDE;
+    void reopen(gs2::Gs2Session::OpenCallbackType callback, gs2::Gs2WebSocketSession& gs2Session) GS2_OVERRIDE;
 };
 
 }}

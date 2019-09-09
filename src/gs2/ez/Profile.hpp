@@ -20,7 +20,7 @@
 #include "../core/Gs2Object.hpp"
 #include "../core/AsyncResult.hpp"
 #include "../core/model/BasicGs2Credential.hpp"
-#include "../core/network/Gs2RestSession.hpp"
+#include "../core/network/Gs2WebSocketSession.hpp"
 #include "GameSession.hpp"
 
 namespace gs2 { namespace ez {
@@ -33,7 +33,7 @@ class Profile : public gs2::Gs2Object
 private:
     IReopener& m_Reopener;
     BasicGs2Credential m_Credential;
-    Gs2RestSession m_Gs2Session;
+    Gs2WebSocketSession m_Gs2Session;
 
 public:
     typedef std::function<void(gs2::AsyncResult<void>&)> InitializeCallbackType;
@@ -49,12 +49,12 @@ public:
 
     void login(LoginCallbackType callback, IAuthenticator& authenticator);
 
-    const Gs2RestSession& getGs2Session() const
+    const Gs2WebSocketSession& getGs2Session() const
     {
         return m_Gs2Session;
     }
 
-    Gs2RestSession& getGs2Session()
+    Gs2WebSocketSession& getGs2Session()
     {
         return m_Gs2Session;
     }

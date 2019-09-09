@@ -22,14 +22,14 @@
 
 namespace gs2 {
 
-class Gs2RestSession;
+class Gs2WebSocketSession;
 
 namespace ez {
 
 class Gs2AccountAuthenticator : public IAuthenticator, public gs2::Gs2Object
 {
 private:
-    Gs2RestSession& m_Gs2Session;
+    Gs2WebSocketSession& m_Gs2Session;
     StringHolder m_AccountNamespace;
     StringHolder m_KeyId;
     StringHolder m_UserId;
@@ -37,7 +37,7 @@ private:
 
 public:
     Gs2AccountAuthenticator(
-        Gs2RestSession& gs2RestSession,
+        Gs2WebSocketSession& gs2WebSocketSession,
         const Char accountNamespace[],
         const Char keyId[],
         const Char userId[],

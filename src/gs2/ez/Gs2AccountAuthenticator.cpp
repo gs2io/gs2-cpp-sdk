@@ -15,8 +15,8 @@
  */
 
 #include "Gs2AccountAuthenticator.hpp"
-#include "../account/Gs2AccountRestClient.hpp"
-#include "../auth/Gs2AuthRestClient.hpp"
+#include "../account/Gs2AccountWebSocketClient.hpp"
+#include "../auth/Gs2AuthWebSocketClient.hpp"
 
 namespace gs2 { namespace ez {
 
@@ -35,13 +35,13 @@ inline bool isValid(const gs2::auth::LoginBySignatureResult& result)
 }
 
 Gs2AccountAuthenticator::Gs2AccountAuthenticator(
-    Gs2RestSession& gs2RestSession,
+    Gs2WebSocketSession& gs2WebSocketSession,
     const Char accountNamespace[],
     const Char keyId[],
     const Char userId[],
     const Char password[]
 ) :
-    m_Gs2Session(gs2RestSession),
+    m_Gs2Session(gs2WebSocketSession),
     m_AccountNamespace(accountNamespace),
     m_KeyId(keyId),
     m_UserId(userId),
@@ -51,7 +51,7 @@ Gs2AccountAuthenticator::Gs2AccountAuthenticator(
 
 void Gs2AccountAuthenticator::authentication(AuthenticationCallback callback)
 {
-    gs2::account::Gs2AccountRestClient accountClient(m_Gs2Session);
+    gs2::account::Gs2AccountWebSocketClient accountClient(m_Gs2Session);
     gs2::account::AuthenticationRequest authenticationRequest;
     authenticationRequest.setNamespaceName(m_AccountNamespace);
     authenticationRequest.setUserId(m_UserId);
@@ -70,7 +70,7 @@ void Gs2AccountAuthenticator::authentication(AuthenticationCallback callback)
             else if (asyncAuthenticationResult.getResult() && isValid(*asyncAuthenticationResult.getResult()))
             {
                 auto& authenticationResult = *asyncAuthenticationResult.getResult();
-                gs2::auth::Gs2AuthRestClient authClient(m_Gs2Session);
+                gs2::auth::Gs2AuthWebSocketClient authClient(m_Gs2Session);
                 gs2::auth::LoginBySignatureRequest loginBySignatureRequest;
                 loginBySignatureRequest.setUserId(m_UserId);
                 loginBySignatureRequest.setKeyId(m_KeyId);
