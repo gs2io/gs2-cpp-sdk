@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_AUTH_GS2AUTHRESTCLIENT_HPP_
 #define GS2_EZ_AUTH_GS2AUTHRESTCLIENT_HPP_
 
-#include <gs2/auth/Gs2AuthRestClient.hpp>
+#include <gs2/auth/Gs2AuthWebSocketClient.hpp>
 #include "result/EzLoginResult.hpp"
 
 
@@ -32,7 +32,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::auth::Gs2AuthRestClient m_Client;
+    gs2::auth::Gs2AuthWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

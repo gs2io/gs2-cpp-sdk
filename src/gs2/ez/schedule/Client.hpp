@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_SCHEDULE_GS2SCHEDULERESTCLIENT_HPP_
 #define GS2_EZ_SCHEDULE_GS2SCHEDULERESTCLIENT_HPP_
 
-#include <gs2/schedule/Gs2ScheduleRestClient.hpp>
+#include <gs2/schedule/Gs2ScheduleWebSocketClient.hpp>
 #include "result/EzListTriggersResult.hpp"
 #include "result/EzGetTriggerResult.hpp"
 #include "result/EzListEventsResult.hpp"
@@ -35,7 +35,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::schedule::Gs2ScheduleRestClient m_Client;
+    gs2::schedule::Gs2ScheduleWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

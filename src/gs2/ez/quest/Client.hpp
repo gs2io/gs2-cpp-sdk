@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_QUEST_GS2QUESTRESTCLIENT_HPP_
 #define GS2_EZ_QUEST_GS2QUESTRESTCLIENT_HPP_
 
-#include <gs2/quest/Gs2QuestRestClient.hpp>
+#include <gs2/quest/Gs2QuestWebSocketClient.hpp>
 #include "result/EzStartResult.hpp"
 #include "result/EzEndResult.hpp"
 #include "result/EzDeleteResult.hpp"
@@ -40,7 +40,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::quest::Gs2QuestRestClient m_Client;
+    gs2::quest::Gs2QuestWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

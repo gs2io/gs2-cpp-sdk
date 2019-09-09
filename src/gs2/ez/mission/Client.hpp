@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_MISSION_GS2MISSIONRESTCLIENT_HPP_
 #define GS2_EZ_MISSION_GS2MISSIONRESTCLIENT_HPP_
 
-#include <gs2/mission/Gs2MissionRestClient.hpp>
+#include <gs2/mission/Gs2MissionWebSocketClient.hpp>
 #include "result/EzListMissionTaskModelsResult.hpp"
 #include "result/EzGetMissionTaskModelResult.hpp"
 #include "result/EzListCompletesResult.hpp"
@@ -40,7 +40,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::mission::Gs2MissionRestClient m_Client;
+    gs2::mission::Gs2MissionWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

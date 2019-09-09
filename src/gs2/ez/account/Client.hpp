@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_ACCOUNT_GS2ACCOUNTRESTCLIENT_HPP_
 #define GS2_EZ_ACCOUNT_GS2ACCOUNTRESTCLIENT_HPP_
 
-#include <gs2/account/Gs2AccountRestClient.hpp>
+#include <gs2/account/Gs2AccountWebSocketClient.hpp>
 #include "result/EzCreateResult.hpp"
 #include "result/EzAuthenticationResult.hpp"
 #include "result/EzAddTakeOverSettingResult.hpp"
@@ -38,7 +38,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::account::Gs2AccountRestClient m_Client;
+    gs2::account::Gs2AccountWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

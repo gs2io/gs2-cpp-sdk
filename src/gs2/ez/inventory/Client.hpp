@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_INVENTORY_GS2INVENTORYRESTCLIENT_HPP_
 #define GS2_EZ_INVENTORY_GS2INVENTORYRESTCLIENT_HPP_
 
-#include <gs2/inventory/Gs2InventoryRestClient.hpp>
+#include <gs2/inventory/Gs2InventoryWebSocketClient.hpp>
 #include "result/EzListInventoryModelsResult.hpp"
 #include "result/EzGetInventoryModelResult.hpp"
 #include "result/EzListItemModelsResult.hpp"
@@ -40,7 +40,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::inventory::Gs2InventoryRestClient m_Client;
+    gs2::inventory::Gs2InventoryWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

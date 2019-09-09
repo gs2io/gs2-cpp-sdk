@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_EXPERIENCE_GS2EXPERIENCERESTCLIENT_HPP_
 #define GS2_EZ_EXPERIENCE_GS2EXPERIENCERESTCLIENT_HPP_
 
-#include <gs2/experience/Gs2ExperienceRestClient.hpp>
+#include <gs2/experience/Gs2ExperienceWebSocketClient.hpp>
 #include "result/EzListExperienceModelsResult.hpp"
 #include "result/EzGetExperienceModelResult.hpp"
 #include "result/EzListStatusesResult.hpp"
@@ -35,7 +35,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::experience::Gs2ExperienceRestClient m_Client;
+    gs2::experience::Gs2ExperienceWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

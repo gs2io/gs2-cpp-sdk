@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_JOBQUEUE_GS2JOBQUEUERESTCLIENT_HPP_
 #define GS2_EZ_JOBQUEUE_GS2JOBQUEUERESTCLIENT_HPP_
 
-#include <gs2/jobQueue/Gs2JobQueueRestClient.hpp>
+#include <gs2/jobQueue/Gs2JobQueueWebSocketClient.hpp>
 #include "result/EzRunResult.hpp"
 
 
@@ -32,7 +32,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::jobQueue::Gs2JobQueueRestClient m_Client;
+    gs2::jobQueue::Gs2JobQueueWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_LOTTERY_GS2LOTTERYRESTCLIENT_HPP_
 #define GS2_EZ_LOTTERY_GS2LOTTERYRESTCLIENT_HPP_
 
-#include <gs2/lottery/Gs2LotteryRestClient.hpp>
+#include <gs2/lottery/Gs2LotteryWebSocketClient.hpp>
 #include "result/EzDescribeBoxesResult.hpp"
 #include "result/EzGetBoxResult.hpp"
 #include "result/EzResetBoxResult.hpp"
@@ -35,7 +35,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::lottery::Gs2LotteryRestClient m_Client;
+    gs2::lottery::Gs2LotteryWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

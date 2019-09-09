@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_MONEY_GS2MONEYRESTCLIENT_HPP_
 #define GS2_EZ_MONEY_GS2MONEYRESTCLIENT_HPP_
 
-#include <gs2/money/Gs2MoneyRestClient.hpp>
+#include <gs2/money/Gs2MoneyWebSocketClient.hpp>
 #include "result/EzGetResult.hpp"
 #include "result/EzWithdrawResult.hpp"
 
@@ -33,7 +33,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::money::Gs2MoneyRestClient m_Client;
+    gs2::money::Gs2MoneyWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

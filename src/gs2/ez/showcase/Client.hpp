@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_SHOWCASE_GS2SHOWCASERESTCLIENT_HPP_
 #define GS2_EZ_SHOWCASE_GS2SHOWCASERESTCLIENT_HPP_
 
-#include <gs2/showcase/Gs2ShowcaseRestClient.hpp>
+#include <gs2/showcase/Gs2ShowcaseWebSocketClient.hpp>
 #include "result/EzListResult.hpp"
 #include "result/EzBuyResult.hpp"
 
@@ -33,7 +33,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::showcase::Gs2ShowcaseRestClient m_Client;
+    gs2::showcase::Gs2ShowcaseWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_LIMIT_GS2LIMITRESTCLIENT_HPP_
 #define GS2_EZ_LIMIT_GS2LIMITRESTCLIENT_HPP_
 
-#include <gs2/limit/Gs2LimitRestClient.hpp>
+#include <gs2/limit/Gs2LimitWebSocketClient.hpp>
 #include "result/EzListCountersResult.hpp"
 #include "result/EzGetCounterResult.hpp"
 #include "result/EzListLimitModelsResult.hpp"
@@ -35,7 +35,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::limit::Gs2LimitRestClient m_Client;
+    gs2::limit::Gs2LimitWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

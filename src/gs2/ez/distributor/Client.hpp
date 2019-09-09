@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_DISTRIBUTOR_GS2DISTRIBUTORRESTCLIENT_HPP_
 #define GS2_EZ_DISTRIBUTOR_GS2DISTRIBUTORRESTCLIENT_HPP_
 
-#include <gs2/distributor/Gs2DistributorRestClient.hpp>
+#include <gs2/distributor/Gs2DistributorWebSocketClient.hpp>
 #include "result/EzListDistributorModelsResult.hpp"
 #include "result/EzGetDistributorModelResult.hpp"
 #include "result/EzRunStampTaskResult.hpp"
@@ -35,7 +35,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::distributor::Gs2DistributorRestClient m_Client;
+    gs2::distributor::Gs2DistributorWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

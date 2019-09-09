@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_MATCHMAKING_GS2MATCHMAKINGRESTCLIENT_HPP_
 #define GS2_EZ_MATCHMAKING_GS2MATCHMAKINGRESTCLIENT_HPP_
 
-#include <gs2/matchmaking/Gs2MatchmakingRestClient.hpp>
+#include <gs2/matchmaking/Gs2MatchmakingWebSocketClient.hpp>
 #include "result/EzCreateGatheringResult.hpp"
 #include "result/EzUpdateGatheringResult.hpp"
 #include "result/EzDoMatchmakingResult.hpp"
@@ -36,7 +36,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::matchmaking::Gs2MatchmakingRestClient m_Client;
+    gs2::matchmaking::Gs2MatchmakingWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

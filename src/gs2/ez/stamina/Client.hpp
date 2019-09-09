@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_STAMINA_GS2STAMINARESTCLIENT_HPP_
 #define GS2_EZ_STAMINA_GS2STAMINARESTCLIENT_HPP_
 
-#include <gs2/stamina/Gs2StaminaRestClient.hpp>
+#include <gs2/stamina/Gs2StaminaWebSocketClient.hpp>
 #include "result/EzListStaminaModelsResult.hpp"
 #include "result/EzGetStaminaModelResult.hpp"
 #include "result/EzGetStaminaResult.hpp"
@@ -35,7 +35,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::stamina::Gs2StaminaRestClient m_Client;
+    gs2::stamina::Gs2StaminaWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

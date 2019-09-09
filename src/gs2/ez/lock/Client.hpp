@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_LOCK_GS2LOCKRESTCLIENT_HPP_
 #define GS2_EZ_LOCK_GS2LOCKRESTCLIENT_HPP_
 
-#include <gs2/lock/Gs2LockRestClient.hpp>
+#include <gs2/lock/Gs2LockWebSocketClient.hpp>
 #include "result/EzLockResult.hpp"
 #include "result/EzUnlockResult.hpp"
 
@@ -33,7 +33,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::lock::Gs2LockRestClient m_Client;
+    gs2::lock::Gs2LockWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_INBOX_GS2INBOXRESTCLIENT_HPP_
 #define GS2_EZ_INBOX_GS2INBOXRESTCLIENT_HPP_
 
-#include <gs2/inbox/Gs2InboxRestClient.hpp>
+#include <gs2/inbox/Gs2InboxWebSocketClient.hpp>
 #include "result/EzListResult.hpp"
 #include "result/EzReadResult.hpp"
 #include "result/EzDeleteResult.hpp"
@@ -34,7 +34,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::inbox::Gs2InboxRestClient m_Client;
+    gs2::inbox::Gs2InboxWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);

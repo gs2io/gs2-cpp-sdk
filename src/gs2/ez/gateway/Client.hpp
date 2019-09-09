@@ -17,7 +17,7 @@
 #ifndef GS2_EZ_GATEWAY_GS2GATEWAYRESTCLIENT_HPP_
 #define GS2_EZ_GATEWAY_GS2GATEWAYRESTCLIENT_HPP_
 
-#include <gs2/gateway/Gs2GatewayRestClient.hpp>
+#include <gs2/gateway/Gs2GatewayWebSocketClient.hpp>
 #include "result/EzSetUserIdResult.hpp"
 
 
@@ -32,7 +32,7 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::gateway::Gs2GatewayRestClient m_Client;
+    gs2::gateway::Gs2GatewayWebSocketClient m_Client;
 
 public:
     Client(gs2::ez::Profile& profile);
