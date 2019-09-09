@@ -42,7 +42,7 @@ class Gs2Session : public Gs2Object
 public:
     typedef std::function<void(AsyncResult<void>&)> OpenCallbackType;
     typedef std::function<void()> CloseCallbackType;
-    typedef std::function<void(NotificationMessage)> NotificationMessageCallbackType;
+    typedef std::function<void(NotificationMessage&)> NotificationMessageCallbackType;
 
 private:
     enum class State {
