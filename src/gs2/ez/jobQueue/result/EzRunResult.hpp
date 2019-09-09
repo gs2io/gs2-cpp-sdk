@@ -28,25 +28,29 @@ class EzRunResult : public gs2::Gs2Object
 {
 private:
     /** ジョブ */
-    EzJob m_Item;
+    optional<EzJob> m_Item;
     /** ジョブの実行結果 */
-    EzJobResultBody m_Result;
+    optional<EzJobResultBody> m_Result;
     /** None */
     Bool m_IsLastJob;
 
 public:
     EzRunResult(const gs2::jobQueue::RunResult& result) :
-        m_Item(*result.getItem()),
-        m_Result(*result.getResult()),
         m_IsLastJob(*result.getIsLastJob())
     {
+        if (result.getItem())
+        {
+            m_Item = EzJob(*result.getItem());
+        }
+        if (result.getResult())
+        {
+            m_Result = EzJobResultBody(*result.getResult());
+        }
     }
 
     static bool isConvertible(const gs2::jobQueue::RunResult& result)
     {
         return
-            result.getItem().has_value() &&
-            result.getResult().has_value() &&
             result.getIsLastJob().has_value();
     }
 
@@ -54,22 +58,22 @@ public:
     //   Getters
     // ========================================
 
-    const EzJob& getItem() const
+    const optional<EzJob>& getItem() const
     {
         return m_Item;
     }
 
-    EzJob& getItem()
+    optional<EzJob>& getItem()
     {
         return m_Item;
     }
 
-    const EzJobResultBody& getResult() const
+    const optional<EzJobResultBody>& getResult() const
     {
         return m_Result;
     }
 
-    EzJobResultBody& getResult()
+    optional<EzJobResultBody>& getResult()
     {
         return m_Result;
     }
