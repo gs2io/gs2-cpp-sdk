@@ -113,16 +113,16 @@ public:
         m_pData(nullptr)
     {}
 
-    NotificationMessage(const NotificationMessage& stampTask) :
-        Gs2Object(stampTask),
-        m_pData(stampTask.m_pData != nullptr ? new Data(*stampTask.m_pData) : nullptr)
+    NotificationMessage(const NotificationMessage& notificationMessage) :
+        Gs2Object(notificationMessage),
+        m_pData(notificationMessage.m_pData != nullptr ? new Data(*notificationMessage.m_pData) : nullptr)
     {}
 
-    NotificationMessage(NotificationMessage&& stampTask) :
-        Gs2Object(std::move(stampTask)),
-        m_pData(stampTask.m_pData)
+    NotificationMessage(NotificationMessage&& notificationMessage) :
+        Gs2Object(std::move(notificationMessage)),
+        m_pData(notificationMessage.m_pData)
     {
-        stampTask.m_pData = nullptr;
+        notificationMessage.m_pData = nullptr;
     }
 
     ~NotificationMessage()
@@ -133,29 +133,29 @@ public:
         }
     }
 
-    NotificationMessage& operator=(const NotificationMessage& stampTask)
+    NotificationMessage& operator=(const NotificationMessage& notificationMessage)
     {
-        Gs2Object::operator=(stampTask);
+        Gs2Object::operator=(notificationMessage);
 
         if (m_pData != nullptr)
         {
             delete m_pData;
         }
-        m_pData = new Data(*stampTask.m_pData);
+        m_pData = new Data(*notificationMessage.m_pData);
 
         return *this;
     }
 
-    NotificationMessage& operator=(NotificationMessage&& stampTask)
+    NotificationMessage& operator=(NotificationMessage&& notificationMessage)
     {
-        Gs2Object::operator=(std::move(stampTask));
+        Gs2Object::operator=(std::move(notificationMessage));
 
         if (m_pData != nullptr)
         {
             delete m_pData;
         }
-        m_pData = stampTask.m_pData;
-        stampTask.m_pData = nullptr;
+        m_pData = notificationMessage.m_pData;
+        notificationMessage.m_pData = nullptr;
 
         return *this;
     }
@@ -239,7 +239,7 @@ public:
         if (getPayload())
         {
             out.emplace();
-            json::JsonParser::parse(&model.getModel(), getPayload());
+            detail::json::JsonParser::parse(&out->getModel(), *getPayload());
         }
         return out;
     }
