@@ -39,6 +39,12 @@ public:
     template<class U> struct rebind { typedef StandardAllocator<U> other; };
     // typedef std::true_type is_always_equal;
 
+    StandardAllocator() = default;
+
+    template<class U>
+    StandardAllocator(const StandardAllocator<U>&)
+    {}
+
     pointer address(reference x) const
     {
         return std::addressof(x);
