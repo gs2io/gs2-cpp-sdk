@@ -20,48 +20,70 @@
 #include "../Gs2Object.hpp"
 #include "StandardAllocator.hpp"
 #include "StringHolder.hpp"
+#include <memory>
 #include <vector>
 #include <utility>
 
 GS2_START_OF_NAMESPACE
 
-template<typename T> class List : public Gs2Object {
+namespace detail {
 
+template <class T>
+inline void deepCopy(std::vector<T, detail::StandardAllocator<T>>& to, const std::vector<T, detail::StandardAllocator<T>>& from)
+{
+    for (const auto& e : from)
+    {
+        to.emplace_back(e.deepCopy());
+    }
+}
+
+// 実際にはディープコピーの必要がない型たち
+template<> inline void deepCopy<Int8>(std::vector<Int8, detail::StandardAllocator<Int8>>& to, const std::vector<Int8, detail::StandardAllocator<Int8>>& from) { to = from; }
+template<> inline void deepCopy<Int16>(std::vector<Int16, detail::StandardAllocator<Int16>>& to, const std::vector<Int16, detail::StandardAllocator<Int16>>& from) { to = from; }
+template<> inline void deepCopy<Int32>(std::vector<Int32, detail::StandardAllocator<Int32>>& to, const std::vector<Int32, detail::StandardAllocator<Int32>>& from) { to = from; }
+template<> inline void deepCopy<Int64>(std::vector<Int64, detail::StandardAllocator<Int64>>& to, const std::vector<Int64, detail::StandardAllocator<Int64>>& from) { to = from; }
+template<> inline void deepCopy<UInt8>(std::vector<UInt8, detail::StandardAllocator<UInt8>>& to, const std::vector<UInt8, detail::StandardAllocator<UInt8>>& from) { to = from; }
+template<> inline void deepCopy<UInt16>(std::vector<UInt16, detail::StandardAllocator<UInt16>>& to, const std::vector<UInt16, detail::StandardAllocator<UInt16>>& from) { to = from; }
+template<> inline void deepCopy<UInt32>(std::vector<UInt32, detail::StandardAllocator<UInt32>>& to, const std::vector<UInt32, detail::StandardAllocator<UInt32>>& from) { to = from; }
+template<> inline void deepCopy<UInt64>(std::vector<UInt64, detail::StandardAllocator<UInt64>>& to, const std::vector<UInt64, detail::StandardAllocator<UInt64>>& from) { to = from; }
+template<> inline void deepCopy<Float>(std::vector<Float, detail::StandardAllocator<Float>>& to, const std::vector<Float, detail::StandardAllocator<Float>>& from) { to = from; }
+template<> inline void deepCopy<Double>(std::vector<Double, detail::StandardAllocator<Double>>& to, const std::vector<Double, detail::StandardAllocator<Double>>& from) { to = from; }
+template<> inline void deepCopy<StringHolder>(std::vector<StringHolder, detail::StandardAllocator<StringHolder>>& to, const std::vector<StringHolder, detail::StandardAllocator<StringHolder>>& from) { to = from; }
+
+}
+
+template<typename T>
+class List : public Gs2Object
+{
 private:
+    typedef std::vector<T, detail::StandardAllocator<T>> Vector;
 
-    std::vector<T, detail::StandardAllocator<T>>m_List;
+    std::shared_ptr<Vector> m_pList;
 
 public:
-
-    List()
+    List() :
+        m_pList(std::allocate_shared<Vector>(detail::StandardAllocator<char>()))
     {}
 
     List(const List& obj) :
         Gs2Object(obj),
-        m_List(obj.m_List)
-    {
-    }
+        m_pList(obj.m_pList)
+    {}
 
     List(List&& obj) :
         Gs2Object(std::move(obj)),
-        m_List(std::move(obj.m_List))
-    {
-    }
+        m_pList(std::move(obj.m_pList))
+    {}
 
-    ~List() {
-    }
+    ~List() = default;
 
     List& operator=(const List& list)
     {
         Gs2Object::operator=(list);
 
-        if (&list != this)
+        if (list.m_pList != m_pList)
         {
-            m_List.clear();
-            for (const auto& element : list.m_List)
-            {
-                m_List.emplace_back(element);
-            }
+            m_pList = list.m_pList;
         }
 
         return *this;
@@ -71,12 +93,19 @@ public:
     {
         Gs2Object::operator=(std::move(list));
 
-        if (&list != this)
+        if (list.m_pList != m_pList)
         {
-            m_List = std::move(list.m_List);
+            m_pList = std::move(list.m_pList);
         }
 
         return *this;
+    }
+
+    List deepCopy() const
+    {
+        List list;
+        detail::deepCopy(*list.m_pList, *m_pList);
+        return list;
     }
 
     const List* operator->() const
@@ -91,187 +120,67 @@ public:
 
     const Int32 getCount() const
     {
-        return m_List.size();
+        return m_pList->size();
     }
 
     const T& operator[](Int32 i) const
     {
-        return m_List[i];
+        return (*m_pList)[i];
     }
 
     void clear()
     {
-        m_List.clear();
+        m_pList->clear();
     }
 
-    List& operator+=(const T& element)
+    List& operator+=(T element)
     {
-        m_List.emplace_back(element);
-        return *this;
-    }
-
-    List& operator+=(T&& element)
-    {
-        m_List.emplace_back(std::move(element));
+        m_pList->emplace_back(std::move(element));
         return *this;
     }
 
     List& operator+=(const List& list)
     {
-        m_List.insert(m_List.end(), list.m_List.begin(), list.m_List.end());
+        std::copy(list.m_pList->begin(), list.m_pList->end(), std::back_inserter(*m_pList));
         return *this;
     }
 
     List& operator+=(List&& list)
     {
-        for (auto itr = list.m_List.begin(); itr != list.m_List.end(); ++itr)
-        {
-            m_List.insert(m_List.end(), std::move(*itr));
-        }
+        std::move(list.m_pList->begin(), list.m_pList->end(), std::back_inserter(*m_pList));
+        list.clear();
         return *this;
     }
-};
 
-template<typename T>
-bool operator!=(const List<T>& lhs, const List<T>& lhr)
-{
-    Int32 count = lhs.getCount();
-    if (count != lhr.getCount())
+    bool operator!=(const List& list) const
     {
-        return true;
-    }
-
-    for (Int32 i = 0; i < count; ++i)
-    {
-        if (lhs[i] != lhr[i])
+        if (m_pList != list.m_pList)
         {
-            return true;
-        }
-    }
+            auto count = getCount();
 
-    return false;
-}
-
-template<typename T>
-bool operator==(const List<T>& lhs, const List<T>& lhr)
-{
-    return !(lhs != lhr);
-}
-
-template<> class List<StringHolder> : public Gs2Object {
-
-private:
-
-    std::vector<StringHolder, detail::StandardAllocator<StringHolder>>m_List;
-
-public:
-
-    List()
-    {}
-
-    List(const List& obj) :
-        Gs2Object(obj),
-        m_List(obj.m_List)
-    {
-    }
-
-    List(List&& obj) :
-        Gs2Object(std::move(obj)),
-        m_List(std::move(obj.m_List))
-    {
-    }
-
-    ~List() {
-    }
-
-    List& operator=(const List& list)
-    {
-        Gs2Object::operator=(list);
-
-        if (&list != this)
-        {
-            m_List.clear();
-            for (const auto& element : list.m_List)
+            if (count != list.getCount())
             {
-                m_List.emplace_back(element);
+                return true;
+            }
+
+            for (Int32 i = 0; i < count; ++i)
+            {
+                if ((*m_pList)[i] != (*list.m_pList)[i])
+                {
+                    return true;
+                }
             }
         }
 
-        return *this;
+        return false;
     }
-
-    List& operator=(List&& list)
-    {
-        Gs2Object::operator=(std::move(list));
-
-        if (&list != this)
-        {
-            m_List = std::move(list.m_List);
-        }
-
-        return *this;
-    }
-
-    const List* operator->() const
-    {
-        return this;
-    }
-
-    List* operator->()
-    {
-        return this;
-    }
-
-    const Int32 getCount() const
-    {
-        return m_List.size();
-    }
-
-    const StringHolder& operator[](Int32 i) const
-    {
-        return m_List[i];
-    }
-
-    void clear()
-    {
-        m_List.clear();
-    }
-
-    List& operator+=(const StringHolder& element)
-    {
-        m_List.emplace_back(element);
-        return *this;
-    }
-
-    List& operator+=(StringHolder&& element)
-    {
-        m_List.emplace_back(std::move(element));
-        return *this;
-    }
-
-    List& operator+=(const Char element[])
-    {
-        m_List.emplace_back(element);
-        return *this;
-    }
-
-    List& operator+=(const List& list)
-    {
-        m_List.insert(m_List.end(), list.m_List.begin(), list.m_List.end());
-        return *this;
-    }
-
-    List& operator+=(List&& list)
-    {
-        for (auto itr = list.m_List.begin(); itr != list.m_List.end(); ++itr)
-        {
-            m_List.insert(m_List.end(), std::move(*itr));
-        }
-        return *this;
-    }
-
-    // TODO: move
 };
+
+template<typename T>
+inline bool operator==(const List<T>& lhs, const List<T>& lhr)
+{
+    return !(lhs != lhr);
+}
 
 
 namespace detail {
