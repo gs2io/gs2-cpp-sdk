@@ -19,26 +19,36 @@
 
 #include "../Gs2Object.hpp"
 #include "../external/optional/optional.hpp"
+#include <memory>
 
 GS2_START_OF_NAMESPACE
 
-class StringHolder : public Gs2Object {
-
+/**
+ * 固定文字列のホルダーです。
+ *
+ * 格納された文字列の内容を変更することはできませんが、別の文字列を格納しなおすことはできます。
+ *
+ * @author Game Server Services, Inc.
+ */
+class StringHolder : public Gs2Object
+{
     friend bool operator==(const StringHolder& lhs, const StringHolder& lhr);
     friend bool operator==(const StringHolder& lhs, const Char lhr[]);
 
 private:
-    Int32 m_Size;    // TODO: unsigned
-    Char* m_Buffer;
+    Int32 m_Size;
+    std::shared_ptr<const Char> m_Buffer;
 
 public:
-    explicit StringHolder(const Char string[]);
+    StringHolder();
+
+    StringHolder(const Char string[]);
 
     StringHolder(const StringHolder& stringHolder);
 
     StringHolder(StringHolder&& stringHolder) noexcept;
 
-    ~StringHolder();
+    ~StringHolder() = default;
 
     StringHolder& operator=(const StringHolder& stringHolder);
 
