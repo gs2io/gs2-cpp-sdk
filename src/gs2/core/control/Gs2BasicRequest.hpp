@@ -164,48 +164,6 @@ public:
     }
 
     /**
-     * タイムスタンプを取得。
-     *
-     * @return タイムスタンプ
-     */
-    const gs2::optional<Int64>& getGs2Timestamp() const
-    {
-        return ensureData().gs2Timestamp;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    void setGs2Timestamp(Int64 gs2Timestamp)
-    {
-        ensureData().gs2Timestamp = gs2Timestamp;
-    }
-
-    /**
-     * GS2認証署名を取得。
-     *
-     * @return GS2認証署名
-     */
-    const gs2::optional<StringHolder>& getGs2RequestSign() const
-    {
-        return ensureData().gs2RequestSign;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    void setGs2RequestSign(const Char* gs2RequestSign)
-    {
-        ensureData().gs2RequestSign.emplace(gs2RequestSign);
-    }
-
-    /**
      * GS2リクエストIDを取得。
      *
      * @return GS2リクエストID
