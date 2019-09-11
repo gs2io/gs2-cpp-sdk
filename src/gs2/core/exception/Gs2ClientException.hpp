@@ -87,69 +87,20 @@ private:
         }
     };
 
-    std::shared_ptr<Data> m_pData;
-
-    Data& ensureData()
-    {
-        if (!m_pData)
-        {
-            m_pData = std::allocate_shared<Data>(detail::StandardAllocator<char>());
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const
-    {
-        if (!m_pData)
-        {
-            const_cast<std::shared_ptr<Data>&>(m_pData) = std::allocate_shared<Data>(detail::StandardAllocator<char>());
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     Gs2ClientException() = default;
-
-    Gs2ClientException(const Gs2ClientException& gs2ClientException) :
-        Gs2Object(gs2ClientException),
-        m_pData(gs2ClientException.m_pData)
-    {}
-
-    Gs2ClientException(Gs2ClientException&& gs2ClientException) :
-        Gs2Object(std::move(gs2ClientException)),
-        m_pData(std::move(gs2ClientException.m_pData))
-    {}
-
+    Gs2ClientException(const Gs2ClientException& gs2ClientException) = default;
+    Gs2ClientException(Gs2ClientException&& gs2ClientException) = default;
     ~Gs2ClientException() = default;
 
-    Gs2ClientException& operator=(const Gs2ClientException& gs2ClientException)
-    {
-        Gs2Object::operator=(gs2ClientException);
-        if (&gs2ClientException != this)
-        {
-            m_pData = gs2ClientException.m_pData;
-        }
-        return *this;
-    }
-
-    Gs2ClientException& operator=(Gs2ClientException&& gs2ClientException)
-    {
-        Gs2Object::operator=(std::move(gs2ClientException));
-        if (&gs2ClientException != this)
-        {
-            m_pData = std::move(gs2ClientException.m_pData);
-        }
-        return *this;
-    }
+    Gs2ClientException& operator=(const Gs2ClientException& gs2ClientException) = default;
+    Gs2ClientException& operator=(Gs2ClientException&& gs2ClientException) = default;
 
     Gs2ClientException deepCopy() const
     {
-        Gs2ClientException gs2ClientException;
-        if (m_pData)
-        {
-            gs2ClientException.m_pData.reset(new Data(*m_pData));
-        }
-        return gs2ClientException;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Gs2ClientException);
     }
 
     const Gs2ClientException* operator->() const
