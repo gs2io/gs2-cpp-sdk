@@ -25,7 +25,7 @@ GS2_START_OF_NAMESPACE
 
 class Gs2BasicRequest : public Gs2Object
 {
-private:
+protected:
     class Data : public Gs2Object
     {
     public:
@@ -55,85 +55,40 @@ private:
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+private:
+    virtual Data& getData_() = 0;
+    virtual const Data& getData_() const = 0;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
-
-public:
-    Gs2BasicRequest() :
-        m_pData(nullptr)
-    {}
+protected:
+    Gs2BasicRequest() = default;
 
     Gs2BasicRequest(const Gs2BasicRequest& gs2BasicRequest) :
-        Gs2Object(gs2BasicRequest),
-        m_pData(gs2BasicRequest.m_pData != nullptr ? new Data(*gs2BasicRequest.m_pData) : nullptr)
+        Gs2Object(gs2BasicRequest)
     {}
 
     Gs2BasicRequest(Gs2BasicRequest&& gs2BasicRequest) :
-        Gs2Object(std::move(gs2BasicRequest)),
-        m_pData(gs2BasicRequest.m_pData)
-    {
-        gs2BasicRequest.m_pData = nullptr;
-    }
+        Gs2Object(std::move(gs2BasicRequest))
+    {}
 
-    ~Gs2BasicRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
+    virtual ~Gs2BasicRequest() = default;
 
     Gs2BasicRequest& operator=(const Gs2BasicRequest& gs2BasicRequest)
     {
         Gs2Object::operator=(gs2BasicRequest);
-
-        if (&gs2BasicRequest != this)
-        {
-            if (m_pData != nullptr)
-            {
-                delete m_pData;
-            }
-            m_pData = new Data(*gs2BasicRequest.m_pData);
-        }
-
         return *this;
     }
 
     Gs2BasicRequest& operator=(Gs2BasicRequest&& gs2BasicRequest)
     {
         Gs2Object::operator=(std::move(gs2BasicRequest));
-
-        if (&gs2BasicRequest != this)
-        {
-            if (m_pData != nullptr)
-            {
-                delete m_pData;
-            }
-            m_pData = gs2BasicRequest.m_pData;
-            gs2BasicRequest.m_pData = nullptr;
-        }
-
         return *this;
     }
 
+public:
     /**
      * GS2認証クライアントIDを取得。
      *
@@ -141,7 +96,7 @@ public:
      */
     const gs2::optional<StringHolder>& getGs2ClientId() const
     {
-        return ensureData().gs2ClientId;
+        return getData_().gs2ClientId;
     }
 
     /**
@@ -152,7 +107,7 @@ public:
      */
     void setGs2ClientId(const Char* gs2ClientId)
     {
-        ensureData().gs2ClientId.emplace(gs2ClientId);
+        getData_().gs2ClientId.emplace(gs2ClientId);
     }
 
     /**
@@ -162,7 +117,7 @@ public:
      */
     const gs2::optional<StringHolder>& getRequestId() const
     {
-        return ensureData().gs2RequestId;
+        return getData_().gs2RequestId;
     }
 
     /**
@@ -172,7 +127,7 @@ public:
      */
     void setRequestId(const Char* gs2RequestId)
     {
-        ensureData().gs2RequestId.emplace(gs2RequestId);
+        getData_().gs2RequestId.emplace(gs2RequestId);
     }
 
     /**
@@ -183,7 +138,7 @@ public:
      */
     void setContextStack(const Char* contextStack)
     {
-        ensureData().contextStack.emplace(contextStack);
+        getData_().contextStack.emplace(contextStack);
     }
 
     /**
@@ -193,7 +148,7 @@ public:
      */
     const gs2::optional<StringHolder>& getContextStack() const
     {
-        return ensureData().contextStack;
+        return getData_().contextStack;
     }
 };
 
