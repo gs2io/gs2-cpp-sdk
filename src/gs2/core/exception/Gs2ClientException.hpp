@@ -21,7 +21,9 @@
 #include "../json/IModel.hpp"
 #include "../json/JsonParser.hpp"
 #include "../util/List.hpp"
+#include "../util/StandardAllocator.hpp"
 #include "../model/RequestError.hpp"
+#include <memory>
 
 GS2_START_OF_NAMESPACE
 
@@ -52,13 +54,12 @@ private:
         optional<Type> type;
         List<RequestError> errors;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             type(data.type),
-            errors(data.errors)
+            errors(data.errors.deepCopy())
         {}
 
         Data(Data&& data) :
@@ -69,7 +70,6 @@ private:
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
@@ -87,79 +87,69 @@ private:
         }
     };
 
-    Data* m_pData;
+    std::shared_ptr<Data> m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
+    Data& ensureData()
+    {
+        if (!m_pData)
+        {
+            m_pData = std::allocate_shared<Data>(detail::StandardAllocator<char>());
         }
         return *m_pData;
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
+    const Data& ensureData() const
+    {
+        if (!m_pData)
+        {
+            const_cast<std::shared_ptr<Data>&>(m_pData) = std::allocate_shared<Data>(detail::StandardAllocator<char>());
         }
         return *m_pData;
     }
 
 public:
-    Gs2ClientException() :
-        m_pData(nullptr)
-    {}
+    Gs2ClientException() = default;
 
     Gs2ClientException(const Gs2ClientException& gs2ClientException) :
         Gs2Object(gs2ClientException),
-        m_pData(gs2ClientException.m_pData != nullptr ? new Data(*gs2ClientException.m_pData) : nullptr)
-    {
-    }
+        m_pData(gs2ClientException.m_pData)
+    {}
 
     Gs2ClientException(Gs2ClientException&& gs2ClientException) :
         Gs2Object(std::move(gs2ClientException)),
-        m_pData(gs2ClientException.m_pData)
-    {
-        gs2ClientException.m_pData = nullptr;
-    }
+        m_pData(std::move(gs2ClientException.m_pData))
+    {}
 
-    ~Gs2ClientException()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
+    ~Gs2ClientException() = default;
 
     Gs2ClientException& operator=(const Gs2ClientException& gs2ClientException)
     {
         Gs2Object::operator=(gs2ClientException);
-
         if (&gs2ClientException != this)
         {
-            if (m_pData != nullptr)
-            {
-                delete m_pData;
-            }
-            m_pData = new Data(*gs2ClientException.m_pData);
+            m_pData = gs2ClientException.m_pData;
         }
-
         return *this;
     }
 
     Gs2ClientException& operator=(Gs2ClientException&& gs2ClientException)
     {
         Gs2Object::operator=(std::move(gs2ClientException));
-
         if (&gs2ClientException != this)
         {
-            if (m_pData != nullptr)
-            {
-                delete m_pData;
-            }
-            m_pData = gs2ClientException.m_pData;
-            gs2ClientException.m_pData = nullptr;
+            m_pData = std::move(gs2ClientException.m_pData);
         }
-
         return *this;
+    }
+
+    Gs2ClientException deepCopy() const
+    {
+        Gs2ClientException gs2ClientException;
+        if (m_pData)
+        {
+            gs2ClientException.m_pData.reset(new Data(*m_pData));
+        }
+        return gs2ClientException;
     }
 
     const Gs2ClientException* operator->() const
