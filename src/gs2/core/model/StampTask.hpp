@@ -44,8 +44,7 @@ private:
         /** スタンプシートタスクデータ */
         optional<StringHolder> task;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -53,27 +52,24 @@ private:
             task(data.task)
         {}
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            action(std::move(data.action)),
-            task(std::move(data.task))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "action") == 0) {
+            if (std::strcmp(name, "action") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->action.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "task") == 0) {
+            else if (std::strcmp(name, "task") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->task.emplace(jsonValue.GetString());
@@ -82,72 +78,20 @@ private:
         }
     };
     
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    StampTask() :
-        m_pData(nullptr)
-    {}
+    StampTask() = default;
+    StampTask(const StampTask& stampTask) = default;
+    StampTask(StampTask&& stampTask) = default;
+    ~StampTask() = default;
 
-    StampTask(const StampTask& stampTask) :
-        Gs2Object(stampTask),
-        m_pData(stampTask.m_pData != nullptr ? new Data(*stampTask.m_pData) : nullptr)
-    {}
+    StampTask& operator=(const StampTask& stampTask) = default;
+    StampTask& operator=(StampTask&& stampTask) = default;
 
-    StampTask(StampTask&& stampTask) :
-        Gs2Object(std::move(stampTask)),
-        m_pData(stampTask.m_pData)
+    StampTask deepCopy() const
     {
-        stampTask.m_pData = nullptr;
-    }
-
-    ~StampTask()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    StampTask& operator=(const StampTask& stampTask)
-    {
-        Gs2Object::operator=(stampTask);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*stampTask.m_pData);
-
-        return *this;
-    }
-
-    StampTask& operator=(StampTask&& stampTask)
-    {
-        Gs2Object::operator=(std::move(stampTask));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = stampTask.m_pData;
-        stampTask.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(StampTask);
     }
 
     const StampTask* operator->() const
