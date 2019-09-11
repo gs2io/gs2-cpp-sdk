@@ -31,10 +31,6 @@ private:
     public:
         /** GS2認証クライアントID */
         gs2::optional<StringHolder> gs2ClientId;
-        /** タイムスタンプ */
-        gs2::optional<Int64> gs2Timestamp;
-        /** GS2認証署名 */
-        gs2::optional<StringHolder> gs2RequestSign;
         /** GS2リクエストID */
         gs2::optional<StringHolder> gs2RequestId;
         /** コンテクストスタック */
@@ -46,8 +42,6 @@ private:
         Data(const Data& data) :
             Gs2Object(data),
             gs2ClientId(data.gs2ClientId),
-            gs2Timestamp(data.gs2Timestamp),
-            gs2RequestSign(data.gs2RequestSign),
             gs2RequestId(data.gs2RequestId),
             contextStack(data.contextStack)
         {}
@@ -55,8 +49,6 @@ private:
         Data(Data&& data) :
             Gs2Object(std::move(data)),
             gs2ClientId(std::move(data.gs2ClientId)),
-            gs2Timestamp(std::move(data.gs2Timestamp)),
-            gs2RequestSign(std::move(data.gs2RequestSign)),
             gs2RequestId(std::move(data.gs2RequestId)),
             contextStack(std::move(data.contextStack))
         {}
