@@ -141,7 +141,7 @@ public:
      *
      * @param sheet スタンプシートデータ
      */
-    void setSheet(const Char* sheet)
+    void setSheet(StringHolder sheet)
     {
         ensureData().sheet.emplace(sheet);
     }
@@ -161,7 +161,7 @@ public:
      *
      * @param tasks 
      */
-    void setTasks(const List<StampTask>& tasks)
+    void setTasks(List<StampTask> tasks)
     {
         ensureData().tasks.emplace(tasks);
     }
@@ -181,7 +181,7 @@ public:
      *
      * @param transactionId スタンプシート関連の処理の実行で使用するトランザクションID
      */
-    void setTransactionId(const Char* transactionId)
+    void setTransactionId(StringHolder transactionId)
     {
         ensureData().transactionId.emplace(transactionId);
     }
