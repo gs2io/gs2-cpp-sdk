@@ -47,38 +47,37 @@ private:
         /** スタンプシート関連の処理の実行で使用するトランザクションID */
         optional<StringHolder> transactionId;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             sheet(data.sheet),
-            tasks(data.tasks),
             transactionId(data.transactionId)
-        {}
+        {
+            if (data.tasks)
+            {
+                tasks = data.tasks->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            sheet(std::move(data.sheet)),
-            tasks(std::move(data.tasks)),
-            transactionId(std::move(data.transactionId))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "sheet") == 0) {
+            if (std::strcmp(name, "sheet") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->sheet.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "tasks") == 0) {
+            else if (std::strcmp(name, "tasks") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -90,7 +89,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name, "transactionId") == 0) {
+            else if (std::strcmp(name, "transactionId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->transactionId.emplace(jsonValue.GetString());
@@ -99,72 +99,20 @@ private:
         }
     };
     
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    StampSheet() :
-        m_pData(nullptr)
-    {}
+    StampSheet() = default;
+    StampSheet(const StampSheet& stampSheet) = default;
+    StampSheet(StampSheet&& stampSheet) = default;
+    ~StampSheet() = default;
 
-    StampSheet(const StampSheet& stampSheet) :
-        Gs2Object(stampSheet),
-        m_pData(stampSheet.m_pData != nullptr ? new Data(*stampSheet.m_pData) : nullptr)
-    {}
+    StampSheet& operator=(const StampSheet& stampSheet) = default;
+    StampSheet& operator=(StampSheet&& stampSheet) = default;
 
-    StampSheet(StampSheet&& stampSheet) :
-        Gs2Object(std::move(stampSheet)),
-        m_pData(stampSheet.m_pData)
+    StampSheet deepCopy() const
     {
-        stampSheet.m_pData = nullptr;
-    }
-
-    ~StampSheet()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    StampSheet& operator=(const StampSheet& stampSheet)
-    {
-        Gs2Object::operator=(stampSheet);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*stampSheet.m_pData);
-
-        return *this;
-    }
-
-    StampSheet& operator=(StampSheet&& stampSheet)
-    {
-        Gs2Object::operator=(std::move(stampSheet));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = stampSheet.m_pData;
-        stampSheet.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(StampSheet);
     }
 
     const StampSheet* operator->() const
