@@ -73,69 +73,20 @@ private:
         }
     };
 
-    std::shared_ptr<Data> m_pData;
-
-    Data& ensureData()
-    {
-        if (!m_pData)
-        {
-            m_pData = std::allocate_shared<Data>(detail::StandardAllocator<char>());
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const
-    {
-        if (!m_pData)
-        {
-            const_cast<std::shared_ptr<Data>&>(m_pData) = std::allocate_shared<Data>(detail::StandardAllocator<char>());
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     RequestError() = default;
-
-    RequestError(const RequestError& requestError) :
-        Gs2Object(requestError),
-        m_pData(requestError.m_pData)
-    {}
-
-    RequestError(RequestError&& requestError) :
-        Gs2Object(std::move(requestError)),
-        m_pData(std::move(requestError.m_pData))
-    {}
-
+    RequestError(const RequestError& requestError) = default;
+    RequestError(RequestError&& requestError) = default;
     ~RequestError() = default;
 
-    RequestError& operator=(const RequestError& requestError)
-    {
-        Gs2Object::operator=(requestError);
-        if (&requestError != this)
-        {
-            m_pData = requestError.m_pData;
-        }
-        return *this;
-    }
-
-    RequestError& operator=(RequestError&& requestError)
-    {
-        Gs2Object::operator=(std::move(requestError));
-        if (&requestError != this)
-        {
-            m_pData = std::move(requestError.m_pData);
-        }
-        return *this;
-    }
+    RequestError& operator=(const RequestError& requestError) = default;
+    RequestError& operator=(RequestError&& requestError) = default;
 
     RequestError deepCopy() const
     {
-        RequestError requestError;
-        if (m_pData)
-        {
-            requestError.m_pData = std::allocate_shared<Data>(detail::StandardAllocator<char>(), *m_pData);
-        }
-        return requestError;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(RequestError);
     }
 
     const RequestError* operator->() const
