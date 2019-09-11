@@ -105,9 +105,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    void setGs2ClientId(const Char* gs2ClientId)
+    void setGs2ClientId(StringHolder gs2ClientId)
     {
-        getData_().gs2ClientId.emplace(gs2ClientId);
+        getData_().gs2ClientId.emplace(std::move(gs2ClientId));
     }
 
     /**
@@ -125,20 +125,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    void setRequestId(const Char* gs2RequestId)
+    void setRequestId(StringHolder gs2RequestId)
     {
-        getData_().gs2RequestId.emplace(gs2RequestId);
-    }
-
-    /**
-     * コンテクストスタックを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param contextStack コンテクストスタック
-     */
-    void setContextStack(const Char* contextStack)
-    {
-        getData_().contextStack.emplace(contextStack);
+        getData_().gs2RequestId.emplace(std::move(gs2RequestId));
     }
 
     /**
@@ -149,6 +138,17 @@ public:
     const gs2::optional<StringHolder>& getContextStack() const
     {
         return getData_().contextStack;
+    }
+
+    /**
+     * コンテクストスタックを設定。
+     * 通常は自動的に計算されるため、この値を設定する必要はありません。
+     *
+     * @param contextStack コンテクストスタック
+     */
+    void setContextStack(StringHolder contextStack)
+    {
+        getData_().contextStack.emplace(std::move(contextStack));
     }
 };
 
