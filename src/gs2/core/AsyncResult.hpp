@@ -33,119 +33,59 @@ private:
         optional<T> result;
         optional<Gs2ClientException> error;
         
-        Data()
-        {}
+        Data() = default;
         
         Data(const Data& data) :
-            Gs2Object(data),
-            result(data.result),
-            error(data.error)
-        {}
+            Gs2Object(data)
+        {
+            if (data.result)
+            {
+                result = data.result->deepCopy();
+            }
+            if (data.error)
+            {
+                error = data.error->deepCopy();
+            }
+        }
         
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            result(std::move(data.result)),
-            error(std::move(data.error))
-        {}
+        Data(Data&& data) = default;
         
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    AsyncResult() :
-        m_pData(nullptr)
-    {}
+    AsyncResult() = default;
+    AsyncResult(const AsyncResult& asyncResult) = default;
+    AsyncResult(AsyncResult&& asyncResult) = default;
+    ~AsyncResult() = default;
 
-    AsyncResult(T&& result, optional<Gs2ClientException>&& error) :
-        m_pData(nullptr)
+    AsyncResult(T&& result, optional<Gs2ClientException>&& error)
     {
         ensureData().result.emplace(std::move(result));
         ensureData().error = std::move(error);
     }
 
-    AsyncResult(T&& result) :
-        m_pData(nullptr)
+    AsyncResult(T&& result)
     {
         ensureData().result.emplace(std::move(result));
     }
 
-    AsyncResult(Gs2ClientException&& error) :
-        m_pData(nullptr)
+    AsyncResult(Gs2ClientException&& error)
     {
         ensureData().error = std::move(error);
     }
 
-    AsyncResult(const AsyncResult& asyncResult) :
-        Gs2Object(asyncResult),
-        m_pData(asyncResult.m_pData != nullptr ? new Data(*asyncResult.m_pData) : nullptr)
-    {}
+    AsyncResult& operator=(const AsyncResult& asyncResult) = default;
+    AsyncResult& operator=(AsyncResult&& asyncResult) = default;
 
-    AsyncResult(AsyncResult&& asyncResult) :
-        Gs2Object(std::move(asyncResult)),
-        m_pData(asyncResult.m_pData)
+    AsyncResult deepCopy() const
     {
-        asyncResult.m_pData = nullptr;
-    }
-
-    ~AsyncResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    AsyncResult& operator=(const AsyncResult& asyncResult)
-    {
-        Gs2Object::operator=(asyncResult);
-
-        if (&asyncResult != this)
-        {
-            if (m_pData != nullptr)
-            {
-                delete m_pData;
-            }
-            m_pData = new Data(*asyncResult.m_pData);
-        }
-
-        return *this;
-    }
-
-    AsyncResult& operator=(AsyncResult&& asyncResult)
-    {
-        Gs2Object::operator=(std::move(asyncResult));
-
-        if (&asyncResult != this)
-        {
-            if (m_pData != nullptr)
-            {
-                delete m_pData;
-            }
-            m_pData = asyncResult.m_pData;
-            asyncResult.m_pData = nullptr;
-        }
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(AsyncResult);
     }
 
     const optional<T>& getResult() const
@@ -168,110 +108,49 @@ private:
     public:
         optional<Gs2ClientException> error;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
-            error(data.error)
-        {}
+            Gs2Object(data)
+        {
+            if (data.error)
+            {
+                error = data.error->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            error(std::move(data.error))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    AsyncResult() :
-        m_pData(nullptr)
-    {}
+    AsyncResult() = default;
+    AsyncResult(const AsyncResult& asyncResult) = default;
+    AsyncResult(AsyncResult&& asyncResult) = default;
+    ~AsyncResult() = default;
 
-    AsyncResult(optional<Gs2ClientException>&& error) :
-        m_pData(nullptr)
+    AsyncResult(optional<Gs2ClientException>&& error)
     {
         ensureData().error = std::move(error);
     }
 
-    AsyncResult(Gs2ClientException&& error) :
-        m_pData(nullptr)
+    AsyncResult(Gs2ClientException&& error)
     {
         ensureData().error = std::move(error);
     }
 
-    AsyncResult(const AsyncResult& asyncResult) :
-        Gs2Object(asyncResult),
-        m_pData(asyncResult.m_pData != nullptr ? new Data(*asyncResult.m_pData) : nullptr)
-    {}
+    AsyncResult& operator=(const AsyncResult& asyncResult) = default;
+    AsyncResult& operator=(AsyncResult&& asyncResult) = default;
 
-    AsyncResult(AsyncResult&& asyncResult) :
-        Gs2Object(std::move(asyncResult)),
-        m_pData(asyncResult.m_pData)
+    AsyncResult deepCopy() const
     {
-        asyncResult.m_pData = nullptr;
-    }
-
-    ~AsyncResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    AsyncResult& operator=(const AsyncResult& asyncResult)
-    {
-        Gs2Object::operator=(asyncResult);
-
-        if (&asyncResult != this)
-        {
-            if (m_pData != nullptr)
-            {
-                delete m_pData;
-            }
-            m_pData = asyncResult.m_pData != nullptr ? new Data(*asyncResult.m_pData) : nullptr;
-        }
-
-        return *this;
-    }
-
-    AsyncResult& operator=(AsyncResult&& asyncResult)
-    {
-        Gs2Object::operator=(std::move(asyncResult));
-
-        if (&asyncResult != this)
-        {
-            if (m_pData != nullptr)
-            {
-                delete m_pData;
-            }
-            m_pData = asyncResult.m_pData;
-            asyncResult.m_pData = nullptr;
-        }
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(AsyncResult);
     }
 
     const optional<Gs2ClientException>& getError() const
