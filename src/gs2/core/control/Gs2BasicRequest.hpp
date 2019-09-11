@@ -65,28 +65,12 @@ private:
 
 protected:
     Gs2BasicRequest() = default;
-
-    Gs2BasicRequest(const Gs2BasicRequest& gs2BasicRequest) :
-        Gs2Object(gs2BasicRequest)
-    {}
-
-    Gs2BasicRequest(Gs2BasicRequest&& gs2BasicRequest) :
-        Gs2Object(std::move(gs2BasicRequest))
-    {}
-
+    Gs2BasicRequest(const Gs2BasicRequest& gs2BasicRequest) = default;
+    Gs2BasicRequest(Gs2BasicRequest&& gs2BasicRequest) = default;
     virtual ~Gs2BasicRequest() = default;
 
-    Gs2BasicRequest& operator=(const Gs2BasicRequest& gs2BasicRequest)
-    {
-        Gs2Object::operator=(gs2BasicRequest);
-        return *this;
-    }
-
-    Gs2BasicRequest& operator=(Gs2BasicRequest&& gs2BasicRequest)
-    {
-        Gs2Object::operator=(std::move(gs2BasicRequest));
-        return *this;
-    }
+    Gs2BasicRequest& operator=(const Gs2BasicRequest& gs2BasicRequest) = default;
+    Gs2BasicRequest& operator=(Gs2BasicRequest&& gs2BasicRequest) = default;
 
 public:
     /**
