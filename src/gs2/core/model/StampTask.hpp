@@ -120,7 +120,7 @@ public:
      *
      * @param action アクション名
      */
-    void setAction(const Char* action)
+    void setAction(StringHolder action)
     {
         ensureData().action.emplace(action);
     }
@@ -140,7 +140,7 @@ public:
      *
      * @param task スタンプシートタスクデータ
      */
-    void setTask(const Char* task)
+    void setTask(StringHolder task)
     {
         ensureData().task.emplace(task);
     }
