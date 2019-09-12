@@ -26,7 +26,7 @@ Gs2Session::~Gs2Session()
 {
 }
 
-void Gs2Session::triggerOpenCallback(detail::IntrusiveList<OpenCallbackHolder>& openCallbackHolderList, AsyncResult<void>& result)
+void Gs2Session::triggerOpenCallback(detail::IntrusiveList<OpenCallbackHolder>& openCallbackHolderList, AsyncResult<void> result)
 {
     while (auto* pOpenCallbackHolder = openCallbackHolderList.pop())
     {
@@ -44,7 +44,7 @@ void Gs2Session::triggerCloseCallback(detail::IntrusiveList<CloseCallbackHolder>
     }
 }
 
-void Gs2Session::triggerCancelTasksCallback(detail::IntrusiveList<detail::Gs2SessionTask>& gs2SessionTaskList, Gs2ClientException& gs2ClientException)
+void Gs2Session::triggerCancelTasksCallback(detail::IntrusiveList<detail::Gs2SessionTask>& gs2SessionTaskList, Gs2ClientException gs2ClientException)
 {
     detail::Gs2ClientErrorResponse clientErrorResponse;
     clientErrorResponse.getGs2ClientException() = gs2ClientException;   // TODO: move?
@@ -216,8 +216,7 @@ void Gs2Session::openCallback(StringHolder* pProjectToken, Gs2ClientException* p
                 changeStateToClosing();
             }
 
-            AsyncResult<void> result;
-            Gs2Session::triggerOpenCallback(openCallbackHolderList, result);
+            Gs2Session::triggerOpenCallback(openCallbackHolderList, AsyncResult<void>());
         }
         else
         {
@@ -232,8 +231,7 @@ void Gs2Session::openCallback(StringHolder* pProjectToken, Gs2ClientException* p
             Gs2ClientException gs2ClientException;
             gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
 
-            AsyncResult<void> result(gs2ClientException);
-            Gs2Session::triggerOpenCallback(openCallbackHolderList, result);
+            Gs2Session::triggerOpenCallback(openCallbackHolderList, AsyncResult<void>(std::move(gs2ClientException)));
             Gs2Session::triggerCloseCallback(closeCallbackHolderList);
         }
     }
@@ -246,8 +244,7 @@ void Gs2Session::openCallback(StringHolder* pProjectToken, Gs2ClientException* p
 
         changeStateToIdle();
 
-        AsyncResult<void> result(*pClientException);
-        Gs2Session::triggerOpenCallback(openCallbackHolderList, result);
+        Gs2Session::triggerOpenCallback(openCallbackHolderList, AsyncResult<void>(*pClientException));
         Gs2Session::triggerCloseCallback(closeCallbackHolderList);
     }
 }

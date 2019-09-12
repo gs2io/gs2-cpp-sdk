@@ -70,7 +70,7 @@ template <class T>
 class Gs2RestSessionTask : public Gs2RestSessionTaskBase
 {
 public:
-    typedef std::function<void(AsyncResult<T>&)> CallbackType;
+    typedef std::function<void(AsyncResult<T>)> CallbackType;
 
 private:
     CallbackType m_Callback;
@@ -79,8 +79,7 @@ private:
     {
         T result;
         gs2Response.exportTo(result.getModel());
-        AsyncResult<T> asyncResult(std::move(result), std::move(gs2Response.getGs2ClientException()));
-        m_Callback(asyncResult);
+        m_Callback(AsyncResult<T>(std::move(result), std::move(gs2Response.getGs2ClientException())));
     }
 
 public:
@@ -96,15 +95,14 @@ template<>
 class Gs2RestSessionTask<void> : public Gs2RestSessionTaskBase
 {
 public:
-    typedef std::function<void(AsyncResult<void>&)> CallbackType;
+    typedef std::function<void(AsyncResult<void>)> CallbackType;
 
 private:
     CallbackType m_Callback;
 
     void triggerUserCallback(Gs2Response& gs2Response) GS2_OVERRIDE
     {
-        AsyncResult<void> asyncResult(std::move(gs2Response.getGs2ClientException()));
-        m_Callback(asyncResult);
+        m_Callback(AsyncResult<void>(std::move(gs2Response.getGs2ClientException())));
     }
 
 public:

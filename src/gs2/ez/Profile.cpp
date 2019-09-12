@@ -40,25 +40,21 @@ void Profile::finalize(FinalizeCallbackType callback)
 void Profile::login(LoginCallbackType callback, IAuthenticator& authenticator)
 {
     authenticator.authentication(
-        [callback](gs2::AsyncResult<gs2::auth::AccessToken>& r)
+        [callback](gs2::AsyncResult<gs2::auth::AccessToken> r)
         {
             if (r.getError())
             {
-                auto gs2ClientException = *r.getError();
-                gs2::AsyncResult<GameSession> asyncResult(std::move(gs2ClientException));
-                callback(asyncResult);
+                callback(gs2::AsyncResult<GameSession>(*r.getError()));
             }
             else if (r.getResult())
             {
-                gs2::AsyncResult<GameSession> asyncResult(std::move(*r.getResult()));
-                callback(asyncResult);
+                callback(gs2::AsyncResult<GameSession>(*r.getResult()));
             }
             else
             {
                 Gs2ClientException gs2ClientException;
                 gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-                gs2::AsyncResult<GameSession> asyncResult(std::move(gs2ClientException));
-                callback(asyncResult);
+                callback(gs2::AsyncResult<GameSession>(std::move(gs2ClientException)));
             }
         }
     );

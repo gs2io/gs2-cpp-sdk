@@ -40,9 +40,9 @@ class Gs2Session : public Gs2Object
     friend class detail::Gs2SessionTask;
 
 public:
-    typedef std::function<void(AsyncResult<void>&)> OpenCallbackType;
+    typedef std::function<void(AsyncResult<void>)> OpenCallbackType;
     typedef std::function<void()> CloseCallbackType;
-    typedef std::function<void(NotificationMessage&)> NotificationMessageCallbackType;
+    typedef std::function<void(NotificationMessage)> NotificationMessageCallbackType;
 
 private:
     enum class State {
@@ -94,9 +94,9 @@ private:
 
     detail::Gs2SessionTaskId::Generator m_Gs2SessionIdTaskGenerator;
 
-    static void triggerOpenCallback(detail::IntrusiveList<OpenCallbackHolder>& openCallbackHolderList, AsyncResult<void>& result);
+    static void triggerOpenCallback(detail::IntrusiveList<OpenCallbackHolder>& openCallbackHolderList, AsyncResult<void> result);
     static void triggerCloseCallback(detail::IntrusiveList<CloseCallbackHolder>& closeCallbackHolderList);
-    static void triggerCancelTasksCallback(detail::IntrusiveList<detail::Gs2SessionTask>& gs2SessionTaskList, Gs2ClientException& gs2ClientException);
+    static void triggerCancelTasksCallback(detail::IntrusiveList<detail::Gs2SessionTask>& gs2SessionTaskList, Gs2ClientException gs2ClientException);
 
     inline void enterStateLock() { m_Mutex.lock(); }
     inline void exitStateLock() { m_Mutex.unlock(); };
