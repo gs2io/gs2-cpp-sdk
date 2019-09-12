@@ -82,6 +82,9 @@ public:
         return *m_pData; \
     }
 
+#define GS2_CORE_SHARED_DATA_INITIALIZATION(...) \
+    m_pData(std::allocate_shared<Data>(detail::StandardAllocator<char>(), __VA_ARGS__))
+
 #define GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Clazz) \
     Clazz copy; \
     if (m_pData) \
