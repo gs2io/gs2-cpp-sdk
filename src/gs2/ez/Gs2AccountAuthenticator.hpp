@@ -38,10 +38,10 @@ private:
 public:
     Gs2AccountAuthenticator(
         Gs2WebSocketSession& gs2WebSocketSession,
-        const Char accountNamespace[],
-        const Char keyId[],
-        const Char userId[],
-        const Char password[]
+        StringHolder accountNamespace,
+        StringHolder keyId,
+        StringHolder userId,
+        StringHolder password
     );
 
     void authentication(AuthenticationCallback callback) GS2_OVERRIDE;

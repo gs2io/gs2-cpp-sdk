@@ -36,16 +36,16 @@ inline bool isValid(const gs2::auth::LoginBySignatureResult& result)
 
 Gs2AccountAuthenticator::Gs2AccountAuthenticator(
     Gs2WebSocketSession& gs2WebSocketSession,
-    const Char accountNamespace[],
-    const Char keyId[],
-    const Char userId[],
-    const Char password[]
+    StringHolder accountNamespace,
+    StringHolder keyId,
+    StringHolder userId,
+    StringHolder password
 ) :
     m_Gs2Session(gs2WebSocketSession),
-    m_AccountNamespace(accountNamespace),
-    m_KeyId(keyId),
-    m_UserId(userId),
-    m_Password(password)
+    m_AccountNamespace(std::move(accountNamespace)),
+    m_KeyId(std::move(keyId)),
+    m_UserId(std::move(userId)),
+    m_Password(std::move(password))
 {
 }
 
