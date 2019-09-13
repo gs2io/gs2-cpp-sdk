@@ -73,19 +73,19 @@ private:
     }
 
 public:
-    explicit Gs2WebSocketSession(const BasicGs2Credential& gs2Credential) :
+    explicit Gs2WebSocketSession(BasicGs2Credential gs2Credential) :
         Gs2Session(gs2Credential),
         m_State(State::Idle),
         m_WebSocket(*this)
     {}
 
-    Gs2WebSocketSession(const BasicGs2Credential& gs2Credential, const Region& region) :
+    Gs2WebSocketSession(BasicGs2Credential gs2Credential, Region region) :
         Gs2Session(gs2Credential, region),
         m_State(State::Idle),
         m_WebSocket(*this)
     {}
 
-    Gs2WebSocketSession(const BasicGs2Credential& gs2Credential, const Char region[]) :
+    Gs2WebSocketSession(BasicGs2Credential gs2Credential, const Char region[]) :
         Gs2Session(gs2Credential, region),
         m_State(State::Idle),
         m_WebSocket(*this)

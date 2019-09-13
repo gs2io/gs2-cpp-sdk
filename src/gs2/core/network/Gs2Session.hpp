@@ -81,7 +81,7 @@ private:
 
     State m_State;
 
-    const BasicGs2Credential& m_Gs2Credential;
+    BasicGs2Credential m_Gs2Credential;
     Region m_Region;
 
     optional<StringHolder> m_ProjectToken;
@@ -126,19 +126,19 @@ protected:
     detail::Gs2SessionTask* findGs2SessionTask(const detail::Gs2SessionTaskId& gs2SessionTaskId);
 
 public:
-    explicit Gs2Session(const BasicGs2Credential& gs2Credential) :
+    explicit Gs2Session(BasicGs2Credential gs2Credential) :
         m_State(State::Idle),
         m_Gs2Credential(gs2Credential),
         m_Region(Region::AP_NORTHEAST_1)
     {}
 
-    Gs2Session(const BasicGs2Credential& gs2Credential, const Region& region) :
+    Gs2Session(BasicGs2Credential gs2Credential, Region region) :
         m_State(State::Idle),
         m_Gs2Credential(gs2Credential),
         m_Region(region)
     {}
 
-    Gs2Session(const BasicGs2Credential& gs2Credential, const Char region[]) :
+    Gs2Session(BasicGs2Credential gs2Credential, StringHolder region) :
         m_State(State::Idle),
         m_Gs2Credential(gs2Credential),
         m_Region(region)

@@ -46,17 +46,17 @@ private:
     std::atomic<bool> m_IsOpenCancelled;
 
 public:
-    explicit Gs2RestSession(const BasicGs2Credential& gs2Credential) :
+    explicit Gs2RestSession(BasicGs2Credential gs2Credential) :
         Gs2Session(gs2Credential),
         m_IsOpenCancelled(false)
     {}
 
-    Gs2RestSession(const BasicGs2Credential& gs2Credential, const Region& region) :
+    Gs2RestSession(BasicGs2Credential gs2Credential, Region region) :
         Gs2Session(gs2Credential, region),
         m_IsOpenCancelled(false)
     {}
 
-    Gs2RestSession(const BasicGs2Credential& gs2Credential, const Char region[]) :
+    Gs2RestSession(BasicGs2Credential gs2Credential, const Char region[]) :
         Gs2Session(gs2Credential, region),
         m_IsOpenCancelled(false)
     {}
