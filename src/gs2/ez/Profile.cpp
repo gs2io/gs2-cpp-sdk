@@ -36,7 +36,7 @@ void Profile::finalize(FinalizeCallbackType callback)
     m_Gs2Session.close(callback);
 }
 
-void Profile::login(LoginCallbackType callback, IAuthenticator& authenticator)
+void Profile::login(IAuthenticator& authenticator, LoginCallbackType callback)
 {
     authenticator.authentication(
         [callback](gs2::AsyncResult<gs2::auth::AccessToken> r)

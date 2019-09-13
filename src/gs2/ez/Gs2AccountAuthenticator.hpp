@@ -44,6 +44,9 @@ public:
         StringHolder password
     );
 
+    Gs2AccountAuthenticator(const Gs2AccountAuthenticator&) = default;
+    Gs2AccountAuthenticator(Gs2AccountAuthenticator&&) = default;
+
     ~Gs2AccountAuthenticator() GS2_OVERRIDE = default;
 
     void authentication(AuthenticationCallback callback) GS2_OVERRIDE;

@@ -57,9 +57,12 @@ void Gs2AccountAuthenticator::authentication(AuthenticationCallback callback)
     authenticationRequest.setUserId(m_UserId);
     authenticationRequest.setPassword(m_Password);
     authenticationRequest.setKeyId(m_KeyId);
+    auto& gs2Session = m_Gs2Session;
+    auto& userId = m_UserId;
+    auto& keyId = m_KeyId;
     accountClient.authentication(
         authenticationRequest,
-        [this, callback](gs2::account::AsyncAuthenticationResult asyncAuthenticationResult)
+        [callback, &gs2Session, userId, keyId](gs2::account::AsyncAuthenticationResult asyncAuthenticationResult)
         {
             if (asyncAuthenticationResult.getError())
             {
@@ -68,10 +71,10 @@ void Gs2AccountAuthenticator::authentication(AuthenticationCallback callback)
             else if (asyncAuthenticationResult.getResult() && isValid(*asyncAuthenticationResult.getResult()))
             {
                 auto& authenticationResult = *asyncAuthenticationResult.getResult();
-                gs2::auth::Gs2AuthWebSocketClient authClient(m_Gs2Session);
+                gs2::auth::Gs2AuthWebSocketClient authClient(gs2Session);
                 gs2::auth::LoginBySignatureRequest loginBySignatureRequest;
-                loginBySignatureRequest.setUserId(m_UserId);
-                loginBySignatureRequest.setKeyId(m_KeyId);
+                loginBySignatureRequest.setUserId(userId);
+                loginBySignatureRequest.setKeyId(keyId);
                 loginBySignatureRequest.setBody(*authenticationResult.getBody());
                 loginBySignatureRequest.setSignature(*authenticationResult.getSignature());
                 authClient.loginBySignature(

@@ -43,6 +43,8 @@ public:
 private:
     Profile(IReopener* pReopener, StringHolder&& clientId, StringHolder&& clientSecret);
 
+    void login(IAuthenticator& authenticator, LoginCallbackType callback);
+
 public:
     template<class Reopener>
     Profile(StringHolder clientId, StringHolder clientSecret, Reopener reopener) :
@@ -53,7 +55,11 @@ public:
 
     void finalize(FinalizeCallbackType callback);
 
-    void login(LoginCallbackType callback, IAuthenticator& authenticator);
+    template<class Authenticator>
+    void login(LoginCallbackType callback, Authenticator authenticator)
+    {
+        login(authenticator, std::move(callback));
+    }
 
     const Gs2WebSocketSession& getGs2Session() const
     {
