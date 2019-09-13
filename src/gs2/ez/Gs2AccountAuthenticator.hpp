@@ -44,6 +44,8 @@ public:
         StringHolder password
     );
 
+    ~Gs2AccountAuthenticator() GS2_OVERRIDE = default;
+
     void authentication(AuthenticationCallback callback) GS2_OVERRIDE;
 };
 

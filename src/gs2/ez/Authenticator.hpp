@@ -30,6 +30,8 @@ public:
     typedef std::function<void(gs2::AsyncResult<gs2::auth::AccessToken>)> AuthenticationCallback;
 
 public:
+    virtual ~IAuthenticator() = default;
+
     virtual void authentication(AuthenticationCallback callback) = 0;
 };
 
