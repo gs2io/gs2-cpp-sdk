@@ -24,7 +24,7 @@ GS2_START_OF_NAMESPACE
  * @param clientId クライアントID
  * @param clientSecret クライアントシークレット
  */
-BasicGs2Credential::BasicGs2Credential(const Char clientId[], const Char clientSecret[]) :
+BasicGs2Credential::BasicGs2Credential(StringHolder clientId, StringHolder clientSecret) :
     IGs2Credential(),
     m_ClientId(clientId), 
     m_ClientSecret(clientSecret)

@@ -38,8 +38,10 @@ public:
      * @param clientId クライアントID
      * @param clientSecret クライアントシークレット
      */
-    BasicGs2Credential(const Char clientId[], const Char clientSecret[]);
+    BasicGs2Credential(StringHolder clientId, StringHolder clientSecret);
 
+    BasicGs2Credential(const BasicGs2Credential& basicGs2Credential) = default;
+    BasicGs2Credential(BasicGs2Credential&& basicGs2Credential) = default;
     ~BasicGs2Credential() GS2_OVERRIDE = default;
 
     /**
