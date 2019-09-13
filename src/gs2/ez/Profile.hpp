@@ -22,6 +22,7 @@
 #include "../core/model/BasicGs2Credential.hpp"
 #include "../core/network/Gs2WebSocketSession.hpp"
 #include "GameSession.hpp"
+#include <memory>
 
 namespace gs2 { namespace ez {
 
@@ -31,8 +32,7 @@ class IAuthenticator;
 class Profile : public gs2::Gs2Object
 {
 private:
-    IReopener& m_Reopener;
-    BasicGs2Credential m_Credential;
+    std::unique_ptr<IReopener> m_pReopener;
     Gs2WebSocketSession m_Gs2Session;
 
 public:
@@ -40,8 +40,14 @@ public:
     typedef std::function<void()> FinalizeCallbackType;
     typedef std::function<void(gs2::AsyncResult<GameSession>)> LoginCallbackType;
 
+private:
+    Profile(IReopener* pReopener, StringHolder&& clientId, StringHolder&& clientSecret);
+
 public:
-    Profile(const Char clientId[], const Char clientSecret[], IReopener& reopener);
+    template<class Reopener>
+    Profile(StringHolder clientId, StringHolder clientSecret, Reopener reopener) :
+        Profile(new Reopener(std::move(reopener)), std::move(clientId), std::move(clientSecret))
+    {}
 
     void initialize(InitializeCallbackType callback);
 

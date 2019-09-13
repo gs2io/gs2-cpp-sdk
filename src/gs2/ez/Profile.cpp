@@ -20,16 +20,15 @@
 
 namespace gs2 { namespace ez {
 
-Profile::Profile(const Char clientId[], const Char clientSecret[], IReopener& reopener) :
-    m_Reopener(reopener),
-    m_Credential(clientId, clientSecret),
-    m_Gs2Session(m_Credential)
+Profile::Profile(IReopener* pReopener, StringHolder&& clientId, StringHolder&& clientSecret) :
+    m_pReopener(pReopener),
+    m_Gs2Session(BasicGs2Credential(std::move(clientId), std::move(clientSecret)))
 {
 }
 
 void Profile::initialize(InitializeCallbackType callback)
 {
-    m_Reopener.reopen(callback, m_Gs2Session);
+    m_pReopener->reopen(callback, m_Gs2Session);
 }
 
 void Profile::finalize(FinalizeCallbackType callback)
