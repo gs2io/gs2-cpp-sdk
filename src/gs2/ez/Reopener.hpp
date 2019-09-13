@@ -30,6 +30,7 @@ namespace ez {
 class IReopener
 {
 public:
+    virtual ~IReopener() = default;
     virtual void reopen(gs2::Gs2Session::OpenCallbackType callback, gs2::Gs2WebSocketSession& session) = 0;
 };
 
