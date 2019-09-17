@@ -33,6 +33,7 @@ GS2_START_OF_NAMESPACE
 
 namespace detail {
     class Gs2SessionTask;
+    class Gs2Response;
 }
 
 class Gs2Session : public Gs2Object
@@ -98,6 +99,8 @@ private:
     static void triggerCloseCallback(detail::IntrusiveList<CloseCallbackHolder>& closeCallbackHolderList);
     static void triggerCancelTasksCallback(detail::IntrusiveList<detail::Gs2SessionTask>& gs2SessionTaskList, Gs2ClientException gs2ClientException);
 
+    detail::Gs2SessionTask* findGs2SessionTask(const detail::Gs2SessionTaskId& gs2SessionTaskId);
+
     inline void enterStateLock() { m_Mutex.lock(); }
     inline void exitStateLock() { m_Mutex.unlock(); };
 
@@ -123,7 +126,8 @@ protected:
     void closeCallback(Gs2ClientException& gs2ClientException, bool isCloseInstant);
     void cancelTasksCallback(Gs2ClientException& gs2ClientException);
 
-    detail::Gs2SessionTask* findGs2SessionTask(const detail::Gs2SessionTaskId& gs2SessionTaskId);
+    // Gs2SessionTask からも利用
+    void onResponse(const detail::Gs2SessionTaskId& gs2SessionTaskId, detail::Gs2Response& gs2Resoponse);
 
 public:
     explicit Gs2Session(BasicGs2Credential gs2Credential) :

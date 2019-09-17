@@ -26,6 +26,11 @@ const optional<StringHolder>& Gs2SessionTask::getProjectToken() const
     return m_Gs2Session.getProjectToken();
 }
 
+void Gs2SessionTask::onResponse(Gs2Response& gs2Response)
+{
+    m_Gs2Session.onResponse(m_Gs2SessionTaskId, gs2Response);
+}
+
 void Gs2SessionTask::callback(Gs2Response& gs2Response)
 {
     triggerUserCallback(gs2Response);

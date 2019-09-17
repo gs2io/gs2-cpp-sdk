@@ -33,9 +33,10 @@ private:
     {
     private:
         Gs2RestSessionTaskBase& m_Gs2StandardHttpTaskBase;
+
         void callback(Gs2RestResponse& gs2RestResponse) GS2_OVERRIDE
         {
-            m_Gs2StandardHttpTaskBase.callback(gs2RestResponse);
+            m_Gs2StandardHttpTaskBase.onResponse(gs2RestResponse);
         }
 
     public:

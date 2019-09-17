@@ -56,6 +56,21 @@ void Gs2Session::triggerCancelTasksCallback(detail::IntrusiveList<detail::Gs2Ses
     }
 }
 
+detail::Gs2SessionTask* Gs2Session::findGs2SessionTask(const detail::Gs2SessionTaskId& gs2SessionTaskId)
+{
+    std::lock_guard<std::mutex> lock(m_Mutex);
+
+    for (auto* p = m_Gs2SessionTaskList.getHead(); p != nullptr; p = p->getNext())
+    {
+        if (p->m_Gs2SessionTaskId == gs2SessionTaskId)
+        {
+            return p;
+        }
+    }
+
+    return nullptr;
+}
+
 void Gs2Session::changeStateToIdle()
 {
     // 外部要因による切断がありうるので、どの状態からでも遷移しうる
@@ -366,6 +381,20 @@ void Gs2Session::execute(detail::Gs2SessionTask &gs2SessionTask)
     }
 }
 
+void Gs2Session::onResponse(const detail::Gs2SessionTaskId& gs2SessionTaskId, detail::Gs2Response& gs2Response)
+{
+    auto* pGs2SessionTask = findGs2SessionTask(gs2SessionTaskId);
+    if (pGs2SessionTask != nullptr)
+    {
+        // API 応答
+        pGs2SessionTask->callback(gs2Response);
+    }
+    else
+    {
+        // このようなメッセージは届かないはず
+    }
+}
+
 void Gs2Session::notifyComplete(detail::Gs2SessionTask& gs2SessionTask)
 {
     enterStateLock();
@@ -380,21 +409,6 @@ void Gs2Session::notifyComplete(detail::Gs2SessionTask& gs2SessionTask)
     {
         keepCurrentState();
     }
-}
-
-detail::Gs2SessionTask* Gs2Session::findGs2SessionTask(const detail::Gs2SessionTaskId& gs2SessionTaskId)
-{
-    std::lock_guard<std::mutex> lock(m_Mutex);
-
-    for (auto p = m_Gs2SessionTaskList.getHead(); p != nullptr; p = p->getNext())
-    {
-        if (p->m_Gs2SessionTaskId == gs2SessionTaskId)
-        {
-            return p;
-        }
-    }
-
-    return nullptr;
 }
 
 GS2_END_OF_NAMESPACE

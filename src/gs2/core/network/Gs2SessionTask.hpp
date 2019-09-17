@@ -50,6 +50,9 @@ protected:
         return m_Gs2SessionTaskId;
     }
 
+    // レスポンスが直接セッションに届かない派生クラスでは、この関数でセッションにレスポンスの到着を伝える
+    void onResponse(Gs2Response& gs2Response);
+
     const optional<StringHolder>& getProjectToken() const;
 
 private:

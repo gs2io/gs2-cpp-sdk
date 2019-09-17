@@ -118,16 +118,7 @@ void Gs2WebSocketSession::WebSocket::onMessage(detail::Gs2WebSocketResponse& gs2
         }
         else
         {
-            auto* pGs2SessionTask = m_Gs2WebSocketSession.findGs2SessionTask(gs2WebSocketResponse.getGs2SessionTaskId());
-            if (pGs2SessionTask != nullptr)
-            {
-                // API 応答
-                pGs2SessionTask->callback(gs2WebSocketResponse);
-            }
-            else
-            {
-                // このようなメッセージは届かないはず
-            }
+            m_Gs2WebSocketSession.onResponse(gs2WebSocketResponse.getGs2SessionTaskId(), gs2WebSocketResponse);
         }
         break;
     }
