@@ -28,7 +28,7 @@ Gs2Session::~Gs2Session()
 
 void Gs2Session::triggerOpenCallback(detail::IntrusiveList<OpenCallbackHolder>& openCallbackHolderList, AsyncResult<void> result)
 {
-    while (auto* pOpenCallbackHolder = openCallbackHolderList.pop())
+    while (auto* pOpenCallbackHolder = openCallbackHolderList.dequeue())
     {
         pOpenCallbackHolder->callback()(result);
         delete pOpenCallbackHolder;
@@ -37,7 +37,7 @@ void Gs2Session::triggerOpenCallback(detail::IntrusiveList<OpenCallbackHolder>& 
 
 void Gs2Session::triggerCloseCallback(detail::IntrusiveList<CloseCallbackHolder>& closeCallbackHolderList)
 {
-    while (auto* pCloseCallbackHolder = closeCallbackHolderList.pop())
+    while (auto* pCloseCallbackHolder = closeCallbackHolderList.dequeue())
     {
         pCloseCallbackHolder->callback()();
         delete pCloseCallbackHolder;
@@ -49,7 +49,7 @@ void Gs2Session::triggerCancelTasksCallback(detail::IntrusiveList<detail::Gs2Ses
     detail::Gs2ClientErrorResponse clientErrorResponse;
     clientErrorResponse.getGs2ClientException() = gs2ClientException;   // TODO: move?
 
-    while (auto* pGs2SessionTask = gs2SessionTaskList.pop())
+    while (auto* pGs2SessionTask = gs2SessionTaskList.dequeue())
     {
         pGs2SessionTask->triggerUserCallback(clientErrorResponse);  // notifyComplete() は不要なのでユーザコールバックのみ呼ぶ
         delete pGs2SessionTask;
@@ -185,7 +185,7 @@ void Gs2Session::open(OpenCallbackType callback)
     switch (m_State)
     {
     case State::Idle:
-        m_OpenCallbackHolderList.push(*new OpenCallbackHolder(std::move(callback)));
+        m_OpenCallbackHolderList.enqueue(*new OpenCallbackHolder(std::move(callback)));
         changeStateToOpening();
         break;
 
@@ -193,7 +193,7 @@ void Gs2Session::open(OpenCallbackType callback)
     case State::CancellingOpen:
     case State::CancellingTasks:    // 切断処理が終わってから実行される
     case State::Closing:            // 切断処理が終わってから実行される
-        m_OpenCallbackHolderList.push(*new OpenCallbackHolder(std::move(callback)));
+        m_OpenCallbackHolderList.enqueue(*new OpenCallbackHolder(std::move(callback)));
         keepCurrentState();
         break;
 
@@ -277,7 +277,7 @@ void Gs2Session::close(CloseCallbackType callback)
     }
     else
     {
-        m_CloseCallbackHolderList.push(*new CloseCallbackHolder(std::move(callback)));
+        m_CloseCallbackHolderList.enqueue(*new CloseCallbackHolder(std::move(callback)));
 
         switch(m_State)
         {
@@ -363,7 +363,7 @@ void Gs2Session::execute(detail::Gs2SessionTask &gs2SessionTask)
 
         gs2SessionTask.prepareImpl();
 
-        m_Gs2SessionTaskList.push(gs2SessionTask);
+        m_Gs2SessionTaskList.enqueue(gs2SessionTask);
 
         keepCurrentState();
 

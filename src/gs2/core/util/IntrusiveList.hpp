@@ -63,17 +63,25 @@ class IntrusiveListBase : public Gs2Object
 {
 private:
     IntrusiveListItemBase* m_pHead;
+    IntrusiveListItemBase* m_pTail;     // unreliable when m_pHead == nullptr
 
 protected:
-    void push(IntrusiveListItemBase& item)
+    void enqueue(IntrusiveListItemBase& item)
     {
         assert(item.m_pNext == nullptr);
 
-        item.m_pNext = m_pHead;
-        m_pHead = &item;
+        if (m_pHead == nullptr)     // also m_pTail == nullptr
+        {
+            m_pHead = &item;
+        }
+        else
+        {
+            m_pTail->m_pNext = &item;
+        }
+        m_pTail = &item;
     }
 
-    IntrusiveListItemBase* pop()
+    IntrusiveListItemBase* dequeue()
     {
         auto pHead = m_pHead;
 
@@ -112,14 +120,16 @@ protected:
 public:
     IntrusiveListBase() :
         Gs2Object(),
-        m_pHead(nullptr)
+        m_pHead(nullptr),
+        m_pTail(nullptr)
     {}
 
     IntrusiveListBase(const IntrusiveListBase&) = delete;
 
     IntrusiveListBase(IntrusiveListBase&& intrusiveListBase) :
         Gs2Object(),
-        m_pHead(intrusiveListBase.m_pHead)
+        m_pHead(intrusiveListBase.m_pHead),
+        m_pTail(intrusiveListBase.m_pTail)
     {
         intrusiveListBase.m_pHead = nullptr;
     }
@@ -144,14 +154,14 @@ public:
 
     ~IntrusiveList() = default;
 
-    void push(T& item)
+    void enqueue(T& item)
     {
-        IntrusiveListBase::push(item);
+        IntrusiveListBase::enqueue(item);
     }
 
-    T* pop()
+    T* dequeue()
     {
-        return static_cast<T*>(IntrusiveListBase::pop());
+        return static_cast<T*>(IntrusiveListBase::dequeue());
     }
 
     T* remove(T& item)
