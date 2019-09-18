@@ -31,7 +31,15 @@ namespace detail {
 
 class Gs2Response;
 
-class Gs2SessionTask : public Gs2Object, public detail::IntrusiveListItem<Gs2SessionTask>
+class Gs2Task : public Gs2Object, public detail::IntrusiveListItem<Gs2Task>
+{
+public:
+    virtual ~Gs2Task() = default;
+
+    virtual void triggerCallback() = 0;
+};
+
+class Gs2SessionTask : public Gs2Task
 {
     friend gs2::Gs2Session;
 
@@ -56,8 +64,6 @@ protected:
     const optional<StringHolder>& getProjectToken() const;
 
 private:
-    virtual void triggerUserCallback(Gs2Response& gs2Response) = 0;
-
     // Gs2Session::execute() から利用
     virtual void prepareImpl() = 0;     // ロックの内側から呼ばれるので m_Gs2Session のプライベートメンバに安全にアクセス可能
     virtual void executeImpl() = 0;     // ロックの外側から呼ばれるので直接コールバックを呼び出し可能
@@ -69,7 +75,8 @@ public:
 
     virtual ~Gs2SessionTask() = default;
 
-    void callback(Gs2Response& gs2Response);
+    virtual void setResult(Gs2Response& gs2Response) = 0;
+    virtual void setResult(Gs2ClientException gs2ClientException) = 0;
 
     void execute();
 };

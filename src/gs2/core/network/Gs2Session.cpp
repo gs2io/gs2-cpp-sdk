@@ -22,49 +22,55 @@
 
 GS2_START_OF_NAMESPACE
 
-Gs2Session::~Gs2Session()
+void Gs2Session::Lock::unlock()
 {
-}
+    auto completeTaskList = std::move(m_Gs2Session.m_CompleteTaskList);
 
-void Gs2Session::triggerOpenCallback(detail::IntrusiveList<OpenCallbackHolder>& openCallbackHolderList, AsyncResult<void> result)
-{
-    while (auto* pOpenCallbackHolder = openCallbackHolderList.dequeue())
+    m_Gs2Session.m_Mutex.unlock();
+    m_IsLockedByMe = false;
+
+    while (auto* pCompleteTask = completeTaskList.dequeue())
     {
-        pOpenCallbackHolder->callback()(result);
-        delete pOpenCallbackHolder;
+        pCompleteTask->triggerCallback();
+        delete pCompleteTask;
     }
 }
 
-void Gs2Session::triggerCloseCallback(detail::IntrusiveList<CloseCallbackHolder>& closeCallbackHolderList)
+void Gs2Session::completeOpenTasks(AsyncOpenResult asyncOpenResult)
 {
-    while (auto* pCloseCallbackHolder = closeCallbackHolderList.dequeue())
+    while (auto* pOpenTask = m_OpenTaskList.dequeue())
     {
-        pCloseCallbackHolder->callback()();
-        delete pCloseCallbackHolder;
+        pOpenTask->setResult(asyncOpenResult);
+        m_CompleteTaskList.enqueue(*pOpenTask);
     }
 }
 
-void Gs2Session::triggerCancelTasksCallback(detail::IntrusiveList<detail::Gs2SessionTask>& gs2SessionTaskList, Gs2ClientException gs2ClientException)
+void Gs2Session::completeCloseTasks()
 {
-    detail::Gs2ClientErrorResponse clientErrorResponse;
-    clientErrorResponse.getGs2ClientException() = gs2ClientException;   // TODO: move?
-
-    while (auto* pGs2SessionTask = gs2SessionTaskList.dequeue())
+    while (auto* pCloseTask = m_CloseTaskList.dequeue())
     {
-        pGs2SessionTask->triggerUserCallback(clientErrorResponse);  // notifyComplete() は不要なのでユーザコールバックのみ呼ぶ
-        delete pGs2SessionTask;
+        m_CompleteTaskList.enqueue(*pCloseTask);
     }
 }
 
-detail::Gs2SessionTask* Gs2Session::findGs2SessionTask(const detail::Gs2SessionTaskId& gs2SessionTaskId)
+void Gs2Session::completeSessionTasks(Gs2ClientException gs2ClientException)
 {
-    std::lock_guard<std::mutex> lock(m_Mutex);
+    while (auto* pGs2SessionTask = static_cast<detail::Gs2SessionTask*>(m_Gs2SessionTaskList.dequeue()))
+    {
+        pGs2SessionTask->setResult(gs2ClientException);
+        m_CompleteTaskList.enqueue(*pGs2SessionTask);
+    }
+}
 
+detail::Gs2SessionTask* Gs2Session::removeGs2SessionTask(const detail::Gs2SessionTaskId& gs2SessionTaskId)
+{
     for (auto* p = m_Gs2SessionTaskList.getHead(); p != nullptr; p = p->getNext())
     {
-        if (p->m_Gs2SessionTaskId == gs2SessionTaskId)
+        auto* pGs2SessionTask = static_cast<detail::Gs2SessionTask*>(p);
+        if (pGs2SessionTask->m_Gs2SessionTaskId == gs2SessionTaskId)
         {
-            return p;
+            m_Gs2SessionTaskList.remove(*p);
+            return pGs2SessionTask;
         }
     }
 
@@ -75,78 +81,61 @@ void Gs2Session::changeStateToIdle()
 {
     // 外部要因による切断がありうるので、どの状態からでも遷移しうる
 
-    assert(m_OpenCallbackHolderList.isEmpty());     // すべてコールバックされ（るために取り出され）ているべき
-    assert(m_CloseCallbackHolderList.isEmpty());    // すべてコールバックされ（るために取り出され）ているべき
+    assert(m_OpenTaskList.isEmpty());     // すべてコールバックされ（るために取り出され）ているべき
+    assert(m_CloseTaskList.isEmpty());    // すべてコールバックされ（るために取り出され）ているべき
     assert(m_Gs2SessionTaskList.isEmpty());         // Available になる前に登録はできない
 
     m_State = State::Idle;
-
-    exitStateLock();
 }
 
 void Gs2Session::changeStateToOpening()
 {
     assert(m_State == State::Idle || m_State == State::Closing);
 
-    assert(!m_OpenCallbackHolderList.isEmpty());    // open() タスクが登録されているときのみ遷移する
-    assert(m_CloseCallbackHolderList.isEmpty());    // すべてコールバックされ（るために取り出され）ているべき
+    assert(!m_OpenTaskList.isEmpty());    // open() タスクが登録されているときのみ遷移する
+    assert(m_CloseTaskList.isEmpty());    // すべてコールバックされ（るために取り出され）ているべき
     assert(m_Gs2SessionTaskList.isEmpty());         // Available になる前に登録はできない
 
     m_State = State::Opening;
 
-    auto isOpenInstant = openImpl();
-
-    if (isOpenInstant)
-    {
-        // Idle か Available に遷移しているはずだけど、ロックから出てしまっているので検証はしない
-    }
-    else
-    {
-        exitStateLock();
-    }
+    openImpl();
 }
 
 void Gs2Session::changeStateToCancellingOpen()
 {
     assert(m_State == State::Opening);
 
-    assert(!m_OpenCallbackHolderList.isEmpty());    // Opening は open() タスクが必ず存在する
-    assert(!m_CloseCallbackHolderList.isEmpty());   // 接続処理中の close() によってのみ遷移する
+    assert(!m_OpenTaskList.isEmpty());    // Opening は open() タスクが必ず存在する
+    assert(!m_CloseTaskList.isEmpty());   // 接続処理中の close() によってのみ遷移する
     assert(m_Gs2SessionTaskList.isEmpty());         // Available になる前に登録はできない
 
     m_State = State::CancellingOpen;
 
     cancelOpenImpl();
-
-    exitStateLock();
 }
 
 void Gs2Session::changeStateToAvailable(StringHolder&& projectToken)
 {
     assert(m_State == State::Opening);
 
-    assert(m_OpenCallbackHolderList.isEmpty());     // すべてコールバックされ（るために取り出され）ているべき
-    assert(m_CloseCallbackHolderList.isEmpty());    // close() が呼ばれている場合は Closing に遷移しなければならない
+    assert(m_OpenTaskList.isEmpty());     // すべてコールバックされ（るために取り出され）ているべき
+    assert(m_CloseTaskList.isEmpty());    // close() が呼ばれている場合は Closing に遷移しなければならない
     assert(m_Gs2SessionTaskList.isEmpty());         // Available になる前に登録はできない
 
     m_ProjectToken = std::move(projectToken);
 
     m_State = State::Available;
-
-    exitStateLock();
 }
 
 void Gs2Session::changeStateToCancellingTasks()
 {
     assert(m_State == State::Available);
 
-    assert(m_OpenCallbackHolderList.isEmpty());     // Available のあいだの open() は即時返却される
+    assert(m_OpenTaskList.isEmpty());     // Available のあいだの open() は即時返却される
     // 外部要因による切断の場合に close() を呼ばなくても遷移することがある
     assert(!m_Gs2SessionTaskList.isEmpty());        // キャンセルしたいタスクがあるから遷移するのである
 
     m_State = State::CancellingTasks;
-
-    exitStateLock();
 }
 
 void Gs2Session::changeStateToClosing()
@@ -161,31 +150,17 @@ void Gs2Session::changeStateToClosing()
 
     m_State = State::Closing;
 
-    bool isCloseInstant = closeImpl();
-
-    if (isCloseInstant)
-    {
-        // Idle か Opening に遷移しているはずだけど、ロックから出てしまっているので検証はしない
-    }
-    else
-    {
-        exitStateLock();
-    }
-}
-
-void Gs2Session::keepCurrentState()
-{
-    exitStateLock();
+    closeImpl();
 }
 
 void Gs2Session::open(OpenCallbackType callback)
 {
-    enterStateLock();
+    Lock lock(*this);
 
     switch (m_State)
     {
     case State::Idle:
-        m_OpenCallbackHolderList.enqueue(*new OpenCallbackHolder(std::move(callback)));
+        m_OpenTaskList.enqueue(*new OpenTask(std::move(callback)));
         changeStateToOpening();
         break;
 
@@ -193,26 +168,22 @@ void Gs2Session::open(OpenCallbackType callback)
     case State::CancellingOpen:
     case State::CancellingTasks:    // 切断処理が終わってから実行される
     case State::Closing:            // 切断処理が終わってから実行される
-        m_OpenCallbackHolderList.enqueue(*new OpenCallbackHolder(std::move(callback)));
-        keepCurrentState();
+        m_OpenTaskList.enqueue(*new OpenTask(std::move(callback)));
         break;
 
     case State::Available:
-        keepCurrentState();
+        lock.unlock();
         AsyncResult<void> result;
         callback(result);
         break;
     }
 }
 
-void Gs2Session::openCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException, bool isOpenInstant)
+void Gs2Session::openCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException, bool isAlreadyLocked)
 {
     // 接続完了コールバック
 
-    if (!isOpenInstant)
-    {
-        enterStateLock();
-    }
+    Lock lock(*this, isAlreadyLocked);
 
     if (pClientException == nullptr)
     {
@@ -220,9 +191,9 @@ void Gs2Session::openCallback(StringHolder* pProjectToken, Gs2ClientException* p
 
         if (pProjectToken != nullptr)
         {
-            detail::IntrusiveList<OpenCallbackHolder> openCallbackHolderList(std::move(m_OpenCallbackHolderList));
+            completeOpenTasks(AsyncOpenResult());
 
-            if (m_CloseCallbackHolderList.isEmpty())
+            if (m_CloseTaskList.isEmpty())
             {
                 changeStateToAvailable(std::move(*pProjectToken));
             }
@@ -230,54 +201,46 @@ void Gs2Session::openCallback(StringHolder* pProjectToken, Gs2ClientException* p
             {
                 changeStateToClosing();
             }
-
-            Gs2Session::triggerOpenCallback(openCallbackHolderList, AsyncResult<void>());
         }
         else
         {
             // 応答からプロジェクトトークンが取得できなかった場合
             // ただし、ここには来ないように派生クラスを実装しなければならない
 
-            detail::IntrusiveList<OpenCallbackHolder> openCallbackHolderList(std::move(m_OpenCallbackHolderList));
-            detail::IntrusiveList<CloseCallbackHolder> closeCallbackHolderList(std::move(m_CloseCallbackHolderList));
-
-            changeStateToIdle();
-
             Gs2ClientException gs2ClientException;
             gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
 
-            Gs2Session::triggerOpenCallback(openCallbackHolderList, AsyncResult<void>(std::move(gs2ClientException)));
-            Gs2Session::triggerCloseCallback(closeCallbackHolderList);
+            Gs2Session::completeOpenTasks(AsyncOpenResult(std::move(gs2ClientException)));
+            Gs2Session::completeCloseTasks();
+
+            changeStateToIdle();
         }
     }
     else
     {
         // ログイン処理がエラーになった場合
 
-        detail::IntrusiveList<OpenCallbackHolder> openCallbackHolderList(std::move(m_OpenCallbackHolderList));
-        detail::IntrusiveList<CloseCallbackHolder> closeCallbackHolderList(std::move(m_CloseCallbackHolderList));
+        Gs2Session::completeOpenTasks(AsyncOpenResult(*pClientException));
+        Gs2Session::completeCloseTasks();
 
         changeStateToIdle();
-
-        Gs2Session::triggerOpenCallback(openCallbackHolderList, AsyncResult<void>(*pClientException));
-        Gs2Session::triggerCloseCallback(closeCallbackHolderList);
     }
 }
 
 void Gs2Session::close(CloseCallbackType callback)
 {
-    enterStateLock();
+    Lock lock(*this);
 
     if (m_State == State::Idle)
     {
         // 即コールバック
-        keepCurrentState();
+        lock.unlock();
 
         callback();
     }
     else
     {
-        m_CloseCallbackHolderList.enqueue(*new CloseCallbackHolder(std::move(callback)));
+        m_CloseTaskList.enqueue(*new CloseTask(std::move(callback)));
 
         switch(m_State)
         {
@@ -300,7 +263,6 @@ void Gs2Session::close(CloseCallbackType callback)
         case State::CancellingOpen:
         case State::CancellingTasks:
         case State::Closing:
-            keepCurrentState();
             break;
         }
     }
@@ -308,23 +270,25 @@ void Gs2Session::close(CloseCallbackType callback)
 
 void Gs2Session::setOnClose(CloseCallbackType callback)
 {
-    std::lock_guard<std::mutex> lock(m_Mutex);
+    Lock lock(*this);
 
     m_OnClose = callback;
 }
 
-void Gs2Session::closeCallback(Gs2ClientException& gs2ClientException, bool isCloseInstant)
+void Gs2Session::closeCallback(Gs2ClientException& gs2ClientException, bool isAlreadyLocked)
 {
-    if (!isCloseInstant)
+    Lock lock(*this, isAlreadyLocked);
+
+    completeSessionTasks(gs2ClientException);
+    completeCloseTasks();
+
+    if (m_OnClose)
     {
-        enterStateLock();
+        auto onClose = m_OnClose;
+        m_CompleteTaskList.enqueue(*new CloseTask(std::move(onClose)));
     }
 
-    auto onClose = m_OnClose;
-    detail::IntrusiveList<detail::Gs2SessionTask> gs2SessionTaskList(std::move(m_Gs2SessionTaskList));
-    detail::IntrusiveList<CloseCallbackHolder> closeCallbackHolderList(std::move(m_CloseCallbackHolderList));
-
-    if (m_OpenCallbackHolderList.isEmpty())
+    if (m_OpenTaskList.isEmpty())
     {
         changeStateToIdle();
     }
@@ -332,30 +296,18 @@ void Gs2Session::closeCallback(Gs2ClientException& gs2ClientException, bool isCl
     {
         changeStateToOpening();
     }
-
-    Gs2Session::triggerCancelTasksCallback(gs2SessionTaskList, gs2ClientException);
-
-    if (onClose)
-    {
-        onClose();
-    }
-    Gs2Session::triggerCloseCallback(closeCallbackHolderList);
 }
 
-void Gs2Session::cancelTasksCallback(Gs2ClientException& gs2ClientException)
+void Gs2Session::cancelTasksCallback(Gs2ClientException& gs2ClientException, bool isAlreadyLocked)
 {
-    enterStateLock();
+    Lock lock(*this, isAlreadyLocked);
 
-    auto gs2SessionTaskList = std::move(m_Gs2SessionTaskList);
-
-    keepCurrentState();
-
-    triggerCancelTasksCallback(gs2SessionTaskList, gs2ClientException);
+    completeSessionTasks(gs2ClientException);
 }
 
 void Gs2Session::execute(detail::Gs2SessionTask &gs2SessionTask)
 {
-    enterStateLock();
+    Lock lock(*this);
 
     if (m_State == State::Available)
     {
@@ -365,49 +317,40 @@ void Gs2Session::execute(detail::Gs2SessionTask &gs2SessionTask)
 
         m_Gs2SessionTaskList.enqueue(gs2SessionTask);
 
-        keepCurrentState();
+        lock.unlock();
 
         gs2SessionTask.executeImpl();
     }
     else
     {
-        keepCurrentState();
+        lock.unlock();
 
-        detail::Gs2ClientErrorResponse gs2ClientErrorResponse;
-        auto& gs2ClientException = gs2ClientErrorResponse.getGs2ClientException();
-        gs2ClientException.emplace();
-        gs2ClientException->setType(Gs2ClientException::SessionNotOpenException);
-        gs2SessionTask.callback(gs2ClientErrorResponse);
+        Gs2ClientException gs2ClientException;
+        gs2ClientException.setType(Gs2ClientException::SessionNotOpenException);
+        gs2SessionTask.setResult(std::move(gs2ClientException));
+        gs2SessionTask.triggerCallback();
     }
 }
 
 void Gs2Session::onResponse(const detail::Gs2SessionTaskId& gs2SessionTaskId, detail::Gs2Response& gs2Response)
 {
-    auto* pGs2SessionTask = findGs2SessionTask(gs2SessionTaskId);
+    Lock lock(*this);
+
+    auto* pGs2SessionTask = removeGs2SessionTask(gs2SessionTaskId);
     if (pGs2SessionTask != nullptr)
     {
         // API 応答
-        pGs2SessionTask->callback(gs2Response);
+        pGs2SessionTask->setResult(gs2Response);
+        m_CompleteTaskList.enqueue(*pGs2SessionTask);
+
+        if (m_State == State::CancellingTasks && m_Gs2SessionTaskList.isEmpty())
+        {
+            changeStateToClosing();
+        }
     }
     else
     {
         // このようなメッセージは届かないはず
-    }
-}
-
-void Gs2Session::notifyComplete(detail::Gs2SessionTask& gs2SessionTask)
-{
-    enterStateLock();
-
-    m_Gs2SessionTaskList.remove(gs2SessionTask);
-
-    if (m_State == State::CancellingTasks && m_Gs2SessionTaskList.isEmpty())
-    {
-        changeStateToClosing();
-    }
-    else
-    {
-        keepCurrentState();
     }
 }
 

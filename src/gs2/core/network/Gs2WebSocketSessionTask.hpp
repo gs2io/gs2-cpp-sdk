@@ -53,19 +53,30 @@ public:
 
 private:
     CallbackType m_Callback;
-
-    void triggerUserCallback(Gs2Response& gs2Response) GS2_OVERRIDE
-    {
-        T result;
-        gs2Response.exportTo(result.getModel());
-        m_Callback(AsyncResult<T>(std::move(result), std::move(gs2Response.getGs2ClientException())));
-    }
+    AsyncResult<T> m_AsyncResult;
 
 public:
     Gs2WebSocketSessionTask(Gs2WebSocketSession& gs2WebSocketSession, CallbackType& callback) :
         Gs2WebSocketSessionTaskBase(gs2WebSocketSession),
         m_Callback(callback)
     {
+    }
+
+    void triggerCallback() GS2_OVERRIDE
+    {
+        m_Callback(std::move(m_AsyncResult));
+    }
+
+    void setResult(Gs2Response& gs2Response) GS2_OVERRIDE
+    {
+        T result;
+        gs2Response.exportTo(result.getModel());
+        m_AsyncResult = AsyncResult<T>(std::move(result), std::move(gs2Response.getGs2ClientException()));
+    }
+
+    void setResult(Gs2ClientException gs2ClientException) GS2_OVERRIDE
+    {
+        m_AsyncResult = AsyncResult<T>(std::move(gs2ClientException));
     }
 };
 
@@ -78,17 +89,28 @@ public:
 
 private:
     CallbackType m_Callback;
-
-    void triggerUserCallback(Gs2Response& gs2Response) GS2_OVERRIDE
-    {
-        m_Callback(AsyncResult<void>(std::move(gs2Response.getGs2ClientException())));
-    }
+    AsyncResult<void> m_AsyncResult;
 
 public:
     Gs2WebSocketSessionTask(Gs2WebSocketSession& gs2WebSocketSession, CallbackType& callback) :
         Gs2WebSocketSessionTaskBase(gs2WebSocketSession),
         m_Callback(callback)
     {
+    }
+
+    void triggerCallback() GS2_OVERRIDE
+    {
+        m_Callback(std::move(m_AsyncResult));
+    }
+
+    void setResult(Gs2Response& gs2Response) GS2_OVERRIDE
+    {
+        m_AsyncResult = AsyncResult<void>(std::move(gs2Response.getGs2ClientException()));
+    }
+
+    void setResult(Gs2ClientException gs2ClientException) GS2_OVERRIDE
+    {
+        m_AsyncResult = AsyncResult<void>(std::move(gs2ClientException));
     }
 };
 

@@ -25,6 +25,7 @@
 #include "../model/NotificationMessage.hpp"
 #include "../util/IntrusiveList.hpp"
 #include "../util/StringHolder.hpp"
+#include "Gs2SessionTask.hpp"
 #include "Gs2SessionTaskId.hpp"
 #include <functional>
 #include <mutex>
@@ -32,7 +33,6 @@
 GS2_START_OF_NAMESPACE
 
 namespace detail {
-    class Gs2SessionTask;
     class Gs2Response;
 }
 
@@ -41,7 +41,8 @@ class Gs2Session : public Gs2Object
     friend class detail::Gs2SessionTask;
 
 public:
-    typedef std::function<void(AsyncResult<void>)> OpenCallbackType;
+    typedef AsyncResult<void> AsyncOpenResult;
+    typedef std::function<void(AsyncOpenResult)> OpenCallbackType;
     typedef std::function<void()> CloseCallbackType;
     typedef std::function<void(NotificationMessage)> NotificationMessageCallbackType;
 
@@ -55,27 +56,81 @@ private:
         Closing,
     };
 
-    template <typename T>
-    class CallbackHolder : public Gs2Object, public detail::IntrusiveListItem<CallbackHolder<T>>
+    class Lock
     {
     private:
-        T m_Callback;
+        Gs2Session& m_Gs2Session;
+        bool m_IsLockedByMe;
 
     public:
-        explicit CallbackHolder(T&& callback) :
-            m_Callback(callback)
+        Lock(Gs2Session& gs2Session, bool defer = false) :
+            m_Gs2Session(gs2Session),
+            m_IsLockedByMe(!defer)
+        {
+            if (!defer)
+            {
+                m_Gs2Session.m_Mutex.lock();
+            }
+        }
+
+        ~Lock()
+        {
+            if (m_IsLockedByMe)
+            {
+                unlock();
+            }
+        }
+
+        void lock()
+        {
+            m_Gs2Session.m_Mutex.lock();
+            m_IsLockedByMe = true;
+        }
+
+        void unlock();
+    };
+
+    class OpenTask : public detail::Gs2Task
+    {
+    private:
+        OpenCallbackType m_Callback;
+        AsyncOpenResult m_AsyncOpenResult;
+
+    public:
+        OpenTask(OpenCallbackType&& callback) :
+            m_Callback(std::move(callback))
         {}
 
-        ~CallbackHolder() = default;
+        ~OpenTask() GS2_OVERRIDE = default;
 
-        const T& callback() const
+        void triggerCallback() GS2_OVERRIDE
         {
-            return m_Callback;
+            m_Callback(std::move(m_AsyncOpenResult));
+        }
+
+        void setResult(AsyncOpenResult asyncOpenResult)
+        {
+            m_AsyncOpenResult = std::move(asyncOpenResult);
         }
     };
 
-    typedef CallbackHolder<OpenCallbackType> OpenCallbackHolder;
-    typedef CallbackHolder<CloseCallbackType> CloseCallbackHolder;
+    class CloseTask : public detail::Gs2Task
+    {
+    private:
+        CloseCallbackType m_Callback;
+
+    public:
+        CloseTask(CloseCallbackType&& callback) :
+            m_Callback(std::move(callback))
+        {}
+
+        ~CloseTask() GS2_OVERRIDE = default;
+
+        void triggerCallback() GS2_OVERRIDE
+        {
+            m_Callback();
+        }
+    };
 
 private:
     mutable std::mutex m_Mutex;
@@ -87,22 +142,21 @@ private:
 
     optional<StringHolder> m_ProjectToken;
 
-    detail::IntrusiveList<OpenCallbackHolder> m_OpenCallbackHolderList;
-    detail::IntrusiveList<CloseCallbackHolder> m_CloseCallbackHolderList;
-    detail::IntrusiveList<detail::Gs2SessionTask> m_Gs2SessionTaskList;
+    detail::IntrusiveList<OpenTask> m_OpenTaskList;
+    detail::IntrusiveList<CloseTask> m_CloseTaskList;
+    detail::IntrusiveList<detail::Gs2Task> m_Gs2SessionTaskList;
+
+    detail::IntrusiveList<detail::Gs2Task> m_CompleteTaskList;
 
     CloseCallbackType m_OnClose;
 
     detail::Gs2SessionTaskId::Generator m_Gs2SessionIdTaskGenerator;
 
-    static void triggerOpenCallback(detail::IntrusiveList<OpenCallbackHolder>& openCallbackHolderList, AsyncResult<void> result);
-    static void triggerCloseCallback(detail::IntrusiveList<CloseCallbackHolder>& closeCallbackHolderList);
-    static void triggerCancelTasksCallback(detail::IntrusiveList<detail::Gs2SessionTask>& gs2SessionTaskList, Gs2ClientException gs2ClientException);
+    void completeOpenTasks(AsyncOpenResult asyncOpenResult);
+    void completeCloseTasks();
+    void completeSessionTasks(Gs2ClientException gs2ClientException);
 
-    detail::Gs2SessionTask* findGs2SessionTask(const detail::Gs2SessionTaskId& gs2SessionTaskId);
-
-    inline void enterStateLock() { m_Mutex.lock(); }
-    inline void exitStateLock() { m_Mutex.unlock(); };
+    detail::Gs2SessionTask* removeGs2SessionTask(const detail::Gs2SessionTaskId& gs2SessionTaskId);
 
     void changeStateToIdle();
     void changeStateToOpening();
@@ -110,11 +164,9 @@ private:
     void changeStateToAvailable(StringHolder&& projectToken);
     void changeStateToCancellingTasks();
     void changeStateToClosing();
-    void keepCurrentState();
 
     // Gs2SessionTask から利用
     void execute(detail::Gs2SessionTask &gs2SessionTask);
-    void notifyComplete(detail::Gs2SessionTask& gs2SessionTask);
 
 protected:
     const optional<StringHolder>& getProjectToken() const
@@ -122,9 +174,10 @@ protected:
         return m_ProjectToken;
     }
 
-    void openCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException, bool isOpenInstant);
-    void closeCallback(Gs2ClientException& gs2ClientException, bool isCloseInstant);
-    void cancelTasksCallback(Gs2ClientException& gs2ClientException);
+    // openImpl(), cancelOpenImpl(), closeImpl() の実装から呼び出す場合は isAlreadyLocked に true を指定すること
+    void openCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException, bool isAlreadyLocked = false);
+    void closeCallback(Gs2ClientException& gs2ClientException, bool isAlreadyLocked = false);
+    void cancelTasksCallback(Gs2ClientException& gs2ClientException, bool isAlreadyLocked = false);
 
     // Gs2SessionTask からも利用
     void onResponse(const detail::Gs2SessionTaskId& gs2SessionTaskId, detail::Gs2Response& gs2Resoponse);
@@ -148,7 +201,7 @@ public:
         m_Region(region)
     {}
 
-    virtual ~Gs2Session();
+    virtual ~Gs2Session() = default;
 
     const BasicGs2Credential& getGs2Credential() const
     {
@@ -168,9 +221,9 @@ public:
 
 private:
     // 以下の関数は m_Mutex のロック内から呼ばれます
-    virtual bool openImpl() = 0;
+    virtual void openImpl() = 0;
     virtual void cancelOpenImpl() {}
-    virtual bool closeImpl() = 0;   // 中で closeCallback() を呼んだ場合は true を返すこと
+    virtual void closeImpl() = 0;
 };
 
 

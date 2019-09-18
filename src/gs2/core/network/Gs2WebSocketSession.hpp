@@ -96,9 +96,9 @@ public:
     void setOnNotificationMessage(NotificationMessageCallbackType callback);
 
 private:
-    bool openImpl() GS2_OVERRIDE;
+    void openImpl() GS2_OVERRIDE;
     void cancelOpenImpl() GS2_OVERRIDE;
-    bool closeImpl() GS2_OVERRIDE;
+    void closeImpl() GS2_OVERRIDE;
 };
 
 GS2_END_OF_NAMESPACE

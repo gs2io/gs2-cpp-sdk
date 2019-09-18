@@ -60,13 +60,13 @@ void Gs2RestSession::Gs2LoginTask::callback(detail::Gs2RestResponse& gs2RestResp
         optional<StringHolder> projectToken;
         Gs2ClientException gs2ClientException;
         gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-        m_Gs2RestSession.openCallback(nullptr, &gs2ClientException, false);
+        m_Gs2RestSession.openCallback(nullptr, &gs2ClientException);
     }
     else if (gs2RestResponse.getGs2ClientException())
     {
         // ログイン処理がエラーになった場合
 
-        m_Gs2RestSession.openCallback(nullptr, &*gs2RestResponse.getGs2ClientException(), false);
+        m_Gs2RestSession.openCallback(nullptr, &*gs2RestResponse.getGs2ClientException());
     }
     else
     {
@@ -79,7 +79,7 @@ void Gs2RestSession::Gs2LoginTask::callback(detail::Gs2RestResponse& gs2RestResp
         {
             // 応答からプロジェクトトークンが取得できた場合
 
-            m_Gs2RestSession.openCallback(&*resultModel.accessToken, nullptr, false);
+            m_Gs2RestSession.openCallback(&*resultModel.accessToken, nullptr);
         }
         else
         {
@@ -87,20 +87,18 @@ void Gs2RestSession::Gs2LoginTask::callback(detail::Gs2RestResponse& gs2RestResp
 
             Gs2ClientException gs2ClientException;
             gs2ClientException.setType(Gs2ClientException::UnknownException);   // TODO
-            m_Gs2RestSession.openCallback(nullptr, &gs2ClientException, false);
+            m_Gs2RestSession.openCallback(nullptr, &gs2ClientException);
         }
     }
 
     delete this;
 }
 
-bool Gs2RestSession::openImpl()
+void Gs2RestSession::openImpl()
 {
     m_IsOpenCancelled = false;
 
     (new Gs2LoginTask(*this))->send();
-
-    return false;
 }
 
 void Gs2RestSession::cancelOpenImpl()
@@ -108,12 +106,10 @@ void Gs2RestSession::cancelOpenImpl()
     m_IsOpenCancelled = true;
 }
 
-bool Gs2RestSession::closeImpl()
+void Gs2RestSession::closeImpl()
 {
     Gs2ClientException gs2ClientException;  // TODO
     closeCallback(gs2ClientException, true);
-
-    return true;
 }
 
 GS2_END_OF_NAMESPACE
