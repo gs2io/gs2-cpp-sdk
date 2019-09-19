@@ -18,11 +18,13 @@
 #define GS2_CORE_NETWORK_GS2RESTSESSIONTASK_HPP_
 
 #include "Gs2SessionTask.hpp"
-#include "Gs2RestSession.hpp"
 #include "HttpTask.hpp"
-#include "Gs2RestResponse.hpp"
+#include "Gs2Response.hpp"
+#include "../AsyncResult.hpp"
 
 GS2_START_OF_NAMESPACE
+
+class Gs2RestSession;
 
 namespace detail {
 
@@ -34,10 +36,7 @@ private:
     private:
         Gs2RestSessionTaskBase& m_Gs2StandardHttpTaskBase;
 
-        void callback(Gs2RestResponse& gs2RestResponse) GS2_OVERRIDE
-        {
-            m_Gs2StandardHttpTaskBase.onResponse(gs2RestResponse);
-        }
+        void callback(Gs2RestResponse& gs2RestResponse) GS2_OVERRIDE;
 
     public:
         Gs2RestTask(Gs2RestSessionTaskBase& gs2StandardHttpTaskBase) :
@@ -49,22 +48,21 @@ private:
 
 private:
     Gs2RestTask m_Gs2RestTask;
+    Gs2RestSession* m_pGs2RestSession;
 
-    void prepareImpl() GS2_OVERRIDE;
-    void executeImpl() GS2_OVERRIDE;
+    void prepareImpl(Gs2Session& gs2Session, const StringHolder& projectToken) GS2_OVERRIDE;
+    void executeImpl(Gs2Session& gs2Session) GS2_OVERRIDE;
+
+    virtual const char* getServiceName() const = 0;
+    virtual Gs2HttpTask::Verb constructRequestImpl(StringVariable& url, Gs2HttpTask& gs2HttpTask) = 0;
 
 public:
-    explicit Gs2RestSessionTaskBase(Gs2RestSession& gs2RestSession) :
-        Gs2SessionTask(gs2RestSession),
-        m_Gs2RestTask(*this)
+    explicit Gs2RestSessionTaskBase() :
+        m_Gs2RestTask(*this),
+        m_pGs2RestSession(nullptr)
     {}
 
     ~Gs2RestSessionTaskBase() GS2_OVERRIDE = default;
-
-    Gs2HttpTask& getGs2HttpTask()
-    {
-        return m_Gs2RestTask;
-    }
 };
 
 template <class T>
@@ -78,9 +76,8 @@ private:
     AsyncResult<T> m_AsyncResult;
 
 public:
-    Gs2RestSessionTask(Gs2RestSession& gs2RestSession, CallbackType& callback) :
-        Gs2RestSessionTaskBase(gs2RestSession),
-        m_Callback(callback)
+    Gs2RestSessionTask(CallbackType callback) :
+        m_Callback(std::move(callback))
     {
     }
 
@@ -114,9 +111,8 @@ private:
     AsyncResult<void> m_AsyncResult;
 
 public:
-    Gs2RestSessionTask(Gs2RestSession& gs2RestSession, CallbackType& callback) :
-        Gs2RestSessionTaskBase(gs2RestSession),
-        m_Callback(callback)
+    Gs2RestSessionTask(CallbackType callback) :
+        m_Callback(std::move(callback))
     {
     }
 

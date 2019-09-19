@@ -15,20 +15,35 @@
  */
 
 #include "Gs2RestSessionTask.hpp"
+#include "Gs2RestSession.hpp"
 
 GS2_START_OF_NAMESPACE
 
 namespace detail {
 
-void Gs2RestSessionTaskBase::prepareImpl()
+void Gs2RestSessionTaskBase::Gs2RestTask::callback(Gs2RestResponse& gs2RestResponse)
 {
-    auto& httpRequest = getGs2HttpTask().getHttpRequest();
-
-    httpRequest.SetHeader("X-GS2-CLIENT-ID", static_cast<const char*>(getGs2Session().getGs2Credential().getClientId()));
-    httpRequest.SetHeader("Authorization", static_cast<const char*>(*getProjectToken()));
+    m_Gs2StandardHttpTaskBase.onResponse(*m_Gs2StandardHttpTaskBase.m_pGs2RestSession, gs2RestResponse);
 }
 
-void Gs2RestSessionTaskBase::executeImpl()
+void Gs2RestSessionTaskBase::prepareImpl(Gs2Session& gs2Session, const StringHolder& projectToken)
+{
+    m_pGs2RestSession = static_cast<Gs2RestSession*>(&gs2Session);
+
+    StringVariable url(Gs2RestSession::EndpointHost);
+    url.replace("{service}", getServiceName());
+    url.replace("{region}", gs2Session.getRegion().getName());
+
+    auto verb = constructRequestImpl(url, m_Gs2RestTask);
+
+    m_Gs2RestTask.setVerb(verb);
+    m_Gs2RestTask.setUrl(url.c_str());
+
+    m_Gs2RestTask.addHeaderEntry("X-GS2-CLIENT-ID", gs2Session.getGs2Credential().getClientId());
+    m_Gs2RestTask.addHeaderEntry("Authorization", projectToken);
+}
+
+void Gs2RestSessionTaskBase::executeImpl(Gs2Session& gs2Session)
 {
     m_Gs2RestTask.send();
 }

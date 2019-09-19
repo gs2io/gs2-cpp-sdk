@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-#include <gs2/core/util/StringVariable.hpp>
 #include "Gs2RestSession.hpp"
 #include "../json/JsonWriter.hpp"
 #include "../json/JsonParser.hpp"
+#include "../util/StringVariable.hpp"
 #include "Gs2RestSessionTask.hpp"
 #include "LoginResultModel.hpp"
 
@@ -29,24 +29,24 @@ Gs2RestSession::Gs2LoginTask::Gs2LoginTask(Gs2RestSession& gs2RestSession) :
     Gs2HttpTask(),
     m_Gs2RestSession(gs2RestSession)
 {
-    getHttpRequest().SetVerb("POST");
-    detail::json::JsonWriter writer;
-    writer.writeObjectStart();
-    writer.writePropertyName("client_id");
-    writer.writeCharArray(gs2RestSession.getGs2Credential().getClientId());
-    writer.writePropertyName("client_secret");
-    writer.writeCharArray(gs2RestSession.getGs2Credential().getClientSecret());
-    writer.writeObjectEnd();
-    auto body = writer.toString();
-    getHttpRequest().SetContentAsString(body);
+    setVerb(Verb::Post);
+
+    detail::json::JsonWriter jsonWriter;
+    jsonWriter.writeObjectStart();
+    jsonWriter.writePropertyName("client_id");
+    jsonWriter.writeCharArray(gs2RestSession.getGs2Credential().getClientId());
+    jsonWriter.writePropertyName("client_secret");
+    jsonWriter.writeCharArray(gs2RestSession.getGs2Credential().getClientSecret());
+    jsonWriter.writeObjectEnd();
+    setBody(jsonWriter.toString());
 
     detail::StringVariable url(Gs2RestSession::EndpointHost);
     url.replace("{service}", "identifier");
     url.replace("{region}", gs2RestSession.getRegion().getName());
     url += "/projectToken/login";
-    getHttpRequest().SetURL(url.c_str());
-    std::vector<std::string> headerEntries;
-    getHttpRequest().SetHeader("Content-Type", "application/json");
+    setUrl(url.c_str());
+
+    addHeaderEntry("Content-Type", "application/json");
 }
 
 void Gs2RestSession::Gs2LoginTask::callback(detail::Gs2RestResponse& gs2RestResponse)

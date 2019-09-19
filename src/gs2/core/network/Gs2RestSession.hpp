@@ -18,7 +18,7 @@
 #define GS2_CORE_NETWORK_GS2RESTSESSION_HPP_
 
 #include "Gs2Session.hpp"
-#include "HttpTask.hpp"
+#include "Gs2RestSessionTask.hpp"
 #include <atomic>
 
 GS2_START_OF_NAMESPACE
@@ -62,6 +62,11 @@ public:
     {}
 
     ~Gs2RestSession() GS2_OVERRIDE = default;
+
+    void execute(detail::Gs2RestSessionTaskBase& gs2RestSessionTask)
+    {
+        Gs2Session::execute(gs2RestSessionTask);
+    }
 
 private:
     void openImpl() GS2_OVERRIDE;

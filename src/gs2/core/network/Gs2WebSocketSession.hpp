@@ -19,12 +19,9 @@
 
 #include "Gs2Session.hpp"
 #include "WebSocket.hpp"
+#include "Gs2WebSocketSessionTask.hpp"
 
 GS2_START_OF_NAMESPACE
-
-namespace detail {
-    class Gs2WebSocketSessionTaskBase;
-}
 
 class Gs2WebSocketSession : public Gs2Session
 {
@@ -94,6 +91,11 @@ public:
     ~Gs2WebSocketSession() GS2_OVERRIDE = default;
 
     void setOnNotificationMessage(NotificationMessageCallbackType callback);
+
+    void execute(detail::Gs2WebSocketSessionTaskBase& gs2WebSocketSessionTask)
+    {
+        Gs2Session::execute(gs2WebSocketSessionTask);
+    }
 
 private:
     void openImpl() GS2_OVERRIDE;

@@ -36,20 +36,48 @@ HttpTask::~HttpTask()
 {
 }
 
+void HttpTask::setUrl(const char url[])
+{
+    m_pHttpRequest->SetURL(url);
+}
+
+void HttpTask::setVerb(Verb verb)
+{
+    const char* verbString = "invalid";
+    switch (verb)
+    {
+    case Verb::Get:
+        verbString = "GET";
+        break;
+    case Verb::Post:
+        verbString = "POST";
+        break;
+    case Verb::Delete:
+        verbString = "DELETE";
+        break;
+    case Verb::Put:
+        verbString = "PUT";
+        break;
+    }
+    m_pHttpRequest->SetVerb(verbString);
+}
+
+void HttpTask::addHeaderEntry(const char key[], const char value[])
+{
+    m_pHttpRequest->SetHeader(key, value);
+}
+
+void HttpTask::setBody(const char body[])
+{
+    TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
+    m_pHttpRequest->SetContent(content);
+}
+
 void HttpTask::send()
 {
     m_pHttpRequest->OnProcessRequestComplete().BindRaw(this, &HttpTask::callback);
     m_pHttpRequest->ProcessRequest();
     FHttpModule::Get().GetHttpManager().AddRequest(m_pHttpRequest);
-}
-
-void HttpTask::addHeaderEntry(std::vector<std::string>& headers, const Char key[], const Char value[])
-{
-    std::string entry(key);
-    entry.append(": ");
-    entry.append(value);
-
-    headers.push_back(entry);
 }
 
 

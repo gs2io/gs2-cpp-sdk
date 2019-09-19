@@ -21,19 +21,20 @@ GS2_START_OF_NAMESPACE
 
 namespace detail {
 
-const optional<StringHolder>& Gs2SessionTask::getProjectToken() const
+void Gs2SessionTask::onResponse(Gs2Session& gs2Session, Gs2Response& gs2Response)
 {
-    return m_Gs2Session.getProjectToken();
+    gs2Session.onResponse(m_Gs2SessionTaskId, gs2Response);
 }
 
-void Gs2SessionTask::onResponse(Gs2Response& gs2Response)
+void Gs2SessionTask::prepare(Gs2Session& gs2Session, Gs2SessionTaskId gs2SessionTaskId)
 {
-    m_Gs2Session.onResponse(m_Gs2SessionTaskId, gs2Response);
+    m_Gs2SessionTaskId = gs2SessionTaskId;
+    prepareImpl(gs2Session, *gs2Session.getProjectToken());
 }
 
-void Gs2SessionTask::execute()
+void Gs2SessionTask::execute(Gs2Session& gs2Session)
 {
-    m_Gs2Session.execute(*this);
+    executeImpl(gs2Session);
 }
 
 }

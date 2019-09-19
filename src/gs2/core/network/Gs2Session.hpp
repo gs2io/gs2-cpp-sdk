@@ -165,9 +165,6 @@ private:
     void changeStateToCancellingTasks();
     void changeStateToClosing();
 
-    // Gs2SessionTask から利用
-    void execute(detail::Gs2SessionTask &gs2SessionTask);
-
 protected:
     const optional<StringHolder>& getProjectToken() const
     {
@@ -178,6 +175,8 @@ protected:
     void openCallback(StringHolder* pProjectToken, Gs2ClientException* pClientException, bool isAlreadyLocked = false);
     void closeCallback(Gs2ClientException& gs2ClientException, bool isAlreadyLocked = false);
     void cancelTasksCallback(Gs2ClientException& gs2ClientException, bool isAlreadyLocked = false);
+
+    void execute(detail::Gs2SessionTask& gs2SessionTask);
 
     // Gs2SessionTask からも利用
     void onResponse(const detail::Gs2SessionTaskId& gs2SessionTaskId, detail::Gs2Response& gs2Resoponse);

@@ -15,23 +15,51 @@
  */
 
 #include "Gs2WebSocketSessionTask.hpp"
+#include "../json/JsonWriter.hpp"
 
 GS2_START_OF_NAMESPACE
 
 namespace detail {
 
-void Gs2WebSocketSessionTaskBase::prepareImpl()
+void Gs2WebSocketSessionTaskBase::prepareImpl(Gs2Session& gs2Session, const StringHolder& projectToken)
 {
-    sendImpl(getGs2Session().getGs2Credential().getClientId(), *getProjectToken(), getGs2SessionTaskId());
+    detail::json::JsonWriter jsonWriter;
+
+    jsonWriter.writeObjectStart();
+
+    constructRequestImpl(jsonWriter);
+
+    jsonWriter.writePropertyName("xGs2ClientId");
+    jsonWriter.writeCharArray(gs2Session.getGs2Credential().getClientId());
+    jsonWriter.writePropertyName("xGs2ProjectToken");
+    jsonWriter.writeCharArray(projectToken);
+
+    jsonWriter.writePropertyName("x_gs2");
+    jsonWriter.writeObjectStart();
+    jsonWriter.writePropertyName("service");
+    jsonWriter.writeCharArray(getServiceName());
+    jsonWriter.writePropertyName("component");
+    jsonWriter.writeCharArray(getComponentName());
+    jsonWriter.writePropertyName("function");
+    jsonWriter.writeCharArray(getFunctionName());
+    jsonWriter.writePropertyName("contentType");
+    jsonWriter.writeCharArray("application/json");
+    jsonWriter.writePropertyName("requestId");
+    {
+        char buffer[16];
+        getGs2SessionTaskId().exportTo(buffer, sizeof(buffer));
+        jsonWriter.writeCharArray(buffer);
+    }
+    jsonWriter.writeObjectEnd();
+
+    jsonWriter.writeObjectEnd();
+
+    static_cast<Gs2WebSocketSession&>(gs2Session).send(jsonWriter.toString());
 }
 
-void Gs2WebSocketSessionTaskBase::executeImpl()
+void Gs2WebSocketSessionTaskBase::executeImpl(Gs2Session& gs2Session)
 {
-}
-
-void Gs2WebSocketSessionTaskBase::send(const Char message[])
-{
-    static_cast<Gs2WebSocketSession&>(getGs2Session()).send(message);
+    GS2_NOT_USED(gs2Session);
 }
 
 }

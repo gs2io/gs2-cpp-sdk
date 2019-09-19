@@ -311,15 +311,13 @@ void Gs2Session::execute(detail::Gs2SessionTask &gs2SessionTask)
 
     if (m_State == State::Available)
     {
-        gs2SessionTask.m_Gs2SessionTaskId = m_Gs2SessionIdTaskGenerator.issue();
-
-        gs2SessionTask.prepareImpl();
+        gs2SessionTask.prepare(*this, m_Gs2SessionIdTaskGenerator.issue());
 
         m_Gs2SessionTaskList.enqueue(gs2SessionTask);
 
         lock.unlock();
 
-        gs2SessionTask.executeImpl();
+        gs2SessionTask.execute(*this);
     }
     else
     {

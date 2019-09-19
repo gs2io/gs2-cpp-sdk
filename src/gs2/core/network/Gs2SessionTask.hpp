@@ -44,41 +44,31 @@ class Gs2SessionTask : public Gs2Task
     friend gs2::Gs2Session;
 
 private:
-    Gs2Session& m_Gs2Session;
     Gs2SessionTaskId m_Gs2SessionTaskId;
 
 protected:
-    Gs2Session& getGs2Session()
-    {
-        return m_Gs2Session;
-    }
+    void onResponse(Gs2Session& gs2Session, Gs2Response& gs2Response);
 
     const Gs2SessionTaskId& getGs2SessionTaskId() const
     {
         return m_Gs2SessionTaskId;
     }
 
-    // レスポンスが直接セッションに届かない派生クラスでは、この関数でセッションにレスポンスの到着を伝える
-    void onResponse(Gs2Response& gs2Response);
-
-    const optional<StringHolder>& getProjectToken() const;
-
 private:
     // Gs2Session::execute() から利用
-    virtual void prepareImpl() = 0;     // ロックの内側から呼ばれるので m_Gs2Session のプライベートメンバに安全にアクセス可能
-    virtual void executeImpl() = 0;     // ロックの外側から呼ばれるので直接コールバックを呼び出し可能
+    void prepare(Gs2Session& gs2Session, Gs2SessionTaskId gs2SessionTaskId);
+    void execute(Gs2Session& gs2Session);
+
+    virtual void prepareImpl(Gs2Session& gs2Session, const StringHolder& projectToken) = 0;   // ロックの内側から呼ばれるので m_Gs2Session のプライベートメンバに安全にアクセス可能
+    virtual void executeImpl(Gs2Session& gs2Session) = 0;   // ロックの外側から呼ばれるので直接コールバックを呼び出し可能
 
 public:
-    Gs2SessionTask(Gs2Session& gs2Session) :
-        m_Gs2Session(gs2Session)
-    {}
+    Gs2SessionTask() = default;
 
     virtual ~Gs2SessionTask() = default;
 
     virtual void setResult(Gs2Response& gs2Response) = 0;
     virtual void setResult(Gs2ClientException gs2ClientException) = 0;
-
-    void execute();
 };
 
 }

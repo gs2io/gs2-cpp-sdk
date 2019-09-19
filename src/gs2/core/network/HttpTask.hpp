@@ -18,6 +18,7 @@
 #define GS2_CORE_NETWORK_HTTPTASK_HPP_
 
 #include "../Gs2Object.hpp"
+#include "../util/StringVariable.hpp"
 #include <string>
 #include <vector>
 #include <Http.h>
@@ -30,6 +31,15 @@ class Gs2RestResponse;
 
 class HttpTask : public Gs2Object
 {
+public:
+    enum class Verb
+    {
+        Get,
+        Post,
+        Delete,
+        Put,
+    };
+
 private:
     TSharedRef<IHttpRequest> m_pHttpRequest;
 
@@ -39,17 +49,13 @@ public:
     HttpTask();
     virtual ~HttpTask();
 
+    void setUrl(const char url[]);
+    void setVerb(Verb verb);
+    void addHeaderEntry(const char key[], const char value[]);
+    void setBody(const char body[]);
+
     // 最大1回までしか呼べません
     void send();
-
-    // ユーザデータは設定しても send 時に上書きされます
-    IHttpRequest& getHttpRequest()
-    {
-        return *m_pHttpRequest;
-    }
-
-    // ユーティリティ
-    static void addHeaderEntry(std::vector<std::string>& headers, const Char key[], const Char value[]);
 };
 
 
