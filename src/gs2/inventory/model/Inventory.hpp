@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace inventory {
@@ -56,8 +58,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -68,64 +69,62 @@ private:
             currentInventoryMaxCapacity(data.currentInventoryMaxCapacity),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            inventoryId(std::move(data.inventoryId)),
-            inventoryName(std::move(data.inventoryName)),
-            userId(std::move(data.userId)),
-            currentInventoryCapacityUsage(std::move(data.currentInventoryCapacityUsage)),
-            currentInventoryMaxCapacity(std::move(data.currentInventoryMaxCapacity)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "inventoryId") == 0) {
+            if (std::strcmp(name_, "inventoryId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->inventoryId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "inventoryName") == 0) {
+            else if (std::strcmp(name_, "inventoryName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->inventoryName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "currentInventoryCapacityUsage") == 0) {
+            else if (std::strcmp(name_, "currentInventoryCapacityUsage") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->currentInventoryCapacityUsage = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "currentInventoryMaxCapacity") == 0) {
+            else if (std::strcmp(name_, "currentInventoryMaxCapacity") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->currentInventoryMaxCapacity = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -134,72 +133,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Inventory() :
-        m_pData(nullptr)
-    {}
+    Inventory() = default;
+    Inventory(const Inventory& inventory) = default;
+    Inventory(Inventory&& inventory) = default;
+    ~Inventory() = default;
 
-    Inventory(const Inventory& inventory) :
-        Gs2Object(inventory),
-        m_pData(inventory.m_pData != nullptr ? new Data(*inventory.m_pData) : nullptr)
-    {}
+    Inventory& operator=(const Inventory& inventory) = default;
+    Inventory& operator=(Inventory&& inventory) = default;
 
-    Inventory(Inventory&& inventory) :
-        Gs2Object(std::move(inventory)),
-        m_pData(inventory.m_pData)
+    Inventory deepCopy() const
     {
-        inventory.m_pData = nullptr;
-    }
-
-    ~Inventory()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Inventory& operator=(const Inventory& inventory)
-    {
-        Gs2Object::operator=(inventory);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*inventory.m_pData);
-
-        return *this;
-    }
-
-    Inventory& operator=(Inventory&& inventory)
-    {
-        Gs2Object::operator=(std::move(inventory));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = inventory.m_pData;
-        inventory.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Inventory);
     }
 
     const Inventory* operator->() const
@@ -226,9 +173,9 @@ public:
      *
      * @param inventoryId インベントリ
      */
-    void setInventoryId(const Char* inventoryId)
+    void setInventoryId(StringHolder inventoryId)
     {
-        ensureData().inventoryId.emplace(inventoryId);
+        ensureData().inventoryId.emplace(std::move(inventoryId));
     }
 
     /**
@@ -236,9 +183,9 @@ public:
      *
      * @param inventoryId インベントリ
      */
-    Inventory& withInventoryId(const Char* inventoryId)
+    Inventory& withInventoryId(StringHolder inventoryId)
     {
-        setInventoryId(inventoryId);
+        setInventoryId(std::move(inventoryId));
         return *this;
     }
 
@@ -257,9 +204,9 @@ public:
      *
      * @param inventoryName インベントリモデル名
      */
-    void setInventoryName(const Char* inventoryName)
+    void setInventoryName(StringHolder inventoryName)
     {
-        ensureData().inventoryName.emplace(inventoryName);
+        ensureData().inventoryName.emplace(std::move(inventoryName));
     }
 
     /**
@@ -267,9 +214,9 @@ public:
      *
      * @param inventoryName インベントリモデル名
      */
-    Inventory& withInventoryName(const Char* inventoryName)
+    Inventory& withInventoryName(StringHolder inventoryName)
     {
-        setInventoryName(inventoryName);
+        setInventoryName(std::move(inventoryName));
         return *this;
     }
 
@@ -288,9 +235,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -298,9 +245,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    Inventory& withUserId(const Char* userId)
+    Inventory& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -439,7 +386,7 @@ inline bool operator!=(const Inventory& lhs, const Inventory& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

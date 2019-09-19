@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace lottery {
@@ -52,8 +54,7 @@ private:
         /** APIの応答内容 */
         optional<StringHolder> result;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -62,50 +63,48 @@ private:
             responseCacheId(data.responseCacheId),
             requestHash(data.requestHash),
             result(data.result)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            region(std::move(data.region)),
-            ownerId(std::move(data.ownerId)),
-            responseCacheId(std::move(data.responseCacheId)),
-            requestHash(std::move(data.requestHash)),
-            result(std::move(data.result))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "region") == 0) {
+            if (std::strcmp(name_, "region") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->region.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "responseCacheId") == 0) {
+            else if (std::strcmp(name_, "responseCacheId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->responseCacheId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "requestHash") == 0) {
+            else if (std::strcmp(name_, "requestHash") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->requestHash.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "result") == 0) {
+            else if (std::strcmp(name_, "result") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->result.emplace(jsonValue.GetString());
@@ -114,72 +113,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    ResponseCache() :
-        m_pData(nullptr)
-    {}
+    ResponseCache() = default;
+    ResponseCache(const ResponseCache& responseCache) = default;
+    ResponseCache(ResponseCache&& responseCache) = default;
+    ~ResponseCache() = default;
 
-    ResponseCache(const ResponseCache& responseCache) :
-        Gs2Object(responseCache),
-        m_pData(responseCache.m_pData != nullptr ? new Data(*responseCache.m_pData) : nullptr)
-    {}
+    ResponseCache& operator=(const ResponseCache& responseCache) = default;
+    ResponseCache& operator=(ResponseCache&& responseCache) = default;
 
-    ResponseCache(ResponseCache&& responseCache) :
-        Gs2Object(std::move(responseCache)),
-        m_pData(responseCache.m_pData)
+    ResponseCache deepCopy() const
     {
-        responseCache.m_pData = nullptr;
-    }
-
-    ~ResponseCache()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    ResponseCache& operator=(const ResponseCache& responseCache)
-    {
-        Gs2Object::operator=(responseCache);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*responseCache.m_pData);
-
-        return *this;
-    }
-
-    ResponseCache& operator=(ResponseCache&& responseCache)
-    {
-        Gs2Object::operator=(std::move(responseCache));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = responseCache.m_pData;
-        responseCache.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ResponseCache);
     }
 
     const ResponseCache* operator->() const
@@ -206,9 +153,9 @@ public:
      *
      * @param region None
      */
-    void setRegion(const Char* region)
+    void setRegion(StringHolder region)
     {
-        ensureData().region.emplace(region);
+        ensureData().region.emplace(std::move(region));
     }
 
     /**
@@ -216,9 +163,9 @@ public:
      *
      * @param region None
      */
-    ResponseCache& withRegion(const Char* region)
+    ResponseCache& withRegion(StringHolder region)
     {
-        setRegion(region);
+        setRegion(std::move(region));
         return *this;
     }
 
@@ -237,9 +184,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
@@ -247,9 +194,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    ResponseCache& withOwnerId(const Char* ownerId)
+    ResponseCache& withOwnerId(StringHolder ownerId)
     {
-        setOwnerId(ownerId);
+        setOwnerId(std::move(ownerId));
         return *this;
     }
 
@@ -268,9 +215,9 @@ public:
      *
      * @param responseCacheId レスポンスキャッシュ のGRN
      */
-    void setResponseCacheId(const Char* responseCacheId)
+    void setResponseCacheId(StringHolder responseCacheId)
     {
-        ensureData().responseCacheId.emplace(responseCacheId);
+        ensureData().responseCacheId.emplace(std::move(responseCacheId));
     }
 
     /**
@@ -278,9 +225,9 @@ public:
      *
      * @param responseCacheId レスポンスキャッシュ のGRN
      */
-    ResponseCache& withResponseCacheId(const Char* responseCacheId)
+    ResponseCache& withResponseCacheId(StringHolder responseCacheId)
     {
-        setResponseCacheId(responseCacheId);
+        setResponseCacheId(std::move(responseCacheId));
         return *this;
     }
 
@@ -299,9 +246,9 @@ public:
      *
      * @param requestHash None
      */
-    void setRequestHash(const Char* requestHash)
+    void setRequestHash(StringHolder requestHash)
     {
-        ensureData().requestHash.emplace(requestHash);
+        ensureData().requestHash.emplace(std::move(requestHash));
     }
 
     /**
@@ -309,9 +256,9 @@ public:
      *
      * @param requestHash None
      */
-    ResponseCache& withRequestHash(const Char* requestHash)
+    ResponseCache& withRequestHash(StringHolder requestHash)
     {
-        setRequestHash(requestHash);
+        setRequestHash(std::move(requestHash));
         return *this;
     }
 
@@ -330,9 +277,9 @@ public:
      *
      * @param result APIの応答内容
      */
-    void setResult(const Char* result)
+    void setResult(StringHolder result)
     {
-        ensureData().result.emplace(result);
+        ensureData().result.emplace(std::move(result));
     }
 
     /**
@@ -340,9 +287,9 @@ public:
      *
      * @param result APIの応答内容
      */
-    ResponseCache& withResult(const Char* result)
+    ResponseCache& withResult(StringHolder result)
     {
-        setResult(result);
+        setResult(std::move(result));
         return *this;
     }
 
@@ -357,7 +304,7 @@ inline bool operator!=(const ResponseCache& lhs, const ResponseCache& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

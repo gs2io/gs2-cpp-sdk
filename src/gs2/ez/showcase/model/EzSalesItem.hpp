@@ -29,48 +29,93 @@ namespace gs2 { namespace ez { namespace showcase {
 class EzSalesItem : public gs2::Gs2Object
 {
 private:
-    /** 商品名 */
-    gs2::optional<StringHolder> m_Name;
-    /** 商品のメタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** 消費アクションリスト */
-    gs2::optional<List<EzConsumeAction>> m_ConsumeActions;
-    /** 入手アクションリスト */
-    gs2::optional<List<EzAcquireAction>> m_AcquireActions;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 商品名 */
+        gs2::optional<StringHolder> name;
+        /** 商品のメタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** 消費アクションリスト */
+        gs2::optional<List<EzConsumeAction>> consumeActions;
+        /** 入手アクションリスト */
+        gs2::optional<List<EzAcquireAction>> acquireActions;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            metadata(data.metadata)
+        {
+            if (data.consumeActions)
+            {
+                consumeActions = data.consumeActions->deepCopy();
+            }
+            if (data.acquireActions)
+            {
+                acquireActions = data.acquireActions->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::showcase::SalesItem& salesItem) :
+            name(salesItem.getName()),
+            metadata(salesItem.getMetadata())
+        {
+            consumeActions.emplace();
+            if (salesItem.getConsumeActions())
+            {
+                for (int i = 0; i < salesItem.getConsumeActions()->getCount(); ++i)
+                {
+                    *consumeActions += EzConsumeAction((*salesItem.getConsumeActions())[i]);
+                }
+            }
+            acquireActions.emplace();
+            if (salesItem.getAcquireActions())
+            {
+                for (int i = 0; i < salesItem.getAcquireActions()->getCount(); ++i)
+                {
+                    *acquireActions += EzAcquireAction((*salesItem.getAcquireActions())[i]);
+                }
+            }
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzSalesItem() = default;
+    EzSalesItem(const EzSalesItem& ezSalesItem) = default;
+    EzSalesItem(EzSalesItem&& ezSalesItem) = default;
+    ~EzSalesItem() = default;
 
     EzSalesItem(gs2::showcase::SalesItem salesItem) :
-        m_Name(salesItem.getName()),
-        m_Metadata(salesItem.getMetadata())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(salesItem)
+    {}
+
+    EzSalesItem& operator=(const EzSalesItem& ezSalesItem) = default;
+    EzSalesItem& operator=(EzSalesItem&& ezSalesItem) = default;
+
+    EzSalesItem deepCopy() const
     {
-        m_ConsumeActions.emplace();
-        if (salesItem.getConsumeActions())
-        {
-            for (int i = 0; i < salesItem.getConsumeActions()->getCount(); ++i)
-            {
-                *m_ConsumeActions += EzConsumeAction((*salesItem.getConsumeActions())[i]);
-            }
-        }
-        m_AcquireActions.emplace();
-        if (salesItem.getAcquireActions())
-        {
-            for (int i = 0; i < salesItem.getAcquireActions()->getCount(); ++i)
-            {
-                *m_AcquireActions += EzAcquireAction((*salesItem.getAcquireActions())[i]);
-            }
-        }
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzSalesItem);
     }
 
     gs2::showcase::SalesItem ToModel() const
     {
         gs2::showcase::SalesItem salesItem;
-        salesItem.setName(*m_Name);
-        salesItem.setMetadata(*m_Metadata);
+        salesItem.setName(getName());
+        salesItem.setMetadata(getMetadata());
         {
             gs2::List<gs2::showcase::ConsumeAction> list;
-            auto& consumeActions = *m_ConsumeActions;
+            auto& consumeActions = getConsumeActions();
             for (int i = 0; i < consumeActions.getCount(); ++i)
             {
                 list += consumeActions[i].ToModel();
@@ -79,7 +124,7 @@ public:
         }
         {
             gs2::List<gs2::showcase::AcquireAction> list;
-            auto& acquireActions = *m_AcquireActions;
+            auto& acquireActions = getAcquireActions();
             for (int i = 0; i < acquireActions.getCount(); ++i)
             {
                 list += acquireActions[i].ToModel();
@@ -93,111 +138,69 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
+        return *ensureData().name;
     }
 
-    gs2::StringHolder& getName()
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
-    }
-
-    const gs2::StringHolder& getMetadata() const
-    {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
+        return *ensureData().metadata;
     }
 
     const List<EzConsumeAction>& getConsumeActions() const
     {
-        return *m_ConsumeActions;
-    }
-
-    List<EzConsumeAction>& getConsumeActions()
-    {
-        return *m_ConsumeActions;
+        return *ensureData().consumeActions;
     }
 
     const List<EzAcquireAction>& getAcquireActions() const
     {
-        return *m_AcquireActions;
-    }
-
-    List<EzAcquireAction>& getAcquireActions()
-    {
-        return *m_AcquireActions;
+        return *ensureData().acquireActions;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
-    void setConsumeActions(const List<EzConsumeAction>& consumeActions)
+    void setConsumeActions(List<EzConsumeAction> consumeActions)
     {
-        m_ConsumeActions = consumeActions;
+        ensureData().consumeActions = std::move(consumeActions);
     }
 
-    void setConsumeActions(List<EzConsumeAction>&& consumeActions)
+    void setAcquireActions(List<EzAcquireAction> acquireActions)
     {
-        m_ConsumeActions = std::move(consumeActions);
+        ensureData().acquireActions = std::move(acquireActions);
     }
 
-    void setAcquireActions(const List<EzAcquireAction>& acquireActions)
+    EzSalesItem& withName(StringHolder name)
     {
-        m_AcquireActions = acquireActions;
-    }
-
-    void setAcquireActions(List<EzAcquireAction>&& acquireActions)
-    {
-        m_AcquireActions = std::move(acquireActions);
-    }
-
-    EzSalesItem& withName(Char* name)
-    {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzSalesItem& withMetadata(Char* metadata)
+    EzSalesItem& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
-    EzSalesItem& withConsumeActions(const List<EzConsumeAction>& consumeActions)
-    {
-        setConsumeActions(consumeActions);
-        return *this;
-    }
-
-    EzSalesItem& withConsumeActions(List<EzConsumeAction>&& consumeActions)
+    EzSalesItem& withConsumeActions(List<EzConsumeAction> consumeActions)
     {
         setConsumeActions(std::move(consumeActions));
         return *this;
     }
 
-    EzSalesItem& withAcquireActions(const List<EzAcquireAction>& acquireActions)
-    {
-        setAcquireActions(acquireActions);
-        return *this;
-    }
-
-    EzSalesItem& withAcquireActions(List<EzAcquireAction>&& acquireActions)
+    EzSalesItem& withAcquireActions(List<EzAcquireAction> acquireActions)
     {
         setAcquireActions(std::move(acquireActions));
         return *this;

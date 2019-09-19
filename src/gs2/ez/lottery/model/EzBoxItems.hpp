@@ -28,38 +28,79 @@ namespace gs2 { namespace ez { namespace lottery {
 class EzBoxItems : public gs2::Gs2Object
 {
 private:
-    /** ボックス */
-    gs2::optional<StringHolder> m_BoxId;
-    /** 排出確率テーブル名 */
-    gs2::optional<StringHolder> m_PrizeTableName;
-    /** ボックスから取り出したアイテムのリスト */
-    gs2::optional<List<EzBoxItem>> m_Items;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ボックス */
+        gs2::optional<StringHolder> boxId;
+        /** 排出確率テーブル名 */
+        gs2::optional<StringHolder> prizeTableName;
+        /** ボックスから取り出したアイテムのリスト */
+        gs2::optional<List<EzBoxItem>> items;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            boxId(data.boxId),
+            prizeTableName(data.prizeTableName)
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::lottery::BoxItems& boxItems) :
+            boxId(boxItems.getBoxId()),
+            prizeTableName(boxItems.getPrizeTableName())
+        {
+            items.emplace();
+            if (boxItems.getItems())
+            {
+                for (int i = 0; i < boxItems.getItems()->getCount(); ++i)
+                {
+                    *items += EzBoxItem((*boxItems.getItems())[i]);
+                }
+            }
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzBoxItems() = default;
+    EzBoxItems(const EzBoxItems& ezBoxItems) = default;
+    EzBoxItems(EzBoxItems&& ezBoxItems) = default;
+    ~EzBoxItems() = default;
 
     EzBoxItems(gs2::lottery::BoxItems boxItems) :
-        m_BoxId(boxItems.getBoxId()),
-        m_PrizeTableName(boxItems.getPrizeTableName())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(boxItems)
+    {}
+
+    EzBoxItems& operator=(const EzBoxItems& ezBoxItems) = default;
+    EzBoxItems& operator=(EzBoxItems&& ezBoxItems) = default;
+
+    EzBoxItems deepCopy() const
     {
-        m_Items.emplace();
-        if (boxItems.getItems())
-        {
-            for (int i = 0; i < boxItems.getItems()->getCount(); ++i)
-            {
-                *m_Items += EzBoxItem((*boxItems.getItems())[i]);
-            }
-        }
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzBoxItems);
     }
 
     gs2::lottery::BoxItems ToModel() const
     {
         gs2::lottery::BoxItems boxItems;
-        boxItems.setBoxId(*m_BoxId);
-        boxItems.setPrizeTableName(*m_PrizeTableName);
+        boxItems.setBoxId(getBoxId());
+        boxItems.setPrizeTableName(getPrizeTableName());
         {
             gs2::List<gs2::lottery::BoxItem> list;
-            auto& items = *m_Items;
+            auto& items = getItems();
             for (int i = 0; i < items.getCount(); ++i)
             {
                 list += items[i].ToModel();
@@ -73,79 +114,53 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getBoxId() const
+    const StringHolder& getBoxId() const
     {
-        return *m_BoxId;
+        return *ensureData().boxId;
     }
 
-    gs2::StringHolder& getBoxId()
+    const StringHolder& getPrizeTableName() const
     {
-        return *m_BoxId;
-    }
-
-    const gs2::StringHolder& getPrizeTableName() const
-    {
-        return *m_PrizeTableName;
-    }
-
-    gs2::StringHolder& getPrizeTableName()
-    {
-        return *m_PrizeTableName;
+        return *ensureData().prizeTableName;
     }
 
     const List<EzBoxItem>& getItems() const
     {
-        return *m_Items;
-    }
-
-    List<EzBoxItem>& getItems()
-    {
-        return *m_Items;
+        return *ensureData().items;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setBoxId(Char* boxId)
+    void setBoxId(StringHolder boxId)
     {
-        m_BoxId.emplace(boxId);
+        ensureData().boxId = std::move(boxId);
     }
 
-    void setPrizeTableName(Char* prizeTableName)
+    void setPrizeTableName(StringHolder prizeTableName)
     {
-        m_PrizeTableName.emplace(prizeTableName);
+        ensureData().prizeTableName = std::move(prizeTableName);
     }
 
-    void setItems(const List<EzBoxItem>& items)
+    void setItems(List<EzBoxItem> items)
     {
-        m_Items = items;
+        ensureData().items = std::move(items);
     }
 
-    void setItems(List<EzBoxItem>&& items)
+    EzBoxItems& withBoxId(StringHolder boxId)
     {
-        m_Items = std::move(items);
-    }
-
-    EzBoxItems& withBoxId(Char* boxId)
-    {
-        setBoxId(boxId);
+        setBoxId(std::move(boxId));
         return *this;
     }
 
-    EzBoxItems& withPrizeTableName(Char* prizeTableName)
+    EzBoxItems& withPrizeTableName(StringHolder prizeTableName)
     {
-        setPrizeTableName(prizeTableName);
+        setPrizeTableName(std::move(prizeTableName));
         return *this;
     }
 
-    EzBoxItems& withItems(const List<EzBoxItem>& items)
-    {
-        setItems(items);
-        return *this;
-    }
-
-    EzBoxItems& withItems(List<EzBoxItem>&& items)
+    EzBoxItems& withItems(List<EzBoxItem> items)
     {
         setItems(std::move(items));
         return *this;

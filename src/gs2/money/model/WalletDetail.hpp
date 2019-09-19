@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace money {
@@ -56,8 +58,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -68,64 +69,62 @@ private:
             count(data.count),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            walletDetailId(std::move(data.walletDetailId)),
-            userId(std::move(data.userId)),
-            slot(std::move(data.slot)),
-            price(std::move(data.price)),
-            count(std::move(data.count)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "walletDetailId") == 0) {
+            if (std::strcmp(name_, "walletDetailId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->walletDetailId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "slot") == 0) {
+            else if (std::strcmp(name_, "slot") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->slot = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "price") == 0) {
+            else if (std::strcmp(name_, "price") == 0)
+            {
                 if (jsonValue.IsFloat())
                 {
                     this->price = jsonValue.GetFloat();
                 }
             }
-            else if (std::strcmp(name_, "count") == 0) {
+            else if (std::strcmp(name_, "count") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->count = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -134,72 +133,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    WalletDetail() :
-        m_pData(nullptr)
-    {}
+    WalletDetail() = default;
+    WalletDetail(const WalletDetail& walletDetail) = default;
+    WalletDetail(WalletDetail&& walletDetail) = default;
+    ~WalletDetail() = default;
 
-    WalletDetail(const WalletDetail& walletDetail) :
-        Gs2Object(walletDetail),
-        m_pData(walletDetail.m_pData != nullptr ? new Data(*walletDetail.m_pData) : nullptr)
-    {}
+    WalletDetail& operator=(const WalletDetail& walletDetail) = default;
+    WalletDetail& operator=(WalletDetail&& walletDetail) = default;
 
-    WalletDetail(WalletDetail&& walletDetail) :
-        Gs2Object(std::move(walletDetail)),
-        m_pData(walletDetail.m_pData)
+    WalletDetail deepCopy() const
     {
-        walletDetail.m_pData = nullptr;
-    }
-
-    ~WalletDetail()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    WalletDetail& operator=(const WalletDetail& walletDetail)
-    {
-        Gs2Object::operator=(walletDetail);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*walletDetail.m_pData);
-
-        return *this;
-    }
-
-    WalletDetail& operator=(WalletDetail&& walletDetail)
-    {
-        Gs2Object::operator=(std::move(walletDetail));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = walletDetail.m_pData;
-        walletDetail.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(WalletDetail);
     }
 
     const WalletDetail* operator->() const
@@ -226,9 +173,9 @@ public:
      *
      * @param walletDetailId ウォレットの詳細
      */
-    void setWalletDetailId(const Char* walletDetailId)
+    void setWalletDetailId(StringHolder walletDetailId)
     {
-        ensureData().walletDetailId.emplace(walletDetailId);
+        ensureData().walletDetailId.emplace(std::move(walletDetailId));
     }
 
     /**
@@ -236,9 +183,9 @@ public:
      *
      * @param walletDetailId ウォレットの詳細
      */
-    WalletDetail& withWalletDetailId(const Char* walletDetailId)
+    WalletDetail& withWalletDetailId(StringHolder walletDetailId)
     {
-        setWalletDetailId(walletDetailId);
+        setWalletDetailId(std::move(walletDetailId));
         return *this;
     }
 
@@ -257,9 +204,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -267,9 +214,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    WalletDetail& withUserId(const Char* userId)
+    WalletDetail& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -439,7 +386,7 @@ inline bool operator!=(const WalletDetail& lhs, const WalletDetail& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

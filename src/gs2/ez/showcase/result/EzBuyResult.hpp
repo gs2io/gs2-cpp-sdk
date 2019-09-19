@@ -27,16 +27,55 @@ namespace gs2 { namespace ez { namespace showcase {
 class EzBuyResult : public gs2::Gs2Object
 {
 private:
-    /** 商品 */
-    EzSalesItem m_Item;
-    /** 購入処理の実行に使用するスタンプシート */
-    StringHolder m_StampSheet;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 商品 */
+        EzSalesItem item;
+        /** 購入処理の実行に使用するスタンプシート */
+        StringHolder stampSheet;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            stampSheet(data.stampSheet)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::showcase::BuyResult& buyResult) :
+            item(*buyResult.getItem()),
+            stampSheet(*buyResult.getStampSheet())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzBuyResult(const gs2::showcase::BuyResult& result) :
-        m_Item(*result.getItem()),
-        m_StampSheet(*result.getStampSheet())
+    EzBuyResult() = default;
+    EzBuyResult(const EzBuyResult& result) = default;
+    EzBuyResult(EzBuyResult&& result) = default;
+    ~EzBuyResult() = default;
+
+    EzBuyResult(gs2::showcase::BuyResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzBuyResult& operator=(const EzBuyResult& result) = default;
+    EzBuyResult& operator=(EzBuyResult&& result) = default;
+
+    EzBuyResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzBuyResult);
     }
 
     static bool isConvertible(const gs2::showcase::BuyResult& result)
@@ -52,22 +91,12 @@ public:
 
     const EzSalesItem& getItem() const
     {
-        return m_Item;
+        return ensureData().item;
     }
 
-    EzSalesItem& getItem()
+    const StringHolder& getStampSheet() const
     {
-        return m_Item;
-    }
-
-    const gs2::StringHolder& getStampSheet() const
-    {
-        return m_StampSheet;
-    }
-
-    gs2::StringHolder& getStampSheet()
-    {
-        return m_StampSheet;
+        return ensureData().stampSheet;
     }
 };
 

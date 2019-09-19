@@ -27,19 +27,59 @@ namespace gs2 { namespace ez { namespace account {
 class EzAuthenticationResult : public gs2::Gs2Object
 {
 private:
-    /** ゲームプレイヤーアカウント */
-    EzAccount m_Item;
-    /** 署名対象のアカウント情報 */
-    StringHolder m_Body;
-    /** 署名 */
-    StringHolder m_Signature;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ゲームプレイヤーアカウント */
+        EzAccount item;
+        /** 署名対象のアカウント情報 */
+        StringHolder body;
+        /** 署名 */
+        StringHolder signature;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            body(data.body),
+            signature(data.signature)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::account::AuthenticationResult& authenticationResult) :
+            item(*authenticationResult.getItem()),
+            body(*authenticationResult.getBody()),
+            signature(*authenticationResult.getSignature())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzAuthenticationResult(const gs2::account::AuthenticationResult& result) :
-        m_Item(*result.getItem()),
-        m_Body(*result.getBody()),
-        m_Signature(*result.getSignature())
+    EzAuthenticationResult() = default;
+    EzAuthenticationResult(const EzAuthenticationResult& result) = default;
+    EzAuthenticationResult(EzAuthenticationResult&& result) = default;
+    ~EzAuthenticationResult() = default;
+
+    EzAuthenticationResult(gs2::account::AuthenticationResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzAuthenticationResult& operator=(const EzAuthenticationResult& result) = default;
+    EzAuthenticationResult& operator=(EzAuthenticationResult&& result) = default;
+
+    EzAuthenticationResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzAuthenticationResult);
     }
 
     static bool isConvertible(const gs2::account::AuthenticationResult& result)
@@ -56,32 +96,17 @@ public:
 
     const EzAccount& getItem() const
     {
-        return m_Item;
+        return ensureData().item;
     }
 
-    EzAccount& getItem()
+    const StringHolder& getBody() const
     {
-        return m_Item;
+        return ensureData().body;
     }
 
-    const gs2::StringHolder& getBody() const
+    const StringHolder& getSignature() const
     {
-        return m_Body;
-    }
-
-    gs2::StringHolder& getBody()
-    {
-        return m_Body;
-    }
-
-    const gs2::StringHolder& getSignature() const
-    {
-        return m_Signature;
-    }
-
-    gs2::StringHolder& getSignature()
-    {
-        return m_Signature;
+        return ensureData().signature;
     }
 };
 

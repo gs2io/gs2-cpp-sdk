@@ -50,8 +50,8 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
     void listExperienceModels(
-        std::function<void(AsyncEzListExperienceModelsResult&)> callback,
-        const Char* namespaceName
+        std::function<void(AsyncEzListExperienceModelsResult)> callback,
+        StringHolder namespaceName
     );
 
     /// <summary>
@@ -64,9 +64,9 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="experienceName">経験値の種類名</param>
     void getExperienceModel(
-        std::function<void(AsyncEzGetExperienceModelResult&)> callback,
-        const Char* namespaceName,
-        const Char* experienceName
+        std::function<void(AsyncEzGetExperienceModelResult)> callback,
+        StringHolder namespaceName,
+        StringHolder experienceName
     );
 
     /// <summary>
@@ -83,11 +83,11 @@ public:
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
     void listStatuses(
-        std::function<void(AsyncEzListStatusesResult&)> callback,
+        std::function<void(AsyncEzListStatusesResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* experienceName=nullptr,
-        const Char* pageToken=nullptr,
+        StringHolder namespaceName,
+        gs2::optional<StringHolder> experienceName=gs2::nullopt,
+        gs2::optional<StringHolder> pageToken=gs2::nullopt,
         gs2::optional<Int64> limit=gs2::nullopt
     );
 
@@ -102,11 +102,11 @@ public:
     /// <param name="experienceName">経験値の種類の名前</param>
     /// <param name="propertyId">プロパティID</param>
     void getStatus(
-        std::function<void(AsyncEzGetStatusResult&)> callback,
+        std::function<void(AsyncEzGetStatusResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* experienceName,
-        const Char* propertyId
+        StringHolder namespaceName,
+        StringHolder experienceName,
+        StringHolder propertyId
     );
 };
 

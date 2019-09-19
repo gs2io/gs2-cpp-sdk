@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace mission
 {
@@ -43,28 +45,28 @@ private:
         /** 削除した達成状況 */
         optional<Complete> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DeleteCompleteByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    DeleteCompleteByUserIdResult() = default;
+    DeleteCompleteByUserIdResult(const DeleteCompleteByUserIdResult& deleteCompleteByUserIdResult) = default;
+    DeleteCompleteByUserIdResult(DeleteCompleteByUserIdResult&& deleteCompleteByUserIdResult) = default;
+    ~DeleteCompleteByUserIdResult() = default;
 
-    DeleteCompleteByUserIdResult(const DeleteCompleteByUserIdResult& deleteCompleteByUserIdResult) :
-        Gs2Object(deleteCompleteByUserIdResult),
-        m_pData(deleteCompleteByUserIdResult.m_pData != nullptr ? new Data(*deleteCompleteByUserIdResult.m_pData) : nullptr)
-    {}
+    DeleteCompleteByUserIdResult& operator=(const DeleteCompleteByUserIdResult& deleteCompleteByUserIdResult) = default;
+    DeleteCompleteByUserIdResult& operator=(DeleteCompleteByUserIdResult&& deleteCompleteByUserIdResult) = default;
 
-    DeleteCompleteByUserIdResult(DeleteCompleteByUserIdResult&& deleteCompleteByUserIdResult) :
-        Gs2Object(std::move(deleteCompleteByUserIdResult)),
-        m_pData(deleteCompleteByUserIdResult.m_pData)
+    DeleteCompleteByUserIdResult deepCopy() const
     {
-        deleteCompleteByUserIdResult.m_pData = nullptr;
-    }
-
-    ~DeleteCompleteByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DeleteCompleteByUserIdResult& operator=(const DeleteCompleteByUserIdResult& deleteCompleteByUserIdResult)
-    {
-        Gs2Object::operator=(deleteCompleteByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*deleteCompleteByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    DeleteCompleteByUserIdResult& operator=(DeleteCompleteByUserIdResult&& deleteCompleteByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(deleteCompleteByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = deleteCompleteByUserIdResult.m_pData;
-        deleteCompleteByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteCompleteByUserIdResult);
     }
 
     const DeleteCompleteByUserIdResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 削除した達成状況
      */
-    void setItem(const Complete& item)
+    void setItem(Complete item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

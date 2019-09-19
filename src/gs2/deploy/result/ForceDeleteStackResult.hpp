@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace deploy
 {
@@ -43,28 +45,28 @@ private:
         /** 削除したスタック */
         optional<Stack> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    ForceDeleteStackResult() :
-        m_pData(nullptr)
-    {}
+    ForceDeleteStackResult() = default;
+    ForceDeleteStackResult(const ForceDeleteStackResult& forceDeleteStackResult) = default;
+    ForceDeleteStackResult(ForceDeleteStackResult&& forceDeleteStackResult) = default;
+    ~ForceDeleteStackResult() = default;
 
-    ForceDeleteStackResult(const ForceDeleteStackResult& forceDeleteStackResult) :
-        Gs2Object(forceDeleteStackResult),
-        m_pData(forceDeleteStackResult.m_pData != nullptr ? new Data(*forceDeleteStackResult.m_pData) : nullptr)
-    {}
+    ForceDeleteStackResult& operator=(const ForceDeleteStackResult& forceDeleteStackResult) = default;
+    ForceDeleteStackResult& operator=(ForceDeleteStackResult&& forceDeleteStackResult) = default;
 
-    ForceDeleteStackResult(ForceDeleteStackResult&& forceDeleteStackResult) :
-        Gs2Object(std::move(forceDeleteStackResult)),
-        m_pData(forceDeleteStackResult.m_pData)
+    ForceDeleteStackResult deepCopy() const
     {
-        forceDeleteStackResult.m_pData = nullptr;
-    }
-
-    ~ForceDeleteStackResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    ForceDeleteStackResult& operator=(const ForceDeleteStackResult& forceDeleteStackResult)
-    {
-        Gs2Object::operator=(forceDeleteStackResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*forceDeleteStackResult.m_pData);
-
-        return *this;
-    }
-
-    ForceDeleteStackResult& operator=(ForceDeleteStackResult&& forceDeleteStackResult)
-    {
-        Gs2Object::operator=(std::move(forceDeleteStackResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = forceDeleteStackResult.m_pData;
-        forceDeleteStackResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ForceDeleteStackResult);
     }
 
     const ForceDeleteStackResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 削除したスタック
      */
-    void setItem(const Stack& item)
+    void setItem(Stack item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

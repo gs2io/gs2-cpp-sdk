@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2InboxConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inbox
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** プレゼントボックス名 */
@@ -52,104 +54,53 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             userId(data.userId),
             messageName(data.messageName),
-            config(data.config),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+            if (data.config)
+            {
+                config = data.config->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            userId(std::move(data.userId)),
-            messageName(std::move(data.messageName)),
-            config(std::move(data.config)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    ReadMessageByUserIdRequest() :
-        m_pData(nullptr)
-    {}
+    ReadMessageByUserIdRequest() = default;
+    ReadMessageByUserIdRequest(const ReadMessageByUserIdRequest& readMessageByUserIdRequest) = default;
+    ReadMessageByUserIdRequest(ReadMessageByUserIdRequest&& readMessageByUserIdRequest) = default;
+    ~ReadMessageByUserIdRequest() GS2_OVERRIDE = default;
 
-    ReadMessageByUserIdRequest(const ReadMessageByUserIdRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Inbox(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    ReadMessageByUserIdRequest& operator=(const ReadMessageByUserIdRequest& readMessageByUserIdRequest) = default;
+    ReadMessageByUserIdRequest& operator=(ReadMessageByUserIdRequest&& readMessageByUserIdRequest) = default;
 
-    ReadMessageByUserIdRequest(ReadMessageByUserIdRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Inbox(std::move(obj)),
-        m_pData(obj.m_pData)
+    ReadMessageByUserIdRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~ReadMessageByUserIdRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    ReadMessageByUserIdRequest& operator=(const ReadMessageByUserIdRequest& readMessageByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(readMessageByUserIdRequest);
-        Gs2Inbox::operator=(readMessageByUserIdRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*readMessageByUserIdRequest.m_pData);
-
-        return *this;
-    }
-
-    ReadMessageByUserIdRequest& operator=(ReadMessageByUserIdRequest&& readMessageByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(readMessageByUserIdRequest));
-        Gs2Inbox::operator=(std::move(readMessageByUserIdRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = readMessageByUserIdRequest.m_pData;
-        readMessageByUserIdRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ReadMessageByUserIdRequest);
     }
 
     const ReadMessageByUserIdRequest* operator->() const
@@ -177,9 +128,9 @@ public:
      *
      * @param namespaceName プレゼントボックス名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -187,9 +138,9 @@ public:
      *
      * @param namespaceName プレゼントボックス名
      */
-    ReadMessageByUserIdRequest& withNamespaceName(const Char* namespaceName)
+    ReadMessageByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -208,9 +159,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -218,9 +169,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    ReadMessageByUserIdRequest& withUserId(const Char* userId)
+    ReadMessageByUserIdRequest& withUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
         return *this;
     }
 
@@ -239,9 +190,9 @@ public:
      *
      * @param messageName メッセージID
      */
-    void setMessageName(const Char* messageName)
+    void setMessageName(StringHolder messageName)
     {
-        ensureData().messageName.emplace(messageName);
+        ensureData().messageName.emplace(std::move(messageName));
     }
 
     /**
@@ -249,9 +200,9 @@ public:
      *
      * @param messageName メッセージID
      */
-    ReadMessageByUserIdRequest& withMessageName(const Char* messageName)
+    ReadMessageByUserIdRequest& withMessageName(StringHolder messageName)
     {
-        ensureData().messageName.emplace(messageName);
+        ensureData().messageName.emplace(std::move(messageName));
         return *this;
     }
 
@@ -270,9 +221,9 @@ public:
      *
      * @param config スタンプシートの変数に適用する設定値
      */
-    void setConfig(const List<Config>& config)
+    void setConfig(List<Config> config)
     {
-        ensureData().config.emplace(config);
+        ensureData().config.emplace(std::move(config));
     }
 
     /**
@@ -280,9 +231,9 @@ public:
      *
      * @param config スタンプシートの変数に適用する設定値
      */
-    ReadMessageByUserIdRequest& withConfig(const List<Config>& config)
+    ReadMessageByUserIdRequest& withConfig(List<Config> config)
     {
-        ensureData().config.emplace(config);
+        ensureData().config.emplace(std::move(config));
         return *this;
     }
 
@@ -301,9 +252,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -311,9 +262,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    ReadMessageByUserIdRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    ReadMessageByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -324,33 +275,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    ReadMessageByUserIdRequest& withGs2ClientId(const Char* gs2ClientId)
+    ReadMessageByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    ReadMessageByUserIdRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    ReadMessageByUserIdRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -359,9 +286,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    ReadMessageByUserIdRequest& withRequestId(const Char* gs2RequestId)
+    ReadMessageByUserIdRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

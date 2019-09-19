@@ -27,19 +27,57 @@ namespace gs2 { namespace ez { namespace limit {
 class EzListLimitModelsResult : public gs2::Gs2Object
 {
 private:
-    /** 回数制限の種類のリスト */
-    List<EzLimitModel> m_Items;
-
-public:
-    EzListLimitModelsResult(const gs2::limit::DescribeLimitModelsResult& result)
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** 回数制限の種類のリスト */
+        List<EzLimitModel> items;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::limit::DescribeLimitModelsResult& describeLimitModelsResult)
+        {
             {
-                m_Items += EzLimitModel(list[i]);
+                auto& list = *describeLimitModelsResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzLimitModel(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListLimitModelsResult() = default;
+    EzListLimitModelsResult(const EzListLimitModelsResult& result) = default;
+    EzListLimitModelsResult(EzListLimitModelsResult&& result) = default;
+    ~EzListLimitModelsResult() = default;
+
+    EzListLimitModelsResult(gs2::limit::DescribeLimitModelsResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListLimitModelsResult& operator=(const EzListLimitModelsResult& result) = default;
+    EzListLimitModelsResult& operator=(EzListLimitModelsResult&& result) = default;
+
+    EzListLimitModelsResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListLimitModelsResult);
     }
 
     static bool isConvertible(const gs2::limit::DescribeLimitModelsResult& result)
@@ -54,12 +92,7 @@ public:
 
     const List<EzLimitModel>& getItems() const
     {
-        return m_Items;
-    }
-
-    List<EzLimitModel>& getItems()
-    {
-        return m_Items;
+        return ensureData().items;
     }
 };
 

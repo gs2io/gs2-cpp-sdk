@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace project
 {
@@ -43,28 +45,25 @@ private:
         /** パスワードを再発行するために必要なトークン */
         optional<StringHolder> issuePasswordToken;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             issuePasswordToken(data.issuePasswordToken)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            issuePasswordToken(std::move(data.issuePasswordToken))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "issuePasswordToken") == 0) {
+            if (std::strcmp(name_, "issuePasswordToken") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->issuePasswordToken.emplace(jsonValue.GetString());
@@ -73,72 +72,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    ForgetResult() :
-        m_pData(nullptr)
-    {}
+    ForgetResult() = default;
+    ForgetResult(const ForgetResult& forgetResult) = default;
+    ForgetResult(ForgetResult&& forgetResult) = default;
+    ~ForgetResult() = default;
 
-    ForgetResult(const ForgetResult& forgetResult) :
-        Gs2Object(forgetResult),
-        m_pData(forgetResult.m_pData != nullptr ? new Data(*forgetResult.m_pData) : nullptr)
-    {}
+    ForgetResult& operator=(const ForgetResult& forgetResult) = default;
+    ForgetResult& operator=(ForgetResult&& forgetResult) = default;
 
-    ForgetResult(ForgetResult&& forgetResult) :
-        Gs2Object(std::move(forgetResult)),
-        m_pData(forgetResult.m_pData)
+    ForgetResult deepCopy() const
     {
-        forgetResult.m_pData = nullptr;
-    }
-
-    ~ForgetResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    ForgetResult& operator=(const ForgetResult& forgetResult)
-    {
-        Gs2Object::operator=(forgetResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*forgetResult.m_pData);
-
-        return *this;
-    }
-
-    ForgetResult& operator=(ForgetResult&& forgetResult)
-    {
-        Gs2Object::operator=(std::move(forgetResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = forgetResult.m_pData;
-        forgetResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ForgetResult);
     }
 
     const ForgetResult* operator->() const
@@ -165,9 +112,9 @@ public:
      *
      * @param issuePasswordToken パスワードを再発行するために必要なトークン
      */
-    void setIssuePasswordToken(const Char* issuePasswordToken)
+    void setIssuePasswordToken(StringHolder issuePasswordToken)
     {
-        ensureData().issuePasswordToken.emplace(issuePasswordToken);
+        ensureData().issuePasswordToken.emplace(std::move(issuePasswordToken));
     }
 
 

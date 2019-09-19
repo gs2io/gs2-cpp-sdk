@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace experience
 {
@@ -43,28 +45,28 @@ private:
         /** 更新した現在有効な現在有効な経験値設定 */
         optional<CurrentExperienceMaster> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    UpdateCurrentExperienceMasterResult() :
-        m_pData(nullptr)
-    {}
+    UpdateCurrentExperienceMasterResult() = default;
+    UpdateCurrentExperienceMasterResult(const UpdateCurrentExperienceMasterResult& updateCurrentExperienceMasterResult) = default;
+    UpdateCurrentExperienceMasterResult(UpdateCurrentExperienceMasterResult&& updateCurrentExperienceMasterResult) = default;
+    ~UpdateCurrentExperienceMasterResult() = default;
 
-    UpdateCurrentExperienceMasterResult(const UpdateCurrentExperienceMasterResult& updateCurrentExperienceMasterResult) :
-        Gs2Object(updateCurrentExperienceMasterResult),
-        m_pData(updateCurrentExperienceMasterResult.m_pData != nullptr ? new Data(*updateCurrentExperienceMasterResult.m_pData) : nullptr)
-    {}
+    UpdateCurrentExperienceMasterResult& operator=(const UpdateCurrentExperienceMasterResult& updateCurrentExperienceMasterResult) = default;
+    UpdateCurrentExperienceMasterResult& operator=(UpdateCurrentExperienceMasterResult&& updateCurrentExperienceMasterResult) = default;
 
-    UpdateCurrentExperienceMasterResult(UpdateCurrentExperienceMasterResult&& updateCurrentExperienceMasterResult) :
-        Gs2Object(std::move(updateCurrentExperienceMasterResult)),
-        m_pData(updateCurrentExperienceMasterResult.m_pData)
+    UpdateCurrentExperienceMasterResult deepCopy() const
     {
-        updateCurrentExperienceMasterResult.m_pData = nullptr;
-    }
-
-    ~UpdateCurrentExperienceMasterResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateCurrentExperienceMasterResult& operator=(const UpdateCurrentExperienceMasterResult& updateCurrentExperienceMasterResult)
-    {
-        Gs2Object::operator=(updateCurrentExperienceMasterResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateCurrentExperienceMasterResult.m_pData);
-
-        return *this;
-    }
-
-    UpdateCurrentExperienceMasterResult& operator=(UpdateCurrentExperienceMasterResult&& updateCurrentExperienceMasterResult)
-    {
-        Gs2Object::operator=(std::move(updateCurrentExperienceMasterResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateCurrentExperienceMasterResult.m_pData;
-        updateCurrentExperienceMasterResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateCurrentExperienceMasterResult);
     }
 
     const UpdateCurrentExperienceMasterResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 更新した現在有効な現在有効な経験値設定
      */
-    void setItem(const CurrentExperienceMaster& item)
+    void setItem(CurrentExperienceMaster item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace key {
@@ -54,8 +56,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -65,57 +66,55 @@ private:
             secret(data.secret),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            keyId(std::move(data.keyId)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            secret(std::move(data.secret)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "keyId") == 0) {
+            if (std::strcmp(name_, "keyId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->keyId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "secret") == 0) {
+            else if (std::strcmp(name_, "secret") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->secret.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -124,72 +123,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Key() :
-        m_pData(nullptr)
-    {}
+    Key() = default;
+    Key(const Key& key) = default;
+    Key(Key&& key) = default;
+    ~Key() = default;
 
-    Key(const Key& key) :
-        Gs2Object(key),
-        m_pData(key.m_pData != nullptr ? new Data(*key.m_pData) : nullptr)
-    {}
+    Key& operator=(const Key& key) = default;
+    Key& operator=(Key&& key) = default;
 
-    Key(Key&& key) :
-        Gs2Object(std::move(key)),
-        m_pData(key.m_pData)
+    Key deepCopy() const
     {
-        key.m_pData = nullptr;
-    }
-
-    ~Key()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Key& operator=(const Key& key)
-    {
-        Gs2Object::operator=(key);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*key.m_pData);
-
-        return *this;
-    }
-
-    Key& operator=(Key&& key)
-    {
-        Gs2Object::operator=(std::move(key));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = key.m_pData;
-        key.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Key);
     }
 
     const Key* operator->() const
@@ -216,9 +163,9 @@ public:
      *
      * @param keyId 暗号鍵
      */
-    void setKeyId(const Char* keyId)
+    void setKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
     }
 
     /**
@@ -226,9 +173,9 @@ public:
      *
      * @param keyId 暗号鍵
      */
-    Key& withKeyId(const Char* keyId)
+    Key& withKeyId(StringHolder keyId)
     {
-        setKeyId(keyId);
+        setKeyId(std::move(keyId));
         return *this;
     }
 
@@ -247,9 +194,9 @@ public:
      *
      * @param name 暗号鍵名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -257,9 +204,9 @@ public:
      *
      * @param name 暗号鍵名
      */
-    Key& withName(const Char* name)
+    Key& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -278,9 +225,9 @@ public:
      *
      * @param description 説明文
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -288,9 +235,9 @@ public:
      *
      * @param description 説明文
      */
-    Key& withDescription(const Char* description)
+    Key& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -309,9 +256,9 @@ public:
      *
      * @param secret 暗号鍵
      */
-    void setSecret(const Char* secret)
+    void setSecret(StringHolder secret)
     {
-        ensureData().secret.emplace(secret);
+        ensureData().secret.emplace(std::move(secret));
     }
 
     /**
@@ -319,9 +266,9 @@ public:
      *
      * @param secret 暗号鍵
      */
-    Key& withSecret(const Char* secret)
+    Key& withSecret(StringHolder secret)
     {
-        setSecret(secret);
+        setSecret(std::move(secret));
         return *this;
     }
 
@@ -398,7 +345,7 @@ inline bool operator!=(const Key& lhs, const Key& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

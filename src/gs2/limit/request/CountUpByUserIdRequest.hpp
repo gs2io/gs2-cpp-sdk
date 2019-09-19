@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2LimitConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace limit
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -56,11 +58,10 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             limitName(data.limitName),
             counterName(data.counterName),
@@ -68,96 +69,41 @@ private:
             countUpValue(data.countUpValue),
             maxValue(data.maxValue),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            limitName(std::move(data.limitName)),
-            counterName(std::move(data.counterName)),
-            userId(std::move(data.userId)),
-            countUpValue(std::move(data.countUpValue)),
-            maxValue(std::move(data.maxValue)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CountUpByUserIdRequest() :
-        m_pData(nullptr)
-    {}
+    CountUpByUserIdRequest() = default;
+    CountUpByUserIdRequest(const CountUpByUserIdRequest& countUpByUserIdRequest) = default;
+    CountUpByUserIdRequest(CountUpByUserIdRequest&& countUpByUserIdRequest) = default;
+    ~CountUpByUserIdRequest() GS2_OVERRIDE = default;
 
-    CountUpByUserIdRequest(const CountUpByUserIdRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Limit(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CountUpByUserIdRequest& operator=(const CountUpByUserIdRequest& countUpByUserIdRequest) = default;
+    CountUpByUserIdRequest& operator=(CountUpByUserIdRequest&& countUpByUserIdRequest) = default;
 
-    CountUpByUserIdRequest(CountUpByUserIdRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Limit(std::move(obj)),
-        m_pData(obj.m_pData)
+    CountUpByUserIdRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CountUpByUserIdRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CountUpByUserIdRequest& operator=(const CountUpByUserIdRequest& countUpByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(countUpByUserIdRequest);
-        Gs2Limit::operator=(countUpByUserIdRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*countUpByUserIdRequest.m_pData);
-
-        return *this;
-    }
-
-    CountUpByUserIdRequest& operator=(CountUpByUserIdRequest&& countUpByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(countUpByUserIdRequest));
-        Gs2Limit::operator=(std::move(countUpByUserIdRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = countUpByUserIdRequest.m_pData;
-        countUpByUserIdRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CountUpByUserIdRequest);
     }
 
     const CountUpByUserIdRequest* operator->() const
@@ -185,9 +131,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -195,9 +141,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    CountUpByUserIdRequest& withNamespaceName(const Char* namespaceName)
+    CountUpByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -216,9 +162,9 @@ public:
      *
      * @param limitName 回数制限の種類の名前
      */
-    void setLimitName(const Char* limitName)
+    void setLimitName(StringHolder limitName)
     {
-        ensureData().limitName.emplace(limitName);
+        ensureData().limitName.emplace(std::move(limitName));
     }
 
     /**
@@ -226,9 +172,9 @@ public:
      *
      * @param limitName 回数制限の種類の名前
      */
-    CountUpByUserIdRequest& withLimitName(const Char* limitName)
+    CountUpByUserIdRequest& withLimitName(StringHolder limitName)
     {
-        ensureData().limitName.emplace(limitName);
+        ensureData().limitName.emplace(std::move(limitName));
         return *this;
     }
 
@@ -247,9 +193,9 @@ public:
      *
      * @param counterName カウンターの名前
      */
-    void setCounterName(const Char* counterName)
+    void setCounterName(StringHolder counterName)
     {
-        ensureData().counterName.emplace(counterName);
+        ensureData().counterName.emplace(std::move(counterName));
     }
 
     /**
@@ -257,9 +203,9 @@ public:
      *
      * @param counterName カウンターの名前
      */
-    CountUpByUserIdRequest& withCounterName(const Char* counterName)
+    CountUpByUserIdRequest& withCounterName(StringHolder counterName)
     {
-        ensureData().counterName.emplace(counterName);
+        ensureData().counterName.emplace(std::move(counterName));
         return *this;
     }
 
@@ -278,9 +224,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -288,9 +234,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    CountUpByUserIdRequest& withUserId(const Char* userId)
+    CountUpByUserIdRequest& withUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
         return *this;
     }
 
@@ -371,9 +317,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -381,9 +327,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    CountUpByUserIdRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    CountUpByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -394,33 +340,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CountUpByUserIdRequest& withGs2ClientId(const Char* gs2ClientId)
+    CountUpByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CountUpByUserIdRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CountUpByUserIdRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -429,9 +351,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CountUpByUserIdRequest& withRequestId(const Char* gs2RequestId)
+    CountUpByUserIdRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

@@ -28,10 +28,10 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::list(
-    std::function<void(AsyncEzListResult&)> callback,
+    std::function<void(AsyncEzListResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* pageToken,
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> pageToken,
     gs2::optional<Int64> limit
 )
 {
@@ -39,16 +39,16 @@ void Client::list(
     request.setNamespaceName(namespaceName);
     if (pageToken)
     {
-        request.setPageToken(pageToken);
+        request.setPageToken(std::move(*pageToken));
     }
     if (limit)
     {
-        request.setLimit(*limit);
+        request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.describeMessages(
         request,
-        [callback](gs2::inbox::AsyncDescribeMessagesResult& r)
+        [callback](gs2::inbox::AsyncDescribeMessagesResult r)
         {
             if (r.getError())
             {
@@ -74,22 +74,22 @@ void Client::list(
 }
 
 void Client::read(
-    std::function<void(AsyncEzReadResult&)> callback,
+    std::function<void(AsyncEzReadResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* messageName
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> messageName
 )
 {
     gs2::inbox::ReadMessageRequest request;
     request.setNamespaceName(namespaceName);
     if (messageName)
     {
-        request.setMessageName(messageName);
+        request.setMessageName(std::move(*messageName));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.readMessage(
         request,
-        [callback](gs2::inbox::AsyncReadMessageResult& r)
+        [callback](gs2::inbox::AsyncReadMessageResult r)
         {
             if (r.getError())
             {
@@ -115,10 +115,10 @@ void Client::read(
 }
 
 void Client::delete_(
-    std::function<void(AsyncEzDeleteResult&)> callback,
+    std::function<void(AsyncEzDeleteResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* messageName
+    StringHolder namespaceName,
+    StringHolder messageName
 )
 {
     gs2::inbox::DeleteMessageRequest request;
@@ -127,7 +127,7 @@ void Client::delete_(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.deleteMessage(
         request,
-        [callback](gs2::inbox::AsyncDeleteMessageResult& r)
+        [callback](gs2::inbox::AsyncDeleteMessageResult r)
         {
             if (r.getError())
             {

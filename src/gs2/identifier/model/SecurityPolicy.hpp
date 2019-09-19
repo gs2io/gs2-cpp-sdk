@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace identifier {
@@ -56,8 +58,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -68,64 +69,62 @@ private:
             policy(data.policy),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            securityPolicyId(std::move(data.securityPolicyId)),
-            ownerId(std::move(data.ownerId)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            policy(std::move(data.policy)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "securityPolicyId") == 0) {
+            if (std::strcmp(name_, "securityPolicyId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->securityPolicyId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "policy") == 0) {
+            else if (std::strcmp(name_, "policy") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->policy.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -134,72 +133,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    SecurityPolicy() :
-        m_pData(nullptr)
-    {}
+    SecurityPolicy() = default;
+    SecurityPolicy(const SecurityPolicy& securityPolicy) = default;
+    SecurityPolicy(SecurityPolicy&& securityPolicy) = default;
+    ~SecurityPolicy() = default;
 
-    SecurityPolicy(const SecurityPolicy& securityPolicy) :
-        Gs2Object(securityPolicy),
-        m_pData(securityPolicy.m_pData != nullptr ? new Data(*securityPolicy.m_pData) : nullptr)
-    {}
+    SecurityPolicy& operator=(const SecurityPolicy& securityPolicy) = default;
+    SecurityPolicy& operator=(SecurityPolicy&& securityPolicy) = default;
 
-    SecurityPolicy(SecurityPolicy&& securityPolicy) :
-        Gs2Object(std::move(securityPolicy)),
-        m_pData(securityPolicy.m_pData)
+    SecurityPolicy deepCopy() const
     {
-        securityPolicy.m_pData = nullptr;
-    }
-
-    ~SecurityPolicy()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    SecurityPolicy& operator=(const SecurityPolicy& securityPolicy)
-    {
-        Gs2Object::operator=(securityPolicy);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*securityPolicy.m_pData);
-
-        return *this;
-    }
-
-    SecurityPolicy& operator=(SecurityPolicy&& securityPolicy)
-    {
-        Gs2Object::operator=(std::move(securityPolicy));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = securityPolicy.m_pData;
-        securityPolicy.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(SecurityPolicy);
     }
 
     const SecurityPolicy* operator->() const
@@ -226,9 +173,9 @@ public:
      *
      * @param securityPolicyId セキュリティポリシー
      */
-    void setSecurityPolicyId(const Char* securityPolicyId)
+    void setSecurityPolicyId(StringHolder securityPolicyId)
     {
-        ensureData().securityPolicyId.emplace(securityPolicyId);
+        ensureData().securityPolicyId.emplace(std::move(securityPolicyId));
     }
 
     /**
@@ -236,9 +183,9 @@ public:
      *
      * @param securityPolicyId セキュリティポリシー
      */
-    SecurityPolicy& withSecurityPolicyId(const Char* securityPolicyId)
+    SecurityPolicy& withSecurityPolicyId(StringHolder securityPolicyId)
     {
-        setSecurityPolicyId(securityPolicyId);
+        setSecurityPolicyId(std::move(securityPolicyId));
         return *this;
     }
 
@@ -257,9 +204,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
@@ -267,9 +214,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    SecurityPolicy& withOwnerId(const Char* ownerId)
+    SecurityPolicy& withOwnerId(StringHolder ownerId)
     {
-        setOwnerId(ownerId);
+        setOwnerId(std::move(ownerId));
         return *this;
     }
 
@@ -288,9 +235,9 @@ public:
      *
      * @param name セキュリティポリシー名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -298,9 +245,9 @@ public:
      *
      * @param name セキュリティポリシー名
      */
-    SecurityPolicy& withName(const Char* name)
+    SecurityPolicy& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -319,9 +266,9 @@ public:
      *
      * @param description セキュリティポリシーの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -329,9 +276,9 @@ public:
      *
      * @param description セキュリティポリシーの説明
      */
-    SecurityPolicy& withDescription(const Char* description)
+    SecurityPolicy& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -350,9 +297,9 @@ public:
      *
      * @param policy ポリシードキュメント
      */
-    void setPolicy(const Char* policy)
+    void setPolicy(StringHolder policy)
     {
-        ensureData().policy.emplace(policy);
+        ensureData().policy.emplace(std::move(policy));
     }
 
     /**
@@ -360,9 +307,9 @@ public:
      *
      * @param policy ポリシードキュメント
      */
-    SecurityPolicy& withPolicy(const Char* policy)
+    SecurityPolicy& withPolicy(StringHolder policy)
     {
-        setPolicy(policy);
+        setPolicy(std::move(policy));
         return *this;
     }
 
@@ -439,7 +386,7 @@ inline bool operator!=(const SecurityPolicy& lhs, const SecurityPolicy& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

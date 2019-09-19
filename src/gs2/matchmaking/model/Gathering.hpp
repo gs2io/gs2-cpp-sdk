@@ -22,9 +22,11 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "AttributeRange.hpp"
 #include "CapacityOfRole.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace matchmaking {
@@ -60,54 +62,55 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             gatheringId(data.gatheringId),
             name(data.name),
-            attributeRanges(data.attributeRanges),
-            capacityOfRoles(data.capacityOfRoles),
-            allowUserIds(data.allowUserIds),
             metadata(data.metadata),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.attributeRanges)
+            {
+                attributeRanges = data.attributeRanges->deepCopy();
+            }
+            if (data.capacityOfRoles)
+            {
+                capacityOfRoles = data.capacityOfRoles->deepCopy();
+            }
+            if (data.allowUserIds)
+            {
+                allowUserIds = data.allowUserIds->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            gatheringId(std::move(data.gatheringId)),
-            name(std::move(data.name)),
-            attributeRanges(std::move(data.attributeRanges)),
-            capacityOfRoles(std::move(data.capacityOfRoles)),
-            allowUserIds(std::move(data.allowUserIds)),
-            metadata(std::move(data.metadata)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "gatheringId") == 0) {
+            if (std::strcmp(name_, "gatheringId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->gatheringId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "attributeRanges") == 0) {
+            else if (std::strcmp(name_, "attributeRanges") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -119,7 +122,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "capacityOfRoles") == 0) {
+            else if (std::strcmp(name_, "capacityOfRoles") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -131,7 +135,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "allowUserIds") == 0) {
+            else if (std::strcmp(name_, "allowUserIds") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -146,19 +151,22 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -167,72 +175,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Gathering() :
-        m_pData(nullptr)
-    {}
+    Gathering() = default;
+    Gathering(const Gathering& gathering) = default;
+    Gathering(Gathering&& gathering) = default;
+    ~Gathering() = default;
 
-    Gathering(const Gathering& gathering) :
-        Gs2Object(gathering),
-        m_pData(gathering.m_pData != nullptr ? new Data(*gathering.m_pData) : nullptr)
-    {}
+    Gathering& operator=(const Gathering& gathering) = default;
+    Gathering& operator=(Gathering&& gathering) = default;
 
-    Gathering(Gathering&& gathering) :
-        Gs2Object(std::move(gathering)),
-        m_pData(gathering.m_pData)
+    Gathering deepCopy() const
     {
-        gathering.m_pData = nullptr;
-    }
-
-    ~Gathering()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Gathering& operator=(const Gathering& gathering)
-    {
-        Gs2Object::operator=(gathering);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*gathering.m_pData);
-
-        return *this;
-    }
-
-    Gathering& operator=(Gathering&& gathering)
-    {
-        Gs2Object::operator=(std::move(gathering));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = gathering.m_pData;
-        gathering.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Gathering);
     }
 
     const Gathering* operator->() const
@@ -259,9 +215,9 @@ public:
      *
      * @param gatheringId ギャザリング
      */
-    void setGatheringId(const Char* gatheringId)
+    void setGatheringId(StringHolder gatheringId)
     {
-        ensureData().gatheringId.emplace(gatheringId);
+        ensureData().gatheringId.emplace(std::move(gatheringId));
     }
 
     /**
@@ -269,9 +225,9 @@ public:
      *
      * @param gatheringId ギャザリング
      */
-    Gathering& withGatheringId(const Char* gatheringId)
+    Gathering& withGatheringId(StringHolder gatheringId)
     {
-        setGatheringId(gatheringId);
+        setGatheringId(std::move(gatheringId));
         return *this;
     }
 
@@ -290,9 +246,9 @@ public:
      *
      * @param name ギャザリング名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -300,9 +256,9 @@ public:
      *
      * @param name ギャザリング名
      */
-    Gathering& withName(const Char* name)
+    Gathering& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -321,9 +277,9 @@ public:
      *
      * @param attributeRanges 募集条件
      */
-    void setAttributeRanges(const List<AttributeRange>& attributeRanges)
+    void setAttributeRanges(List<AttributeRange> attributeRanges)
     {
-        ensureData().attributeRanges.emplace(attributeRanges);
+        ensureData().attributeRanges.emplace(std::move(attributeRanges));
     }
 
     /**
@@ -331,9 +287,9 @@ public:
      *
      * @param attributeRanges 募集条件
      */
-    Gathering& withAttributeRanges(const List<AttributeRange>& attributeRanges)
+    Gathering& withAttributeRanges(List<AttributeRange> attributeRanges)
     {
-        setAttributeRanges(attributeRanges);
+        setAttributeRanges(std::move(attributeRanges));
         return *this;
     }
 
@@ -352,9 +308,9 @@ public:
      *
      * @param capacityOfRoles 参加者
      */
-    void setCapacityOfRoles(const List<CapacityOfRole>& capacityOfRoles)
+    void setCapacityOfRoles(List<CapacityOfRole> capacityOfRoles)
     {
-        ensureData().capacityOfRoles.emplace(capacityOfRoles);
+        ensureData().capacityOfRoles.emplace(std::move(capacityOfRoles));
     }
 
     /**
@@ -362,9 +318,9 @@ public:
      *
      * @param capacityOfRoles 参加者
      */
-    Gathering& withCapacityOfRoles(const List<CapacityOfRole>& capacityOfRoles)
+    Gathering& withCapacityOfRoles(List<CapacityOfRole> capacityOfRoles)
     {
-        setCapacityOfRoles(capacityOfRoles);
+        setCapacityOfRoles(std::move(capacityOfRoles));
         return *this;
     }
 
@@ -383,9 +339,9 @@ public:
      *
      * @param allowUserIds 参加を許可するユーザIDリスト
      */
-    void setAllowUserIds(const List<StringHolder>& allowUserIds)
+    void setAllowUserIds(List<StringHolder> allowUserIds)
     {
-        ensureData().allowUserIds.emplace(allowUserIds);
+        ensureData().allowUserIds.emplace(std::move(allowUserIds));
     }
 
     /**
@@ -393,9 +349,9 @@ public:
      *
      * @param allowUserIds 参加を許可するユーザIDリスト
      */
-    Gathering& withAllowUserIds(const List<StringHolder>& allowUserIds)
+    Gathering& withAllowUserIds(List<StringHolder> allowUserIds)
     {
-        setAllowUserIds(allowUserIds);
+        setAllowUserIds(std::move(allowUserIds));
         return *this;
     }
 
@@ -414,9 +370,9 @@ public:
      *
      * @param metadata メタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -424,9 +380,9 @@ public:
      *
      * @param metadata メタデータ
      */
-    Gathering& withMetadata(const Char* metadata)
+    Gathering& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -503,7 +459,7 @@ inline bool operator!=(const Gathering& lhs, const Gathering& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

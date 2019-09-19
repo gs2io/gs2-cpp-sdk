@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2MissionConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace mission
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -52,104 +54,50 @@ private:
         /** ミッションを達成したときの通知先ネームスペース のGRN */
         optional<StringHolder> completeNotificationNamespaceId;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             name(data.name),
             metadata(data.metadata),
             description(data.description),
             completeNotificationNamespaceId(data.completeNotificationNamespaceId)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            description(std::move(data.description)),
-            completeNotificationNamespaceId(std::move(data.completeNotificationNamespaceId))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CreateMissionGroupModelMasterRequest() :
-        m_pData(nullptr)
-    {}
+    CreateMissionGroupModelMasterRequest() = default;
+    CreateMissionGroupModelMasterRequest(const CreateMissionGroupModelMasterRequest& createMissionGroupModelMasterRequest) = default;
+    CreateMissionGroupModelMasterRequest(CreateMissionGroupModelMasterRequest&& createMissionGroupModelMasterRequest) = default;
+    ~CreateMissionGroupModelMasterRequest() GS2_OVERRIDE = default;
 
-    CreateMissionGroupModelMasterRequest(const CreateMissionGroupModelMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Mission(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CreateMissionGroupModelMasterRequest& operator=(const CreateMissionGroupModelMasterRequest& createMissionGroupModelMasterRequest) = default;
+    CreateMissionGroupModelMasterRequest& operator=(CreateMissionGroupModelMasterRequest&& createMissionGroupModelMasterRequest) = default;
 
-    CreateMissionGroupModelMasterRequest(CreateMissionGroupModelMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Mission(std::move(obj)),
-        m_pData(obj.m_pData)
+    CreateMissionGroupModelMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CreateMissionGroupModelMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateMissionGroupModelMasterRequest& operator=(const CreateMissionGroupModelMasterRequest& createMissionGroupModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(createMissionGroupModelMasterRequest);
-        Gs2Mission::operator=(createMissionGroupModelMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createMissionGroupModelMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    CreateMissionGroupModelMasterRequest& operator=(CreateMissionGroupModelMasterRequest&& createMissionGroupModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(createMissionGroupModelMasterRequest));
-        Gs2Mission::operator=(std::move(createMissionGroupModelMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createMissionGroupModelMasterRequest.m_pData;
-        createMissionGroupModelMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateMissionGroupModelMasterRequest);
     }
 
     const CreateMissionGroupModelMasterRequest* operator->() const
@@ -177,9 +125,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -187,9 +135,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    CreateMissionGroupModelMasterRequest& withNamespaceName(const Char* namespaceName)
+    CreateMissionGroupModelMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -208,9 +156,9 @@ public:
      *
      * @param name ミッショングループ名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -218,9 +166,9 @@ public:
      *
      * @param name ミッショングループ名
      */
-    CreateMissionGroupModelMasterRequest& withName(const Char* name)
+    CreateMissionGroupModelMasterRequest& withName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
         return *this;
     }
 
@@ -239,9 +187,9 @@ public:
      *
      * @param metadata メタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -249,9 +197,9 @@ public:
      *
      * @param metadata メタデータ
      */
-    CreateMissionGroupModelMasterRequest& withMetadata(const Char* metadata)
+    CreateMissionGroupModelMasterRequest& withMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
         return *this;
     }
 
@@ -270,9 +218,9 @@ public:
      *
      * @param description ミッショングループの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -280,9 +228,9 @@ public:
      *
      * @param description ミッショングループの説明
      */
-    CreateMissionGroupModelMasterRequest& withDescription(const Char* description)
+    CreateMissionGroupModelMasterRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -301,9 +249,9 @@ public:
      *
      * @param completeNotificationNamespaceId ミッションを達成したときの通知先ネームスペース のGRN
      */
-    void setCompleteNotificationNamespaceId(const Char* completeNotificationNamespaceId)
+    void setCompleteNotificationNamespaceId(StringHolder completeNotificationNamespaceId)
     {
-        ensureData().completeNotificationNamespaceId.emplace(completeNotificationNamespaceId);
+        ensureData().completeNotificationNamespaceId.emplace(std::move(completeNotificationNamespaceId));
     }
 
     /**
@@ -311,9 +259,9 @@ public:
      *
      * @param completeNotificationNamespaceId ミッションを達成したときの通知先ネームスペース のGRN
      */
-    CreateMissionGroupModelMasterRequest& withCompleteNotificationNamespaceId(const Char* completeNotificationNamespaceId)
+    CreateMissionGroupModelMasterRequest& withCompleteNotificationNamespaceId(StringHolder completeNotificationNamespaceId)
     {
-        ensureData().completeNotificationNamespaceId.emplace(completeNotificationNamespaceId);
+        ensureData().completeNotificationNamespaceId.emplace(std::move(completeNotificationNamespaceId));
         return *this;
     }
 
@@ -324,33 +272,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CreateMissionGroupModelMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    CreateMissionGroupModelMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CreateMissionGroupModelMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CreateMissionGroupModelMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -359,9 +283,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CreateMissionGroupModelMasterRequest& withRequestId(const Char* gs2RequestId)
+    CreateMissionGroupModelMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

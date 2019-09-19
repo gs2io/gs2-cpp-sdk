@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace quest {
@@ -54,56 +56,54 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             completedQuestListId(data.completedQuestListId),
             userId(data.userId),
             questGroupName(data.questGroupName),
-            completeQuestNames(data.completeQuestNames),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.completeQuestNames)
+            {
+                completeQuestNames = data.completeQuestNames->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            completedQuestListId(std::move(data.completedQuestListId)),
-            userId(std::move(data.userId)),
-            questGroupName(std::move(data.questGroupName)),
-            completeQuestNames(std::move(data.completeQuestNames)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "completedQuestListId") == 0) {
+            if (std::strcmp(name_, "completedQuestListId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->completedQuestListId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "questGroupName") == 0) {
+            else if (std::strcmp(name_, "questGroupName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->questGroupName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "completeQuestNames") == 0) {
+            else if (std::strcmp(name_, "completeQuestNames") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -118,13 +118,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -133,72 +135,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    CompletedQuestList() :
-        m_pData(nullptr)
-    {}
+    CompletedQuestList() = default;
+    CompletedQuestList(const CompletedQuestList& completedQuestList) = default;
+    CompletedQuestList(CompletedQuestList&& completedQuestList) = default;
+    ~CompletedQuestList() = default;
 
-    CompletedQuestList(const CompletedQuestList& completedQuestList) :
-        Gs2Object(completedQuestList),
-        m_pData(completedQuestList.m_pData != nullptr ? new Data(*completedQuestList.m_pData) : nullptr)
-    {}
+    CompletedQuestList& operator=(const CompletedQuestList& completedQuestList) = default;
+    CompletedQuestList& operator=(CompletedQuestList&& completedQuestList) = default;
 
-    CompletedQuestList(CompletedQuestList&& completedQuestList) :
-        Gs2Object(std::move(completedQuestList)),
-        m_pData(completedQuestList.m_pData)
+    CompletedQuestList deepCopy() const
     {
-        completedQuestList.m_pData = nullptr;
-    }
-
-    ~CompletedQuestList()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CompletedQuestList& operator=(const CompletedQuestList& completedQuestList)
-    {
-        Gs2Object::operator=(completedQuestList);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*completedQuestList.m_pData);
-
-        return *this;
-    }
-
-    CompletedQuestList& operator=(CompletedQuestList&& completedQuestList)
-    {
-        Gs2Object::operator=(std::move(completedQuestList));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = completedQuestList.m_pData;
-        completedQuestList.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CompletedQuestList);
     }
 
     const CompletedQuestList* operator->() const
@@ -225,9 +175,9 @@ public:
      *
      * @param completedQuestListId クエスト進行
      */
-    void setCompletedQuestListId(const Char* completedQuestListId)
+    void setCompletedQuestListId(StringHolder completedQuestListId)
     {
-        ensureData().completedQuestListId.emplace(completedQuestListId);
+        ensureData().completedQuestListId.emplace(std::move(completedQuestListId));
     }
 
     /**
@@ -235,9 +185,9 @@ public:
      *
      * @param completedQuestListId クエスト進行
      */
-    CompletedQuestList& withCompletedQuestListId(const Char* completedQuestListId)
+    CompletedQuestList& withCompletedQuestListId(StringHolder completedQuestListId)
     {
-        setCompletedQuestListId(completedQuestListId);
+        setCompletedQuestListId(std::move(completedQuestListId));
         return *this;
     }
 
@@ -256,9 +206,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -266,9 +216,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    CompletedQuestList& withUserId(const Char* userId)
+    CompletedQuestList& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -287,9 +237,9 @@ public:
      *
      * @param questGroupName クエストグループ名
      */
-    void setQuestGroupName(const Char* questGroupName)
+    void setQuestGroupName(StringHolder questGroupName)
     {
-        ensureData().questGroupName.emplace(questGroupName);
+        ensureData().questGroupName.emplace(std::move(questGroupName));
     }
 
     /**
@@ -297,9 +247,9 @@ public:
      *
      * @param questGroupName クエストグループ名
      */
-    CompletedQuestList& withQuestGroupName(const Char* questGroupName)
+    CompletedQuestList& withQuestGroupName(StringHolder questGroupName)
     {
-        setQuestGroupName(questGroupName);
+        setQuestGroupName(std::move(questGroupName));
         return *this;
     }
 
@@ -318,9 +268,9 @@ public:
      *
      * @param completeQuestNames 攻略済みのクエスト名一覧のリスト
      */
-    void setCompleteQuestNames(const List<StringHolder>& completeQuestNames)
+    void setCompleteQuestNames(List<StringHolder> completeQuestNames)
     {
-        ensureData().completeQuestNames.emplace(completeQuestNames);
+        ensureData().completeQuestNames.emplace(std::move(completeQuestNames));
     }
 
     /**
@@ -328,9 +278,9 @@ public:
      *
      * @param completeQuestNames 攻略済みのクエスト名一覧のリスト
      */
-    CompletedQuestList& withCompleteQuestNames(const List<StringHolder>& completeQuestNames)
+    CompletedQuestList& withCompleteQuestNames(List<StringHolder> completeQuestNames)
     {
-        setCompleteQuestNames(completeQuestNames);
+        setCompleteQuestNames(std::move(completeQuestNames));
         return *this;
     }
 
@@ -407,7 +357,7 @@ inline bool operator!=(const CompletedQuestList& lhs, const CompletedQuestList& 
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

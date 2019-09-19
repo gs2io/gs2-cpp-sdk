@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace mission
 {
@@ -43,28 +45,25 @@ private:
         /** ミッションの達成報酬を受領するスタンプシート */
         optional<StringHolder> stampSheet;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             stampSheet(data.stampSheet)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            stampSheet(std::move(data.stampSheet))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "stampSheet") == 0) {
+            if (std::strcmp(name_, "stampSheet") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->stampSheet.emplace(jsonValue.GetString());
@@ -73,72 +72,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    CompleteResult() :
-        m_pData(nullptr)
-    {}
+    CompleteResult() = default;
+    CompleteResult(const CompleteResult& completeResult) = default;
+    CompleteResult(CompleteResult&& completeResult) = default;
+    ~CompleteResult() = default;
 
-    CompleteResult(const CompleteResult& completeResult) :
-        Gs2Object(completeResult),
-        m_pData(completeResult.m_pData != nullptr ? new Data(*completeResult.m_pData) : nullptr)
-    {}
+    CompleteResult& operator=(const CompleteResult& completeResult) = default;
+    CompleteResult& operator=(CompleteResult&& completeResult) = default;
 
-    CompleteResult(CompleteResult&& completeResult) :
-        Gs2Object(std::move(completeResult)),
-        m_pData(completeResult.m_pData)
+    CompleteResult deepCopy() const
     {
-        completeResult.m_pData = nullptr;
-    }
-
-    ~CompleteResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CompleteResult& operator=(const CompleteResult& completeResult)
-    {
-        Gs2Object::operator=(completeResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*completeResult.m_pData);
-
-        return *this;
-    }
-
-    CompleteResult& operator=(CompleteResult&& completeResult)
-    {
-        Gs2Object::operator=(std::move(completeResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = completeResult.m_pData;
-        completeResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CompleteResult);
     }
 
     const CompleteResult* operator->() const
@@ -165,9 +112,9 @@ public:
      *
      * @param stampSheet ミッションの達成報酬を受領するスタンプシート
      */
-    void setStampSheet(const Char* stampSheet)
+    void setStampSheet(StringHolder stampSheet)
     {
-        ensureData().stampSheet.emplace(stampSheet);
+        ensureData().stampSheet.emplace(std::move(stampSheet));
     }
 
 

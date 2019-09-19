@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace stamina {
@@ -62,8 +64,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -77,85 +78,83 @@ private:
             lastRecoveredAt(data.lastRecoveredAt),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            staminaId(std::move(data.staminaId)),
-            staminaName(std::move(data.staminaName)),
-            userId(std::move(data.userId)),
-            value(std::move(data.value)),
-            maxValue(std::move(data.maxValue)),
-            overflowValue(std::move(data.overflowValue)),
-            nextRecoverAt(std::move(data.nextRecoverAt)),
-            lastRecoveredAt(std::move(data.lastRecoveredAt)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "staminaId") == 0) {
+            if (std::strcmp(name_, "staminaId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->staminaId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "staminaName") == 0) {
+            else if (std::strcmp(name_, "staminaName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->staminaName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "value") == 0) {
+            else if (std::strcmp(name_, "value") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->value = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "maxValue") == 0) {
+            else if (std::strcmp(name_, "maxValue") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->maxValue = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "overflowValue") == 0) {
+            else if (std::strcmp(name_, "overflowValue") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->overflowValue = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "nextRecoverAt") == 0) {
+            else if (std::strcmp(name_, "nextRecoverAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->nextRecoverAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "lastRecoveredAt") == 0) {
+            else if (std::strcmp(name_, "lastRecoveredAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->lastRecoveredAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -164,72 +163,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Stamina() :
-        m_pData(nullptr)
-    {}
+    Stamina() = default;
+    Stamina(const Stamina& stamina) = default;
+    Stamina(Stamina&& stamina) = default;
+    ~Stamina() = default;
 
-    Stamina(const Stamina& stamina) :
-        Gs2Object(stamina),
-        m_pData(stamina.m_pData != nullptr ? new Data(*stamina.m_pData) : nullptr)
-    {}
+    Stamina& operator=(const Stamina& stamina) = default;
+    Stamina& operator=(Stamina&& stamina) = default;
 
-    Stamina(Stamina&& stamina) :
-        Gs2Object(std::move(stamina)),
-        m_pData(stamina.m_pData)
+    Stamina deepCopy() const
     {
-        stamina.m_pData = nullptr;
-    }
-
-    ~Stamina()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Stamina& operator=(const Stamina& stamina)
-    {
-        Gs2Object::operator=(stamina);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*stamina.m_pData);
-
-        return *this;
-    }
-
-    Stamina& operator=(Stamina&& stamina)
-    {
-        Gs2Object::operator=(std::move(stamina));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = stamina.m_pData;
-        stamina.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Stamina);
     }
 
     const Stamina* operator->() const
@@ -256,9 +203,9 @@ public:
      *
      * @param staminaId スタミナ
      */
-    void setStaminaId(const Char* staminaId)
+    void setStaminaId(StringHolder staminaId)
     {
-        ensureData().staminaId.emplace(staminaId);
+        ensureData().staminaId.emplace(std::move(staminaId));
     }
 
     /**
@@ -266,9 +213,9 @@ public:
      *
      * @param staminaId スタミナ
      */
-    Stamina& withStaminaId(const Char* staminaId)
+    Stamina& withStaminaId(StringHolder staminaId)
     {
-        setStaminaId(staminaId);
+        setStaminaId(std::move(staminaId));
         return *this;
     }
 
@@ -287,9 +234,9 @@ public:
      *
      * @param staminaName スタミナモデルの名前
      */
-    void setStaminaName(const Char* staminaName)
+    void setStaminaName(StringHolder staminaName)
     {
-        ensureData().staminaName.emplace(staminaName);
+        ensureData().staminaName.emplace(std::move(staminaName));
     }
 
     /**
@@ -297,9 +244,9 @@ public:
      *
      * @param staminaName スタミナモデルの名前
      */
-    Stamina& withStaminaName(const Char* staminaName)
+    Stamina& withStaminaName(StringHolder staminaName)
     {
-        setStaminaName(staminaName);
+        setStaminaName(std::move(staminaName));
         return *this;
     }
 
@@ -318,9 +265,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -328,9 +275,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    Stamina& withUserId(const Char* userId)
+    Stamina& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -562,7 +509,7 @@ inline bool operator!=(const Stamina& lhs, const Stamina& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

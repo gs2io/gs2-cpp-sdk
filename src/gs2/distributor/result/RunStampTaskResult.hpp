@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace distributor
 {
@@ -45,36 +47,33 @@ private:
         /** レスポンス内容 */
         optional<StringHolder> result;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             contextStack(data.contextStack),
             result(data.result)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            contextStack(std::move(data.contextStack)),
-            result(std::move(data.result))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "contextStack") == 0) {
+            if (std::strcmp(name_, "contextStack") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->contextStack.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "result") == 0) {
+            else if (std::strcmp(name_, "result") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->result.emplace(jsonValue.GetString());
@@ -83,72 +82,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    RunStampTaskResult() :
-        m_pData(nullptr)
-    {}
+    RunStampTaskResult() = default;
+    RunStampTaskResult(const RunStampTaskResult& runStampTaskResult) = default;
+    RunStampTaskResult(RunStampTaskResult&& runStampTaskResult) = default;
+    ~RunStampTaskResult() = default;
 
-    RunStampTaskResult(const RunStampTaskResult& runStampTaskResult) :
-        Gs2Object(runStampTaskResult),
-        m_pData(runStampTaskResult.m_pData != nullptr ? new Data(*runStampTaskResult.m_pData) : nullptr)
-    {}
+    RunStampTaskResult& operator=(const RunStampTaskResult& runStampTaskResult) = default;
+    RunStampTaskResult& operator=(RunStampTaskResult&& runStampTaskResult) = default;
 
-    RunStampTaskResult(RunStampTaskResult&& runStampTaskResult) :
-        Gs2Object(std::move(runStampTaskResult)),
-        m_pData(runStampTaskResult.m_pData)
+    RunStampTaskResult deepCopy() const
     {
-        runStampTaskResult.m_pData = nullptr;
-    }
-
-    ~RunStampTaskResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    RunStampTaskResult& operator=(const RunStampTaskResult& runStampTaskResult)
-    {
-        Gs2Object::operator=(runStampTaskResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*runStampTaskResult.m_pData);
-
-        return *this;
-    }
-
-    RunStampTaskResult& operator=(RunStampTaskResult&& runStampTaskResult)
-    {
-        Gs2Object::operator=(std::move(runStampTaskResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = runStampTaskResult.m_pData;
-        runStampTaskResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(RunStampTaskResult);
     }
 
     const RunStampTaskResult* operator->() const
@@ -175,9 +122,9 @@ public:
      *
      * @param contextStack タスクの実行結果を反映したコンテキストスタック
      */
-    void setContextStack(const Char* contextStack)
+    void setContextStack(StringHolder contextStack)
     {
-        ensureData().contextStack.emplace(contextStack);
+        ensureData().contextStack.emplace(std::move(contextStack));
     }
 
     /**
@@ -195,9 +142,9 @@ public:
      *
      * @param result レスポンス内容
      */
-    void setResult(const Char* result)
+    void setResult(StringHolder result)
     {
-        ensureData().result.emplace(result);
+        ensureData().result.emplace(std::move(result));
     }
 
 

@@ -27,19 +27,57 @@ namespace gs2 { namespace ez { namespace schedule {
 class EzListEventsResult : public gs2::Gs2Object
 {
 private:
-    /** イベントのリスト */
-    List<EzEvent> m_Items;
-
-public:
-    EzListEventsResult(const gs2::schedule::DescribeEventsResult& result)
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** イベントのリスト */
+        List<EzEvent> items;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::schedule::DescribeEventsResult& describeEventsResult)
+        {
             {
-                m_Items += EzEvent(list[i]);
+                auto& list = *describeEventsResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzEvent(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListEventsResult() = default;
+    EzListEventsResult(const EzListEventsResult& result) = default;
+    EzListEventsResult(EzListEventsResult&& result) = default;
+    ~EzListEventsResult() = default;
+
+    EzListEventsResult(gs2::schedule::DescribeEventsResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListEventsResult& operator=(const EzListEventsResult& result) = default;
+    EzListEventsResult& operator=(EzListEventsResult&& result) = default;
+
+    EzListEventsResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListEventsResult);
     }
 
     static bool isConvertible(const gs2::schedule::DescribeEventsResult& result)
@@ -54,12 +92,7 @@ public:
 
     const List<EzEvent>& getItems() const
     {
-        return m_Items;
-    }
-
-    List<EzEvent>& getItems()
-    {
-        return m_Items;
+        return ensureData().items;
     }
 };
 

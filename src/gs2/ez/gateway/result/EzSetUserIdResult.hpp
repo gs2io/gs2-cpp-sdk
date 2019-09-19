@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace gateway {
 class EzSetUserIdResult : public gs2::Gs2Object
 {
 private:
-    /** 更新したWebsocketセッション */
-    EzWebSocketSession m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 更新したWebsocketセッション */
+        EzWebSocketSession item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::gateway::SetUserIdResult& setUserIdResult) :
+            item(*setUserIdResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzSetUserIdResult(const gs2::gateway::SetUserIdResult& result) :
-        m_Item(*result.getItem())
+    EzSetUserIdResult() = default;
+    EzSetUserIdResult(const EzSetUserIdResult& result) = default;
+    EzSetUserIdResult(EzSetUserIdResult&& result) = default;
+    ~EzSetUserIdResult() = default;
+
+    EzSetUserIdResult(gs2::gateway::SetUserIdResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzSetUserIdResult& operator=(const EzSetUserIdResult& result) = default;
+    EzSetUserIdResult& operator=(EzSetUserIdResult&& result) = default;
+
+    EzSetUserIdResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzSetUserIdResult);
     }
 
     static bool isConvertible(const gs2::gateway::SetUserIdResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzWebSocketSession& getItem() const
     {
-        return m_Item;
-    }
-
-    EzWebSocketSession& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

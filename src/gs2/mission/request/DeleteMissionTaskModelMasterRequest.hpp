@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2MissionConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace mission
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -48,100 +50,48 @@ private:
         /** タスク名 */
         optional<StringHolder> missionTaskName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             missionGroupName(data.missionGroupName),
             missionTaskName(data.missionTaskName)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            missionGroupName(std::move(data.missionGroupName)),
-            missionTaskName(std::move(data.missionTaskName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    DeleteMissionTaskModelMasterRequest() :
-        m_pData(nullptr)
-    {}
+    DeleteMissionTaskModelMasterRequest() = default;
+    DeleteMissionTaskModelMasterRequest(const DeleteMissionTaskModelMasterRequest& deleteMissionTaskModelMasterRequest) = default;
+    DeleteMissionTaskModelMasterRequest(DeleteMissionTaskModelMasterRequest&& deleteMissionTaskModelMasterRequest) = default;
+    ~DeleteMissionTaskModelMasterRequest() GS2_OVERRIDE = default;
 
-    DeleteMissionTaskModelMasterRequest(const DeleteMissionTaskModelMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Mission(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    DeleteMissionTaskModelMasterRequest& operator=(const DeleteMissionTaskModelMasterRequest& deleteMissionTaskModelMasterRequest) = default;
+    DeleteMissionTaskModelMasterRequest& operator=(DeleteMissionTaskModelMasterRequest&& deleteMissionTaskModelMasterRequest) = default;
 
-    DeleteMissionTaskModelMasterRequest(DeleteMissionTaskModelMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Mission(std::move(obj)),
-        m_pData(obj.m_pData)
+    DeleteMissionTaskModelMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~DeleteMissionTaskModelMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DeleteMissionTaskModelMasterRequest& operator=(const DeleteMissionTaskModelMasterRequest& deleteMissionTaskModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(deleteMissionTaskModelMasterRequest);
-        Gs2Mission::operator=(deleteMissionTaskModelMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*deleteMissionTaskModelMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    DeleteMissionTaskModelMasterRequest& operator=(DeleteMissionTaskModelMasterRequest&& deleteMissionTaskModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(deleteMissionTaskModelMasterRequest));
-        Gs2Mission::operator=(std::move(deleteMissionTaskModelMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = deleteMissionTaskModelMasterRequest.m_pData;
-        deleteMissionTaskModelMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteMissionTaskModelMasterRequest);
     }
 
     const DeleteMissionTaskModelMasterRequest* operator->() const
@@ -169,9 +119,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -179,9 +129,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    DeleteMissionTaskModelMasterRequest& withNamespaceName(const Char* namespaceName)
+    DeleteMissionTaskModelMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -200,9 +150,9 @@ public:
      *
      * @param missionGroupName ミッショングループ名
      */
-    void setMissionGroupName(const Char* missionGroupName)
+    void setMissionGroupName(StringHolder missionGroupName)
     {
-        ensureData().missionGroupName.emplace(missionGroupName);
+        ensureData().missionGroupName.emplace(std::move(missionGroupName));
     }
 
     /**
@@ -210,9 +160,9 @@ public:
      *
      * @param missionGroupName ミッショングループ名
      */
-    DeleteMissionTaskModelMasterRequest& withMissionGroupName(const Char* missionGroupName)
+    DeleteMissionTaskModelMasterRequest& withMissionGroupName(StringHolder missionGroupName)
     {
-        ensureData().missionGroupName.emplace(missionGroupName);
+        ensureData().missionGroupName.emplace(std::move(missionGroupName));
         return *this;
     }
 
@@ -231,9 +181,9 @@ public:
      *
      * @param missionTaskName タスク名
      */
-    void setMissionTaskName(const Char* missionTaskName)
+    void setMissionTaskName(StringHolder missionTaskName)
     {
-        ensureData().missionTaskName.emplace(missionTaskName);
+        ensureData().missionTaskName.emplace(std::move(missionTaskName));
     }
 
     /**
@@ -241,9 +191,9 @@ public:
      *
      * @param missionTaskName タスク名
      */
-    DeleteMissionTaskModelMasterRequest& withMissionTaskName(const Char* missionTaskName)
+    DeleteMissionTaskModelMasterRequest& withMissionTaskName(StringHolder missionTaskName)
     {
-        ensureData().missionTaskName.emplace(missionTaskName);
+        ensureData().missionTaskName.emplace(std::move(missionTaskName));
         return *this;
     }
 
@@ -254,33 +204,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    DeleteMissionTaskModelMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    DeleteMissionTaskModelMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    DeleteMissionTaskModelMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    DeleteMissionTaskModelMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -289,9 +215,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    DeleteMissionTaskModelMasterRequest& withRequestId(const Char* gs2RequestId)
+    DeleteMissionTaskModelMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

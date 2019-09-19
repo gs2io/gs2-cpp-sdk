@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2StaminaConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace stamina
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -54,106 +56,54 @@ private:
         /** ランク毎のスタミナの最大値テーブル */
         optional<List<Int32>> values;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             maxStaminaTableName(data.maxStaminaTableName),
             description(data.description),
             metadata(data.metadata),
-            experienceModelId(data.experienceModelId),
-            values(data.values)
-        {}
+            experienceModelId(data.experienceModelId)
+        {
+            if (data.values)
+            {
+                values = data.values->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            maxStaminaTableName(std::move(data.maxStaminaTableName)),
-            description(std::move(data.description)),
-            metadata(std::move(data.metadata)),
-            experienceModelId(std::move(data.experienceModelId)),
-            values(std::move(data.values))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    UpdateMaxStaminaTableMasterRequest() :
-        m_pData(nullptr)
-    {}
+    UpdateMaxStaminaTableMasterRequest() = default;
+    UpdateMaxStaminaTableMasterRequest(const UpdateMaxStaminaTableMasterRequest& updateMaxStaminaTableMasterRequest) = default;
+    UpdateMaxStaminaTableMasterRequest(UpdateMaxStaminaTableMasterRequest&& updateMaxStaminaTableMasterRequest) = default;
+    ~UpdateMaxStaminaTableMasterRequest() GS2_OVERRIDE = default;
 
-    UpdateMaxStaminaTableMasterRequest(const UpdateMaxStaminaTableMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Stamina(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    UpdateMaxStaminaTableMasterRequest& operator=(const UpdateMaxStaminaTableMasterRequest& updateMaxStaminaTableMasterRequest) = default;
+    UpdateMaxStaminaTableMasterRequest& operator=(UpdateMaxStaminaTableMasterRequest&& updateMaxStaminaTableMasterRequest) = default;
 
-    UpdateMaxStaminaTableMasterRequest(UpdateMaxStaminaTableMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Stamina(std::move(obj)),
-        m_pData(obj.m_pData)
+    UpdateMaxStaminaTableMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~UpdateMaxStaminaTableMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateMaxStaminaTableMasterRequest& operator=(const UpdateMaxStaminaTableMasterRequest& updateMaxStaminaTableMasterRequest)
-    {
-        Gs2BasicRequest::operator=(updateMaxStaminaTableMasterRequest);
-        Gs2Stamina::operator=(updateMaxStaminaTableMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateMaxStaminaTableMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    UpdateMaxStaminaTableMasterRequest& operator=(UpdateMaxStaminaTableMasterRequest&& updateMaxStaminaTableMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(updateMaxStaminaTableMasterRequest));
-        Gs2Stamina::operator=(std::move(updateMaxStaminaTableMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateMaxStaminaTableMasterRequest.m_pData;
-        updateMaxStaminaTableMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateMaxStaminaTableMasterRequest);
     }
 
     const UpdateMaxStaminaTableMasterRequest* operator->() const
@@ -181,9 +131,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -191,9 +141,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    UpdateMaxStaminaTableMasterRequest& withNamespaceName(const Char* namespaceName)
+    UpdateMaxStaminaTableMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -212,9 +162,9 @@ public:
      *
      * @param maxStaminaTableName 最大スタミナ値テーブル名
      */
-    void setMaxStaminaTableName(const Char* maxStaminaTableName)
+    void setMaxStaminaTableName(StringHolder maxStaminaTableName)
     {
-        ensureData().maxStaminaTableName.emplace(maxStaminaTableName);
+        ensureData().maxStaminaTableName.emplace(std::move(maxStaminaTableName));
     }
 
     /**
@@ -222,9 +172,9 @@ public:
      *
      * @param maxStaminaTableName 最大スタミナ値テーブル名
      */
-    UpdateMaxStaminaTableMasterRequest& withMaxStaminaTableName(const Char* maxStaminaTableName)
+    UpdateMaxStaminaTableMasterRequest& withMaxStaminaTableName(StringHolder maxStaminaTableName)
     {
-        ensureData().maxStaminaTableName.emplace(maxStaminaTableName);
+        ensureData().maxStaminaTableName.emplace(std::move(maxStaminaTableName));
         return *this;
     }
 
@@ -243,9 +193,9 @@ public:
      *
      * @param description スタミナの最大値テーブルマスターの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -253,9 +203,9 @@ public:
      *
      * @param description スタミナの最大値テーブルマスターの説明
      */
-    UpdateMaxStaminaTableMasterRequest& withDescription(const Char* description)
+    UpdateMaxStaminaTableMasterRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -274,9 +224,9 @@ public:
      *
      * @param metadata 最大スタミナ値テーブルのメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -284,9 +234,9 @@ public:
      *
      * @param metadata 最大スタミナ値テーブルのメタデータ
      */
-    UpdateMaxStaminaTableMasterRequest& withMetadata(const Char* metadata)
+    UpdateMaxStaminaTableMasterRequest& withMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
         return *this;
     }
 
@@ -305,9 +255,9 @@ public:
      *
      * @param experienceModelId 経験値の種類マスター のGRN
      */
-    void setExperienceModelId(const Char* experienceModelId)
+    void setExperienceModelId(StringHolder experienceModelId)
     {
-        ensureData().experienceModelId.emplace(experienceModelId);
+        ensureData().experienceModelId.emplace(std::move(experienceModelId));
     }
 
     /**
@@ -315,9 +265,9 @@ public:
      *
      * @param experienceModelId 経験値の種類マスター のGRN
      */
-    UpdateMaxStaminaTableMasterRequest& withExperienceModelId(const Char* experienceModelId)
+    UpdateMaxStaminaTableMasterRequest& withExperienceModelId(StringHolder experienceModelId)
     {
-        ensureData().experienceModelId.emplace(experienceModelId);
+        ensureData().experienceModelId.emplace(std::move(experienceModelId));
         return *this;
     }
 
@@ -336,9 +286,9 @@ public:
      *
      * @param values ランク毎のスタミナの最大値テーブル
      */
-    void setValues(const List<Int32>& values)
+    void setValues(List<Int32> values)
     {
-        ensureData().values.emplace(values);
+        ensureData().values.emplace(std::move(values));
     }
 
     /**
@@ -346,9 +296,9 @@ public:
      *
      * @param values ランク毎のスタミナの最大値テーブル
      */
-    UpdateMaxStaminaTableMasterRequest& withValues(const List<Int32>& values)
+    UpdateMaxStaminaTableMasterRequest& withValues(List<Int32> values)
     {
-        ensureData().values.emplace(values);
+        ensureData().values.emplace(std::move(values));
         return *this;
     }
 
@@ -359,33 +309,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    UpdateMaxStaminaTableMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    UpdateMaxStaminaTableMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    UpdateMaxStaminaTableMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    UpdateMaxStaminaTableMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -394,9 +320,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    UpdateMaxStaminaTableMasterRequest& withRequestId(const Char* gs2RequestId)
+    UpdateMaxStaminaTableMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

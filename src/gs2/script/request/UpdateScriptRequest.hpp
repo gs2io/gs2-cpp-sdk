@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ScriptConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace script
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -50,102 +52,49 @@ private:
         /** Luaスクリプト */
         optional<StringHolder> script;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             scriptName(data.scriptName),
             description(data.description),
             script(data.script)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            scriptName(std::move(data.scriptName)),
-            description(std::move(data.description)),
-            script(std::move(data.script))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    UpdateScriptRequest() :
-        m_pData(nullptr)
-    {}
+    UpdateScriptRequest() = default;
+    UpdateScriptRequest(const UpdateScriptRequest& updateScriptRequest) = default;
+    UpdateScriptRequest(UpdateScriptRequest&& updateScriptRequest) = default;
+    ~UpdateScriptRequest() GS2_OVERRIDE = default;
 
-    UpdateScriptRequest(const UpdateScriptRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Script(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    UpdateScriptRequest& operator=(const UpdateScriptRequest& updateScriptRequest) = default;
+    UpdateScriptRequest& operator=(UpdateScriptRequest&& updateScriptRequest) = default;
 
-    UpdateScriptRequest(UpdateScriptRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Script(std::move(obj)),
-        m_pData(obj.m_pData)
+    UpdateScriptRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~UpdateScriptRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateScriptRequest& operator=(const UpdateScriptRequest& updateScriptRequest)
-    {
-        Gs2BasicRequest::operator=(updateScriptRequest);
-        Gs2Script::operator=(updateScriptRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateScriptRequest.m_pData);
-
-        return *this;
-    }
-
-    UpdateScriptRequest& operator=(UpdateScriptRequest&& updateScriptRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(updateScriptRequest));
-        Gs2Script::operator=(std::move(updateScriptRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateScriptRequest.m_pData;
-        updateScriptRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateScriptRequest);
     }
 
     const UpdateScriptRequest* operator->() const
@@ -173,9 +122,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -183,9 +132,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    UpdateScriptRequest& withNamespaceName(const Char* namespaceName)
+    UpdateScriptRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -204,9 +153,9 @@ public:
      *
      * @param scriptName スクリプト名
      */
-    void setScriptName(const Char* scriptName)
+    void setScriptName(StringHolder scriptName)
     {
-        ensureData().scriptName.emplace(scriptName);
+        ensureData().scriptName.emplace(std::move(scriptName));
     }
 
     /**
@@ -214,9 +163,9 @@ public:
      *
      * @param scriptName スクリプト名
      */
-    UpdateScriptRequest& withScriptName(const Char* scriptName)
+    UpdateScriptRequest& withScriptName(StringHolder scriptName)
     {
-        ensureData().scriptName.emplace(scriptName);
+        ensureData().scriptName.emplace(std::move(scriptName));
         return *this;
     }
 
@@ -235,9 +184,9 @@ public:
      *
      * @param description 説明文
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -245,9 +194,9 @@ public:
      *
      * @param description 説明文
      */
-    UpdateScriptRequest& withDescription(const Char* description)
+    UpdateScriptRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -266,9 +215,9 @@ public:
      *
      * @param script Luaスクリプト
      */
-    void setScript(const Char* script)
+    void setScript(StringHolder script)
     {
-        ensureData().script.emplace(script);
+        ensureData().script.emplace(std::move(script));
     }
 
     /**
@@ -276,9 +225,9 @@ public:
      *
      * @param script Luaスクリプト
      */
-    UpdateScriptRequest& withScript(const Char* script)
+    UpdateScriptRequest& withScript(StringHolder script)
     {
-        ensureData().script.emplace(script);
+        ensureData().script.emplace(std::move(script));
         return *this;
     }
 
@@ -289,33 +238,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    UpdateScriptRequest& withGs2ClientId(const Char* gs2ClientId)
+    UpdateScriptRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    UpdateScriptRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    UpdateScriptRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -324,9 +249,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    UpdateScriptRequest& withRequestId(const Char* gs2RequestId)
+    UpdateScriptRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

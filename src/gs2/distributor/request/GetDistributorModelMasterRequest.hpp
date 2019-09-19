@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2DistributorConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace distributor
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -46,98 +48,47 @@ private:
         /** 配信設定名 */
         optional<StringHolder> distributorName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             distributorName(data.distributorName)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            distributorName(std::move(data.distributorName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    GetDistributorModelMasterRequest() :
-        m_pData(nullptr)
-    {}
+    GetDistributorModelMasterRequest() = default;
+    GetDistributorModelMasterRequest(const GetDistributorModelMasterRequest& getDistributorModelMasterRequest) = default;
+    GetDistributorModelMasterRequest(GetDistributorModelMasterRequest&& getDistributorModelMasterRequest) = default;
+    ~GetDistributorModelMasterRequest() GS2_OVERRIDE = default;
 
-    GetDistributorModelMasterRequest(const GetDistributorModelMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Distributor(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    GetDistributorModelMasterRequest& operator=(const GetDistributorModelMasterRequest& getDistributorModelMasterRequest) = default;
+    GetDistributorModelMasterRequest& operator=(GetDistributorModelMasterRequest&& getDistributorModelMasterRequest) = default;
 
-    GetDistributorModelMasterRequest(GetDistributorModelMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Distributor(std::move(obj)),
-        m_pData(obj.m_pData)
+    GetDistributorModelMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~GetDistributorModelMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetDistributorModelMasterRequest& operator=(const GetDistributorModelMasterRequest& getDistributorModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(getDistributorModelMasterRequest);
-        Gs2Distributor::operator=(getDistributorModelMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getDistributorModelMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    GetDistributorModelMasterRequest& operator=(GetDistributorModelMasterRequest&& getDistributorModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(getDistributorModelMasterRequest));
-        Gs2Distributor::operator=(std::move(getDistributorModelMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getDistributorModelMasterRequest.m_pData;
-        getDistributorModelMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetDistributorModelMasterRequest);
     }
 
     const GetDistributorModelMasterRequest* operator->() const
@@ -165,9 +116,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -175,9 +126,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    GetDistributorModelMasterRequest& withNamespaceName(const Char* namespaceName)
+    GetDistributorModelMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -196,9 +147,9 @@ public:
      *
      * @param distributorName 配信設定名
      */
-    void setDistributorName(const Char* distributorName)
+    void setDistributorName(StringHolder distributorName)
     {
-        ensureData().distributorName.emplace(distributorName);
+        ensureData().distributorName.emplace(std::move(distributorName));
     }
 
     /**
@@ -206,9 +157,9 @@ public:
      *
      * @param distributorName 配信設定名
      */
-    GetDistributorModelMasterRequest& withDistributorName(const Char* distributorName)
+    GetDistributorModelMasterRequest& withDistributorName(StringHolder distributorName)
     {
-        ensureData().distributorName.emplace(distributorName);
+        ensureData().distributorName.emplace(std::move(distributorName));
         return *this;
     }
 
@@ -219,33 +170,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    GetDistributorModelMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    GetDistributorModelMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    GetDistributorModelMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    GetDistributorModelMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -254,9 +181,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    GetDistributorModelMasterRequest& withRequestId(const Char* gs2RequestId)
+    GetDistributorModelMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

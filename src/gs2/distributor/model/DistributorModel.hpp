@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace distributor {
@@ -54,8 +56,7 @@ private:
         /** ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト */
         optional<List<StringHolder>> whiteListTargetIds;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -63,59 +64,60 @@ private:
             name(data.name),
             metadata(data.metadata),
             assumeUserId(data.assumeUserId),
-            inboxNamespaceId(data.inboxNamespaceId),
-            whiteListTargetIds(data.whiteListTargetIds)
-        {}
+            inboxNamespaceId(data.inboxNamespaceId)
+        {
+            if (data.whiteListTargetIds)
+            {
+                whiteListTargetIds = data.whiteListTargetIds->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            distributorModelId(std::move(data.distributorModelId)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            assumeUserId(std::move(data.assumeUserId)),
-            inboxNamespaceId(std::move(data.inboxNamespaceId)),
-            whiteListTargetIds(std::move(data.whiteListTargetIds))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "distributorModelId") == 0) {
+            if (std::strcmp(name_, "distributorModelId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->distributorModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "assumeUserId") == 0) {
+            else if (std::strcmp(name_, "assumeUserId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->assumeUserId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "inboxNamespaceId") == 0) {
+            else if (std::strcmp(name_, "inboxNamespaceId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->inboxNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "whiteListTargetIds") == 0) {
+            else if (std::strcmp(name_, "whiteListTargetIds") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -133,72 +135,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DistributorModel() :
-        m_pData(nullptr)
-    {}
+    DistributorModel() = default;
+    DistributorModel(const DistributorModel& distributorModel) = default;
+    DistributorModel(DistributorModel&& distributorModel) = default;
+    ~DistributorModel() = default;
 
-    DistributorModel(const DistributorModel& distributorModel) :
-        Gs2Object(distributorModel),
-        m_pData(distributorModel.m_pData != nullptr ? new Data(*distributorModel.m_pData) : nullptr)
-    {}
+    DistributorModel& operator=(const DistributorModel& distributorModel) = default;
+    DistributorModel& operator=(DistributorModel&& distributorModel) = default;
 
-    DistributorModel(DistributorModel&& distributorModel) :
-        Gs2Object(std::move(distributorModel)),
-        m_pData(distributorModel.m_pData)
+    DistributorModel deepCopy() const
     {
-        distributorModel.m_pData = nullptr;
-    }
-
-    ~DistributorModel()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DistributorModel& operator=(const DistributorModel& distributorModel)
-    {
-        Gs2Object::operator=(distributorModel);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*distributorModel.m_pData);
-
-        return *this;
-    }
-
-    DistributorModel& operator=(DistributorModel&& distributorModel)
-    {
-        Gs2Object::operator=(std::move(distributorModel));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = distributorModel.m_pData;
-        distributorModel.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DistributorModel);
     }
 
     const DistributorModel* operator->() const
@@ -225,9 +175,9 @@ public:
      *
      * @param distributorModelId 配信設定
      */
-    void setDistributorModelId(const Char* distributorModelId)
+    void setDistributorModelId(StringHolder distributorModelId)
     {
-        ensureData().distributorModelId.emplace(distributorModelId);
+        ensureData().distributorModelId.emplace(std::move(distributorModelId));
     }
 
     /**
@@ -235,9 +185,9 @@ public:
      *
      * @param distributorModelId 配信設定
      */
-    DistributorModel& withDistributorModelId(const Char* distributorModelId)
+    DistributorModel& withDistributorModelId(StringHolder distributorModelId)
     {
-        setDistributorModelId(distributorModelId);
+        setDistributorModelId(std::move(distributorModelId));
         return *this;
     }
 
@@ -256,9 +206,9 @@ public:
      *
      * @param name ディストリビューターの種類名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -266,9 +216,9 @@ public:
      *
      * @param name ディストリビューターの種類名
      */
-    DistributorModel& withName(const Char* name)
+    DistributorModel& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -287,9 +237,9 @@ public:
      *
      * @param metadata ディストリビューターの種類のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -297,9 +247,9 @@ public:
      *
      * @param metadata ディストリビューターの種類のメタデータ
      */
-    DistributorModel& withMetadata(const Char* metadata)
+    DistributorModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -318,9 +268,9 @@ public:
      *
      * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
      */
-    void setAssumeUserId(const Char* assumeUserId)
+    void setAssumeUserId(StringHolder assumeUserId)
     {
-        ensureData().assumeUserId.emplace(assumeUserId);
+        ensureData().assumeUserId.emplace(std::move(assumeUserId));
     }
 
     /**
@@ -328,9 +278,9 @@ public:
      *
      * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
      */
-    DistributorModel& withAssumeUserId(const Char* assumeUserId)
+    DistributorModel& withAssumeUserId(StringHolder assumeUserId)
     {
-        setAssumeUserId(assumeUserId);
+        setAssumeUserId(std::move(assumeUserId));
         return *this;
     }
 
@@ -349,9 +299,9 @@ public:
      *
      * @param inboxNamespaceId 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
      */
-    void setInboxNamespaceId(const Char* inboxNamespaceId)
+    void setInboxNamespaceId(StringHolder inboxNamespaceId)
     {
-        ensureData().inboxNamespaceId.emplace(inboxNamespaceId);
+        ensureData().inboxNamespaceId.emplace(std::move(inboxNamespaceId));
     }
 
     /**
@@ -359,9 +309,9 @@ public:
      *
      * @param inboxNamespaceId 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
      */
-    DistributorModel& withInboxNamespaceId(const Char* inboxNamespaceId)
+    DistributorModel& withInboxNamespaceId(StringHolder inboxNamespaceId)
     {
-        setInboxNamespaceId(inboxNamespaceId);
+        setInboxNamespaceId(std::move(inboxNamespaceId));
         return *this;
     }
 
@@ -380,9 +330,9 @@ public:
      *
      * @param whiteListTargetIds ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト
      */
-    void setWhiteListTargetIds(const List<StringHolder>& whiteListTargetIds)
+    void setWhiteListTargetIds(List<StringHolder> whiteListTargetIds)
     {
-        ensureData().whiteListTargetIds.emplace(whiteListTargetIds);
+        ensureData().whiteListTargetIds.emplace(std::move(whiteListTargetIds));
     }
 
     /**
@@ -390,9 +340,9 @@ public:
      *
      * @param whiteListTargetIds ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト
      */
-    DistributorModel& withWhiteListTargetIds(const List<StringHolder>& whiteListTargetIds)
+    DistributorModel& withWhiteListTargetIds(List<StringHolder> whiteListTargetIds)
     {
-        setWhiteListTargetIds(whiteListTargetIds);
+        setWhiteListTargetIds(std::move(whiteListTargetIds));
         return *this;
     }
 
@@ -407,7 +357,7 @@ inline bool operator!=(const DistributorModel& lhs, const DistributorModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

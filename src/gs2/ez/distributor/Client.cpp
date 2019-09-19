@@ -28,15 +28,15 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::listDistributorModels(
-    std::function<void(AsyncEzListDistributorModelsResult&)> callback,
-    const Char* namespaceName
+    std::function<void(AsyncEzListDistributorModelsResult)> callback,
+    StringHolder namespaceName
 )
 {
     gs2::distributor::DescribeDistributorModelsRequest request;
     request.setNamespaceName(namespaceName);
     m_Client.describeDistributorModels(
         request,
-        [callback](gs2::distributor::AsyncDescribeDistributorModelsResult& r)
+        [callback](gs2::distributor::AsyncDescribeDistributorModelsResult r)
         {
             if (r.getError())
             {
@@ -62,9 +62,9 @@ void Client::listDistributorModels(
 }
 
 void Client::getDistributorModel(
-    std::function<void(AsyncEzGetDistributorModelResult&)> callback,
-    const Char* namespaceName,
-    const Char* distributorName
+    std::function<void(AsyncEzGetDistributorModelResult)> callback,
+    StringHolder namespaceName,
+    StringHolder distributorName
 )
 {
     gs2::distributor::GetDistributorModelRequest request;
@@ -72,7 +72,7 @@ void Client::getDistributorModel(
     request.setDistributorName(distributorName);
     m_Client.getDistributorModel(
         request,
-        [callback](gs2::distributor::AsyncGetDistributorModelResult& r)
+        [callback](gs2::distributor::AsyncGetDistributorModelResult r)
         {
             if (r.getError())
             {
@@ -98,12 +98,12 @@ void Client::getDistributorModel(
 }
 
 void Client::runStampTask(
-    std::function<void(AsyncEzRunStampTaskResult&)> callback,
-    const Char* namespaceName,
-    const Char* distributorName,
-    const Char* stampTask,
-    const Char* keyId,
-    const Char* contextStack
+    std::function<void(AsyncEzRunStampTaskResult)> callback,
+    StringHolder namespaceName,
+    StringHolder distributorName,
+    StringHolder stampTask,
+    StringHolder keyId,
+    gs2::optional<StringHolder> contextStack
 )
 {
     gs2::distributor::RunStampTaskRequest request;
@@ -113,11 +113,11 @@ void Client::runStampTask(
     request.setKeyId(keyId);
     if (contextStack)
     {
-        request.setContextStack(contextStack);
+        request.setContextStack(std::move(*contextStack));
     }
     m_Client.runStampTask(
         request,
-        [callback](gs2::distributor::AsyncRunStampTaskResult& r)
+        [callback](gs2::distributor::AsyncRunStampTaskResult r)
         {
             if (r.getError())
             {
@@ -143,12 +143,12 @@ void Client::runStampTask(
 }
 
 void Client::runStampSheet(
-    std::function<void(AsyncEzRunStampSheetResult&)> callback,
-    const Char* namespaceName,
-    const Char* distributorName,
-    const Char* stampSheet,
-    const Char* keyId,
-    const Char* contextStack
+    std::function<void(AsyncEzRunStampSheetResult)> callback,
+    StringHolder namespaceName,
+    StringHolder distributorName,
+    StringHolder stampSheet,
+    StringHolder keyId,
+    gs2::optional<StringHolder> contextStack
 )
 {
     gs2::distributor::RunStampSheetRequest request;
@@ -158,11 +158,11 @@ void Client::runStampSheet(
     request.setKeyId(keyId);
     if (contextStack)
     {
-        request.setContextStack(contextStack);
+        request.setContextStack(std::move(*contextStack));
     }
     m_Client.runStampSheet(
         request,
-        [callback](gs2::distributor::AsyncRunStampSheetResult& r)
+        [callback](gs2::distributor::AsyncRunStampSheetResult r)
         {
             if (r.getError())
             {

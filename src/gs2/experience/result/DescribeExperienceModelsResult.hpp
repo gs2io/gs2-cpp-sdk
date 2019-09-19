@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace experience
 {
@@ -43,28 +45,28 @@ private:
         /** 経験値・ランクアップ閾値モデルのリスト */
         optional<List<ExperienceModel>> items;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            items(data.items)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -79,72 +81,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DescribeExperienceModelsResult() :
-        m_pData(nullptr)
-    {}
+    DescribeExperienceModelsResult() = default;
+    DescribeExperienceModelsResult(const DescribeExperienceModelsResult& describeExperienceModelsResult) = default;
+    DescribeExperienceModelsResult(DescribeExperienceModelsResult&& describeExperienceModelsResult) = default;
+    ~DescribeExperienceModelsResult() = default;
 
-    DescribeExperienceModelsResult(const DescribeExperienceModelsResult& describeExperienceModelsResult) :
-        Gs2Object(describeExperienceModelsResult),
-        m_pData(describeExperienceModelsResult.m_pData != nullptr ? new Data(*describeExperienceModelsResult.m_pData) : nullptr)
-    {}
+    DescribeExperienceModelsResult& operator=(const DescribeExperienceModelsResult& describeExperienceModelsResult) = default;
+    DescribeExperienceModelsResult& operator=(DescribeExperienceModelsResult&& describeExperienceModelsResult) = default;
 
-    DescribeExperienceModelsResult(DescribeExperienceModelsResult&& describeExperienceModelsResult) :
-        Gs2Object(std::move(describeExperienceModelsResult)),
-        m_pData(describeExperienceModelsResult.m_pData)
+    DescribeExperienceModelsResult deepCopy() const
     {
-        describeExperienceModelsResult.m_pData = nullptr;
-    }
-
-    ~DescribeExperienceModelsResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DescribeExperienceModelsResult& operator=(const DescribeExperienceModelsResult& describeExperienceModelsResult)
-    {
-        Gs2Object::operator=(describeExperienceModelsResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*describeExperienceModelsResult.m_pData);
-
-        return *this;
-    }
-
-    DescribeExperienceModelsResult& operator=(DescribeExperienceModelsResult&& describeExperienceModelsResult)
-    {
-        Gs2Object::operator=(std::move(describeExperienceModelsResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = describeExperienceModelsResult.m_pData;
-        describeExperienceModelsResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeExperienceModelsResult);
     }
 
     const DescribeExperienceModelsResult* operator->() const
@@ -171,9 +121,9 @@ public:
      *
      * @param items 経験値・ランクアップ閾値モデルのリスト
      */
-    void setItems(const List<ExperienceModel>& items)
+    void setItems(List<ExperienceModel> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
 

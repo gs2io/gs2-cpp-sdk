@@ -28,9 +28,9 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::setUserId(
-    std::function<void(AsyncEzSetUserIdResult&)> callback,
+    std::function<void(AsyncEzSetUserIdResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
+    StringHolder namespaceName,
     Bool allowConcurrentAccess
 )
 {
@@ -40,7 +40,7 @@ void Client::setUserId(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.setUserId(
         request,
-        [callback](gs2::gateway::AsyncSetUserIdResult& r)
+        [callback](gs2::gateway::AsyncSetUserIdResult r)
         {
             if (r.getError())
             {

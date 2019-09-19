@@ -27,33 +27,72 @@ namespace gs2 { namespace ez { namespace account {
 class EzTakeOver : public gs2::Gs2Object
 {
 private:
-    /** ユーザーID */
-    gs2::optional<StringHolder> m_UserId;
-    /** スロット番号 */
-    gs2::optional<Int32> m_Type;
-    /** 引き継ぎ用ユーザーID */
-    gs2::optional<StringHolder> m_UserIdentifier;
-    /** 作成日時 */
-    gs2::optional<Int64> m_CreatedAt;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ユーザーID */
+        gs2::optional<StringHolder> userId;
+        /** スロット番号 */
+        gs2::optional<Int32> type;
+        /** 引き継ぎ用ユーザーID */
+        gs2::optional<StringHolder> userIdentifier;
+        /** 作成日時 */
+        gs2::optional<Int64> createdAt;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            userId(data.userId),
+            type(data.type),
+            userIdentifier(data.userIdentifier),
+            createdAt(data.createdAt)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::account::TakeOver& takeOver) :
+            userId(takeOver.getUserId()),
+            type(takeOver.getType() ? *takeOver.getType() : 0),
+            userIdentifier(takeOver.getUserIdentifier()),
+            createdAt(takeOver.getCreatedAt() ? *takeOver.getCreatedAt() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzTakeOver() = default;
+    EzTakeOver(const EzTakeOver& ezTakeOver) = default;
+    EzTakeOver(EzTakeOver&& ezTakeOver) = default;
+    ~EzTakeOver() = default;
 
     EzTakeOver(gs2::account::TakeOver takeOver) :
-        m_UserId(takeOver.getUserId()),
-        m_Type(takeOver.getType() ? *takeOver.getType() : 0),
-        m_UserIdentifier(takeOver.getUserIdentifier()),
-        m_CreatedAt(takeOver.getCreatedAt() ? *takeOver.getCreatedAt() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(takeOver)
+    {}
+
+    EzTakeOver& operator=(const EzTakeOver& ezTakeOver) = default;
+    EzTakeOver& operator=(EzTakeOver&& ezTakeOver) = default;
+
+    EzTakeOver deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzTakeOver);
     }
 
     gs2::account::TakeOver ToModel() const
     {
         gs2::account::TakeOver takeOver;
-        takeOver.setUserId(*m_UserId);
-        takeOver.setType(*m_Type);
-        takeOver.setUserIdentifier(*m_UserIdentifier);
-        takeOver.setCreatedAt(*m_CreatedAt);
+        takeOver.setUserId(getUserId());
+        takeOver.setType(getType());
+        takeOver.setUserIdentifier(getUserIdentifier());
+        takeOver.setCreatedAt(getCreatedAt());
         return takeOver;
     }
 
@@ -61,63 +100,53 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getUserId() const
+    const StringHolder& getUserId() const
     {
-        return *m_UserId;
-    }
-
-    gs2::StringHolder& getUserId()
-    {
-        return *m_UserId;
+        return *ensureData().userId;
     }
 
     Int32 getType() const
     {
-        return *m_Type;
+        return *ensureData().type;
     }
 
-    const gs2::StringHolder& getUserIdentifier() const
+    const StringHolder& getUserIdentifier() const
     {
-        return *m_UserIdentifier;
-    }
-
-    gs2::StringHolder& getUserIdentifier()
-    {
-        return *m_UserIdentifier;
+        return *ensureData().userIdentifier;
     }
 
     Int64 getCreatedAt() const
     {
-        return *m_CreatedAt;
+        return *ensureData().createdAt;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setUserId(Char* userId)
+    void setUserId(StringHolder userId)
     {
-        m_UserId.emplace(userId);
+        ensureData().userId = std::move(userId);
     }
 
     void setType(Int32 type)
     {
-        m_Type = type;
+        ensureData().type = type;
     }
 
-    void setUserIdentifier(Char* userIdentifier)
+    void setUserIdentifier(StringHolder userIdentifier)
     {
-        m_UserIdentifier.emplace(userIdentifier);
+        ensureData().userIdentifier = std::move(userIdentifier);
     }
 
     void setCreatedAt(Int64 createdAt)
     {
-        m_CreatedAt = createdAt;
+        ensureData().createdAt = createdAt;
     }
 
-    EzTakeOver& withUserId(Char* userId)
+    EzTakeOver& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -127,9 +156,9 @@ public:
         return *this;
     }
 
-    EzTakeOver& withUserIdentifier(Char* userIdentifier)
+    EzTakeOver& withUserIdentifier(StringHolder userIdentifier)
     {
-        setUserIdentifier(userIdentifier);
+        setUserIdentifier(std::move(userIdentifier));
         return *this;
     }
 

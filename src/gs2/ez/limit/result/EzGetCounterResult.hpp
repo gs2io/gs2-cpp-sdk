@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace limit {
 class EzGetCounterResult : public gs2::Gs2Object
 {
 private:
-    /** カウンター */
-    EzCounter m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** カウンター */
+        EzCounter item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::limit::GetCounterResult& getCounterResult) :
+            item(*getCounterResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetCounterResult(const gs2::limit::GetCounterResult& result) :
-        m_Item(*result.getItem())
+    EzGetCounterResult() = default;
+    EzGetCounterResult(const EzGetCounterResult& result) = default;
+    EzGetCounterResult(EzGetCounterResult&& result) = default;
+    ~EzGetCounterResult() = default;
+
+    EzGetCounterResult(gs2::limit::GetCounterResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetCounterResult& operator=(const EzGetCounterResult& result) = default;
+    EzGetCounterResult& operator=(EzGetCounterResult&& result) = default;
+
+    EzGetCounterResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetCounterResult);
     }
 
     static bool isConvertible(const gs2::limit::GetCounterResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzCounter& getItem() const
     {
-        return m_Item;
-    }
-
-    EzCounter& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

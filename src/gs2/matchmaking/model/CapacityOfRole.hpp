@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "Player.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace matchmaking {
@@ -51,40 +53,41 @@ private:
         /** 参加者のプレイヤー情報リスト */
         optional<List<Player>> participants;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             roleName(data.roleName),
-            roleAliases(data.roleAliases),
-            capacity(data.capacity),
-            participants(data.participants)
-        {}
+            capacity(data.capacity)
+        {
+            if (data.roleAliases)
+            {
+                roleAliases = data.roleAliases->deepCopy();
+            }
+            if (data.participants)
+            {
+                participants = data.participants->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            roleName(std::move(data.roleName)),
-            roleAliases(std::move(data.roleAliases)),
-            capacity(std::move(data.capacity)),
-            participants(std::move(data.participants))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "roleName") == 0) {
+            if (std::strcmp(name_, "roleName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->roleName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "roleAliases") == 0) {
+            else if (std::strcmp(name_, "roleAliases") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -99,13 +102,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "capacity") == 0) {
+            else if (std::strcmp(name_, "capacity") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->capacity = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "participants") == 0) {
+            else if (std::strcmp(name_, "participants") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -120,72 +125,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    CapacityOfRole() :
-        m_pData(nullptr)
-    {}
+    CapacityOfRole() = default;
+    CapacityOfRole(const CapacityOfRole& capacityOfRole) = default;
+    CapacityOfRole(CapacityOfRole&& capacityOfRole) = default;
+    ~CapacityOfRole() = default;
 
-    CapacityOfRole(const CapacityOfRole& capacityOfRole) :
-        Gs2Object(capacityOfRole),
-        m_pData(capacityOfRole.m_pData != nullptr ? new Data(*capacityOfRole.m_pData) : nullptr)
-    {}
+    CapacityOfRole& operator=(const CapacityOfRole& capacityOfRole) = default;
+    CapacityOfRole& operator=(CapacityOfRole&& capacityOfRole) = default;
 
-    CapacityOfRole(CapacityOfRole&& capacityOfRole) :
-        Gs2Object(std::move(capacityOfRole)),
-        m_pData(capacityOfRole.m_pData)
+    CapacityOfRole deepCopy() const
     {
-        capacityOfRole.m_pData = nullptr;
-    }
-
-    ~CapacityOfRole()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CapacityOfRole& operator=(const CapacityOfRole& capacityOfRole)
-    {
-        Gs2Object::operator=(capacityOfRole);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*capacityOfRole.m_pData);
-
-        return *this;
-    }
-
-    CapacityOfRole& operator=(CapacityOfRole&& capacityOfRole)
-    {
-        Gs2Object::operator=(std::move(capacityOfRole));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = capacityOfRole.m_pData;
-        capacityOfRole.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CapacityOfRole);
     }
 
     const CapacityOfRole* operator->() const
@@ -212,9 +165,9 @@ public:
      *
      * @param roleName ロール名
      */
-    void setRoleName(const Char* roleName)
+    void setRoleName(StringHolder roleName)
     {
-        ensureData().roleName.emplace(roleName);
+        ensureData().roleName.emplace(std::move(roleName));
     }
 
     /**
@@ -222,9 +175,9 @@ public:
      *
      * @param roleName ロール名
      */
-    CapacityOfRole& withRoleName(const Char* roleName)
+    CapacityOfRole& withRoleName(StringHolder roleName)
     {
-        setRoleName(roleName);
+        setRoleName(std::move(roleName));
         return *this;
     }
 
@@ -243,9 +196,9 @@ public:
      *
      * @param roleAliases ロール名の別名リスト
      */
-    void setRoleAliases(const List<StringHolder>& roleAliases)
+    void setRoleAliases(List<StringHolder> roleAliases)
     {
-        ensureData().roleAliases.emplace(roleAliases);
+        ensureData().roleAliases.emplace(std::move(roleAliases));
     }
 
     /**
@@ -253,9 +206,9 @@ public:
      *
      * @param roleAliases ロール名の別名リスト
      */
-    CapacityOfRole& withRoleAliases(const List<StringHolder>& roleAliases)
+    CapacityOfRole& withRoleAliases(List<StringHolder> roleAliases)
     {
-        setRoleAliases(roleAliases);
+        setRoleAliases(std::move(roleAliases));
         return *this;
     }
 
@@ -305,9 +258,9 @@ public:
      *
      * @param participants 参加者のプレイヤー情報リスト
      */
-    void setParticipants(const List<Player>& participants)
+    void setParticipants(List<Player> participants)
     {
-        ensureData().participants.emplace(participants);
+        ensureData().participants.emplace(std::move(participants));
     }
 
     /**
@@ -315,9 +268,9 @@ public:
      *
      * @param participants 参加者のプレイヤー情報リスト
      */
-    CapacityOfRole& withParticipants(const List<Player>& participants)
+    CapacityOfRole& withParticipants(List<Player> participants)
     {
-        setParticipants(participants);
+        setParticipants(std::move(participants));
         return *this;
     }
 
@@ -332,7 +285,7 @@ inline bool operator!=(const CapacityOfRole& lhs, const CapacityOfRole& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

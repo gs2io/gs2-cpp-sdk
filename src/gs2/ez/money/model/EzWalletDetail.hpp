@@ -27,33 +27,72 @@ namespace gs2 { namespace ez { namespace money {
 class EzWalletDetail : public gs2::Gs2Object
 {
 private:
-    /** スロット番号 */
-    gs2::optional<Int32> m_Slot;
-    /** 有償課金通貨所持量 */
-    gs2::optional<Int32> m_Paid;
-    /** 無償課金通貨所持量 */
-    gs2::optional<Int32> m_Free;
-    /** 最終更新日時 */
-    gs2::optional<Int64> m_UpdatedAt;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** スロット番号 */
+        gs2::optional<Int32> slot;
+        /** 有償課金通貨所持量 */
+        gs2::optional<Int32> paid;
+        /** 無償課金通貨所持量 */
+        gs2::optional<Int32> free;
+        /** 最終更新日時 */
+        gs2::optional<Int64> updatedAt;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            slot(data.slot),
+            paid(data.paid),
+            free(data.free),
+            updatedAt(data.updatedAt)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::money::Wallet& wallet) :
+            slot(wallet.getSlot() ? *wallet.getSlot() : 0),
+            paid(wallet.getPaid() ? *wallet.getPaid() : 0),
+            free(wallet.getFree() ? *wallet.getFree() : 0),
+            updatedAt(wallet.getUpdatedAt() ? *wallet.getUpdatedAt() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzWalletDetail() = default;
+    EzWalletDetail(const EzWalletDetail& ezWalletDetail) = default;
+    EzWalletDetail(EzWalletDetail&& ezWalletDetail) = default;
+    ~EzWalletDetail() = default;
 
     EzWalletDetail(gs2::money::Wallet wallet) :
-        m_Slot(wallet.getSlot() ? *wallet.getSlot() : 0),
-        m_Paid(wallet.getPaid() ? *wallet.getPaid() : 0),
-        m_Free(wallet.getFree() ? *wallet.getFree() : 0),
-        m_UpdatedAt(wallet.getUpdatedAt() ? *wallet.getUpdatedAt() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(wallet)
+    {}
+
+    EzWalletDetail& operator=(const EzWalletDetail& ezWalletDetail) = default;
+    EzWalletDetail& operator=(EzWalletDetail&& ezWalletDetail) = default;
+
+    EzWalletDetail deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzWalletDetail);
     }
 
     gs2::money::Wallet ToModel() const
     {
         gs2::money::Wallet wallet;
-        wallet.setSlot(*m_Slot);
-        wallet.setPaid(*m_Paid);
-        wallet.setFree(*m_Free);
-        wallet.setUpdatedAt(*m_UpdatedAt);
+        wallet.setSlot(getSlot());
+        wallet.setPaid(getPaid());
+        wallet.setFree(getFree());
+        wallet.setUpdatedAt(getUpdatedAt());
         return wallet;
     }
 
@@ -63,22 +102,22 @@ public:
 
     Int32 getSlot() const
     {
-        return *m_Slot;
+        return *ensureData().slot;
     }
 
     Int32 getPaid() const
     {
-        return *m_Paid;
+        return *ensureData().paid;
     }
 
     Int32 getFree() const
     {
-        return *m_Free;
+        return *ensureData().free;
     }
 
     Int64 getUpdatedAt() const
     {
-        return *m_UpdatedAt;
+        return *ensureData().updatedAt;
     }
 
     // ========================================
@@ -87,22 +126,22 @@ public:
 
     void setSlot(Int32 slot)
     {
-        m_Slot = slot;
+        ensureData().slot = slot;
     }
 
     void setPaid(Int32 paid)
     {
-        m_Paid = paid;
+        ensureData().paid = paid;
     }
 
     void setFree(Int32 free)
     {
-        m_Free = free;
+        ensureData().free = free;
     }
 
     void setUpdatedAt(Int64 updatedAt)
     {
-        m_UpdatedAt = updatedAt;
+        ensureData().updatedAt = updatedAt;
     }
 
     EzWalletDetail& withSlot(Int32 slot)

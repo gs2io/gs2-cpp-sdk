@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2DeployConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace deploy
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** スタック名 */
@@ -48,100 +50,51 @@ private:
         /** GitHubからソースコードをチェックアウトしてくる設定 */
         optional<GitHubCheckoutSetting> checkoutSetting;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             name(data.name),
-            description(data.description),
-            checkoutSetting(data.checkoutSetting)
-        {}
+            description(data.description)
+        {
+            if (data.checkoutSetting)
+            {
+                checkoutSetting = data.checkoutSetting->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            checkoutSetting(std::move(data.checkoutSetting))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CreateStackFromGitHubRequest() :
-        m_pData(nullptr)
-    {}
+    CreateStackFromGitHubRequest() = default;
+    CreateStackFromGitHubRequest(const CreateStackFromGitHubRequest& createStackFromGitHubRequest) = default;
+    CreateStackFromGitHubRequest(CreateStackFromGitHubRequest&& createStackFromGitHubRequest) = default;
+    ~CreateStackFromGitHubRequest() GS2_OVERRIDE = default;
 
-    CreateStackFromGitHubRequest(const CreateStackFromGitHubRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Deploy(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CreateStackFromGitHubRequest& operator=(const CreateStackFromGitHubRequest& createStackFromGitHubRequest) = default;
+    CreateStackFromGitHubRequest& operator=(CreateStackFromGitHubRequest&& createStackFromGitHubRequest) = default;
 
-    CreateStackFromGitHubRequest(CreateStackFromGitHubRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Deploy(std::move(obj)),
-        m_pData(obj.m_pData)
+    CreateStackFromGitHubRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CreateStackFromGitHubRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateStackFromGitHubRequest& operator=(const CreateStackFromGitHubRequest& createStackFromGitHubRequest)
-    {
-        Gs2BasicRequest::operator=(createStackFromGitHubRequest);
-        Gs2Deploy::operator=(createStackFromGitHubRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createStackFromGitHubRequest.m_pData);
-
-        return *this;
-    }
-
-    CreateStackFromGitHubRequest& operator=(CreateStackFromGitHubRequest&& createStackFromGitHubRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(createStackFromGitHubRequest));
-        Gs2Deploy::operator=(std::move(createStackFromGitHubRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createStackFromGitHubRequest.m_pData;
-        createStackFromGitHubRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateStackFromGitHubRequest);
     }
 
     const CreateStackFromGitHubRequest* operator->() const
@@ -169,9 +122,9 @@ public:
      *
      * @param name スタック名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -179,9 +132,9 @@ public:
      *
      * @param name スタック名
      */
-    CreateStackFromGitHubRequest& withName(const Char* name)
+    CreateStackFromGitHubRequest& withName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
         return *this;
     }
 
@@ -200,9 +153,9 @@ public:
      *
      * @param description スタックの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -210,9 +163,9 @@ public:
      *
      * @param description スタックの説明
      */
-    CreateStackFromGitHubRequest& withDescription(const Char* description)
+    CreateStackFromGitHubRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -231,9 +184,9 @@ public:
      *
      * @param checkoutSetting GitHubからソースコードをチェックアウトしてくる設定
      */
-    void setCheckoutSetting(const GitHubCheckoutSetting& checkoutSetting)
+    void setCheckoutSetting(GitHubCheckoutSetting checkoutSetting)
     {
-        ensureData().checkoutSetting.emplace(checkoutSetting);
+        ensureData().checkoutSetting.emplace(std::move(checkoutSetting));
     }
 
     /**
@@ -241,9 +194,9 @@ public:
      *
      * @param checkoutSetting GitHubからソースコードをチェックアウトしてくる設定
      */
-    CreateStackFromGitHubRequest& withCheckoutSetting(const GitHubCheckoutSetting& checkoutSetting)
+    CreateStackFromGitHubRequest& withCheckoutSetting(GitHubCheckoutSetting checkoutSetting)
     {
-        ensureData().checkoutSetting.emplace(checkoutSetting);
+        ensureData().checkoutSetting.emplace(std::move(checkoutSetting));
         return *this;
     }
 
@@ -254,33 +207,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CreateStackFromGitHubRequest& withGs2ClientId(const Char* gs2ClientId)
+    CreateStackFromGitHubRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CreateStackFromGitHubRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CreateStackFromGitHubRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -289,9 +218,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CreateStackFromGitHubRequest& withRequestId(const Char* gs2RequestId)
+    CreateStackFromGitHubRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

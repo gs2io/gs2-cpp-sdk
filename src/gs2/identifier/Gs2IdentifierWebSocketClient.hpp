@@ -78,76 +78,54 @@ private:
     class DescribeUsersTask : public detail::Gs2WebSocketSessionTask<DescribeUsersResult>
     {
     private:
-        DescribeUsersRequest& m_Request;
+        DescribeUsersRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "user";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeUsers";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getPageToken())
             {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
             }
             if (m_Request.getLimit())
             {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("user");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeUsers");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DescribeUsersTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeUsersRequest& request,
+            DescribeUsersRequest request,
             Gs2WebSocketSessionTask<DescribeUsersResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DescribeUsersResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DescribeUsersResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DescribeUsersTask() GS2_OVERRIDE = default;
@@ -156,76 +134,54 @@ private:
     class CreateUserTask : public detail::Gs2WebSocketSessionTask<CreateUserResult>
     {
     private:
-        CreateUserRequest& m_Request;
+        CreateUserRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "user";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "createUser";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getName())
             {
-                writer.writePropertyName("name");
-                writer.writeCharArray(*m_Request.getName());
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
             }
             if (m_Request.getDescription())
             {
-                writer.writePropertyName("description");
-                writer.writeCharArray(*m_Request.getDescription());
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("user");
-            writer.writePropertyName("function");
-            writer.writeCharArray("createUser");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         CreateUserTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            CreateUserRequest& request,
+            CreateUserRequest request,
             Gs2WebSocketSessionTask<CreateUserResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<CreateUserResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<CreateUserResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~CreateUserTask() GS2_OVERRIDE = default;
@@ -234,76 +190,54 @@ private:
     class UpdateUserTask : public detail::Gs2WebSocketSessionTask<UpdateUserResult>
     {
     private:
-        UpdateUserRequest& m_Request;
+        UpdateUserRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "user";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateUser";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getUserName())
             {
-                writer.writePropertyName("userName");
-                writer.writeCharArray(*m_Request.getUserName());
+                jsonWriter.writePropertyName("userName");
+                jsonWriter.writeCharArray(*m_Request.getUserName());
             }
             if (m_Request.getDescription())
             {
-                writer.writePropertyName("description");
-                writer.writeCharArray(*m_Request.getDescription());
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("user");
-            writer.writePropertyName("function");
-            writer.writeCharArray("updateUser");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         UpdateUserTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            UpdateUserRequest& request,
+            UpdateUserRequest request,
             Gs2WebSocketSessionTask<UpdateUserResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<UpdateUserResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<UpdateUserResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~UpdateUserTask() GS2_OVERRIDE = default;
@@ -312,71 +246,49 @@ private:
     class GetUserTask : public detail::Gs2WebSocketSessionTask<GetUserResult>
     {
     private:
-        GetUserRequest& m_Request;
+        GetUserRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "user";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getUser";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getUserName())
             {
-                writer.writePropertyName("userName");
-                writer.writeCharArray(*m_Request.getUserName());
+                jsonWriter.writePropertyName("userName");
+                jsonWriter.writeCharArray(*m_Request.getUserName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("user");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getUser");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         GetUserTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetUserRequest& request,
+            GetUserRequest request,
             Gs2WebSocketSessionTask<GetUserResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetUserResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<GetUserResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~GetUserTask() GS2_OVERRIDE = default;
@@ -385,71 +297,49 @@ private:
     class DeleteUserTask : public detail::Gs2WebSocketSessionTask<void>
     {
     private:
-        DeleteUserRequest& m_Request;
+        DeleteUserRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "user";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteUser";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getUserName())
             {
-                writer.writePropertyName("userName");
-                writer.writeCharArray(*m_Request.getUserName());
+                jsonWriter.writePropertyName("userName");
+                jsonWriter.writeCharArray(*m_Request.getUserName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("user");
-            writer.writePropertyName("function");
-            writer.writeCharArray("deleteUser");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DeleteUserTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DeleteUserRequest& request,
+            DeleteUserRequest request,
             Gs2WebSocketSessionTask<void>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<void>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<void>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DeleteUserTask() GS2_OVERRIDE = default;
@@ -458,76 +348,54 @@ private:
     class DescribeSecurityPoliciesTask : public detail::Gs2WebSocketSessionTask<DescribeSecurityPoliciesResult>
     {
     private:
-        DescribeSecurityPoliciesRequest& m_Request;
+        DescribeSecurityPoliciesRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "securityPolicy";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeSecurityPolicies";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getPageToken())
             {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
             }
             if (m_Request.getLimit())
             {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("securityPolicy");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeSecurityPolicies");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DescribeSecurityPoliciesTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeSecurityPoliciesRequest& request,
+            DescribeSecurityPoliciesRequest request,
             Gs2WebSocketSessionTask<DescribeSecurityPoliciesResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DescribeSecurityPoliciesResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DescribeSecurityPoliciesResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DescribeSecurityPoliciesTask() GS2_OVERRIDE = default;
@@ -536,76 +404,54 @@ private:
     class DescribeCommonSecurityPoliciesTask : public detail::Gs2WebSocketSessionTask<DescribeCommonSecurityPoliciesResult>
     {
     private:
-        DescribeCommonSecurityPoliciesRequest& m_Request;
+        DescribeCommonSecurityPoliciesRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "securityPolicy";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeCommonSecurityPolicies";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getPageToken())
             {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
             }
             if (m_Request.getLimit())
             {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("securityPolicy");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeCommonSecurityPolicies");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DescribeCommonSecurityPoliciesTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeCommonSecurityPoliciesRequest& request,
+            DescribeCommonSecurityPoliciesRequest request,
             Gs2WebSocketSessionTask<DescribeCommonSecurityPoliciesResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DescribeCommonSecurityPoliciesResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DescribeCommonSecurityPoliciesResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DescribeCommonSecurityPoliciesTask() GS2_OVERRIDE = default;
@@ -614,81 +460,59 @@ private:
     class CreateSecurityPolicyTask : public detail::Gs2WebSocketSessionTask<CreateSecurityPolicyResult>
     {
     private:
-        CreateSecurityPolicyRequest& m_Request;
+        CreateSecurityPolicyRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "securityPolicy";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "createSecurityPolicy";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getName())
             {
-                writer.writePropertyName("name");
-                writer.writeCharArray(*m_Request.getName());
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
             }
             if (m_Request.getDescription())
             {
-                writer.writePropertyName("description");
-                writer.writeCharArray(*m_Request.getDescription());
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
             }
             if (m_Request.getPolicy())
             {
-                writer.writePropertyName("policy");
-                writer.writeCharArray(*m_Request.getPolicy());
+                jsonWriter.writePropertyName("policy");
+                jsonWriter.writeCharArray(*m_Request.getPolicy());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("securityPolicy");
-            writer.writePropertyName("function");
-            writer.writeCharArray("createSecurityPolicy");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         CreateSecurityPolicyTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            CreateSecurityPolicyRequest& request,
+            CreateSecurityPolicyRequest request,
             Gs2WebSocketSessionTask<CreateSecurityPolicyResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<CreateSecurityPolicyResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<CreateSecurityPolicyResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~CreateSecurityPolicyTask() GS2_OVERRIDE = default;
@@ -697,81 +521,59 @@ private:
     class UpdateSecurityPolicyTask : public detail::Gs2WebSocketSessionTask<UpdateSecurityPolicyResult>
     {
     private:
-        UpdateSecurityPolicyRequest& m_Request;
+        UpdateSecurityPolicyRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "securityPolicy";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateSecurityPolicy";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getSecurityPolicyName())
             {
-                writer.writePropertyName("securityPolicyName");
-                writer.writeCharArray(*m_Request.getSecurityPolicyName());
+                jsonWriter.writePropertyName("securityPolicyName");
+                jsonWriter.writeCharArray(*m_Request.getSecurityPolicyName());
             }
             if (m_Request.getDescription())
             {
-                writer.writePropertyName("description");
-                writer.writeCharArray(*m_Request.getDescription());
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
             }
             if (m_Request.getPolicy())
             {
-                writer.writePropertyName("policy");
-                writer.writeCharArray(*m_Request.getPolicy());
+                jsonWriter.writePropertyName("policy");
+                jsonWriter.writeCharArray(*m_Request.getPolicy());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("securityPolicy");
-            writer.writePropertyName("function");
-            writer.writeCharArray("updateSecurityPolicy");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         UpdateSecurityPolicyTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            UpdateSecurityPolicyRequest& request,
+            UpdateSecurityPolicyRequest request,
             Gs2WebSocketSessionTask<UpdateSecurityPolicyResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<UpdateSecurityPolicyResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<UpdateSecurityPolicyResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~UpdateSecurityPolicyTask() GS2_OVERRIDE = default;
@@ -780,71 +582,49 @@ private:
     class GetSecurityPolicyTask : public detail::Gs2WebSocketSessionTask<GetSecurityPolicyResult>
     {
     private:
-        GetSecurityPolicyRequest& m_Request;
+        GetSecurityPolicyRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "securityPolicy";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getSecurityPolicy";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getSecurityPolicyName())
             {
-                writer.writePropertyName("securityPolicyName");
-                writer.writeCharArray(*m_Request.getSecurityPolicyName());
+                jsonWriter.writePropertyName("securityPolicyName");
+                jsonWriter.writeCharArray(*m_Request.getSecurityPolicyName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("securityPolicy");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getSecurityPolicy");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         GetSecurityPolicyTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetSecurityPolicyRequest& request,
+            GetSecurityPolicyRequest request,
             Gs2WebSocketSessionTask<GetSecurityPolicyResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetSecurityPolicyResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<GetSecurityPolicyResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~GetSecurityPolicyTask() GS2_OVERRIDE = default;
@@ -853,71 +633,49 @@ private:
     class DeleteSecurityPolicyTask : public detail::Gs2WebSocketSessionTask<void>
     {
     private:
-        DeleteSecurityPolicyRequest& m_Request;
+        DeleteSecurityPolicyRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "securityPolicy";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteSecurityPolicy";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getSecurityPolicyName())
             {
-                writer.writePropertyName("securityPolicyName");
-                writer.writeCharArray(*m_Request.getSecurityPolicyName());
+                jsonWriter.writePropertyName("securityPolicyName");
+                jsonWriter.writeCharArray(*m_Request.getSecurityPolicyName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("securityPolicy");
-            writer.writePropertyName("function");
-            writer.writeCharArray("deleteSecurityPolicy");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DeleteSecurityPolicyTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DeleteSecurityPolicyRequest& request,
+            DeleteSecurityPolicyRequest request,
             Gs2WebSocketSessionTask<void>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<void>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<void>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DeleteSecurityPolicyTask() GS2_OVERRIDE = default;
@@ -926,81 +684,59 @@ private:
     class DescribeIdentifiersTask : public detail::Gs2WebSocketSessionTask<DescribeIdentifiersResult>
     {
     private:
-        DescribeIdentifiersRequest& m_Request;
+        DescribeIdentifiersRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "identifier";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeIdentifiers";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getUserName())
             {
-                writer.writePropertyName("userName");
-                writer.writeCharArray(*m_Request.getUserName());
+                jsonWriter.writePropertyName("userName");
+                jsonWriter.writeCharArray(*m_Request.getUserName());
             }
             if (m_Request.getPageToken())
             {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
             }
             if (m_Request.getLimit())
             {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeIdentifiers");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DescribeIdentifiersTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeIdentifiersRequest& request,
+            DescribeIdentifiersRequest request,
             Gs2WebSocketSessionTask<DescribeIdentifiersResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DescribeIdentifiersResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DescribeIdentifiersResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DescribeIdentifiersTask() GS2_OVERRIDE = default;
@@ -1009,71 +745,49 @@ private:
     class CreateIdentifierTask : public detail::Gs2WebSocketSessionTask<CreateIdentifierResult>
     {
     private:
-        CreateIdentifierRequest& m_Request;
+        CreateIdentifierRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "identifier";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "createIdentifier";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getUserName())
             {
-                writer.writePropertyName("userName");
-                writer.writeCharArray(*m_Request.getUserName());
+                jsonWriter.writePropertyName("userName");
+                jsonWriter.writeCharArray(*m_Request.getUserName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("function");
-            writer.writeCharArray("createIdentifier");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         CreateIdentifierTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            CreateIdentifierRequest& request,
+            CreateIdentifierRequest request,
             Gs2WebSocketSessionTask<CreateIdentifierResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<CreateIdentifierResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<CreateIdentifierResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~CreateIdentifierTask() GS2_OVERRIDE = default;
@@ -1082,76 +796,54 @@ private:
     class GetIdentifierTask : public detail::Gs2WebSocketSessionTask<GetIdentifierResult>
     {
     private:
-        GetIdentifierRequest& m_Request;
+        GetIdentifierRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "identifier";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getIdentifier";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getUserName())
             {
-                writer.writePropertyName("userName");
-                writer.writeCharArray(*m_Request.getUserName());
+                jsonWriter.writePropertyName("userName");
+                jsonWriter.writeCharArray(*m_Request.getUserName());
             }
             if (m_Request.getClientId())
             {
-                writer.writePropertyName("clientId");
-                writer.writeCharArray(*m_Request.getClientId());
+                jsonWriter.writePropertyName("clientId");
+                jsonWriter.writeCharArray(*m_Request.getClientId());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getIdentifier");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         GetIdentifierTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetIdentifierRequest& request,
+            GetIdentifierRequest request,
             Gs2WebSocketSessionTask<GetIdentifierResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetIdentifierResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<GetIdentifierResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~GetIdentifierTask() GS2_OVERRIDE = default;
@@ -1160,76 +852,54 @@ private:
     class DeleteIdentifierTask : public detail::Gs2WebSocketSessionTask<void>
     {
     private:
-        DeleteIdentifierRequest& m_Request;
+        DeleteIdentifierRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "identifier";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteIdentifier";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getUserName())
             {
-                writer.writePropertyName("userName");
-                writer.writeCharArray(*m_Request.getUserName());
+                jsonWriter.writePropertyName("userName");
+                jsonWriter.writeCharArray(*m_Request.getUserName());
             }
             if (m_Request.getClientId())
             {
-                writer.writePropertyName("clientId");
-                writer.writeCharArray(*m_Request.getClientId());
+                jsonWriter.writePropertyName("clientId");
+                jsonWriter.writeCharArray(*m_Request.getClientId());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("function");
-            writer.writeCharArray("deleteIdentifier");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DeleteIdentifierTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DeleteIdentifierRequest& request,
+            DeleteIdentifierRequest request,
             Gs2WebSocketSessionTask<void>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<void>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<void>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DeleteIdentifierTask() GS2_OVERRIDE = default;
@@ -1238,71 +908,49 @@ private:
     class GetHasSecurityPolicyTask : public detail::Gs2WebSocketSessionTask<GetHasSecurityPolicyResult>
     {
     private:
-        GetHasSecurityPolicyRequest& m_Request;
+        GetHasSecurityPolicyRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "attachSecurityPolicy";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getHasSecurityPolicy";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getUserName())
             {
-                writer.writePropertyName("userName");
-                writer.writeCharArray(*m_Request.getUserName());
+                jsonWriter.writePropertyName("userName");
+                jsonWriter.writeCharArray(*m_Request.getUserName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("attachSecurityPolicy");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getHasSecurityPolicy");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         GetHasSecurityPolicyTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetHasSecurityPolicyRequest& request,
+            GetHasSecurityPolicyRequest request,
             Gs2WebSocketSessionTask<GetHasSecurityPolicyResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetHasSecurityPolicyResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<GetHasSecurityPolicyResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~GetHasSecurityPolicyTask() GS2_OVERRIDE = default;
@@ -1311,76 +959,54 @@ private:
     class AttachSecurityPolicyTask : public detail::Gs2WebSocketSessionTask<AttachSecurityPolicyResult>
     {
     private:
-        AttachSecurityPolicyRequest& m_Request;
+        AttachSecurityPolicyRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "attachSecurityPolicy";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "attachSecurityPolicy";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getUserName())
             {
-                writer.writePropertyName("userName");
-                writer.writeCharArray(*m_Request.getUserName());
+                jsonWriter.writePropertyName("userName");
+                jsonWriter.writeCharArray(*m_Request.getUserName());
             }
             if (m_Request.getSecurityPolicyId())
             {
-                writer.writePropertyName("securityPolicyId");
-                writer.writeCharArray(*m_Request.getSecurityPolicyId());
+                jsonWriter.writePropertyName("securityPolicyId");
+                jsonWriter.writeCharArray(*m_Request.getSecurityPolicyId());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("attachSecurityPolicy");
-            writer.writePropertyName("function");
-            writer.writeCharArray("attachSecurityPolicy");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         AttachSecurityPolicyTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            AttachSecurityPolicyRequest& request,
+            AttachSecurityPolicyRequest request,
             Gs2WebSocketSessionTask<AttachSecurityPolicyResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<AttachSecurityPolicyResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<AttachSecurityPolicyResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~AttachSecurityPolicyTask() GS2_OVERRIDE = default;
@@ -1389,76 +1015,54 @@ private:
     class DetachSecurityPolicyTask : public detail::Gs2WebSocketSessionTask<DetachSecurityPolicyResult>
     {
     private:
-        DetachSecurityPolicyRequest& m_Request;
+        DetachSecurityPolicyRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "attachSecurityPolicy";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "detachSecurityPolicy";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getUserName())
             {
-                writer.writePropertyName("userName");
-                writer.writeCharArray(*m_Request.getUserName());
+                jsonWriter.writePropertyName("userName");
+                jsonWriter.writeCharArray(*m_Request.getUserName());
             }
             if (m_Request.getSecurityPolicyId())
             {
-                writer.writePropertyName("securityPolicyId");
-                writer.writeCharArray(*m_Request.getSecurityPolicyId());
+                jsonWriter.writePropertyName("securityPolicyId");
+                jsonWriter.writeCharArray(*m_Request.getSecurityPolicyId());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("attachSecurityPolicy");
-            writer.writePropertyName("function");
-            writer.writeCharArray("detachSecurityPolicy");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DetachSecurityPolicyTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DetachSecurityPolicyRequest& request,
+            DetachSecurityPolicyRequest request,
             Gs2WebSocketSessionTask<DetachSecurityPolicyResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DetachSecurityPolicyResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DetachSecurityPolicyResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DetachSecurityPolicyTask() GS2_OVERRIDE = default;
@@ -1467,228 +1071,205 @@ private:
     class LoginTask : public detail::Gs2WebSocketSessionTask<LoginResult>
     {
     private:
-        LoginRequest& m_Request;
+        LoginRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "identifier";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "projectToken";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "login";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getClientId())
             {
-                writer.writePropertyName("clientId");
-                writer.writeCharArray(*m_Request.getClientId());
+                jsonWriter.writePropertyName("clientId");
+                jsonWriter.writeCharArray(*m_Request.getClientId());
             }
             if (m_Request.getClientSecret())
             {
-                writer.writePropertyName("clientSecret");
-                writer.writeCharArray(*m_Request.getClientSecret());
+                jsonWriter.writePropertyName("clientSecret");
+                jsonWriter.writeCharArray(*m_Request.getClientSecret());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("identifier");
-            writer.writePropertyName("component");
-            writer.writeCharArray("projectToken");
-            writer.writePropertyName("function");
-            writer.writeCharArray("login");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         LoginTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            LoginRequest& request,
+            LoginRequest request,
             Gs2WebSocketSessionTask<LoginResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<LoginResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<LoginResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~LoginTask() GS2_OVERRIDE = default;
     };
 
 private:
-    static void write(detail::json::JsonWriter& writer, const User& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const User& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getUserId())
         {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*obj.getUserId());
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
         }
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*obj.getDescription());
+            jsonWriter.writePropertyName("description");
+            jsonWriter.writeCharArray(*obj.getDescription());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const SecurityPolicy& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const SecurityPolicy& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getSecurityPolicyId())
         {
-            writer.writePropertyName("securityPolicyId");
-            writer.writeCharArray(*obj.getSecurityPolicyId());
+            jsonWriter.writePropertyName("securityPolicyId");
+            jsonWriter.writeCharArray(*obj.getSecurityPolicyId());
         }
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*obj.getDescription());
+            jsonWriter.writePropertyName("description");
+            jsonWriter.writeCharArray(*obj.getDescription());
         }
         if (obj.getPolicy())
         {
-            writer.writePropertyName("policy");
-            writer.writeCharArray(*obj.getPolicy());
+            jsonWriter.writePropertyName("policy");
+            jsonWriter.writeCharArray(*obj.getPolicy());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Identifier& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Identifier& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getClientId())
         {
-            writer.writePropertyName("clientId");
-            writer.writeCharArray(*obj.getClientId());
+            jsonWriter.writePropertyName("clientId");
+            jsonWriter.writeCharArray(*obj.getClientId());
         }
         if (obj.getUserName())
         {
-            writer.writePropertyName("userName");
-            writer.writeCharArray(*obj.getUserName());
+            jsonWriter.writePropertyName("userName");
+            jsonWriter.writeCharArray(*obj.getUserName());
         }
         if (obj.getClientSecret())
         {
-            writer.writePropertyName("clientSecret");
-            writer.writeCharArray(*obj.getClientSecret());
+            jsonWriter.writePropertyName("clientSecret");
+            jsonWriter.writeCharArray(*obj.getClientSecret());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const AttachSecurityPolicy& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const AttachSecurityPolicy& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getUserId())
         {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*obj.getUserId());
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
         }
         if (obj.getSecurityPolicyIds())
         {
-            writer.writePropertyName("securityPolicyIds");
-            writer.writeArrayStart();
+            jsonWriter.writePropertyName("securityPolicyIds");
+            jsonWriter.writeArrayStart();
             auto& list = *obj.getSecurityPolicyIds();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.writeCharArray(list[i]);
+                jsonWriter.writeCharArray(list[i]);
             }
-            writer.writeArrayEnd();
+            jsonWriter.writeArrayEnd();
         }
         if (obj.getAttachedAt())
         {
-            writer.writePropertyName("attachedAt");
-            writer.writeInt64(*obj.getAttachedAt());
+            jsonWriter.writePropertyName("attachedAt");
+            jsonWriter.writeInt64(*obj.getAttachedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const ProjectToken& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const ProjectToken& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getToken())
         {
-            writer.writePropertyName("token");
-            writer.writeCharArray(*obj.getToken());
+            jsonWriter.writePropertyName("token");
+            jsonWriter.writeCharArray(*obj.getToken());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
-
 
 
 public:
@@ -1708,10 +1289,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeUsers(DescribeUsersRequest& request, std::function<void(AsyncDescribeUsersResult&)> callback)
+    void describeUsers(DescribeUsersRequest request, std::function<void(AsyncDescribeUsersResult)> callback)
     {
-        DescribeUsersTask& task = *new DescribeUsersTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DescribeUsersTask& task = *new DescribeUsersTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1720,10 +1301,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createUser(CreateUserRequest& request, std::function<void(AsyncCreateUserResult&)> callback)
+    void createUser(CreateUserRequest request, std::function<void(AsyncCreateUserResult)> callback)
     {
-        CreateUserTask& task = *new CreateUserTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        CreateUserTask& task = *new CreateUserTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1732,10 +1313,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateUser(UpdateUserRequest& request, std::function<void(AsyncUpdateUserResult&)> callback)
+    void updateUser(UpdateUserRequest request, std::function<void(AsyncUpdateUserResult)> callback)
     {
-        UpdateUserTask& task = *new UpdateUserTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        UpdateUserTask& task = *new UpdateUserTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1744,10 +1325,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getUser(GetUserRequest& request, std::function<void(AsyncGetUserResult&)> callback)
+    void getUser(GetUserRequest request, std::function<void(AsyncGetUserResult)> callback)
     {
-        GetUserTask& task = *new GetUserTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        GetUserTask& task = *new GetUserTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1756,10 +1337,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteUser(DeleteUserRequest& request, std::function<void(AsyncDeleteUserResult&)> callback)
+    void deleteUser(DeleteUserRequest request, std::function<void(AsyncDeleteUserResult)> callback)
     {
-        DeleteUserTask& task = *new DeleteUserTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DeleteUserTask& task = *new DeleteUserTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1768,10 +1349,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeSecurityPolicies(DescribeSecurityPoliciesRequest& request, std::function<void(AsyncDescribeSecurityPoliciesResult&)> callback)
+    void describeSecurityPolicies(DescribeSecurityPoliciesRequest request, std::function<void(AsyncDescribeSecurityPoliciesResult)> callback)
     {
-        DescribeSecurityPoliciesTask& task = *new DescribeSecurityPoliciesTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DescribeSecurityPoliciesTask& task = *new DescribeSecurityPoliciesTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1780,10 +1361,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCommonSecurityPolicies(DescribeCommonSecurityPoliciesRequest& request, std::function<void(AsyncDescribeCommonSecurityPoliciesResult&)> callback)
+    void describeCommonSecurityPolicies(DescribeCommonSecurityPoliciesRequest request, std::function<void(AsyncDescribeCommonSecurityPoliciesResult)> callback)
     {
-        DescribeCommonSecurityPoliciesTask& task = *new DescribeCommonSecurityPoliciesTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DescribeCommonSecurityPoliciesTask& task = *new DescribeCommonSecurityPoliciesTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1792,10 +1373,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createSecurityPolicy(CreateSecurityPolicyRequest& request, std::function<void(AsyncCreateSecurityPolicyResult&)> callback)
+    void createSecurityPolicy(CreateSecurityPolicyRequest request, std::function<void(AsyncCreateSecurityPolicyResult)> callback)
     {
-        CreateSecurityPolicyTask& task = *new CreateSecurityPolicyTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        CreateSecurityPolicyTask& task = *new CreateSecurityPolicyTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1804,10 +1385,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateSecurityPolicy(UpdateSecurityPolicyRequest& request, std::function<void(AsyncUpdateSecurityPolicyResult&)> callback)
+    void updateSecurityPolicy(UpdateSecurityPolicyRequest request, std::function<void(AsyncUpdateSecurityPolicyResult)> callback)
     {
-        UpdateSecurityPolicyTask& task = *new UpdateSecurityPolicyTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        UpdateSecurityPolicyTask& task = *new UpdateSecurityPolicyTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1816,10 +1397,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getSecurityPolicy(GetSecurityPolicyRequest& request, std::function<void(AsyncGetSecurityPolicyResult&)> callback)
+    void getSecurityPolicy(GetSecurityPolicyRequest request, std::function<void(AsyncGetSecurityPolicyResult)> callback)
     {
-        GetSecurityPolicyTask& task = *new GetSecurityPolicyTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        GetSecurityPolicyTask& task = *new GetSecurityPolicyTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1828,10 +1409,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteSecurityPolicy(DeleteSecurityPolicyRequest& request, std::function<void(AsyncDeleteSecurityPolicyResult&)> callback)
+    void deleteSecurityPolicy(DeleteSecurityPolicyRequest request, std::function<void(AsyncDeleteSecurityPolicyResult)> callback)
     {
-        DeleteSecurityPolicyTask& task = *new DeleteSecurityPolicyTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DeleteSecurityPolicyTask& task = *new DeleteSecurityPolicyTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1840,10 +1421,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeIdentifiers(DescribeIdentifiersRequest& request, std::function<void(AsyncDescribeIdentifiersResult&)> callback)
+    void describeIdentifiers(DescribeIdentifiersRequest request, std::function<void(AsyncDescribeIdentifiersResult)> callback)
     {
-        DescribeIdentifiersTask& task = *new DescribeIdentifiersTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DescribeIdentifiersTask& task = *new DescribeIdentifiersTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1852,10 +1433,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createIdentifier(CreateIdentifierRequest& request, std::function<void(AsyncCreateIdentifierResult&)> callback)
+    void createIdentifier(CreateIdentifierRequest request, std::function<void(AsyncCreateIdentifierResult)> callback)
     {
-        CreateIdentifierTask& task = *new CreateIdentifierTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        CreateIdentifierTask& task = *new CreateIdentifierTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1864,10 +1445,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getIdentifier(GetIdentifierRequest& request, std::function<void(AsyncGetIdentifierResult&)> callback)
+    void getIdentifier(GetIdentifierRequest request, std::function<void(AsyncGetIdentifierResult)> callback)
     {
-        GetIdentifierTask& task = *new GetIdentifierTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        GetIdentifierTask& task = *new GetIdentifierTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1876,10 +1457,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteIdentifier(DeleteIdentifierRequest& request, std::function<void(AsyncDeleteIdentifierResult&)> callback)
+    void deleteIdentifier(DeleteIdentifierRequest request, std::function<void(AsyncDeleteIdentifierResult)> callback)
     {
-        DeleteIdentifierTask& task = *new DeleteIdentifierTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DeleteIdentifierTask& task = *new DeleteIdentifierTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1888,10 +1469,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getHasSecurityPolicy(GetHasSecurityPolicyRequest& request, std::function<void(AsyncGetHasSecurityPolicyResult&)> callback)
+    void getHasSecurityPolicy(GetHasSecurityPolicyRequest request, std::function<void(AsyncGetHasSecurityPolicyResult)> callback)
     {
-        GetHasSecurityPolicyTask& task = *new GetHasSecurityPolicyTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        GetHasSecurityPolicyTask& task = *new GetHasSecurityPolicyTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1900,10 +1481,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void attachSecurityPolicy(AttachSecurityPolicyRequest& request, std::function<void(AsyncAttachSecurityPolicyResult&)> callback)
+    void attachSecurityPolicy(AttachSecurityPolicyRequest request, std::function<void(AsyncAttachSecurityPolicyResult)> callback)
     {
-        AttachSecurityPolicyTask& task = *new AttachSecurityPolicyTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        AttachSecurityPolicyTask& task = *new AttachSecurityPolicyTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1912,10 +1493,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void detachSecurityPolicy(DetachSecurityPolicyRequest& request, std::function<void(AsyncDetachSecurityPolicyResult&)> callback)
+    void detachSecurityPolicy(DetachSecurityPolicyRequest request, std::function<void(AsyncDetachSecurityPolicyResult)> callback)
     {
-        DetachSecurityPolicyTask& task = *new DetachSecurityPolicyTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DetachSecurityPolicyTask& task = *new DetachSecurityPolicyTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1924,10 +1505,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void login(LoginRequest& request, std::function<void(AsyncLoginResult&)> callback)
+    void login(LoginRequest request, std::function<void(AsyncLoginResult)> callback)
     {
-        LoginTask& task = *new LoginTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        LoginTask& task = *new LoginTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 protected:

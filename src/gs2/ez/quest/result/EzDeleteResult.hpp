@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace quest {
 class EzDeleteResult : public gs2::Gs2Object
 {
 private:
-    /** クエスト挑戦 */
-    EzProgress m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** クエスト挑戦 */
+        EzProgress item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::quest::DeleteProgressResult& deleteProgressResult) :
+            item(*deleteProgressResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzDeleteResult(const gs2::quest::DeleteProgressResult& result) :
-        m_Item(*result.getItem())
+    EzDeleteResult() = default;
+    EzDeleteResult(const EzDeleteResult& result) = default;
+    EzDeleteResult(EzDeleteResult&& result) = default;
+    ~EzDeleteResult() = default;
+
+    EzDeleteResult(gs2::quest::DeleteProgressResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzDeleteResult& operator=(const EzDeleteResult& result) = default;
+    EzDeleteResult& operator=(EzDeleteResult&& result) = default;
+
+    EzDeleteResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDeleteResult);
     }
 
     static bool isConvertible(const gs2::quest::DeleteProgressResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzProgress& getItem() const
     {
-        return m_Item;
-    }
-
-    EzProgress& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

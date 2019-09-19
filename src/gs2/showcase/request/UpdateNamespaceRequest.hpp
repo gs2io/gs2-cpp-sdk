@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ShowcaseConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace showcase
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -50,102 +52,49 @@ private:
         /** 購入処理のスタンプシートで使用する暗号鍵GRN */
         optional<StringHolder> keyId;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             description(data.description),
             queueNamespaceId(data.queueNamespaceId),
             keyId(data.keyId)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            description(std::move(data.description)),
-            queueNamespaceId(std::move(data.queueNamespaceId)),
-            keyId(std::move(data.keyId))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    UpdateNamespaceRequest() :
-        m_pData(nullptr)
-    {}
+    UpdateNamespaceRequest() = default;
+    UpdateNamespaceRequest(const UpdateNamespaceRequest& updateNamespaceRequest) = default;
+    UpdateNamespaceRequest(UpdateNamespaceRequest&& updateNamespaceRequest) = default;
+    ~UpdateNamespaceRequest() GS2_OVERRIDE = default;
 
-    UpdateNamespaceRequest(const UpdateNamespaceRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Showcase(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    UpdateNamespaceRequest& operator=(const UpdateNamespaceRequest& updateNamespaceRequest) = default;
+    UpdateNamespaceRequest& operator=(UpdateNamespaceRequest&& updateNamespaceRequest) = default;
 
-    UpdateNamespaceRequest(UpdateNamespaceRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Showcase(std::move(obj)),
-        m_pData(obj.m_pData)
+    UpdateNamespaceRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~UpdateNamespaceRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateNamespaceRequest& operator=(const UpdateNamespaceRequest& updateNamespaceRequest)
-    {
-        Gs2BasicRequest::operator=(updateNamespaceRequest);
-        Gs2Showcase::operator=(updateNamespaceRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateNamespaceRequest.m_pData);
-
-        return *this;
-    }
-
-    UpdateNamespaceRequest& operator=(UpdateNamespaceRequest&& updateNamespaceRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(updateNamespaceRequest));
-        Gs2Showcase::operator=(std::move(updateNamespaceRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateNamespaceRequest.m_pData;
-        updateNamespaceRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateNamespaceRequest);
     }
 
     const UpdateNamespaceRequest* operator->() const
@@ -173,9 +122,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -183,9 +132,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    UpdateNamespaceRequest& withNamespaceName(const Char* namespaceName)
+    UpdateNamespaceRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -204,9 +153,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -214,9 +163,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    UpdateNamespaceRequest& withDescription(const Char* description)
+    UpdateNamespaceRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -235,9 +184,9 @@ public:
      *
      * @param queueNamespaceId 購入処理をジョブとして追加するキューのネームスペース のGRN
      */
-    void setQueueNamespaceId(const Char* queueNamespaceId)
+    void setQueueNamespaceId(StringHolder queueNamespaceId)
     {
-        ensureData().queueNamespaceId.emplace(queueNamespaceId);
+        ensureData().queueNamespaceId.emplace(std::move(queueNamespaceId));
     }
 
     /**
@@ -245,9 +194,9 @@ public:
      *
      * @param queueNamespaceId 購入処理をジョブとして追加するキューのネームスペース のGRN
      */
-    UpdateNamespaceRequest& withQueueNamespaceId(const Char* queueNamespaceId)
+    UpdateNamespaceRequest& withQueueNamespaceId(StringHolder queueNamespaceId)
     {
-        ensureData().queueNamespaceId.emplace(queueNamespaceId);
+        ensureData().queueNamespaceId.emplace(std::move(queueNamespaceId));
         return *this;
     }
 
@@ -266,9 +215,9 @@ public:
      *
      * @param keyId 購入処理のスタンプシートで使用する暗号鍵GRN
      */
-    void setKeyId(const Char* keyId)
+    void setKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
     }
 
     /**
@@ -276,9 +225,9 @@ public:
      *
      * @param keyId 購入処理のスタンプシートで使用する暗号鍵GRN
      */
-    UpdateNamespaceRequest& withKeyId(const Char* keyId)
+    UpdateNamespaceRequest& withKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
         return *this;
     }
 
@@ -289,33 +238,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    UpdateNamespaceRequest& withGs2ClientId(const Char* gs2ClientId)
+    UpdateNamespaceRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    UpdateNamespaceRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    UpdateNamespaceRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -324,9 +249,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    UpdateNamespaceRequest& withRequestId(const Char* gs2RequestId)
+    UpdateNamespaceRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

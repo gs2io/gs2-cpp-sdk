@@ -78,285 +78,1752 @@ namespace gs2 { namespace money {
 class Gs2MoneyRestClient : public AbstractGs2ClientBase
 {
 private:
-    static void write(detail::json::JsonWriter& writer, const Namespace& obj)
+
+    class DescribeNamespacesTask : public detail::Gs2RestSessionTask<DescribeNamespacesResult>
     {
-        writer.writeObjectStart();
+    private:
+        DescribeNamespacesRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/";
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeNamespacesTask(
+            DescribeNamespacesRequest request,
+            Gs2RestSessionTask<DescribeNamespacesResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeNamespacesResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeNamespacesTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateNamespaceTask : public detail::Gs2RestSessionTask<CreateNamespaceResult>
+    {
+    private:
+        CreateNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getName())
+            {
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getPriority())
+            {
+                jsonWriter.writePropertyName("priority");
+                jsonWriter.writeCharArray(*m_Request.getPriority());
+            }
+            if (m_Request.getShareFree())
+            {
+                jsonWriter.writePropertyName("shareFree");
+                jsonWriter.writeBool(*m_Request.getShareFree());
+            }
+            if (m_Request.getCurrency())
+            {
+                jsonWriter.writePropertyName("currency");
+                jsonWriter.writeCharArray(*m_Request.getCurrency());
+            }
+            if (m_Request.getAppleKey())
+            {
+                jsonWriter.writePropertyName("appleKey");
+                jsonWriter.writeCharArray(*m_Request.getAppleKey());
+            }
+            if (m_Request.getGoogleKey())
+            {
+                jsonWriter.writePropertyName("googleKey");
+                jsonWriter.writeCharArray(*m_Request.getGoogleKey());
+            }
+            if (m_Request.getEnableFakeReceipt())
+            {
+                jsonWriter.writePropertyName("enableFakeReceipt");
+                jsonWriter.writeBool(*m_Request.getEnableFakeReceipt());
+            }
+            if (m_Request.getCreateWalletScript())
+            {
+                jsonWriter.writePropertyName("createWalletScript");
+                write(jsonWriter, *m_Request.getCreateWalletScript());
+            }
+            if (m_Request.getDepositScript())
+            {
+                jsonWriter.writePropertyName("depositScript");
+                write(jsonWriter, *m_Request.getDepositScript());
+            }
+            if (m_Request.getWithdrawScript())
+            {
+                jsonWriter.writePropertyName("withdrawScript");
+                write(jsonWriter, *m_Request.getWithdrawScript());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        CreateNamespaceTask(
+            CreateNamespaceRequest request,
+            Gs2RestSessionTask<CreateNamespaceResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<CreateNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateNamespaceTask() GS2_OVERRIDE = default;
+    };
+
+    class GetNamespaceStatusTask : public detail::Gs2RestSessionTask<GetNamespaceStatusResult>
+    {
+    private:
+        GetNamespaceStatusRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/status";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetNamespaceStatusTask(
+            GetNamespaceStatusRequest request,
+            Gs2RestSessionTask<GetNamespaceStatusResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetNamespaceStatusResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetNamespaceStatusTask() GS2_OVERRIDE = default;
+    };
+
+    class GetNamespaceTask : public detail::Gs2RestSessionTask<GetNamespaceResult>
+    {
+    private:
+        GetNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetNamespaceTask(
+            GetNamespaceRequest request,
+            Gs2RestSessionTask<GetNamespaceResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetNamespaceTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateNamespaceTask : public detail::Gs2RestSessionTask<UpdateNamespaceResult>
+    {
+    private:
+        UpdateNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getPriority())
+            {
+                jsonWriter.writePropertyName("priority");
+                jsonWriter.writeCharArray(*m_Request.getPriority());
+            }
+            if (m_Request.getAppleKey())
+            {
+                jsonWriter.writePropertyName("appleKey");
+                jsonWriter.writeCharArray(*m_Request.getAppleKey());
+            }
+            if (m_Request.getGoogleKey())
+            {
+                jsonWriter.writePropertyName("googleKey");
+                jsonWriter.writeCharArray(*m_Request.getGoogleKey());
+            }
+            if (m_Request.getEnableFakeReceipt())
+            {
+                jsonWriter.writePropertyName("enableFakeReceipt");
+                jsonWriter.writeBool(*m_Request.getEnableFakeReceipt());
+            }
+            if (m_Request.getCreateWalletScript())
+            {
+                jsonWriter.writePropertyName("createWalletScript");
+                write(jsonWriter, *m_Request.getCreateWalletScript());
+            }
+            if (m_Request.getDepositScript())
+            {
+                jsonWriter.writePropertyName("depositScript");
+                write(jsonWriter, *m_Request.getDepositScript());
+            }
+            if (m_Request.getWithdrawScript())
+            {
+                jsonWriter.writePropertyName("withdrawScript");
+                write(jsonWriter, *m_Request.getWithdrawScript());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Put;
+        }
+
+    public:
+        UpdateNamespaceTask(
+            UpdateNamespaceRequest request,
+            Gs2RestSessionTask<UpdateNamespaceResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<UpdateNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateNamespaceTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteNamespaceTask : public detail::Gs2RestSessionTask<void>
+    {
+    private:
+        DeleteNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        DeleteNamespaceTask(
+            DeleteNamespaceRequest request,
+            Gs2RestSessionTask<void>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<void>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteNamespaceTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeWalletsTask : public detail::Gs2RestSessionTask<DescribeWalletsResult>
+    {
+    private:
+        DescribeWalletsRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/wallet";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeWalletsTask(
+            DescribeWalletsRequest request,
+            Gs2RestSessionTask<DescribeWalletsResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeWalletsResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeWalletsTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeWalletsByUserIdTask : public detail::Gs2RestSessionTask<DescribeWalletsByUserIdResult>
+    {
+    private:
+        DescribeWalletsByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/wallet";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeWalletsByUserIdTask(
+            DescribeWalletsByUserIdRequest request,
+            Gs2RestSessionTask<DescribeWalletsByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeWalletsByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeWalletsByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class QueryWalletsTask : public detail::Gs2RestSessionTask<QueryWalletsResult>
+    {
+    private:
+        QueryWalletsRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/wallet/query";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getUserId())
+            {
+                url += joint;
+                url += "userId=";
+                url += detail::StringVariable(*m_Request.getUserId(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        QueryWalletsTask(
+            QueryWalletsRequest request,
+            Gs2RestSessionTask<QueryWalletsResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<QueryWalletsResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~QueryWalletsTask() GS2_OVERRIDE = default;
+    };
+
+    class GetWalletTask : public detail::Gs2RestSessionTask<GetWalletResult>
+    {
+    private:
+        GetWalletRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/wallet/{slot}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getSlot();
+                if (value.has_value())
+                {
+                    detail::StringVariable urlSafeValue(*value);
+                    url.replace("{slot}", urlSafeValue.c_str());
+                }
+                else
+                {
+                    url.replace("{slot}", "null");
+                }
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetWalletTask(
+            GetWalletRequest request,
+            Gs2RestSessionTask<GetWalletResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetWalletResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetWalletTask() GS2_OVERRIDE = default;
+    };
+
+    class GetWalletByUserIdTask : public detail::Gs2RestSessionTask<GetWalletByUserIdResult>
+    {
+    private:
+        GetWalletByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/wallet/{slot}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getSlot();
+                if (value.has_value())
+                {
+                    detail::StringVariable urlSafeValue(*value);
+                    url.replace("{slot}", urlSafeValue.c_str());
+                }
+                else
+                {
+                    url.replace("{slot}", "null");
+                }
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetWalletByUserIdTask(
+            GetWalletByUserIdRequest request,
+            Gs2RestSessionTask<GetWalletByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetWalletByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetWalletByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class DepositByUserIdTask : public detail::Gs2RestSessionTask<DepositByUserIdResult>
+    {
+    private:
+        DepositByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/wallet/{slot}/deposit";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getSlot();
+                if (value.has_value())
+                {
+                    detail::StringVariable urlSafeValue(*value);
+                    url.replace("{slot}", urlSafeValue.c_str());
+                }
+                else
+                {
+                    url.replace("{slot}", "null");
+                }
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getPrice())
+            {
+                jsonWriter.writePropertyName("price");
+                jsonWriter.writeFloat(*m_Request.getPrice());
+            }
+            if (m_Request.getCount())
+            {
+                jsonWriter.writePropertyName("count");
+                jsonWriter.writeInt32(*m_Request.getCount());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        DepositByUserIdTask(
+            DepositByUserIdRequest request,
+            Gs2RestSessionTask<DepositByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DepositByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DepositByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class WithdrawTask : public detail::Gs2RestSessionTask<WithdrawResult>
+    {
+    private:
+        WithdrawRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/wallet/{slot}/withdraw";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getSlot();
+                if (value.has_value())
+                {
+                    detail::StringVariable urlSafeValue(*value);
+                    url.replace("{slot}", urlSafeValue.c_str());
+                }
+                else
+                {
+                    url.replace("{slot}", "null");
+                }
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getCount())
+            {
+                jsonWriter.writePropertyName("count");
+                jsonWriter.writeInt32(*m_Request.getCount());
+            }
+            if (m_Request.getPaidOnly())
+            {
+                jsonWriter.writePropertyName("paidOnly");
+                jsonWriter.writeBool(*m_Request.getPaidOnly());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        WithdrawTask(
+            WithdrawRequest request,
+            Gs2RestSessionTask<WithdrawResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<WithdrawResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~WithdrawTask() GS2_OVERRIDE = default;
+    };
+
+    class WithdrawByUserIdTask : public detail::Gs2RestSessionTask<WithdrawByUserIdResult>
+    {
+    private:
+        WithdrawByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/wallet/{slot}/withdraw";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getSlot();
+                if (value.has_value())
+                {
+                    detail::StringVariable urlSafeValue(*value);
+                    url.replace("{slot}", urlSafeValue.c_str());
+                }
+                else
+                {
+                    url.replace("{slot}", "null");
+                }
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getCount())
+            {
+                jsonWriter.writePropertyName("count");
+                jsonWriter.writeInt32(*m_Request.getCount());
+            }
+            if (m_Request.getPaidOnly())
+            {
+                jsonWriter.writePropertyName("paidOnly");
+                jsonWriter.writeBool(*m_Request.getPaidOnly());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        WithdrawByUserIdTask(
+            WithdrawByUserIdRequest request,
+            Gs2RestSessionTask<WithdrawByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<WithdrawByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~WithdrawByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class DepositByStampSheetTask : public detail::Gs2RestSessionTask<DepositByStampSheetResult>
+    {
+    private:
+        DepositByStampSheetRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stamp/deposit";
+            {
+                auto& value = m_Request.getStampSheet();
+                url.replace("{stampSheet}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        DepositByStampSheetTask(
+            DepositByStampSheetRequest request,
+            Gs2RestSessionTask<DepositByStampSheetResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DepositByStampSheetResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DepositByStampSheetTask() GS2_OVERRIDE = default;
+    };
+
+    class WithdrawByStampTaskTask : public detail::Gs2RestSessionTask<WithdrawByStampTaskResult>
+    {
+    private:
+        WithdrawByStampTaskRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stamp/withdraw";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampTask())
+            {
+                jsonWriter.writePropertyName("stampTask");
+                jsonWriter.writeCharArray(*m_Request.getStampTask());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        WithdrawByStampTaskTask(
+            WithdrawByStampTaskRequest request,
+            Gs2RestSessionTask<WithdrawByStampTaskResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<WithdrawByStampTaskResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~WithdrawByStampTaskTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeWalletDetailsByUserIdTask : public detail::Gs2RestSessionTask<DescribeWalletDetailsByUserIdResult>
+    {
+    private:
+        DescribeWalletDetailsByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/wallet/{slot}/detail";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getSlot();
+                if (value.has_value())
+                {
+                    detail::StringVariable urlSafeValue(*value);
+                    url.replace("{slot}", urlSafeValue.c_str());
+                }
+                else
+                {
+                    url.replace("{slot}", "null");
+                }
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeWalletDetailsByUserIdTask(
+            DescribeWalletDetailsByUserIdRequest request,
+            Gs2RestSessionTask<DescribeWalletDetailsByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeWalletDetailsByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeWalletDetailsByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeReceiptsTask : public detail::Gs2RestSessionTask<DescribeReceiptsResult>
+    {
+    private:
+        DescribeReceiptsRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/receipt";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getUserId())
+            {
+                url += joint;
+                url += "userId=";
+                url += detail::StringVariable(*m_Request.getUserId(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getSlot())
+            {
+                url += joint;
+                url += "slot=";
+                url += detail::StringVariable(*m_Request.getSlot()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getBegin())
+            {
+                url += joint;
+                url += "begin=";
+                url += detail::StringVariable(*m_Request.getBegin()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getEnd())
+            {
+                url += joint;
+                url += "end=";
+                url += detail::StringVariable(*m_Request.getEnd()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeReceiptsTask(
+            DescribeReceiptsRequest request,
+            Gs2RestSessionTask<DescribeReceiptsResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeReceiptsResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeReceiptsTask() GS2_OVERRIDE = default;
+    };
+
+    class GetByUserIdAndTransactionIdTask : public detail::Gs2RestSessionTask<GetByUserIdAndTransactionIdResult>
+    {
+    private:
+        GetByUserIdAndTransactionIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/receipt/{transactionId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getTransactionId();
+                url.replace("{transactionId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetByUserIdAndTransactionIdTask(
+            GetByUserIdAndTransactionIdRequest request,
+            Gs2RestSessionTask<GetByUserIdAndTransactionIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetByUserIdAndTransactionIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetByUserIdAndTransactionIdTask() GS2_OVERRIDE = default;
+    };
+
+    class RecordReceiptTask : public detail::Gs2RestSessionTask<RecordReceiptResult>
+    {
+    private:
+        RecordReceiptRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/receipt";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getContentsId())
+            {
+                jsonWriter.writePropertyName("contentsId");
+                jsonWriter.writeCharArray(*m_Request.getContentsId());
+            }
+            if (m_Request.getReceipt())
+            {
+                jsonWriter.writePropertyName("receipt");
+                jsonWriter.writeCharArray(*m_Request.getReceipt());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        RecordReceiptTask(
+            RecordReceiptRequest request,
+            Gs2RestSessionTask<RecordReceiptResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<RecordReceiptResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RecordReceiptTask() GS2_OVERRIDE = default;
+    };
+
+    class RecordReceiptByStampTaskTask : public detail::Gs2RestSessionTask<RecordReceiptByStampTaskResult>
+    {
+    private:
+        RecordReceiptByStampTaskRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "money";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stamp/receipt/record";
+            {
+                auto& value = m_Request.getStampTask();
+                url.replace("{stampTask}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        RecordReceiptByStampTaskTask(
+            RecordReceiptByStampTaskRequest request,
+            Gs2RestSessionTask<RecordReceiptByStampTaskResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<RecordReceiptByStampTaskResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RecordReceiptByStampTaskTask() GS2_OVERRIDE = default;
+    };
+
+private:
+    static void write(detail::json::JsonWriter& jsonWriter, const Namespace& obj)
+    {
+        jsonWriter.writeObjectStart();
         if (obj.getNamespaceId())
         {
-            writer.writePropertyName("namespaceId");
-            writer.writeCharArray(*obj.getNamespaceId());
+            jsonWriter.writePropertyName("namespaceId");
+            jsonWriter.writeCharArray(*obj.getNamespaceId());
         }
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*obj.getDescription());
+            jsonWriter.writePropertyName("description");
+            jsonWriter.writeCharArray(*obj.getDescription());
         }
         if (obj.getPriority())
         {
-            writer.writePropertyName("priority");
-            writer.writeCharArray(*obj.getPriority());
+            jsonWriter.writePropertyName("priority");
+            jsonWriter.writeCharArray(*obj.getPriority());
         }
         if (obj.getShareFree())
         {
-            writer.writePropertyName("shareFree");
-            writer.writeBool(*obj.getShareFree());
+            jsonWriter.writePropertyName("shareFree");
+            jsonWriter.writeBool(*obj.getShareFree());
         }
         if (obj.getCurrency())
         {
-            writer.writePropertyName("currency");
-            writer.writeCharArray(*obj.getCurrency());
+            jsonWriter.writePropertyName("currency");
+            jsonWriter.writeCharArray(*obj.getCurrency());
         }
         if (obj.getAppleKey())
         {
-            writer.writePropertyName("appleKey");
-            writer.writeCharArray(*obj.getAppleKey());
+            jsonWriter.writePropertyName("appleKey");
+            jsonWriter.writeCharArray(*obj.getAppleKey());
         }
         if (obj.getGoogleKey())
         {
-            writer.writePropertyName("googleKey");
-            writer.writeCharArray(*obj.getGoogleKey());
+            jsonWriter.writePropertyName("googleKey");
+            jsonWriter.writeCharArray(*obj.getGoogleKey());
         }
         if (obj.getEnableFakeReceipt())
         {
-            writer.writePropertyName("enableFakeReceipt");
-            writer.writeBool(*obj.getEnableFakeReceipt());
+            jsonWriter.writePropertyName("enableFakeReceipt");
+            jsonWriter.writeBool(*obj.getEnableFakeReceipt());
         }
         if (obj.getCreateWalletScript())
         {
-            writer.writePropertyName("createWalletScript");
-            write(writer, *obj.getCreateWalletScript());
+            jsonWriter.writePropertyName("createWalletScript");
+            write(jsonWriter, *obj.getCreateWalletScript());
         }
         if (obj.getDepositScript())
         {
-            writer.writePropertyName("depositScript");
-            write(writer, *obj.getDepositScript());
+            jsonWriter.writePropertyName("depositScript");
+            write(jsonWriter, *obj.getDepositScript());
         }
         if (obj.getWithdrawScript())
         {
-            writer.writePropertyName("withdrawScript");
-            write(writer, *obj.getWithdrawScript());
+            jsonWriter.writePropertyName("withdrawScript");
+            write(jsonWriter, *obj.getWithdrawScript());
         }
         if (obj.getBalance())
         {
-            writer.writePropertyName("balance");
-            writer.writeDouble(*obj.getBalance());
+            jsonWriter.writePropertyName("balance");
+            jsonWriter.writeDouble(*obj.getBalance());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Wallet& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Wallet& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getWalletId())
         {
-            writer.writePropertyName("walletId");
-            writer.writeCharArray(*obj.getWalletId());
+            jsonWriter.writePropertyName("walletId");
+            jsonWriter.writeCharArray(*obj.getWalletId());
         }
         if (obj.getUserId())
         {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*obj.getUserId());
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
         }
         if (obj.getSlot())
         {
-            writer.writePropertyName("slot");
-            writer.writeInt32(*obj.getSlot());
+            jsonWriter.writePropertyName("slot");
+            jsonWriter.writeInt32(*obj.getSlot());
         }
         if (obj.getPaid())
         {
-            writer.writePropertyName("paid");
-            writer.writeInt32(*obj.getPaid());
+            jsonWriter.writePropertyName("paid");
+            jsonWriter.writeInt32(*obj.getPaid());
         }
         if (obj.getFree())
         {
-            writer.writePropertyName("free");
-            writer.writeInt32(*obj.getFree());
+            jsonWriter.writePropertyName("free");
+            jsonWriter.writeInt32(*obj.getFree());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const WalletDetail& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const WalletDetail& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getWalletDetailId())
         {
-            writer.writePropertyName("walletDetailId");
-            writer.writeCharArray(*obj.getWalletDetailId());
+            jsonWriter.writePropertyName("walletDetailId");
+            jsonWriter.writeCharArray(*obj.getWalletDetailId());
         }
         if (obj.getUserId())
         {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*obj.getUserId());
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
         }
         if (obj.getSlot())
         {
-            writer.writePropertyName("slot");
-            writer.writeInt32(*obj.getSlot());
+            jsonWriter.writePropertyName("slot");
+            jsonWriter.writeInt32(*obj.getSlot());
         }
         if (obj.getPrice())
         {
-            writer.writePropertyName("price");
-            writer.writeFloat(*obj.getPrice());
+            jsonWriter.writePropertyName("price");
+            jsonWriter.writeFloat(*obj.getPrice());
         }
         if (obj.getCount())
         {
-            writer.writePropertyName("count");
-            writer.writeInt32(*obj.getCount());
+            jsonWriter.writePropertyName("count");
+            jsonWriter.writeInt32(*obj.getCount());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Receipt& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Receipt& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getReceiptId())
         {
-            writer.writePropertyName("receiptId");
-            writer.writeCharArray(*obj.getReceiptId());
+            jsonWriter.writePropertyName("receiptId");
+            jsonWriter.writeCharArray(*obj.getReceiptId());
         }
         if (obj.getTransactionId())
         {
-            writer.writePropertyName("transactionId");
-            writer.writeCharArray(*obj.getTransactionId());
+            jsonWriter.writePropertyName("transactionId");
+            jsonWriter.writeCharArray(*obj.getTransactionId());
         }
         if (obj.getUserId())
         {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*obj.getUserId());
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
         }
         if (obj.getType())
         {
-            writer.writePropertyName("type");
-            writer.writeCharArray(*obj.getType());
+            jsonWriter.writePropertyName("type");
+            jsonWriter.writeCharArray(*obj.getType());
         }
         if (obj.getSlot())
         {
-            writer.writePropertyName("slot");
-            writer.writeInt32(*obj.getSlot());
+            jsonWriter.writePropertyName("slot");
+            jsonWriter.writeInt32(*obj.getSlot());
         }
         if (obj.getPrice())
         {
-            writer.writePropertyName("price");
-            writer.writeFloat(*obj.getPrice());
+            jsonWriter.writePropertyName("price");
+            jsonWriter.writeFloat(*obj.getPrice());
         }
         if (obj.getPaid())
         {
-            writer.writePropertyName("paid");
-            writer.writeInt32(*obj.getPaid());
+            jsonWriter.writePropertyName("paid");
+            jsonWriter.writeInt32(*obj.getPaid());
         }
         if (obj.getFree())
         {
-            writer.writePropertyName("free");
-            writer.writeInt32(*obj.getFree());
+            jsonWriter.writePropertyName("free");
+            jsonWriter.writeInt32(*obj.getFree());
         }
         if (obj.getTotal())
         {
-            writer.writePropertyName("total");
-            writer.writeInt32(*obj.getTotal());
+            jsonWriter.writePropertyName("total");
+            jsonWriter.writeInt32(*obj.getTotal());
         }
         if (obj.getContentsId())
         {
-            writer.writePropertyName("contentsId");
-            writer.writeCharArray(*obj.getContentsId());
+            jsonWriter.writePropertyName("contentsId");
+            jsonWriter.writeCharArray(*obj.getContentsId());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const ResponseCache& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const ResponseCache& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getRegion())
         {
-            writer.writePropertyName("region");
-            writer.writeCharArray(*obj.getRegion());
+            jsonWriter.writePropertyName("region");
+            jsonWriter.writeCharArray(*obj.getRegion());
         }
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getResponseCacheId())
         {
-            writer.writePropertyName("responseCacheId");
-            writer.writeCharArray(*obj.getResponseCacheId());
+            jsonWriter.writePropertyName("responseCacheId");
+            jsonWriter.writeCharArray(*obj.getResponseCacheId());
         }
         if (obj.getRequestHash())
         {
-            writer.writePropertyName("requestHash");
-            writer.writeCharArray(*obj.getRequestHash());
+            jsonWriter.writePropertyName("requestHash");
+            jsonWriter.writeCharArray(*obj.getRequestHash());
         }
         if (obj.getResult())
         {
-            writer.writePropertyName("result");
-            writer.writeCharArray(*obj.getResult());
+            jsonWriter.writePropertyName("result");
+            jsonWriter.writeCharArray(*obj.getResult());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const ScriptSetting& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const ScriptSetting& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getTriggerScriptId())
         {
-            writer.writePropertyName("triggerScriptId");
-            writer.writeCharArray(*obj.getTriggerScriptId());
+            jsonWriter.writePropertyName("triggerScriptId");
+            jsonWriter.writeCharArray(*obj.getTriggerScriptId());
         }
         if (obj.getDoneTriggerScriptId())
         {
-            writer.writePropertyName("doneTriggerScriptId");
-            writer.writeCharArray(*obj.getDoneTriggerScriptId());
+            jsonWriter.writePropertyName("doneTriggerScriptId");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerScriptId());
         }
         if (obj.getDoneTriggerQueueNamespaceId())
         {
-            writer.writePropertyName("doneTriggerQueueNamespaceId");
-            writer.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
+            jsonWriter.writePropertyName("doneTriggerQueueNamespaceId");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
 
@@ -378,45 +1845,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
+    void describeNamespaces(DescribeNamespacesRequest request, std::function<void(AsyncDescribeNamespacesResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeNamespacesResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/";
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getPageToken())
-        {
-            url += joint;
-            url += "pageToken=";
-            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getLimit())
-        {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DescribeNamespacesTask& task = *new DescribeNamespacesTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -425,92 +1857,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
+    void createNamespace(CreateNamespaceRequest request, std::function<void(AsyncCreateNamespaceResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateNamespaceResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getName())
-        {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*request.getName());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        if (request.getPriority())
-        {
-            writer.writePropertyName("priority");
-            writer.writeCharArray(*request.getPriority());
-        }
-        if (request.getShareFree())
-        {
-            writer.writePropertyName("shareFree");
-            writer.writeBool(*request.getShareFree());
-        }
-        if (request.getCurrency())
-        {
-            writer.writePropertyName("currency");
-            writer.writeCharArray(*request.getCurrency());
-        }
-        if (request.getAppleKey())
-        {
-            writer.writePropertyName("appleKey");
-            writer.writeCharArray(*request.getAppleKey());
-        }
-        if (request.getGoogleKey())
-        {
-            writer.writePropertyName("googleKey");
-            writer.writeCharArray(*request.getGoogleKey());
-        }
-        if (request.getEnableFakeReceipt())
-        {
-            writer.writePropertyName("enableFakeReceipt");
-            writer.writeBool(*request.getEnableFakeReceipt());
-        }
-        if (request.getCreateWalletScript())
-        {
-            writer.writePropertyName("createWalletScript");
-            write(writer, *request.getCreateWalletScript());
-        }
-        if (request.getDepositScript())
-        {
-            writer.writePropertyName("depositScript");
-            write(writer, *request.getDepositScript());
-        }
-        if (request.getWithdrawScript())
-        {
-            writer.writePropertyName("withdrawScript");
-            write(writer, *request.getWithdrawScript());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        CreateNamespaceTask& task = *new CreateNamespaceTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -519,35 +1869,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
+    void getNamespaceStatus(GetNamespaceStatusRequest request, std::function<void(AsyncGetNamespaceStatusResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceStatusResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/status";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -556,35 +1881,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
+    void getNamespace(GetNamespaceRequest request, std::function<void(AsyncGetNamespaceResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        GetNamespaceTask& task = *new GetNamespaceTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -593,81 +1893,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
+    void updateNamespace(UpdateNamespaceRequest request, std::function<void(AsyncUpdateNamespaceResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateNamespaceResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("PUT");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        if (request.getPriority())
-        {
-            writer.writePropertyName("priority");
-            writer.writeCharArray(*request.getPriority());
-        }
-        if (request.getAppleKey())
-        {
-            writer.writePropertyName("appleKey");
-            writer.writeCharArray(*request.getAppleKey());
-        }
-        if (request.getGoogleKey())
-        {
-            writer.writePropertyName("googleKey");
-            writer.writeCharArray(*request.getGoogleKey());
-        }
-        if (request.getEnableFakeReceipt())
-        {
-            writer.writePropertyName("enableFakeReceipt");
-            writer.writeBool(*request.getEnableFakeReceipt());
-        }
-        if (request.getCreateWalletScript())
-        {
-            writer.writePropertyName("createWalletScript");
-            write(writer, *request.getCreateWalletScript());
-        }
-        if (request.getDepositScript())
-        {
-            writer.writePropertyName("depositScript");
-            write(writer, *request.getDepositScript());
-        }
-        if (request.getWithdrawScript())
-        {
-            writer.writePropertyName("withdrawScript");
-            write(writer, *request.getWithdrawScript());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        UpdateNamespaceTask& task = *new UpdateNamespaceTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -676,40 +1905,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
+    void deleteNamespace(DeleteNamespaceRequest request, std::function<void(AsyncDeleteNamespaceResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("DELETE");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-        {
-            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DeleteNamespaceTask& task = *new DeleteNamespaceTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -718,57 +1917,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWallets(DescribeWalletsRequest& request, std::function<void(AsyncDescribeWalletsResult&)> callback)
+    void describeWallets(DescribeWalletsRequest request, std::function<void(AsyncDescribeWalletsResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeWalletsResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/me/wallet";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getPageToken())
-        {
-            url += joint;
-            url += "pageToken=";
-            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getLimit())
-        {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        DescribeWalletsTask& task = *new DescribeWalletsTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -777,57 +1929,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWalletsByUserId(DescribeWalletsByUserIdRequest& request, std::function<void(AsyncDescribeWalletsByUserIdResult&)> callback)
+    void describeWalletsByUserId(DescribeWalletsByUserIdRequest request, std::function<void(AsyncDescribeWalletsByUserIdResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeWalletsByUserIdResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/wallet";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getUserId();
-            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getPageToken())
-        {
-            url += joint;
-            url += "pageToken=";
-            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getLimit())
-        {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        DescribeWalletsByUserIdTask& task = *new DescribeWalletsByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -836,60 +1941,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void queryWallets(QueryWalletsRequest& request, std::function<void(AsyncQueryWalletsResult&)> callback)
+    void queryWallets(QueryWalletsRequest request, std::function<void(AsyncQueryWalletsResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<QueryWalletsResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/wallet/query";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getUserId())
-        {
-            url += joint;
-            url += "userId=";
-            url += detail::StringVariable(*request.getUserId(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getPageToken())
-        {
-            url += joint;
-            url += "pageToken=";
-            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getLimit())
-        {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        QueryWalletsTask& task = *new QueryWalletsTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -898,55 +1953,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getWallet(GetWalletRequest& request, std::function<void(AsyncGetWalletResult&)> callback)
+    void getWallet(GetWalletRequest request, std::function<void(AsyncGetWalletResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetWalletResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/me/wallet/{slot}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getSlot();
-            if (value.has_value())
-            {
-                detail::StringVariable urlSafeValue(*value);
-                url.replace("{slot}", urlSafeValue.c_str());
-            }
-            else
-            {
-                url.replace("{slot}", "null");
-            }
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        GetWalletTask& task = *new GetWalletTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -955,55 +1965,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getWalletByUserId(GetWalletByUserIdRequest& request, std::function<void(AsyncGetWalletByUserIdResult&)> callback)
+    void getWalletByUserId(GetWalletByUserIdRequest request, std::function<void(AsyncGetWalletByUserIdResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetWalletByUserIdResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/wallet/{slot}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getUserId();
-            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getSlot();
-            if (value.has_value())
-            {
-                detail::StringVariable urlSafeValue(*value);
-                url.replace("{slot}", urlSafeValue.c_str());
-            }
-            else
-            {
-                url.replace("{slot}", "null");
-            }
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        GetWalletByUserIdTask& task = *new GetWalletByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1012,71 +1977,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void depositByUserId(DepositByUserIdRequest& request, std::function<void(AsyncDepositByUserIdResult&)> callback)
+    void depositByUserId(DepositByUserIdRequest request, std::function<void(AsyncDepositByUserIdResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DepositByUserIdResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/wallet/{slot}/deposit";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getUserId();
-            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getSlot();
-            if (value.has_value())
-            {
-                detail::StringVariable urlSafeValue(*value);
-                url.replace("{slot}", urlSafeValue.c_str());
-            }
-            else
-            {
-                url.replace("{slot}", "null");
-            }
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getPrice())
-        {
-            writer.writePropertyName("price");
-            writer.writeFloat(*request.getPrice());
-        }
-        if (request.getCount())
-        {
-            writer.writePropertyName("count");
-            writer.writeInt32(*request.getCount());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        DepositByUserIdTask& task = *new DepositByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1085,71 +1989,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void withdraw(WithdrawRequest& request, std::function<void(AsyncWithdrawResult&)> callback)
+    void withdraw(WithdrawRequest request, std::function<void(AsyncWithdrawResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<WithdrawResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/me/wallet/{slot}/withdraw";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getSlot();
-            if (value.has_value())
-            {
-                detail::StringVariable urlSafeValue(*value);
-                url.replace("{slot}", urlSafeValue.c_str());
-            }
-            else
-            {
-                url.replace("{slot}", "null");
-            }
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getCount())
-        {
-            writer.writePropertyName("count");
-            writer.writeInt32(*request.getCount());
-        }
-        if (request.getPaidOnly())
-        {
-            writer.writePropertyName("paidOnly");
-            writer.writeBool(*request.getPaidOnly());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        WithdrawTask& task = *new WithdrawTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1158,71 +2001,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void withdrawByUserId(WithdrawByUserIdRequest& request, std::function<void(AsyncWithdrawByUserIdResult&)> callback)
+    void withdrawByUserId(WithdrawByUserIdRequest request, std::function<void(AsyncWithdrawByUserIdResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<WithdrawByUserIdResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/wallet/{slot}/withdraw";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getUserId();
-            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getSlot();
-            if (value.has_value())
-            {
-                detail::StringVariable urlSafeValue(*value);
-                url.replace("{slot}", urlSafeValue.c_str());
-            }
-            else
-            {
-                url.replace("{slot}", "null");
-            }
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getCount())
-        {
-            writer.writePropertyName("count");
-            writer.writeInt32(*request.getCount());
-        }
-        if (request.getPaidOnly())
-        {
-            writer.writePropertyName("paidOnly");
-            writer.writeBool(*request.getPaidOnly());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        WithdrawByUserIdTask& task = *new WithdrawByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1231,50 +2013,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void depositByStampSheet(DepositByStampSheetRequest& request, std::function<void(AsyncDepositByStampSheetResult&)> callback)
+    void depositByStampSheet(DepositByStampSheetRequest request, std::function<void(AsyncDepositByStampSheetResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DepositByStampSheetResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stamp/deposit";
-        {
-            auto& value = request.getStampSheet();
-            url.replace("{stampSheet}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getKeyId())
-        {
-            writer.writePropertyName("keyId");
-            writer.writeCharArray(*request.getKeyId());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        DepositByStampSheetTask& task = *new DepositByStampSheetTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1283,51 +2025,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void withdrawByStampTask(WithdrawByStampTaskRequest& request, std::function<void(AsyncWithdrawByStampTaskResult&)> callback)
+    void withdrawByStampTask(WithdrawByStampTaskRequest request, std::function<void(AsyncWithdrawByStampTaskResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<WithdrawByStampTaskResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stamp/withdraw";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getStampTask())
-        {
-            writer.writePropertyName("stampTask");
-            writer.writeCharArray(*request.getStampTask());
-        }
-        if (request.getKeyId())
-        {
-            writer.writePropertyName("keyId");
-            writer.writeCharArray(*request.getKeyId());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        WithdrawByStampTaskTask& task = *new WithdrawByStampTaskTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1336,69 +2037,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeWalletDetailsByUserId(DescribeWalletDetailsByUserIdRequest& request, std::function<void(AsyncDescribeWalletDetailsByUserIdResult&)> callback)
+    void describeWalletDetailsByUserId(DescribeWalletDetailsByUserIdRequest request, std::function<void(AsyncDescribeWalletDetailsByUserIdResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeWalletDetailsByUserIdResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/wallet/{slot}/detail";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getUserId();
-            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getSlot();
-            if (value.has_value())
-            {
-                detail::StringVariable urlSafeValue(*value);
-                url.replace("{slot}", urlSafeValue.c_str());
-            }
-            else
-            {
-                url.replace("{slot}", "null");
-            }
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getPageToken())
-        {
-            url += joint;
-            url += "pageToken=";
-            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getLimit())
-        {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        DescribeWalletDetailsByUserIdTask& task = *new DescribeWalletDetailsByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1407,81 +2049,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeReceipts(DescribeReceiptsRequest& request, std::function<void(AsyncDescribeReceiptsResult&)> callback)
+    void describeReceipts(DescribeReceiptsRequest request, std::function<void(AsyncDescribeReceiptsResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeReceiptsResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/receipt";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getUserId())
-        {
-            url += joint;
-            url += "userId=";
-            url += detail::StringVariable(*request.getUserId(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getSlot())
-        {
-            url += joint;
-            url += "slot=";
-            url += detail::StringVariable(*request.getSlot()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getBegin())
-        {
-            url += joint;
-            url += "begin=";
-            url += detail::StringVariable(*request.getBegin()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getEnd())
-        {
-            url += joint;
-            url += "end=";
-            url += detail::StringVariable(*request.getEnd()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getPageToken())
-        {
-            url += joint;
-            url += "pageToken=";
-            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getLimit())
-        {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        DescribeReceiptsTask& task = *new DescribeReceiptsTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1490,47 +2061,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getByUserIdAndTransactionId(GetByUserIdAndTransactionIdRequest& request, std::function<void(AsyncGetByUserIdAndTransactionIdResult&)> callback)
+    void getByUserIdAndTransactionId(GetByUserIdAndTransactionIdRequest request, std::function<void(AsyncGetByUserIdAndTransactionIdResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetByUserIdAndTransactionIdResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/receipt/{transactionId}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getUserId();
-            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getTransactionId();
-            url.replace("{transactionId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        GetByUserIdAndTransactionIdTask& task = *new GetByUserIdAndTransactionIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1539,59 +2073,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void recordReceipt(RecordReceiptRequest& request, std::function<void(AsyncRecordReceiptResult&)> callback)
+    void recordReceipt(RecordReceiptRequest request, std::function<void(AsyncRecordReceiptResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<RecordReceiptResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/user/{userId}/receipt";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getUserId();
-            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getContentsId())
-        {
-            writer.writePropertyName("contentsId");
-            writer.writeCharArray(*request.getContentsId());
-        }
-        if (request.getReceipt())
-        {
-            writer.writePropertyName("receipt");
-            writer.writeCharArray(*request.getReceipt());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        RecordReceiptTask& task = *new RecordReceiptTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1600,50 +2085,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void recordReceiptByStampTask(RecordReceiptByStampTaskRequest& request, std::function<void(AsyncRecordReceiptByStampTaskResult&)> callback)
+    void recordReceiptByStampTask(RecordReceiptByStampTaskRequest request, std::function<void(AsyncRecordReceiptByStampTaskResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<RecordReceiptByStampTaskResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "money");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stamp/receipt/record";
-        {
-            auto& value = request.getStampTask();
-            url.replace("{stampTask}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getKeyId())
-        {
-            writer.writePropertyName("keyId");
-            writer.writeCharArray(*request.getKeyId());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        RecordReceiptByStampTaskTask& task = *new RecordReceiptByStampTaskTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 protected:

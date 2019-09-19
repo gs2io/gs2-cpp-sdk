@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2LockConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace lock
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** カテゴリー名 */
@@ -54,106 +56,51 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             propertyId(data.propertyId),
             userId(data.userId),
             transactionId(data.transactionId),
             ttl(data.ttl),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            propertyId(std::move(data.propertyId)),
-            userId(std::move(data.userId)),
-            transactionId(std::move(data.transactionId)),
-            ttl(std::move(data.ttl)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    LockByUserIdRequest() :
-        m_pData(nullptr)
-    {}
+    LockByUserIdRequest() = default;
+    LockByUserIdRequest(const LockByUserIdRequest& lockByUserIdRequest) = default;
+    LockByUserIdRequest(LockByUserIdRequest&& lockByUserIdRequest) = default;
+    ~LockByUserIdRequest() GS2_OVERRIDE = default;
 
-    LockByUserIdRequest(const LockByUserIdRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Lock(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    LockByUserIdRequest& operator=(const LockByUserIdRequest& lockByUserIdRequest) = default;
+    LockByUserIdRequest& operator=(LockByUserIdRequest&& lockByUserIdRequest) = default;
 
-    LockByUserIdRequest(LockByUserIdRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Lock(std::move(obj)),
-        m_pData(obj.m_pData)
+    LockByUserIdRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~LockByUserIdRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    LockByUserIdRequest& operator=(const LockByUserIdRequest& lockByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(lockByUserIdRequest);
-        Gs2Lock::operator=(lockByUserIdRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*lockByUserIdRequest.m_pData);
-
-        return *this;
-    }
-
-    LockByUserIdRequest& operator=(LockByUserIdRequest&& lockByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(lockByUserIdRequest));
-        Gs2Lock::operator=(std::move(lockByUserIdRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = lockByUserIdRequest.m_pData;
-        lockByUserIdRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(LockByUserIdRequest);
     }
 
     const LockByUserIdRequest* operator->() const
@@ -181,9 +128,9 @@ public:
      *
      * @param namespaceName カテゴリー名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -191,9 +138,9 @@ public:
      *
      * @param namespaceName カテゴリー名
      */
-    LockByUserIdRequest& withNamespaceName(const Char* namespaceName)
+    LockByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -212,9 +159,9 @@ public:
      *
      * @param propertyId プロパティID
      */
-    void setPropertyId(const Char* propertyId)
+    void setPropertyId(StringHolder propertyId)
     {
-        ensureData().propertyId.emplace(propertyId);
+        ensureData().propertyId.emplace(std::move(propertyId));
     }
 
     /**
@@ -222,9 +169,9 @@ public:
      *
      * @param propertyId プロパティID
      */
-    LockByUserIdRequest& withPropertyId(const Char* propertyId)
+    LockByUserIdRequest& withPropertyId(StringHolder propertyId)
     {
-        ensureData().propertyId.emplace(propertyId);
+        ensureData().propertyId.emplace(std::move(propertyId));
         return *this;
     }
 
@@ -243,9 +190,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -253,9 +200,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    LockByUserIdRequest& withUserId(const Char* userId)
+    LockByUserIdRequest& withUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
         return *this;
     }
 
@@ -274,9 +221,9 @@ public:
      *
      * @param transactionId ロックを取得するトランザクションID
      */
-    void setTransactionId(const Char* transactionId)
+    void setTransactionId(StringHolder transactionId)
     {
-        ensureData().transactionId.emplace(transactionId);
+        ensureData().transactionId.emplace(std::move(transactionId));
     }
 
     /**
@@ -284,9 +231,9 @@ public:
      *
      * @param transactionId ロックを取得するトランザクションID
      */
-    LockByUserIdRequest& withTransactionId(const Char* transactionId)
+    LockByUserIdRequest& withTransactionId(StringHolder transactionId)
     {
-        ensureData().transactionId.emplace(transactionId);
+        ensureData().transactionId.emplace(std::move(transactionId));
         return *this;
     }
 
@@ -336,9 +283,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -346,9 +293,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    LockByUserIdRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    LockByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -359,33 +306,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    LockByUserIdRequest& withGs2ClientId(const Char* gs2ClientId)
+    LockByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    LockByUserIdRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    LockByUserIdRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -394,9 +317,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    LockByUserIdRequest& withRequestId(const Char* gs2RequestId)
+    LockByUserIdRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

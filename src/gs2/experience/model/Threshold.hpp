@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace experience {
@@ -48,44 +50,44 @@ private:
         /** ランクアップ経験値閾値リスト */
         optional<List<Int64>> values;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             thresholdId(data.thresholdId),
-            metadata(data.metadata),
-            values(data.values)
-        {}
+            metadata(data.metadata)
+        {
+            if (data.values)
+            {
+                values = data.values->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            thresholdId(std::move(data.thresholdId)),
-            metadata(std::move(data.metadata)),
-            values(std::move(data.values))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "thresholdId") == 0) {
+            if (std::strcmp(name_, "thresholdId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->thresholdId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "values") == 0) {
+            else if (std::strcmp(name_, "values") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -101,72 +103,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Threshold() :
-        m_pData(nullptr)
-    {}
+    Threshold() = default;
+    Threshold(const Threshold& threshold) = default;
+    Threshold(Threshold&& threshold) = default;
+    ~Threshold() = default;
 
-    Threshold(const Threshold& threshold) :
-        Gs2Object(threshold),
-        m_pData(threshold.m_pData != nullptr ? new Data(*threshold.m_pData) : nullptr)
-    {}
+    Threshold& operator=(const Threshold& threshold) = default;
+    Threshold& operator=(Threshold&& threshold) = default;
 
-    Threshold(Threshold&& threshold) :
-        Gs2Object(std::move(threshold)),
-        m_pData(threshold.m_pData)
+    Threshold deepCopy() const
     {
-        threshold.m_pData = nullptr;
-    }
-
-    ~Threshold()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Threshold& operator=(const Threshold& threshold)
-    {
-        Gs2Object::operator=(threshold);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*threshold.m_pData);
-
-        return *this;
-    }
-
-    Threshold& operator=(Threshold&& threshold)
-    {
-        Gs2Object::operator=(std::move(threshold));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = threshold.m_pData;
-        threshold.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Threshold);
     }
 
     const Threshold* operator->() const
@@ -193,9 +143,9 @@ public:
      *
      * @param thresholdId しきい値ID
      */
-    void setThresholdId(const Char* thresholdId)
+    void setThresholdId(StringHolder thresholdId)
     {
-        ensureData().thresholdId.emplace(thresholdId);
+        ensureData().thresholdId.emplace(std::move(thresholdId));
     }
 
     /**
@@ -203,9 +153,9 @@ public:
      *
      * @param thresholdId しきい値ID
      */
-    Threshold& withThresholdId(const Char* thresholdId)
+    Threshold& withThresholdId(StringHolder thresholdId)
     {
-        setThresholdId(thresholdId);
+        setThresholdId(std::move(thresholdId));
         return *this;
     }
 
@@ -224,9 +174,9 @@ public:
      *
      * @param metadata ランクアップ閾値のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -234,9 +184,9 @@ public:
      *
      * @param metadata ランクアップ閾値のメタデータ
      */
-    Threshold& withMetadata(const Char* metadata)
+    Threshold& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -255,9 +205,9 @@ public:
      *
      * @param values ランクアップ経験値閾値リスト
      */
-    void setValues(const List<Int64>& values)
+    void setValues(List<Int64> values)
     {
-        ensureData().values.emplace(values);
+        ensureData().values.emplace(std::move(values));
     }
 
     /**
@@ -265,9 +215,9 @@ public:
      *
      * @param values ランクアップ経験値閾値リスト
      */
-    Threshold& withValues(const List<Int64>& values)
+    Threshold& withValues(List<Int64> values)
     {
-        setValues(values);
+        setValues(std::move(values));
         return *this;
     }
 
@@ -282,7 +232,7 @@ inline bool operator!=(const Threshold& lhs, const Threshold& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

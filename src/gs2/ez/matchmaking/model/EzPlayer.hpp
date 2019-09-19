@@ -28,44 +28,85 @@ namespace gs2 { namespace ez { namespace matchmaking {
 class EzPlayer : public gs2::Gs2Object
 {
 private:
-    /** ユーザーID */
-    gs2::optional<StringHolder> m_UserId;
-    /** 属性値のリスト */
-    gs2::optional<List<EzAttribute>> m_Attributes;
-    /** ロール名 */
-    gs2::optional<StringHolder> m_RoleName;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ユーザーID */
+        gs2::optional<StringHolder> userId;
+        /** 属性値のリスト */
+        gs2::optional<List<EzAttribute>> attributes;
+        /** ロール名 */
+        gs2::optional<StringHolder> roleName;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            userId(data.userId),
+            roleName(data.roleName)
+        {
+            if (data.attributes)
+            {
+                attributes = data.attributes->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::matchmaking::Player& player) :
+            userId(player.getUserId()),
+            roleName(player.getRoleName())
+        {
+            attributes.emplace();
+            if (player.getAttributes())
+            {
+                for (int i = 0; i < player.getAttributes()->getCount(); ++i)
+                {
+                    *attributes += EzAttribute((*player.getAttributes())[i]);
+                }
+            }
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzPlayer() = default;
+    EzPlayer(const EzPlayer& ezPlayer) = default;
+    EzPlayer(EzPlayer&& ezPlayer) = default;
+    ~EzPlayer() = default;
 
     EzPlayer(gs2::matchmaking::Player player) :
-        m_UserId(player.getUserId()),
-        m_RoleName(player.getRoleName())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(player)
+    {}
+
+    EzPlayer& operator=(const EzPlayer& ezPlayer) = default;
+    EzPlayer& operator=(EzPlayer&& ezPlayer) = default;
+
+    EzPlayer deepCopy() const
     {
-        m_Attributes.emplace();
-        if (player.getAttributes())
-        {
-            for (int i = 0; i < player.getAttributes()->getCount(); ++i)
-            {
-                *m_Attributes += EzAttribute((*player.getAttributes())[i]);
-            }
-        }
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzPlayer);
     }
 
     gs2::matchmaking::Player ToModel() const
     {
         gs2::matchmaking::Player player;
-        player.setUserId(*m_UserId);
+        player.setUserId(getUserId());
         {
             gs2::List<gs2::matchmaking::Attribute> list;
-            auto& attributes = *m_Attributes;
+            auto& attributes = getAttributes();
             for (int i = 0; i < attributes.getCount(); ++i)
             {
                 list += attributes[i].ToModel();
             }
             player.setAttributes(list);
         }
-        player.setRoleName(*m_RoleName);
+        player.setRoleName(getRoleName());
         return player;
     }
 
@@ -73,81 +114,55 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getUserId() const
+    const StringHolder& getUserId() const
     {
-        return *m_UserId;
-    }
-
-    gs2::StringHolder& getUserId()
-    {
-        return *m_UserId;
+        return *ensureData().userId;
     }
 
     const List<EzAttribute>& getAttributes() const
     {
-        return *m_Attributes;
+        return *ensureData().attributes;
     }
 
-    List<EzAttribute>& getAttributes()
+    const StringHolder& getRoleName() const
     {
-        return *m_Attributes;
-    }
-
-    const gs2::StringHolder& getRoleName() const
-    {
-        return *m_RoleName;
-    }
-
-    gs2::StringHolder& getRoleName()
-    {
-        return *m_RoleName;
+        return *ensureData().roleName;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setUserId(Char* userId)
+    void setUserId(StringHolder userId)
     {
-        m_UserId.emplace(userId);
+        ensureData().userId = std::move(userId);
     }
 
-    void setAttributes(const List<EzAttribute>& attributes)
+    void setAttributes(List<EzAttribute> attributes)
     {
-        m_Attributes = attributes;
+        ensureData().attributes = std::move(attributes);
     }
 
-    void setAttributes(List<EzAttribute>&& attributes)
+    void setRoleName(StringHolder roleName)
     {
-        m_Attributes = std::move(attributes);
+        ensureData().roleName = std::move(roleName);
     }
 
-    void setRoleName(Char* roleName)
+    EzPlayer& withUserId(StringHolder userId)
     {
-        m_RoleName.emplace(roleName);
-    }
-
-    EzPlayer& withUserId(Char* userId)
-    {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
-    EzPlayer& withAttributes(const List<EzAttribute>& attributes)
-    {
-        setAttributes(attributes);
-        return *this;
-    }
-
-    EzPlayer& withAttributes(List<EzAttribute>&& attributes)
+    EzPlayer& withAttributes(List<EzAttribute> attributes)
     {
         setAttributes(std::move(attributes));
         return *this;
     }
 
-    EzPlayer& withRoleName(Char* roleName)
+    EzPlayer& withRoleName(StringHolder roleName)
     {
-        setRoleName(roleName);
+        setRoleName(std::move(roleName));
         return *this;
     }
 };

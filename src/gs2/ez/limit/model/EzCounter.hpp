@@ -27,37 +27,77 @@ namespace gs2 { namespace ez { namespace limit {
 class EzCounter : public gs2::Gs2Object
 {
 private:
-    /** カウンター */
-    gs2::optional<StringHolder> m_CounterId;
-    /** カウンターの名前 */
-    gs2::optional<StringHolder> m_Name;
-    /** カウント値 */
-    gs2::optional<Int32> m_Count;
-    /** 作成日時 */
-    gs2::optional<Int64> m_CreatedAt;
-    /** 最終更新日時 */
-    gs2::optional<Int64> m_UpdatedAt;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** カウンター */
+        gs2::optional<StringHolder> counterId;
+        /** カウンターの名前 */
+        gs2::optional<StringHolder> name;
+        /** カウント値 */
+        gs2::optional<Int32> count;
+        /** 作成日時 */
+        gs2::optional<Int64> createdAt;
+        /** 最終更新日時 */
+        gs2::optional<Int64> updatedAt;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            counterId(data.counterId),
+            name(data.name),
+            count(data.count),
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::limit::Counter& counter) :
+            counterId(counter.getCounterId()),
+            name(counter.getName()),
+            count(counter.getCount() ? *counter.getCount() : 0),
+            createdAt(counter.getCreatedAt() ? *counter.getCreatedAt() : 0),
+            updatedAt(counter.getUpdatedAt() ? *counter.getUpdatedAt() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzCounter() = default;
+    EzCounter(const EzCounter& ezCounter) = default;
+    EzCounter(EzCounter&& ezCounter) = default;
+    ~EzCounter() = default;
 
     EzCounter(gs2::limit::Counter counter) :
-        m_CounterId(counter.getCounterId()),
-        m_Name(counter.getName()),
-        m_Count(counter.getCount() ? *counter.getCount() : 0),
-        m_CreatedAt(counter.getCreatedAt() ? *counter.getCreatedAt() : 0),
-        m_UpdatedAt(counter.getUpdatedAt() ? *counter.getUpdatedAt() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(counter)
+    {}
+
+    EzCounter& operator=(const EzCounter& ezCounter) = default;
+    EzCounter& operator=(EzCounter&& ezCounter) = default;
+
+    EzCounter deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCounter);
     }
 
     gs2::limit::Counter ToModel() const
     {
         gs2::limit::Counter counter;
-        counter.setCounterId(*m_CounterId);
-        counter.setName(*m_Name);
-        counter.setCount(*m_Count);
-        counter.setCreatedAt(*m_CreatedAt);
-        counter.setUpdatedAt(*m_UpdatedAt);
+        counter.setCounterId(getCounterId());
+        counter.setName(getName());
+        counter.setCount(getCount());
+        counter.setCreatedAt(getCreatedAt());
+        counter.setUpdatedAt(getUpdatedAt());
         return counter;
     }
 
@@ -65,79 +105,69 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getCounterId() const
+    const StringHolder& getCounterId() const
     {
-        return *m_CounterId;
+        return *ensureData().counterId;
     }
 
-    gs2::StringHolder& getCounterId()
+    const StringHolder& getName() const
     {
-        return *m_CounterId;
-    }
-
-    const gs2::StringHolder& getName() const
-    {
-        return *m_Name;
-    }
-
-    gs2::StringHolder& getName()
-    {
-        return *m_Name;
+        return *ensureData().name;
     }
 
     Int32 getCount() const
     {
-        return *m_Count;
+        return *ensureData().count;
     }
 
     Int64 getCreatedAt() const
     {
-        return *m_CreatedAt;
+        return *ensureData().createdAt;
     }
 
     Int64 getUpdatedAt() const
     {
-        return *m_UpdatedAt;
+        return *ensureData().updatedAt;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setCounterId(Char* counterId)
+    void setCounterId(StringHolder counterId)
     {
-        m_CounterId.emplace(counterId);
+        ensureData().counterId = std::move(counterId);
     }
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
     void setCount(Int32 count)
     {
-        m_Count = count;
+        ensureData().count = count;
     }
 
     void setCreatedAt(Int64 createdAt)
     {
-        m_CreatedAt = createdAt;
+        ensureData().createdAt = createdAt;
     }
 
     void setUpdatedAt(Int64 updatedAt)
     {
-        m_UpdatedAt = updatedAt;
+        ensureData().updatedAt = updatedAt;
     }
 
-    EzCounter& withCounterId(Char* counterId)
+    EzCounter& withCounterId(StringHolder counterId)
     {
-        setCounterId(counterId);
+        setCounterId(std::move(counterId));
         return *this;
     }
 
-    EzCounter& withName(Char* name)
+    EzCounter& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 

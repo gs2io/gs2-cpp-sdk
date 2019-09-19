@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "AcquireAction.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace lottery {
@@ -45,28 +47,28 @@ private:
         /** 入手アクションのリスト */
         optional<List<AcquireAction>> acquireActions;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            acquireActions(data.acquireActions)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.acquireActions)
+            {
+                acquireActions = data.acquireActions->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            acquireActions(std::move(data.acquireActions))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "acquireActions") == 0) {
+            if (std::strcmp(name_, "acquireActions") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -81,72 +83,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DrawnPrize() :
-        m_pData(nullptr)
-    {}
+    DrawnPrize() = default;
+    DrawnPrize(const DrawnPrize& drawnPrize) = default;
+    DrawnPrize(DrawnPrize&& drawnPrize) = default;
+    ~DrawnPrize() = default;
 
-    DrawnPrize(const DrawnPrize& drawnPrize) :
-        Gs2Object(drawnPrize),
-        m_pData(drawnPrize.m_pData != nullptr ? new Data(*drawnPrize.m_pData) : nullptr)
-    {}
+    DrawnPrize& operator=(const DrawnPrize& drawnPrize) = default;
+    DrawnPrize& operator=(DrawnPrize&& drawnPrize) = default;
 
-    DrawnPrize(DrawnPrize&& drawnPrize) :
-        Gs2Object(std::move(drawnPrize)),
-        m_pData(drawnPrize.m_pData)
+    DrawnPrize deepCopy() const
     {
-        drawnPrize.m_pData = nullptr;
-    }
-
-    ~DrawnPrize()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DrawnPrize& operator=(const DrawnPrize& drawnPrize)
-    {
-        Gs2Object::operator=(drawnPrize);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*drawnPrize.m_pData);
-
-        return *this;
-    }
-
-    DrawnPrize& operator=(DrawnPrize&& drawnPrize)
-    {
-        Gs2Object::operator=(std::move(drawnPrize));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = drawnPrize.m_pData;
-        drawnPrize.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DrawnPrize);
     }
 
     const DrawnPrize* operator->() const
@@ -173,9 +123,9 @@ public:
      *
      * @param acquireActions 入手アクションのリスト
      */
-    void setAcquireActions(const List<AcquireAction>& acquireActions)
+    void setAcquireActions(List<AcquireAction> acquireActions)
     {
-        ensureData().acquireActions.emplace(acquireActions);
+        ensureData().acquireActions.emplace(std::move(acquireActions));
     }
 
     /**
@@ -183,9 +133,9 @@ public:
      *
      * @param acquireActions 入手アクションのリスト
      */
-    DrawnPrize& withAcquireActions(const List<AcquireAction>& acquireActions)
+    DrawnPrize& withAcquireActions(List<AcquireAction> acquireActions)
     {
-        setAcquireActions(acquireActions);
+        setAcquireActions(std::move(acquireActions));
         return *this;
     }
 
@@ -200,7 +150,7 @@ inline bool operator!=(const DrawnPrize& lhs, const DrawnPrize& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

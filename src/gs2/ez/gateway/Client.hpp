@@ -47,9 +47,9 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="allowConcurrentAccess">同時に異なるクライアントからの接続を許容するか</param>
     void setUserId(
-        std::function<void(AsyncEzSetUserIdResult&)> callback,
+        std::function<void(AsyncEzSetUserIdResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
+        StringHolder namespaceName,
         Bool allowConcurrentAccess
     );
 };

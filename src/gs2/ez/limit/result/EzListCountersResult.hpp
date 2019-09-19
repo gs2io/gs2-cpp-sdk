@@ -27,22 +27,61 @@ namespace gs2 { namespace ez { namespace limit {
 class EzListCountersResult : public gs2::Gs2Object
 {
 private:
-    /** カウンターのリスト */
-    List<EzCounter> m_Items;
-    /** リストの続きを取得するためのページトークン */
-    optional<StringHolder> m_NextPageToken;
-
-public:
-    EzListCountersResult(const gs2::limit::DescribeCountersResult& result) :
-        m_NextPageToken(result.getNextPageToken())
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** カウンターのリスト */
+        List<EzCounter> items;
+        /** リストの続きを取得するためのページトークン */
+        optional<StringHolder> nextPageToken;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            nextPageToken(data.nextPageToken)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::limit::DescribeCountersResult& describeCountersResult) :
+            nextPageToken(describeCountersResult.getNextPageToken())
+        {
             {
-                m_Items += EzCounter(list[i]);
+                auto& list = *describeCountersResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzCounter(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListCountersResult() = default;
+    EzListCountersResult(const EzListCountersResult& result) = default;
+    EzListCountersResult(EzListCountersResult&& result) = default;
+    ~EzListCountersResult() = default;
+
+    EzListCountersResult(gs2::limit::DescribeCountersResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListCountersResult& operator=(const EzListCountersResult& result) = default;
+    EzListCountersResult& operator=(EzListCountersResult&& result) = default;
+
+    EzListCountersResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListCountersResult);
     }
 
     static bool isConvertible(const gs2::limit::DescribeCountersResult& result)
@@ -57,22 +96,12 @@ public:
 
     const List<EzCounter>& getItems() const
     {
-        return m_Items;
+        return ensureData().items;
     }
 
-    List<EzCounter>& getItems()
+    const optional<StringHolder>& getNextPageToken() const
     {
-        return m_Items;
-    }
-
-    const optional<gs2::StringHolder>& getNextPageToken() const
-    {
-        return m_NextPageToken;
-    }
-
-    optional<gs2::StringHolder>& getNextPageToken()
-    {
-        return m_NextPageToken;
+        return ensureData().nextPageToken;
     }
 };
 

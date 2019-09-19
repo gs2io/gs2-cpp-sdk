@@ -27,29 +27,67 @@ namespace gs2 { namespace ez { namespace account {
 class EzAccount : public gs2::Gs2Object
 {
 private:
-    /** アカウントID */
-    gs2::optional<StringHolder> m_UserId;
-    /** パスワード */
-    gs2::optional<StringHolder> m_Password;
-    /** 作成日時 */
-    gs2::optional<Int64> m_CreatedAt;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** アカウントID */
+        gs2::optional<StringHolder> userId;
+        /** パスワード */
+        gs2::optional<StringHolder> password;
+        /** 作成日時 */
+        gs2::optional<Int64> createdAt;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            userId(data.userId),
+            password(data.password),
+            createdAt(data.createdAt)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::account::Account& account) :
+            userId(account.getUserId()),
+            password(account.getPassword()),
+            createdAt(account.getCreatedAt() ? *account.getCreatedAt() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzAccount() = default;
+    EzAccount(const EzAccount& ezAccount) = default;
+    EzAccount(EzAccount&& ezAccount) = default;
+    ~EzAccount() = default;
 
     EzAccount(gs2::account::Account account) :
-        m_UserId(account.getUserId()),
-        m_Password(account.getPassword()),
-        m_CreatedAt(account.getCreatedAt() ? *account.getCreatedAt() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(account)
+    {}
+
+    EzAccount& operator=(const EzAccount& ezAccount) = default;
+    EzAccount& operator=(EzAccount&& ezAccount) = default;
+
+    EzAccount deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzAccount);
     }
 
     gs2::account::Account ToModel() const
     {
         gs2::account::Account account;
-        account.setUserId(*m_UserId);
-        account.setPassword(*m_Password);
-        account.setCreatedAt(*m_CreatedAt);
+        account.setUserId(getUserId());
+        account.setPassword(getPassword());
+        account.setCreatedAt(getCreatedAt());
         return account;
     }
 
@@ -57,59 +95,49 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getUserId() const
+    const StringHolder& getUserId() const
     {
-        return *m_UserId;
+        return *ensureData().userId;
     }
 
-    gs2::StringHolder& getUserId()
+    const StringHolder& getPassword() const
     {
-        return *m_UserId;
-    }
-
-    const gs2::StringHolder& getPassword() const
-    {
-        return *m_Password;
-    }
-
-    gs2::StringHolder& getPassword()
-    {
-        return *m_Password;
+        return *ensureData().password;
     }
 
     Int64 getCreatedAt() const
     {
-        return *m_CreatedAt;
+        return *ensureData().createdAt;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setUserId(Char* userId)
+    void setUserId(StringHolder userId)
     {
-        m_UserId.emplace(userId);
+        ensureData().userId = std::move(userId);
     }
 
-    void setPassword(Char* password)
+    void setPassword(StringHolder password)
     {
-        m_Password.emplace(password);
+        ensureData().password = std::move(password);
     }
 
     void setCreatedAt(Int64 createdAt)
     {
-        m_CreatedAt = createdAt;
+        ensureData().createdAt = createdAt;
     }
 
-    EzAccount& withUserId(Char* userId)
+    EzAccount& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
-    EzAccount& withPassword(Char* password)
+    EzAccount& withPassword(StringHolder password)
     {
-        setPassword(password);
+        setPassword(std::move(password));
         return *this;
     }
 

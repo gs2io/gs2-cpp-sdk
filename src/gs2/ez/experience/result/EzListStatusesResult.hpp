@@ -27,22 +27,61 @@ namespace gs2 { namespace ez { namespace experience {
 class EzListStatusesResult : public gs2::Gs2Object
 {
 private:
-    /** ステータスのリスト */
-    List<EzStatus> m_Items;
-    /** リストの続きを取得するためのページトークン */
-    optional<StringHolder> m_NextPageToken;
-
-public:
-    EzListStatusesResult(const gs2::experience::DescribeStatusesResult& result) :
-        m_NextPageToken(result.getNextPageToken())
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** ステータスのリスト */
+        List<EzStatus> items;
+        /** リストの続きを取得するためのページトークン */
+        optional<StringHolder> nextPageToken;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            nextPageToken(data.nextPageToken)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::experience::DescribeStatusesResult& describeStatusesResult) :
+            nextPageToken(describeStatusesResult.getNextPageToken())
+        {
             {
-                m_Items += EzStatus(list[i]);
+                auto& list = *describeStatusesResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzStatus(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListStatusesResult() = default;
+    EzListStatusesResult(const EzListStatusesResult& result) = default;
+    EzListStatusesResult(EzListStatusesResult&& result) = default;
+    ~EzListStatusesResult() = default;
+
+    EzListStatusesResult(gs2::experience::DescribeStatusesResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListStatusesResult& operator=(const EzListStatusesResult& result) = default;
+    EzListStatusesResult& operator=(EzListStatusesResult&& result) = default;
+
+    EzListStatusesResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListStatusesResult);
     }
 
     static bool isConvertible(const gs2::experience::DescribeStatusesResult& result)
@@ -57,22 +96,12 @@ public:
 
     const List<EzStatus>& getItems() const
     {
-        return m_Items;
+        return ensureData().items;
     }
 
-    List<EzStatus>& getItems()
+    const optional<StringHolder>& getNextPageToken() const
     {
-        return m_Items;
-    }
-
-    const optional<gs2::StringHolder>& getNextPageToken() const
-    {
-        return m_NextPageToken;
-    }
-
-    optional<gs2::StringHolder>& getNextPageToken()
-    {
-        return m_NextPageToken;
+        return ensureData().nextPageToken;
     }
 };
 

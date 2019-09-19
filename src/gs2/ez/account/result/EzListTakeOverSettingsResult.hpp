@@ -27,22 +27,61 @@ namespace gs2 { namespace ez { namespace account {
 class EzListTakeOverSettingsResult : public gs2::Gs2Object
 {
 private:
-    /** 引き継ぎ設定のリスト */
-    List<EzTakeOver> m_Items;
-    /** リストの続きを取得するためのページトークン */
-    optional<StringHolder> m_NextPageToken;
-
-public:
-    EzListTakeOverSettingsResult(const gs2::account::DescribeTakeOversResult& result) :
-        m_NextPageToken(result.getNextPageToken())
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** 引き継ぎ設定のリスト */
+        List<EzTakeOver> items;
+        /** リストの続きを取得するためのページトークン */
+        optional<StringHolder> nextPageToken;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            nextPageToken(data.nextPageToken)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::account::DescribeTakeOversResult& describeTakeOversResult) :
+            nextPageToken(describeTakeOversResult.getNextPageToken())
+        {
             {
-                m_Items += EzTakeOver(list[i]);
+                auto& list = *describeTakeOversResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzTakeOver(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListTakeOverSettingsResult() = default;
+    EzListTakeOverSettingsResult(const EzListTakeOverSettingsResult& result) = default;
+    EzListTakeOverSettingsResult(EzListTakeOverSettingsResult&& result) = default;
+    ~EzListTakeOverSettingsResult() = default;
+
+    EzListTakeOverSettingsResult(gs2::account::DescribeTakeOversResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListTakeOverSettingsResult& operator=(const EzListTakeOverSettingsResult& result) = default;
+    EzListTakeOverSettingsResult& operator=(EzListTakeOverSettingsResult&& result) = default;
+
+    EzListTakeOverSettingsResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListTakeOverSettingsResult);
     }
 
     static bool isConvertible(const gs2::account::DescribeTakeOversResult& result)
@@ -57,22 +96,12 @@ public:
 
     const List<EzTakeOver>& getItems() const
     {
-        return m_Items;
+        return ensureData().items;
     }
 
-    List<EzTakeOver>& getItems()
+    const optional<StringHolder>& getNextPageToken() const
     {
-        return m_Items;
-    }
-
-    const optional<gs2::StringHolder>& getNextPageToken() const
-    {
-        return m_NextPageToken;
-    }
-
-    optional<gs2::StringHolder>& getNextPageToken()
-    {
-        return m_NextPageToken;
+        return ensureData().nextPageToken;
     }
 };
 

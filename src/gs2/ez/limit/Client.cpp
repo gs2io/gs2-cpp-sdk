@@ -28,22 +28,22 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::listCounters(
-    std::function<void(AsyncEzListCountersResult&)> callback,
+    std::function<void(AsyncEzListCountersResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* limitName
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> limitName
 )
 {
     gs2::limit::DescribeCountersRequest request;
     request.setNamespaceName(namespaceName);
     if (limitName)
     {
-        request.setLimitName(limitName);
+        request.setLimitName(std::move(*limitName));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.describeCounters(
         request,
-        [callback](gs2::limit::AsyncDescribeCountersResult& r)
+        [callback](gs2::limit::AsyncDescribeCountersResult r)
         {
             if (r.getError())
             {
@@ -69,11 +69,11 @@ void Client::listCounters(
 }
 
 void Client::getCounter(
-    std::function<void(AsyncEzGetCounterResult&)> callback,
+    std::function<void(AsyncEzGetCounterResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* limitName,
-    const Char* counterName
+    StringHolder namespaceName,
+    StringHolder limitName,
+    StringHolder counterName
 )
 {
     gs2::limit::GetCounterRequest request;
@@ -83,7 +83,7 @@ void Client::getCounter(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.getCounter(
         request,
-        [callback](gs2::limit::AsyncGetCounterResult& r)
+        [callback](gs2::limit::AsyncGetCounterResult r)
         {
             if (r.getError())
             {
@@ -109,15 +109,15 @@ void Client::getCounter(
 }
 
 void Client::listLimitModels(
-    std::function<void(AsyncEzListLimitModelsResult&)> callback,
-    const Char* namespaceName
+    std::function<void(AsyncEzListLimitModelsResult)> callback,
+    StringHolder namespaceName
 )
 {
     gs2::limit::DescribeLimitModelsRequest request;
     request.setNamespaceName(namespaceName);
     m_Client.describeLimitModels(
         request,
-        [callback](gs2::limit::AsyncDescribeLimitModelsResult& r)
+        [callback](gs2::limit::AsyncDescribeLimitModelsResult r)
         {
             if (r.getError())
             {
@@ -143,9 +143,9 @@ void Client::listLimitModels(
 }
 
 void Client::getLimitModel(
-    std::function<void(AsyncEzGetLimitModelResult&)> callback,
-    const Char* namespaceName,
-    const Char* limitName
+    std::function<void(AsyncEzGetLimitModelResult)> callback,
+    StringHolder namespaceName,
+    StringHolder limitName
 )
 {
     gs2::limit::GetLimitModelRequest request;
@@ -153,7 +153,7 @@ void Client::getLimitModel(
     request.setLimitName(limitName);
     m_Client.getLimitModel(
         request,
-        [callback](gs2::limit::AsyncGetLimitModelResult& r)
+        [callback](gs2::limit::AsyncGetLimitModelResult r)
         {
             if (r.getError())
             {

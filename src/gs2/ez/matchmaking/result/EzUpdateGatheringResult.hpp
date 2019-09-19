@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace matchmaking {
 class EzUpdateGatheringResult : public gs2::Gs2Object
 {
 private:
-    /** ギャザリング */
-    EzGathering m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ギャザリング */
+        EzGathering item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::matchmaking::UpdateGatheringResult& updateGatheringResult) :
+            item(*updateGatheringResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzUpdateGatheringResult(const gs2::matchmaking::UpdateGatheringResult& result) :
-        m_Item(*result.getItem())
+    EzUpdateGatheringResult() = default;
+    EzUpdateGatheringResult(const EzUpdateGatheringResult& result) = default;
+    EzUpdateGatheringResult(EzUpdateGatheringResult&& result) = default;
+    ~EzUpdateGatheringResult() = default;
+
+    EzUpdateGatheringResult(gs2::matchmaking::UpdateGatheringResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzUpdateGatheringResult& operator=(const EzUpdateGatheringResult& result) = default;
+    EzUpdateGatheringResult& operator=(EzUpdateGatheringResult&& result) = default;
+
+    EzUpdateGatheringResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzUpdateGatheringResult);
     }
 
     static bool isConvertible(const gs2::matchmaking::UpdateGatheringResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzGathering& getItem() const
     {
-        return m_Item;
-    }
-
-    EzGathering& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

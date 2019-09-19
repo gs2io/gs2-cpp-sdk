@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "MaxStaminaTable.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace stamina {
@@ -61,8 +63,7 @@ private:
         /** GS2-Experience と連携する際に使用するスタミナ最大値テーブル */
         optional<MaxStaminaTable> maxStaminaTable;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -73,80 +74,81 @@ private:
             recoverValue(data.recoverValue),
             initialCapacity(data.initialCapacity),
             isOverflow(data.isOverflow),
-            maxCapacity(data.maxCapacity),
-            maxStaminaTable(data.maxStaminaTable)
-        {}
+            maxCapacity(data.maxCapacity)
+        {
+            if (data.maxStaminaTable)
+            {
+                maxStaminaTable = data.maxStaminaTable->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            staminaModelId(std::move(data.staminaModelId)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            recoverIntervalMinutes(std::move(data.recoverIntervalMinutes)),
-            recoverValue(std::move(data.recoverValue)),
-            initialCapacity(std::move(data.initialCapacity)),
-            isOverflow(std::move(data.isOverflow)),
-            maxCapacity(std::move(data.maxCapacity)),
-            maxStaminaTable(std::move(data.maxStaminaTable))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "staminaModelId") == 0) {
+            if (std::strcmp(name_, "staminaModelId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->staminaModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "recoverIntervalMinutes") == 0) {
+            else if (std::strcmp(name_, "recoverIntervalMinutes") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->recoverIntervalMinutes = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "recoverValue") == 0) {
+            else if (std::strcmp(name_, "recoverValue") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->recoverValue = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "initialCapacity") == 0) {
+            else if (std::strcmp(name_, "initialCapacity") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->initialCapacity = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "isOverflow") == 0) {
+            else if (std::strcmp(name_, "isOverflow") == 0)
+            {
                 if (jsonValue.IsBool())
                 {
                     this->isOverflow = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name_, "maxCapacity") == 0) {
+            else if (std::strcmp(name_, "maxCapacity") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->maxCapacity = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "maxStaminaTable") == 0) {
+            else if (std::strcmp(name_, "maxStaminaTable") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -157,72 +159,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    StaminaModel() :
-        m_pData(nullptr)
-    {}
+    StaminaModel() = default;
+    StaminaModel(const StaminaModel& staminaModel) = default;
+    StaminaModel(StaminaModel&& staminaModel) = default;
+    ~StaminaModel() = default;
 
-    StaminaModel(const StaminaModel& staminaModel) :
-        Gs2Object(staminaModel),
-        m_pData(staminaModel.m_pData != nullptr ? new Data(*staminaModel.m_pData) : nullptr)
-    {}
+    StaminaModel& operator=(const StaminaModel& staminaModel) = default;
+    StaminaModel& operator=(StaminaModel&& staminaModel) = default;
 
-    StaminaModel(StaminaModel&& staminaModel) :
-        Gs2Object(std::move(staminaModel)),
-        m_pData(staminaModel.m_pData)
+    StaminaModel deepCopy() const
     {
-        staminaModel.m_pData = nullptr;
-    }
-
-    ~StaminaModel()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    StaminaModel& operator=(const StaminaModel& staminaModel)
-    {
-        Gs2Object::operator=(staminaModel);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*staminaModel.m_pData);
-
-        return *this;
-    }
-
-    StaminaModel& operator=(StaminaModel&& staminaModel)
-    {
-        Gs2Object::operator=(std::move(staminaModel));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = staminaModel.m_pData;
-        staminaModel.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(StaminaModel);
     }
 
     const StaminaModel* operator->() const
@@ -249,9 +199,9 @@ public:
      *
      * @param staminaModelId スタミナモデルマスター
      */
-    void setStaminaModelId(const Char* staminaModelId)
+    void setStaminaModelId(StringHolder staminaModelId)
     {
-        ensureData().staminaModelId.emplace(staminaModelId);
+        ensureData().staminaModelId.emplace(std::move(staminaModelId));
     }
 
     /**
@@ -259,9 +209,9 @@ public:
      *
      * @param staminaModelId スタミナモデルマスター
      */
-    StaminaModel& withStaminaModelId(const Char* staminaModelId)
+    StaminaModel& withStaminaModelId(StringHolder staminaModelId)
     {
-        setStaminaModelId(staminaModelId);
+        setStaminaModelId(std::move(staminaModelId));
         return *this;
     }
 
@@ -280,9 +230,9 @@ public:
      *
      * @param name スタミナの種類名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -290,9 +240,9 @@ public:
      *
      * @param name スタミナの種類名
      */
-    StaminaModel& withName(const Char* name)
+    StaminaModel& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -311,9 +261,9 @@ public:
      *
      * @param metadata スタミナの種類のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -321,9 +271,9 @@ public:
      *
      * @param metadata スタミナの種類のメタデータ
      */
-    StaminaModel& withMetadata(const Char* metadata)
+    StaminaModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -497,9 +447,9 @@ public:
      *
      * @param maxStaminaTable GS2-Experience と連携する際に使用するスタミナ最大値テーブル
      */
-    void setMaxStaminaTable(const MaxStaminaTable& maxStaminaTable)
+    void setMaxStaminaTable(MaxStaminaTable maxStaminaTable)
     {
-        ensureData().maxStaminaTable.emplace(maxStaminaTable);
+        ensureData().maxStaminaTable.emplace(std::move(maxStaminaTable));
     }
 
     /**
@@ -507,9 +457,9 @@ public:
      *
      * @param maxStaminaTable GS2-Experience と連携する際に使用するスタミナ最大値テーブル
      */
-    StaminaModel& withMaxStaminaTable(const MaxStaminaTable& maxStaminaTable)
+    StaminaModel& withMaxStaminaTable(MaxStaminaTable maxStaminaTable)
     {
-        setMaxStaminaTable(maxStaminaTable);
+        setMaxStaminaTable(std::move(maxStaminaTable));
         return *this;
     }
 
@@ -524,7 +474,7 @@ inline bool operator!=(const StaminaModel& lhs, const StaminaModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

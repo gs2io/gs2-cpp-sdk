@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace money
 {
@@ -43,28 +45,28 @@ private:
         /** レシート */
         optional<Receipt> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GetByUserIdAndTransactionIdResult() :
-        m_pData(nullptr)
-    {}
+    GetByUserIdAndTransactionIdResult() = default;
+    GetByUserIdAndTransactionIdResult(const GetByUserIdAndTransactionIdResult& getByUserIdAndTransactionIdResult) = default;
+    GetByUserIdAndTransactionIdResult(GetByUserIdAndTransactionIdResult&& getByUserIdAndTransactionIdResult) = default;
+    ~GetByUserIdAndTransactionIdResult() = default;
 
-    GetByUserIdAndTransactionIdResult(const GetByUserIdAndTransactionIdResult& getByUserIdAndTransactionIdResult) :
-        Gs2Object(getByUserIdAndTransactionIdResult),
-        m_pData(getByUserIdAndTransactionIdResult.m_pData != nullptr ? new Data(*getByUserIdAndTransactionIdResult.m_pData) : nullptr)
-    {}
+    GetByUserIdAndTransactionIdResult& operator=(const GetByUserIdAndTransactionIdResult& getByUserIdAndTransactionIdResult) = default;
+    GetByUserIdAndTransactionIdResult& operator=(GetByUserIdAndTransactionIdResult&& getByUserIdAndTransactionIdResult) = default;
 
-    GetByUserIdAndTransactionIdResult(GetByUserIdAndTransactionIdResult&& getByUserIdAndTransactionIdResult) :
-        Gs2Object(std::move(getByUserIdAndTransactionIdResult)),
-        m_pData(getByUserIdAndTransactionIdResult.m_pData)
+    GetByUserIdAndTransactionIdResult deepCopy() const
     {
-        getByUserIdAndTransactionIdResult.m_pData = nullptr;
-    }
-
-    ~GetByUserIdAndTransactionIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetByUserIdAndTransactionIdResult& operator=(const GetByUserIdAndTransactionIdResult& getByUserIdAndTransactionIdResult)
-    {
-        Gs2Object::operator=(getByUserIdAndTransactionIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getByUserIdAndTransactionIdResult.m_pData);
-
-        return *this;
-    }
-
-    GetByUserIdAndTransactionIdResult& operator=(GetByUserIdAndTransactionIdResult&& getByUserIdAndTransactionIdResult)
-    {
-        Gs2Object::operator=(std::move(getByUserIdAndTransactionIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getByUserIdAndTransactionIdResult.m_pData;
-        getByUserIdAndTransactionIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetByUserIdAndTransactionIdResult);
     }
 
     const GetByUserIdAndTransactionIdResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item レシート
      */
-    void setItem(const Receipt& item)
+    void setItem(Receipt item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

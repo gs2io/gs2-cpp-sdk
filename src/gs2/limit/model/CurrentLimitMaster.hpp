@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace limit {
@@ -46,36 +48,33 @@ private:
         /** マスターデータ */
         optional<StringHolder> settings;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             namespaceName(data.namespaceName),
             settings(data.settings)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            settings(std::move(data.settings))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "namespaceName") == 0) {
+            if (std::strcmp(name_, "namespaceName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->namespaceName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "settings") == 0) {
+            else if (std::strcmp(name_, "settings") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->settings.emplace(jsonValue.GetString());
@@ -84,72 +83,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    CurrentLimitMaster() :
-        m_pData(nullptr)
-    {}
+    CurrentLimitMaster() = default;
+    CurrentLimitMaster(const CurrentLimitMaster& currentLimitMaster) = default;
+    CurrentLimitMaster(CurrentLimitMaster&& currentLimitMaster) = default;
+    ~CurrentLimitMaster() = default;
 
-    CurrentLimitMaster(const CurrentLimitMaster& currentLimitMaster) :
-        Gs2Object(currentLimitMaster),
-        m_pData(currentLimitMaster.m_pData != nullptr ? new Data(*currentLimitMaster.m_pData) : nullptr)
-    {}
+    CurrentLimitMaster& operator=(const CurrentLimitMaster& currentLimitMaster) = default;
+    CurrentLimitMaster& operator=(CurrentLimitMaster&& currentLimitMaster) = default;
 
-    CurrentLimitMaster(CurrentLimitMaster&& currentLimitMaster) :
-        Gs2Object(std::move(currentLimitMaster)),
-        m_pData(currentLimitMaster.m_pData)
+    CurrentLimitMaster deepCopy() const
     {
-        currentLimitMaster.m_pData = nullptr;
-    }
-
-    ~CurrentLimitMaster()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CurrentLimitMaster& operator=(const CurrentLimitMaster& currentLimitMaster)
-    {
-        Gs2Object::operator=(currentLimitMaster);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*currentLimitMaster.m_pData);
-
-        return *this;
-    }
-
-    CurrentLimitMaster& operator=(CurrentLimitMaster&& currentLimitMaster)
-    {
-        Gs2Object::operator=(std::move(currentLimitMaster));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = currentLimitMaster.m_pData;
-        currentLimitMaster.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CurrentLimitMaster);
     }
 
     const CurrentLimitMaster* operator->() const
@@ -176,9 +123,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -186,9 +133,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    CurrentLimitMaster& withNamespaceName(const Char* namespaceName)
+    CurrentLimitMaster& withNamespaceName(StringHolder namespaceName)
     {
-        setNamespaceName(namespaceName);
+        setNamespaceName(std::move(namespaceName));
         return *this;
     }
 
@@ -207,9 +154,9 @@ public:
      *
      * @param settings マスターデータ
      */
-    void setSettings(const Char* settings)
+    void setSettings(StringHolder settings)
     {
-        ensureData().settings.emplace(settings);
+        ensureData().settings.emplace(std::move(settings));
     }
 
     /**
@@ -217,9 +164,9 @@ public:
      *
      * @param settings マスターデータ
      */
-    CurrentLimitMaster& withSettings(const Char* settings)
+    CurrentLimitMaster& withSettings(StringHolder settings)
     {
-        setSettings(settings);
+        setSettings(std::move(settings));
         return *this;
     }
 
@@ -234,7 +181,7 @@ inline bool operator!=(const CurrentLimitMaster& lhs, const CurrentLimitMaster& 
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

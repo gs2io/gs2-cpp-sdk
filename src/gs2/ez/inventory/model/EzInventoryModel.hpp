@@ -27,33 +27,72 @@ namespace gs2 { namespace ez { namespace inventory {
 class EzInventoryModel : public gs2::Gs2Object
 {
 private:
-    /** インベントリの種類名 */
-    gs2::optional<StringHolder> m_Name;
-    /** インベントリの種類のメタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** インベントリの初期サイズ */
-    gs2::optional<Int32> m_InitialCapacity;
-    /** インベントリの最大サイズ */
-    gs2::optional<Int32> m_MaxCapacity;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** インベントリの種類名 */
+        gs2::optional<StringHolder> name;
+        /** インベントリの種類のメタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** インベントリの初期サイズ */
+        gs2::optional<Int32> initialCapacity;
+        /** インベントリの最大サイズ */
+        gs2::optional<Int32> maxCapacity;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            metadata(data.metadata),
+            initialCapacity(data.initialCapacity),
+            maxCapacity(data.maxCapacity)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::inventory::InventoryModel& inventoryModel) :
+            name(inventoryModel.getName()),
+            metadata(inventoryModel.getMetadata()),
+            initialCapacity(inventoryModel.getInitialCapacity() ? *inventoryModel.getInitialCapacity() : 0),
+            maxCapacity(inventoryModel.getMaxCapacity() ? *inventoryModel.getMaxCapacity() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzInventoryModel() = default;
+    EzInventoryModel(const EzInventoryModel& ezInventoryModel) = default;
+    EzInventoryModel(EzInventoryModel&& ezInventoryModel) = default;
+    ~EzInventoryModel() = default;
 
     EzInventoryModel(gs2::inventory::InventoryModel inventoryModel) :
-        m_Name(inventoryModel.getName()),
-        m_Metadata(inventoryModel.getMetadata()),
-        m_InitialCapacity(inventoryModel.getInitialCapacity() ? *inventoryModel.getInitialCapacity() : 0),
-        m_MaxCapacity(inventoryModel.getMaxCapacity() ? *inventoryModel.getMaxCapacity() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(inventoryModel)
+    {}
+
+    EzInventoryModel& operator=(const EzInventoryModel& ezInventoryModel) = default;
+    EzInventoryModel& operator=(EzInventoryModel&& ezInventoryModel) = default;
+
+    EzInventoryModel deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzInventoryModel);
     }
 
     gs2::inventory::InventoryModel ToModel() const
     {
         gs2::inventory::InventoryModel inventoryModel;
-        inventoryModel.setName(*m_Name);
-        inventoryModel.setMetadata(*m_Metadata);
-        inventoryModel.setInitialCapacity(*m_InitialCapacity);
-        inventoryModel.setMaxCapacity(*m_MaxCapacity);
+        inventoryModel.setName(getName());
+        inventoryModel.setMetadata(getMetadata());
+        inventoryModel.setInitialCapacity(getInitialCapacity());
+        inventoryModel.setMaxCapacity(getMaxCapacity());
         return inventoryModel;
     }
 
@@ -61,69 +100,59 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
+        return *ensureData().name;
     }
 
-    gs2::StringHolder& getName()
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
-    }
-
-    const gs2::StringHolder& getMetadata() const
-    {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
+        return *ensureData().metadata;
     }
 
     Int32 getInitialCapacity() const
     {
-        return *m_InitialCapacity;
+        return *ensureData().initialCapacity;
     }
 
     Int32 getMaxCapacity() const
     {
-        return *m_MaxCapacity;
+        return *ensureData().maxCapacity;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
     void setInitialCapacity(Int32 initialCapacity)
     {
-        m_InitialCapacity = initialCapacity;
+        ensureData().initialCapacity = initialCapacity;
     }
 
     void setMaxCapacity(Int32 maxCapacity)
     {
-        m_MaxCapacity = maxCapacity;
+        ensureData().maxCapacity = maxCapacity;
     }
 
-    EzInventoryModel& withName(Char* name)
+    EzInventoryModel& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzInventoryModel& withMetadata(Char* metadata)
+    EzInventoryModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 

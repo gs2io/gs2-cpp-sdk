@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace experience {
 class EzGetExperienceModelResult : public gs2::Gs2Object
 {
 private:
-    /** 経験値・ランクアップ閾値モデル */
-    EzExperienceModel m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 経験値・ランクアップ閾値モデル */
+        EzExperienceModel item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::experience::GetExperienceModelResult& getExperienceModelResult) :
+            item(*getExperienceModelResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetExperienceModelResult(const gs2::experience::GetExperienceModelResult& result) :
-        m_Item(*result.getItem())
+    EzGetExperienceModelResult() = default;
+    EzGetExperienceModelResult(const EzGetExperienceModelResult& result) = default;
+    EzGetExperienceModelResult(EzGetExperienceModelResult&& result) = default;
+    ~EzGetExperienceModelResult() = default;
+
+    EzGetExperienceModelResult(gs2::experience::GetExperienceModelResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetExperienceModelResult& operator=(const EzGetExperienceModelResult& result) = default;
+    EzGetExperienceModelResult& operator=(EzGetExperienceModelResult&& result) = default;
+
+    EzGetExperienceModelResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetExperienceModelResult);
     }
 
     static bool isConvertible(const gs2::experience::GetExperienceModelResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzExperienceModel& getItem() const
     {
-        return m_Item;
-    }
-
-    EzExperienceModel& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

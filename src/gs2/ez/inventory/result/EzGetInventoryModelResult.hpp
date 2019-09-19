@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace inventory {
 class EzGetInventoryModelResult : public gs2::Gs2Object
 {
 private:
-    /** インベントリモデル */
-    EzInventoryModel m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** インベントリモデル */
+        EzInventoryModel item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::inventory::GetInventoryModelResult& getInventoryModelResult) :
+            item(*getInventoryModelResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetInventoryModelResult(const gs2::inventory::GetInventoryModelResult& result) :
-        m_Item(*result.getItem())
+    EzGetInventoryModelResult() = default;
+    EzGetInventoryModelResult(const EzGetInventoryModelResult& result) = default;
+    EzGetInventoryModelResult(EzGetInventoryModelResult&& result) = default;
+    ~EzGetInventoryModelResult() = default;
+
+    EzGetInventoryModelResult(gs2::inventory::GetInventoryModelResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetInventoryModelResult& operator=(const EzGetInventoryModelResult& result) = default;
+    EzGetInventoryModelResult& operator=(EzGetInventoryModelResult&& result) = default;
+
+    EzGetInventoryModelResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetInventoryModelResult);
     }
 
     static bool isConvertible(const gs2::inventory::GetInventoryModelResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzInventoryModel& getItem() const
     {
-        return m_Item;
-    }
-
-    EzInventoryModel& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

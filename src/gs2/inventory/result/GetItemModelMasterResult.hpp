@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inventory
 {
@@ -43,28 +45,28 @@ private:
         /** アイテムモデルマスター */
         optional<ItemModelMaster> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GetItemModelMasterResult() :
-        m_pData(nullptr)
-    {}
+    GetItemModelMasterResult() = default;
+    GetItemModelMasterResult(const GetItemModelMasterResult& getItemModelMasterResult) = default;
+    GetItemModelMasterResult(GetItemModelMasterResult&& getItemModelMasterResult) = default;
+    ~GetItemModelMasterResult() = default;
 
-    GetItemModelMasterResult(const GetItemModelMasterResult& getItemModelMasterResult) :
-        Gs2Object(getItemModelMasterResult),
-        m_pData(getItemModelMasterResult.m_pData != nullptr ? new Data(*getItemModelMasterResult.m_pData) : nullptr)
-    {}
+    GetItemModelMasterResult& operator=(const GetItemModelMasterResult& getItemModelMasterResult) = default;
+    GetItemModelMasterResult& operator=(GetItemModelMasterResult&& getItemModelMasterResult) = default;
 
-    GetItemModelMasterResult(GetItemModelMasterResult&& getItemModelMasterResult) :
-        Gs2Object(std::move(getItemModelMasterResult)),
-        m_pData(getItemModelMasterResult.m_pData)
+    GetItemModelMasterResult deepCopy() const
     {
-        getItemModelMasterResult.m_pData = nullptr;
-    }
-
-    ~GetItemModelMasterResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetItemModelMasterResult& operator=(const GetItemModelMasterResult& getItemModelMasterResult)
-    {
-        Gs2Object::operator=(getItemModelMasterResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getItemModelMasterResult.m_pData);
-
-        return *this;
-    }
-
-    GetItemModelMasterResult& operator=(GetItemModelMasterResult&& getItemModelMasterResult)
-    {
-        Gs2Object::operator=(std::move(getItemModelMasterResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getItemModelMasterResult.m_pData;
-        getItemModelMasterResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetItemModelMasterResult);
     }
 
     const GetItemModelMasterResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item アイテムモデルマスター
      */
-    void setItem(const ItemModelMaster& item)
+    void setItem(ItemModelMaster item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

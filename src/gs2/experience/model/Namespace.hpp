@@ -22,10 +22,12 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "ScriptSetting.hpp"
 #include "ScriptSetting.hpp"
 #include "ScriptSetting.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace experience {
@@ -65,8 +67,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -75,66 +76,69 @@ private:
             name(data.name),
             description(data.description),
             experienceCapScriptId(data.experienceCapScriptId),
-            changeExperienceScript(data.changeExperienceScript),
-            changeRankScript(data.changeRankScript),
-            changeRankCapScript(data.changeRankCapScript),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.changeExperienceScript)
+            {
+                changeExperienceScript = data.changeExperienceScript->deepCopy();
+            }
+            if (data.changeRankScript)
+            {
+                changeRankScript = data.changeRankScript->deepCopy();
+            }
+            if (data.changeRankCapScript)
+            {
+                changeRankCapScript = data.changeRankCapScript->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            namespaceId(std::move(data.namespaceId)),
-            ownerId(std::move(data.ownerId)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            experienceCapScriptId(std::move(data.experienceCapScriptId)),
-            changeExperienceScript(std::move(data.changeExperienceScript)),
-            changeRankScript(std::move(data.changeRankScript)),
-            changeRankCapScript(std::move(data.changeRankCapScript)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "namespaceId") == 0) {
+            if (std::strcmp(name_, "namespaceId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->namespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "experienceCapScriptId") == 0) {
+            else if (std::strcmp(name_, "experienceCapScriptId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->experienceCapScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "changeExperienceScript") == 0) {
+            else if (std::strcmp(name_, "changeExperienceScript") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -142,7 +146,8 @@ private:
                     detail::json::JsonParser::parse(&this->changeExperienceScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "changeRankScript") == 0) {
+            else if (std::strcmp(name_, "changeRankScript") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -150,7 +155,8 @@ private:
                     detail::json::JsonParser::parse(&this->changeRankScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "changeRankCapScript") == 0) {
+            else if (std::strcmp(name_, "changeRankCapScript") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -158,13 +164,15 @@ private:
                     detail::json::JsonParser::parse(&this->changeRankCapScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -173,72 +181,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Namespace() :
-        m_pData(nullptr)
-    {}
+    Namespace() = default;
+    Namespace(const Namespace& namespace_) = default;
+    Namespace(Namespace&& namespace_) = default;
+    ~Namespace() = default;
 
-    Namespace(const Namespace& namespace_) :
-        Gs2Object(namespace_),
-        m_pData(namespace_.m_pData != nullptr ? new Data(*namespace_.m_pData) : nullptr)
-    {}
+    Namespace& operator=(const Namespace& namespace_) = default;
+    Namespace& operator=(Namespace&& namespace_) = default;
 
-    Namespace(Namespace&& namespace_) :
-        Gs2Object(std::move(namespace_)),
-        m_pData(namespace_.m_pData)
+    Namespace deepCopy() const
     {
-        namespace_.m_pData = nullptr;
-    }
-
-    ~Namespace()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Namespace& operator=(const Namespace& namespace_)
-    {
-        Gs2Object::operator=(namespace_);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*namespace_.m_pData);
-
-        return *this;
-    }
-
-    Namespace& operator=(Namespace&& namespace_)
-    {
-        Gs2Object::operator=(std::move(namespace_));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = namespace_.m_pData;
-        namespace_.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Namespace);
     }
 
     const Namespace* operator->() const
@@ -265,9 +221,9 @@ public:
      *
      * @param namespaceId ネームスペース
      */
-    void setNamespaceId(const Char* namespaceId)
+    void setNamespaceId(StringHolder namespaceId)
     {
-        ensureData().namespaceId.emplace(namespaceId);
+        ensureData().namespaceId.emplace(std::move(namespaceId));
     }
 
     /**
@@ -275,9 +231,9 @@ public:
      *
      * @param namespaceId ネームスペース
      */
-    Namespace& withNamespaceId(const Char* namespaceId)
+    Namespace& withNamespaceId(StringHolder namespaceId)
     {
-        setNamespaceId(namespaceId);
+        setNamespaceId(std::move(namespaceId));
         return *this;
     }
 
@@ -296,9 +252,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
@@ -306,9 +262,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    Namespace& withOwnerId(const Char* ownerId)
+    Namespace& withOwnerId(StringHolder ownerId)
     {
-        setOwnerId(ownerId);
+        setOwnerId(std::move(ownerId));
         return *this;
     }
 
@@ -327,9 +283,9 @@ public:
      *
      * @param name ネームスペース名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -337,9 +293,9 @@ public:
      *
      * @param name ネームスペース名
      */
-    Namespace& withName(const Char* name)
+    Namespace& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -358,9 +314,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -368,9 +324,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    Namespace& withDescription(const Char* description)
+    Namespace& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -389,9 +345,9 @@ public:
      *
      * @param experienceCapScriptId ランクキャップ取得時 に実行されるスクリプト のGRN
      */
-    void setExperienceCapScriptId(const Char* experienceCapScriptId)
+    void setExperienceCapScriptId(StringHolder experienceCapScriptId)
     {
-        ensureData().experienceCapScriptId.emplace(experienceCapScriptId);
+        ensureData().experienceCapScriptId.emplace(std::move(experienceCapScriptId));
     }
 
     /**
@@ -399,9 +355,9 @@ public:
      *
      * @param experienceCapScriptId ランクキャップ取得時 に実行されるスクリプト のGRN
      */
-    Namespace& withExperienceCapScriptId(const Char* experienceCapScriptId)
+    Namespace& withExperienceCapScriptId(StringHolder experienceCapScriptId)
     {
-        setExperienceCapScriptId(experienceCapScriptId);
+        setExperienceCapScriptId(std::move(experienceCapScriptId));
         return *this;
     }
 
@@ -420,9 +376,9 @@ public:
      *
      * @param changeExperienceScript 経験値変化したときに実行するスクリプト
      */
-    void setChangeExperienceScript(const ScriptSetting& changeExperienceScript)
+    void setChangeExperienceScript(ScriptSetting changeExperienceScript)
     {
-        ensureData().changeExperienceScript.emplace(changeExperienceScript);
+        ensureData().changeExperienceScript.emplace(std::move(changeExperienceScript));
     }
 
     /**
@@ -430,9 +386,9 @@ public:
      *
      * @param changeExperienceScript 経験値変化したときに実行するスクリプト
      */
-    Namespace& withChangeExperienceScript(const ScriptSetting& changeExperienceScript)
+    Namespace& withChangeExperienceScript(ScriptSetting changeExperienceScript)
     {
-        setChangeExperienceScript(changeExperienceScript);
+        setChangeExperienceScript(std::move(changeExperienceScript));
         return *this;
     }
 
@@ -451,9 +407,9 @@ public:
      *
      * @param changeRankScript ランク変化したときに実行するスクリプト
      */
-    void setChangeRankScript(const ScriptSetting& changeRankScript)
+    void setChangeRankScript(ScriptSetting changeRankScript)
     {
-        ensureData().changeRankScript.emplace(changeRankScript);
+        ensureData().changeRankScript.emplace(std::move(changeRankScript));
     }
 
     /**
@@ -461,9 +417,9 @@ public:
      *
      * @param changeRankScript ランク変化したときに実行するスクリプト
      */
-    Namespace& withChangeRankScript(const ScriptSetting& changeRankScript)
+    Namespace& withChangeRankScript(ScriptSetting changeRankScript)
     {
-        setChangeRankScript(changeRankScript);
+        setChangeRankScript(std::move(changeRankScript));
         return *this;
     }
 
@@ -482,9 +438,9 @@ public:
      *
      * @param changeRankCapScript ランクキャップ変化したときに実行するスクリプト
      */
-    void setChangeRankCapScript(const ScriptSetting& changeRankCapScript)
+    void setChangeRankCapScript(ScriptSetting changeRankCapScript)
     {
-        ensureData().changeRankCapScript.emplace(changeRankCapScript);
+        ensureData().changeRankCapScript.emplace(std::move(changeRankCapScript));
     }
 
     /**
@@ -492,9 +448,9 @@ public:
      *
      * @param changeRankCapScript ランクキャップ変化したときに実行するスクリプト
      */
-    Namespace& withChangeRankCapScript(const ScriptSetting& changeRankCapScript)
+    Namespace& withChangeRankCapScript(ScriptSetting changeRankCapScript)
     {
-        setChangeRankCapScript(changeRankCapScript);
+        setChangeRankCapScript(std::move(changeRankCapScript));
         return *this;
     }
 
@@ -571,7 +527,7 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

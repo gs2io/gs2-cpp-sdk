@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace showcase {
@@ -46,36 +48,33 @@ private:
         /** マスターデータ */
         optional<StringHolder> settings;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             namespaceName(data.namespaceName),
             settings(data.settings)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            settings(std::move(data.settings))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "namespaceName") == 0) {
+            if (std::strcmp(name_, "namespaceName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->namespaceName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "settings") == 0) {
+            else if (std::strcmp(name_, "settings") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->settings.emplace(jsonValue.GetString());
@@ -84,72 +83,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    CurrentShowcaseMaster() :
-        m_pData(nullptr)
-    {}
+    CurrentShowcaseMaster() = default;
+    CurrentShowcaseMaster(const CurrentShowcaseMaster& currentShowcaseMaster) = default;
+    CurrentShowcaseMaster(CurrentShowcaseMaster&& currentShowcaseMaster) = default;
+    ~CurrentShowcaseMaster() = default;
 
-    CurrentShowcaseMaster(const CurrentShowcaseMaster& currentShowcaseMaster) :
-        Gs2Object(currentShowcaseMaster),
-        m_pData(currentShowcaseMaster.m_pData != nullptr ? new Data(*currentShowcaseMaster.m_pData) : nullptr)
-    {}
+    CurrentShowcaseMaster& operator=(const CurrentShowcaseMaster& currentShowcaseMaster) = default;
+    CurrentShowcaseMaster& operator=(CurrentShowcaseMaster&& currentShowcaseMaster) = default;
 
-    CurrentShowcaseMaster(CurrentShowcaseMaster&& currentShowcaseMaster) :
-        Gs2Object(std::move(currentShowcaseMaster)),
-        m_pData(currentShowcaseMaster.m_pData)
+    CurrentShowcaseMaster deepCopy() const
     {
-        currentShowcaseMaster.m_pData = nullptr;
-    }
-
-    ~CurrentShowcaseMaster()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CurrentShowcaseMaster& operator=(const CurrentShowcaseMaster& currentShowcaseMaster)
-    {
-        Gs2Object::operator=(currentShowcaseMaster);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*currentShowcaseMaster.m_pData);
-
-        return *this;
-    }
-
-    CurrentShowcaseMaster& operator=(CurrentShowcaseMaster&& currentShowcaseMaster)
-    {
-        Gs2Object::operator=(std::move(currentShowcaseMaster));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = currentShowcaseMaster.m_pData;
-        currentShowcaseMaster.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CurrentShowcaseMaster);
     }
 
     const CurrentShowcaseMaster* operator->() const
@@ -176,9 +123,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -186,9 +133,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    CurrentShowcaseMaster& withNamespaceName(const Char* namespaceName)
+    CurrentShowcaseMaster& withNamespaceName(StringHolder namespaceName)
     {
-        setNamespaceName(namespaceName);
+        setNamespaceName(std::move(namespaceName));
         return *this;
     }
 
@@ -207,9 +154,9 @@ public:
      *
      * @param settings マスターデータ
      */
-    void setSettings(const Char* settings)
+    void setSettings(StringHolder settings)
     {
-        ensureData().settings.emplace(settings);
+        ensureData().settings.emplace(std::move(settings));
     }
 
     /**
@@ -217,9 +164,9 @@ public:
      *
      * @param settings マスターデータ
      */
-    CurrentShowcaseMaster& withSettings(const Char* settings)
+    CurrentShowcaseMaster& withSettings(StringHolder settings)
     {
-        setSettings(settings);
+        setSettings(std::move(settings));
         return *this;
     }
 
@@ -234,7 +181,7 @@ inline bool operator!=(const CurrentShowcaseMaster& lhs, const CurrentShowcaseMa
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

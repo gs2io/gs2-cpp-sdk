@@ -28,9 +28,9 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::get(
-    std::function<void(AsyncEzGetResult&)> callback,
+    std::function<void(AsyncEzGetResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
+    StringHolder namespaceName,
     Int32 slot
 )
 {
@@ -40,7 +40,7 @@ void Client::get(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.getWallet(
         request,
-        [callback](gs2::money::AsyncGetWalletResult& r)
+        [callback](gs2::money::AsyncGetWalletResult r)
         {
             if (r.getError())
             {
@@ -66,9 +66,9 @@ void Client::get(
 }
 
 void Client::withdraw(
-    std::function<void(AsyncEzWithdrawResult&)> callback,
+    std::function<void(AsyncEzWithdrawResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
+    StringHolder namespaceName,
     Int32 slot,
     Int32 count,
     Bool paidOnly
@@ -82,7 +82,7 @@ void Client::withdraw(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.withdraw(
         request,
-        [callback](gs2::money::AsyncWithdrawResult& r)
+        [callback](gs2::money::AsyncWithdrawResult r)
         {
             if (r.getError())
             {

@@ -27,22 +27,61 @@ namespace gs2 { namespace ez { namespace inbox {
 class EzListResult : public gs2::Gs2Object
 {
 private:
-    /** メッセージのリスト */
-    List<EzMessage> m_Items;
-    /** リストの続きを取得するためのページトークン */
-    optional<StringHolder> m_NextPageToken;
-
-public:
-    EzListResult(const gs2::inbox::DescribeMessagesResult& result) :
-        m_NextPageToken(result.getNextPageToken())
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** メッセージのリスト */
+        List<EzMessage> items;
+        /** リストの続きを取得するためのページトークン */
+        optional<StringHolder> nextPageToken;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            nextPageToken(data.nextPageToken)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::inbox::DescribeMessagesResult& describeMessagesResult) :
+            nextPageToken(describeMessagesResult.getNextPageToken())
+        {
             {
-                m_Items += EzMessage(list[i]);
+                auto& list = *describeMessagesResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzMessage(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListResult() = default;
+    EzListResult(const EzListResult& result) = default;
+    EzListResult(EzListResult&& result) = default;
+    ~EzListResult() = default;
+
+    EzListResult(gs2::inbox::DescribeMessagesResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListResult& operator=(const EzListResult& result) = default;
+    EzListResult& operator=(EzListResult&& result) = default;
+
+    EzListResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListResult);
     }
 
     static bool isConvertible(const gs2::inbox::DescribeMessagesResult& result)
@@ -57,22 +96,12 @@ public:
 
     const List<EzMessage>& getItems() const
     {
-        return m_Items;
+        return ensureData().items;
     }
 
-    List<EzMessage>& getItems()
+    const optional<StringHolder>& getNextPageToken() const
     {
-        return m_Items;
-    }
-
-    const optional<gs2::StringHolder>& getNextPageToken() const
-    {
-        return m_NextPageToken;
-    }
-
-    optional<gs2::StringHolder>& getNextPageToken()
-    {
-        return m_NextPageToken;
+        return ensureData().nextPageToken;
     }
 };
 

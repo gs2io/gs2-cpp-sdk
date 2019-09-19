@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2QuestConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace quest
 {
@@ -38,102 +40,52 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** カテゴリ名 */
         optional<StringHolder> namespaceName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    DescribeQuestGroupModelsRequest() :
-        m_pData(nullptr)
-    {}
+    DescribeQuestGroupModelsRequest() = default;
+    DescribeQuestGroupModelsRequest(const DescribeQuestGroupModelsRequest& describeQuestGroupModelsRequest) = default;
+    DescribeQuestGroupModelsRequest(DescribeQuestGroupModelsRequest&& describeQuestGroupModelsRequest) = default;
+    ~DescribeQuestGroupModelsRequest() GS2_OVERRIDE = default;
 
-    DescribeQuestGroupModelsRequest(const DescribeQuestGroupModelsRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Quest(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    DescribeQuestGroupModelsRequest& operator=(const DescribeQuestGroupModelsRequest& describeQuestGroupModelsRequest) = default;
+    DescribeQuestGroupModelsRequest& operator=(DescribeQuestGroupModelsRequest&& describeQuestGroupModelsRequest) = default;
 
-    DescribeQuestGroupModelsRequest(DescribeQuestGroupModelsRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Quest(std::move(obj)),
-        m_pData(obj.m_pData)
+    DescribeQuestGroupModelsRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~DescribeQuestGroupModelsRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DescribeQuestGroupModelsRequest& operator=(const DescribeQuestGroupModelsRequest& describeQuestGroupModelsRequest)
-    {
-        Gs2BasicRequest::operator=(describeQuestGroupModelsRequest);
-        Gs2Quest::operator=(describeQuestGroupModelsRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*describeQuestGroupModelsRequest.m_pData);
-
-        return *this;
-    }
-
-    DescribeQuestGroupModelsRequest& operator=(DescribeQuestGroupModelsRequest&& describeQuestGroupModelsRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(describeQuestGroupModelsRequest));
-        Gs2Quest::operator=(std::move(describeQuestGroupModelsRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = describeQuestGroupModelsRequest.m_pData;
-        describeQuestGroupModelsRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeQuestGroupModelsRequest);
     }
 
     const DescribeQuestGroupModelsRequest* operator->() const
@@ -161,9 +113,9 @@ public:
      *
      * @param namespaceName カテゴリ名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -171,9 +123,9 @@ public:
      *
      * @param namespaceName カテゴリ名
      */
-    DescribeQuestGroupModelsRequest& withNamespaceName(const Char* namespaceName)
+    DescribeQuestGroupModelsRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -184,33 +136,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    DescribeQuestGroupModelsRequest& withGs2ClientId(const Char* gs2ClientId)
+    DescribeQuestGroupModelsRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    DescribeQuestGroupModelsRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    DescribeQuestGroupModelsRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -219,9 +147,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    DescribeQuestGroupModelsRequest& withRequestId(const Char* gs2RequestId)
+    DescribeQuestGroupModelsRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

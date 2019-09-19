@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace deploy {
@@ -50,8 +52,7 @@ private:
         /** 作成日時 */
         optional<Int64> createdAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -59,43 +60,41 @@ private:
             name(data.name),
             value(data.value),
             createdAt(data.createdAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            outputId(std::move(data.outputId)),
-            name(std::move(data.name)),
-            value(std::move(data.value)),
-            createdAt(std::move(data.createdAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "outputId") == 0) {
+            if (std::strcmp(name_, "outputId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->outputId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "value") == 0) {
+            else if (std::strcmp(name_, "value") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->value.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
@@ -104,72 +103,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Output() :
-        m_pData(nullptr)
-    {}
+    Output() = default;
+    Output(const Output& output) = default;
+    Output(Output&& output) = default;
+    ~Output() = default;
 
-    Output(const Output& output) :
-        Gs2Object(output),
-        m_pData(output.m_pData != nullptr ? new Data(*output.m_pData) : nullptr)
-    {}
+    Output& operator=(const Output& output) = default;
+    Output& operator=(Output&& output) = default;
 
-    Output(Output&& output) :
-        Gs2Object(std::move(output)),
-        m_pData(output.m_pData)
+    Output deepCopy() const
     {
-        output.m_pData = nullptr;
-    }
-
-    ~Output()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Output& operator=(const Output& output)
-    {
-        Gs2Object::operator=(output);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*output.m_pData);
-
-        return *this;
-    }
-
-    Output& operator=(Output&& output)
-    {
-        Gs2Object::operator=(std::move(output));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = output.m_pData;
-        output.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Output);
     }
 
     const Output* operator->() const
@@ -196,9 +143,9 @@ public:
      *
      * @param outputId アウトプット
      */
-    void setOutputId(const Char* outputId)
+    void setOutputId(StringHolder outputId)
     {
-        ensureData().outputId.emplace(outputId);
+        ensureData().outputId.emplace(std::move(outputId));
     }
 
     /**
@@ -206,9 +153,9 @@ public:
      *
      * @param outputId アウトプット
      */
-    Output& withOutputId(const Char* outputId)
+    Output& withOutputId(StringHolder outputId)
     {
-        setOutputId(outputId);
+        setOutputId(std::move(outputId));
         return *this;
     }
 
@@ -227,9 +174,9 @@ public:
      *
      * @param name アウトプット名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -237,9 +184,9 @@ public:
      *
      * @param name アウトプット名
      */
-    Output& withName(const Char* name)
+    Output& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -258,9 +205,9 @@ public:
      *
      * @param value 値
      */
-    void setValue(const Char* value)
+    void setValue(StringHolder value)
     {
-        ensureData().value.emplace(value);
+        ensureData().value.emplace(std::move(value));
     }
 
     /**
@@ -268,9 +215,9 @@ public:
      *
      * @param value 値
      */
-    Output& withValue(const Char* value)
+    Output& withValue(StringHolder value)
     {
-        setValue(value);
+        setValue(std::move(value));
         return *this;
     }
 
@@ -316,7 +263,7 @@ inline bool operator!=(const Output& lhs, const Output& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

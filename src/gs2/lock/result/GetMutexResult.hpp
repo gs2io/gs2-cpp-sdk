@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace lock
 {
@@ -43,28 +45,28 @@ private:
         /** ミューテックス */
         optional<Mutex> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GetMutexResult() :
-        m_pData(nullptr)
-    {}
+    GetMutexResult() = default;
+    GetMutexResult(const GetMutexResult& getMutexResult) = default;
+    GetMutexResult(GetMutexResult&& getMutexResult) = default;
+    ~GetMutexResult() = default;
 
-    GetMutexResult(const GetMutexResult& getMutexResult) :
-        Gs2Object(getMutexResult),
-        m_pData(getMutexResult.m_pData != nullptr ? new Data(*getMutexResult.m_pData) : nullptr)
-    {}
+    GetMutexResult& operator=(const GetMutexResult& getMutexResult) = default;
+    GetMutexResult& operator=(GetMutexResult&& getMutexResult) = default;
 
-    GetMutexResult(GetMutexResult&& getMutexResult) :
-        Gs2Object(std::move(getMutexResult)),
-        m_pData(getMutexResult.m_pData)
+    GetMutexResult deepCopy() const
     {
-        getMutexResult.m_pData = nullptr;
-    }
-
-    ~GetMutexResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetMutexResult& operator=(const GetMutexResult& getMutexResult)
-    {
-        Gs2Object::operator=(getMutexResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getMutexResult.m_pData);
-
-        return *this;
-    }
-
-    GetMutexResult& operator=(GetMutexResult&& getMutexResult)
-    {
-        Gs2Object::operator=(std::move(getMutexResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getMutexResult.m_pData;
-        getMutexResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetMutexResult);
     }
 
     const GetMutexResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item ミューテックス
      */
-    void setItem(const Mutex& item)
+    void setItem(Mutex item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace key {
@@ -56,8 +58,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -68,64 +69,62 @@ private:
             encryptionKeyName(data.encryptionKeyName),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            apiKeyId(std::move(data.apiKeyId)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            apiKey(std::move(data.apiKey)),
-            encryptionKeyName(std::move(data.encryptionKeyName)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "apiKeyId") == 0) {
+            if (std::strcmp(name_, "apiKeyId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->apiKeyId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "apiKey") == 0) {
+            else if (std::strcmp(name_, "apiKey") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->apiKey.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "encryptionKeyName") == 0) {
+            else if (std::strcmp(name_, "encryptionKeyName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->encryptionKeyName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -134,72 +133,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GitHubApiKey() :
-        m_pData(nullptr)
-    {}
+    GitHubApiKey() = default;
+    GitHubApiKey(const GitHubApiKey& gitHubApiKey) = default;
+    GitHubApiKey(GitHubApiKey&& gitHubApiKey) = default;
+    ~GitHubApiKey() = default;
 
-    GitHubApiKey(const GitHubApiKey& gitHubApiKey) :
-        Gs2Object(gitHubApiKey),
-        m_pData(gitHubApiKey.m_pData != nullptr ? new Data(*gitHubApiKey.m_pData) : nullptr)
-    {}
+    GitHubApiKey& operator=(const GitHubApiKey& gitHubApiKey) = default;
+    GitHubApiKey& operator=(GitHubApiKey&& gitHubApiKey) = default;
 
-    GitHubApiKey(GitHubApiKey&& gitHubApiKey) :
-        Gs2Object(std::move(gitHubApiKey)),
-        m_pData(gitHubApiKey.m_pData)
+    GitHubApiKey deepCopy() const
     {
-        gitHubApiKey.m_pData = nullptr;
-    }
-
-    ~GitHubApiKey()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GitHubApiKey& operator=(const GitHubApiKey& gitHubApiKey)
-    {
-        Gs2Object::operator=(gitHubApiKey);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*gitHubApiKey.m_pData);
-
-        return *this;
-    }
-
-    GitHubApiKey& operator=(GitHubApiKey&& gitHubApiKey)
-    {
-        Gs2Object::operator=(std::move(gitHubApiKey));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = gitHubApiKey.m_pData;
-        gitHubApiKey.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GitHubApiKey);
     }
 
     const GitHubApiKey* operator->() const
@@ -226,9 +173,9 @@ public:
      *
      * @param apiKeyId GitHub のAPIキー
      */
-    void setApiKeyId(const Char* apiKeyId)
+    void setApiKeyId(StringHolder apiKeyId)
     {
-        ensureData().apiKeyId.emplace(apiKeyId);
+        ensureData().apiKeyId.emplace(std::move(apiKeyId));
     }
 
     /**
@@ -236,9 +183,9 @@ public:
      *
      * @param apiKeyId GitHub のAPIキー
      */
-    GitHubApiKey& withApiKeyId(const Char* apiKeyId)
+    GitHubApiKey& withApiKeyId(StringHolder apiKeyId)
     {
-        setApiKeyId(apiKeyId);
+        setApiKeyId(std::move(apiKeyId));
         return *this;
     }
 
@@ -257,9 +204,9 @@ public:
      *
      * @param name GitHub APIキー名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -267,9 +214,9 @@ public:
      *
      * @param name GitHub APIキー名
      */
-    GitHubApiKey& withName(const Char* name)
+    GitHubApiKey& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -288,9 +235,9 @@ public:
      *
      * @param description 説明文
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -298,9 +245,9 @@ public:
      *
      * @param description 説明文
      */
-    GitHubApiKey& withDescription(const Char* description)
+    GitHubApiKey& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -319,9 +266,9 @@ public:
      *
      * @param apiKey APIキー
      */
-    void setApiKey(const Char* apiKey)
+    void setApiKey(StringHolder apiKey)
     {
-        ensureData().apiKey.emplace(apiKey);
+        ensureData().apiKey.emplace(std::move(apiKey));
     }
 
     /**
@@ -329,9 +276,9 @@ public:
      *
      * @param apiKey APIキー
      */
-    GitHubApiKey& withApiKey(const Char* apiKey)
+    GitHubApiKey& withApiKey(StringHolder apiKey)
     {
-        setApiKey(apiKey);
+        setApiKey(std::move(apiKey));
         return *this;
     }
 
@@ -350,9 +297,9 @@ public:
      *
      * @param encryptionKeyName APIキーの暗号化に使用する暗号鍵名
      */
-    void setEncryptionKeyName(const Char* encryptionKeyName)
+    void setEncryptionKeyName(StringHolder encryptionKeyName)
     {
-        ensureData().encryptionKeyName.emplace(encryptionKeyName);
+        ensureData().encryptionKeyName.emplace(std::move(encryptionKeyName));
     }
 
     /**
@@ -360,9 +307,9 @@ public:
      *
      * @param encryptionKeyName APIキーの暗号化に使用する暗号鍵名
      */
-    GitHubApiKey& withEncryptionKeyName(const Char* encryptionKeyName)
+    GitHubApiKey& withEncryptionKeyName(StringHolder encryptionKeyName)
     {
-        setEncryptionKeyName(encryptionKeyName);
+        setEncryptionKeyName(std::move(encryptionKeyName));
         return *this;
     }
 
@@ -439,7 +386,7 @@ inline bool operator!=(const GitHubApiKey& lhs, const GitHubApiKey& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

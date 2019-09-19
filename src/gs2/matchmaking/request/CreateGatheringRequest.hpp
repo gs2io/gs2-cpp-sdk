@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2MatchmakingConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace matchmaking
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** アクセストークン */
@@ -56,108 +58,64 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             accessToken(data.accessToken),
             namespaceName(data.namespaceName),
-            player(data.player),
-            attributeRanges(data.attributeRanges),
-            capacityOfRoles(data.capacityOfRoles),
-            allowUserIds(data.allowUserIds),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+            if (data.player)
+            {
+                player = data.player->deepCopy();
+            }
+            if (data.attributeRanges)
+            {
+                attributeRanges = data.attributeRanges->deepCopy();
+            }
+            if (data.capacityOfRoles)
+            {
+                capacityOfRoles = data.capacityOfRoles->deepCopy();
+            }
+            if (data.allowUserIds)
+            {
+                allowUserIds = data.allowUserIds->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            accessToken(std::move(data.accessToken)),
-            namespaceName(std::move(data.namespaceName)),
-            player(std::move(data.player)),
-            attributeRanges(std::move(data.attributeRanges)),
-            capacityOfRoles(std::move(data.capacityOfRoles)),
-            allowUserIds(std::move(data.allowUserIds)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CreateGatheringRequest() :
-        m_pData(nullptr)
-    {}
+    CreateGatheringRequest() = default;
+    CreateGatheringRequest(const CreateGatheringRequest& createGatheringRequest) = default;
+    CreateGatheringRequest(CreateGatheringRequest&& createGatheringRequest) = default;
+    ~CreateGatheringRequest() GS2_OVERRIDE = default;
 
-    CreateGatheringRequest(const CreateGatheringRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Matchmaking(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CreateGatheringRequest& operator=(const CreateGatheringRequest& createGatheringRequest) = default;
+    CreateGatheringRequest& operator=(CreateGatheringRequest&& createGatheringRequest) = default;
 
-    CreateGatheringRequest(CreateGatheringRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Matchmaking(std::move(obj)),
-        m_pData(obj.m_pData)
+    CreateGatheringRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CreateGatheringRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateGatheringRequest& operator=(const CreateGatheringRequest& createGatheringRequest)
-    {
-        Gs2BasicRequest::operator=(createGatheringRequest);
-        Gs2Matchmaking::operator=(createGatheringRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createGatheringRequest.m_pData);
-
-        return *this;
-    }
-
-    CreateGatheringRequest& operator=(CreateGatheringRequest&& createGatheringRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(createGatheringRequest));
-        Gs2Matchmaking::operator=(std::move(createGatheringRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createGatheringRequest.m_pData;
-        createGatheringRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateGatheringRequest);
     }
 
     const CreateGatheringRequest* operator->() const
@@ -175,7 +133,8 @@ public:
      *
      * @return アクセストークン
      */
-    const gs2::optional<StringHolder>& getAccessToken() const {
+    const gs2::optional<StringHolder>& getAccessToken() const
+    {
         return ensureData().accessToken;
     }
 
@@ -184,8 +143,9 @@ public:
      *
      * @param accessToken アクセストークン
      */
-    void setAccessToken(const Char* accessToken) {
-        ensureData().accessToken.emplace(accessToken);
+    void setAccessToken(StringHolder accessToken)
+    {
+        ensureData().accessToken.emplace(std::move(accessToken));
     }
 
     /**
@@ -194,8 +154,9 @@ public:
      * @param accessToken アクセストークン
      * @return this
      */
-    CreateGatheringRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
+    CreateGatheringRequest& withAccessToken(StringHolder accessToken)
+    {
+        setAccessToken(std::move(accessToken));
         return *this;
     }
 
@@ -214,9 +175,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -224,9 +185,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    CreateGatheringRequest& withNamespaceName(const Char* namespaceName)
+    CreateGatheringRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -245,9 +206,9 @@ public:
      *
      * @param player 自身のプレイヤー情報
      */
-    void setPlayer(const Player& player)
+    void setPlayer(Player player)
     {
-        ensureData().player.emplace(player);
+        ensureData().player.emplace(std::move(player));
     }
 
     /**
@@ -255,9 +216,9 @@ public:
      *
      * @param player 自身のプレイヤー情報
      */
-    CreateGatheringRequest& withPlayer(const Player& player)
+    CreateGatheringRequest& withPlayer(Player player)
     {
-        ensureData().player.emplace(player);
+        ensureData().player.emplace(std::move(player));
         return *this;
     }
 
@@ -276,9 +237,9 @@ public:
      *
      * @param attributeRanges 募集条件
      */
-    void setAttributeRanges(const List<AttributeRange>& attributeRanges)
+    void setAttributeRanges(List<AttributeRange> attributeRanges)
     {
-        ensureData().attributeRanges.emplace(attributeRanges);
+        ensureData().attributeRanges.emplace(std::move(attributeRanges));
     }
 
     /**
@@ -286,9 +247,9 @@ public:
      *
      * @param attributeRanges 募集条件
      */
-    CreateGatheringRequest& withAttributeRanges(const List<AttributeRange>& attributeRanges)
+    CreateGatheringRequest& withAttributeRanges(List<AttributeRange> attributeRanges)
     {
-        ensureData().attributeRanges.emplace(attributeRanges);
+        ensureData().attributeRanges.emplace(std::move(attributeRanges));
         return *this;
     }
 
@@ -307,9 +268,9 @@ public:
      *
      * @param capacityOfRoles 参加者
      */
-    void setCapacityOfRoles(const List<CapacityOfRole>& capacityOfRoles)
+    void setCapacityOfRoles(List<CapacityOfRole> capacityOfRoles)
     {
-        ensureData().capacityOfRoles.emplace(capacityOfRoles);
+        ensureData().capacityOfRoles.emplace(std::move(capacityOfRoles));
     }
 
     /**
@@ -317,9 +278,9 @@ public:
      *
      * @param capacityOfRoles 参加者
      */
-    CreateGatheringRequest& withCapacityOfRoles(const List<CapacityOfRole>& capacityOfRoles)
+    CreateGatheringRequest& withCapacityOfRoles(List<CapacityOfRole> capacityOfRoles)
     {
-        ensureData().capacityOfRoles.emplace(capacityOfRoles);
+        ensureData().capacityOfRoles.emplace(std::move(capacityOfRoles));
         return *this;
     }
 
@@ -338,9 +299,9 @@ public:
      *
      * @param allowUserIds 参加を許可するユーザIDリスト
      */
-    void setAllowUserIds(const List<StringHolder>& allowUserIds)
+    void setAllowUserIds(List<StringHolder> allowUserIds)
     {
-        ensureData().allowUserIds.emplace(allowUserIds);
+        ensureData().allowUserIds.emplace(std::move(allowUserIds));
     }
 
     /**
@@ -348,9 +309,9 @@ public:
      *
      * @param allowUserIds 参加を許可するユーザIDリスト
      */
-    CreateGatheringRequest& withAllowUserIds(const List<StringHolder>& allowUserIds)
+    CreateGatheringRequest& withAllowUserIds(List<StringHolder> allowUserIds)
     {
-        ensureData().allowUserIds.emplace(allowUserIds);
+        ensureData().allowUserIds.emplace(std::move(allowUserIds));
         return *this;
     }
 
@@ -369,9 +330,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -379,9 +340,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    CreateGatheringRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    CreateGatheringRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -392,33 +353,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CreateGatheringRequest& withGs2ClientId(const Char* gs2ClientId)
+    CreateGatheringRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CreateGatheringRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CreateGatheringRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -427,9 +364,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CreateGatheringRequest& withRequestId(const Char* gs2RequestId)
+    CreateGatheringRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

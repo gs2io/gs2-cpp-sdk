@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2IdentifierConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace identifier
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ユーザー名 */
@@ -46,98 +48,47 @@ private:
         /** ユーザの説明 */
         optional<StringHolder> description;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             name(data.name),
             description(data.description)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            name(std::move(data.name)),
-            description(std::move(data.description))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CreateUserRequest() :
-        m_pData(nullptr)
-    {}
+    CreateUserRequest() = default;
+    CreateUserRequest(const CreateUserRequest& createUserRequest) = default;
+    CreateUserRequest(CreateUserRequest&& createUserRequest) = default;
+    ~CreateUserRequest() GS2_OVERRIDE = default;
 
-    CreateUserRequest(const CreateUserRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Identifier(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CreateUserRequest& operator=(const CreateUserRequest& createUserRequest) = default;
+    CreateUserRequest& operator=(CreateUserRequest&& createUserRequest) = default;
 
-    CreateUserRequest(CreateUserRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Identifier(std::move(obj)),
-        m_pData(obj.m_pData)
+    CreateUserRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CreateUserRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateUserRequest& operator=(const CreateUserRequest& createUserRequest)
-    {
-        Gs2BasicRequest::operator=(createUserRequest);
-        Gs2Identifier::operator=(createUserRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createUserRequest.m_pData);
-
-        return *this;
-    }
-
-    CreateUserRequest& operator=(CreateUserRequest&& createUserRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(createUserRequest));
-        Gs2Identifier::operator=(std::move(createUserRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createUserRequest.m_pData;
-        createUserRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateUserRequest);
     }
 
     const CreateUserRequest* operator->() const
@@ -165,9 +116,9 @@ public:
      *
      * @param name ユーザー名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -175,9 +126,9 @@ public:
      *
      * @param name ユーザー名
      */
-    CreateUserRequest& withName(const Char* name)
+    CreateUserRequest& withName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
         return *this;
     }
 
@@ -196,9 +147,9 @@ public:
      *
      * @param description ユーザの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -206,9 +157,9 @@ public:
      *
      * @param description ユーザの説明
      */
-    CreateUserRequest& withDescription(const Char* description)
+    CreateUserRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -219,33 +170,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CreateUserRequest& withGs2ClientId(const Char* gs2ClientId)
+    CreateUserRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CreateUserRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CreateUserRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -254,9 +181,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CreateUserRequest& withRequestId(const Char* gs2RequestId)
+    CreateUserRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

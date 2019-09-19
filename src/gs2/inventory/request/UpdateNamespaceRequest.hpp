@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2InventoryConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inventory
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** カテゴリー名 */
@@ -52,104 +54,59 @@ private:
         /** アイテム消費するときに実行するスクリプト */
         optional<ScriptSetting> consumeScript;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
-            description(data.description),
-            acquireScript(data.acquireScript),
-            overflowScript(data.overflowScript),
-            consumeScript(data.consumeScript)
-        {}
+            description(data.description)
+        {
+            if (data.acquireScript)
+            {
+                acquireScript = data.acquireScript->deepCopy();
+            }
+            if (data.overflowScript)
+            {
+                overflowScript = data.overflowScript->deepCopy();
+            }
+            if (data.consumeScript)
+            {
+                consumeScript = data.consumeScript->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            description(std::move(data.description)),
-            acquireScript(std::move(data.acquireScript)),
-            overflowScript(std::move(data.overflowScript)),
-            consumeScript(std::move(data.consumeScript))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    UpdateNamespaceRequest() :
-        m_pData(nullptr)
-    {}
+    UpdateNamespaceRequest() = default;
+    UpdateNamespaceRequest(const UpdateNamespaceRequest& updateNamespaceRequest) = default;
+    UpdateNamespaceRequest(UpdateNamespaceRequest&& updateNamespaceRequest) = default;
+    ~UpdateNamespaceRequest() GS2_OVERRIDE = default;
 
-    UpdateNamespaceRequest(const UpdateNamespaceRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Inventory(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    UpdateNamespaceRequest& operator=(const UpdateNamespaceRequest& updateNamespaceRequest) = default;
+    UpdateNamespaceRequest& operator=(UpdateNamespaceRequest&& updateNamespaceRequest) = default;
 
-    UpdateNamespaceRequest(UpdateNamespaceRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Inventory(std::move(obj)),
-        m_pData(obj.m_pData)
+    UpdateNamespaceRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~UpdateNamespaceRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateNamespaceRequest& operator=(const UpdateNamespaceRequest& updateNamespaceRequest)
-    {
-        Gs2BasicRequest::operator=(updateNamespaceRequest);
-        Gs2Inventory::operator=(updateNamespaceRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateNamespaceRequest.m_pData);
-
-        return *this;
-    }
-
-    UpdateNamespaceRequest& operator=(UpdateNamespaceRequest&& updateNamespaceRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(updateNamespaceRequest));
-        Gs2Inventory::operator=(std::move(updateNamespaceRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateNamespaceRequest.m_pData;
-        updateNamespaceRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateNamespaceRequest);
     }
 
     const UpdateNamespaceRequest* operator->() const
@@ -177,9 +134,9 @@ public:
      *
      * @param namespaceName カテゴリー名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -187,9 +144,9 @@ public:
      *
      * @param namespaceName カテゴリー名
      */
-    UpdateNamespaceRequest& withNamespaceName(const Char* namespaceName)
+    UpdateNamespaceRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -208,9 +165,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -218,9 +175,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    UpdateNamespaceRequest& withDescription(const Char* description)
+    UpdateNamespaceRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -239,9 +196,9 @@ public:
      *
      * @param acquireScript アイテム入手したときに実行するスクリプト
      */
-    void setAcquireScript(const ScriptSetting& acquireScript)
+    void setAcquireScript(ScriptSetting acquireScript)
     {
-        ensureData().acquireScript.emplace(acquireScript);
+        ensureData().acquireScript.emplace(std::move(acquireScript));
     }
 
     /**
@@ -249,9 +206,9 @@ public:
      *
      * @param acquireScript アイテム入手したときに実行するスクリプト
      */
-    UpdateNamespaceRequest& withAcquireScript(const ScriptSetting& acquireScript)
+    UpdateNamespaceRequest& withAcquireScript(ScriptSetting acquireScript)
     {
-        ensureData().acquireScript.emplace(acquireScript);
+        ensureData().acquireScript.emplace(std::move(acquireScript));
         return *this;
     }
 
@@ -270,9 +227,9 @@ public:
      *
      * @param overflowScript 入手上限に当たって入手できなかったときに実行するスクリプト
      */
-    void setOverflowScript(const ScriptSetting& overflowScript)
+    void setOverflowScript(ScriptSetting overflowScript)
     {
-        ensureData().overflowScript.emplace(overflowScript);
+        ensureData().overflowScript.emplace(std::move(overflowScript));
     }
 
     /**
@@ -280,9 +237,9 @@ public:
      *
      * @param overflowScript 入手上限に当たって入手できなかったときに実行するスクリプト
      */
-    UpdateNamespaceRequest& withOverflowScript(const ScriptSetting& overflowScript)
+    UpdateNamespaceRequest& withOverflowScript(ScriptSetting overflowScript)
     {
-        ensureData().overflowScript.emplace(overflowScript);
+        ensureData().overflowScript.emplace(std::move(overflowScript));
         return *this;
     }
 
@@ -301,9 +258,9 @@ public:
      *
      * @param consumeScript アイテム消費するときに実行するスクリプト
      */
-    void setConsumeScript(const ScriptSetting& consumeScript)
+    void setConsumeScript(ScriptSetting consumeScript)
     {
-        ensureData().consumeScript.emplace(consumeScript);
+        ensureData().consumeScript.emplace(std::move(consumeScript));
     }
 
     /**
@@ -311,9 +268,9 @@ public:
      *
      * @param consumeScript アイテム消費するときに実行するスクリプト
      */
-    UpdateNamespaceRequest& withConsumeScript(const ScriptSetting& consumeScript)
+    UpdateNamespaceRequest& withConsumeScript(ScriptSetting consumeScript)
     {
-        ensureData().consumeScript.emplace(consumeScript);
+        ensureData().consumeScript.emplace(std::move(consumeScript));
         return *this;
     }
 
@@ -324,33 +281,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    UpdateNamespaceRequest& withGs2ClientId(const Char* gs2ClientId)
+    UpdateNamespaceRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    UpdateNamespaceRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    UpdateNamespaceRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -359,9 +292,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    UpdateNamespaceRequest& withRequestId(const Char* gs2RequestId)
+    UpdateNamespaceRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

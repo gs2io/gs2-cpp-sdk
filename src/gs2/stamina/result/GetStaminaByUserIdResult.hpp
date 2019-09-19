@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace stamina
 {
@@ -43,28 +45,28 @@ private:
         /** スタミナ */
         optional<Stamina> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GetStaminaByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    GetStaminaByUserIdResult() = default;
+    GetStaminaByUserIdResult(const GetStaminaByUserIdResult& getStaminaByUserIdResult) = default;
+    GetStaminaByUserIdResult(GetStaminaByUserIdResult&& getStaminaByUserIdResult) = default;
+    ~GetStaminaByUserIdResult() = default;
 
-    GetStaminaByUserIdResult(const GetStaminaByUserIdResult& getStaminaByUserIdResult) :
-        Gs2Object(getStaminaByUserIdResult),
-        m_pData(getStaminaByUserIdResult.m_pData != nullptr ? new Data(*getStaminaByUserIdResult.m_pData) : nullptr)
-    {}
+    GetStaminaByUserIdResult& operator=(const GetStaminaByUserIdResult& getStaminaByUserIdResult) = default;
+    GetStaminaByUserIdResult& operator=(GetStaminaByUserIdResult&& getStaminaByUserIdResult) = default;
 
-    GetStaminaByUserIdResult(GetStaminaByUserIdResult&& getStaminaByUserIdResult) :
-        Gs2Object(std::move(getStaminaByUserIdResult)),
-        m_pData(getStaminaByUserIdResult.m_pData)
+    GetStaminaByUserIdResult deepCopy() const
     {
-        getStaminaByUserIdResult.m_pData = nullptr;
-    }
-
-    ~GetStaminaByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetStaminaByUserIdResult& operator=(const GetStaminaByUserIdResult& getStaminaByUserIdResult)
-    {
-        Gs2Object::operator=(getStaminaByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getStaminaByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    GetStaminaByUserIdResult& operator=(GetStaminaByUserIdResult&& getStaminaByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(getStaminaByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getStaminaByUserIdResult.m_pData;
-        getStaminaByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetStaminaByUserIdResult);
     }
 
     const GetStaminaByUserIdResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item スタミナ
      */
-    void setItem(const Stamina& item)
+    void setItem(Stamina item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

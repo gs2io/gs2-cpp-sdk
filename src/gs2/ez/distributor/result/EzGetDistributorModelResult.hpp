@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace distributor {
 class EzGetDistributorModelResult : public gs2::Gs2Object
 {
 private:
-    /** 配信設定 */
-    EzDistributorModel m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 配信設定 */
+        EzDistributorModel item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::distributor::GetDistributorModelResult& getDistributorModelResult) :
+            item(*getDistributorModelResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetDistributorModelResult(const gs2::distributor::GetDistributorModelResult& result) :
-        m_Item(*result.getItem())
+    EzGetDistributorModelResult() = default;
+    EzGetDistributorModelResult(const EzGetDistributorModelResult& result) = default;
+    EzGetDistributorModelResult(EzGetDistributorModelResult&& result) = default;
+    ~EzGetDistributorModelResult() = default;
+
+    EzGetDistributorModelResult(gs2::distributor::GetDistributorModelResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetDistributorModelResult& operator=(const EzGetDistributorModelResult& result) = default;
+    EzGetDistributorModelResult& operator=(EzGetDistributorModelResult&& result) = default;
+
+    EzGetDistributorModelResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetDistributorModelResult);
     }
 
     static bool isConvertible(const gs2::distributor::GetDistributorModelResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzDistributorModel& getItem() const
     {
-        return m_Item;
-    }
-
-    EzDistributorModel& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

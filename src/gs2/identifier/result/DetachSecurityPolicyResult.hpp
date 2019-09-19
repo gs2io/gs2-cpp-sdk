@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace identifier
 {
@@ -43,28 +45,28 @@ private:
         /** 剥奪したあとユーザーに引き続き割り当てられているセキュリティポリシーのリスト */
         optional<List<SecurityPolicy>> items;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            items(data.items)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -79,72 +81,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DetachSecurityPolicyResult() :
-        m_pData(nullptr)
-    {}
+    DetachSecurityPolicyResult() = default;
+    DetachSecurityPolicyResult(const DetachSecurityPolicyResult& detachSecurityPolicyResult) = default;
+    DetachSecurityPolicyResult(DetachSecurityPolicyResult&& detachSecurityPolicyResult) = default;
+    ~DetachSecurityPolicyResult() = default;
 
-    DetachSecurityPolicyResult(const DetachSecurityPolicyResult& detachSecurityPolicyResult) :
-        Gs2Object(detachSecurityPolicyResult),
-        m_pData(detachSecurityPolicyResult.m_pData != nullptr ? new Data(*detachSecurityPolicyResult.m_pData) : nullptr)
-    {}
+    DetachSecurityPolicyResult& operator=(const DetachSecurityPolicyResult& detachSecurityPolicyResult) = default;
+    DetachSecurityPolicyResult& operator=(DetachSecurityPolicyResult&& detachSecurityPolicyResult) = default;
 
-    DetachSecurityPolicyResult(DetachSecurityPolicyResult&& detachSecurityPolicyResult) :
-        Gs2Object(std::move(detachSecurityPolicyResult)),
-        m_pData(detachSecurityPolicyResult.m_pData)
+    DetachSecurityPolicyResult deepCopy() const
     {
-        detachSecurityPolicyResult.m_pData = nullptr;
-    }
-
-    ~DetachSecurityPolicyResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DetachSecurityPolicyResult& operator=(const DetachSecurityPolicyResult& detachSecurityPolicyResult)
-    {
-        Gs2Object::operator=(detachSecurityPolicyResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*detachSecurityPolicyResult.m_pData);
-
-        return *this;
-    }
-
-    DetachSecurityPolicyResult& operator=(DetachSecurityPolicyResult&& detachSecurityPolicyResult)
-    {
-        Gs2Object::operator=(std::move(detachSecurityPolicyResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = detachSecurityPolicyResult.m_pData;
-        detachSecurityPolicyResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DetachSecurityPolicyResult);
     }
 
     const DetachSecurityPolicyResult* operator->() const
@@ -171,9 +121,9 @@ public:
      *
      * @param items 剥奪したあとユーザーに引き続き割り当てられているセキュリティポリシーのリスト
      */
-    void setItems(const List<SecurityPolicy>& items)
+    void setItems(List<SecurityPolicy> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
 

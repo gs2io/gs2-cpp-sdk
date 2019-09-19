@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace jobQueue {
@@ -62,8 +64,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -77,85 +78,83 @@ private:
             index(data.index),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            jobId(std::move(data.jobId)),
-            name(std::move(data.name)),
-            userId(std::move(data.userId)),
-            scriptId(std::move(data.scriptId)),
-            args(std::move(data.args)),
-            currentRetryCount(std::move(data.currentRetryCount)),
-            maxTryCount(std::move(data.maxTryCount)),
-            index(std::move(data.index)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "jobId") == 0) {
+            if (std::strcmp(name_, "jobId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->jobId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "scriptId") == 0) {
+            else if (std::strcmp(name_, "scriptId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->scriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "args") == 0) {
+            else if (std::strcmp(name_, "args") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->args.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "currentRetryCount") == 0) {
+            else if (std::strcmp(name_, "currentRetryCount") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->currentRetryCount = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "maxTryCount") == 0) {
+            else if (std::strcmp(name_, "maxTryCount") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->maxTryCount = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "index") == 0) {
+            else if (std::strcmp(name_, "index") == 0)
+            {
                 if (jsonValue.IsDouble())
                 {
                     this->index = jsonValue.GetDouble();
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -164,72 +163,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Job() :
-        m_pData(nullptr)
-    {}
+    Job() = default;
+    Job(const Job& job) = default;
+    Job(Job&& job) = default;
+    ~Job() = default;
 
-    Job(const Job& job) :
-        Gs2Object(job),
-        m_pData(job.m_pData != nullptr ? new Data(*job.m_pData) : nullptr)
-    {}
+    Job& operator=(const Job& job) = default;
+    Job& operator=(Job&& job) = default;
 
-    Job(Job&& job) :
-        Gs2Object(std::move(job)),
-        m_pData(job.m_pData)
+    Job deepCopy() const
     {
-        job.m_pData = nullptr;
-    }
-
-    ~Job()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Job& operator=(const Job& job)
-    {
-        Gs2Object::operator=(job);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*job.m_pData);
-
-        return *this;
-    }
-
-    Job& operator=(Job&& job)
-    {
-        Gs2Object::operator=(std::move(job));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = job.m_pData;
-        job.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Job);
     }
 
     const Job* operator->() const
@@ -256,9 +203,9 @@ public:
      *
      * @param jobId ジョブ
      */
-    void setJobId(const Char* jobId)
+    void setJobId(StringHolder jobId)
     {
-        ensureData().jobId.emplace(jobId);
+        ensureData().jobId.emplace(std::move(jobId));
     }
 
     /**
@@ -266,9 +213,9 @@ public:
      *
      * @param jobId ジョブ
      */
-    Job& withJobId(const Char* jobId)
+    Job& withJobId(StringHolder jobId)
     {
-        setJobId(jobId);
+        setJobId(std::move(jobId));
         return *this;
     }
 
@@ -287,9 +234,9 @@ public:
      *
      * @param name ジョブの名前
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -297,9 +244,9 @@ public:
      *
      * @param name ジョブの名前
      */
-    Job& withName(const Char* name)
+    Job& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -318,9 +265,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -328,9 +275,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    Job& withUserId(const Char* userId)
+    Job& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -349,9 +296,9 @@ public:
      *
      * @param scriptId ジョブの実行に使用するスクリプト のGRN
      */
-    void setScriptId(const Char* scriptId)
+    void setScriptId(StringHolder scriptId)
     {
-        ensureData().scriptId.emplace(scriptId);
+        ensureData().scriptId.emplace(std::move(scriptId));
     }
 
     /**
@@ -359,9 +306,9 @@ public:
      *
      * @param scriptId ジョブの実行に使用するスクリプト のGRN
      */
-    Job& withScriptId(const Char* scriptId)
+    Job& withScriptId(StringHolder scriptId)
     {
-        setScriptId(scriptId);
+        setScriptId(std::move(scriptId));
         return *this;
     }
 
@@ -380,9 +327,9 @@ public:
      *
      * @param args 引数
      */
-    void setArgs(const Char* args)
+    void setArgs(StringHolder args)
     {
-        ensureData().args.emplace(args);
+        ensureData().args.emplace(std::move(args));
     }
 
     /**
@@ -390,9 +337,9 @@ public:
      *
      * @param args 引数
      */
-    Job& withArgs(const Char* args)
+    Job& withArgs(StringHolder args)
     {
-        setArgs(args);
+        setArgs(std::move(args));
         return *this;
     }
 
@@ -562,7 +509,7 @@ inline bool operator!=(const Job& lhs, const Job& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

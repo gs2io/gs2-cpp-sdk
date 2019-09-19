@@ -28,10 +28,10 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::describeBoxes(
-    std::function<void(AsyncEzDescribeBoxesResult&)> callback,
+    std::function<void(AsyncEzDescribeBoxesResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* pageToken,
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> pageToken,
     gs2::optional<Int64> limit
 )
 {
@@ -39,16 +39,16 @@ void Client::describeBoxes(
     request.setNamespaceName(namespaceName);
     if (pageToken)
     {
-        request.setPageToken(pageToken);
+        request.setPageToken(std::move(*pageToken));
     }
     if (limit)
     {
-        request.setLimit(*limit);
+        request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.describeBoxes(
         request,
-        [callback](gs2::lottery::AsyncDescribeBoxesResult& r)
+        [callback](gs2::lottery::AsyncDescribeBoxesResult r)
         {
             if (r.getError())
             {
@@ -74,10 +74,10 @@ void Client::describeBoxes(
 }
 
 void Client::getBox(
-    std::function<void(AsyncEzGetBoxResult&)> callback,
+    std::function<void(AsyncEzGetBoxResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* lotteryName
+    StringHolder namespaceName,
+    StringHolder lotteryName
 )
 {
     gs2::lottery::GetBoxRequest request;
@@ -86,7 +86,7 @@ void Client::getBox(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.getBox(
         request,
-        [callback](gs2::lottery::AsyncGetBoxResult& r)
+        [callback](gs2::lottery::AsyncGetBoxResult r)
         {
             if (r.getError())
             {
@@ -112,10 +112,10 @@ void Client::getBox(
 }
 
 void Client::resetBox(
-    std::function<void(AsyncEzResetBoxResult&)> callback,
+    std::function<void(AsyncEzResetBoxResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* lotteryName
+    StringHolder namespaceName,
+    StringHolder lotteryName
 )
 {
     gs2::lottery::ResetBoxRequest request;
@@ -124,7 +124,7 @@ void Client::resetBox(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.resetBox(
         request,
-        [callback](gs2::lottery::AsyncResetBoxResult& r)
+        [callback](gs2::lottery::AsyncResetBoxResult r)
         {
             if (r.getError())
             {
@@ -142,10 +142,10 @@ void Client::resetBox(
 }
 
 void Client::listProbabilities(
-    std::function<void(AsyncEzListProbabilitiesResult&)> callback,
+    std::function<void(AsyncEzListProbabilitiesResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* lotteryName
+    StringHolder namespaceName,
+    StringHolder lotteryName
 )
 {
     gs2::lottery::DescribeProbabilitiesRequest request;
@@ -154,7 +154,7 @@ void Client::listProbabilities(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.describeProbabilities(
         request,
-        [callback](gs2::lottery::AsyncDescribeProbabilitiesResult& r)
+        [callback](gs2::lottery::AsyncDescribeProbabilitiesResult r)
         {
             if (r.getError())
             {

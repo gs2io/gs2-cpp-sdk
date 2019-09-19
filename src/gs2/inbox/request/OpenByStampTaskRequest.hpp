@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2InboxConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inbox
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** スタンプタスク */
@@ -48,100 +50,48 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             stampTask(data.stampTask),
             keyId(data.keyId),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            stampTask(std::move(data.stampTask)),
-            keyId(std::move(data.keyId)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    OpenByStampTaskRequest() :
-        m_pData(nullptr)
-    {}
+    OpenByStampTaskRequest() = default;
+    OpenByStampTaskRequest(const OpenByStampTaskRequest& openByStampTaskRequest) = default;
+    OpenByStampTaskRequest(OpenByStampTaskRequest&& openByStampTaskRequest) = default;
+    ~OpenByStampTaskRequest() GS2_OVERRIDE = default;
 
-    OpenByStampTaskRequest(const OpenByStampTaskRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Inbox(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    OpenByStampTaskRequest& operator=(const OpenByStampTaskRequest& openByStampTaskRequest) = default;
+    OpenByStampTaskRequest& operator=(OpenByStampTaskRequest&& openByStampTaskRequest) = default;
 
-    OpenByStampTaskRequest(OpenByStampTaskRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Inbox(std::move(obj)),
-        m_pData(obj.m_pData)
+    OpenByStampTaskRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~OpenByStampTaskRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    OpenByStampTaskRequest& operator=(const OpenByStampTaskRequest& openByStampTaskRequest)
-    {
-        Gs2BasicRequest::operator=(openByStampTaskRequest);
-        Gs2Inbox::operator=(openByStampTaskRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*openByStampTaskRequest.m_pData);
-
-        return *this;
-    }
-
-    OpenByStampTaskRequest& operator=(OpenByStampTaskRequest&& openByStampTaskRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(openByStampTaskRequest));
-        Gs2Inbox::operator=(std::move(openByStampTaskRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = openByStampTaskRequest.m_pData;
-        openByStampTaskRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(OpenByStampTaskRequest);
     }
 
     const OpenByStampTaskRequest* operator->() const
@@ -169,9 +119,9 @@ public:
      *
      * @param stampTask スタンプタスク
      */
-    void setStampTask(const Char* stampTask)
+    void setStampTask(StringHolder stampTask)
     {
-        ensureData().stampTask.emplace(stampTask);
+        ensureData().stampTask.emplace(std::move(stampTask));
     }
 
     /**
@@ -179,9 +129,9 @@ public:
      *
      * @param stampTask スタンプタスク
      */
-    OpenByStampTaskRequest& withStampTask(const Char* stampTask)
+    OpenByStampTaskRequest& withStampTask(StringHolder stampTask)
     {
-        ensureData().stampTask.emplace(stampTask);
+        ensureData().stampTask.emplace(std::move(stampTask));
         return *this;
     }
 
@@ -200,9 +150,9 @@ public:
      *
      * @param keyId スタンプタスクの署名検証に使用する 暗号鍵 のGRN
      */
-    void setKeyId(const Char* keyId)
+    void setKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
     }
 
     /**
@@ -210,9 +160,9 @@ public:
      *
      * @param keyId スタンプタスクの署名検証に使用する 暗号鍵 のGRN
      */
-    OpenByStampTaskRequest& withKeyId(const Char* keyId)
+    OpenByStampTaskRequest& withKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
         return *this;
     }
 
@@ -231,9 +181,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -241,9 +191,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    OpenByStampTaskRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    OpenByStampTaskRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -254,33 +204,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    OpenByStampTaskRequest& withGs2ClientId(const Char* gs2ClientId)
+    OpenByStampTaskRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    OpenByStampTaskRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    OpenByStampTaskRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -289,9 +215,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    OpenByStampTaskRequest& withRequestId(const Char* gs2RequestId)
+    OpenByStampTaskRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

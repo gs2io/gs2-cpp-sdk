@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2DeployConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace deploy
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** スタック名 */
@@ -48,100 +50,48 @@ private:
         /** テンプレートデータ */
         optional<StringHolder> template_;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             name(data.name),
             description(data.description),
             template_(data.template_)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            template_(std::move(data.template_))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CreateStackRequest() :
-        m_pData(nullptr)
-    {}
+    CreateStackRequest() = default;
+    CreateStackRequest(const CreateStackRequest& createStackRequest) = default;
+    CreateStackRequest(CreateStackRequest&& createStackRequest) = default;
+    ~CreateStackRequest() GS2_OVERRIDE = default;
 
-    CreateStackRequest(const CreateStackRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Deploy(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CreateStackRequest& operator=(const CreateStackRequest& createStackRequest) = default;
+    CreateStackRequest& operator=(CreateStackRequest&& createStackRequest) = default;
 
-    CreateStackRequest(CreateStackRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Deploy(std::move(obj)),
-        m_pData(obj.m_pData)
+    CreateStackRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CreateStackRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateStackRequest& operator=(const CreateStackRequest& createStackRequest)
-    {
-        Gs2BasicRequest::operator=(createStackRequest);
-        Gs2Deploy::operator=(createStackRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createStackRequest.m_pData);
-
-        return *this;
-    }
-
-    CreateStackRequest& operator=(CreateStackRequest&& createStackRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(createStackRequest));
-        Gs2Deploy::operator=(std::move(createStackRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createStackRequest.m_pData;
-        createStackRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateStackRequest);
     }
 
     const CreateStackRequest* operator->() const
@@ -169,9 +119,9 @@ public:
      *
      * @param name スタック名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -179,9 +129,9 @@ public:
      *
      * @param name スタック名
      */
-    CreateStackRequest& withName(const Char* name)
+    CreateStackRequest& withName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
         return *this;
     }
 
@@ -200,9 +150,9 @@ public:
      *
      * @param description スタックの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -210,9 +160,9 @@ public:
      *
      * @param description スタックの説明
      */
-    CreateStackRequest& withDescription(const Char* description)
+    CreateStackRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -231,9 +181,9 @@ public:
      *
      * @param template_ テンプレートデータ
      */
-    void setTemplate(const Char* template_)
+    void setTemplate(StringHolder template_)
     {
-        ensureData().template_.emplace(template_);
+        ensureData().template_.emplace(std::move(template_));
     }
 
     /**
@@ -241,9 +191,9 @@ public:
      *
      * @param template_ テンプレートデータ
      */
-    CreateStackRequest& withTemplate(const Char* template_)
+    CreateStackRequest& withTemplate(StringHolder template_)
     {
-        ensureData().template_.emplace(template_);
+        ensureData().template_.emplace(std::move(template_));
         return *this;
     }
 
@@ -254,33 +204,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CreateStackRequest& withGs2ClientId(const Char* gs2ClientId)
+    CreateStackRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CreateStackRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CreateStackRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -289,9 +215,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CreateStackRequest& withRequestId(const Char* gs2RequestId)
+    CreateStackRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

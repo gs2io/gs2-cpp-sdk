@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "OutputField.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace deploy {
@@ -67,8 +69,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -77,70 +78,71 @@ private:
             type(data.type),
             name(data.name),
             request(data.request),
-            after(data.after),
             rollbackContext(data.rollbackContext),
             rollbackRequest(data.rollbackRequest),
-            rollbackAfter(data.rollbackAfter),
-            outputFields(data.outputFields),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.after)
+            {
+                after = data.after->deepCopy();
+            }
+            if (data.rollbackAfter)
+            {
+                rollbackAfter = data.rollbackAfter->deepCopy();
+            }
+            if (data.outputFields)
+            {
+                outputFields = data.outputFields->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            resourceId(std::move(data.resourceId)),
-            context(std::move(data.context)),
-            type(std::move(data.type)),
-            name(std::move(data.name)),
-            request(std::move(data.request)),
-            after(std::move(data.after)),
-            rollbackContext(std::move(data.rollbackContext)),
-            rollbackRequest(std::move(data.rollbackRequest)),
-            rollbackAfter(std::move(data.rollbackAfter)),
-            outputFields(std::move(data.outputFields)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "resourceId") == 0) {
+            if (std::strcmp(name_, "resourceId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->resourceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "context") == 0) {
+            else if (std::strcmp(name_, "context") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->context.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "type") == 0) {
+            else if (std::strcmp(name_, "type") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->type.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "request") == 0) {
+            else if (std::strcmp(name_, "request") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->request.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "after") == 0) {
+            else if (std::strcmp(name_, "after") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -155,19 +157,22 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "rollbackContext") == 0) {
+            else if (std::strcmp(name_, "rollbackContext") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->rollbackContext.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "rollbackRequest") == 0) {
+            else if (std::strcmp(name_, "rollbackRequest") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->rollbackRequest.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "rollbackAfter") == 0) {
+            else if (std::strcmp(name_, "rollbackAfter") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -182,7 +187,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "outputFields") == 0) {
+            else if (std::strcmp(name_, "outputFields") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -194,13 +200,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -209,72 +217,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    WorkingResource() :
-        m_pData(nullptr)
-    {}
+    WorkingResource() = default;
+    WorkingResource(const WorkingResource& workingResource) = default;
+    WorkingResource(WorkingResource&& workingResource) = default;
+    ~WorkingResource() = default;
 
-    WorkingResource(const WorkingResource& workingResource) :
-        Gs2Object(workingResource),
-        m_pData(workingResource.m_pData != nullptr ? new Data(*workingResource.m_pData) : nullptr)
-    {}
+    WorkingResource& operator=(const WorkingResource& workingResource) = default;
+    WorkingResource& operator=(WorkingResource&& workingResource) = default;
 
-    WorkingResource(WorkingResource&& workingResource) :
-        Gs2Object(std::move(workingResource)),
-        m_pData(workingResource.m_pData)
+    WorkingResource deepCopy() const
     {
-        workingResource.m_pData = nullptr;
-    }
-
-    ~WorkingResource()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    WorkingResource& operator=(const WorkingResource& workingResource)
-    {
-        Gs2Object::operator=(workingResource);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*workingResource.m_pData);
-
-        return *this;
-    }
-
-    WorkingResource& operator=(WorkingResource&& workingResource)
-    {
-        Gs2Object::operator=(std::move(workingResource));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = workingResource.m_pData;
-        workingResource.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(WorkingResource);
     }
 
     const WorkingResource* operator->() const
@@ -301,9 +257,9 @@ public:
      *
      * @param resourceId 作成中のリソース
      */
-    void setResourceId(const Char* resourceId)
+    void setResourceId(StringHolder resourceId)
     {
-        ensureData().resourceId.emplace(resourceId);
+        ensureData().resourceId.emplace(std::move(resourceId));
     }
 
     /**
@@ -311,9 +267,9 @@ public:
      *
      * @param resourceId 作成中のリソース
      */
-    WorkingResource& withResourceId(const Char* resourceId)
+    WorkingResource& withResourceId(StringHolder resourceId)
     {
-        setResourceId(resourceId);
+        setResourceId(std::move(resourceId));
         return *this;
     }
 
@@ -332,9 +288,9 @@ public:
      *
      * @param context 操作の種類
      */
-    void setContext(const Char* context)
+    void setContext(StringHolder context)
     {
-        ensureData().context.emplace(context);
+        ensureData().context.emplace(std::move(context));
     }
 
     /**
@@ -342,9 +298,9 @@ public:
      *
      * @param context 操作の種類
      */
-    WorkingResource& withContext(const Char* context)
+    WorkingResource& withContext(StringHolder context)
     {
-        setContext(context);
+        setContext(std::move(context));
         return *this;
     }
 
@@ -363,9 +319,9 @@ public:
      *
      * @param type 操作対象のリソース
      */
-    void setType(const Char* type)
+    void setType(StringHolder type)
     {
-        ensureData().type.emplace(type);
+        ensureData().type.emplace(std::move(type));
     }
 
     /**
@@ -373,9 +329,9 @@ public:
      *
      * @param type 操作対象のリソース
      */
-    WorkingResource& withType(const Char* type)
+    WorkingResource& withType(StringHolder type)
     {
-        setType(type);
+        setType(std::move(type));
         return *this;
     }
 
@@ -394,9 +350,9 @@ public:
      *
      * @param name 作成中のリソース名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -404,9 +360,9 @@ public:
      *
      * @param name 作成中のリソース名
      */
-    WorkingResource& withName(const Char* name)
+    WorkingResource& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -425,9 +381,9 @@ public:
      *
      * @param request リクエストパラメータ
      */
-    void setRequest(const Char* request)
+    void setRequest(StringHolder request)
     {
-        ensureData().request.emplace(request);
+        ensureData().request.emplace(std::move(request));
     }
 
     /**
@@ -435,9 +391,9 @@ public:
      *
      * @param request リクエストパラメータ
      */
-    WorkingResource& withRequest(const Char* request)
+    WorkingResource& withRequest(StringHolder request)
     {
-        setRequest(request);
+        setRequest(std::move(request));
         return *this;
     }
 
@@ -456,9 +412,9 @@ public:
      *
      * @param after 依存しているリソースの名前
      */
-    void setAfter(const List<StringHolder>& after)
+    void setAfter(List<StringHolder> after)
     {
-        ensureData().after.emplace(after);
+        ensureData().after.emplace(std::move(after));
     }
 
     /**
@@ -466,9 +422,9 @@ public:
      *
      * @param after 依存しているリソースの名前
      */
-    WorkingResource& withAfter(const List<StringHolder>& after)
+    WorkingResource& withAfter(List<StringHolder> after)
     {
-        setAfter(after);
+        setAfter(std::move(after));
         return *this;
     }
 
@@ -487,9 +443,9 @@ public:
      *
      * @param rollbackContext ロールバック操作の種類
      */
-    void setRollbackContext(const Char* rollbackContext)
+    void setRollbackContext(StringHolder rollbackContext)
     {
-        ensureData().rollbackContext.emplace(rollbackContext);
+        ensureData().rollbackContext.emplace(std::move(rollbackContext));
     }
 
     /**
@@ -497,9 +453,9 @@ public:
      *
      * @param rollbackContext ロールバック操作の種類
      */
-    WorkingResource& withRollbackContext(const Char* rollbackContext)
+    WorkingResource& withRollbackContext(StringHolder rollbackContext)
     {
-        setRollbackContext(rollbackContext);
+        setRollbackContext(std::move(rollbackContext));
         return *this;
     }
 
@@ -518,9 +474,9 @@ public:
      *
      * @param rollbackRequest ロールバック用のリクエストパラメータ
      */
-    void setRollbackRequest(const Char* rollbackRequest)
+    void setRollbackRequest(StringHolder rollbackRequest)
     {
-        ensureData().rollbackRequest.emplace(rollbackRequest);
+        ensureData().rollbackRequest.emplace(std::move(rollbackRequest));
     }
 
     /**
@@ -528,9 +484,9 @@ public:
      *
      * @param rollbackRequest ロールバック用のリクエストパラメータ
      */
-    WorkingResource& withRollbackRequest(const Char* rollbackRequest)
+    WorkingResource& withRollbackRequest(StringHolder rollbackRequest)
     {
-        setRollbackRequest(rollbackRequest);
+        setRollbackRequest(std::move(rollbackRequest));
         return *this;
     }
 
@@ -549,9 +505,9 @@ public:
      *
      * @param rollbackAfter ロールバック時に依存しているリソースの名前
      */
-    void setRollbackAfter(const List<StringHolder>& rollbackAfter)
+    void setRollbackAfter(List<StringHolder> rollbackAfter)
     {
-        ensureData().rollbackAfter.emplace(rollbackAfter);
+        ensureData().rollbackAfter.emplace(std::move(rollbackAfter));
     }
 
     /**
@@ -559,9 +515,9 @@ public:
      *
      * @param rollbackAfter ロールバック時に依存しているリソースの名前
      */
-    WorkingResource& withRollbackAfter(const List<StringHolder>& rollbackAfter)
+    WorkingResource& withRollbackAfter(List<StringHolder> rollbackAfter)
     {
-        setRollbackAfter(rollbackAfter);
+        setRollbackAfter(std::move(rollbackAfter));
         return *this;
     }
 
@@ -580,9 +536,9 @@ public:
      *
      * @param outputFields リソースを作成したときに Output に記録するフィールド
      */
-    void setOutputFields(const List<OutputField>& outputFields)
+    void setOutputFields(List<OutputField> outputFields)
     {
-        ensureData().outputFields.emplace(outputFields);
+        ensureData().outputFields.emplace(std::move(outputFields));
     }
 
     /**
@@ -590,9 +546,9 @@ public:
      *
      * @param outputFields リソースを作成したときに Output に記録するフィールド
      */
-    WorkingResource& withOutputFields(const List<OutputField>& outputFields)
+    WorkingResource& withOutputFields(List<OutputField> outputFields)
     {
-        setOutputFields(outputFields);
+        setOutputFields(std::move(outputFields));
         return *this;
     }
 
@@ -669,7 +625,7 @@ inline bool operator!=(const WorkingResource& lhs, const WorkingResource& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

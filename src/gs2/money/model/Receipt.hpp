@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace money {
@@ -64,8 +66,7 @@ private:
         /** 作成日時 */
         optional<Int64> createdAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -80,92 +81,90 @@ private:
             total(data.total),
             contentsId(data.contentsId),
             createdAt(data.createdAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            receiptId(std::move(data.receiptId)),
-            transactionId(std::move(data.transactionId)),
-            userId(std::move(data.userId)),
-            type(std::move(data.type)),
-            slot(std::move(data.slot)),
-            price(std::move(data.price)),
-            paid(std::move(data.paid)),
-            free(std::move(data.free)),
-            total(std::move(data.total)),
-            contentsId(std::move(data.contentsId)),
-            createdAt(std::move(data.createdAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "receiptId") == 0) {
+            if (std::strcmp(name_, "receiptId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->receiptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "transactionId") == 0) {
+            else if (std::strcmp(name_, "transactionId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->transactionId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "type") == 0) {
+            else if (std::strcmp(name_, "type") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->type.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "slot") == 0) {
+            else if (std::strcmp(name_, "slot") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->slot = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "price") == 0) {
+            else if (std::strcmp(name_, "price") == 0)
+            {
                 if (jsonValue.IsFloat())
                 {
                     this->price = jsonValue.GetFloat();
                 }
             }
-            else if (std::strcmp(name_, "paid") == 0) {
+            else if (std::strcmp(name_, "paid") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->paid = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "free") == 0) {
+            else if (std::strcmp(name_, "free") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->free = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "total") == 0) {
+            else if (std::strcmp(name_, "total") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->total = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "contentsId") == 0) {
+            else if (std::strcmp(name_, "contentsId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->contentsId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
@@ -174,72 +173,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Receipt() :
-        m_pData(nullptr)
-    {}
+    Receipt() = default;
+    Receipt(const Receipt& receipt) = default;
+    Receipt(Receipt&& receipt) = default;
+    ~Receipt() = default;
 
-    Receipt(const Receipt& receipt) :
-        Gs2Object(receipt),
-        m_pData(receipt.m_pData != nullptr ? new Data(*receipt.m_pData) : nullptr)
-    {}
+    Receipt& operator=(const Receipt& receipt) = default;
+    Receipt& operator=(Receipt&& receipt) = default;
 
-    Receipt(Receipt&& receipt) :
-        Gs2Object(std::move(receipt)),
-        m_pData(receipt.m_pData)
+    Receipt deepCopy() const
     {
-        receipt.m_pData = nullptr;
-    }
-
-    ~Receipt()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Receipt& operator=(const Receipt& receipt)
-    {
-        Gs2Object::operator=(receipt);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*receipt.m_pData);
-
-        return *this;
-    }
-
-    Receipt& operator=(Receipt&& receipt)
-    {
-        Gs2Object::operator=(std::move(receipt));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = receipt.m_pData;
-        receipt.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Receipt);
     }
 
     const Receipt* operator->() const
@@ -266,9 +213,9 @@ public:
      *
      * @param receiptId レシート
      */
-    void setReceiptId(const Char* receiptId)
+    void setReceiptId(StringHolder receiptId)
     {
-        ensureData().receiptId.emplace(receiptId);
+        ensureData().receiptId.emplace(std::move(receiptId));
     }
 
     /**
@@ -276,9 +223,9 @@ public:
      *
      * @param receiptId レシート
      */
-    Receipt& withReceiptId(const Char* receiptId)
+    Receipt& withReceiptId(StringHolder receiptId)
     {
-        setReceiptId(receiptId);
+        setReceiptId(std::move(receiptId));
         return *this;
     }
 
@@ -297,9 +244,9 @@ public:
      *
      * @param transactionId トランザクションID
      */
-    void setTransactionId(const Char* transactionId)
+    void setTransactionId(StringHolder transactionId)
     {
-        ensureData().transactionId.emplace(transactionId);
+        ensureData().transactionId.emplace(std::move(transactionId));
     }
 
     /**
@@ -307,9 +254,9 @@ public:
      *
      * @param transactionId トランザクションID
      */
-    Receipt& withTransactionId(const Char* transactionId)
+    Receipt& withTransactionId(StringHolder transactionId)
     {
-        setTransactionId(transactionId);
+        setTransactionId(std::move(transactionId));
         return *this;
     }
 
@@ -328,9 +275,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -338,9 +285,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    Receipt& withUserId(const Char* userId)
+    Receipt& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -359,9 +306,9 @@ public:
      *
      * @param type 種類
      */
-    void setType(const Char* type)
+    void setType(StringHolder type)
     {
-        ensureData().type.emplace(type);
+        ensureData().type.emplace(std::move(type));
     }
 
     /**
@@ -369,9 +316,9 @@ public:
      *
      * @param type 種類
      */
-    Receipt& withType(const Char* type)
+    Receipt& withType(StringHolder type)
     {
-        setType(type);
+        setType(std::move(type));
         return *this;
     }
 
@@ -545,9 +492,9 @@ public:
      *
      * @param contentsId ストアプラットフォームで販売されているコンテンツID
      */
-    void setContentsId(const Char* contentsId)
+    void setContentsId(StringHolder contentsId)
     {
-        ensureData().contentsId.emplace(contentsId);
+        ensureData().contentsId.emplace(std::move(contentsId));
     }
 
     /**
@@ -555,9 +502,9 @@ public:
      *
      * @param contentsId ストアプラットフォームで販売されているコンテンツID
      */
-    Receipt& withContentsId(const Char* contentsId)
+    Receipt& withContentsId(StringHolder contentsId)
     {
-        setContentsId(contentsId);
+        setContentsId(std::move(contentsId));
         return *this;
     }
 
@@ -603,7 +550,7 @@ inline bool operator!=(const Receipt& lhs, const Receipt& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

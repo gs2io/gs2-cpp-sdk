@@ -27,29 +27,73 @@ namespace gs2 { namespace ez { namespace mission {
 class EzComplete : public gs2::Gs2Object
 {
 private:
-    /** ミッショングループ名 */
-    gs2::optional<StringHolder> m_MissionGroupName;
-    /** 達成済みのタスク名リスト */
-    gs2::optional<List<StringHolder>> m_CompletedMissionTaskNames;
-    /** 報酬の受け取り済みのタスク名リスト */
-    gs2::optional<List<StringHolder>> m_ReceivedMissionTaskNames;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ミッショングループ名 */
+        gs2::optional<StringHolder> missionGroupName;
+        /** 達成済みのタスク名リスト */
+        gs2::optional<List<StringHolder>> completedMissionTaskNames;
+        /** 報酬の受け取り済みのタスク名リスト */
+        gs2::optional<List<StringHolder>> receivedMissionTaskNames;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            missionGroupName(data.missionGroupName)
+        {
+            if (data.completedMissionTaskNames)
+            {
+                completedMissionTaskNames = data.completedMissionTaskNames->deepCopy();
+            }
+            if (data.receivedMissionTaskNames)
+            {
+                receivedMissionTaskNames = data.receivedMissionTaskNames->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::mission::Complete& complete) :
+            missionGroupName(complete.getMissionGroupName()),
+            completedMissionTaskNames(complete.getCompletedMissionTaskNames()),
+            receivedMissionTaskNames(complete.getReceivedMissionTaskNames())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzComplete() = default;
+    EzComplete(const EzComplete& ezComplete) = default;
+    EzComplete(EzComplete&& ezComplete) = default;
+    ~EzComplete() = default;
 
     EzComplete(gs2::mission::Complete complete) :
-        m_MissionGroupName(complete.getMissionGroupName()),
-        m_CompletedMissionTaskNames(complete.getCompletedMissionTaskNames()),
-        m_ReceivedMissionTaskNames(complete.getReceivedMissionTaskNames())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(complete)
+    {}
+
+    EzComplete& operator=(const EzComplete& ezComplete) = default;
+    EzComplete& operator=(EzComplete&& ezComplete) = default;
+
+    EzComplete deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzComplete);
     }
 
     gs2::mission::Complete ToModel() const
     {
         gs2::mission::Complete complete;
-        complete.setMissionGroupName(*m_MissionGroupName);
-        complete.setCompletedMissionTaskNames(*m_CompletedMissionTaskNames);
-        complete.setReceivedMissionTaskNames(*m_ReceivedMissionTaskNames);
+        complete.setMissionGroupName(getMissionGroupName());
+        complete.setCompletedMissionTaskNames(getCompletedMissionTaskNames());
+        complete.setReceivedMissionTaskNames(getReceivedMissionTaskNames());
         return complete;
     }
 
@@ -57,90 +101,53 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getMissionGroupName() const
+    const StringHolder& getMissionGroupName() const
     {
-        return *m_MissionGroupName;
-    }
-
-    gs2::StringHolder& getMissionGroupName()
-    {
-        return *m_MissionGroupName;
+        return *ensureData().missionGroupName;
     }
 
     const List<StringHolder>& getCompletedMissionTaskNames() const
     {
-        return *m_CompletedMissionTaskNames;
-    }
-
-    List<StringHolder>& getCompletedMissionTaskNames()
-    {
-        return *m_CompletedMissionTaskNames;
+        return *ensureData().completedMissionTaskNames;
     }
 
     const List<StringHolder>& getReceivedMissionTaskNames() const
     {
-        return *m_ReceivedMissionTaskNames;
-    }
-
-    List<StringHolder>& getReceivedMissionTaskNames()
-    {
-        return *m_ReceivedMissionTaskNames;
+        return *ensureData().receivedMissionTaskNames;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setMissionGroupName(Char* missionGroupName)
+    void setMissionGroupName(StringHolder missionGroupName)
     {
-        m_MissionGroupName.emplace(missionGroupName);
+        ensureData().missionGroupName = std::move(missionGroupName);
     }
 
-    void setCompletedMissionTaskNames(const List<StringHolder>& completedMissionTaskNames)
+    void setCompletedMissionTaskNames(List<StringHolder> completedMissionTaskNames)
     {
-        m_CompletedMissionTaskNames = completedMissionTaskNames;
+        ensureData().completedMissionTaskNames = std::move(completedMissionTaskNames);
     }
 
-    void setCompletedMissionTaskNames(List<StringHolder>&& completedMissionTaskNames)
+    void setReceivedMissionTaskNames(List<StringHolder> receivedMissionTaskNames)
     {
-        m_CompletedMissionTaskNames = std::move(completedMissionTaskNames);
+        ensureData().receivedMissionTaskNames = std::move(receivedMissionTaskNames);
     }
 
-    void setReceivedMissionTaskNames(const List<StringHolder>& receivedMissionTaskNames)
+    EzComplete& withMissionGroupName(StringHolder missionGroupName)
     {
-        m_ReceivedMissionTaskNames = receivedMissionTaskNames;
-    }
-
-    void setReceivedMissionTaskNames(List<StringHolder>&& receivedMissionTaskNames)
-    {
-        m_ReceivedMissionTaskNames = std::move(receivedMissionTaskNames);
-    }
-
-    EzComplete& withMissionGroupName(Char* missionGroupName)
-    {
-        setMissionGroupName(missionGroupName);
+        setMissionGroupName(std::move(missionGroupName));
         return *this;
     }
 
-    EzComplete& withCompletedMissionTaskNames(const List<StringHolder>& completedMissionTaskNames)
-    {
-        setCompletedMissionTaskNames(completedMissionTaskNames);
-        return *this;
-    }
-
-    EzComplete& withCompletedMissionTaskNames(List<StringHolder>&& completedMissionTaskNames)
+    EzComplete& withCompletedMissionTaskNames(List<StringHolder> completedMissionTaskNames)
     {
         setCompletedMissionTaskNames(std::move(completedMissionTaskNames));
         return *this;
     }
 
-    EzComplete& withReceivedMissionTaskNames(const List<StringHolder>& receivedMissionTaskNames)
-    {
-        setReceivedMissionTaskNames(receivedMissionTaskNames);
-        return *this;
-    }
-
-    EzComplete& withReceivedMissionTaskNames(List<StringHolder>&& receivedMissionTaskNames)
+    EzComplete& withReceivedMissionTaskNames(List<StringHolder> receivedMissionTaskNames)
     {
         setReceivedMissionTaskNames(std::move(receivedMissionTaskNames));
         return *this;

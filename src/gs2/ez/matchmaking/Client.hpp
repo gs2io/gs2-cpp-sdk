@@ -56,9 +56,9 @@ public:
     /// <param name="capacityOfRoles">参加者</param>
     /// <param name="allowUserIds">参加を許可するユーザIDリスト</param>
     void createGathering(
-        std::function<void(AsyncEzCreateGatheringResult&)> callback,
+        std::function<void(AsyncEzCreateGatheringResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
+        StringHolder namespaceName,
         EzPlayer player,
         List<EzCapacityOfRole> capacityOfRoles,
         List<StringHolder> allowUserIds,
@@ -76,10 +76,10 @@ public:
     /// <param name="gatheringName">ギャザリング名</param>
     /// <param name="attributeRanges">募集条件</param>
     void updateGathering(
-        std::function<void(AsyncEzUpdateGatheringResult&)> callback,
+        std::function<void(AsyncEzUpdateGatheringResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* gatheringName,
+        StringHolder namespaceName,
+        StringHolder gatheringName,
         gs2::optional<List<EzAttributeRange>> attributeRanges=gs2::nullopt
     );
 
@@ -98,11 +98,11 @@ public:
     /// <param name="player">自身のプレイヤー情報</param>
     /// <param name="matchmakingContextToken">検索の再開に使用する マッチメイキングの状態を保持するトークン</param>
     void doMatchmaking(
-        std::function<void(AsyncEzDoMatchmakingResult&)> callback,
+        std::function<void(AsyncEzDoMatchmakingResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
+        StringHolder namespaceName,
         EzPlayer player,
-        const Char* matchmakingContextToken=nullptr
+        gs2::optional<StringHolder> matchmakingContextToken=gs2::nullopt
     );
 
     /// <summary>
@@ -113,9 +113,9 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="gatheringName">ギャザリング名</param>
     void getGathering(
-        std::function<void(AsyncEzGetGatheringResult&)> callback,
-        const Char* namespaceName,
-        const Char* gatheringName
+        std::function<void(AsyncEzGetGatheringResult)> callback,
+        StringHolder namespaceName,
+        StringHolder gatheringName
     );
 
     /// <summary>
@@ -130,10 +130,10 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="gatheringName">ギャザリング名</param>
     void cancelMatchmaking(
-        std::function<void(AsyncEzCancelMatchmakingResult&)> callback,
+        std::function<void(AsyncEzCancelMatchmakingResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* gatheringName
+        StringHolder namespaceName,
+        StringHolder gatheringName
     );
 };
 

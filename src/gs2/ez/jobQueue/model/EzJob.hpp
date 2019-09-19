@@ -27,29 +27,67 @@ namespace gs2 { namespace ez { namespace jobQueue {
 class EzJob : public gs2::Gs2Object
 {
 private:
-    /** ジョブ */
-    gs2::optional<StringHolder> m_JobId;
-    /** 現在のリトライ回数 */
-    gs2::optional<Int32> m_CurrentRetryCount;
-    /** 最大試行回数 */
-    gs2::optional<Int32> m_MaxTryCount;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ジョブ */
+        gs2::optional<StringHolder> jobId;
+        /** 現在のリトライ回数 */
+        gs2::optional<Int32> currentRetryCount;
+        /** 最大試行回数 */
+        gs2::optional<Int32> maxTryCount;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            jobId(data.jobId),
+            currentRetryCount(data.currentRetryCount),
+            maxTryCount(data.maxTryCount)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::jobQueue::Job& job) :
+            jobId(job.getJobId()),
+            currentRetryCount(job.getCurrentRetryCount() ? *job.getCurrentRetryCount() : 0),
+            maxTryCount(job.getMaxTryCount() ? *job.getMaxTryCount() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzJob() = default;
+    EzJob(const EzJob& ezJob) = default;
+    EzJob(EzJob&& ezJob) = default;
+    ~EzJob() = default;
 
     EzJob(gs2::jobQueue::Job job) :
-        m_JobId(job.getJobId()),
-        m_CurrentRetryCount(job.getCurrentRetryCount() ? *job.getCurrentRetryCount() : 0),
-        m_MaxTryCount(job.getMaxTryCount() ? *job.getMaxTryCount() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(job)
+    {}
+
+    EzJob& operator=(const EzJob& ezJob) = default;
+    EzJob& operator=(EzJob&& ezJob) = default;
+
+    EzJob deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzJob);
     }
 
     gs2::jobQueue::Job ToModel() const
     {
         gs2::jobQueue::Job job;
-        job.setJobId(*m_JobId);
-        job.setCurrentRetryCount(*m_CurrentRetryCount);
-        job.setMaxTryCount(*m_MaxTryCount);
+        job.setJobId(getJobId());
+        job.setCurrentRetryCount(getCurrentRetryCount());
+        job.setMaxTryCount(getMaxTryCount());
         return job;
     }
 
@@ -57,48 +95,43 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getJobId() const
+    const StringHolder& getJobId() const
     {
-        return *m_JobId;
-    }
-
-    gs2::StringHolder& getJobId()
-    {
-        return *m_JobId;
+        return *ensureData().jobId;
     }
 
     Int32 getCurrentRetryCount() const
     {
-        return *m_CurrentRetryCount;
+        return *ensureData().currentRetryCount;
     }
 
     Int32 getMaxTryCount() const
     {
-        return *m_MaxTryCount;
+        return *ensureData().maxTryCount;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setJobId(Char* jobId)
+    void setJobId(StringHolder jobId)
     {
-        m_JobId.emplace(jobId);
+        ensureData().jobId = std::move(jobId);
     }
 
     void setCurrentRetryCount(Int32 currentRetryCount)
     {
-        m_CurrentRetryCount = currentRetryCount;
+        ensureData().currentRetryCount = currentRetryCount;
     }
 
     void setMaxTryCount(Int32 maxTryCount)
     {
-        m_MaxTryCount = maxTryCount;
+        ensureData().maxTryCount = maxTryCount;
     }
 
-    EzJob& withJobId(Char* jobId)
+    EzJob& withJobId(StringHolder jobId)
     {
-        setJobId(jobId);
+        setJobId(std::move(jobId));
         return *this;
     }
 

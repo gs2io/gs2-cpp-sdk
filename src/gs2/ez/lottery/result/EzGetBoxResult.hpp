@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace lottery {
 class EzGetBoxResult : public gs2::Gs2Object
 {
 private:
-    /** ボックスから取り出したアイテムのリスト */
-    EzBoxItems m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ボックスから取り出したアイテムのリスト */
+        EzBoxItems item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::lottery::GetBoxResult& getBoxResult) :
+            item(*getBoxResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetBoxResult(const gs2::lottery::GetBoxResult& result) :
-        m_Item(*result.getItem())
+    EzGetBoxResult() = default;
+    EzGetBoxResult(const EzGetBoxResult& result) = default;
+    EzGetBoxResult(EzGetBoxResult&& result) = default;
+    ~EzGetBoxResult() = default;
+
+    EzGetBoxResult(gs2::lottery::GetBoxResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetBoxResult& operator=(const EzGetBoxResult& result) = default;
+    EzGetBoxResult& operator=(EzGetBoxResult&& result) = default;
+
+    EzGetBoxResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetBoxResult);
     }
 
     static bool isConvertible(const gs2::lottery::GetBoxResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzBoxItems& getItem() const
     {
-        return m_Item;
-    }
-
-    EzBoxItems& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

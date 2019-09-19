@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace project {
@@ -54,8 +56,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -65,57 +66,55 @@ private:
             description(data.description),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            projectId(std::move(data.projectId)),
-            accountName(std::move(data.accountName)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "projectId") == 0) {
+            if (std::strcmp(name_, "projectId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->projectId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "accountName") == 0) {
+            else if (std::strcmp(name_, "accountName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->accountName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -124,72 +123,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Project() :
-        m_pData(nullptr)
-    {}
+    Project() = default;
+    Project(const Project& project) = default;
+    Project(Project&& project) = default;
+    ~Project() = default;
 
-    Project(const Project& project) :
-        Gs2Object(project),
-        m_pData(project.m_pData != nullptr ? new Data(*project.m_pData) : nullptr)
-    {}
+    Project& operator=(const Project& project) = default;
+    Project& operator=(Project&& project) = default;
 
-    Project(Project&& project) :
-        Gs2Object(std::move(project)),
-        m_pData(project.m_pData)
+    Project deepCopy() const
     {
-        project.m_pData = nullptr;
-    }
-
-    ~Project()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Project& operator=(const Project& project)
-    {
-        Gs2Object::operator=(project);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*project.m_pData);
-
-        return *this;
-    }
-
-    Project& operator=(Project&& project)
-    {
-        Gs2Object::operator=(std::move(project));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = project.m_pData;
-        project.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Project);
     }
 
     const Project* operator->() const
@@ -216,9 +163,9 @@ public:
      *
      * @param projectId プロジェクト
      */
-    void setProjectId(const Char* projectId)
+    void setProjectId(StringHolder projectId)
     {
-        ensureData().projectId.emplace(projectId);
+        ensureData().projectId.emplace(std::move(projectId));
     }
 
     /**
@@ -226,9 +173,9 @@ public:
      *
      * @param projectId プロジェクト
      */
-    Project& withProjectId(const Char* projectId)
+    Project& withProjectId(StringHolder projectId)
     {
-        setProjectId(projectId);
+        setProjectId(std::move(projectId));
         return *this;
     }
 
@@ -247,9 +194,9 @@ public:
      *
      * @param accountName GS2アカウントの名前
      */
-    void setAccountName(const Char* accountName)
+    void setAccountName(StringHolder accountName)
     {
-        ensureData().accountName.emplace(accountName);
+        ensureData().accountName.emplace(std::move(accountName));
     }
 
     /**
@@ -257,9 +204,9 @@ public:
      *
      * @param accountName GS2アカウントの名前
      */
-    Project& withAccountName(const Char* accountName)
+    Project& withAccountName(StringHolder accountName)
     {
-        setAccountName(accountName);
+        setAccountName(std::move(accountName));
         return *this;
     }
 
@@ -278,9 +225,9 @@ public:
      *
      * @param name プロジェクト名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -288,9 +235,9 @@ public:
      *
      * @param name プロジェクト名
      */
-    Project& withName(const Char* name)
+    Project& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -309,9 +256,9 @@ public:
      *
      * @param description プロジェクトの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -319,9 +266,9 @@ public:
      *
      * @param description プロジェクトの説明
      */
-    Project& withDescription(const Char* description)
+    Project& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -398,7 +345,7 @@ inline bool operator!=(const Project& lhs, const Project& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

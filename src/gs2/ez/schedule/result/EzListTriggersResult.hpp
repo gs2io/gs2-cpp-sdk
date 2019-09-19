@@ -27,22 +27,61 @@ namespace gs2 { namespace ez { namespace schedule {
 class EzListTriggersResult : public gs2::Gs2Object
 {
 private:
-    /** トリガーのリスト */
-    List<EzTrigger> m_Items;
-    /** リストの続きを取得するためのページトークン */
-    optional<StringHolder> m_NextPageToken;
-
-public:
-    EzListTriggersResult(const gs2::schedule::DescribeTriggersResult& result) :
-        m_NextPageToken(result.getNextPageToken())
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** トリガーのリスト */
+        List<EzTrigger> items;
+        /** リストの続きを取得するためのページトークン */
+        optional<StringHolder> nextPageToken;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            nextPageToken(data.nextPageToken)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::schedule::DescribeTriggersResult& describeTriggersResult) :
+            nextPageToken(describeTriggersResult.getNextPageToken())
+        {
             {
-                m_Items += EzTrigger(list[i]);
+                auto& list = *describeTriggersResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzTrigger(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListTriggersResult() = default;
+    EzListTriggersResult(const EzListTriggersResult& result) = default;
+    EzListTriggersResult(EzListTriggersResult&& result) = default;
+    ~EzListTriggersResult() = default;
+
+    EzListTriggersResult(gs2::schedule::DescribeTriggersResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListTriggersResult& operator=(const EzListTriggersResult& result) = default;
+    EzListTriggersResult& operator=(EzListTriggersResult&& result) = default;
+
+    EzListTriggersResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListTriggersResult);
     }
 
     static bool isConvertible(const gs2::schedule::DescribeTriggersResult& result)
@@ -57,22 +96,12 @@ public:
 
     const List<EzTrigger>& getItems() const
     {
-        return m_Items;
+        return ensureData().items;
     }
 
-    List<EzTrigger>& getItems()
+    const optional<StringHolder>& getNextPageToken() const
     {
-        return m_Items;
-    }
-
-    const optional<gs2::StringHolder>& getNextPageToken() const
-    {
-        return m_NextPageToken;
-    }
-
-    optional<gs2::StringHolder>& getNextPageToken()
-    {
-        return m_NextPageToken;
+        return ensureData().nextPageToken;
     }
 };
 

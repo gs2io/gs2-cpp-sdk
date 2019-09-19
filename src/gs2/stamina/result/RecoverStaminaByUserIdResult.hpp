@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace stamina
 {
@@ -45,30 +47,29 @@ private:
         /** スタミナ値の上限を超えて受け取れずに GS2-Inbox に転送したスタミナ値 */
         optional<Int64> overflowValue;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            item(data.item),
             overflowValue(data.overflowValue)
-        {}
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item)),
-            overflowValue(std::move(data.overflowValue))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -76,7 +77,8 @@ private:
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "overflowValue") == 0) {
+            else if (std::strcmp(name_, "overflowValue") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->overflowValue = jsonValue.GetInt64();
@@ -85,72 +87,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    RecoverStaminaByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    RecoverStaminaByUserIdResult() = default;
+    RecoverStaminaByUserIdResult(const RecoverStaminaByUserIdResult& recoverStaminaByUserIdResult) = default;
+    RecoverStaminaByUserIdResult(RecoverStaminaByUserIdResult&& recoverStaminaByUserIdResult) = default;
+    ~RecoverStaminaByUserIdResult() = default;
 
-    RecoverStaminaByUserIdResult(const RecoverStaminaByUserIdResult& recoverStaminaByUserIdResult) :
-        Gs2Object(recoverStaminaByUserIdResult),
-        m_pData(recoverStaminaByUserIdResult.m_pData != nullptr ? new Data(*recoverStaminaByUserIdResult.m_pData) : nullptr)
-    {}
+    RecoverStaminaByUserIdResult& operator=(const RecoverStaminaByUserIdResult& recoverStaminaByUserIdResult) = default;
+    RecoverStaminaByUserIdResult& operator=(RecoverStaminaByUserIdResult&& recoverStaminaByUserIdResult) = default;
 
-    RecoverStaminaByUserIdResult(RecoverStaminaByUserIdResult&& recoverStaminaByUserIdResult) :
-        Gs2Object(std::move(recoverStaminaByUserIdResult)),
-        m_pData(recoverStaminaByUserIdResult.m_pData)
+    RecoverStaminaByUserIdResult deepCopy() const
     {
-        recoverStaminaByUserIdResult.m_pData = nullptr;
-    }
-
-    ~RecoverStaminaByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    RecoverStaminaByUserIdResult& operator=(const RecoverStaminaByUserIdResult& recoverStaminaByUserIdResult)
-    {
-        Gs2Object::operator=(recoverStaminaByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*recoverStaminaByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    RecoverStaminaByUserIdResult& operator=(RecoverStaminaByUserIdResult&& recoverStaminaByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(recoverStaminaByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = recoverStaminaByUserIdResult.m_pData;
-        recoverStaminaByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(RecoverStaminaByUserIdResult);
     }
 
     const RecoverStaminaByUserIdResult* operator->() const
@@ -177,9 +127,9 @@ public:
      *
      * @param item スタミナ
      */
-    void setItem(const Stamina& item)
+    void setItem(Stamina item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
     /**

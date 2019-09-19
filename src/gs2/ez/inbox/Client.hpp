@@ -52,10 +52,10 @@ public:
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
     void list(
-        std::function<void(AsyncEzListResult&)> callback,
+        std::function<void(AsyncEzListResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* pageToken=nullptr,
+        StringHolder namespaceName,
+        gs2::optional<StringHolder> pageToken=gs2::nullopt,
         gs2::optional<Int64> limit=gs2::nullopt
     );
 
@@ -69,10 +69,10 @@ public:
     /// <param name="namespaceName">プレゼントボックス名</param>
     /// <param name="messageName">メッセージID</param>
     void read(
-        std::function<void(AsyncEzReadResult&)> callback,
+        std::function<void(AsyncEzReadResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* messageName=nullptr
+        StringHolder namespaceName,
+        gs2::optional<StringHolder> messageName=gs2::nullopt
     );
 
     /// <summary>
@@ -87,10 +87,10 @@ public:
     /// <param name="namespaceName">プレゼントボックス名</param>
     /// <param name="messageName">メッセージID</param>
     void delete_(
-        std::function<void(AsyncEzDeleteResult&)> callback,
+        std::function<void(AsyncEzDeleteResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* messageName
+        StringHolder namespaceName,
+        StringHolder messageName
     );
 };
 

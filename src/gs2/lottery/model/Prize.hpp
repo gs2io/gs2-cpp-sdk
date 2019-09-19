@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "AcquireAction.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace lottery {
@@ -53,48 +55,46 @@ private:
         /** 排出重み */
         optional<Int32> weight;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             prizeId(data.prizeId),
             type(data.type),
-            acquireActions(data.acquireActions),
             prizeTableName(data.prizeTableName),
             weight(data.weight)
-        {}
+        {
+            if (data.acquireActions)
+            {
+                acquireActions = data.acquireActions->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            prizeId(std::move(data.prizeId)),
-            type(std::move(data.type)),
-            acquireActions(std::move(data.acquireActions)),
-            prizeTableName(std::move(data.prizeTableName)),
-            weight(std::move(data.weight))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "prizeId") == 0) {
+            if (std::strcmp(name_, "prizeId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->prizeId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "type") == 0) {
+            else if (std::strcmp(name_, "type") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->type.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "acquireActions") == 0) {
+            else if (std::strcmp(name_, "acquireActions") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -106,13 +106,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "prizeTableName") == 0) {
+            else if (std::strcmp(name_, "prizeTableName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->prizeTableName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "weight") == 0) {
+            else if (std::strcmp(name_, "weight") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->weight = jsonValue.GetInt();
@@ -121,72 +123,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Prize() :
-        m_pData(nullptr)
-    {}
+    Prize() = default;
+    Prize(const Prize& prize) = default;
+    Prize(Prize&& prize) = default;
+    ~Prize() = default;
 
-    Prize(const Prize& prize) :
-        Gs2Object(prize),
-        m_pData(prize.m_pData != nullptr ? new Data(*prize.m_pData) : nullptr)
-    {}
+    Prize& operator=(const Prize& prize) = default;
+    Prize& operator=(Prize&& prize) = default;
 
-    Prize(Prize&& prize) :
-        Gs2Object(std::move(prize)),
-        m_pData(prize.m_pData)
+    Prize deepCopy() const
     {
-        prize.m_pData = nullptr;
-    }
-
-    ~Prize()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Prize& operator=(const Prize& prize)
-    {
-        Gs2Object::operator=(prize);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*prize.m_pData);
-
-        return *this;
-    }
-
-    Prize& operator=(Prize&& prize)
-    {
-        Gs2Object::operator=(std::move(prize));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = prize.m_pData;
-        prize.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Prize);
     }
 
     const Prize* operator->() const
@@ -213,9 +163,9 @@ public:
      *
      * @param prizeId 景品ID
      */
-    void setPrizeId(const Char* prizeId)
+    void setPrizeId(StringHolder prizeId)
     {
-        ensureData().prizeId.emplace(prizeId);
+        ensureData().prizeId.emplace(std::move(prizeId));
     }
 
     /**
@@ -223,9 +173,9 @@ public:
      *
      * @param prizeId 景品ID
      */
-    Prize& withPrizeId(const Char* prizeId)
+    Prize& withPrizeId(StringHolder prizeId)
     {
-        setPrizeId(prizeId);
+        setPrizeId(std::move(prizeId));
         return *this;
     }
 
@@ -244,9 +194,9 @@ public:
      *
      * @param type 景品の種類
      */
-    void setType(const Char* type)
+    void setType(StringHolder type)
     {
-        ensureData().type.emplace(type);
+        ensureData().type.emplace(std::move(type));
     }
 
     /**
@@ -254,9 +204,9 @@ public:
      *
      * @param type 景品の種類
      */
-    Prize& withType(const Char* type)
+    Prize& withType(StringHolder type)
     {
-        setType(type);
+        setType(std::move(type));
         return *this;
     }
 
@@ -275,9 +225,9 @@ public:
      *
      * @param acquireActions 景品の入手アクションリスト
      */
-    void setAcquireActions(const List<AcquireAction>& acquireActions)
+    void setAcquireActions(List<AcquireAction> acquireActions)
     {
-        ensureData().acquireActions.emplace(acquireActions);
+        ensureData().acquireActions.emplace(std::move(acquireActions));
     }
 
     /**
@@ -285,9 +235,9 @@ public:
      *
      * @param acquireActions 景品の入手アクションリスト
      */
-    Prize& withAcquireActions(const List<AcquireAction>& acquireActions)
+    Prize& withAcquireActions(List<AcquireAction> acquireActions)
     {
-        setAcquireActions(acquireActions);
+        setAcquireActions(std::move(acquireActions));
         return *this;
     }
 
@@ -306,9 +256,9 @@ public:
      *
      * @param prizeTableName 排出確率テーブルの名前
      */
-    void setPrizeTableName(const Char* prizeTableName)
+    void setPrizeTableName(StringHolder prizeTableName)
     {
-        ensureData().prizeTableName.emplace(prizeTableName);
+        ensureData().prizeTableName.emplace(std::move(prizeTableName));
     }
 
     /**
@@ -316,9 +266,9 @@ public:
      *
      * @param prizeTableName 排出確率テーブルの名前
      */
-    Prize& withPrizeTableName(const Char* prizeTableName)
+    Prize& withPrizeTableName(StringHolder prizeTableName)
     {
-        setPrizeTableName(prizeTableName);
+        setPrizeTableName(std::move(prizeTableName));
         return *this;
     }
 
@@ -364,7 +314,7 @@ inline bool operator!=(const Prize& lhs, const Prize& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "DisplayItemMaster.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace showcase {
@@ -59,8 +61,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -68,57 +69,55 @@ private:
             name(data.name),
             description(data.description),
             metadata(data.metadata),
-            displayItems(data.displayItems),
             salesPeriodEventId(data.salesPeriodEventId),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.displayItems)
+            {
+                displayItems = data.displayItems->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            showcaseId(std::move(data.showcaseId)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            metadata(std::move(data.metadata)),
-            displayItems(std::move(data.displayItems)),
-            salesPeriodEventId(std::move(data.salesPeriodEventId)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "showcaseId") == 0) {
+            if (std::strcmp(name_, "showcaseId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->showcaseId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "displayItems") == 0) {
+            else if (std::strcmp(name_, "displayItems") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -130,19 +129,22 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "salesPeriodEventId") == 0) {
+            else if (std::strcmp(name_, "salesPeriodEventId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->salesPeriodEventId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -151,72 +153,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    ShowcaseMaster() :
-        m_pData(nullptr)
-    {}
+    ShowcaseMaster() = default;
+    ShowcaseMaster(const ShowcaseMaster& showcaseMaster) = default;
+    ShowcaseMaster(ShowcaseMaster&& showcaseMaster) = default;
+    ~ShowcaseMaster() = default;
 
-    ShowcaseMaster(const ShowcaseMaster& showcaseMaster) :
-        Gs2Object(showcaseMaster),
-        m_pData(showcaseMaster.m_pData != nullptr ? new Data(*showcaseMaster.m_pData) : nullptr)
-    {}
+    ShowcaseMaster& operator=(const ShowcaseMaster& showcaseMaster) = default;
+    ShowcaseMaster& operator=(ShowcaseMaster&& showcaseMaster) = default;
 
-    ShowcaseMaster(ShowcaseMaster&& showcaseMaster) :
-        Gs2Object(std::move(showcaseMaster)),
-        m_pData(showcaseMaster.m_pData)
+    ShowcaseMaster deepCopy() const
     {
-        showcaseMaster.m_pData = nullptr;
-    }
-
-    ~ShowcaseMaster()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    ShowcaseMaster& operator=(const ShowcaseMaster& showcaseMaster)
-    {
-        Gs2Object::operator=(showcaseMaster);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*showcaseMaster.m_pData);
-
-        return *this;
-    }
-
-    ShowcaseMaster& operator=(ShowcaseMaster&& showcaseMaster)
-    {
-        Gs2Object::operator=(std::move(showcaseMaster));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = showcaseMaster.m_pData;
-        showcaseMaster.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ShowcaseMaster);
     }
 
     const ShowcaseMaster* operator->() const
@@ -243,9 +193,9 @@ public:
      *
      * @param showcaseId 陳列棚マスター
      */
-    void setShowcaseId(const Char* showcaseId)
+    void setShowcaseId(StringHolder showcaseId)
     {
-        ensureData().showcaseId.emplace(showcaseId);
+        ensureData().showcaseId.emplace(std::move(showcaseId));
     }
 
     /**
@@ -253,9 +203,9 @@ public:
      *
      * @param showcaseId 陳列棚マスター
      */
-    ShowcaseMaster& withShowcaseId(const Char* showcaseId)
+    ShowcaseMaster& withShowcaseId(StringHolder showcaseId)
     {
-        setShowcaseId(showcaseId);
+        setShowcaseId(std::move(showcaseId));
         return *this;
     }
 
@@ -274,9 +224,9 @@ public:
      *
      * @param name 陳列棚名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -284,9 +234,9 @@ public:
      *
      * @param name 陳列棚名
      */
-    ShowcaseMaster& withName(const Char* name)
+    ShowcaseMaster& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -305,9 +255,9 @@ public:
      *
      * @param description 陳列棚マスターの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -315,9 +265,9 @@ public:
      *
      * @param description 陳列棚マスターの説明
      */
-    ShowcaseMaster& withDescription(const Char* description)
+    ShowcaseMaster& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -336,9 +286,9 @@ public:
      *
      * @param metadata 商品のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -346,9 +296,9 @@ public:
      *
      * @param metadata 商品のメタデータ
      */
-    ShowcaseMaster& withMetadata(const Char* metadata)
+    ShowcaseMaster& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -367,9 +317,9 @@ public:
      *
      * @param displayItems 陳列する商品モデル一覧
      */
-    void setDisplayItems(const List<DisplayItemMaster>& displayItems)
+    void setDisplayItems(List<DisplayItemMaster> displayItems)
     {
-        ensureData().displayItems.emplace(displayItems);
+        ensureData().displayItems.emplace(std::move(displayItems));
     }
 
     /**
@@ -377,9 +327,9 @@ public:
      *
      * @param displayItems 陳列する商品モデル一覧
      */
-    ShowcaseMaster& withDisplayItems(const List<DisplayItemMaster>& displayItems)
+    ShowcaseMaster& withDisplayItems(List<DisplayItemMaster> displayItems)
     {
-        setDisplayItems(displayItems);
+        setDisplayItems(std::move(displayItems));
         return *this;
     }
 
@@ -398,9 +348,9 @@ public:
      *
      * @param salesPeriodEventId 販売期間とするイベントマスター のGRN
      */
-    void setSalesPeriodEventId(const Char* salesPeriodEventId)
+    void setSalesPeriodEventId(StringHolder salesPeriodEventId)
     {
-        ensureData().salesPeriodEventId.emplace(salesPeriodEventId);
+        ensureData().salesPeriodEventId.emplace(std::move(salesPeriodEventId));
     }
 
     /**
@@ -408,9 +358,9 @@ public:
      *
      * @param salesPeriodEventId 販売期間とするイベントマスター のGRN
      */
-    ShowcaseMaster& withSalesPeriodEventId(const Char* salesPeriodEventId)
+    ShowcaseMaster& withSalesPeriodEventId(StringHolder salesPeriodEventId)
     {
-        setSalesPeriodEventId(salesPeriodEventId);
+        setSalesPeriodEventId(std::move(salesPeriodEventId));
         return *this;
     }
 
@@ -487,7 +437,7 @@ inline bool operator!=(const ShowcaseMaster& lhs, const ShowcaseMaster& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

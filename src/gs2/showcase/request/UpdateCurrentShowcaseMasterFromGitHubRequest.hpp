@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ShowcaseConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace showcase
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -46,98 +48,50 @@ private:
         /** GitHubからマスターデータをチェックアウトしてくる設定 */
         optional<GitHubCheckoutSetting> checkoutSetting;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
-            namespaceName(data.namespaceName),
-            checkoutSetting(data.checkoutSetting)
-        {}
+            Gs2BasicRequest::Data(data),
+            namespaceName(data.namespaceName)
+        {
+            if (data.checkoutSetting)
+            {
+                checkoutSetting = data.checkoutSetting->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            checkoutSetting(std::move(data.checkoutSetting))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    UpdateCurrentShowcaseMasterFromGitHubRequest() :
-        m_pData(nullptr)
-    {}
+    UpdateCurrentShowcaseMasterFromGitHubRequest() = default;
+    UpdateCurrentShowcaseMasterFromGitHubRequest(const UpdateCurrentShowcaseMasterFromGitHubRequest& updateCurrentShowcaseMasterFromGitHubRequest) = default;
+    UpdateCurrentShowcaseMasterFromGitHubRequest(UpdateCurrentShowcaseMasterFromGitHubRequest&& updateCurrentShowcaseMasterFromGitHubRequest) = default;
+    ~UpdateCurrentShowcaseMasterFromGitHubRequest() GS2_OVERRIDE = default;
 
-    UpdateCurrentShowcaseMasterFromGitHubRequest(const UpdateCurrentShowcaseMasterFromGitHubRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Showcase(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    UpdateCurrentShowcaseMasterFromGitHubRequest& operator=(const UpdateCurrentShowcaseMasterFromGitHubRequest& updateCurrentShowcaseMasterFromGitHubRequest) = default;
+    UpdateCurrentShowcaseMasterFromGitHubRequest& operator=(UpdateCurrentShowcaseMasterFromGitHubRequest&& updateCurrentShowcaseMasterFromGitHubRequest) = default;
 
-    UpdateCurrentShowcaseMasterFromGitHubRequest(UpdateCurrentShowcaseMasterFromGitHubRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Showcase(std::move(obj)),
-        m_pData(obj.m_pData)
+    UpdateCurrentShowcaseMasterFromGitHubRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~UpdateCurrentShowcaseMasterFromGitHubRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateCurrentShowcaseMasterFromGitHubRequest& operator=(const UpdateCurrentShowcaseMasterFromGitHubRequest& updateCurrentShowcaseMasterFromGitHubRequest)
-    {
-        Gs2BasicRequest::operator=(updateCurrentShowcaseMasterFromGitHubRequest);
-        Gs2Showcase::operator=(updateCurrentShowcaseMasterFromGitHubRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateCurrentShowcaseMasterFromGitHubRequest.m_pData);
-
-        return *this;
-    }
-
-    UpdateCurrentShowcaseMasterFromGitHubRequest& operator=(UpdateCurrentShowcaseMasterFromGitHubRequest&& updateCurrentShowcaseMasterFromGitHubRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(updateCurrentShowcaseMasterFromGitHubRequest));
-        Gs2Showcase::operator=(std::move(updateCurrentShowcaseMasterFromGitHubRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateCurrentShowcaseMasterFromGitHubRequest.m_pData;
-        updateCurrentShowcaseMasterFromGitHubRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateCurrentShowcaseMasterFromGitHubRequest);
     }
 
     const UpdateCurrentShowcaseMasterFromGitHubRequest* operator->() const
@@ -165,9 +119,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -175,9 +129,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    UpdateCurrentShowcaseMasterFromGitHubRequest& withNamespaceName(const Char* namespaceName)
+    UpdateCurrentShowcaseMasterFromGitHubRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -196,9 +150,9 @@ public:
      *
      * @param checkoutSetting GitHubからマスターデータをチェックアウトしてくる設定
      */
-    void setCheckoutSetting(const GitHubCheckoutSetting& checkoutSetting)
+    void setCheckoutSetting(GitHubCheckoutSetting checkoutSetting)
     {
-        ensureData().checkoutSetting.emplace(checkoutSetting);
+        ensureData().checkoutSetting.emplace(std::move(checkoutSetting));
     }
 
     /**
@@ -206,9 +160,9 @@ public:
      *
      * @param checkoutSetting GitHubからマスターデータをチェックアウトしてくる設定
      */
-    UpdateCurrentShowcaseMasterFromGitHubRequest& withCheckoutSetting(const GitHubCheckoutSetting& checkoutSetting)
+    UpdateCurrentShowcaseMasterFromGitHubRequest& withCheckoutSetting(GitHubCheckoutSetting checkoutSetting)
     {
-        ensureData().checkoutSetting.emplace(checkoutSetting);
+        ensureData().checkoutSetting.emplace(std::move(checkoutSetting));
         return *this;
     }
 
@@ -219,33 +173,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    UpdateCurrentShowcaseMasterFromGitHubRequest& withGs2ClientId(const Char* gs2ClientId)
+    UpdateCurrentShowcaseMasterFromGitHubRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    UpdateCurrentShowcaseMasterFromGitHubRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    UpdateCurrentShowcaseMasterFromGitHubRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -254,9 +184,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    UpdateCurrentShowcaseMasterFromGitHubRequest& withRequestId(const Char* gs2RequestId)
+    UpdateCurrentShowcaseMasterFromGitHubRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

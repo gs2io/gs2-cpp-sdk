@@ -28,15 +28,15 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::listStaminaModels(
-    std::function<void(AsyncEzListStaminaModelsResult&)> callback,
-    const Char* namespaceName
+    std::function<void(AsyncEzListStaminaModelsResult)> callback,
+    StringHolder namespaceName
 )
 {
     gs2::stamina::DescribeStaminaModelsRequest request;
     request.setNamespaceName(namespaceName);
     m_Client.describeStaminaModels(
         request,
-        [callback](gs2::stamina::AsyncDescribeStaminaModelsResult& r)
+        [callback](gs2::stamina::AsyncDescribeStaminaModelsResult r)
         {
             if (r.getError())
             {
@@ -62,9 +62,9 @@ void Client::listStaminaModels(
 }
 
 void Client::getStaminaModel(
-    std::function<void(AsyncEzGetStaminaModelResult&)> callback,
-    const Char* namespaceName,
-    const Char* staminaName
+    std::function<void(AsyncEzGetStaminaModelResult)> callback,
+    StringHolder namespaceName,
+    StringHolder staminaName
 )
 {
     gs2::stamina::GetStaminaModelRequest request;
@@ -72,7 +72,7 @@ void Client::getStaminaModel(
     request.setStaminaName(staminaName);
     m_Client.getStaminaModel(
         request,
-        [callback](gs2::stamina::AsyncGetStaminaModelResult& r)
+        [callback](gs2::stamina::AsyncGetStaminaModelResult r)
         {
             if (r.getError())
             {
@@ -98,10 +98,10 @@ void Client::getStaminaModel(
 }
 
 void Client::getStamina(
-    std::function<void(AsyncEzGetStaminaResult&)> callback,
+    std::function<void(AsyncEzGetStaminaResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* staminaName
+    StringHolder namespaceName,
+    StringHolder staminaName
 )
 {
     gs2::stamina::GetStaminaRequest request;
@@ -110,7 +110,7 @@ void Client::getStamina(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.getStamina(
         request,
-        [callback](gs2::stamina::AsyncGetStaminaResult& r)
+        [callback](gs2::stamina::AsyncGetStaminaResult r)
         {
             if (r.getError())
             {
@@ -136,10 +136,10 @@ void Client::getStamina(
 }
 
 void Client::consume(
-    std::function<void(AsyncEzConsumeResult&)> callback,
+    std::function<void(AsyncEzConsumeResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* staminaName,
+    StringHolder namespaceName,
+    StringHolder staminaName,
     Int32 consumeValue
 )
 {
@@ -150,7 +150,7 @@ void Client::consume(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.consumeStamina(
         request,
-        [callback](gs2::stamina::AsyncConsumeStaminaResult& r)
+        [callback](gs2::stamina::AsyncConsumeStaminaResult r)
         {
             if (r.getError())
             {

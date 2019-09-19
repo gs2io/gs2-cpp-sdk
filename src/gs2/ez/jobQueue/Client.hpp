@@ -50,9 +50,9 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     void run(
-        std::function<void(AsyncEzRunResult&)> callback,
+        std::function<void(AsyncEzRunResult)> callback,
         GameSession& session,
-        const Char* namespaceName
+        StringHolder namespaceName
     );
 };
 

@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace quest
 {
@@ -45,30 +47,29 @@ private:
         /** 報酬付与処理の実行に使用するスタンプシート */
         optional<StringHolder> stampSheet;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            item(data.item),
             stampSheet(data.stampSheet)
-        {}
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item)),
-            stampSheet(std::move(data.stampSheet))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -76,7 +77,8 @@ private:
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "stampSheet") == 0) {
+            else if (std::strcmp(name_, "stampSheet") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->stampSheet.emplace(jsonValue.GetString());
@@ -85,72 +87,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EndByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    EndByUserIdResult() = default;
+    EndByUserIdResult(const EndByUserIdResult& endByUserIdResult) = default;
+    EndByUserIdResult(EndByUserIdResult&& endByUserIdResult) = default;
+    ~EndByUserIdResult() = default;
 
-    EndByUserIdResult(const EndByUserIdResult& endByUserIdResult) :
-        Gs2Object(endByUserIdResult),
-        m_pData(endByUserIdResult.m_pData != nullptr ? new Data(*endByUserIdResult.m_pData) : nullptr)
-    {}
+    EndByUserIdResult& operator=(const EndByUserIdResult& endByUserIdResult) = default;
+    EndByUserIdResult& operator=(EndByUserIdResult&& endByUserIdResult) = default;
 
-    EndByUserIdResult(EndByUserIdResult&& endByUserIdResult) :
-        Gs2Object(std::move(endByUserIdResult)),
-        m_pData(endByUserIdResult.m_pData)
+    EndByUserIdResult deepCopy() const
     {
-        endByUserIdResult.m_pData = nullptr;
-    }
-
-    ~EndByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    EndByUserIdResult& operator=(const EndByUserIdResult& endByUserIdResult)
-    {
-        Gs2Object::operator=(endByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*endByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    EndByUserIdResult& operator=(EndByUserIdResult&& endByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(endByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = endByUserIdResult.m_pData;
-        endByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EndByUserIdResult);
     }
 
     const EndByUserIdResult* operator->() const
@@ -177,9 +127,9 @@ public:
      *
      * @param item クエスト挑戦
      */
-    void setItem(const Progress& item)
+    void setItem(Progress item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
     /**
@@ -197,9 +147,9 @@ public:
      *
      * @param stampSheet 報酬付与処理の実行に使用するスタンプシート
      */
-    void setStampSheet(const Char* stampSheet)
+    void setStampSheet(StringHolder stampSheet)
     {
-        ensureData().stampSheet.emplace(stampSheet);
+        ensureData().stampSheet.emplace(std::move(stampSheet));
     }
 
 

@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace experience {
@@ -60,8 +62,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -74,78 +75,76 @@ private:
             rankCapValue(data.rankCapValue),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            statusId(std::move(data.statusId)),
-            experienceName(std::move(data.experienceName)),
-            userId(std::move(data.userId)),
-            propertyId(std::move(data.propertyId)),
-            experienceValue(std::move(data.experienceValue)),
-            rankValue(std::move(data.rankValue)),
-            rankCapValue(std::move(data.rankCapValue)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "statusId") == 0) {
+            if (std::strcmp(name_, "statusId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->statusId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "experienceName") == 0) {
+            else if (std::strcmp(name_, "experienceName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->experienceName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "propertyId") == 0) {
+            else if (std::strcmp(name_, "propertyId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->propertyId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "experienceValue") == 0) {
+            else if (std::strcmp(name_, "experienceValue") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->experienceValue = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "rankValue") == 0) {
+            else if (std::strcmp(name_, "rankValue") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->rankValue = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "rankCapValue") == 0) {
+            else if (std::strcmp(name_, "rankCapValue") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->rankCapValue = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -154,72 +153,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Status() :
-        m_pData(nullptr)
-    {}
+    Status() = default;
+    Status(const Status& status) = default;
+    Status(Status&& status) = default;
+    ~Status() = default;
 
-    Status(const Status& status) :
-        Gs2Object(status),
-        m_pData(status.m_pData != nullptr ? new Data(*status.m_pData) : nullptr)
-    {}
+    Status& operator=(const Status& status) = default;
+    Status& operator=(Status&& status) = default;
 
-    Status(Status&& status) :
-        Gs2Object(std::move(status)),
-        m_pData(status.m_pData)
+    Status deepCopy() const
     {
-        status.m_pData = nullptr;
-    }
-
-    ~Status()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Status& operator=(const Status& status)
-    {
-        Gs2Object::operator=(status);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*status.m_pData);
-
-        return *this;
-    }
-
-    Status& operator=(Status&& status)
-    {
-        Gs2Object::operator=(std::move(status));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = status.m_pData;
-        status.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Status);
     }
 
     const Status* operator->() const
@@ -246,9 +193,9 @@ public:
      *
      * @param statusId ステータス
      */
-    void setStatusId(const Char* statusId)
+    void setStatusId(StringHolder statusId)
     {
-        ensureData().statusId.emplace(statusId);
+        ensureData().statusId.emplace(std::move(statusId));
     }
 
     /**
@@ -256,9 +203,9 @@ public:
      *
      * @param statusId ステータス
      */
-    Status& withStatusId(const Char* statusId)
+    Status& withStatusId(StringHolder statusId)
     {
-        setStatusId(statusId);
+        setStatusId(std::move(statusId));
         return *this;
     }
 
@@ -277,9 +224,9 @@ public:
      *
      * @param experienceName 経験値の種類の名前
      */
-    void setExperienceName(const Char* experienceName)
+    void setExperienceName(StringHolder experienceName)
     {
-        ensureData().experienceName.emplace(experienceName);
+        ensureData().experienceName.emplace(std::move(experienceName));
     }
 
     /**
@@ -287,9 +234,9 @@ public:
      *
      * @param experienceName 経験値の種類の名前
      */
-    Status& withExperienceName(const Char* experienceName)
+    Status& withExperienceName(StringHolder experienceName)
     {
-        setExperienceName(experienceName);
+        setExperienceName(std::move(experienceName));
         return *this;
     }
 
@@ -308,9 +255,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -318,9 +265,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    Status& withUserId(const Char* userId)
+    Status& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -339,9 +286,9 @@ public:
      *
      * @param propertyId プロパティID
      */
-    void setPropertyId(const Char* propertyId)
+    void setPropertyId(StringHolder propertyId)
     {
-        ensureData().propertyId.emplace(propertyId);
+        ensureData().propertyId.emplace(std::move(propertyId));
     }
 
     /**
@@ -349,9 +296,9 @@ public:
      *
      * @param propertyId プロパティID
      */
-    Status& withPropertyId(const Char* propertyId)
+    Status& withPropertyId(StringHolder propertyId)
     {
-        setPropertyId(propertyId);
+        setPropertyId(std::move(propertyId));
         return *this;
     }
 
@@ -521,7 +468,7 @@ inline bool operator!=(const Status& lhs, const Status& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

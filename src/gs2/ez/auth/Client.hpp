@@ -51,11 +51,11 @@ public:
     /// <param name="body">アカウント認証情報の署名対象</param>
     /// <param name="signature">署名</param>
     void login(
-        std::function<void(AsyncEzLoginResult&)> callback,
-        const Char* userId,
-        const Char* keyId,
-        const Char* body,
-        const Char* signature
+        std::function<void(AsyncEzLoginResult)> callback,
+        StringHolder userId,
+        StringHolder keyId,
+        StringHolder body,
+        StringHolder signature
     );
 };
 

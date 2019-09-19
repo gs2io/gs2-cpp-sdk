@@ -27,25 +27,65 @@ namespace gs2 { namespace ez { namespace inventory {
 class EzGetItemResult : public gs2::Gs2Object
 {
 private:
-    /** 有効期限毎の{model_name} */
-    List<EzItemSet> m_Items;
-    /** アイテムモデル */
-    EzItemModel m_ItemModel;
-    /** インベントリ */
-    EzInventory m_Inventory;
-
-public:
-    EzGetItemResult(const gs2::inventory::GetItemSetResult& result) :
-        m_ItemModel(*result.getItemModel()),
-        m_Inventory(*result.getInventory())
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** 有効期限毎の{model_name} */
+        List<EzItemSet> items;
+        /** アイテムモデル */
+        EzItemModel itemModel;
+        /** インベントリ */
+        EzInventory inventory;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+            itemModel = data.itemModel.deepCopy();
+            inventory = data.inventory.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::inventory::GetItemSetResult& getItemSetResult) :
+            itemModel(*getItemSetResult.getItemModel()),
+            inventory(*getItemSetResult.getInventory())
+        {
             {
-                m_Items += EzItemSet(list[i]);
+                auto& list = *getItemSetResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzItemSet(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzGetItemResult() = default;
+    EzGetItemResult(const EzGetItemResult& result) = default;
+    EzGetItemResult(EzGetItemResult&& result) = default;
+    ~EzGetItemResult() = default;
+
+    EzGetItemResult(gs2::inventory::GetItemSetResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetItemResult& operator=(const EzGetItemResult& result) = default;
+    EzGetItemResult& operator=(EzGetItemResult&& result) = default;
+
+    EzGetItemResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetItemResult);
     }
 
     static bool isConvertible(const gs2::inventory::GetItemSetResult& result)
@@ -62,32 +102,17 @@ public:
 
     const List<EzItemSet>& getItems() const
     {
-        return m_Items;
-    }
-
-    List<EzItemSet>& getItems()
-    {
-        return m_Items;
+        return ensureData().items;
     }
 
     const EzItemModel& getItemModel() const
     {
-        return m_ItemModel;
-    }
-
-    EzItemModel& getItemModel()
-    {
-        return m_ItemModel;
+        return ensureData().itemModel;
     }
 
     const EzInventory& getInventory() const
     {
-        return m_Inventory;
-    }
-
-    EzInventory& getInventory()
-    {
-        return m_Inventory;
+        return ensureData().inventory;
     }
 };
 

@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace lottery {
@@ -56,8 +58,7 @@ private:
         /** 抽選テーブルを確定するスクリプト のGRN */
         optional<StringHolder> choicePrizeTableScriptId;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -68,64 +69,62 @@ private:
             method(data.method),
             prizeTableName(data.prizeTableName),
             choicePrizeTableScriptId(data.choicePrizeTableScriptId)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            lotteryModelId(std::move(data.lotteryModelId)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            mode(std::move(data.mode)),
-            method(std::move(data.method)),
-            prizeTableName(std::move(data.prizeTableName)),
-            choicePrizeTableScriptId(std::move(data.choicePrizeTableScriptId))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "lotteryModelId") == 0) {
+            if (std::strcmp(name_, "lotteryModelId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->lotteryModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "mode") == 0) {
+            else if (std::strcmp(name_, "mode") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->mode.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "method") == 0) {
+            else if (std::strcmp(name_, "method") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->method.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "prizeTableName") == 0) {
+            else if (std::strcmp(name_, "prizeTableName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->prizeTableName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "choicePrizeTableScriptId") == 0) {
+            else if (std::strcmp(name_, "choicePrizeTableScriptId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->choicePrizeTableScriptId.emplace(jsonValue.GetString());
@@ -134,72 +133,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    LotteryModel() :
-        m_pData(nullptr)
-    {}
+    LotteryModel() = default;
+    LotteryModel(const LotteryModel& lotteryModel) = default;
+    LotteryModel(LotteryModel&& lotteryModel) = default;
+    ~LotteryModel() = default;
 
-    LotteryModel(const LotteryModel& lotteryModel) :
-        Gs2Object(lotteryModel),
-        m_pData(lotteryModel.m_pData != nullptr ? new Data(*lotteryModel.m_pData) : nullptr)
-    {}
+    LotteryModel& operator=(const LotteryModel& lotteryModel) = default;
+    LotteryModel& operator=(LotteryModel&& lotteryModel) = default;
 
-    LotteryModel(LotteryModel&& lotteryModel) :
-        Gs2Object(std::move(lotteryModel)),
-        m_pData(lotteryModel.m_pData)
+    LotteryModel deepCopy() const
     {
-        lotteryModel.m_pData = nullptr;
-    }
-
-    ~LotteryModel()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    LotteryModel& operator=(const LotteryModel& lotteryModel)
-    {
-        Gs2Object::operator=(lotteryModel);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*lotteryModel.m_pData);
-
-        return *this;
-    }
-
-    LotteryModel& operator=(LotteryModel&& lotteryModel)
-    {
-        Gs2Object::operator=(std::move(lotteryModel));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = lotteryModel.m_pData;
-        lotteryModel.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(LotteryModel);
     }
 
     const LotteryModel* operator->() const
@@ -226,9 +173,9 @@ public:
      *
      * @param lotteryModelId 抽選の種類マスター
      */
-    void setLotteryModelId(const Char* lotteryModelId)
+    void setLotteryModelId(StringHolder lotteryModelId)
     {
-        ensureData().lotteryModelId.emplace(lotteryModelId);
+        ensureData().lotteryModelId.emplace(std::move(lotteryModelId));
     }
 
     /**
@@ -236,9 +183,9 @@ public:
      *
      * @param lotteryModelId 抽選の種類マスター
      */
-    LotteryModel& withLotteryModelId(const Char* lotteryModelId)
+    LotteryModel& withLotteryModelId(StringHolder lotteryModelId)
     {
-        setLotteryModelId(lotteryModelId);
+        setLotteryModelId(std::move(lotteryModelId));
         return *this;
     }
 
@@ -257,9 +204,9 @@ public:
      *
      * @param name 抽選モデルの種類名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -267,9 +214,9 @@ public:
      *
      * @param name 抽選モデルの種類名
      */
-    LotteryModel& withName(const Char* name)
+    LotteryModel& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -288,9 +235,9 @@ public:
      *
      * @param metadata 抽選モデルの種類のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -298,9 +245,9 @@ public:
      *
      * @param metadata 抽選モデルの種類のメタデータ
      */
-    LotteryModel& withMetadata(const Char* metadata)
+    LotteryModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -319,9 +266,9 @@ public:
      *
      * @param mode 抽選モード
      */
-    void setMode(const Char* mode)
+    void setMode(StringHolder mode)
     {
-        ensureData().mode.emplace(mode);
+        ensureData().mode.emplace(std::move(mode));
     }
 
     /**
@@ -329,9 +276,9 @@ public:
      *
      * @param mode 抽選モード
      */
-    LotteryModel& withMode(const Char* mode)
+    LotteryModel& withMode(StringHolder mode)
     {
-        setMode(mode);
+        setMode(std::move(mode));
         return *this;
     }
 
@@ -350,9 +297,9 @@ public:
      *
      * @param method 抽選方法
      */
-    void setMethod(const Char* method)
+    void setMethod(StringHolder method)
     {
-        ensureData().method.emplace(method);
+        ensureData().method.emplace(std::move(method));
     }
 
     /**
@@ -360,9 +307,9 @@ public:
      *
      * @param method 抽選方法
      */
-    LotteryModel& withMethod(const Char* method)
+    LotteryModel& withMethod(StringHolder method)
     {
-        setMethod(method);
+        setMethod(std::move(method));
         return *this;
     }
 
@@ -381,9 +328,9 @@ public:
      *
      * @param prizeTableName 景品テーブルの名前
      */
-    void setPrizeTableName(const Char* prizeTableName)
+    void setPrizeTableName(StringHolder prizeTableName)
     {
-        ensureData().prizeTableName.emplace(prizeTableName);
+        ensureData().prizeTableName.emplace(std::move(prizeTableName));
     }
 
     /**
@@ -391,9 +338,9 @@ public:
      *
      * @param prizeTableName 景品テーブルの名前
      */
-    LotteryModel& withPrizeTableName(const Char* prizeTableName)
+    LotteryModel& withPrizeTableName(StringHolder prizeTableName)
     {
-        setPrizeTableName(prizeTableName);
+        setPrizeTableName(std::move(prizeTableName));
         return *this;
     }
 
@@ -412,9 +359,9 @@ public:
      *
      * @param choicePrizeTableScriptId 抽選テーブルを確定するスクリプト のGRN
      */
-    void setChoicePrizeTableScriptId(const Char* choicePrizeTableScriptId)
+    void setChoicePrizeTableScriptId(StringHolder choicePrizeTableScriptId)
     {
-        ensureData().choicePrizeTableScriptId.emplace(choicePrizeTableScriptId);
+        ensureData().choicePrizeTableScriptId.emplace(std::move(choicePrizeTableScriptId));
     }
 
     /**
@@ -422,9 +369,9 @@ public:
      *
      * @param choicePrizeTableScriptId 抽選テーブルを確定するスクリプト のGRN
      */
-    LotteryModel& withChoicePrizeTableScriptId(const Char* choicePrizeTableScriptId)
+    LotteryModel& withChoicePrizeTableScriptId(StringHolder choicePrizeTableScriptId)
     {
-        setChoicePrizeTableScriptId(choicePrizeTableScriptId);
+        setChoicePrizeTableScriptId(std::move(choicePrizeTableScriptId));
         return *this;
     }
 
@@ -439,7 +386,7 @@ inline bool operator!=(const LotteryModel& lhs, const LotteryModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

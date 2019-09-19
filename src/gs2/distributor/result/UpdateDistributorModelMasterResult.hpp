@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace distributor
 {
@@ -43,28 +45,28 @@ private:
         /** 更新した配信設定マスター */
         optional<DistributorModelMaster> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    UpdateDistributorModelMasterResult() :
-        m_pData(nullptr)
-    {}
+    UpdateDistributorModelMasterResult() = default;
+    UpdateDistributorModelMasterResult(const UpdateDistributorModelMasterResult& updateDistributorModelMasterResult) = default;
+    UpdateDistributorModelMasterResult(UpdateDistributorModelMasterResult&& updateDistributorModelMasterResult) = default;
+    ~UpdateDistributorModelMasterResult() = default;
 
-    UpdateDistributorModelMasterResult(const UpdateDistributorModelMasterResult& updateDistributorModelMasterResult) :
-        Gs2Object(updateDistributorModelMasterResult),
-        m_pData(updateDistributorModelMasterResult.m_pData != nullptr ? new Data(*updateDistributorModelMasterResult.m_pData) : nullptr)
-    {}
+    UpdateDistributorModelMasterResult& operator=(const UpdateDistributorModelMasterResult& updateDistributorModelMasterResult) = default;
+    UpdateDistributorModelMasterResult& operator=(UpdateDistributorModelMasterResult&& updateDistributorModelMasterResult) = default;
 
-    UpdateDistributorModelMasterResult(UpdateDistributorModelMasterResult&& updateDistributorModelMasterResult) :
-        Gs2Object(std::move(updateDistributorModelMasterResult)),
-        m_pData(updateDistributorModelMasterResult.m_pData)
+    UpdateDistributorModelMasterResult deepCopy() const
     {
-        updateDistributorModelMasterResult.m_pData = nullptr;
-    }
-
-    ~UpdateDistributorModelMasterResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateDistributorModelMasterResult& operator=(const UpdateDistributorModelMasterResult& updateDistributorModelMasterResult)
-    {
-        Gs2Object::operator=(updateDistributorModelMasterResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateDistributorModelMasterResult.m_pData);
-
-        return *this;
-    }
-
-    UpdateDistributorModelMasterResult& operator=(UpdateDistributorModelMasterResult&& updateDistributorModelMasterResult)
-    {
-        Gs2Object::operator=(std::move(updateDistributorModelMasterResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateDistributorModelMasterResult.m_pData;
-        updateDistributorModelMasterResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateDistributorModelMasterResult);
     }
 
     const UpdateDistributorModelMasterResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 更新した配信設定マスター
      */
-    void setItem(const DistributorModelMaster& item)
+    void setItem(DistributorModelMaster item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

@@ -27,19 +27,57 @@ namespace gs2 { namespace ez { namespace stamina {
 class EzListStaminaModelsResult : public gs2::Gs2Object
 {
 private:
-    /** スタミナモデルのリスト */
-    List<EzStaminaModel> m_Items;
-
-public:
-    EzListStaminaModelsResult(const gs2::stamina::DescribeStaminaModelsResult& result)
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** スタミナモデルのリスト */
+        List<EzStaminaModel> items;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::stamina::DescribeStaminaModelsResult& describeStaminaModelsResult)
+        {
             {
-                m_Items += EzStaminaModel(list[i]);
+                auto& list = *describeStaminaModelsResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzStaminaModel(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListStaminaModelsResult() = default;
+    EzListStaminaModelsResult(const EzListStaminaModelsResult& result) = default;
+    EzListStaminaModelsResult(EzListStaminaModelsResult&& result) = default;
+    ~EzListStaminaModelsResult() = default;
+
+    EzListStaminaModelsResult(gs2::stamina::DescribeStaminaModelsResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListStaminaModelsResult& operator=(const EzListStaminaModelsResult& result) = default;
+    EzListStaminaModelsResult& operator=(EzListStaminaModelsResult&& result) = default;
+
+    EzListStaminaModelsResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListStaminaModelsResult);
     }
 
     static bool isConvertible(const gs2::stamina::DescribeStaminaModelsResult& result)
@@ -54,12 +92,7 @@ public:
 
     const List<EzStaminaModel>& getItems() const
     {
-        return m_Items;
-    }
-
-    List<EzStaminaModel>& getItems()
-    {
-        return m_Items;
+        return ensureData().items;
     }
 };
 

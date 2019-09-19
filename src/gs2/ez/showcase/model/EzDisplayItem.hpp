@@ -29,33 +29,78 @@ namespace gs2 { namespace ez { namespace showcase {
 class EzDisplayItem : public gs2::Gs2Object
 {
 private:
-    /** 陳列商品ID */
-    gs2::optional<StringHolder> m_DisplayItemId;
-    /** 種類 */
-    gs2::optional<StringHolder> m_Type;
-    /** 陳列する商品 */
-    gs2::optional<EzSalesItem> m_SalesItem;
-    /** 陳列する商品グループ */
-    gs2::optional<EzSalesItemGroup> m_SalesItemGroup;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 陳列商品ID */
+        gs2::optional<StringHolder> displayItemId;
+        /** 種類 */
+        gs2::optional<StringHolder> type;
+        /** 陳列する商品 */
+        gs2::optional<EzSalesItem> salesItem;
+        /** 陳列する商品グループ */
+        gs2::optional<EzSalesItemGroup> salesItemGroup;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            displayItemId(data.displayItemId),
+            type(data.type)
+        {
+            if (data.salesItem)
+            {
+                salesItem = data.salesItem->deepCopy();
+            }
+            if (data.salesItemGroup)
+            {
+                salesItemGroup = data.salesItemGroup->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::showcase::DisplayItem& displayItem) :
+            displayItemId(displayItem.getDisplayItemId()),
+            type(displayItem.getType()),
+            salesItem(*displayItem.getSalesItem()),
+            salesItemGroup(*displayItem.getSalesItemGroup())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzDisplayItem() = default;
+    EzDisplayItem(const EzDisplayItem& ezDisplayItem) = default;
+    EzDisplayItem(EzDisplayItem&& ezDisplayItem) = default;
+    ~EzDisplayItem() = default;
 
     EzDisplayItem(gs2::showcase::DisplayItem displayItem) :
-        m_DisplayItemId(displayItem.getDisplayItemId()),
-        m_Type(displayItem.getType()),
-        m_SalesItem(*displayItem.getSalesItem()),
-        m_SalesItemGroup(*displayItem.getSalesItemGroup())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(displayItem)
+    {}
+
+    EzDisplayItem& operator=(const EzDisplayItem& ezDisplayItem) = default;
+    EzDisplayItem& operator=(EzDisplayItem&& ezDisplayItem) = default;
+
+    EzDisplayItem deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDisplayItem);
     }
 
     gs2::showcase::DisplayItem ToModel() const
     {
         gs2::showcase::DisplayItem displayItem;
-        displayItem.setDisplayItemId(*m_DisplayItemId);
-        displayItem.setType(*m_Type);
-        displayItem.setSalesItem(m_SalesItem->ToModel());
-        displayItem.setSalesItemGroup(m_SalesItemGroup->ToModel());
+        displayItem.setDisplayItemId(getDisplayItemId());
+        displayItem.setType(getType());
+        displayItem.setSalesItem(getSalesItem().ToModel());
+        displayItem.setSalesItemGroup(getSalesItemGroup().ToModel());
         return displayItem;
     }
 
@@ -63,111 +108,69 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getDisplayItemId() const
+    const StringHolder& getDisplayItemId() const
     {
-        return *m_DisplayItemId;
+        return *ensureData().displayItemId;
     }
 
-    gs2::StringHolder& getDisplayItemId()
+    const StringHolder& getType() const
     {
-        return *m_DisplayItemId;
-    }
-
-    const gs2::StringHolder& getType() const
-    {
-        return *m_Type;
-    }
-
-    gs2::StringHolder& getType()
-    {
-        return *m_Type;
+        return *ensureData().type;
     }
 
     const EzSalesItem& getSalesItem() const
     {
-        return *m_SalesItem;
-    }
-
-    EzSalesItem& getSalesItem()
-    {
-        return *m_SalesItem;
+        return *ensureData().salesItem;
     }
 
     const EzSalesItemGroup& getSalesItemGroup() const
     {
-        return *m_SalesItemGroup;
-    }
-
-    EzSalesItemGroup& getSalesItemGroup()
-    {
-        return *m_SalesItemGroup;
+        return *ensureData().salesItemGroup;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setDisplayItemId(Char* displayItemId)
+    void setDisplayItemId(StringHolder displayItemId)
     {
-        m_DisplayItemId.emplace(displayItemId);
+        ensureData().displayItemId = std::move(displayItemId);
     }
 
-    void setType(Char* type)
+    void setType(StringHolder type)
     {
-        m_Type.emplace(type);
+        ensureData().type = std::move(type);
     }
 
-    void setSalesItem(const EzSalesItem& salesItem)
+    void setSalesItem(EzSalesItem salesItem)
     {
-        m_SalesItem = salesItem;
+        ensureData().salesItem = std::move(salesItem);
     }
 
-    void setSalesItem(EzSalesItem&& salesItem)
+    void setSalesItemGroup(EzSalesItemGroup salesItemGroup)
     {
-        m_SalesItem = std::move(salesItem);
+        ensureData().salesItemGroup = std::move(salesItemGroup);
     }
 
-    void setSalesItemGroup(const EzSalesItemGroup& salesItemGroup)
+    EzDisplayItem& withDisplayItemId(StringHolder displayItemId)
     {
-        m_SalesItemGroup = salesItemGroup;
-    }
-
-    void setSalesItemGroup(EzSalesItemGroup&& salesItemGroup)
-    {
-        m_SalesItemGroup = std::move(salesItemGroup);
-    }
-
-    EzDisplayItem& withDisplayItemId(Char* displayItemId)
-    {
-        setDisplayItemId(displayItemId);
+        setDisplayItemId(std::move(displayItemId));
         return *this;
     }
 
-    EzDisplayItem& withType(Char* type)
+    EzDisplayItem& withType(StringHolder type)
     {
-        setType(type);
+        setType(std::move(type));
         return *this;
     }
 
-    EzDisplayItem& withSalesItem(const EzSalesItem& salesItem)
-    {
-        setSalesItem(salesItem);
-        return *this;
-    }
-
-    EzDisplayItem& withSalesItem(EzSalesItem&& salesItem)
+    EzDisplayItem& withSalesItem(EzSalesItem salesItem)
     {
         setSalesItem(std::move(salesItem));
         return *this;
     }
 
-    EzDisplayItem& withSalesItemGroup(const EzSalesItemGroup& salesItemGroup)
-    {
-        setSalesItemGroup(salesItemGroup);
-        return *this;
-    }
-
-    EzDisplayItem& withSalesItemGroup(EzSalesItemGroup&& salesItemGroup)
+    EzDisplayItem& withSalesItemGroup(EzSalesItemGroup salesItemGroup)
     {
         setSalesItemGroup(std::move(salesItemGroup));
         return *this;

@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "AcquireAction.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace lottery {
@@ -49,32 +51,30 @@ private:
         /** 初期数量 */
         optional<Int32> initial;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            acquireActions(data.acquireActions),
             remaining(data.remaining),
             initial(data.initial)
-        {}
+        {
+            if (data.acquireActions)
+            {
+                acquireActions = data.acquireActions->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            acquireActions(std::move(data.acquireActions)),
-            remaining(std::move(data.remaining)),
-            initial(std::move(data.initial))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "acquireActions") == 0) {
+            if (std::strcmp(name_, "acquireActions") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -86,13 +86,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "remaining") == 0) {
+            else if (std::strcmp(name_, "remaining") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->remaining = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "initial") == 0) {
+            else if (std::strcmp(name_, "initial") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->initial = jsonValue.GetInt();
@@ -101,72 +103,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    BoxItem() :
-        m_pData(nullptr)
-    {}
+    BoxItem() = default;
+    BoxItem(const BoxItem& boxItem) = default;
+    BoxItem(BoxItem&& boxItem) = default;
+    ~BoxItem() = default;
 
-    BoxItem(const BoxItem& boxItem) :
-        Gs2Object(boxItem),
-        m_pData(boxItem.m_pData != nullptr ? new Data(*boxItem.m_pData) : nullptr)
-    {}
+    BoxItem& operator=(const BoxItem& boxItem) = default;
+    BoxItem& operator=(BoxItem&& boxItem) = default;
 
-    BoxItem(BoxItem&& boxItem) :
-        Gs2Object(std::move(boxItem)),
-        m_pData(boxItem.m_pData)
+    BoxItem deepCopy() const
     {
-        boxItem.m_pData = nullptr;
-    }
-
-    ~BoxItem()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    BoxItem& operator=(const BoxItem& boxItem)
-    {
-        Gs2Object::operator=(boxItem);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*boxItem.m_pData);
-
-        return *this;
-    }
-
-    BoxItem& operator=(BoxItem&& boxItem)
-    {
-        Gs2Object::operator=(std::move(boxItem));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = boxItem.m_pData;
-        boxItem.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(BoxItem);
     }
 
     const BoxItem* operator->() const
@@ -193,9 +143,9 @@ public:
      *
      * @param acquireActions 入手アクションのリスト
      */
-    void setAcquireActions(const List<AcquireAction>& acquireActions)
+    void setAcquireActions(List<AcquireAction> acquireActions)
     {
-        ensureData().acquireActions.emplace(acquireActions);
+        ensureData().acquireActions.emplace(std::move(acquireActions));
     }
 
     /**
@@ -203,9 +153,9 @@ public:
      *
      * @param acquireActions 入手アクションのリスト
      */
-    BoxItem& withAcquireActions(const List<AcquireAction>& acquireActions)
+    BoxItem& withAcquireActions(List<AcquireAction> acquireActions)
     {
-        setAcquireActions(acquireActions);
+        setAcquireActions(std::move(acquireActions));
         return *this;
     }
 
@@ -282,7 +232,7 @@ inline bool operator!=(const BoxItem& lhs, const BoxItem& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

@@ -66,352 +66,1189 @@ namespace gs2 { namespace deploy {
 class Gs2DeployRestClient : public AbstractGs2ClientBase
 {
 private:
-    static void write(detail::json::JsonWriter& writer, const Stack& obj)
+
+    class DescribeStacksTask : public detail::Gs2RestSessionTask<DescribeStacksResult>
     {
-        writer.writeObjectStart();
+    private:
+        DescribeStacksRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack";
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeStacksTask(
+            DescribeStacksRequest request,
+            Gs2RestSessionTask<DescribeStacksResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeStacksResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeStacksTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateStackTask : public detail::Gs2RestSessionTask<CreateStackResult>
+    {
+    private:
+        CreateStackRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getName())
+            {
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getTemplate())
+            {
+                jsonWriter.writePropertyName("template");
+                jsonWriter.writeCharArray(*m_Request.getTemplate());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        CreateStackTask(
+            CreateStackRequest request,
+            Gs2RestSessionTask<CreateStackResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<CreateStackResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateStackTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateStackFromGitHubTask : public detail::Gs2RestSessionTask<CreateStackFromGitHubResult>
+    {
+    private:
+        CreateStackFromGitHubRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/from_git_hub";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getName())
+            {
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getCheckoutSetting())
+            {
+                jsonWriter.writePropertyName("checkoutSetting");
+                write(jsonWriter, *m_Request.getCheckoutSetting());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        CreateStackFromGitHubTask(
+            CreateStackFromGitHubRequest request,
+            Gs2RestSessionTask<CreateStackFromGitHubResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<CreateStackFromGitHubResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateStackFromGitHubTask() GS2_OVERRIDE = default;
+    };
+
+    class GetStackStatusTask : public detail::Gs2RestSessionTask<GetStackStatusResult>
+    {
+    private:
+        GetStackStatusRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/{stackName}/status";
+            {
+                auto& value = m_Request.getStackName();
+                url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetStackStatusTask(
+            GetStackStatusRequest request,
+            Gs2RestSessionTask<GetStackStatusResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetStackStatusResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetStackStatusTask() GS2_OVERRIDE = default;
+    };
+
+    class GetStackTask : public detail::Gs2RestSessionTask<GetStackResult>
+    {
+    private:
+        GetStackRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/{stackName}";
+            {
+                auto& value = m_Request.getStackName();
+                url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetStackTask(
+            GetStackRequest request,
+            Gs2RestSessionTask<GetStackResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetStackResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetStackTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateStackTask : public detail::Gs2RestSessionTask<UpdateStackResult>
+    {
+    private:
+        UpdateStackRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/{stackName}";
+            {
+                auto& value = m_Request.getStackName();
+                url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getTemplate())
+            {
+                jsonWriter.writePropertyName("template");
+                jsonWriter.writeCharArray(*m_Request.getTemplate());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Put;
+        }
+
+    public:
+        UpdateStackTask(
+            UpdateStackRequest request,
+            Gs2RestSessionTask<UpdateStackResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<UpdateStackResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateStackTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateStackFromGitHubTask : public detail::Gs2RestSessionTask<UpdateStackFromGitHubResult>
+    {
+    private:
+        UpdateStackFromGitHubRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/{stackName}/from_git_hub";
+            {
+                auto& value = m_Request.getStackName();
+                url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getCheckoutSetting())
+            {
+                jsonWriter.writePropertyName("checkoutSetting");
+                write(jsonWriter, *m_Request.getCheckoutSetting());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Put;
+        }
+
+    public:
+        UpdateStackFromGitHubTask(
+            UpdateStackFromGitHubRequest request,
+            Gs2RestSessionTask<UpdateStackFromGitHubResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<UpdateStackFromGitHubResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateStackFromGitHubTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteStackTask : public detail::Gs2RestSessionTask<DeleteStackResult>
+    {
+    private:
+        DeleteStackRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/{stackName}";
+            {
+                auto& value = m_Request.getStackName();
+                url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        DeleteStackTask(
+            DeleteStackRequest request,
+            Gs2RestSessionTask<DeleteStackResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DeleteStackResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteStackTask() GS2_OVERRIDE = default;
+    };
+
+    class ForceDeleteStackTask : public detail::Gs2RestSessionTask<ForceDeleteStackResult>
+    {
+    private:
+        ForceDeleteStackRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/{stackName}/force";
+            {
+                auto& value = m_Request.getStackName();
+                url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        ForceDeleteStackTask(
+            ForceDeleteStackRequest request,
+            Gs2RestSessionTask<ForceDeleteStackResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<ForceDeleteStackResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~ForceDeleteStackTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeResourcesTask : public detail::Gs2RestSessionTask<DescribeResourcesResult>
+    {
+    private:
+        DescribeResourcesRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/{stackName}/resource";
+            {
+                auto& value = m_Request.getStackName();
+                url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeResourcesTask(
+            DescribeResourcesRequest request,
+            Gs2RestSessionTask<DescribeResourcesResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeResourcesResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeResourcesTask() GS2_OVERRIDE = default;
+    };
+
+    class GetResourceTask : public detail::Gs2RestSessionTask<GetResourceResult>
+    {
+    private:
+        GetResourceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/{stackName}/resource/{resourceName}";
+            {
+                auto& value = m_Request.getStackName();
+                url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getResourceName();
+                url.replace("{resourceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetResourceTask(
+            GetResourceRequest request,
+            Gs2RestSessionTask<GetResourceResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetResourceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetResourceTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeEventsTask : public detail::Gs2RestSessionTask<DescribeEventsResult>
+    {
+    private:
+        DescribeEventsRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/{stackName}/event";
+            {
+                auto& value = m_Request.getStackName();
+                url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeEventsTask(
+            DescribeEventsRequest request,
+            Gs2RestSessionTask<DescribeEventsResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeEventsResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeEventsTask() GS2_OVERRIDE = default;
+    };
+
+    class GetEventTask : public detail::Gs2RestSessionTask<GetEventResult>
+    {
+    private:
+        GetEventRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/{stackName}/event/{eventName}";
+            {
+                auto& value = m_Request.getStackName();
+                url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getEventName();
+                url.replace("{eventName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetEventTask(
+            GetEventRequest request,
+            Gs2RestSessionTask<GetEventResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetEventResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetEventTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeOutputsTask : public detail::Gs2RestSessionTask<DescribeOutputsResult>
+    {
+    private:
+        DescribeOutputsRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/{stackName}/output";
+            {
+                auto& value = m_Request.getStackName();
+                url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeOutputsTask(
+            DescribeOutputsRequest request,
+            Gs2RestSessionTask<DescribeOutputsResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeOutputsResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeOutputsTask() GS2_OVERRIDE = default;
+    };
+
+    class GetOutputTask : public detail::Gs2RestSessionTask<GetOutputResult>
+    {
+    private:
+        GetOutputRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/{stackName}/output/{outputName}";
+            {
+                auto& value = m_Request.getStackName();
+                url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getOutputName();
+                url.replace("{outputName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetOutputTask(
+            GetOutputRequest request,
+            Gs2RestSessionTask<GetOutputResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetOutputResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetOutputTask() GS2_OVERRIDE = default;
+    };
+
+private:
+    static void write(detail::json::JsonWriter& jsonWriter, const Stack& obj)
+    {
+        jsonWriter.writeObjectStart();
         if (obj.getStackId())
         {
-            writer.writePropertyName("stackId");
-            writer.writeCharArray(*obj.getStackId());
+            jsonWriter.writePropertyName("stackId");
+            jsonWriter.writeCharArray(*obj.getStackId());
         }
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*obj.getDescription());
+            jsonWriter.writePropertyName("description");
+            jsonWriter.writeCharArray(*obj.getDescription());
         }
         if (obj.getTemplate())
         {
-            writer.writePropertyName("template");
-            writer.writeCharArray(*obj.getTemplate());
+            jsonWriter.writePropertyName("template");
+            jsonWriter.writeCharArray(*obj.getTemplate());
         }
         if (obj.getStatus())
         {
-            writer.writePropertyName("status");
-            writer.writeCharArray(*obj.getStatus());
+            jsonWriter.writePropertyName("status");
+            jsonWriter.writeCharArray(*obj.getStatus());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Resource& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Resource& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getResourceId())
         {
-            writer.writePropertyName("resourceId");
-            writer.writeCharArray(*obj.getResourceId());
+            jsonWriter.writePropertyName("resourceId");
+            jsonWriter.writeCharArray(*obj.getResourceId());
         }
         if (obj.getType())
         {
-            writer.writePropertyName("type");
-            writer.writeCharArray(*obj.getType());
+            jsonWriter.writePropertyName("type");
+            jsonWriter.writeCharArray(*obj.getType());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getRequest())
         {
-            writer.writePropertyName("request");
-            writer.writeCharArray(*obj.getRequest());
+            jsonWriter.writePropertyName("request");
+            jsonWriter.writeCharArray(*obj.getRequest());
         }
         if (obj.getResponse())
         {
-            writer.writePropertyName("response");
-            writer.writeCharArray(*obj.getResponse());
+            jsonWriter.writePropertyName("response");
+            jsonWriter.writeCharArray(*obj.getResponse());
         }
         if (obj.getRollbackContext())
         {
-            writer.writePropertyName("rollbackContext");
-            writer.writeCharArray(*obj.getRollbackContext());
+            jsonWriter.writePropertyName("rollbackContext");
+            jsonWriter.writeCharArray(*obj.getRollbackContext());
         }
         if (obj.getRollbackRequest())
         {
-            writer.writePropertyName("rollbackRequest");
-            writer.writeCharArray(*obj.getRollbackRequest());
+            jsonWriter.writePropertyName("rollbackRequest");
+            jsonWriter.writeCharArray(*obj.getRollbackRequest());
         }
         if (obj.getRollbackAfter())
         {
-            writer.writePropertyName("rollbackAfter");
-            writer.writeArrayStart();
+            jsonWriter.writePropertyName("rollbackAfter");
+            jsonWriter.writeArrayStart();
             auto& list = *obj.getRollbackAfter();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.writeCharArray(list[i]);
+                jsonWriter.writeCharArray(list[i]);
             }
-            writer.writeArrayEnd();
+            jsonWriter.writeArrayEnd();
         }
         if (obj.getOutputKeys())
         {
-            writer.writePropertyName("outputKeys");
-            writer.writeArrayStart();
+            jsonWriter.writePropertyName("outputKeys");
+            jsonWriter.writeArrayStart();
             auto& list = *obj.getOutputKeys();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.writeCharArray(list[i]);
+                jsonWriter.writeCharArray(list[i]);
             }
-            writer.writeArrayEnd();
+            jsonWriter.writeArrayEnd();
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const WorkingStack& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const WorkingStack& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getStackId())
         {
-            writer.writePropertyName("stackId");
-            writer.writeCharArray(*obj.getStackId());
+            jsonWriter.writePropertyName("stackId");
+            jsonWriter.writeCharArray(*obj.getStackId());
         }
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const WorkingResource& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const WorkingResource& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getResourceId())
         {
-            writer.writePropertyName("resourceId");
-            writer.writeCharArray(*obj.getResourceId());
+            jsonWriter.writePropertyName("resourceId");
+            jsonWriter.writeCharArray(*obj.getResourceId());
         }
         if (obj.getContext())
         {
-            writer.writePropertyName("context");
-            writer.writeCharArray(*obj.getContext());
+            jsonWriter.writePropertyName("context");
+            jsonWriter.writeCharArray(*obj.getContext());
         }
         if (obj.getType())
         {
-            writer.writePropertyName("type");
-            writer.writeCharArray(*obj.getType());
+            jsonWriter.writePropertyName("type");
+            jsonWriter.writeCharArray(*obj.getType());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getRequest())
         {
-            writer.writePropertyName("request");
-            writer.writeCharArray(*obj.getRequest());
+            jsonWriter.writePropertyName("request");
+            jsonWriter.writeCharArray(*obj.getRequest());
         }
         if (obj.getAfter())
         {
-            writer.writePropertyName("after");
-            writer.writeArrayStart();
+            jsonWriter.writePropertyName("after");
+            jsonWriter.writeArrayStart();
             auto& list = *obj.getAfter();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.writeCharArray(list[i]);
+                jsonWriter.writeCharArray(list[i]);
             }
-            writer.writeArrayEnd();
+            jsonWriter.writeArrayEnd();
         }
         if (obj.getRollbackContext())
         {
-            writer.writePropertyName("rollbackContext");
-            writer.writeCharArray(*obj.getRollbackContext());
+            jsonWriter.writePropertyName("rollbackContext");
+            jsonWriter.writeCharArray(*obj.getRollbackContext());
         }
         if (obj.getRollbackRequest())
         {
-            writer.writePropertyName("rollbackRequest");
-            writer.writeCharArray(*obj.getRollbackRequest());
+            jsonWriter.writePropertyName("rollbackRequest");
+            jsonWriter.writeCharArray(*obj.getRollbackRequest());
         }
         if (obj.getRollbackAfter())
         {
-            writer.writePropertyName("rollbackAfter");
-            writer.writeArrayStart();
+            jsonWriter.writePropertyName("rollbackAfter");
+            jsonWriter.writeArrayStart();
             auto& list = *obj.getRollbackAfter();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.writeCharArray(list[i]);
+                jsonWriter.writeCharArray(list[i]);
             }
-            writer.writeArrayEnd();
+            jsonWriter.writeArrayEnd();
         }
         if (obj.getOutputFields())
         {
-            writer.writePropertyName("outputFields");
-            writer.writeArrayStart();
+            jsonWriter.writePropertyName("outputFields");
+            jsonWriter.writeArrayStart();
             auto& list = *obj.getOutputFields();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                write(writer, list[i]);
+                write(jsonWriter, list[i]);
             }
-            writer.writeArrayEnd();
+            jsonWriter.writeArrayEnd();
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Event& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Event& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getEventId())
         {
-            writer.writePropertyName("eventId");
-            writer.writeCharArray(*obj.getEventId());
+            jsonWriter.writePropertyName("eventId");
+            jsonWriter.writeCharArray(*obj.getEventId());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getResourceName())
         {
-            writer.writePropertyName("resourceName");
-            writer.writeCharArray(*obj.getResourceName());
+            jsonWriter.writePropertyName("resourceName");
+            jsonWriter.writeCharArray(*obj.getResourceName());
         }
         if (obj.getType())
         {
-            writer.writePropertyName("type");
-            writer.writeCharArray(*obj.getType());
+            jsonWriter.writePropertyName("type");
+            jsonWriter.writeCharArray(*obj.getType());
         }
         if (obj.getMessage())
         {
-            writer.writePropertyName("message");
-            writer.writeCharArray(*obj.getMessage());
+            jsonWriter.writePropertyName("message");
+            jsonWriter.writeCharArray(*obj.getMessage());
         }
         if (obj.getEventAt())
         {
-            writer.writePropertyName("eventAt");
-            writer.writeInt64(*obj.getEventAt());
+            jsonWriter.writePropertyName("eventAt");
+            jsonWriter.writeInt64(*obj.getEventAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Output& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Output& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getOutputId())
         {
-            writer.writePropertyName("outputId");
-            writer.writeCharArray(*obj.getOutputId());
+            jsonWriter.writePropertyName("outputId");
+            jsonWriter.writeCharArray(*obj.getOutputId());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getValue())
         {
-            writer.writePropertyName("value");
-            writer.writeCharArray(*obj.getValue());
+            jsonWriter.writePropertyName("value");
+            jsonWriter.writeCharArray(*obj.getValue());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const GitHubCheckoutSetting& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getGitHubApiKeyId())
         {
-            writer.writePropertyName("gitHubApiKeyId");
-            writer.writeCharArray(*obj.getGitHubApiKeyId());
+            jsonWriter.writePropertyName("gitHubApiKeyId");
+            jsonWriter.writeCharArray(*obj.getGitHubApiKeyId());
         }
         if (obj.getRepositoryName())
         {
-            writer.writePropertyName("repositoryName");
-            writer.writeCharArray(*obj.getRepositoryName());
+            jsonWriter.writePropertyName("repositoryName");
+            jsonWriter.writeCharArray(*obj.getRepositoryName());
         }
         if (obj.getSourcePath())
         {
-            writer.writePropertyName("sourcePath");
-            writer.writeCharArray(*obj.getSourcePath());
+            jsonWriter.writePropertyName("sourcePath");
+            jsonWriter.writeCharArray(*obj.getSourcePath());
         }
         if (obj.getReferenceType())
         {
-            writer.writePropertyName("referenceType");
-            writer.writeCharArray(*obj.getReferenceType());
+            jsonWriter.writePropertyName("referenceType");
+            jsonWriter.writeCharArray(*obj.getReferenceType());
         }
         if (obj.getCommitHash())
         {
-            writer.writePropertyName("commitHash");
-            writer.writeCharArray(*obj.getCommitHash());
+            jsonWriter.writePropertyName("commitHash");
+            jsonWriter.writeCharArray(*obj.getCommitHash());
         }
         if (obj.getBranchName())
         {
-            writer.writePropertyName("branchName");
-            writer.writeCharArray(*obj.getBranchName());
+            jsonWriter.writePropertyName("branchName");
+            jsonWriter.writeCharArray(*obj.getBranchName());
         }
         if (obj.getTagName())
         {
-            writer.writePropertyName("tagName");
-            writer.writeCharArray(*obj.getTagName());
+            jsonWriter.writePropertyName("tagName");
+            jsonWriter.writeCharArray(*obj.getTagName());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const OutputField& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const OutputField& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getFieldName())
         {
-            writer.writePropertyName("fieldName");
-            writer.writeCharArray(*obj.getFieldName());
+            jsonWriter.writePropertyName("fieldName");
+            jsonWriter.writeCharArray(*obj.getFieldName());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
 
@@ -433,45 +1270,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeStacks(DescribeStacksRequest& request, std::function<void(AsyncDescribeStacksResult&)> callback)
+    void describeStacks(DescribeStacksRequest request, std::function<void(AsyncDescribeStacksResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeStacksResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack";
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getPageToken())
-        {
-            url += joint;
-            url += "pageToken=";
-            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getLimit())
-        {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DescribeStacksTask& task = *new DescribeStacksTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -480,52 +1282,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createStack(CreateStackRequest& request, std::function<void(AsyncCreateStackResult&)> callback)
+    void createStack(CreateStackRequest request, std::function<void(AsyncCreateStackResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateStackResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getName())
-        {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*request.getName());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        if (request.getTemplate())
-        {
-            writer.writePropertyName("template");
-            writer.writeCharArray(*request.getTemplate());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        CreateStackTask& task = *new CreateStackTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -534,52 +1294,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createStackFromGitHub(CreateStackFromGitHubRequest& request, std::function<void(AsyncCreateStackFromGitHubResult&)> callback)
+    void createStackFromGitHub(CreateStackFromGitHubRequest request, std::function<void(AsyncCreateStackFromGitHubResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateStackFromGitHubResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack/from_git_hub";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getName())
-        {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*request.getName());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        if (request.getCheckoutSetting())
-        {
-            writer.writePropertyName("checkoutSetting");
-            write(writer, *request.getCheckoutSetting());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        CreateStackFromGitHubTask& task = *new CreateStackFromGitHubTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -588,35 +1306,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStackStatus(GetStackStatusRequest& request, std::function<void(AsyncGetStackStatusResult&)> callback)
+    void getStackStatus(GetStackStatusRequest request, std::function<void(AsyncGetStackStatusResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetStackStatusResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack/{stackName}/status";
-        {
-            auto& value = request.getStackName();
-            url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        GetStackStatusTask& task = *new GetStackStatusTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -625,35 +1318,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getStack(GetStackRequest& request, std::function<void(AsyncGetStackResult&)> callback)
+    void getStack(GetStackRequest request, std::function<void(AsyncGetStackResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetStackResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack/{stackName}";
-        {
-            auto& value = request.getStackName();
-            url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        GetStackTask& task = *new GetStackTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -662,51 +1330,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateStack(UpdateStackRequest& request, std::function<void(AsyncUpdateStackResult&)> callback)
+    void updateStack(UpdateStackRequest request, std::function<void(AsyncUpdateStackResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateStackResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("PUT");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack/{stackName}";
-        {
-            auto& value = request.getStackName();
-            url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        if (request.getTemplate())
-        {
-            writer.writePropertyName("template");
-            writer.writeCharArray(*request.getTemplate());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        UpdateStackTask& task = *new UpdateStackTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -715,51 +1342,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateStackFromGitHub(UpdateStackFromGitHubRequest& request, std::function<void(AsyncUpdateStackFromGitHubResult&)> callback)
+    void updateStackFromGitHub(UpdateStackFromGitHubRequest request, std::function<void(AsyncUpdateStackFromGitHubResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateStackFromGitHubResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("PUT");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack/{stackName}/from_git_hub";
-        {
-            auto& value = request.getStackName();
-            url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        if (request.getCheckoutSetting())
-        {
-            writer.writePropertyName("checkoutSetting");
-            write(writer, *request.getCheckoutSetting());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        UpdateStackFromGitHubTask& task = *new UpdateStackFromGitHubTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -772,40 +1358,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteStack(DeleteStackRequest& request, std::function<void(AsyncDeleteStackResult&)> callback)
+    void deleteStack(DeleteStackRequest request, std::function<void(AsyncDeleteStackResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteStackResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("DELETE");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack/{stackName}";
-        {
-            auto& value = request.getStackName();
-            url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-        {
-            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DeleteStackTask& task = *new DeleteStackTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -814,40 +1370,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void forceDeleteStack(ForceDeleteStackRequest& request, std::function<void(AsyncForceDeleteStackResult&)> callback)
+    void forceDeleteStack(ForceDeleteStackRequest request, std::function<void(AsyncForceDeleteStackResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<ForceDeleteStackResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("DELETE");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack/{stackName}/force";
-        {
-            auto& value = request.getStackName();
-            url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-        {
-            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        ForceDeleteStackTask& task = *new ForceDeleteStackTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -856,49 +1382,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeResources(DescribeResourcesRequest& request, std::function<void(AsyncDescribeResourcesResult&)> callback)
+    void describeResources(DescribeResourcesRequest request, std::function<void(AsyncDescribeResourcesResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeResourcesResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack/{stackName}/resource";
-        {
-            auto& value = request.getStackName();
-            url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getPageToken())
-        {
-            url += joint;
-            url += "pageToken=";
-            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getLimit())
-        {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DescribeResourcesTask& task = *new DescribeResourcesTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -907,39 +1394,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getResource(GetResourceRequest& request, std::function<void(AsyncGetResourceResult&)> callback)
+    void getResource(GetResourceRequest request, std::function<void(AsyncGetResourceResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetResourceResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack/{stackName}/resource/{resourceName}";
-        {
-            auto& value = request.getStackName();
-            url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getResourceName();
-            url.replace("{resourceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        GetResourceTask& task = *new GetResourceTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -948,49 +1406,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeEvents(DescribeEventsRequest& request, std::function<void(AsyncDescribeEventsResult&)> callback)
+    void describeEvents(DescribeEventsRequest request, std::function<void(AsyncDescribeEventsResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeEventsResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack/{stackName}/event";
-        {
-            auto& value = request.getStackName();
-            url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getPageToken())
-        {
-            url += joint;
-            url += "pageToken=";
-            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getLimit())
-        {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DescribeEventsTask& task = *new DescribeEventsTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -999,39 +1418,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getEvent(GetEventRequest& request, std::function<void(AsyncGetEventResult&)> callback)
+    void getEvent(GetEventRequest request, std::function<void(AsyncGetEventResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetEventResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack/{stackName}/event/{eventName}";
-        {
-            auto& value = request.getStackName();
-            url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getEventName();
-            url.replace("{eventName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        GetEventTask& task = *new GetEventTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1040,49 +1430,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeOutputs(DescribeOutputsRequest& request, std::function<void(AsyncDescribeOutputsResult&)> callback)
+    void describeOutputs(DescribeOutputsRequest request, std::function<void(AsyncDescribeOutputsResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeOutputsResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack/{stackName}/output";
-        {
-            auto& value = request.getStackName();
-            url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getPageToken())
-        {
-            url += joint;
-            url += "pageToken=";
-            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getLimit())
-        {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DescribeOutputsTask& task = *new DescribeOutputsTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1091,39 +1442,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getOutput(GetOutputRequest& request, std::function<void(AsyncGetOutputResult&)> callback)
+    void getOutput(GetOutputRequest request, std::function<void(AsyncGetOutputResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetOutputResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "deploy");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/stack/{stackName}/output/{outputName}";
-        {
-            auto& value = request.getStackName();
-            url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getOutputName();
-            url.replace("{outputName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        GetOutputTask& task = *new GetOutputTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 protected:

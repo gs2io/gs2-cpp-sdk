@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ProjectConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace project
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** GS2アカウントトークン */
@@ -48,100 +50,48 @@ private:
         /** データの取得件数 */
         optional<Int64> limit;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             accountToken(data.accountToken),
             pageToken(data.pageToken),
             limit(data.limit)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            accountToken(std::move(data.accountToken)),
-            pageToken(std::move(data.pageToken)),
-            limit(std::move(data.limit))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    DescribeProjectsRequest() :
-        m_pData(nullptr)
-    {}
+    DescribeProjectsRequest() = default;
+    DescribeProjectsRequest(const DescribeProjectsRequest& describeProjectsRequest) = default;
+    DescribeProjectsRequest(DescribeProjectsRequest&& describeProjectsRequest) = default;
+    ~DescribeProjectsRequest() GS2_OVERRIDE = default;
 
-    DescribeProjectsRequest(const DescribeProjectsRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Project(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    DescribeProjectsRequest& operator=(const DescribeProjectsRequest& describeProjectsRequest) = default;
+    DescribeProjectsRequest& operator=(DescribeProjectsRequest&& describeProjectsRequest) = default;
 
-    DescribeProjectsRequest(DescribeProjectsRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Project(std::move(obj)),
-        m_pData(obj.m_pData)
+    DescribeProjectsRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~DescribeProjectsRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DescribeProjectsRequest& operator=(const DescribeProjectsRequest& describeProjectsRequest)
-    {
-        Gs2BasicRequest::operator=(describeProjectsRequest);
-        Gs2Project::operator=(describeProjectsRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*describeProjectsRequest.m_pData);
-
-        return *this;
-    }
-
-    DescribeProjectsRequest& operator=(DescribeProjectsRequest&& describeProjectsRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(describeProjectsRequest));
-        Gs2Project::operator=(std::move(describeProjectsRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = describeProjectsRequest.m_pData;
-        describeProjectsRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeProjectsRequest);
     }
 
     const DescribeProjectsRequest* operator->() const
@@ -169,9 +119,9 @@ public:
      *
      * @param accountToken GS2アカウントトークン
      */
-    void setAccountToken(const Char* accountToken)
+    void setAccountToken(StringHolder accountToken)
     {
-        ensureData().accountToken.emplace(accountToken);
+        ensureData().accountToken.emplace(std::move(accountToken));
     }
 
     /**
@@ -179,9 +129,9 @@ public:
      *
      * @param accountToken GS2アカウントトークン
      */
-    DescribeProjectsRequest& withAccountToken(const Char* accountToken)
+    DescribeProjectsRequest& withAccountToken(StringHolder accountToken)
     {
-        ensureData().accountToken.emplace(accountToken);
+        ensureData().accountToken.emplace(std::move(accountToken));
         return *this;
     }
 
@@ -200,9 +150,9 @@ public:
      *
      * @param pageToken データの取得を開始する位置を指定するトークン
      */
-    void setPageToken(const Char* pageToken)
+    void setPageToken(StringHolder pageToken)
     {
-        ensureData().pageToken.emplace(pageToken);
+        ensureData().pageToken.emplace(std::move(pageToken));
     }
 
     /**
@@ -210,9 +160,9 @@ public:
      *
      * @param pageToken データの取得を開始する位置を指定するトークン
      */
-    DescribeProjectsRequest& withPageToken(const Char* pageToken)
+    DescribeProjectsRequest& withPageToken(StringHolder pageToken)
     {
-        ensureData().pageToken.emplace(pageToken);
+        ensureData().pageToken.emplace(std::move(pageToken));
         return *this;
     }
 
@@ -254,33 +204,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    DescribeProjectsRequest& withGs2ClientId(const Char* gs2ClientId)
+    DescribeProjectsRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    DescribeProjectsRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    DescribeProjectsRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -289,9 +215,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    DescribeProjectsRequest& withRequestId(const Char* gs2RequestId)
+    DescribeProjectsRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

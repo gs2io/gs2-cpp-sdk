@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace gateway {
@@ -54,8 +56,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -65,57 +66,55 @@ private:
             token(data.token),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            firebaseTokenId(std::move(data.firebaseTokenId)),
-            ownerId(std::move(data.ownerId)),
-            userId(std::move(data.userId)),
-            token(std::move(data.token)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "firebaseTokenId") == 0) {
+            if (std::strcmp(name_, "firebaseTokenId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->firebaseTokenId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "token") == 0) {
+            else if (std::strcmp(name_, "token") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->token.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -124,72 +123,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    FirebaseToken() :
-        m_pData(nullptr)
-    {}
+    FirebaseToken() = default;
+    FirebaseToken(const FirebaseToken& firebaseToken) = default;
+    FirebaseToken(FirebaseToken&& firebaseToken) = default;
+    ~FirebaseToken() = default;
 
-    FirebaseToken(const FirebaseToken& firebaseToken) :
-        Gs2Object(firebaseToken),
-        m_pData(firebaseToken.m_pData != nullptr ? new Data(*firebaseToken.m_pData) : nullptr)
-    {}
+    FirebaseToken& operator=(const FirebaseToken& firebaseToken) = default;
+    FirebaseToken& operator=(FirebaseToken&& firebaseToken) = default;
 
-    FirebaseToken(FirebaseToken&& firebaseToken) :
-        Gs2Object(std::move(firebaseToken)),
-        m_pData(firebaseToken.m_pData)
+    FirebaseToken deepCopy() const
     {
-        firebaseToken.m_pData = nullptr;
-    }
-
-    ~FirebaseToken()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    FirebaseToken& operator=(const FirebaseToken& firebaseToken)
-    {
-        Gs2Object::operator=(firebaseToken);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*firebaseToken.m_pData);
-
-        return *this;
-    }
-
-    FirebaseToken& operator=(FirebaseToken&& firebaseToken)
-    {
-        Gs2Object::operator=(std::move(firebaseToken));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = firebaseToken.m_pData;
-        firebaseToken.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(FirebaseToken);
     }
 
     const FirebaseToken* operator->() const
@@ -216,9 +163,9 @@ public:
      *
      * @param firebaseTokenId Firebaseデバイストークン のGRN
      */
-    void setFirebaseTokenId(const Char* firebaseTokenId)
+    void setFirebaseTokenId(StringHolder firebaseTokenId)
     {
-        ensureData().firebaseTokenId.emplace(firebaseTokenId);
+        ensureData().firebaseTokenId.emplace(std::move(firebaseTokenId));
     }
 
     /**
@@ -226,9 +173,9 @@ public:
      *
      * @param firebaseTokenId Firebaseデバイストークン のGRN
      */
-    FirebaseToken& withFirebaseTokenId(const Char* firebaseTokenId)
+    FirebaseToken& withFirebaseTokenId(StringHolder firebaseTokenId)
     {
-        setFirebaseTokenId(firebaseTokenId);
+        setFirebaseTokenId(std::move(firebaseTokenId));
         return *this;
     }
 
@@ -247,9 +194,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
@@ -257,9 +204,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    FirebaseToken& withOwnerId(const Char* ownerId)
+    FirebaseToken& withOwnerId(StringHolder ownerId)
     {
-        setOwnerId(ownerId);
+        setOwnerId(std::move(ownerId));
         return *this;
     }
 
@@ -278,9 +225,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -288,9 +235,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    FirebaseToken& withUserId(const Char* userId)
+    FirebaseToken& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -309,9 +256,9 @@ public:
      *
      * @param token Firebase Cloud Messaging のデバイストークン
      */
-    void setToken(const Char* token)
+    void setToken(StringHolder token)
     {
-        ensureData().token.emplace(token);
+        ensureData().token.emplace(std::move(token));
     }
 
     /**
@@ -319,9 +266,9 @@ public:
      *
      * @param token Firebase Cloud Messaging のデバイストークン
      */
-    FirebaseToken& withToken(const Char* token)
+    FirebaseToken& withToken(StringHolder token)
     {
-        setToken(token);
+        setToken(std::move(token));
         return *this;
     }
 
@@ -398,7 +345,7 @@ inline bool operator!=(const FirebaseToken& lhs, const FirebaseToken& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

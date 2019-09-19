@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace gateway
 {
@@ -43,28 +45,25 @@ private:
         /** 通知に使用したプロトコル */
         optional<StringHolder> protocol;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             protocol(data.protocol)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            protocol(std::move(data.protocol))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "protocol") == 0) {
+            if (std::strcmp(name_, "protocol") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->protocol.emplace(jsonValue.GetString());
@@ -73,72 +72,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    SendNotificationResult() :
-        m_pData(nullptr)
-    {}
+    SendNotificationResult() = default;
+    SendNotificationResult(const SendNotificationResult& sendNotificationResult) = default;
+    SendNotificationResult(SendNotificationResult&& sendNotificationResult) = default;
+    ~SendNotificationResult() = default;
 
-    SendNotificationResult(const SendNotificationResult& sendNotificationResult) :
-        Gs2Object(sendNotificationResult),
-        m_pData(sendNotificationResult.m_pData != nullptr ? new Data(*sendNotificationResult.m_pData) : nullptr)
-    {}
+    SendNotificationResult& operator=(const SendNotificationResult& sendNotificationResult) = default;
+    SendNotificationResult& operator=(SendNotificationResult&& sendNotificationResult) = default;
 
-    SendNotificationResult(SendNotificationResult&& sendNotificationResult) :
-        Gs2Object(std::move(sendNotificationResult)),
-        m_pData(sendNotificationResult.m_pData)
+    SendNotificationResult deepCopy() const
     {
-        sendNotificationResult.m_pData = nullptr;
-    }
-
-    ~SendNotificationResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    SendNotificationResult& operator=(const SendNotificationResult& sendNotificationResult)
-    {
-        Gs2Object::operator=(sendNotificationResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*sendNotificationResult.m_pData);
-
-        return *this;
-    }
-
-    SendNotificationResult& operator=(SendNotificationResult&& sendNotificationResult)
-    {
-        Gs2Object::operator=(std::move(sendNotificationResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = sendNotificationResult.m_pData;
-        sendNotificationResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(SendNotificationResult);
     }
 
     const SendNotificationResult* operator->() const
@@ -165,9 +112,9 @@ public:
      *
      * @param protocol 通知に使用したプロトコル
      */
-    void setProtocol(const Char* protocol)
+    void setProtocol(StringHolder protocol)
     {
-        ensureData().protocol.emplace(protocol);
+        ensureData().protocol.emplace(std::move(protocol));
     }
 
 

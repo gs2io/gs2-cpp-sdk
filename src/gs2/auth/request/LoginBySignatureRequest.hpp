@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2AuthConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace auth
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ユーザーID */
@@ -52,104 +54,50 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             userId(data.userId),
             keyId(data.keyId),
             body(data.body),
             signature(data.signature),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            userId(std::move(data.userId)),
-            keyId(std::move(data.keyId)),
-            body(std::move(data.body)),
-            signature(std::move(data.signature)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    LoginBySignatureRequest() :
-        m_pData(nullptr)
-    {}
+    LoginBySignatureRequest() = default;
+    LoginBySignatureRequest(const LoginBySignatureRequest& loginBySignatureRequest) = default;
+    LoginBySignatureRequest(LoginBySignatureRequest&& loginBySignatureRequest) = default;
+    ~LoginBySignatureRequest() GS2_OVERRIDE = default;
 
-    LoginBySignatureRequest(const LoginBySignatureRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Auth(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    LoginBySignatureRequest& operator=(const LoginBySignatureRequest& loginBySignatureRequest) = default;
+    LoginBySignatureRequest& operator=(LoginBySignatureRequest&& loginBySignatureRequest) = default;
 
-    LoginBySignatureRequest(LoginBySignatureRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Auth(std::move(obj)),
-        m_pData(obj.m_pData)
+    LoginBySignatureRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~LoginBySignatureRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    LoginBySignatureRequest& operator=(const LoginBySignatureRequest& loginBySignatureRequest)
-    {
-        Gs2BasicRequest::operator=(loginBySignatureRequest);
-        Gs2Auth::operator=(loginBySignatureRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*loginBySignatureRequest.m_pData);
-
-        return *this;
-    }
-
-    LoginBySignatureRequest& operator=(LoginBySignatureRequest&& loginBySignatureRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(loginBySignatureRequest));
-        Gs2Auth::operator=(std::move(loginBySignatureRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = loginBySignatureRequest.m_pData;
-        loginBySignatureRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(LoginBySignatureRequest);
     }
 
     const LoginBySignatureRequest* operator->() const
@@ -177,9 +125,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -187,9 +135,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    LoginBySignatureRequest& withUserId(const Char* userId)
+    LoginBySignatureRequest& withUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
         return *this;
     }
 
@@ -208,9 +156,9 @@ public:
      *
      * @param keyId 署名の作成に使用した暗号鍵 のGRN
      */
-    void setKeyId(const Char* keyId)
+    void setKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
     }
 
     /**
@@ -218,9 +166,9 @@ public:
      *
      * @param keyId 署名の作成に使用した暗号鍵 のGRN
      */
-    LoginBySignatureRequest& withKeyId(const Char* keyId)
+    LoginBySignatureRequest& withKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
         return *this;
     }
 
@@ -239,9 +187,9 @@ public:
      *
      * @param body アカウント認証情報の署名対象
      */
-    void setBody(const Char* body)
+    void setBody(StringHolder body)
     {
-        ensureData().body.emplace(body);
+        ensureData().body.emplace(std::move(body));
     }
 
     /**
@@ -249,9 +197,9 @@ public:
      *
      * @param body アカウント認証情報の署名対象
      */
-    LoginBySignatureRequest& withBody(const Char* body)
+    LoginBySignatureRequest& withBody(StringHolder body)
     {
-        ensureData().body.emplace(body);
+        ensureData().body.emplace(std::move(body));
         return *this;
     }
 
@@ -270,9 +218,9 @@ public:
      *
      * @param signature 署名
      */
-    void setSignature(const Char* signature)
+    void setSignature(StringHolder signature)
     {
-        ensureData().signature.emplace(signature);
+        ensureData().signature.emplace(std::move(signature));
     }
 
     /**
@@ -280,9 +228,9 @@ public:
      *
      * @param signature 署名
      */
-    LoginBySignatureRequest& withSignature(const Char* signature)
+    LoginBySignatureRequest& withSignature(StringHolder signature)
     {
-        ensureData().signature.emplace(signature);
+        ensureData().signature.emplace(std::move(signature));
         return *this;
     }
 
@@ -301,9 +249,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -311,9 +259,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    LoginBySignatureRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    LoginBySignatureRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -324,33 +272,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    LoginBySignatureRequest& withGs2ClientId(const Char* gs2ClientId)
+    LoginBySignatureRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    LoginBySignatureRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    LoginBySignatureRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -359,9 +283,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    LoginBySignatureRequest& withRequestId(const Char* gs2RequestId)
+    LoginBySignatureRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

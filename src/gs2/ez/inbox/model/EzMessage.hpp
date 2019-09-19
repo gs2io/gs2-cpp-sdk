@@ -28,60 +28,105 @@ namespace gs2 { namespace ez { namespace inbox {
 class EzMessage : public gs2::Gs2Object
 {
 private:
-    /** メッセージ */
-    gs2::optional<StringHolder> m_MessageId;
-    /** メッセージID */
-    gs2::optional<StringHolder> m_Name;
-    /** メッセージの内容に相当するメタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** 既読状態 */
-    gs2::optional<Bool> m_IsRead;
-    /** 開封時に実行する入手アクション */
-    gs2::optional<List<EzAcquireAction>> m_ReadAcquireActions;
-    /** 作成日時 */
-    gs2::optional<Int64> m_ReceivedAt;
-    /** 最終更新日時 */
-    gs2::optional<Int64> m_ReadAt;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** メッセージ */
+        gs2::optional<StringHolder> messageId;
+        /** メッセージID */
+        gs2::optional<StringHolder> name;
+        /** メッセージの内容に相当するメタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** 既読状態 */
+        gs2::optional<Bool> isRead;
+        /** 開封時に実行する入手アクション */
+        gs2::optional<List<EzAcquireAction>> readAcquireActions;
+        /** 作成日時 */
+        gs2::optional<Int64> receivedAt;
+        /** 最終更新日時 */
+        gs2::optional<Int64> readAt;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            messageId(data.messageId),
+            name(data.name),
+            metadata(data.metadata),
+            isRead(data.isRead),
+            receivedAt(data.receivedAt),
+            readAt(data.readAt)
+        {
+            if (data.readAcquireActions)
+            {
+                readAcquireActions = data.readAcquireActions->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::inbox::Message& message) :
+            messageId(message.getMessageId()),
+            name(message.getName()),
+            metadata(message.getMetadata()),
+            isRead(message.getIsRead() ? *message.getIsRead() : false),
+            receivedAt(message.getReceivedAt() ? *message.getReceivedAt() : 0),
+            readAt(message.getReadAt() ? *message.getReadAt() : 0)
+        {
+            readAcquireActions.emplace();
+            if (message.getReadAcquireActions())
+            {
+                for (int i = 0; i < message.getReadAcquireActions()->getCount(); ++i)
+                {
+                    *readAcquireActions += EzAcquireAction((*message.getReadAcquireActions())[i]);
+                }
+            }
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzMessage() = default;
+    EzMessage(const EzMessage& ezMessage) = default;
+    EzMessage(EzMessage&& ezMessage) = default;
+    ~EzMessage() = default;
 
     EzMessage(gs2::inbox::Message message) :
-        m_MessageId(message.getMessageId()),
-        m_Name(message.getName()),
-        m_Metadata(message.getMetadata()),
-        m_IsRead(message.getIsRead() ? *message.getIsRead() : false),
-        m_ReceivedAt(message.getReceivedAt() ? *message.getReceivedAt() : 0),
-        m_ReadAt(message.getReadAt() ? *message.getReadAt() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(message)
+    {}
+
+    EzMessage& operator=(const EzMessage& ezMessage) = default;
+    EzMessage& operator=(EzMessage&& ezMessage) = default;
+
+    EzMessage deepCopy() const
     {
-        m_ReadAcquireActions.emplace();
-        if (message.getReadAcquireActions())
-        {
-            for (int i = 0; i < message.getReadAcquireActions()->getCount(); ++i)
-            {
-                *m_ReadAcquireActions += EzAcquireAction((*message.getReadAcquireActions())[i]);
-            }
-        }
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzMessage);
     }
 
     gs2::inbox::Message ToModel() const
     {
         gs2::inbox::Message message;
-        message.setMessageId(*m_MessageId);
-        message.setName(*m_Name);
-        message.setMetadata(*m_Metadata);
-        message.setIsRead(*m_IsRead);
+        message.setMessageId(getMessageId());
+        message.setName(getName());
+        message.setMetadata(getMetadata());
+        message.setIsRead(getIsRead());
         {
             gs2::List<gs2::inbox::AcquireAction> list;
-            auto& readAcquireActions = *m_ReadAcquireActions;
+            auto& readAcquireActions = getReadAcquireActions();
             for (int i = 0; i < readAcquireActions.getCount(); ++i)
             {
                 list += readAcquireActions[i].ToModel();
             }
             message.setReadAcquireActions(list);
         }
-        message.setReceivedAt(*m_ReceivedAt);
-        message.setReadAt(*m_ReadAt);
+        message.setReceivedAt(getReceivedAt());
+        message.setReadAt(getReadAt());
         return message;
     }
 
@@ -89,120 +134,95 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getMessageId() const
+    const StringHolder& getMessageId() const
     {
-        return *m_MessageId;
+        return *ensureData().messageId;
     }
 
-    gs2::StringHolder& getMessageId()
+    const StringHolder& getName() const
     {
-        return *m_MessageId;
+        return *ensureData().name;
     }
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
-    }
-
-    gs2::StringHolder& getName()
-    {
-        return *m_Name;
-    }
-
-    const gs2::StringHolder& getMetadata() const
-    {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
+        return *ensureData().metadata;
     }
 
     Bool getIsRead() const
     {
-        return *m_IsRead;
+        return *ensureData().isRead;
     }
 
     const List<EzAcquireAction>& getReadAcquireActions() const
     {
-        return *m_ReadAcquireActions;
-    }
-
-    List<EzAcquireAction>& getReadAcquireActions()
-    {
-        return *m_ReadAcquireActions;
+        return *ensureData().readAcquireActions;
     }
 
     Int64 getReceivedAt() const
     {
-        return *m_ReceivedAt;
+        return *ensureData().receivedAt;
     }
 
     Int64 getReadAt() const
     {
-        return *m_ReadAt;
+        return *ensureData().readAt;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setMessageId(Char* messageId)
+    void setMessageId(StringHolder messageId)
     {
-        m_MessageId.emplace(messageId);
+        ensureData().messageId = std::move(messageId);
     }
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
     void setIsRead(Bool isRead)
     {
-        m_IsRead = isRead;
+        ensureData().isRead = isRead;
     }
 
-    void setReadAcquireActions(const List<EzAcquireAction>& readAcquireActions)
+    void setReadAcquireActions(List<EzAcquireAction> readAcquireActions)
     {
-        m_ReadAcquireActions = readAcquireActions;
-    }
-
-    void setReadAcquireActions(List<EzAcquireAction>&& readAcquireActions)
-    {
-        m_ReadAcquireActions = std::move(readAcquireActions);
+        ensureData().readAcquireActions = std::move(readAcquireActions);
     }
 
     void setReceivedAt(Int64 receivedAt)
     {
-        m_ReceivedAt = receivedAt;
+        ensureData().receivedAt = receivedAt;
     }
 
     void setReadAt(Int64 readAt)
     {
-        m_ReadAt = readAt;
+        ensureData().readAt = readAt;
     }
 
-    EzMessage& withMessageId(Char* messageId)
+    EzMessage& withMessageId(StringHolder messageId)
     {
-        setMessageId(messageId);
+        setMessageId(std::move(messageId));
         return *this;
     }
 
-    EzMessage& withName(Char* name)
+    EzMessage& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzMessage& withMetadata(Char* metadata)
+    EzMessage& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -212,13 +232,7 @@ public:
         return *this;
     }
 
-    EzMessage& withReadAcquireActions(const List<EzAcquireAction>& readAcquireActions)
-    {
-        setReadAcquireActions(readAcquireActions);
-        return *this;
-    }
-
-    EzMessage& withReadAcquireActions(List<EzAcquireAction>&& readAcquireActions)
+    EzMessage& withReadAcquireActions(List<EzAcquireAction> readAcquireActions)
     {
         setReadAcquireActions(std::move(readAcquireActions));
         return *this;

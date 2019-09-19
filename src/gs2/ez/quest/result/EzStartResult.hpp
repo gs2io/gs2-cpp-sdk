@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace quest {
 class EzStartResult : public gs2::Gs2Object
 {
 private:
-    /** クエストの開始処理の実行に使用するスタンプシート */
-    StringHolder m_StampSheet;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** クエストの開始処理の実行に使用するスタンプシート */
+        StringHolder stampSheet;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            stampSheet(data.stampSheet)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::quest::StartResult& startResult) :
+            stampSheet(*startResult.getStampSheet())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzStartResult(const gs2::quest::StartResult& result) :
-        m_StampSheet(*result.getStampSheet())
+    EzStartResult() = default;
+    EzStartResult(const EzStartResult& result) = default;
+    EzStartResult(EzStartResult&& result) = default;
+    ~EzStartResult() = default;
+
+    EzStartResult(gs2::quest::StartResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzStartResult& operator=(const EzStartResult& result) = default;
+    EzStartResult& operator=(EzStartResult&& result) = default;
+
+    EzStartResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzStartResult);
     }
 
     static bool isConvertible(const gs2::quest::StartResult& result)
@@ -46,14 +84,9 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getStampSheet() const
+    const StringHolder& getStampSheet() const
     {
-        return m_StampSheet;
-    }
-
-    gs2::StringHolder& getStampSheet()
-    {
-        return m_StampSheet;
+        return ensureData().stampSheet;
     }
 };
 

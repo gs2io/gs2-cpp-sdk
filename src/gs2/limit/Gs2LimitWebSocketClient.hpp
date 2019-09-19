@@ -90,76 +90,54 @@ private:
     class DescribeNamespacesTask : public detail::Gs2WebSocketSessionTask<DescribeNamespacesResult>
     {
     private:
-        DescribeNamespacesRequest& m_Request;
+        DescribeNamespacesRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "namespace";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeNamespaces";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getPageToken())
             {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
             }
             if (m_Request.getLimit())
             {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("namespace");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeNamespaces");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DescribeNamespacesTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeNamespacesRequest& request,
+            DescribeNamespacesRequest request,
             Gs2WebSocketSessionTask<DescribeNamespacesResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DescribeNamespacesResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DescribeNamespacesTask() GS2_OVERRIDE = default;
@@ -168,76 +146,54 @@ private:
     class CreateNamespaceTask : public detail::Gs2WebSocketSessionTask<CreateNamespaceResult>
     {
     private:
-        CreateNamespaceRequest& m_Request;
+        CreateNamespaceRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "namespace";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "createNamespace";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getName())
             {
-                writer.writePropertyName("name");
-                writer.writeCharArray(*m_Request.getName());
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
             }
             if (m_Request.getDescription())
             {
-                writer.writePropertyName("description");
-                writer.writeCharArray(*m_Request.getDescription());
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("namespace");
-            writer.writePropertyName("function");
-            writer.writeCharArray("createNamespace");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         CreateNamespaceTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            CreateNamespaceRequest& request,
+            CreateNamespaceRequest request,
             Gs2WebSocketSessionTask<CreateNamespaceResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<CreateNamespaceResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<CreateNamespaceResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~CreateNamespaceTask() GS2_OVERRIDE = default;
@@ -246,71 +202,49 @@ private:
     class GetNamespaceStatusTask : public detail::Gs2WebSocketSessionTask<GetNamespaceStatusResult>
     {
     private:
-        GetNamespaceStatusRequest& m_Request;
+        GetNamespaceStatusRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "namespace";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getNamespaceStatus";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("namespace");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getNamespaceStatus");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         GetNamespaceStatusTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetNamespaceStatusRequest& request,
+            GetNamespaceStatusRequest request,
             Gs2WebSocketSessionTask<GetNamespaceStatusResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetNamespaceStatusResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<GetNamespaceStatusResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~GetNamespaceStatusTask() GS2_OVERRIDE = default;
@@ -319,71 +253,49 @@ private:
     class GetNamespaceTask : public detail::Gs2WebSocketSessionTask<GetNamespaceResult>
     {
     private:
-        GetNamespaceRequest& m_Request;
+        GetNamespaceRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "namespace";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getNamespace";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("namespace");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getNamespace");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         GetNamespaceTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetNamespaceRequest& request,
+            GetNamespaceRequest request,
             Gs2WebSocketSessionTask<GetNamespaceResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetNamespaceResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<GetNamespaceResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~GetNamespaceTask() GS2_OVERRIDE = default;
@@ -392,76 +304,54 @@ private:
     class UpdateNamespaceTask : public detail::Gs2WebSocketSessionTask<UpdateNamespaceResult>
     {
     private:
-        UpdateNamespaceRequest& m_Request;
+        UpdateNamespaceRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "namespace";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateNamespace";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getDescription())
             {
-                writer.writePropertyName("description");
-                writer.writeCharArray(*m_Request.getDescription());
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("namespace");
-            writer.writePropertyName("function");
-            writer.writeCharArray("updateNamespace");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         UpdateNamespaceTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            UpdateNamespaceRequest& request,
+            UpdateNamespaceRequest request,
             Gs2WebSocketSessionTask<UpdateNamespaceResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<UpdateNamespaceResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<UpdateNamespaceResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~UpdateNamespaceTask() GS2_OVERRIDE = default;
@@ -470,71 +360,49 @@ private:
     class DeleteNamespaceTask : public detail::Gs2WebSocketSessionTask<DeleteNamespaceResult>
     {
     private:
-        DeleteNamespaceRequest& m_Request;
+        DeleteNamespaceRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "namespace";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteNamespace";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("namespace");
-            writer.writePropertyName("function");
-            writer.writeCharArray("deleteNamespace");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DeleteNamespaceTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DeleteNamespaceRequest& request,
+            DeleteNamespaceRequest request,
             Gs2WebSocketSessionTask<DeleteNamespaceResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DeleteNamespaceResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DeleteNamespaceResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DeleteNamespaceTask() GS2_OVERRIDE = default;
@@ -543,96 +411,74 @@ private:
     class DescribeCountersTask : public detail::Gs2WebSocketSessionTask<DescribeCountersResult>
     {
     private:
-        DescribeCountersRequest& m_Request;
+        DescribeCountersRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "counter";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeCounters";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getLimitName())
             {
-                writer.writePropertyName("limitName");
-                writer.writeCharArray(*m_Request.getLimitName());
+                jsonWriter.writePropertyName("limitName");
+                jsonWriter.writeCharArray(*m_Request.getLimitName());
             }
             if (m_Request.getPageToken())
             {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
             }
             if (m_Request.getLimit())
             {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
             if (m_Request.getAccessToken())
             {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
             }
             if (m_Request.getDuplicationAvoider())
             {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeCounters");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DescribeCountersTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeCountersRequest& request,
+            DescribeCountersRequest request,
             Gs2WebSocketSessionTask<DescribeCountersResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DescribeCountersResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DescribeCountersResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DescribeCountersTask() GS2_OVERRIDE = default;
@@ -641,96 +487,74 @@ private:
     class DescribeCountersByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeCountersByUserIdResult>
     {
     private:
-        DescribeCountersByUserIdRequest& m_Request;
+        DescribeCountersByUserIdRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "counter";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeCountersByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getLimitName())
             {
-                writer.writePropertyName("limitName");
-                writer.writeCharArray(*m_Request.getLimitName());
+                jsonWriter.writePropertyName("limitName");
+                jsonWriter.writeCharArray(*m_Request.getLimitName());
             }
             if (m_Request.getUserId())
             {
-                writer.writePropertyName("userId");
-                writer.writeCharArray(*m_Request.getUserId());
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
             }
             if (m_Request.getPageToken())
             {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
             }
             if (m_Request.getLimit())
             {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
             if (m_Request.getDuplicationAvoider())
             {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeCountersByUserId");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DescribeCountersByUserIdTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeCountersByUserIdRequest& request,
+            DescribeCountersByUserIdRequest request,
             Gs2WebSocketSessionTask<DescribeCountersByUserIdResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DescribeCountersByUserIdResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DescribeCountersByUserIdResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DescribeCountersByUserIdTask() GS2_OVERRIDE = default;
@@ -739,91 +563,69 @@ private:
     class GetCounterTask : public detail::Gs2WebSocketSessionTask<GetCounterResult>
     {
     private:
-        GetCounterRequest& m_Request;
+        GetCounterRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "counter";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getCounter";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getLimitName())
             {
-                writer.writePropertyName("limitName");
-                writer.writeCharArray(*m_Request.getLimitName());
+                jsonWriter.writePropertyName("limitName");
+                jsonWriter.writeCharArray(*m_Request.getLimitName());
             }
             if (m_Request.getCounterName())
             {
-                writer.writePropertyName("counterName");
-                writer.writeCharArray(*m_Request.getCounterName());
+                jsonWriter.writePropertyName("counterName");
+                jsonWriter.writeCharArray(*m_Request.getCounterName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
             if (m_Request.getAccessToken())
             {
-                writer.writePropertyName("xGs2AccessToken");
-                writer.writeCharArray(*m_Request.getAccessToken());
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
             }
             if (m_Request.getDuplicationAvoider())
             {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getCounter");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         GetCounterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetCounterRequest& request,
+            GetCounterRequest request,
             Gs2WebSocketSessionTask<GetCounterResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetCounterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<GetCounterResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~GetCounterTask() GS2_OVERRIDE = default;
@@ -832,91 +634,69 @@ private:
     class GetCounterByUserIdTask : public detail::Gs2WebSocketSessionTask<GetCounterByUserIdResult>
     {
     private:
-        GetCounterByUserIdRequest& m_Request;
+        GetCounterByUserIdRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "counter";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getCounterByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getLimitName())
             {
-                writer.writePropertyName("limitName");
-                writer.writeCharArray(*m_Request.getLimitName());
+                jsonWriter.writePropertyName("limitName");
+                jsonWriter.writeCharArray(*m_Request.getLimitName());
             }
             if (m_Request.getUserId())
             {
-                writer.writePropertyName("userId");
-                writer.writeCharArray(*m_Request.getUserId());
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
             }
             if (m_Request.getCounterName())
             {
-                writer.writePropertyName("counterName");
-                writer.writeCharArray(*m_Request.getCounterName());
+                jsonWriter.writePropertyName("counterName");
+                jsonWriter.writeCharArray(*m_Request.getCounterName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
             if (m_Request.getDuplicationAvoider())
             {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getCounterByUserId");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         GetCounterByUserIdTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetCounterByUserIdRequest& request,
+            GetCounterByUserIdRequest request,
             Gs2WebSocketSessionTask<GetCounterByUserIdResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetCounterByUserIdResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<GetCounterByUserIdResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~GetCounterByUserIdTask() GS2_OVERRIDE = default;
@@ -925,101 +705,79 @@ private:
     class CountUpByUserIdTask : public detail::Gs2WebSocketSessionTask<CountUpByUserIdResult>
     {
     private:
-        CountUpByUserIdRequest& m_Request;
+        CountUpByUserIdRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "counter";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "countUpByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getLimitName())
             {
-                writer.writePropertyName("limitName");
-                writer.writeCharArray(*m_Request.getLimitName());
+                jsonWriter.writePropertyName("limitName");
+                jsonWriter.writeCharArray(*m_Request.getLimitName());
             }
             if (m_Request.getCounterName())
             {
-                writer.writePropertyName("counterName");
-                writer.writeCharArray(*m_Request.getCounterName());
+                jsonWriter.writePropertyName("counterName");
+                jsonWriter.writeCharArray(*m_Request.getCounterName());
             }
             if (m_Request.getUserId())
             {
-                writer.writePropertyName("userId");
-                writer.writeCharArray(*m_Request.getUserId());
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
             }
             if (m_Request.getCountUpValue())
             {
-                writer.writePropertyName("countUpValue");
-                writer.writeInt32(*m_Request.getCountUpValue());
+                jsonWriter.writePropertyName("countUpValue");
+                jsonWriter.writeInt32(*m_Request.getCountUpValue());
             }
             if (m_Request.getMaxValue())
             {
-                writer.writePropertyName("maxValue");
-                writer.writeInt32(*m_Request.getMaxValue());
+                jsonWriter.writePropertyName("maxValue");
+                jsonWriter.writeInt32(*m_Request.getMaxValue());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
             if (m_Request.getDuplicationAvoider())
             {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("countUpByUserId");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         CountUpByUserIdTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            CountUpByUserIdRequest& request,
+            CountUpByUserIdRequest request,
             Gs2WebSocketSessionTask<CountUpByUserIdResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<CountUpByUserIdResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<CountUpByUserIdResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~CountUpByUserIdTask() GS2_OVERRIDE = default;
@@ -1028,91 +786,69 @@ private:
     class DeleteCounterByUserIdTask : public detail::Gs2WebSocketSessionTask<DeleteCounterByUserIdResult>
     {
     private:
-        DeleteCounterByUserIdRequest& m_Request;
+        DeleteCounterByUserIdRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "counter";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteCounterByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getLimitName())
             {
-                writer.writePropertyName("limitName");
-                writer.writeCharArray(*m_Request.getLimitName());
+                jsonWriter.writePropertyName("limitName");
+                jsonWriter.writeCharArray(*m_Request.getLimitName());
             }
             if (m_Request.getUserId())
             {
-                writer.writePropertyName("userId");
-                writer.writeCharArray(*m_Request.getUserId());
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
             }
             if (m_Request.getCounterName())
             {
-                writer.writePropertyName("counterName");
-                writer.writeCharArray(*m_Request.getCounterName());
+                jsonWriter.writePropertyName("counterName");
+                jsonWriter.writeCharArray(*m_Request.getCounterName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
             if (m_Request.getDuplicationAvoider())
             {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("deleteCounterByUserId");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DeleteCounterByUserIdTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DeleteCounterByUserIdRequest& request,
+            DeleteCounterByUserIdRequest request,
             Gs2WebSocketSessionTask<DeleteCounterByUserIdResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DeleteCounterByUserIdResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DeleteCounterByUserIdResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DeleteCounterByUserIdTask() GS2_OVERRIDE = default;
@@ -1121,81 +857,59 @@ private:
     class CountUpByStampTaskTask : public detail::Gs2WebSocketSessionTask<CountUpByStampTaskResult>
     {
     private:
-        CountUpByStampTaskRequest& m_Request;
+        CountUpByStampTaskRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "counter";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "countUpByStampTask";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getStampTask())
             {
-                writer.writePropertyName("stampTask");
-                writer.writeCharArray(*m_Request.getStampTask());
+                jsonWriter.writePropertyName("stampTask");
+                jsonWriter.writeCharArray(*m_Request.getStampTask());
             }
             if (m_Request.getKeyId())
             {
-                writer.writePropertyName("keyId");
-                writer.writeCharArray(*m_Request.getKeyId());
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
             if (m_Request.getDuplicationAvoider())
             {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("countUpByStampTask");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         CountUpByStampTaskTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            CountUpByStampTaskRequest& request,
+            CountUpByStampTaskRequest request,
             Gs2WebSocketSessionTask<CountUpByStampTaskResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<CountUpByStampTaskResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<CountUpByStampTaskResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~CountUpByStampTaskTask() GS2_OVERRIDE = default;
@@ -1204,81 +918,59 @@ private:
     class DeleteByStampSheetTask : public detail::Gs2WebSocketSessionTask<DeleteByStampSheetResult>
     {
     private:
-        DeleteByStampSheetRequest& m_Request;
+        DeleteByStampSheetRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "counter";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteByStampSheet";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getStampSheet())
             {
-                writer.writePropertyName("stampSheet");
-                writer.writeCharArray(*m_Request.getStampSheet());
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
             }
             if (m_Request.getKeyId())
             {
-                writer.writePropertyName("keyId");
-                writer.writeCharArray(*m_Request.getKeyId());
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
             if (m_Request.getDuplicationAvoider())
             {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("counter");
-            writer.writePropertyName("function");
-            writer.writeCharArray("deleteByStampSheet");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DeleteByStampSheetTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DeleteByStampSheetRequest& request,
+            DeleteByStampSheetRequest request,
             Gs2WebSocketSessionTask<DeleteByStampSheetResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DeleteByStampSheetResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DeleteByStampSheetResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DeleteByStampSheetTask() GS2_OVERRIDE = default;
@@ -1287,81 +979,59 @@ private:
     class DescribeLimitModelMastersTask : public detail::Gs2WebSocketSessionTask<DescribeLimitModelMastersResult>
     {
     private:
-        DescribeLimitModelMastersRequest& m_Request;
+        DescribeLimitModelMastersRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "limitModelMaster";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeLimitModelMasters";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getPageToken())
             {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
             }
             if (m_Request.getLimit())
             {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("limitModelMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeLimitModelMasters");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DescribeLimitModelMastersTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeLimitModelMastersRequest& request,
+            DescribeLimitModelMastersRequest request,
             Gs2WebSocketSessionTask<DescribeLimitModelMastersResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DescribeLimitModelMastersResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DescribeLimitModelMastersResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DescribeLimitModelMastersTask() GS2_OVERRIDE = default;
@@ -1370,106 +1040,84 @@ private:
     class CreateLimitModelMasterTask : public detail::Gs2WebSocketSessionTask<CreateLimitModelMasterResult>
     {
     private:
-        CreateLimitModelMasterRequest& m_Request;
+        CreateLimitModelMasterRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "limitModelMaster";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "createLimitModelMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getName())
             {
-                writer.writePropertyName("name");
-                writer.writeCharArray(*m_Request.getName());
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
             }
             if (m_Request.getDescription())
             {
-                writer.writePropertyName("description");
-                writer.writeCharArray(*m_Request.getDescription());
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
             }
             if (m_Request.getMetadata())
             {
-                writer.writePropertyName("metadata");
-                writer.writeCharArray(*m_Request.getMetadata());
+                jsonWriter.writePropertyName("metadata");
+                jsonWriter.writeCharArray(*m_Request.getMetadata());
             }
             if (m_Request.getResetType())
             {
-                writer.writePropertyName("resetType");
-                writer.writeCharArray(*m_Request.getResetType());
+                jsonWriter.writePropertyName("resetType");
+                jsonWriter.writeCharArray(*m_Request.getResetType());
             }
             if (m_Request.getResetDayOfMonth())
             {
-                writer.writePropertyName("resetDayOfMonth");
-                writer.writeInt32(*m_Request.getResetDayOfMonth());
+                jsonWriter.writePropertyName("resetDayOfMonth");
+                jsonWriter.writeInt32(*m_Request.getResetDayOfMonth());
             }
             if (m_Request.getResetDayOfWeek())
             {
-                writer.writePropertyName("resetDayOfWeek");
-                writer.writeCharArray(*m_Request.getResetDayOfWeek());
+                jsonWriter.writePropertyName("resetDayOfWeek");
+                jsonWriter.writeCharArray(*m_Request.getResetDayOfWeek());
             }
             if (m_Request.getResetHour())
             {
-                writer.writePropertyName("resetHour");
-                writer.writeInt32(*m_Request.getResetHour());
+                jsonWriter.writePropertyName("resetHour");
+                jsonWriter.writeInt32(*m_Request.getResetHour());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("limitModelMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("createLimitModelMaster");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         CreateLimitModelMasterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            CreateLimitModelMasterRequest& request,
+            CreateLimitModelMasterRequest request,
             Gs2WebSocketSessionTask<CreateLimitModelMasterResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<CreateLimitModelMasterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<CreateLimitModelMasterResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~CreateLimitModelMasterTask() GS2_OVERRIDE = default;
@@ -1478,76 +1126,54 @@ private:
     class GetLimitModelMasterTask : public detail::Gs2WebSocketSessionTask<GetLimitModelMasterResult>
     {
     private:
-        GetLimitModelMasterRequest& m_Request;
+        GetLimitModelMasterRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "limitModelMaster";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getLimitModelMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getLimitName())
             {
-                writer.writePropertyName("limitName");
-                writer.writeCharArray(*m_Request.getLimitName());
+                jsonWriter.writePropertyName("limitName");
+                jsonWriter.writeCharArray(*m_Request.getLimitName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("limitModelMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getLimitModelMaster");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         GetLimitModelMasterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetLimitModelMasterRequest& request,
+            GetLimitModelMasterRequest request,
             Gs2WebSocketSessionTask<GetLimitModelMasterResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetLimitModelMasterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<GetLimitModelMasterResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~GetLimitModelMasterTask() GS2_OVERRIDE = default;
@@ -1556,106 +1182,84 @@ private:
     class UpdateLimitModelMasterTask : public detail::Gs2WebSocketSessionTask<UpdateLimitModelMasterResult>
     {
     private:
-        UpdateLimitModelMasterRequest& m_Request;
+        UpdateLimitModelMasterRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "limitModelMaster";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateLimitModelMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getLimitName())
             {
-                writer.writePropertyName("limitName");
-                writer.writeCharArray(*m_Request.getLimitName());
+                jsonWriter.writePropertyName("limitName");
+                jsonWriter.writeCharArray(*m_Request.getLimitName());
             }
             if (m_Request.getDescription())
             {
-                writer.writePropertyName("description");
-                writer.writeCharArray(*m_Request.getDescription());
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
             }
             if (m_Request.getMetadata())
             {
-                writer.writePropertyName("metadata");
-                writer.writeCharArray(*m_Request.getMetadata());
+                jsonWriter.writePropertyName("metadata");
+                jsonWriter.writeCharArray(*m_Request.getMetadata());
             }
             if (m_Request.getResetType())
             {
-                writer.writePropertyName("resetType");
-                writer.writeCharArray(*m_Request.getResetType());
+                jsonWriter.writePropertyName("resetType");
+                jsonWriter.writeCharArray(*m_Request.getResetType());
             }
             if (m_Request.getResetDayOfMonth())
             {
-                writer.writePropertyName("resetDayOfMonth");
-                writer.writeInt32(*m_Request.getResetDayOfMonth());
+                jsonWriter.writePropertyName("resetDayOfMonth");
+                jsonWriter.writeInt32(*m_Request.getResetDayOfMonth());
             }
             if (m_Request.getResetDayOfWeek())
             {
-                writer.writePropertyName("resetDayOfWeek");
-                writer.writeCharArray(*m_Request.getResetDayOfWeek());
+                jsonWriter.writePropertyName("resetDayOfWeek");
+                jsonWriter.writeCharArray(*m_Request.getResetDayOfWeek());
             }
             if (m_Request.getResetHour())
             {
-                writer.writePropertyName("resetHour");
-                writer.writeInt32(*m_Request.getResetHour());
+                jsonWriter.writePropertyName("resetHour");
+                jsonWriter.writeInt32(*m_Request.getResetHour());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("limitModelMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("updateLimitModelMaster");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         UpdateLimitModelMasterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            UpdateLimitModelMasterRequest& request,
+            UpdateLimitModelMasterRequest request,
             Gs2WebSocketSessionTask<UpdateLimitModelMasterResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<UpdateLimitModelMasterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<UpdateLimitModelMasterResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~UpdateLimitModelMasterTask() GS2_OVERRIDE = default;
@@ -1664,76 +1268,54 @@ private:
     class DeleteLimitModelMasterTask : public detail::Gs2WebSocketSessionTask<DeleteLimitModelMasterResult>
     {
     private:
-        DeleteLimitModelMasterRequest& m_Request;
+        DeleteLimitModelMasterRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "limitModelMaster";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteLimitModelMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getLimitName())
             {
-                writer.writePropertyName("limitName");
-                writer.writeCharArray(*m_Request.getLimitName());
+                jsonWriter.writePropertyName("limitName");
+                jsonWriter.writeCharArray(*m_Request.getLimitName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("limitModelMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("deleteLimitModelMaster");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DeleteLimitModelMasterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DeleteLimitModelMasterRequest& request,
+            DeleteLimitModelMasterRequest request,
             Gs2WebSocketSessionTask<DeleteLimitModelMasterResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DeleteLimitModelMasterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DeleteLimitModelMasterResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DeleteLimitModelMasterTask() GS2_OVERRIDE = default;
@@ -1742,71 +1324,49 @@ private:
     class ExportMasterTask : public detail::Gs2WebSocketSessionTask<ExportMasterResult>
     {
     private:
-        ExportMasterRequest& m_Request;
+        ExportMasterRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "currentLimitMaster";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "exportMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("currentLimitMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("exportMaster");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         ExportMasterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            ExportMasterRequest& request,
+            ExportMasterRequest request,
             Gs2WebSocketSessionTask<ExportMasterResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<ExportMasterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<ExportMasterResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~ExportMasterTask() GS2_OVERRIDE = default;
@@ -1815,71 +1375,49 @@ private:
     class GetCurrentLimitMasterTask : public detail::Gs2WebSocketSessionTask<GetCurrentLimitMasterResult>
     {
     private:
-        GetCurrentLimitMasterRequest& m_Request;
+        GetCurrentLimitMasterRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "currentLimitMaster";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getCurrentLimitMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("currentLimitMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getCurrentLimitMaster");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         GetCurrentLimitMasterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetCurrentLimitMasterRequest& request,
+            GetCurrentLimitMasterRequest request,
             Gs2WebSocketSessionTask<GetCurrentLimitMasterResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetCurrentLimitMasterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<GetCurrentLimitMasterResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~GetCurrentLimitMasterTask() GS2_OVERRIDE = default;
@@ -1888,76 +1426,54 @@ private:
     class UpdateCurrentLimitMasterTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentLimitMasterResult>
     {
     private:
-        UpdateCurrentLimitMasterRequest& m_Request;
+        UpdateCurrentLimitMasterRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "currentLimitMaster";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateCurrentLimitMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getSettings())
             {
-                writer.writePropertyName("settings");
-                writer.writeCharArray(*m_Request.getSettings());
+                jsonWriter.writePropertyName("settings");
+                jsonWriter.writeCharArray(*m_Request.getSettings());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("currentLimitMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("updateCurrentLimitMaster");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         UpdateCurrentLimitMasterTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            UpdateCurrentLimitMasterRequest& request,
+            UpdateCurrentLimitMasterRequest request,
             Gs2WebSocketSessionTask<UpdateCurrentLimitMasterResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<UpdateCurrentLimitMasterResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<UpdateCurrentLimitMasterResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~UpdateCurrentLimitMasterTask() GS2_OVERRIDE = default;
@@ -1966,76 +1482,54 @@ private:
     class UpdateCurrentLimitMasterFromGitHubTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentLimitMasterFromGitHubResult>
     {
     private:
-        UpdateCurrentLimitMasterFromGitHubRequest& m_Request;
+        UpdateCurrentLimitMasterFromGitHubRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "currentLimitMaster";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateCurrentLimitMasterFromGitHub";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getCheckoutSetting())
             {
-                writer.writePropertyName("checkoutSetting");
-                write(writer, *m_Request.getCheckoutSetting());
+                jsonWriter.writePropertyName("checkoutSetting");
+                write(jsonWriter, *m_Request.getCheckoutSetting());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("currentLimitMaster");
-            writer.writePropertyName("function");
-            writer.writeCharArray("updateCurrentLimitMasterFromGitHub");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         UpdateCurrentLimitMasterFromGitHubTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            UpdateCurrentLimitMasterFromGitHubRequest& request,
+            UpdateCurrentLimitMasterFromGitHubRequest request,
             Gs2WebSocketSessionTask<UpdateCurrentLimitMasterFromGitHubResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<UpdateCurrentLimitMasterFromGitHubResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<UpdateCurrentLimitMasterFromGitHubResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~UpdateCurrentLimitMasterFromGitHubTask() GS2_OVERRIDE = default;
@@ -2044,71 +1538,49 @@ private:
     class DescribeLimitModelsTask : public detail::Gs2WebSocketSessionTask<DescribeLimitModelsResult>
     {
     private:
-        DescribeLimitModelsRequest& m_Request;
+        DescribeLimitModelsRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "limitModel";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeLimitModels";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("limitModel");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeLimitModels");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DescribeLimitModelsTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeLimitModelsRequest& request,
+            DescribeLimitModelsRequest request,
             Gs2WebSocketSessionTask<DescribeLimitModelsResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DescribeLimitModelsResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DescribeLimitModelsResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DescribeLimitModelsTask() GS2_OVERRIDE = default;
@@ -2117,344 +1589,321 @@ private:
     class GetLimitModelTask : public detail::Gs2WebSocketSessionTask<GetLimitModelResult>
     {
     private:
-        GetLimitModelRequest& m_Request;
+        GetLimitModelRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "limit";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "limitModel";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getLimitModel";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getNamespaceName())
             {
-                writer.writePropertyName("namespaceName");
-                writer.writeCharArray(*m_Request.getNamespaceName());
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
             if (m_Request.getLimitName())
             {
-                writer.writePropertyName("limitName");
-                writer.writeCharArray(*m_Request.getLimitName());
+                jsonWriter.writePropertyName("limitName");
+                jsonWriter.writeCharArray(*m_Request.getLimitName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("limit");
-            writer.writePropertyName("component");
-            writer.writeCharArray("limitModel");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getLimitModel");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         GetLimitModelTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetLimitModelRequest& request,
+            GetLimitModelRequest request,
             Gs2WebSocketSessionTask<GetLimitModelResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetLimitModelResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<GetLimitModelResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~GetLimitModelTask() GS2_OVERRIDE = default;
     };
 
 private:
-    static void write(detail::json::JsonWriter& writer, const Namespace& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Namespace& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getNamespaceId())
         {
-            writer.writePropertyName("namespaceId");
-            writer.writeCharArray(*obj.getNamespaceId());
+            jsonWriter.writePropertyName("namespaceId");
+            jsonWriter.writeCharArray(*obj.getNamespaceId());
         }
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*obj.getDescription());
+            jsonWriter.writePropertyName("description");
+            jsonWriter.writeCharArray(*obj.getDescription());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Counter& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Counter& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getCounterId())
         {
-            writer.writePropertyName("counterId");
-            writer.writeCharArray(*obj.getCounterId());
+            jsonWriter.writePropertyName("counterId");
+            jsonWriter.writeCharArray(*obj.getCounterId());
         }
         if (obj.getLimitName())
         {
-            writer.writePropertyName("limitName");
-            writer.writeCharArray(*obj.getLimitName());
+            jsonWriter.writePropertyName("limitName");
+            jsonWriter.writeCharArray(*obj.getLimitName());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getUserId())
         {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*obj.getUserId());
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
         }
         if (obj.getCount())
         {
-            writer.writePropertyName("count");
-            writer.writeInt32(*obj.getCount());
+            jsonWriter.writePropertyName("count");
+            jsonWriter.writeInt32(*obj.getCount());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const LimitModelMaster& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const LimitModelMaster& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getLimitModelId())
         {
-            writer.writePropertyName("limitModelId");
-            writer.writeCharArray(*obj.getLimitModelId());
+            jsonWriter.writePropertyName("limitModelId");
+            jsonWriter.writeCharArray(*obj.getLimitModelId());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*obj.getDescription());
+            jsonWriter.writePropertyName("description");
+            jsonWriter.writeCharArray(*obj.getDescription());
         }
         if (obj.getMetadata())
         {
-            writer.writePropertyName("metadata");
-            writer.writeCharArray(*obj.getMetadata());
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
         }
         if (obj.getResetType())
         {
-            writer.writePropertyName("resetType");
-            writer.writeCharArray(*obj.getResetType());
+            jsonWriter.writePropertyName("resetType");
+            jsonWriter.writeCharArray(*obj.getResetType());
         }
         if (obj.getResetDayOfMonth())
         {
-            writer.writePropertyName("resetDayOfMonth");
-            writer.writeInt32(*obj.getResetDayOfMonth());
+            jsonWriter.writePropertyName("resetDayOfMonth");
+            jsonWriter.writeInt32(*obj.getResetDayOfMonth());
         }
         if (obj.getResetDayOfWeek())
         {
-            writer.writePropertyName("resetDayOfWeek");
-            writer.writeCharArray(*obj.getResetDayOfWeek());
+            jsonWriter.writePropertyName("resetDayOfWeek");
+            jsonWriter.writeCharArray(*obj.getResetDayOfWeek());
         }
         if (obj.getResetHour())
         {
-            writer.writePropertyName("resetHour");
-            writer.writeInt32(*obj.getResetHour());
+            jsonWriter.writePropertyName("resetHour");
+            jsonWriter.writeInt32(*obj.getResetHour());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const CurrentLimitMaster& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const CurrentLimitMaster& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getNamespaceName())
         {
-            writer.writePropertyName("namespaceName");
-            writer.writeCharArray(*obj.getNamespaceName());
+            jsonWriter.writePropertyName("namespaceName");
+            jsonWriter.writeCharArray(*obj.getNamespaceName());
         }
         if (obj.getSettings())
         {
-            writer.writePropertyName("settings");
-            writer.writeCharArray(*obj.getSettings());
+            jsonWriter.writePropertyName("settings");
+            jsonWriter.writeCharArray(*obj.getSettings());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const ResponseCache& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const ResponseCache& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getRegion())
         {
-            writer.writePropertyName("region");
-            writer.writeCharArray(*obj.getRegion());
+            jsonWriter.writePropertyName("region");
+            jsonWriter.writeCharArray(*obj.getRegion());
         }
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getResponseCacheId())
         {
-            writer.writePropertyName("responseCacheId");
-            writer.writeCharArray(*obj.getResponseCacheId());
+            jsonWriter.writePropertyName("responseCacheId");
+            jsonWriter.writeCharArray(*obj.getResponseCacheId());
         }
         if (obj.getRequestHash())
         {
-            writer.writePropertyName("requestHash");
-            writer.writeCharArray(*obj.getRequestHash());
+            jsonWriter.writePropertyName("requestHash");
+            jsonWriter.writeCharArray(*obj.getRequestHash());
         }
         if (obj.getResult())
         {
-            writer.writePropertyName("result");
-            writer.writeCharArray(*obj.getResult());
+            jsonWriter.writePropertyName("result");
+            jsonWriter.writeCharArray(*obj.getResult());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const GitHubCheckoutSetting& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const GitHubCheckoutSetting& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getGitHubApiKeyId())
         {
-            writer.writePropertyName("gitHubApiKeyId");
-            writer.writeCharArray(*obj.getGitHubApiKeyId());
+            jsonWriter.writePropertyName("gitHubApiKeyId");
+            jsonWriter.writeCharArray(*obj.getGitHubApiKeyId());
         }
         if (obj.getRepositoryName())
         {
-            writer.writePropertyName("repositoryName");
-            writer.writeCharArray(*obj.getRepositoryName());
+            jsonWriter.writePropertyName("repositoryName");
+            jsonWriter.writeCharArray(*obj.getRepositoryName());
         }
         if (obj.getSourcePath())
         {
-            writer.writePropertyName("sourcePath");
-            writer.writeCharArray(*obj.getSourcePath());
+            jsonWriter.writePropertyName("sourcePath");
+            jsonWriter.writeCharArray(*obj.getSourcePath());
         }
         if (obj.getReferenceType())
         {
-            writer.writePropertyName("referenceType");
-            writer.writeCharArray(*obj.getReferenceType());
+            jsonWriter.writePropertyName("referenceType");
+            jsonWriter.writeCharArray(*obj.getReferenceType());
         }
         if (obj.getCommitHash())
         {
-            writer.writePropertyName("commitHash");
-            writer.writeCharArray(*obj.getCommitHash());
+            jsonWriter.writePropertyName("commitHash");
+            jsonWriter.writeCharArray(*obj.getCommitHash());
         }
         if (obj.getBranchName())
         {
-            writer.writePropertyName("branchName");
-            writer.writeCharArray(*obj.getBranchName());
+            jsonWriter.writePropertyName("branchName");
+            jsonWriter.writeCharArray(*obj.getBranchName());
         }
         if (obj.getTagName())
         {
-            writer.writePropertyName("tagName");
-            writer.writeCharArray(*obj.getTagName());
+            jsonWriter.writePropertyName("tagName");
+            jsonWriter.writeCharArray(*obj.getTagName());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const LimitModel& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const LimitModel& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getLimitModelId())
         {
-            writer.writePropertyName("limitModelId");
-            writer.writeCharArray(*obj.getLimitModelId());
+            jsonWriter.writePropertyName("limitModelId");
+            jsonWriter.writeCharArray(*obj.getLimitModelId());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getMetadata())
         {
-            writer.writePropertyName("metadata");
-            writer.writeCharArray(*obj.getMetadata());
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
         }
         if (obj.getResetType())
         {
-            writer.writePropertyName("resetType");
-            writer.writeCharArray(*obj.getResetType());
+            jsonWriter.writePropertyName("resetType");
+            jsonWriter.writeCharArray(*obj.getResetType());
         }
         if (obj.getResetDayOfMonth())
         {
-            writer.writePropertyName("resetDayOfMonth");
-            writer.writeInt32(*obj.getResetDayOfMonth());
+            jsonWriter.writePropertyName("resetDayOfMonth");
+            jsonWriter.writeInt32(*obj.getResetDayOfMonth());
         }
         if (obj.getResetDayOfWeek())
         {
-            writer.writePropertyName("resetDayOfWeek");
-            writer.writeCharArray(*obj.getResetDayOfWeek());
+            jsonWriter.writePropertyName("resetDayOfWeek");
+            jsonWriter.writeCharArray(*obj.getResetDayOfWeek());
         }
         if (obj.getResetHour())
         {
-            writer.writePropertyName("resetHour");
-            writer.writeInt32(*obj.getResetHour());
+            jsonWriter.writePropertyName("resetHour");
+            jsonWriter.writeInt32(*obj.getResetHour());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
-
 
 
 public:
@@ -2474,10 +1923,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
+    void describeNamespaces(DescribeNamespacesRequest request, std::function<void(AsyncDescribeNamespacesResult)> callback)
     {
-        DescribeNamespacesTask& task = *new DescribeNamespacesTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DescribeNamespacesTask& task = *new DescribeNamespacesTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2486,10 +1935,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
+    void createNamespace(CreateNamespaceRequest request, std::function<void(AsyncCreateNamespaceResult)> callback)
     {
-        CreateNamespaceTask& task = *new CreateNamespaceTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        CreateNamespaceTask& task = *new CreateNamespaceTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2498,10 +1947,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
+    void getNamespaceStatus(GetNamespaceStatusRequest request, std::function<void(AsyncGetNamespaceStatusResult)> callback)
     {
-        GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2510,10 +1959,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
+    void getNamespace(GetNamespaceRequest request, std::function<void(AsyncGetNamespaceResult)> callback)
     {
-        GetNamespaceTask& task = *new GetNamespaceTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        GetNamespaceTask& task = *new GetNamespaceTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2522,10 +1971,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
+    void updateNamespace(UpdateNamespaceRequest request, std::function<void(AsyncUpdateNamespaceResult)> callback)
     {
-        UpdateNamespaceTask& task = *new UpdateNamespaceTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        UpdateNamespaceTask& task = *new UpdateNamespaceTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2534,10 +1983,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
+    void deleteNamespace(DeleteNamespaceRequest request, std::function<void(AsyncDeleteNamespaceResult)> callback)
     {
-        DeleteNamespaceTask& task = *new DeleteNamespaceTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DeleteNamespaceTask& task = *new DeleteNamespaceTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2546,10 +1995,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCounters(DescribeCountersRequest& request, std::function<void(AsyncDescribeCountersResult&)> callback)
+    void describeCounters(DescribeCountersRequest request, std::function<void(AsyncDescribeCountersResult)> callback)
     {
-        DescribeCountersTask& task = *new DescribeCountersTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DescribeCountersTask& task = *new DescribeCountersTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2558,10 +2007,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeCountersByUserId(DescribeCountersByUserIdRequest& request, std::function<void(AsyncDescribeCountersByUserIdResult&)> callback)
+    void describeCountersByUserId(DescribeCountersByUserIdRequest request, std::function<void(AsyncDescribeCountersByUserIdResult)> callback)
     {
-        DescribeCountersByUserIdTask& task = *new DescribeCountersByUserIdTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DescribeCountersByUserIdTask& task = *new DescribeCountersByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2570,10 +2019,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCounter(GetCounterRequest& request, std::function<void(AsyncGetCounterResult&)> callback)
+    void getCounter(GetCounterRequest request, std::function<void(AsyncGetCounterResult)> callback)
     {
-        GetCounterTask& task = *new GetCounterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        GetCounterTask& task = *new GetCounterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2582,10 +2031,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCounterByUserId(GetCounterByUserIdRequest& request, std::function<void(AsyncGetCounterByUserIdResult&)> callback)
+    void getCounterByUserId(GetCounterByUserIdRequest request, std::function<void(AsyncGetCounterByUserIdResult)> callback)
     {
-        GetCounterByUserIdTask& task = *new GetCounterByUserIdTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        GetCounterByUserIdTask& task = *new GetCounterByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2594,10 +2043,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void countUpByUserId(CountUpByUserIdRequest& request, std::function<void(AsyncCountUpByUserIdResult&)> callback)
+    void countUpByUserId(CountUpByUserIdRequest request, std::function<void(AsyncCountUpByUserIdResult)> callback)
     {
-        CountUpByUserIdTask& task = *new CountUpByUserIdTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        CountUpByUserIdTask& task = *new CountUpByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2606,10 +2055,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteCounterByUserId(DeleteCounterByUserIdRequest& request, std::function<void(AsyncDeleteCounterByUserIdResult&)> callback)
+    void deleteCounterByUserId(DeleteCounterByUserIdRequest request, std::function<void(AsyncDeleteCounterByUserIdResult)> callback)
     {
-        DeleteCounterByUserIdTask& task = *new DeleteCounterByUserIdTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DeleteCounterByUserIdTask& task = *new DeleteCounterByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2618,10 +2067,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void countUpByStampTask(CountUpByStampTaskRequest& request, std::function<void(AsyncCountUpByStampTaskResult&)> callback)
+    void countUpByStampTask(CountUpByStampTaskRequest request, std::function<void(AsyncCountUpByStampTaskResult)> callback)
     {
-        CountUpByStampTaskTask& task = *new CountUpByStampTaskTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        CountUpByStampTaskTask& task = *new CountUpByStampTaskTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2630,10 +2079,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteByStampSheet(DeleteByStampSheetRequest& request, std::function<void(AsyncDeleteByStampSheetResult&)> callback)
+    void deleteByStampSheet(DeleteByStampSheetRequest request, std::function<void(AsyncDeleteByStampSheetResult)> callback)
     {
-        DeleteByStampSheetTask& task = *new DeleteByStampSheetTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DeleteByStampSheetTask& task = *new DeleteByStampSheetTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2642,10 +2091,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeLimitModelMasters(DescribeLimitModelMastersRequest& request, std::function<void(AsyncDescribeLimitModelMastersResult&)> callback)
+    void describeLimitModelMasters(DescribeLimitModelMastersRequest request, std::function<void(AsyncDescribeLimitModelMastersResult)> callback)
     {
-        DescribeLimitModelMastersTask& task = *new DescribeLimitModelMastersTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DescribeLimitModelMastersTask& task = *new DescribeLimitModelMastersTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2654,10 +2103,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createLimitModelMaster(CreateLimitModelMasterRequest& request, std::function<void(AsyncCreateLimitModelMasterResult&)> callback)
+    void createLimitModelMaster(CreateLimitModelMasterRequest request, std::function<void(AsyncCreateLimitModelMasterResult)> callback)
     {
-        CreateLimitModelMasterTask& task = *new CreateLimitModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        CreateLimitModelMasterTask& task = *new CreateLimitModelMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2666,10 +2115,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getLimitModelMaster(GetLimitModelMasterRequest& request, std::function<void(AsyncGetLimitModelMasterResult&)> callback)
+    void getLimitModelMaster(GetLimitModelMasterRequest request, std::function<void(AsyncGetLimitModelMasterResult)> callback)
     {
-        GetLimitModelMasterTask& task = *new GetLimitModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        GetLimitModelMasterTask& task = *new GetLimitModelMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2678,10 +2127,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateLimitModelMaster(UpdateLimitModelMasterRequest& request, std::function<void(AsyncUpdateLimitModelMasterResult&)> callback)
+    void updateLimitModelMaster(UpdateLimitModelMasterRequest request, std::function<void(AsyncUpdateLimitModelMasterResult)> callback)
     {
-        UpdateLimitModelMasterTask& task = *new UpdateLimitModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        UpdateLimitModelMasterTask& task = *new UpdateLimitModelMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2690,10 +2139,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteLimitModelMaster(DeleteLimitModelMasterRequest& request, std::function<void(AsyncDeleteLimitModelMasterResult&)> callback)
+    void deleteLimitModelMaster(DeleteLimitModelMasterRequest request, std::function<void(AsyncDeleteLimitModelMasterResult)> callback)
     {
-        DeleteLimitModelMasterTask& task = *new DeleteLimitModelMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DeleteLimitModelMasterTask& task = *new DeleteLimitModelMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2702,10 +2151,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void exportMaster(ExportMasterRequest& request, std::function<void(AsyncExportMasterResult&)> callback)
+    void exportMaster(ExportMasterRequest request, std::function<void(AsyncExportMasterResult)> callback)
     {
-        ExportMasterTask& task = *new ExportMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        ExportMasterTask& task = *new ExportMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2714,10 +2163,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getCurrentLimitMaster(GetCurrentLimitMasterRequest& request, std::function<void(AsyncGetCurrentLimitMasterResult&)> callback)
+    void getCurrentLimitMaster(GetCurrentLimitMasterRequest request, std::function<void(AsyncGetCurrentLimitMasterResult)> callback)
     {
-        GetCurrentLimitMasterTask& task = *new GetCurrentLimitMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        GetCurrentLimitMasterTask& task = *new GetCurrentLimitMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2726,10 +2175,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentLimitMaster(UpdateCurrentLimitMasterRequest& request, std::function<void(AsyncUpdateCurrentLimitMasterResult&)> callback)
+    void updateCurrentLimitMaster(UpdateCurrentLimitMasterRequest request, std::function<void(AsyncUpdateCurrentLimitMasterResult)> callback)
     {
-        UpdateCurrentLimitMasterTask& task = *new UpdateCurrentLimitMasterTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        UpdateCurrentLimitMasterTask& task = *new UpdateCurrentLimitMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2738,10 +2187,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateCurrentLimitMasterFromGitHub(UpdateCurrentLimitMasterFromGitHubRequest& request, std::function<void(AsyncUpdateCurrentLimitMasterFromGitHubResult&)> callback)
+    void updateCurrentLimitMasterFromGitHub(UpdateCurrentLimitMasterFromGitHubRequest request, std::function<void(AsyncUpdateCurrentLimitMasterFromGitHubResult)> callback)
     {
-        UpdateCurrentLimitMasterFromGitHubTask& task = *new UpdateCurrentLimitMasterFromGitHubTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        UpdateCurrentLimitMasterFromGitHubTask& task = *new UpdateCurrentLimitMasterFromGitHubTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2750,10 +2199,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeLimitModels(DescribeLimitModelsRequest& request, std::function<void(AsyncDescribeLimitModelsResult&)> callback)
+    void describeLimitModels(DescribeLimitModelsRequest request, std::function<void(AsyncDescribeLimitModelsResult)> callback)
     {
-        DescribeLimitModelsTask& task = *new DescribeLimitModelsTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DescribeLimitModelsTask& task = *new DescribeLimitModelsTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -2762,10 +2211,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getLimitModel(GetLimitModelRequest& request, std::function<void(AsyncGetLimitModelResult&)> callback)
+    void getLimitModel(GetLimitModelRequest request, std::function<void(AsyncGetLimitModelResult)> callback)
     {
-        GetLimitModelTask& task = *new GetLimitModelTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        GetLimitModelTask& task = *new GetLimitModelTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 protected:

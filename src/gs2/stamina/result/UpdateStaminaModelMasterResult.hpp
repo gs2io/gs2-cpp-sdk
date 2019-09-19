@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace stamina
 {
@@ -43,28 +45,28 @@ private:
         /** 更新したスタミナモデルマスター */
         optional<StaminaModelMaster> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    UpdateStaminaModelMasterResult() :
-        m_pData(nullptr)
-    {}
+    UpdateStaminaModelMasterResult() = default;
+    UpdateStaminaModelMasterResult(const UpdateStaminaModelMasterResult& updateStaminaModelMasterResult) = default;
+    UpdateStaminaModelMasterResult(UpdateStaminaModelMasterResult&& updateStaminaModelMasterResult) = default;
+    ~UpdateStaminaModelMasterResult() = default;
 
-    UpdateStaminaModelMasterResult(const UpdateStaminaModelMasterResult& updateStaminaModelMasterResult) :
-        Gs2Object(updateStaminaModelMasterResult),
-        m_pData(updateStaminaModelMasterResult.m_pData != nullptr ? new Data(*updateStaminaModelMasterResult.m_pData) : nullptr)
-    {}
+    UpdateStaminaModelMasterResult& operator=(const UpdateStaminaModelMasterResult& updateStaminaModelMasterResult) = default;
+    UpdateStaminaModelMasterResult& operator=(UpdateStaminaModelMasterResult&& updateStaminaModelMasterResult) = default;
 
-    UpdateStaminaModelMasterResult(UpdateStaminaModelMasterResult&& updateStaminaModelMasterResult) :
-        Gs2Object(std::move(updateStaminaModelMasterResult)),
-        m_pData(updateStaminaModelMasterResult.m_pData)
+    UpdateStaminaModelMasterResult deepCopy() const
     {
-        updateStaminaModelMasterResult.m_pData = nullptr;
-    }
-
-    ~UpdateStaminaModelMasterResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateStaminaModelMasterResult& operator=(const UpdateStaminaModelMasterResult& updateStaminaModelMasterResult)
-    {
-        Gs2Object::operator=(updateStaminaModelMasterResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateStaminaModelMasterResult.m_pData);
-
-        return *this;
-    }
-
-    UpdateStaminaModelMasterResult& operator=(UpdateStaminaModelMasterResult&& updateStaminaModelMasterResult)
-    {
-        Gs2Object::operator=(std::move(updateStaminaModelMasterResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateStaminaModelMasterResult.m_pData;
-        updateStaminaModelMasterResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateStaminaModelMasterResult);
     }
 
     const UpdateStaminaModelMasterResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 更新したスタミナモデルマスター
      */
-    void setItem(const StaminaModelMaster& item)
+    void setItem(StaminaModelMaster item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

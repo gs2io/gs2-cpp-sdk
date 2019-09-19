@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2JobQueueConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace jobQueue
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -48,100 +50,51 @@ private:
         /** ジョブキューにジョブが登録されたときののプッシュ通知 */
         optional<NotificationSetting> pushNotification;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             name(data.name),
-            description(data.description),
-            pushNotification(data.pushNotification)
-        {}
+            description(data.description)
+        {
+            if (data.pushNotification)
+            {
+                pushNotification = data.pushNotification->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            pushNotification(std::move(data.pushNotification))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CreateNamespaceRequest() :
-        m_pData(nullptr)
-    {}
+    CreateNamespaceRequest() = default;
+    CreateNamespaceRequest(const CreateNamespaceRequest& createNamespaceRequest) = default;
+    CreateNamespaceRequest(CreateNamespaceRequest&& createNamespaceRequest) = default;
+    ~CreateNamespaceRequest() GS2_OVERRIDE = default;
 
-    CreateNamespaceRequest(const CreateNamespaceRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2JobQueue(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CreateNamespaceRequest& operator=(const CreateNamespaceRequest& createNamespaceRequest) = default;
+    CreateNamespaceRequest& operator=(CreateNamespaceRequest&& createNamespaceRequest) = default;
 
-    CreateNamespaceRequest(CreateNamespaceRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2JobQueue(std::move(obj)),
-        m_pData(obj.m_pData)
+    CreateNamespaceRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CreateNamespaceRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateNamespaceRequest& operator=(const CreateNamespaceRequest& createNamespaceRequest)
-    {
-        Gs2BasicRequest::operator=(createNamespaceRequest);
-        Gs2JobQueue::operator=(createNamespaceRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createNamespaceRequest.m_pData);
-
-        return *this;
-    }
-
-    CreateNamespaceRequest& operator=(CreateNamespaceRequest&& createNamespaceRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(createNamespaceRequest));
-        Gs2JobQueue::operator=(std::move(createNamespaceRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createNamespaceRequest.m_pData;
-        createNamespaceRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateNamespaceRequest);
     }
 
     const CreateNamespaceRequest* operator->() const
@@ -169,9 +122,9 @@ public:
      *
      * @param name ネームスペース名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -179,9 +132,9 @@ public:
      *
      * @param name ネームスペース名
      */
-    CreateNamespaceRequest& withName(const Char* name)
+    CreateNamespaceRequest& withName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
         return *this;
     }
 
@@ -200,9 +153,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -210,9 +163,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    CreateNamespaceRequest& withDescription(const Char* description)
+    CreateNamespaceRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -231,9 +184,9 @@ public:
      *
      * @param pushNotification ジョブキューにジョブが登録されたときののプッシュ通知
      */
-    void setPushNotification(const NotificationSetting& pushNotification)
+    void setPushNotification(NotificationSetting pushNotification)
     {
-        ensureData().pushNotification.emplace(pushNotification);
+        ensureData().pushNotification.emplace(std::move(pushNotification));
     }
 
     /**
@@ -241,9 +194,9 @@ public:
      *
      * @param pushNotification ジョブキューにジョブが登録されたときののプッシュ通知
      */
-    CreateNamespaceRequest& withPushNotification(const NotificationSetting& pushNotification)
+    CreateNamespaceRequest& withPushNotification(NotificationSetting pushNotification)
     {
-        ensureData().pushNotification.emplace(pushNotification);
+        ensureData().pushNotification.emplace(std::move(pushNotification));
         return *this;
     }
 
@@ -254,33 +207,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CreateNamespaceRequest& withGs2ClientId(const Char* gs2ClientId)
+    CreateNamespaceRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CreateNamespaceRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CreateNamespaceRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -289,9 +218,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CreateNamespaceRequest& withRequestId(const Char* gs2RequestId)
+    CreateNamespaceRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

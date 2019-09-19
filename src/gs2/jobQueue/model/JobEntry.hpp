@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace jobQueue {
@@ -48,44 +50,41 @@ private:
         /** 最大試行回数 */
         optional<Int32> maxTryCount;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             scriptId(data.scriptId),
             args(data.args),
             maxTryCount(data.maxTryCount)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            scriptId(std::move(data.scriptId)),
-            args(std::move(data.args)),
-            maxTryCount(std::move(data.maxTryCount))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "scriptId") == 0) {
+            if (std::strcmp(name_, "scriptId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->scriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "args") == 0) {
+            else if (std::strcmp(name_, "args") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->args.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "maxTryCount") == 0) {
+            else if (std::strcmp(name_, "maxTryCount") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->maxTryCount = jsonValue.GetInt();
@@ -94,72 +93,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    JobEntry() :
-        m_pData(nullptr)
-    {}
+    JobEntry() = default;
+    JobEntry(const JobEntry& jobEntry) = default;
+    JobEntry(JobEntry&& jobEntry) = default;
+    ~JobEntry() = default;
 
-    JobEntry(const JobEntry& jobEntry) :
-        Gs2Object(jobEntry),
-        m_pData(jobEntry.m_pData != nullptr ? new Data(*jobEntry.m_pData) : nullptr)
-    {}
+    JobEntry& operator=(const JobEntry& jobEntry) = default;
+    JobEntry& operator=(JobEntry&& jobEntry) = default;
 
-    JobEntry(JobEntry&& jobEntry) :
-        Gs2Object(std::move(jobEntry)),
-        m_pData(jobEntry.m_pData)
+    JobEntry deepCopy() const
     {
-        jobEntry.m_pData = nullptr;
-    }
-
-    ~JobEntry()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    JobEntry& operator=(const JobEntry& jobEntry)
-    {
-        Gs2Object::operator=(jobEntry);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*jobEntry.m_pData);
-
-        return *this;
-    }
-
-    JobEntry& operator=(JobEntry&& jobEntry)
-    {
-        Gs2Object::operator=(std::move(jobEntry));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = jobEntry.m_pData;
-        jobEntry.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(JobEntry);
     }
 
     const JobEntry* operator->() const
@@ -186,9 +133,9 @@ public:
      *
      * @param scriptId スクリプト のGRN
      */
-    void setScriptId(const Char* scriptId)
+    void setScriptId(StringHolder scriptId)
     {
-        ensureData().scriptId.emplace(scriptId);
+        ensureData().scriptId.emplace(std::move(scriptId));
     }
 
     /**
@@ -196,9 +143,9 @@ public:
      *
      * @param scriptId スクリプト のGRN
      */
-    JobEntry& withScriptId(const Char* scriptId)
+    JobEntry& withScriptId(StringHolder scriptId)
     {
-        setScriptId(scriptId);
+        setScriptId(std::move(scriptId));
         return *this;
     }
 
@@ -217,9 +164,9 @@ public:
      *
      * @param args 引数
      */
-    void setArgs(const Char* args)
+    void setArgs(StringHolder args)
     {
-        ensureData().args.emplace(args);
+        ensureData().args.emplace(std::move(args));
     }
 
     /**
@@ -227,9 +174,9 @@ public:
      *
      * @param args 引数
      */
-    JobEntry& withArgs(const Char* args)
+    JobEntry& withArgs(StringHolder args)
     {
-        setArgs(args);
+        setArgs(std::move(args));
         return *this;
     }
 
@@ -275,7 +222,7 @@ inline bool operator!=(const JobEntry& lhs, const JobEntry& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace inventory {
@@ -62,8 +64,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -77,85 +78,83 @@ private:
             sortValue(data.sortValue),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            itemModelId(std::move(data.itemModelId)),
-            inventoryName(std::move(data.inventoryName)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            metadata(std::move(data.metadata)),
-            stackingLimit(std::move(data.stackingLimit)),
-            allowMultipleStacks(std::move(data.allowMultipleStacks)),
-            sortValue(std::move(data.sortValue)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "itemModelId") == 0) {
+            if (std::strcmp(name_, "itemModelId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->itemModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "inventoryName") == 0) {
+            else if (std::strcmp(name_, "inventoryName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->inventoryName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "stackingLimit") == 0) {
+            else if (std::strcmp(name_, "stackingLimit") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->stackingLimit = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "allowMultipleStacks") == 0) {
+            else if (std::strcmp(name_, "allowMultipleStacks") == 0)
+            {
                 if (jsonValue.IsBool())
                 {
                     this->allowMultipleStacks = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name_, "sortValue") == 0) {
+            else if (std::strcmp(name_, "sortValue") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->sortValue = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -164,72 +163,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    ItemModelMaster() :
-        m_pData(nullptr)
-    {}
+    ItemModelMaster() = default;
+    ItemModelMaster(const ItemModelMaster& itemModelMaster) = default;
+    ItemModelMaster(ItemModelMaster&& itemModelMaster) = default;
+    ~ItemModelMaster() = default;
 
-    ItemModelMaster(const ItemModelMaster& itemModelMaster) :
-        Gs2Object(itemModelMaster),
-        m_pData(itemModelMaster.m_pData != nullptr ? new Data(*itemModelMaster.m_pData) : nullptr)
-    {}
+    ItemModelMaster& operator=(const ItemModelMaster& itemModelMaster) = default;
+    ItemModelMaster& operator=(ItemModelMaster&& itemModelMaster) = default;
 
-    ItemModelMaster(ItemModelMaster&& itemModelMaster) :
-        Gs2Object(std::move(itemModelMaster)),
-        m_pData(itemModelMaster.m_pData)
+    ItemModelMaster deepCopy() const
     {
-        itemModelMaster.m_pData = nullptr;
-    }
-
-    ~ItemModelMaster()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    ItemModelMaster& operator=(const ItemModelMaster& itemModelMaster)
-    {
-        Gs2Object::operator=(itemModelMaster);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*itemModelMaster.m_pData);
-
-        return *this;
-    }
-
-    ItemModelMaster& operator=(ItemModelMaster&& itemModelMaster)
-    {
-        Gs2Object::operator=(std::move(itemModelMaster));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = itemModelMaster.m_pData;
-        itemModelMaster.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ItemModelMaster);
     }
 
     const ItemModelMaster* operator->() const
@@ -256,9 +203,9 @@ public:
      *
      * @param itemModelId アイテムモデルマスター
      */
-    void setItemModelId(const Char* itemModelId)
+    void setItemModelId(StringHolder itemModelId)
     {
-        ensureData().itemModelId.emplace(itemModelId);
+        ensureData().itemModelId.emplace(std::move(itemModelId));
     }
 
     /**
@@ -266,9 +213,9 @@ public:
      *
      * @param itemModelId アイテムモデルマスター
      */
-    ItemModelMaster& withItemModelId(const Char* itemModelId)
+    ItemModelMaster& withItemModelId(StringHolder itemModelId)
     {
-        setItemModelId(itemModelId);
+        setItemModelId(std::move(itemModelId));
         return *this;
     }
 
@@ -287,9 +234,9 @@ public:
      *
      * @param inventoryName アイテムの種類名
      */
-    void setInventoryName(const Char* inventoryName)
+    void setInventoryName(StringHolder inventoryName)
     {
-        ensureData().inventoryName.emplace(inventoryName);
+        ensureData().inventoryName.emplace(std::move(inventoryName));
     }
 
     /**
@@ -297,9 +244,9 @@ public:
      *
      * @param inventoryName アイテムの種類名
      */
-    ItemModelMaster& withInventoryName(const Char* inventoryName)
+    ItemModelMaster& withInventoryName(StringHolder inventoryName)
     {
-        setInventoryName(inventoryName);
+        setInventoryName(std::move(inventoryName));
         return *this;
     }
 
@@ -318,9 +265,9 @@ public:
      *
      * @param name アイテムモデルの種類名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -328,9 +275,9 @@ public:
      *
      * @param name アイテムモデルの種類名
      */
-    ItemModelMaster& withName(const Char* name)
+    ItemModelMaster& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -349,9 +296,9 @@ public:
      *
      * @param description アイテムモデルマスターの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -359,9 +306,9 @@ public:
      *
      * @param description アイテムモデルマスターの説明
      */
-    ItemModelMaster& withDescription(const Char* description)
+    ItemModelMaster& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -380,9 +327,9 @@ public:
      *
      * @param metadata アイテムモデルの種類のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -390,9 +337,9 @@ public:
      *
      * @param metadata アイテムモデルの種類のメタデータ
      */
-    ItemModelMaster& withMetadata(const Char* metadata)
+    ItemModelMaster& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -562,7 +509,7 @@ inline bool operator!=(const ItemModelMaster& lhs, const ItemModelMaster& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

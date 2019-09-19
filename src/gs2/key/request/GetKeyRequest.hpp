@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2KeyConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace key
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -46,98 +48,47 @@ private:
         /** 暗号鍵名 */
         optional<StringHolder> keyName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             keyName(data.keyName)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            keyName(std::move(data.keyName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    GetKeyRequest() :
-        m_pData(nullptr)
-    {}
+    GetKeyRequest() = default;
+    GetKeyRequest(const GetKeyRequest& getKeyRequest) = default;
+    GetKeyRequest(GetKeyRequest&& getKeyRequest) = default;
+    ~GetKeyRequest() GS2_OVERRIDE = default;
 
-    GetKeyRequest(const GetKeyRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Key(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    GetKeyRequest& operator=(const GetKeyRequest& getKeyRequest) = default;
+    GetKeyRequest& operator=(GetKeyRequest&& getKeyRequest) = default;
 
-    GetKeyRequest(GetKeyRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Key(std::move(obj)),
-        m_pData(obj.m_pData)
+    GetKeyRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~GetKeyRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetKeyRequest& operator=(const GetKeyRequest& getKeyRequest)
-    {
-        Gs2BasicRequest::operator=(getKeyRequest);
-        Gs2Key::operator=(getKeyRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getKeyRequest.m_pData);
-
-        return *this;
-    }
-
-    GetKeyRequest& operator=(GetKeyRequest&& getKeyRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(getKeyRequest));
-        Gs2Key::operator=(std::move(getKeyRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getKeyRequest.m_pData;
-        getKeyRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetKeyRequest);
     }
 
     const GetKeyRequest* operator->() const
@@ -165,9 +116,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -175,9 +126,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    GetKeyRequest& withNamespaceName(const Char* namespaceName)
+    GetKeyRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -196,9 +147,9 @@ public:
      *
      * @param keyName 暗号鍵名
      */
-    void setKeyName(const Char* keyName)
+    void setKeyName(StringHolder keyName)
     {
-        ensureData().keyName.emplace(keyName);
+        ensureData().keyName.emplace(std::move(keyName));
     }
 
     /**
@@ -206,9 +157,9 @@ public:
      *
      * @param keyName 暗号鍵名
      */
-    GetKeyRequest& withKeyName(const Char* keyName)
+    GetKeyRequest& withKeyName(StringHolder keyName)
     {
-        ensureData().keyName.emplace(keyName);
+        ensureData().keyName.emplace(std::move(keyName));
         return *this;
     }
 
@@ -219,33 +170,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    GetKeyRequest& withGs2ClientId(const Char* gs2ClientId)
+    GetKeyRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    GetKeyRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    GetKeyRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -254,9 +181,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    GetKeyRequest& withRequestId(const Char* gs2RequestId)
+    GetKeyRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

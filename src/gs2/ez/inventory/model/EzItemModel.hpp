@@ -27,37 +27,77 @@ namespace gs2 { namespace ez { namespace inventory {
 class EzItemModel : public gs2::Gs2Object
 {
 private:
-    /** アイテムモデルの種類名 */
-    gs2::optional<StringHolder> m_Name;
-    /** アイテムモデルの種類のメタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** スタック可能な最大数量 */
-    gs2::optional<Int64> m_StackingLimit;
-    /** スタック可能な最大数量を超えた時複数枠にアイテムを保管することを許すか */
-    gs2::optional<Bool> m_AllowMultipleStacks;
-    /** 表示順番 */
-    gs2::optional<Int32> m_SortValue;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** アイテムモデルの種類名 */
+        gs2::optional<StringHolder> name;
+        /** アイテムモデルの種類のメタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** スタック可能な最大数量 */
+        gs2::optional<Int64> stackingLimit;
+        /** スタック可能な最大数量を超えた時複数枠にアイテムを保管することを許すか */
+        gs2::optional<Bool> allowMultipleStacks;
+        /** 表示順番 */
+        gs2::optional<Int32> sortValue;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            metadata(data.metadata),
+            stackingLimit(data.stackingLimit),
+            allowMultipleStacks(data.allowMultipleStacks),
+            sortValue(data.sortValue)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::inventory::ItemModel& itemModel) :
+            name(itemModel.getName()),
+            metadata(itemModel.getMetadata()),
+            stackingLimit(itemModel.getStackingLimit() ? *itemModel.getStackingLimit() : 0),
+            allowMultipleStacks(itemModel.getAllowMultipleStacks() ? *itemModel.getAllowMultipleStacks() : false),
+            sortValue(itemModel.getSortValue() ? *itemModel.getSortValue() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzItemModel() = default;
+    EzItemModel(const EzItemModel& ezItemModel) = default;
+    EzItemModel(EzItemModel&& ezItemModel) = default;
+    ~EzItemModel() = default;
 
     EzItemModel(gs2::inventory::ItemModel itemModel) :
-        m_Name(itemModel.getName()),
-        m_Metadata(itemModel.getMetadata()),
-        m_StackingLimit(itemModel.getStackingLimit() ? *itemModel.getStackingLimit() : 0),
-        m_AllowMultipleStacks(itemModel.getAllowMultipleStacks() ? *itemModel.getAllowMultipleStacks() : false),
-        m_SortValue(itemModel.getSortValue() ? *itemModel.getSortValue() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(itemModel)
+    {}
+
+    EzItemModel& operator=(const EzItemModel& ezItemModel) = default;
+    EzItemModel& operator=(EzItemModel&& ezItemModel) = default;
+
+    EzItemModel deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzItemModel);
     }
 
     gs2::inventory::ItemModel ToModel() const
     {
         gs2::inventory::ItemModel itemModel;
-        itemModel.setName(*m_Name);
-        itemModel.setMetadata(*m_Metadata);
-        itemModel.setStackingLimit(*m_StackingLimit);
-        itemModel.setAllowMultipleStacks(*m_AllowMultipleStacks);
-        itemModel.setSortValue(*m_SortValue);
+        itemModel.setName(getName());
+        itemModel.setMetadata(getMetadata());
+        itemModel.setStackingLimit(getStackingLimit());
+        itemModel.setAllowMultipleStacks(getAllowMultipleStacks());
+        itemModel.setSortValue(getSortValue());
         return itemModel;
     }
 
@@ -65,79 +105,69 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
+        return *ensureData().name;
     }
 
-    gs2::StringHolder& getName()
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
-    }
-
-    const gs2::StringHolder& getMetadata() const
-    {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
+        return *ensureData().metadata;
     }
 
     Int64 getStackingLimit() const
     {
-        return *m_StackingLimit;
+        return *ensureData().stackingLimit;
     }
 
     Bool getAllowMultipleStacks() const
     {
-        return *m_AllowMultipleStacks;
+        return *ensureData().allowMultipleStacks;
     }
 
     Int32 getSortValue() const
     {
-        return *m_SortValue;
+        return *ensureData().sortValue;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
     void setStackingLimit(Int64 stackingLimit)
     {
-        m_StackingLimit = stackingLimit;
+        ensureData().stackingLimit = stackingLimit;
     }
 
     void setAllowMultipleStacks(Bool allowMultipleStacks)
     {
-        m_AllowMultipleStacks = allowMultipleStacks;
+        ensureData().allowMultipleStacks = allowMultipleStacks;
     }
 
     void setSortValue(Int32 sortValue)
     {
-        m_SortValue = sortValue;
+        ensureData().sortValue = sortValue;
     }
 
-    EzItemModel& withName(Char* name)
+    EzItemModel& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzItemModel& withMetadata(Char* metadata)
+    EzItemModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 

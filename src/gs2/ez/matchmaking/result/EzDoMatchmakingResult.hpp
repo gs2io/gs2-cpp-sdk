@@ -27,16 +27,55 @@ namespace gs2 { namespace ez { namespace matchmaking {
 class EzDoMatchmakingResult : public gs2::Gs2Object
 {
 private:
-    /** ギャザリング */
-    EzGathering m_Item;
-    /** マッチメイキングの状態を保持するトークン */
-    StringHolder m_MatchmakingContextToken;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ギャザリング */
+        EzGathering item;
+        /** マッチメイキングの状態を保持するトークン */
+        StringHolder matchmakingContextToken;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            matchmakingContextToken(data.matchmakingContextToken)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::matchmaking::DoMatchmakingResult& doMatchmakingResult) :
+            item(*doMatchmakingResult.getItem()),
+            matchmakingContextToken(*doMatchmakingResult.getMatchmakingContextToken())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzDoMatchmakingResult(const gs2::matchmaking::DoMatchmakingResult& result) :
-        m_Item(*result.getItem()),
-        m_MatchmakingContextToken(*result.getMatchmakingContextToken())
+    EzDoMatchmakingResult() = default;
+    EzDoMatchmakingResult(const EzDoMatchmakingResult& result) = default;
+    EzDoMatchmakingResult(EzDoMatchmakingResult&& result) = default;
+    ~EzDoMatchmakingResult() = default;
+
+    EzDoMatchmakingResult(gs2::matchmaking::DoMatchmakingResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzDoMatchmakingResult& operator=(const EzDoMatchmakingResult& result) = default;
+    EzDoMatchmakingResult& operator=(EzDoMatchmakingResult&& result) = default;
+
+    EzDoMatchmakingResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDoMatchmakingResult);
     }
 
     static bool isConvertible(const gs2::matchmaking::DoMatchmakingResult& result)
@@ -52,22 +91,12 @@ public:
 
     const EzGathering& getItem() const
     {
-        return m_Item;
+        return ensureData().item;
     }
 
-    EzGathering& getItem()
+    const StringHolder& getMatchmakingContextToken() const
     {
-        return m_Item;
-    }
-
-    const gs2::StringHolder& getMatchmakingContextToken() const
-    {
-        return m_MatchmakingContextToken;
-    }
-
-    gs2::StringHolder& getMatchmakingContextToken()
-    {
-        return m_MatchmakingContextToken;
+        return ensureData().matchmakingContextToken;
     }
 };
 

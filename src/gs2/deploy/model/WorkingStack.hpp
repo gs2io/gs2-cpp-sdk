@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace deploy {
@@ -52,8 +54,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -62,50 +63,48 @@ private:
             name(data.name),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            stackId(std::move(data.stackId)),
-            ownerId(std::move(data.ownerId)),
-            name(std::move(data.name)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "stackId") == 0) {
+            if (std::strcmp(name_, "stackId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->stackId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -114,72 +113,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    WorkingStack() :
-        m_pData(nullptr)
-    {}
+    WorkingStack() = default;
+    WorkingStack(const WorkingStack& workingStack) = default;
+    WorkingStack(WorkingStack&& workingStack) = default;
+    ~WorkingStack() = default;
 
-    WorkingStack(const WorkingStack& workingStack) :
-        Gs2Object(workingStack),
-        m_pData(workingStack.m_pData != nullptr ? new Data(*workingStack.m_pData) : nullptr)
-    {}
+    WorkingStack& operator=(const WorkingStack& workingStack) = default;
+    WorkingStack& operator=(WorkingStack&& workingStack) = default;
 
-    WorkingStack(WorkingStack&& workingStack) :
-        Gs2Object(std::move(workingStack)),
-        m_pData(workingStack.m_pData)
+    WorkingStack deepCopy() const
     {
-        workingStack.m_pData = nullptr;
-    }
-
-    ~WorkingStack()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    WorkingStack& operator=(const WorkingStack& workingStack)
-    {
-        Gs2Object::operator=(workingStack);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*workingStack.m_pData);
-
-        return *this;
-    }
-
-    WorkingStack& operator=(WorkingStack&& workingStack)
-    {
-        Gs2Object::operator=(std::move(workingStack));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = workingStack.m_pData;
-        workingStack.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(WorkingStack);
     }
 
     const WorkingStack* operator->() const
@@ -206,9 +153,9 @@ public:
      *
      * @param stackId 実行中のスタック
      */
-    void setStackId(const Char* stackId)
+    void setStackId(StringHolder stackId)
     {
-        ensureData().stackId.emplace(stackId);
+        ensureData().stackId.emplace(std::move(stackId));
     }
 
     /**
@@ -216,9 +163,9 @@ public:
      *
      * @param stackId 実行中のスタック
      */
-    WorkingStack& withStackId(const Char* stackId)
+    WorkingStack& withStackId(StringHolder stackId)
     {
-        setStackId(stackId);
+        setStackId(std::move(stackId));
         return *this;
     }
 
@@ -237,9 +184,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
@@ -247,9 +194,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    WorkingStack& withOwnerId(const Char* ownerId)
+    WorkingStack& withOwnerId(StringHolder ownerId)
     {
-        setOwnerId(ownerId);
+        setOwnerId(std::move(ownerId));
         return *this;
     }
 
@@ -268,9 +215,9 @@ public:
      *
      * @param name 実行中のスタック名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -278,9 +225,9 @@ public:
      *
      * @param name 実行中のスタック名
      */
-    WorkingStack& withName(const Char* name)
+    WorkingStack& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -357,7 +304,7 @@ inline bool operator!=(const WorkingStack& lhs, const WorkingStack& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

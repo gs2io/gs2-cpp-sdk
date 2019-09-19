@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace schedule {
@@ -52,8 +54,7 @@ private:
         /** トリガーの有効期限 */
         optional<Int64> expiresAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -62,50 +63,48 @@ private:
             userId(data.userId),
             createdAt(data.createdAt),
             expiresAt(data.expiresAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            triggerId(std::move(data.triggerId)),
-            name(std::move(data.name)),
-            userId(std::move(data.userId)),
-            createdAt(std::move(data.createdAt)),
-            expiresAt(std::move(data.expiresAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "triggerId") == 0) {
+            if (std::strcmp(name_, "triggerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->triggerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "expiresAt") == 0) {
+            else if (std::strcmp(name_, "expiresAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->expiresAt = jsonValue.GetInt64();
@@ -114,72 +113,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Trigger() :
-        m_pData(nullptr)
-    {}
+    Trigger() = default;
+    Trigger(const Trigger& trigger) = default;
+    Trigger(Trigger&& trigger) = default;
+    ~Trigger() = default;
 
-    Trigger(const Trigger& trigger) :
-        Gs2Object(trigger),
-        m_pData(trigger.m_pData != nullptr ? new Data(*trigger.m_pData) : nullptr)
-    {}
+    Trigger& operator=(const Trigger& trigger) = default;
+    Trigger& operator=(Trigger&& trigger) = default;
 
-    Trigger(Trigger&& trigger) :
-        Gs2Object(std::move(trigger)),
-        m_pData(trigger.m_pData)
+    Trigger deepCopy() const
     {
-        trigger.m_pData = nullptr;
-    }
-
-    ~Trigger()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Trigger& operator=(const Trigger& trigger)
-    {
-        Gs2Object::operator=(trigger);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*trigger.m_pData);
-
-        return *this;
-    }
-
-    Trigger& operator=(Trigger&& trigger)
-    {
-        Gs2Object::operator=(std::move(trigger));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = trigger.m_pData;
-        trigger.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Trigger);
     }
 
     const Trigger* operator->() const
@@ -206,9 +153,9 @@ public:
      *
      * @param triggerId トリガー
      */
-    void setTriggerId(const Char* triggerId)
+    void setTriggerId(StringHolder triggerId)
     {
-        ensureData().triggerId.emplace(triggerId);
+        ensureData().triggerId.emplace(std::move(triggerId));
     }
 
     /**
@@ -216,9 +163,9 @@ public:
      *
      * @param triggerId トリガー
      */
-    Trigger& withTriggerId(const Char* triggerId)
+    Trigger& withTriggerId(StringHolder triggerId)
     {
-        setTriggerId(triggerId);
+        setTriggerId(std::move(triggerId));
         return *this;
     }
 
@@ -237,9 +184,9 @@ public:
      *
      * @param name トリガーの名前
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -247,9 +194,9 @@ public:
      *
      * @param name トリガーの名前
      */
-    Trigger& withName(const Char* name)
+    Trigger& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -268,9 +215,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -278,9 +225,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    Trigger& withUserId(const Char* userId)
+    Trigger& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -357,7 +304,7 @@ inline bool operator!=(const Trigger& lhs, const Trigger& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

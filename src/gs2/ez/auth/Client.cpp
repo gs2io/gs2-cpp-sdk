@@ -28,11 +28,11 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::login(
-    std::function<void(AsyncEzLoginResult&)> callback,
-    const Char* userId,
-    const Char* keyId,
-    const Char* body,
-    const Char* signature
+    std::function<void(AsyncEzLoginResult)> callback,
+    StringHolder userId,
+    StringHolder keyId,
+    StringHolder body,
+    StringHolder signature
 )
 {
     gs2::auth::LoginBySignatureRequest request;
@@ -42,7 +42,7 @@ void Client::login(
     request.setSignature(signature);
     m_Client.loginBySignature(
         request,
-        [callback](gs2::auth::AsyncLoginBySignatureResult& r)
+        [callback](gs2::auth::AsyncLoginBySignatureResult r)
         {
             if (r.getError())
             {

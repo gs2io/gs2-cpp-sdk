@@ -27,19 +27,57 @@ namespace gs2 { namespace ez { namespace inventory {
 class EzListItemModelsResult : public gs2::Gs2Object
 {
 private:
-    /** アイテムモデルのリスト */
-    List<EzItemModel> m_Items;
-
-public:
-    EzListItemModelsResult(const gs2::inventory::DescribeItemModelsResult& result)
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** アイテムモデルのリスト */
+        List<EzItemModel> items;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::inventory::DescribeItemModelsResult& describeItemModelsResult)
+        {
             {
-                m_Items += EzItemModel(list[i]);
+                auto& list = *describeItemModelsResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzItemModel(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListItemModelsResult() = default;
+    EzListItemModelsResult(const EzListItemModelsResult& result) = default;
+    EzListItemModelsResult(EzListItemModelsResult&& result) = default;
+    ~EzListItemModelsResult() = default;
+
+    EzListItemModelsResult(gs2::inventory::DescribeItemModelsResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListItemModelsResult& operator=(const EzListItemModelsResult& result) = default;
+    EzListItemModelsResult& operator=(EzListItemModelsResult&& result) = default;
+
+    EzListItemModelsResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListItemModelsResult);
     }
 
     static bool isConvertible(const gs2::inventory::DescribeItemModelsResult& result)
@@ -54,12 +92,7 @@ public:
 
     const List<EzItemModel>& getItems() const
     {
-        return m_Items;
-    }
-
-    List<EzItemModel>& getItems()
-    {
-        return m_Items;
+        return ensureData().items;
     }
 };
 

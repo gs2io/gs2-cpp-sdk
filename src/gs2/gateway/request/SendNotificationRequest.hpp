@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2GatewayConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace gateway
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -58,11 +60,10 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             userId(data.userId),
             issuer(data.issuer),
@@ -71,97 +72,41 @@ private:
             enableTransferMobileNotification(data.enableTransferMobileNotification),
             sound(data.sound),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            userId(std::move(data.userId)),
-            issuer(std::move(data.issuer)),
-            subject(std::move(data.subject)),
-            payload(std::move(data.payload)),
-            enableTransferMobileNotification(std::move(data.enableTransferMobileNotification)),
-            sound(std::move(data.sound)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    SendNotificationRequest() :
-        m_pData(nullptr)
-    {}
+    SendNotificationRequest() = default;
+    SendNotificationRequest(const SendNotificationRequest& sendNotificationRequest) = default;
+    SendNotificationRequest(SendNotificationRequest&& sendNotificationRequest) = default;
+    ~SendNotificationRequest() GS2_OVERRIDE = default;
 
-    SendNotificationRequest(const SendNotificationRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Gateway(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    SendNotificationRequest& operator=(const SendNotificationRequest& sendNotificationRequest) = default;
+    SendNotificationRequest& operator=(SendNotificationRequest&& sendNotificationRequest) = default;
 
-    SendNotificationRequest(SendNotificationRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Gateway(std::move(obj)),
-        m_pData(obj.m_pData)
+    SendNotificationRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~SendNotificationRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    SendNotificationRequest& operator=(const SendNotificationRequest& sendNotificationRequest)
-    {
-        Gs2BasicRequest::operator=(sendNotificationRequest);
-        Gs2Gateway::operator=(sendNotificationRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*sendNotificationRequest.m_pData);
-
-        return *this;
-    }
-
-    SendNotificationRequest& operator=(SendNotificationRequest&& sendNotificationRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(sendNotificationRequest));
-        Gs2Gateway::operator=(std::move(sendNotificationRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = sendNotificationRequest.m_pData;
-        sendNotificationRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(SendNotificationRequest);
     }
 
     const SendNotificationRequest* operator->() const
@@ -189,9 +134,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -199,9 +144,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    SendNotificationRequest& withNamespaceName(const Char* namespaceName)
+    SendNotificationRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -220,9 +165,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -230,9 +175,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    SendNotificationRequest& withUserId(const Char* userId)
+    SendNotificationRequest& withUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
         return *this;
     }
 
@@ -251,9 +196,9 @@ public:
      *
      * @param issuer 通知元のサービス
      */
-    void setIssuer(const Char* issuer)
+    void setIssuer(StringHolder issuer)
     {
-        ensureData().issuer.emplace(issuer);
+        ensureData().issuer.emplace(std::move(issuer));
     }
 
     /**
@@ -261,9 +206,9 @@ public:
      *
      * @param issuer 通知元のサービス
      */
-    SendNotificationRequest& withIssuer(const Char* issuer)
+    SendNotificationRequest& withIssuer(StringHolder issuer)
     {
-        ensureData().issuer.emplace(issuer);
+        ensureData().issuer.emplace(std::move(issuer));
         return *this;
     }
 
@@ -282,9 +227,9 @@ public:
      *
      * @param subject タイトル
      */
-    void setSubject(const Char* subject)
+    void setSubject(StringHolder subject)
     {
-        ensureData().subject.emplace(subject);
+        ensureData().subject.emplace(std::move(subject));
     }
 
     /**
@@ -292,9 +237,9 @@ public:
      *
      * @param subject タイトル
      */
-    SendNotificationRequest& withSubject(const Char* subject)
+    SendNotificationRequest& withSubject(StringHolder subject)
     {
-        ensureData().subject.emplace(subject);
+        ensureData().subject.emplace(std::move(subject));
         return *this;
     }
 
@@ -313,9 +258,9 @@ public:
      *
      * @param payload ペイロード
      */
-    void setPayload(const Char* payload)
+    void setPayload(StringHolder payload)
     {
-        ensureData().payload.emplace(payload);
+        ensureData().payload.emplace(std::move(payload));
     }
 
     /**
@@ -323,9 +268,9 @@ public:
      *
      * @param payload ペイロード
      */
-    SendNotificationRequest& withPayload(const Char* payload)
+    SendNotificationRequest& withPayload(StringHolder payload)
     {
-        ensureData().payload.emplace(payload);
+        ensureData().payload.emplace(std::move(payload));
         return *this;
     }
 
@@ -375,9 +320,9 @@ public:
      *
      * @param sound 再生する音声ファイル名
      */
-    void setSound(const Char* sound)
+    void setSound(StringHolder sound)
     {
-        ensureData().sound.emplace(sound);
+        ensureData().sound.emplace(std::move(sound));
     }
 
     /**
@@ -385,9 +330,9 @@ public:
      *
      * @param sound 再生する音声ファイル名
      */
-    SendNotificationRequest& withSound(const Char* sound)
+    SendNotificationRequest& withSound(StringHolder sound)
     {
-        ensureData().sound.emplace(sound);
+        ensureData().sound.emplace(std::move(sound));
         return *this;
     }
 
@@ -406,9 +351,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -416,9 +361,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    SendNotificationRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    SendNotificationRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -429,33 +374,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    SendNotificationRequest& withGs2ClientId(const Char* gs2ClientId)
+    SendNotificationRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    SendNotificationRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    SendNotificationRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -464,9 +385,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    SendNotificationRequest& withRequestId(const Char* gs2RequestId)
+    SendNotificationRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

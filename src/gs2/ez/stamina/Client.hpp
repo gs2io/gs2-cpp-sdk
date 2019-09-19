@@ -47,8 +47,8 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
     void listStaminaModels(
-        std::function<void(AsyncEzListStaminaModelsResult&)> callback,
-        const Char* namespaceName
+        std::function<void(AsyncEzListStaminaModelsResult)> callback,
+        StringHolder namespaceName
     );
 
     /// <summary>
@@ -59,9 +59,9 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="staminaName">スタミナの種類名</param>
     void getStaminaModel(
-        std::function<void(AsyncEzGetStaminaModelResult&)> callback,
-        const Char* namespaceName,
-        const Char* staminaName
+        std::function<void(AsyncEzGetStaminaModelResult)> callback,
+        StringHolder namespaceName,
+        StringHolder staminaName
     );
 
     /// <summary>
@@ -74,10 +74,10 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="staminaName">スタミナの種類名</param>
     void getStamina(
-        std::function<void(AsyncEzGetStaminaResult&)> callback,
+        std::function<void(AsyncEzGetStaminaResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* staminaName
+        StringHolder namespaceName,
+        StringHolder staminaName
     );
 
     /// <summary>
@@ -91,10 +91,10 @@ public:
     /// <param name="staminaName">スタミナの種類名</param>
     /// <param name="consumeValue">消費するスタミナ量</param>
     void consume(
-        std::function<void(AsyncEzConsumeResult&)> callback,
+        std::function<void(AsyncEzConsumeResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* staminaName,
+        StringHolder namespaceName,
+        StringHolder staminaName,
         Int32 consumeValue
     );
 };

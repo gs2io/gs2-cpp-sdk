@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace quest
 {
@@ -43,28 +45,28 @@ private:
         /** 作成したクエストモデルマスター */
         optional<QuestModelMaster> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    CreateQuestModelMasterResult() :
-        m_pData(nullptr)
-    {}
+    CreateQuestModelMasterResult() = default;
+    CreateQuestModelMasterResult(const CreateQuestModelMasterResult& createQuestModelMasterResult) = default;
+    CreateQuestModelMasterResult(CreateQuestModelMasterResult&& createQuestModelMasterResult) = default;
+    ~CreateQuestModelMasterResult() = default;
 
-    CreateQuestModelMasterResult(const CreateQuestModelMasterResult& createQuestModelMasterResult) :
-        Gs2Object(createQuestModelMasterResult),
-        m_pData(createQuestModelMasterResult.m_pData != nullptr ? new Data(*createQuestModelMasterResult.m_pData) : nullptr)
-    {}
+    CreateQuestModelMasterResult& operator=(const CreateQuestModelMasterResult& createQuestModelMasterResult) = default;
+    CreateQuestModelMasterResult& operator=(CreateQuestModelMasterResult&& createQuestModelMasterResult) = default;
 
-    CreateQuestModelMasterResult(CreateQuestModelMasterResult&& createQuestModelMasterResult) :
-        Gs2Object(std::move(createQuestModelMasterResult)),
-        m_pData(createQuestModelMasterResult.m_pData)
+    CreateQuestModelMasterResult deepCopy() const
     {
-        createQuestModelMasterResult.m_pData = nullptr;
-    }
-
-    ~CreateQuestModelMasterResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateQuestModelMasterResult& operator=(const CreateQuestModelMasterResult& createQuestModelMasterResult)
-    {
-        Gs2Object::operator=(createQuestModelMasterResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createQuestModelMasterResult.m_pData);
-
-        return *this;
-    }
-
-    CreateQuestModelMasterResult& operator=(CreateQuestModelMasterResult&& createQuestModelMasterResult)
-    {
-        Gs2Object::operator=(std::move(createQuestModelMasterResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createQuestModelMasterResult.m_pData;
-        createQuestModelMasterResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateQuestModelMasterResult);
     }
 
     const CreateQuestModelMasterResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 作成したクエストモデルマスター
      */
-    void setItem(const QuestModelMaster& item)
+    void setItem(QuestModelMaster item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

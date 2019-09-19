@@ -28,11 +28,11 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::start(
-    std::function<void(AsyncEzStartResult&)> callback,
+    std::function<void(AsyncEzStartResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* questGroupName,
-    const Char* questName,
+    StringHolder namespaceName,
+    StringHolder questGroupName,
+    StringHolder questName,
     gs2::optional<Bool> force
 )
 {
@@ -42,12 +42,12 @@ void Client::start(
     request.setQuestName(questName);
     if (force)
     {
-        request.setForce(*force);
+        request.setForce(std::move(*force));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.start(
         request,
-        [callback](gs2::quest::AsyncStartResult& r)
+        [callback](gs2::quest::AsyncStartResult r)
         {
             if (r.getError())
             {
@@ -73,10 +73,10 @@ void Client::start(
 }
 
 void Client::end(
-    std::function<void(AsyncEzEndResult&)> callback,
+    std::function<void(AsyncEzEndResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* transactionId,
+    StringHolder namespaceName,
+    StringHolder transactionId,
     gs2::optional<List<EzReward>> rewards,
     gs2::optional<Bool> isComplete
 )
@@ -95,12 +95,12 @@ void Client::end(
     }
     if (isComplete)
     {
-        request.setIsComplete(*isComplete);
+        request.setIsComplete(std::move(*isComplete));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.end(
         request,
-        [callback](gs2::quest::AsyncEndResult& r)
+        [callback](gs2::quest::AsyncEndResult r)
         {
             if (r.getError())
             {
@@ -126,9 +126,9 @@ void Client::end(
 }
 
 void Client::delete_(
-    std::function<void(AsyncEzDeleteResult&)> callback,
+    std::function<void(AsyncEzDeleteResult)> callback,
     GameSession& session,
-    const Char* namespaceName
+    StringHolder namespaceName
 )
 {
     gs2::quest::DeleteProgressRequest request;
@@ -136,7 +136,7 @@ void Client::delete_(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.deleteProgress(
         request,
-        [callback](gs2::quest::AsyncDeleteProgressResult& r)
+        [callback](gs2::quest::AsyncDeleteProgressResult r)
         {
             if (r.getError())
             {
@@ -162,10 +162,10 @@ void Client::delete_(
 }
 
 void Client::describeCompletedQuestLists(
-    std::function<void(AsyncEzDescribeCompletedQuestListsResult&)> callback,
+    std::function<void(AsyncEzDescribeCompletedQuestListsResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* pageToken,
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> pageToken,
     gs2::optional<Int64> limit
 )
 {
@@ -173,16 +173,16 @@ void Client::describeCompletedQuestLists(
     request.setNamespaceName(namespaceName);
     if (pageToken)
     {
-        request.setPageToken(pageToken);
+        request.setPageToken(std::move(*pageToken));
     }
     if (limit)
     {
-        request.setLimit(*limit);
+        request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.describeCompletedQuestLists(
         request,
-        [callback](gs2::quest::AsyncDescribeCompletedQuestListsResult& r)
+        [callback](gs2::quest::AsyncDescribeCompletedQuestListsResult r)
         {
             if (r.getError())
             {
@@ -208,10 +208,10 @@ void Client::describeCompletedQuestLists(
 }
 
 void Client::getCompletedQuestList(
-    std::function<void(AsyncEzGetCompletedQuestListResult&)> callback,
+    std::function<void(AsyncEzGetCompletedQuestListResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* questGroupName
+    StringHolder namespaceName,
+    StringHolder questGroupName
 )
 {
     gs2::quest::GetCompletedQuestListRequest request;
@@ -220,7 +220,7 @@ void Client::getCompletedQuestList(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.getCompletedQuestList(
         request,
-        [callback](gs2::quest::AsyncGetCompletedQuestListResult& r)
+        [callback](gs2::quest::AsyncGetCompletedQuestListResult r)
         {
             if (r.getError())
             {
@@ -246,15 +246,15 @@ void Client::getCompletedQuestList(
 }
 
 void Client::listQuestGroups(
-    std::function<void(AsyncEzListQuestGroupsResult&)> callback,
-    const Char* namespaceName
+    std::function<void(AsyncEzListQuestGroupsResult)> callback,
+    StringHolder namespaceName
 )
 {
     gs2::quest::DescribeQuestGroupModelsRequest request;
     request.setNamespaceName(namespaceName);
     m_Client.describeQuestGroupModels(
         request,
-        [callback](gs2::quest::AsyncDescribeQuestGroupModelsResult& r)
+        [callback](gs2::quest::AsyncDescribeQuestGroupModelsResult r)
         {
             if (r.getError())
             {
@@ -280,9 +280,9 @@ void Client::listQuestGroups(
 }
 
 void Client::getQuestGroup(
-    std::function<void(AsyncEzGetQuestGroupResult&)> callback,
-    const Char* namespaceName,
-    const Char* questGroupName
+    std::function<void(AsyncEzGetQuestGroupResult)> callback,
+    StringHolder namespaceName,
+    StringHolder questGroupName
 )
 {
     gs2::quest::GetQuestGroupModelRequest request;
@@ -290,7 +290,7 @@ void Client::getQuestGroup(
     request.setQuestGroupName(questGroupName);
     m_Client.getQuestGroupModel(
         request,
-        [callback](gs2::quest::AsyncGetQuestGroupModelResult& r)
+        [callback](gs2::quest::AsyncGetQuestGroupModelResult r)
         {
             if (r.getError())
             {
@@ -316,9 +316,9 @@ void Client::getQuestGroup(
 }
 
 void Client::listQuests(
-    std::function<void(AsyncEzListQuestsResult&)> callback,
-    const Char* namespaceName,
-    const Char* questGroupName
+    std::function<void(AsyncEzListQuestsResult)> callback,
+    StringHolder namespaceName,
+    StringHolder questGroupName
 )
 {
     gs2::quest::DescribeQuestModelsRequest request;
@@ -326,7 +326,7 @@ void Client::listQuests(
     request.setQuestGroupName(questGroupName);
     m_Client.describeQuestModels(
         request,
-        [callback](gs2::quest::AsyncDescribeQuestModelsResult& r)
+        [callback](gs2::quest::AsyncDescribeQuestModelsResult r)
         {
             if (r.getError())
             {
@@ -352,10 +352,10 @@ void Client::listQuests(
 }
 
 void Client::getQuest(
-    std::function<void(AsyncEzGetQuestResult&)> callback,
-    const Char* namespaceName,
-    const Char* questGroupName,
-    const Char* questName
+    std::function<void(AsyncEzGetQuestResult)> callback,
+    StringHolder namespaceName,
+    StringHolder questGroupName,
+    StringHolder questName
 )
 {
     gs2::quest::GetQuestModelRequest request;
@@ -364,7 +364,7 @@ void Client::getQuest(
     request.setQuestName(questName);
     m_Client.getQuestModel(
         request,
-        [callback](gs2::quest::AsyncGetQuestModelResult& r)
+        [callback](gs2::quest::AsyncGetQuestModelResult r)
         {
             if (r.getError())
             {

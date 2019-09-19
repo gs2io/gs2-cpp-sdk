@@ -22,11 +22,13 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "ScriptSetting.hpp"
 #include "ScriptSetting.hpp"
 #include "ScriptSetting.hpp"
 #include "ScriptSetting.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace account {
@@ -68,8 +70,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -78,68 +79,73 @@ private:
             name(data.name),
             description(data.description),
             changePasswordIfTakeOver(data.changePasswordIfTakeOver),
-            createAccountScript(data.createAccountScript),
-            authenticationScript(data.authenticationScript),
-            createTakeOverScript(data.createTakeOverScript),
-            doTakeOverScript(data.doTakeOverScript),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.createAccountScript)
+            {
+                createAccountScript = data.createAccountScript->deepCopy();
+            }
+            if (data.authenticationScript)
+            {
+                authenticationScript = data.authenticationScript->deepCopy();
+            }
+            if (data.createTakeOverScript)
+            {
+                createTakeOverScript = data.createTakeOverScript->deepCopy();
+            }
+            if (data.doTakeOverScript)
+            {
+                doTakeOverScript = data.doTakeOverScript->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            namespaceId(std::move(data.namespaceId)),
-            ownerId(std::move(data.ownerId)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            changePasswordIfTakeOver(std::move(data.changePasswordIfTakeOver)),
-            createAccountScript(std::move(data.createAccountScript)),
-            authenticationScript(std::move(data.authenticationScript)),
-            createTakeOverScript(std::move(data.createTakeOverScript)),
-            doTakeOverScript(std::move(data.doTakeOverScript)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "namespaceId") == 0) {
+            if (std::strcmp(name_, "namespaceId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->namespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "changePasswordIfTakeOver") == 0) {
+            else if (std::strcmp(name_, "changePasswordIfTakeOver") == 0)
+            {
                 if (jsonValue.IsBool())
                 {
                     this->changePasswordIfTakeOver = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name_, "createAccountScript") == 0) {
+            else if (std::strcmp(name_, "createAccountScript") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -147,7 +153,8 @@ private:
                     detail::json::JsonParser::parse(&this->createAccountScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "authenticationScript") == 0) {
+            else if (std::strcmp(name_, "authenticationScript") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -155,7 +162,8 @@ private:
                     detail::json::JsonParser::parse(&this->authenticationScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "createTakeOverScript") == 0) {
+            else if (std::strcmp(name_, "createTakeOverScript") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -163,7 +171,8 @@ private:
                     detail::json::JsonParser::parse(&this->createTakeOverScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "doTakeOverScript") == 0) {
+            else if (std::strcmp(name_, "doTakeOverScript") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -171,13 +180,15 @@ private:
                     detail::json::JsonParser::parse(&this->doTakeOverScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -186,72 +197,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Namespace() :
-        m_pData(nullptr)
-    {}
+    Namespace() = default;
+    Namespace(const Namespace& namespace_) = default;
+    Namespace(Namespace&& namespace_) = default;
+    ~Namespace() = default;
 
-    Namespace(const Namespace& namespace_) :
-        Gs2Object(namespace_),
-        m_pData(namespace_.m_pData != nullptr ? new Data(*namespace_.m_pData) : nullptr)
-    {}
+    Namespace& operator=(const Namespace& namespace_) = default;
+    Namespace& operator=(Namespace&& namespace_) = default;
 
-    Namespace(Namespace&& namespace_) :
-        Gs2Object(std::move(namespace_)),
-        m_pData(namespace_.m_pData)
+    Namespace deepCopy() const
     {
-        namespace_.m_pData = nullptr;
-    }
-
-    ~Namespace()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Namespace& operator=(const Namespace& namespace_)
-    {
-        Gs2Object::operator=(namespace_);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*namespace_.m_pData);
-
-        return *this;
-    }
-
-    Namespace& operator=(Namespace&& namespace_)
-    {
-        Gs2Object::operator=(std::move(namespace_));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = namespace_.m_pData;
-        namespace_.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Namespace);
     }
 
     const Namespace* operator->() const
@@ -278,9 +237,9 @@ public:
      *
      * @param namespaceId ネームスペース
      */
-    void setNamespaceId(const Char* namespaceId)
+    void setNamespaceId(StringHolder namespaceId)
     {
-        ensureData().namespaceId.emplace(namespaceId);
+        ensureData().namespaceId.emplace(std::move(namespaceId));
     }
 
     /**
@@ -288,9 +247,9 @@ public:
      *
      * @param namespaceId ネームスペース
      */
-    Namespace& withNamespaceId(const Char* namespaceId)
+    Namespace& withNamespaceId(StringHolder namespaceId)
     {
-        setNamespaceId(namespaceId);
+        setNamespaceId(std::move(namespaceId));
         return *this;
     }
 
@@ -309,9 +268,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
@@ -319,9 +278,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    Namespace& withOwnerId(const Char* ownerId)
+    Namespace& withOwnerId(StringHolder ownerId)
     {
-        setOwnerId(ownerId);
+        setOwnerId(std::move(ownerId));
         return *this;
     }
 
@@ -340,9 +299,9 @@ public:
      *
      * @param name ネームスペース名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -350,9 +309,9 @@ public:
      *
      * @param name ネームスペース名
      */
-    Namespace& withName(const Char* name)
+    Namespace& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -371,9 +330,9 @@ public:
      *
      * @param description 説明文
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -381,9 +340,9 @@ public:
      *
      * @param description 説明文
      */
-    Namespace& withDescription(const Char* description)
+    Namespace& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -433,9 +392,9 @@ public:
      *
      * @param createAccountScript アカウント新規作成したときに実行するスクリプト
      */
-    void setCreateAccountScript(const ScriptSetting& createAccountScript)
+    void setCreateAccountScript(ScriptSetting createAccountScript)
     {
-        ensureData().createAccountScript.emplace(createAccountScript);
+        ensureData().createAccountScript.emplace(std::move(createAccountScript));
     }
 
     /**
@@ -443,9 +402,9 @@ public:
      *
      * @param createAccountScript アカウント新規作成したときに実行するスクリプト
      */
-    Namespace& withCreateAccountScript(const ScriptSetting& createAccountScript)
+    Namespace& withCreateAccountScript(ScriptSetting createAccountScript)
     {
-        setCreateAccountScript(createAccountScript);
+        setCreateAccountScript(std::move(createAccountScript));
         return *this;
     }
 
@@ -464,9 +423,9 @@ public:
      *
      * @param authenticationScript 認証したときに実行するスクリプト
      */
-    void setAuthenticationScript(const ScriptSetting& authenticationScript)
+    void setAuthenticationScript(ScriptSetting authenticationScript)
     {
-        ensureData().authenticationScript.emplace(authenticationScript);
+        ensureData().authenticationScript.emplace(std::move(authenticationScript));
     }
 
     /**
@@ -474,9 +433,9 @@ public:
      *
      * @param authenticationScript 認証したときに実行するスクリプト
      */
-    Namespace& withAuthenticationScript(const ScriptSetting& authenticationScript)
+    Namespace& withAuthenticationScript(ScriptSetting authenticationScript)
     {
-        setAuthenticationScript(authenticationScript);
+        setAuthenticationScript(std::move(authenticationScript));
         return *this;
     }
 
@@ -495,9 +454,9 @@ public:
      *
      * @param createTakeOverScript 引き継ぎ情報登録したときに実行するスクリプト
      */
-    void setCreateTakeOverScript(const ScriptSetting& createTakeOverScript)
+    void setCreateTakeOverScript(ScriptSetting createTakeOverScript)
     {
-        ensureData().createTakeOverScript.emplace(createTakeOverScript);
+        ensureData().createTakeOverScript.emplace(std::move(createTakeOverScript));
     }
 
     /**
@@ -505,9 +464,9 @@ public:
      *
      * @param createTakeOverScript 引き継ぎ情報登録したときに実行するスクリプト
      */
-    Namespace& withCreateTakeOverScript(const ScriptSetting& createTakeOverScript)
+    Namespace& withCreateTakeOverScript(ScriptSetting createTakeOverScript)
     {
-        setCreateTakeOverScript(createTakeOverScript);
+        setCreateTakeOverScript(std::move(createTakeOverScript));
         return *this;
     }
 
@@ -526,9 +485,9 @@ public:
      *
      * @param doTakeOverScript 引き継ぎ実行したときに実行するスクリプト
      */
-    void setDoTakeOverScript(const ScriptSetting& doTakeOverScript)
+    void setDoTakeOverScript(ScriptSetting doTakeOverScript)
     {
-        ensureData().doTakeOverScript.emplace(doTakeOverScript);
+        ensureData().doTakeOverScript.emplace(std::move(doTakeOverScript));
     }
 
     /**
@@ -536,9 +495,9 @@ public:
      *
      * @param doTakeOverScript 引き継ぎ実行したときに実行するスクリプト
      */
-    Namespace& withDoTakeOverScript(const ScriptSetting& doTakeOverScript)
+    Namespace& withDoTakeOverScript(ScriptSetting doTakeOverScript)
     {
-        setDoTakeOverScript(doTakeOverScript);
+        setDoTakeOverScript(std::move(doTakeOverScript));
         return *this;
     }
 
@@ -615,7 +574,7 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

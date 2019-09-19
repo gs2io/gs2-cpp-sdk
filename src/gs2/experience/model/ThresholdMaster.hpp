@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace experience {
@@ -56,8 +58,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -65,55 +66,54 @@ private:
             name(data.name),
             description(data.description),
             metadata(data.metadata),
-            values(data.values),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.values)
+            {
+                values = data.values->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            thresholdId(std::move(data.thresholdId)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            metadata(std::move(data.metadata)),
-            values(std::move(data.values)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "thresholdId") == 0) {
+            if (std::strcmp(name_, "thresholdId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->thresholdId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "values") == 0) {
+            else if (std::strcmp(name_, "values") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -126,13 +126,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -141,72 +143,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    ThresholdMaster() :
-        m_pData(nullptr)
-    {}
+    ThresholdMaster() = default;
+    ThresholdMaster(const ThresholdMaster& thresholdMaster) = default;
+    ThresholdMaster(ThresholdMaster&& thresholdMaster) = default;
+    ~ThresholdMaster() = default;
 
-    ThresholdMaster(const ThresholdMaster& thresholdMaster) :
-        Gs2Object(thresholdMaster),
-        m_pData(thresholdMaster.m_pData != nullptr ? new Data(*thresholdMaster.m_pData) : nullptr)
-    {}
+    ThresholdMaster& operator=(const ThresholdMaster& thresholdMaster) = default;
+    ThresholdMaster& operator=(ThresholdMaster&& thresholdMaster) = default;
 
-    ThresholdMaster(ThresholdMaster&& thresholdMaster) :
-        Gs2Object(std::move(thresholdMaster)),
-        m_pData(thresholdMaster.m_pData)
+    ThresholdMaster deepCopy() const
     {
-        thresholdMaster.m_pData = nullptr;
-    }
-
-    ~ThresholdMaster()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    ThresholdMaster& operator=(const ThresholdMaster& thresholdMaster)
-    {
-        Gs2Object::operator=(thresholdMaster);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*thresholdMaster.m_pData);
-
-        return *this;
-    }
-
-    ThresholdMaster& operator=(ThresholdMaster&& thresholdMaster)
-    {
-        Gs2Object::operator=(std::move(thresholdMaster));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = thresholdMaster.m_pData;
-        thresholdMaster.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ThresholdMaster);
     }
 
     const ThresholdMaster* operator->() const
@@ -233,9 +183,9 @@ public:
      *
      * @param thresholdId ランクアップ閾値マスター
      */
-    void setThresholdId(const Char* thresholdId)
+    void setThresholdId(StringHolder thresholdId)
     {
-        ensureData().thresholdId.emplace(thresholdId);
+        ensureData().thresholdId.emplace(std::move(thresholdId));
     }
 
     /**
@@ -243,9 +193,9 @@ public:
      *
      * @param thresholdId ランクアップ閾値マスター
      */
-    ThresholdMaster& withThresholdId(const Char* thresholdId)
+    ThresholdMaster& withThresholdId(StringHolder thresholdId)
     {
-        setThresholdId(thresholdId);
+        setThresholdId(std::move(thresholdId));
         return *this;
     }
 
@@ -264,9 +214,9 @@ public:
      *
      * @param name ランクアップ閾値名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -274,9 +224,9 @@ public:
      *
      * @param name ランクアップ閾値名
      */
-    ThresholdMaster& withName(const Char* name)
+    ThresholdMaster& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -295,9 +245,9 @@ public:
      *
      * @param description ランクアップ閾値マスターの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -305,9 +255,9 @@ public:
      *
      * @param description ランクアップ閾値マスターの説明
      */
-    ThresholdMaster& withDescription(const Char* description)
+    ThresholdMaster& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -326,9 +276,9 @@ public:
      *
      * @param metadata ランクアップ閾値のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -336,9 +286,9 @@ public:
      *
      * @param metadata ランクアップ閾値のメタデータ
      */
-    ThresholdMaster& withMetadata(const Char* metadata)
+    ThresholdMaster& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -357,9 +307,9 @@ public:
      *
      * @param values ランクアップ経験値閾値リスト
      */
-    void setValues(const List<Int64>& values)
+    void setValues(List<Int64> values)
     {
-        ensureData().values.emplace(values);
+        ensureData().values.emplace(std::move(values));
     }
 
     /**
@@ -367,9 +317,9 @@ public:
      *
      * @param values ランクアップ経験値閾値リスト
      */
-    ThresholdMaster& withValues(const List<Int64>& values)
+    ThresholdMaster& withValues(List<Int64> values)
     {
-        setValues(values);
+        setValues(std::move(values));
         return *this;
     }
 
@@ -446,7 +396,7 @@ inline bool operator!=(const ThresholdMaster& lhs, const ThresholdMaster& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

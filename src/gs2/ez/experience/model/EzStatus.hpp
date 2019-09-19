@@ -27,37 +27,77 @@ namespace gs2 { namespace ez { namespace experience {
 class EzStatus : public gs2::Gs2Object
 {
 private:
-    /** 経験値の種類の名前 */
-    gs2::optional<StringHolder> m_ExperienceName;
-    /** プロパティID */
-    gs2::optional<StringHolder> m_PropertyId;
-    /** 累計獲得経験値 */
-    gs2::optional<Int64> m_ExperienceValue;
-    /** 現在のランク */
-    gs2::optional<Int64> m_RankValue;
-    /** 現在のランクキャップ */
-    gs2::optional<Int64> m_RankCapValue;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 経験値の種類の名前 */
+        gs2::optional<StringHolder> experienceName;
+        /** プロパティID */
+        gs2::optional<StringHolder> propertyId;
+        /** 累計獲得経験値 */
+        gs2::optional<Int64> experienceValue;
+        /** 現在のランク */
+        gs2::optional<Int64> rankValue;
+        /** 現在のランクキャップ */
+        gs2::optional<Int64> rankCapValue;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            experienceName(data.experienceName),
+            propertyId(data.propertyId),
+            experienceValue(data.experienceValue),
+            rankValue(data.rankValue),
+            rankCapValue(data.rankCapValue)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::experience::Status& status) :
+            experienceName(status.getExperienceName()),
+            propertyId(status.getPropertyId()),
+            experienceValue(status.getExperienceValue() ? *status.getExperienceValue() : 0),
+            rankValue(status.getRankValue() ? *status.getRankValue() : 0),
+            rankCapValue(status.getRankCapValue() ? *status.getRankCapValue() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzStatus() = default;
+    EzStatus(const EzStatus& ezStatus) = default;
+    EzStatus(EzStatus&& ezStatus) = default;
+    ~EzStatus() = default;
 
     EzStatus(gs2::experience::Status status) :
-        m_ExperienceName(status.getExperienceName()),
-        m_PropertyId(status.getPropertyId()),
-        m_ExperienceValue(status.getExperienceValue() ? *status.getExperienceValue() : 0),
-        m_RankValue(status.getRankValue() ? *status.getRankValue() : 0),
-        m_RankCapValue(status.getRankCapValue() ? *status.getRankCapValue() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(status)
+    {}
+
+    EzStatus& operator=(const EzStatus& ezStatus) = default;
+    EzStatus& operator=(EzStatus&& ezStatus) = default;
+
+    EzStatus deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzStatus);
     }
 
     gs2::experience::Status ToModel() const
     {
         gs2::experience::Status status;
-        status.setExperienceName(*m_ExperienceName);
-        status.setPropertyId(*m_PropertyId);
-        status.setExperienceValue(*m_ExperienceValue);
-        status.setRankValue(*m_RankValue);
-        status.setRankCapValue(*m_RankCapValue);
+        status.setExperienceName(getExperienceName());
+        status.setPropertyId(getPropertyId());
+        status.setExperienceValue(getExperienceValue());
+        status.setRankValue(getRankValue());
+        status.setRankCapValue(getRankCapValue());
         return status;
     }
 
@@ -65,79 +105,69 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getExperienceName() const
+    const StringHolder& getExperienceName() const
     {
-        return *m_ExperienceName;
+        return *ensureData().experienceName;
     }
 
-    gs2::StringHolder& getExperienceName()
+    const StringHolder& getPropertyId() const
     {
-        return *m_ExperienceName;
-    }
-
-    const gs2::StringHolder& getPropertyId() const
-    {
-        return *m_PropertyId;
-    }
-
-    gs2::StringHolder& getPropertyId()
-    {
-        return *m_PropertyId;
+        return *ensureData().propertyId;
     }
 
     Int64 getExperienceValue() const
     {
-        return *m_ExperienceValue;
+        return *ensureData().experienceValue;
     }
 
     Int64 getRankValue() const
     {
-        return *m_RankValue;
+        return *ensureData().rankValue;
     }
 
     Int64 getRankCapValue() const
     {
-        return *m_RankCapValue;
+        return *ensureData().rankCapValue;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setExperienceName(Char* experienceName)
+    void setExperienceName(StringHolder experienceName)
     {
-        m_ExperienceName.emplace(experienceName);
+        ensureData().experienceName = std::move(experienceName);
     }
 
-    void setPropertyId(Char* propertyId)
+    void setPropertyId(StringHolder propertyId)
     {
-        m_PropertyId.emplace(propertyId);
+        ensureData().propertyId = std::move(propertyId);
     }
 
     void setExperienceValue(Int64 experienceValue)
     {
-        m_ExperienceValue = experienceValue;
+        ensureData().experienceValue = experienceValue;
     }
 
     void setRankValue(Int64 rankValue)
     {
-        m_RankValue = rankValue;
+        ensureData().rankValue = rankValue;
     }
 
     void setRankCapValue(Int64 rankCapValue)
     {
-        m_RankCapValue = rankCapValue;
+        ensureData().rankCapValue = rankCapValue;
     }
 
-    EzStatus& withExperienceName(Char* experienceName)
+    EzStatus& withExperienceName(StringHolder experienceName)
     {
-        setExperienceName(experienceName);
+        setExperienceName(std::move(experienceName));
         return *this;
     }
 
-    EzStatus& withPropertyId(Char* propertyId)
+    EzStatus& withPropertyId(StringHolder propertyId)
     {
-        setPropertyId(propertyId);
+        setPropertyId(std::move(propertyId));
         return *this;
     }
 

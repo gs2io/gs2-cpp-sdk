@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2LotteryConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace lottery
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** アクセストークン */
@@ -50,102 +52,49 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             lotteryName(data.lotteryName),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            accessToken(std::move(data.accessToken)),
-            namespaceName(std::move(data.namespaceName)),
-            lotteryName(std::move(data.lotteryName)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    GetBoxRequest() :
-        m_pData(nullptr)
-    {}
+    GetBoxRequest() = default;
+    GetBoxRequest(const GetBoxRequest& getBoxRequest) = default;
+    GetBoxRequest(GetBoxRequest&& getBoxRequest) = default;
+    ~GetBoxRequest() GS2_OVERRIDE = default;
 
-    GetBoxRequest(const GetBoxRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Lottery(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    GetBoxRequest& operator=(const GetBoxRequest& getBoxRequest) = default;
+    GetBoxRequest& operator=(GetBoxRequest&& getBoxRequest) = default;
 
-    GetBoxRequest(GetBoxRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Lottery(std::move(obj)),
-        m_pData(obj.m_pData)
+    GetBoxRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~GetBoxRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetBoxRequest& operator=(const GetBoxRequest& getBoxRequest)
-    {
-        Gs2BasicRequest::operator=(getBoxRequest);
-        Gs2Lottery::operator=(getBoxRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getBoxRequest.m_pData);
-
-        return *this;
-    }
-
-    GetBoxRequest& operator=(GetBoxRequest&& getBoxRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(getBoxRequest));
-        Gs2Lottery::operator=(std::move(getBoxRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getBoxRequest.m_pData;
-        getBoxRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetBoxRequest);
     }
 
     const GetBoxRequest* operator->() const
@@ -163,7 +112,8 @@ public:
      *
      * @return アクセストークン
      */
-    const gs2::optional<StringHolder>& getAccessToken() const {
+    const gs2::optional<StringHolder>& getAccessToken() const
+    {
         return ensureData().accessToken;
     }
 
@@ -172,8 +122,9 @@ public:
      *
      * @param accessToken アクセストークン
      */
-    void setAccessToken(const Char* accessToken) {
-        ensureData().accessToken.emplace(accessToken);
+    void setAccessToken(StringHolder accessToken)
+    {
+        ensureData().accessToken.emplace(std::move(accessToken));
     }
 
     /**
@@ -182,8 +133,9 @@ public:
      * @param accessToken アクセストークン
      * @return this
      */
-    GetBoxRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
+    GetBoxRequest& withAccessToken(StringHolder accessToken)
+    {
+        setAccessToken(std::move(accessToken));
         return *this;
     }
 
@@ -202,9 +154,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -212,9 +164,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    GetBoxRequest& withNamespaceName(const Char* namespaceName)
+    GetBoxRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -233,9 +185,9 @@ public:
      *
      * @param lotteryName 抽選モデルの種類名
      */
-    void setLotteryName(const Char* lotteryName)
+    void setLotteryName(StringHolder lotteryName)
     {
-        ensureData().lotteryName.emplace(lotteryName);
+        ensureData().lotteryName.emplace(std::move(lotteryName));
     }
 
     /**
@@ -243,9 +195,9 @@ public:
      *
      * @param lotteryName 抽選モデルの種類名
      */
-    GetBoxRequest& withLotteryName(const Char* lotteryName)
+    GetBoxRequest& withLotteryName(StringHolder lotteryName)
     {
-        ensureData().lotteryName.emplace(lotteryName);
+        ensureData().lotteryName.emplace(std::move(lotteryName));
         return *this;
     }
 
@@ -264,9 +216,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -274,9 +226,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    GetBoxRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    GetBoxRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -287,33 +239,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    GetBoxRequest& withGs2ClientId(const Char* gs2ClientId)
+    GetBoxRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    GetBoxRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    GetBoxRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -322,9 +250,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    GetBoxRequest& withRequestId(const Char* gs2RequestId)
+    GetBoxRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

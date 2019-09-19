@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace gateway
 {
@@ -43,28 +45,28 @@ private:
         /** 取得したWebsocketセッション */
         optional<WebSocketSession> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GetWebSocketSessionByConnectionIdResult() :
-        m_pData(nullptr)
-    {}
+    GetWebSocketSessionByConnectionIdResult() = default;
+    GetWebSocketSessionByConnectionIdResult(const GetWebSocketSessionByConnectionIdResult& getWebSocketSessionByConnectionIdResult) = default;
+    GetWebSocketSessionByConnectionIdResult(GetWebSocketSessionByConnectionIdResult&& getWebSocketSessionByConnectionIdResult) = default;
+    ~GetWebSocketSessionByConnectionIdResult() = default;
 
-    GetWebSocketSessionByConnectionIdResult(const GetWebSocketSessionByConnectionIdResult& getWebSocketSessionByConnectionIdResult) :
-        Gs2Object(getWebSocketSessionByConnectionIdResult),
-        m_pData(getWebSocketSessionByConnectionIdResult.m_pData != nullptr ? new Data(*getWebSocketSessionByConnectionIdResult.m_pData) : nullptr)
-    {}
+    GetWebSocketSessionByConnectionIdResult& operator=(const GetWebSocketSessionByConnectionIdResult& getWebSocketSessionByConnectionIdResult) = default;
+    GetWebSocketSessionByConnectionIdResult& operator=(GetWebSocketSessionByConnectionIdResult&& getWebSocketSessionByConnectionIdResult) = default;
 
-    GetWebSocketSessionByConnectionIdResult(GetWebSocketSessionByConnectionIdResult&& getWebSocketSessionByConnectionIdResult) :
-        Gs2Object(std::move(getWebSocketSessionByConnectionIdResult)),
-        m_pData(getWebSocketSessionByConnectionIdResult.m_pData)
+    GetWebSocketSessionByConnectionIdResult deepCopy() const
     {
-        getWebSocketSessionByConnectionIdResult.m_pData = nullptr;
-    }
-
-    ~GetWebSocketSessionByConnectionIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetWebSocketSessionByConnectionIdResult& operator=(const GetWebSocketSessionByConnectionIdResult& getWebSocketSessionByConnectionIdResult)
-    {
-        Gs2Object::operator=(getWebSocketSessionByConnectionIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getWebSocketSessionByConnectionIdResult.m_pData);
-
-        return *this;
-    }
-
-    GetWebSocketSessionByConnectionIdResult& operator=(GetWebSocketSessionByConnectionIdResult&& getWebSocketSessionByConnectionIdResult)
-    {
-        Gs2Object::operator=(std::move(getWebSocketSessionByConnectionIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getWebSocketSessionByConnectionIdResult.m_pData;
-        getWebSocketSessionByConnectionIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetWebSocketSessionByConnectionIdResult);
     }
 
     const GetWebSocketSessionByConnectionIdResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 取得したWebsocketセッション
      */
-    void setItem(const WebSocketSession& item)
+    void setItem(WebSocketSession item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

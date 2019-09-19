@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2MissionConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace mission
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -46,98 +48,50 @@ private:
         /** GitHubからマスターデータをチェックアウトしてくる設定 */
         optional<GitHubCheckoutSetting> checkoutSetting;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
-            namespaceName(data.namespaceName),
-            checkoutSetting(data.checkoutSetting)
-        {}
+            Gs2BasicRequest::Data(data),
+            namespaceName(data.namespaceName)
+        {
+            if (data.checkoutSetting)
+            {
+                checkoutSetting = data.checkoutSetting->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            checkoutSetting(std::move(data.checkoutSetting))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    UpdateCurrentMissionMasterFromGitHubRequest() :
-        m_pData(nullptr)
-    {}
+    UpdateCurrentMissionMasterFromGitHubRequest() = default;
+    UpdateCurrentMissionMasterFromGitHubRequest(const UpdateCurrentMissionMasterFromGitHubRequest& updateCurrentMissionMasterFromGitHubRequest) = default;
+    UpdateCurrentMissionMasterFromGitHubRequest(UpdateCurrentMissionMasterFromGitHubRequest&& updateCurrentMissionMasterFromGitHubRequest) = default;
+    ~UpdateCurrentMissionMasterFromGitHubRequest() GS2_OVERRIDE = default;
 
-    UpdateCurrentMissionMasterFromGitHubRequest(const UpdateCurrentMissionMasterFromGitHubRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Mission(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    UpdateCurrentMissionMasterFromGitHubRequest& operator=(const UpdateCurrentMissionMasterFromGitHubRequest& updateCurrentMissionMasterFromGitHubRequest) = default;
+    UpdateCurrentMissionMasterFromGitHubRequest& operator=(UpdateCurrentMissionMasterFromGitHubRequest&& updateCurrentMissionMasterFromGitHubRequest) = default;
 
-    UpdateCurrentMissionMasterFromGitHubRequest(UpdateCurrentMissionMasterFromGitHubRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Mission(std::move(obj)),
-        m_pData(obj.m_pData)
+    UpdateCurrentMissionMasterFromGitHubRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~UpdateCurrentMissionMasterFromGitHubRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateCurrentMissionMasterFromGitHubRequest& operator=(const UpdateCurrentMissionMasterFromGitHubRequest& updateCurrentMissionMasterFromGitHubRequest)
-    {
-        Gs2BasicRequest::operator=(updateCurrentMissionMasterFromGitHubRequest);
-        Gs2Mission::operator=(updateCurrentMissionMasterFromGitHubRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateCurrentMissionMasterFromGitHubRequest.m_pData);
-
-        return *this;
-    }
-
-    UpdateCurrentMissionMasterFromGitHubRequest& operator=(UpdateCurrentMissionMasterFromGitHubRequest&& updateCurrentMissionMasterFromGitHubRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(updateCurrentMissionMasterFromGitHubRequest));
-        Gs2Mission::operator=(std::move(updateCurrentMissionMasterFromGitHubRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateCurrentMissionMasterFromGitHubRequest.m_pData;
-        updateCurrentMissionMasterFromGitHubRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateCurrentMissionMasterFromGitHubRequest);
     }
 
     const UpdateCurrentMissionMasterFromGitHubRequest* operator->() const
@@ -165,9 +119,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -175,9 +129,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    UpdateCurrentMissionMasterFromGitHubRequest& withNamespaceName(const Char* namespaceName)
+    UpdateCurrentMissionMasterFromGitHubRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -196,9 +150,9 @@ public:
      *
      * @param checkoutSetting GitHubからマスターデータをチェックアウトしてくる設定
      */
-    void setCheckoutSetting(const GitHubCheckoutSetting& checkoutSetting)
+    void setCheckoutSetting(GitHubCheckoutSetting checkoutSetting)
     {
-        ensureData().checkoutSetting.emplace(checkoutSetting);
+        ensureData().checkoutSetting.emplace(std::move(checkoutSetting));
     }
 
     /**
@@ -206,9 +160,9 @@ public:
      *
      * @param checkoutSetting GitHubからマスターデータをチェックアウトしてくる設定
      */
-    UpdateCurrentMissionMasterFromGitHubRequest& withCheckoutSetting(const GitHubCheckoutSetting& checkoutSetting)
+    UpdateCurrentMissionMasterFromGitHubRequest& withCheckoutSetting(GitHubCheckoutSetting checkoutSetting)
     {
-        ensureData().checkoutSetting.emplace(checkoutSetting);
+        ensureData().checkoutSetting.emplace(std::move(checkoutSetting));
         return *this;
     }
 
@@ -219,33 +173,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    UpdateCurrentMissionMasterFromGitHubRequest& withGs2ClientId(const Char* gs2ClientId)
+    UpdateCurrentMissionMasterFromGitHubRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    UpdateCurrentMissionMasterFromGitHubRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    UpdateCurrentMissionMasterFromGitHubRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -254,9 +184,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    UpdateCurrentMissionMasterFromGitHubRequest& withRequestId(const Char* gs2RequestId)
+    UpdateCurrentMissionMasterFromGitHubRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

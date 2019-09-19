@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace lottery {
@@ -54,56 +56,54 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             boxId(data.boxId),
             prizeTableName(data.prizeTableName),
             userId(data.userId),
-            drawnIndexes(data.drawnIndexes),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.drawnIndexes)
+            {
+                drawnIndexes = data.drawnIndexes->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            boxId(std::move(data.boxId)),
-            prizeTableName(std::move(data.prizeTableName)),
-            userId(std::move(data.userId)),
-            drawnIndexes(std::move(data.drawnIndexes)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "boxId") == 0) {
+            if (std::strcmp(name_, "boxId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->boxId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "prizeTableName") == 0) {
+            else if (std::strcmp(name_, "prizeTableName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->prizeTableName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "drawnIndexes") == 0) {
+            else if (std::strcmp(name_, "drawnIndexes") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -116,13 +116,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -131,72 +133,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Box() :
-        m_pData(nullptr)
-    {}
+    Box() = default;
+    Box(const Box& box) = default;
+    Box(Box&& box) = default;
+    ~Box() = default;
 
-    Box(const Box& box) :
-        Gs2Object(box),
-        m_pData(box.m_pData != nullptr ? new Data(*box.m_pData) : nullptr)
-    {}
+    Box& operator=(const Box& box) = default;
+    Box& operator=(Box&& box) = default;
 
-    Box(Box&& box) :
-        Gs2Object(std::move(box)),
-        m_pData(box.m_pData)
+    Box deepCopy() const
     {
-        box.m_pData = nullptr;
-    }
-
-    ~Box()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Box& operator=(const Box& box)
-    {
-        Gs2Object::operator=(box);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*box.m_pData);
-
-        return *this;
-    }
-
-    Box& operator=(Box&& box)
-    {
-        Gs2Object::operator=(std::move(box));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = box.m_pData;
-        box.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Box);
     }
 
     const Box* operator->() const
@@ -223,9 +173,9 @@ public:
      *
      * @param boxId ボックス
      */
-    void setBoxId(const Char* boxId)
+    void setBoxId(StringHolder boxId)
     {
-        ensureData().boxId.emplace(boxId);
+        ensureData().boxId.emplace(std::move(boxId));
     }
 
     /**
@@ -233,9 +183,9 @@ public:
      *
      * @param boxId ボックス
      */
-    Box& withBoxId(const Char* boxId)
+    Box& withBoxId(StringHolder boxId)
     {
-        setBoxId(boxId);
+        setBoxId(std::move(boxId));
         return *this;
     }
 
@@ -254,9 +204,9 @@ public:
      *
      * @param prizeTableName 排出確率テーブル名
      */
-    void setPrizeTableName(const Char* prizeTableName)
+    void setPrizeTableName(StringHolder prizeTableName)
     {
-        ensureData().prizeTableName.emplace(prizeTableName);
+        ensureData().prizeTableName.emplace(std::move(prizeTableName));
     }
 
     /**
@@ -264,9 +214,9 @@ public:
      *
      * @param prizeTableName 排出確率テーブル名
      */
-    Box& withPrizeTableName(const Char* prizeTableName)
+    Box& withPrizeTableName(StringHolder prizeTableName)
     {
-        setPrizeTableName(prizeTableName);
+        setPrizeTableName(std::move(prizeTableName));
         return *this;
     }
 
@@ -285,9 +235,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -295,9 +245,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    Box& withUserId(const Char* userId)
+    Box& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -316,9 +266,9 @@ public:
      *
      * @param drawnIndexes 排出済み景品のインデックスのリスト
      */
-    void setDrawnIndexes(const List<Int32>& drawnIndexes)
+    void setDrawnIndexes(List<Int32> drawnIndexes)
     {
-        ensureData().drawnIndexes.emplace(drawnIndexes);
+        ensureData().drawnIndexes.emplace(std::move(drawnIndexes));
     }
 
     /**
@@ -326,9 +276,9 @@ public:
      *
      * @param drawnIndexes 排出済み景品のインデックスのリスト
      */
-    Box& withDrawnIndexes(const List<Int32>& drawnIndexes)
+    Box& withDrawnIndexes(List<Int32> drawnIndexes)
     {
-        setDrawnIndexes(drawnIndexes);
+        setDrawnIndexes(std::move(drawnIndexes));
         return *this;
     }
 
@@ -405,7 +355,7 @@ inline bool operator!=(const Box& lhs, const Box& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

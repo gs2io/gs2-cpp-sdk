@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace schedule {
 class EzGetEventResult : public gs2::Gs2Object
 {
 private:
-    /** イベント */
-    EzEvent m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** イベント */
+        EzEvent item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::schedule::GetEventResult& getEventResult) :
+            item(*getEventResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetEventResult(const gs2::schedule::GetEventResult& result) :
-        m_Item(*result.getItem())
+    EzGetEventResult() = default;
+    EzGetEventResult(const EzGetEventResult& result) = default;
+    EzGetEventResult(EzGetEventResult&& result) = default;
+    ~EzGetEventResult() = default;
+
+    EzGetEventResult(gs2::schedule::GetEventResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetEventResult& operator=(const EzGetEventResult& result) = default;
+    EzGetEventResult& operator=(EzGetEventResult&& result) = default;
+
+    EzGetEventResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetEventResult);
     }
 
     static bool isConvertible(const gs2::schedule::GetEventResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzEvent& getItem() const
     {
-        return m_Item;
-    }
-
-    EzEvent& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

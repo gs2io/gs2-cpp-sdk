@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace matchmaking
 {
@@ -43,28 +45,28 @@ private:
         /** ギャザリング */
         optional<Gathering> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    CreateGatheringByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    CreateGatheringByUserIdResult() = default;
+    CreateGatheringByUserIdResult(const CreateGatheringByUserIdResult& createGatheringByUserIdResult) = default;
+    CreateGatheringByUserIdResult(CreateGatheringByUserIdResult&& createGatheringByUserIdResult) = default;
+    ~CreateGatheringByUserIdResult() = default;
 
-    CreateGatheringByUserIdResult(const CreateGatheringByUserIdResult& createGatheringByUserIdResult) :
-        Gs2Object(createGatheringByUserIdResult),
-        m_pData(createGatheringByUserIdResult.m_pData != nullptr ? new Data(*createGatheringByUserIdResult.m_pData) : nullptr)
-    {}
+    CreateGatheringByUserIdResult& operator=(const CreateGatheringByUserIdResult& createGatheringByUserIdResult) = default;
+    CreateGatheringByUserIdResult& operator=(CreateGatheringByUserIdResult&& createGatheringByUserIdResult) = default;
 
-    CreateGatheringByUserIdResult(CreateGatheringByUserIdResult&& createGatheringByUserIdResult) :
-        Gs2Object(std::move(createGatheringByUserIdResult)),
-        m_pData(createGatheringByUserIdResult.m_pData)
+    CreateGatheringByUserIdResult deepCopy() const
     {
-        createGatheringByUserIdResult.m_pData = nullptr;
-    }
-
-    ~CreateGatheringByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateGatheringByUserIdResult& operator=(const CreateGatheringByUserIdResult& createGatheringByUserIdResult)
-    {
-        Gs2Object::operator=(createGatheringByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createGatheringByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    CreateGatheringByUserIdResult& operator=(CreateGatheringByUserIdResult&& createGatheringByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(createGatheringByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createGatheringByUserIdResult.m_pData;
-        createGatheringByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateGatheringByUserIdResult);
     }
 
     const CreateGatheringByUserIdResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item ギャザリング
      */
-    void setItem(const Gathering& item)
+    void setItem(Gathering item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

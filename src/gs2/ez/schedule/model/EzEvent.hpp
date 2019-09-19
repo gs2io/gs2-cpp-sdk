@@ -27,45 +27,87 @@ namespace gs2 { namespace ez { namespace schedule {
 class EzEvent : public gs2::Gs2Object
 {
 private:
-    /** イベントの種類名 */
-    gs2::optional<StringHolder> m_Name;
-    /** イベントの種類のメタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** イベント期間の種類 */
-    gs2::optional<StringHolder> m_ScheduleType;
-    /** イベントの開始日時 */
-    gs2::optional<Int64> m_AbsoluteBegin;
-    /** イベントの終了日時 */
-    gs2::optional<Int64> m_AbsoluteEnd;
-    /** イベントの開始トリガー */
-    gs2::optional<StringHolder> m_RelativeTriggerName;
-    /** イベントの開催期間(秒) */
-    gs2::optional<Int32> m_RelativeDuration;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** イベントの種類名 */
+        gs2::optional<StringHolder> name;
+        /** イベントの種類のメタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** イベント期間の種類 */
+        gs2::optional<StringHolder> scheduleType;
+        /** イベントの開始日時 */
+        gs2::optional<Int64> absoluteBegin;
+        /** イベントの終了日時 */
+        gs2::optional<Int64> absoluteEnd;
+        /** イベントの開始トリガー */
+        gs2::optional<StringHolder> relativeTriggerName;
+        /** イベントの開催期間(秒) */
+        gs2::optional<Int32> relativeDuration;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            metadata(data.metadata),
+            scheduleType(data.scheduleType),
+            absoluteBegin(data.absoluteBegin),
+            absoluteEnd(data.absoluteEnd),
+            relativeTriggerName(data.relativeTriggerName),
+            relativeDuration(data.relativeDuration)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::schedule::Event& event) :
+            name(event.getName()),
+            metadata(event.getMetadata()),
+            scheduleType(event.getScheduleType()),
+            absoluteBegin(event.getAbsoluteBegin() ? *event.getAbsoluteBegin() : 0),
+            absoluteEnd(event.getAbsoluteEnd() ? *event.getAbsoluteEnd() : 0),
+            relativeTriggerName(event.getRelativeTriggerName()),
+            relativeDuration(event.getRelativeDuration() ? *event.getRelativeDuration() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzEvent() = default;
+    EzEvent(const EzEvent& ezEvent) = default;
+    EzEvent(EzEvent&& ezEvent) = default;
+    ~EzEvent() = default;
 
     EzEvent(gs2::schedule::Event event) :
-        m_Name(event.getName()),
-        m_Metadata(event.getMetadata()),
-        m_ScheduleType(event.getScheduleType()),
-        m_AbsoluteBegin(event.getAbsoluteBegin() ? *event.getAbsoluteBegin() : 0),
-        m_AbsoluteEnd(event.getAbsoluteEnd() ? *event.getAbsoluteEnd() : 0),
-        m_RelativeTriggerName(event.getRelativeTriggerName()),
-        m_RelativeDuration(event.getRelativeDuration() ? *event.getRelativeDuration() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(event)
+    {}
+
+    EzEvent& operator=(const EzEvent& ezEvent) = default;
+    EzEvent& operator=(EzEvent&& ezEvent) = default;
+
+    EzEvent deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzEvent);
     }
 
     gs2::schedule::Event ToModel() const
     {
         gs2::schedule::Event event;
-        event.setName(*m_Name);
-        event.setMetadata(*m_Metadata);
-        event.setScheduleType(*m_ScheduleType);
-        event.setAbsoluteBegin(*m_AbsoluteBegin);
-        event.setAbsoluteEnd(*m_AbsoluteEnd);
-        event.setRelativeTriggerName(*m_RelativeTriggerName);
-        event.setRelativeDuration(*m_RelativeDuration);
+        event.setName(getName());
+        event.setMetadata(getMetadata());
+        event.setScheduleType(getScheduleType());
+        event.setAbsoluteBegin(getAbsoluteBegin());
+        event.setAbsoluteEnd(getAbsoluteEnd());
+        event.setRelativeTriggerName(getRelativeTriggerName());
+        event.setRelativeDuration(getRelativeDuration());
         return event;
     }
 
@@ -73,115 +115,95 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
+        return *ensureData().name;
     }
 
-    gs2::StringHolder& getName()
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
+        return *ensureData().metadata;
     }
 
-    const gs2::StringHolder& getMetadata() const
+    const StringHolder& getScheduleType() const
     {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
-    }
-
-    const gs2::StringHolder& getScheduleType() const
-    {
-        return *m_ScheduleType;
-    }
-
-    gs2::StringHolder& getScheduleType()
-    {
-        return *m_ScheduleType;
+        return *ensureData().scheduleType;
     }
 
     Int64 getAbsoluteBegin() const
     {
-        return *m_AbsoluteBegin;
+        return *ensureData().absoluteBegin;
     }
 
     Int64 getAbsoluteEnd() const
     {
-        return *m_AbsoluteEnd;
+        return *ensureData().absoluteEnd;
     }
 
-    const gs2::StringHolder& getRelativeTriggerName() const
+    const StringHolder& getRelativeTriggerName() const
     {
-        return *m_RelativeTriggerName;
-    }
-
-    gs2::StringHolder& getRelativeTriggerName()
-    {
-        return *m_RelativeTriggerName;
+        return *ensureData().relativeTriggerName;
     }
 
     Int32 getRelativeDuration() const
     {
-        return *m_RelativeDuration;
+        return *ensureData().relativeDuration;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
-    void setScheduleType(Char* scheduleType)
+    void setScheduleType(StringHolder scheduleType)
     {
-        m_ScheduleType.emplace(scheduleType);
+        ensureData().scheduleType = std::move(scheduleType);
     }
 
     void setAbsoluteBegin(Int64 absoluteBegin)
     {
-        m_AbsoluteBegin = absoluteBegin;
+        ensureData().absoluteBegin = absoluteBegin;
     }
 
     void setAbsoluteEnd(Int64 absoluteEnd)
     {
-        m_AbsoluteEnd = absoluteEnd;
+        ensureData().absoluteEnd = absoluteEnd;
     }
 
-    void setRelativeTriggerName(Char* relativeTriggerName)
+    void setRelativeTriggerName(StringHolder relativeTriggerName)
     {
-        m_RelativeTriggerName.emplace(relativeTriggerName);
+        ensureData().relativeTriggerName = std::move(relativeTriggerName);
     }
 
     void setRelativeDuration(Int32 relativeDuration)
     {
-        m_RelativeDuration = relativeDuration;
+        ensureData().relativeDuration = relativeDuration;
     }
 
-    EzEvent& withName(Char* name)
+    EzEvent& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzEvent& withMetadata(Char* metadata)
+    EzEvent& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
-    EzEvent& withScheduleType(Char* scheduleType)
+    EzEvent& withScheduleType(StringHolder scheduleType)
     {
-        setScheduleType(scheduleType);
+        setScheduleType(std::move(scheduleType));
         return *this;
     }
 
@@ -197,9 +219,9 @@ public:
         return *this;
     }
 
-    EzEvent& withRelativeTriggerName(Char* relativeTriggerName)
+    EzEvent& withRelativeTriggerName(StringHolder relativeTriggerName)
     {
-        setRelativeTriggerName(relativeTriggerName);
+        setRelativeTriggerName(std::move(relativeTriggerName));
         return *this;
     }
 

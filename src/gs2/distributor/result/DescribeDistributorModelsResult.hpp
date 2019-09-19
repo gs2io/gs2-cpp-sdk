@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace distributor
 {
@@ -43,28 +45,28 @@ private:
         /** 配信設定のリスト */
         optional<List<DistributorModel>> items;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            items(data.items)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -79,72 +81,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DescribeDistributorModelsResult() :
-        m_pData(nullptr)
-    {}
+    DescribeDistributorModelsResult() = default;
+    DescribeDistributorModelsResult(const DescribeDistributorModelsResult& describeDistributorModelsResult) = default;
+    DescribeDistributorModelsResult(DescribeDistributorModelsResult&& describeDistributorModelsResult) = default;
+    ~DescribeDistributorModelsResult() = default;
 
-    DescribeDistributorModelsResult(const DescribeDistributorModelsResult& describeDistributorModelsResult) :
-        Gs2Object(describeDistributorModelsResult),
-        m_pData(describeDistributorModelsResult.m_pData != nullptr ? new Data(*describeDistributorModelsResult.m_pData) : nullptr)
-    {}
+    DescribeDistributorModelsResult& operator=(const DescribeDistributorModelsResult& describeDistributorModelsResult) = default;
+    DescribeDistributorModelsResult& operator=(DescribeDistributorModelsResult&& describeDistributorModelsResult) = default;
 
-    DescribeDistributorModelsResult(DescribeDistributorModelsResult&& describeDistributorModelsResult) :
-        Gs2Object(std::move(describeDistributorModelsResult)),
-        m_pData(describeDistributorModelsResult.m_pData)
+    DescribeDistributorModelsResult deepCopy() const
     {
-        describeDistributorModelsResult.m_pData = nullptr;
-    }
-
-    ~DescribeDistributorModelsResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DescribeDistributorModelsResult& operator=(const DescribeDistributorModelsResult& describeDistributorModelsResult)
-    {
-        Gs2Object::operator=(describeDistributorModelsResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*describeDistributorModelsResult.m_pData);
-
-        return *this;
-    }
-
-    DescribeDistributorModelsResult& operator=(DescribeDistributorModelsResult&& describeDistributorModelsResult)
-    {
-        Gs2Object::operator=(std::move(describeDistributorModelsResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = describeDistributorModelsResult.m_pData;
-        describeDistributorModelsResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeDistributorModelsResult);
     }
 
     const DescribeDistributorModelsResult* operator->() const
@@ -171,9 +121,9 @@ public:
      *
      * @param items 配信設定のリスト
      */
-    void setItems(const List<DistributorModel>& items)
+    void setItems(List<DistributorModel> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
 

@@ -28,15 +28,15 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::create(
-    std::function<void(AsyncEzCreateResult&)> callback,
-    const Char* namespaceName
+    std::function<void(AsyncEzCreateResult)> callback,
+    StringHolder namespaceName
 )
 {
     gs2::account::CreateAccountRequest request;
     request.setNamespaceName(namespaceName);
     m_Client.createAccount(
         request,
-        [callback](gs2::account::AsyncCreateAccountResult& r)
+        [callback](gs2::account::AsyncCreateAccountResult r)
         {
             if (r.getError())
             {
@@ -62,11 +62,11 @@ void Client::create(
 }
 
 void Client::authentication(
-    std::function<void(AsyncEzAuthenticationResult&)> callback,
-    const Char* namespaceName,
-    const Char* userId,
-    const Char* keyId,
-    const Char* password
+    std::function<void(AsyncEzAuthenticationResult)> callback,
+    StringHolder namespaceName,
+    StringHolder userId,
+    StringHolder keyId,
+    StringHolder password
 )
 {
     gs2::account::AuthenticationRequest request;
@@ -76,7 +76,7 @@ void Client::authentication(
     request.setPassword(password);
     m_Client.authentication(
         request,
-        [callback](gs2::account::AsyncAuthenticationResult& r)
+        [callback](gs2::account::AsyncAuthenticationResult r)
         {
             if (r.getError())
             {
@@ -102,12 +102,12 @@ void Client::authentication(
 }
 
 void Client::addTakeOverSetting(
-    std::function<void(AsyncEzAddTakeOverSettingResult&)> callback,
+    std::function<void(AsyncEzAddTakeOverSettingResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
+    StringHolder namespaceName,
     Int32 type,
-    const Char* userIdentifier,
-    const Char* password
+    StringHolder userIdentifier,
+    StringHolder password
 )
 {
     gs2::account::CreateTakeOverRequest request;
@@ -118,7 +118,7 @@ void Client::addTakeOverSetting(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.createTakeOver(
         request,
-        [callback](gs2::account::AsyncCreateTakeOverResult& r)
+        [callback](gs2::account::AsyncCreateTakeOverResult r)
         {
             if (r.getError())
             {
@@ -144,10 +144,10 @@ void Client::addTakeOverSetting(
 }
 
 void Client::listTakeOverSettings(
-    std::function<void(AsyncEzListTakeOverSettingsResult&)> callback,
+    std::function<void(AsyncEzListTakeOverSettingsResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* pageToken,
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> pageToken,
     gs2::optional<Int64> limit
 )
 {
@@ -155,16 +155,16 @@ void Client::listTakeOverSettings(
     request.setNamespaceName(namespaceName);
     if (pageToken)
     {
-        request.setPageToken(pageToken);
+        request.setPageToken(std::move(*pageToken));
     }
     if (limit)
     {
-        request.setLimit(*limit);
+        request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.describeTakeOvers(
         request,
-        [callback](gs2::account::AsyncDescribeTakeOversResult& r)
+        [callback](gs2::account::AsyncDescribeTakeOversResult r)
         {
             if (r.getError())
             {
@@ -190,12 +190,12 @@ void Client::listTakeOverSettings(
 }
 
 void Client::updateTakeOverSetting(
-    std::function<void(AsyncEzUpdateTakeOverSettingResult&)> callback,
+    std::function<void(AsyncEzUpdateTakeOverSettingResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
+    StringHolder namespaceName,
     Int32 type,
-    const Char* oldPassword,
-    const Char* password
+    StringHolder oldPassword,
+    StringHolder password
 )
 {
     gs2::account::UpdateTakeOverRequest request;
@@ -206,7 +206,7 @@ void Client::updateTakeOverSetting(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.updateTakeOver(
         request,
-        [callback](gs2::account::AsyncUpdateTakeOverResult& r)
+        [callback](gs2::account::AsyncUpdateTakeOverResult r)
         {
             if (r.getError())
             {
@@ -232,9 +232,9 @@ void Client::updateTakeOverSetting(
 }
 
 void Client::deleteTakeOverSetting(
-    std::function<void(AsyncEzDeleteTakeOverSettingResult&)> callback,
+    std::function<void(AsyncEzDeleteTakeOverSettingResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
+    StringHolder namespaceName,
     Int32 type
 )
 {
@@ -244,7 +244,7 @@ void Client::deleteTakeOverSetting(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.deleteTakeOver(
         request,
-        [callback](gs2::account::AsyncDeleteTakeOverResult& r)
+        [callback](gs2::account::AsyncDeleteTakeOverResult r)
         {
             if (r.getError())
             {
@@ -262,11 +262,11 @@ void Client::deleteTakeOverSetting(
 }
 
 void Client::doTakeOver(
-    std::function<void(AsyncEzDoTakeOverResult&)> callback,
-    const Char* namespaceName,
+    std::function<void(AsyncEzDoTakeOverResult)> callback,
+    StringHolder namespaceName,
     Int32 type,
-    const Char* userIdentifier,
-    const Char* password
+    StringHolder userIdentifier,
+    StringHolder password
 )
 {
     gs2::account::DoTakeOverRequest request;
@@ -276,7 +276,7 @@ void Client::doTakeOver(
     request.setPassword(password);
     m_Client.doTakeOver(
         request,
-        [callback](gs2::account::AsyncDoTakeOverResult& r)
+        [callback](gs2::account::AsyncDoTakeOverResult r)
         {
             if (r.getError())
             {

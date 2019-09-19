@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace project
 {
@@ -47,32 +49,30 @@ private:
         /** プロジェクトトークン */
         optional<StringHolder> projectToken;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            item(data.item),
             ownerId(data.ownerId),
             projectToken(data.projectToken)
-        {}
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item)),
-            ownerId(std::move(data.ownerId)),
-            projectToken(std::move(data.projectToken))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -80,13 +80,15 @@ private:
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "projectToken") == 0) {
+            else if (std::strcmp(name_, "projectToken") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->projectToken.emplace(jsonValue.GetString());
@@ -95,72 +97,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GetProjectTokenResult() :
-        m_pData(nullptr)
-    {}
+    GetProjectTokenResult() = default;
+    GetProjectTokenResult(const GetProjectTokenResult& getProjectTokenResult) = default;
+    GetProjectTokenResult(GetProjectTokenResult&& getProjectTokenResult) = default;
+    ~GetProjectTokenResult() = default;
 
-    GetProjectTokenResult(const GetProjectTokenResult& getProjectTokenResult) :
-        Gs2Object(getProjectTokenResult),
-        m_pData(getProjectTokenResult.m_pData != nullptr ? new Data(*getProjectTokenResult.m_pData) : nullptr)
-    {}
+    GetProjectTokenResult& operator=(const GetProjectTokenResult& getProjectTokenResult) = default;
+    GetProjectTokenResult& operator=(GetProjectTokenResult&& getProjectTokenResult) = default;
 
-    GetProjectTokenResult(GetProjectTokenResult&& getProjectTokenResult) :
-        Gs2Object(std::move(getProjectTokenResult)),
-        m_pData(getProjectTokenResult.m_pData)
+    GetProjectTokenResult deepCopy() const
     {
-        getProjectTokenResult.m_pData = nullptr;
-    }
-
-    ~GetProjectTokenResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetProjectTokenResult& operator=(const GetProjectTokenResult& getProjectTokenResult)
-    {
-        Gs2Object::operator=(getProjectTokenResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getProjectTokenResult.m_pData);
-
-        return *this;
-    }
-
-    GetProjectTokenResult& operator=(GetProjectTokenResult&& getProjectTokenResult)
-    {
-        Gs2Object::operator=(std::move(getProjectTokenResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getProjectTokenResult.m_pData;
-        getProjectTokenResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetProjectTokenResult);
     }
 
     const GetProjectTokenResult* operator->() const
@@ -187,9 +137,9 @@ public:
      *
      * @param item サインインしたプロジェクト
      */
-    void setItem(const Project& item)
+    void setItem(Project item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
     /**
@@ -207,9 +157,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
@@ -227,9 +177,9 @@ public:
      *
      * @param projectToken プロジェクトトークン
      */
-    void setProjectToken(const Char* projectToken)
+    void setProjectToken(StringHolder projectToken)
     {
-        ensureData().projectToken.emplace(projectToken);
+        ensureData().projectToken.emplace(std::move(projectToken));
     }
 
 

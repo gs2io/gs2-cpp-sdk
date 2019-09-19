@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "DrawnPrize.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace lottery {
@@ -47,30 +49,29 @@ private:
         /** 排出確率(0.0〜1.0) */
         optional<Float> rate;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            prize(data.prize),
             rate(data.rate)
-        {}
+        {
+            if (data.prize)
+            {
+                prize = data.prize->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            prize(std::move(data.prize)),
-            rate(std::move(data.rate))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "prize") == 0) {
+            if (std::strcmp(name_, "prize") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -78,7 +79,8 @@ private:
                     detail::json::JsonParser::parse(&this->prize->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "rate") == 0) {
+            else if (std::strcmp(name_, "rate") == 0)
+            {
                 if (jsonValue.IsFloat())
                 {
                     this->rate = jsonValue.GetFloat();
@@ -87,72 +89,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Probability() :
-        m_pData(nullptr)
-    {}
+    Probability() = default;
+    Probability(const Probability& probability) = default;
+    Probability(Probability&& probability) = default;
+    ~Probability() = default;
 
-    Probability(const Probability& probability) :
-        Gs2Object(probability),
-        m_pData(probability.m_pData != nullptr ? new Data(*probability.m_pData) : nullptr)
-    {}
+    Probability& operator=(const Probability& probability) = default;
+    Probability& operator=(Probability&& probability) = default;
 
-    Probability(Probability&& probability) :
-        Gs2Object(std::move(probability)),
-        m_pData(probability.m_pData)
+    Probability deepCopy() const
     {
-        probability.m_pData = nullptr;
-    }
-
-    ~Probability()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Probability& operator=(const Probability& probability)
-    {
-        Gs2Object::operator=(probability);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*probability.m_pData);
-
-        return *this;
-    }
-
-    Probability& operator=(Probability&& probability)
-    {
-        Gs2Object::operator=(std::move(probability));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = probability.m_pData;
-        probability.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Probability);
     }
 
     const Probability* operator->() const
@@ -179,9 +129,9 @@ public:
      *
      * @param prize 景品の種類
      */
-    void setPrize(const DrawnPrize& prize)
+    void setPrize(DrawnPrize prize)
     {
-        ensureData().prize.emplace(prize);
+        ensureData().prize.emplace(std::move(prize));
     }
 
     /**
@@ -189,9 +139,9 @@ public:
      *
      * @param prize 景品の種類
      */
-    Probability& withPrize(const DrawnPrize& prize)
+    Probability& withPrize(DrawnPrize prize)
     {
-        setPrize(prize);
+        setPrize(std::move(prize));
         return *this;
     }
 
@@ -237,7 +187,7 @@ inline bool operator!=(const Probability& lhs, const Probability& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

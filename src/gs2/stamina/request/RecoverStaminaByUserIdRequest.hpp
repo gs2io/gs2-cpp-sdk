@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2StaminaConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace stamina
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -52,104 +54,50 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             staminaName(data.staminaName),
             userId(data.userId),
             recoverValue(data.recoverValue),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            staminaName(std::move(data.staminaName)),
-            userId(std::move(data.userId)),
-            recoverValue(std::move(data.recoverValue)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    RecoverStaminaByUserIdRequest() :
-        m_pData(nullptr)
-    {}
+    RecoverStaminaByUserIdRequest() = default;
+    RecoverStaminaByUserIdRequest(const RecoverStaminaByUserIdRequest& recoverStaminaByUserIdRequest) = default;
+    RecoverStaminaByUserIdRequest(RecoverStaminaByUserIdRequest&& recoverStaminaByUserIdRequest) = default;
+    ~RecoverStaminaByUserIdRequest() GS2_OVERRIDE = default;
 
-    RecoverStaminaByUserIdRequest(const RecoverStaminaByUserIdRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Stamina(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    RecoverStaminaByUserIdRequest& operator=(const RecoverStaminaByUserIdRequest& recoverStaminaByUserIdRequest) = default;
+    RecoverStaminaByUserIdRequest& operator=(RecoverStaminaByUserIdRequest&& recoverStaminaByUserIdRequest) = default;
 
-    RecoverStaminaByUserIdRequest(RecoverStaminaByUserIdRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Stamina(std::move(obj)),
-        m_pData(obj.m_pData)
+    RecoverStaminaByUserIdRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~RecoverStaminaByUserIdRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    RecoverStaminaByUserIdRequest& operator=(const RecoverStaminaByUserIdRequest& recoverStaminaByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(recoverStaminaByUserIdRequest);
-        Gs2Stamina::operator=(recoverStaminaByUserIdRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*recoverStaminaByUserIdRequest.m_pData);
-
-        return *this;
-    }
-
-    RecoverStaminaByUserIdRequest& operator=(RecoverStaminaByUserIdRequest&& recoverStaminaByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(recoverStaminaByUserIdRequest));
-        Gs2Stamina::operator=(std::move(recoverStaminaByUserIdRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = recoverStaminaByUserIdRequest.m_pData;
-        recoverStaminaByUserIdRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(RecoverStaminaByUserIdRequest);
     }
 
     const RecoverStaminaByUserIdRequest* operator->() const
@@ -177,9 +125,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -187,9 +135,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    RecoverStaminaByUserIdRequest& withNamespaceName(const Char* namespaceName)
+    RecoverStaminaByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -208,9 +156,9 @@ public:
      *
      * @param staminaName スタミナの種類名
      */
-    void setStaminaName(const Char* staminaName)
+    void setStaminaName(StringHolder staminaName)
     {
-        ensureData().staminaName.emplace(staminaName);
+        ensureData().staminaName.emplace(std::move(staminaName));
     }
 
     /**
@@ -218,9 +166,9 @@ public:
      *
      * @param staminaName スタミナの種類名
      */
-    RecoverStaminaByUserIdRequest& withStaminaName(const Char* staminaName)
+    RecoverStaminaByUserIdRequest& withStaminaName(StringHolder staminaName)
     {
-        ensureData().staminaName.emplace(staminaName);
+        ensureData().staminaName.emplace(std::move(staminaName));
         return *this;
     }
 
@@ -239,9 +187,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -249,9 +197,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    RecoverStaminaByUserIdRequest& withUserId(const Char* userId)
+    RecoverStaminaByUserIdRequest& withUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
         return *this;
     }
 
@@ -301,9 +249,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -311,9 +259,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    RecoverStaminaByUserIdRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    RecoverStaminaByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -324,33 +272,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    RecoverStaminaByUserIdRequest& withGs2ClientId(const Char* gs2ClientId)
+    RecoverStaminaByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    RecoverStaminaByUserIdRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    RecoverStaminaByUserIdRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -359,9 +283,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    RecoverStaminaByUserIdRequest& withRequestId(const Char* gs2RequestId)
+    RecoverStaminaByUserIdRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

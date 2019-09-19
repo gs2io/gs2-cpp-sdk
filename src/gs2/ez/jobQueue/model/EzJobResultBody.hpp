@@ -27,33 +27,72 @@ namespace gs2 { namespace ez { namespace jobQueue {
 class EzJobResultBody : public gs2::Gs2Object
 {
 private:
-    /** 試行回数 */
-    gs2::optional<Int32> m_TryNumber;
-    /** ステータスコード */
-    gs2::optional<Int32> m_StatusCode;
-    /** レスポンスの内容 */
-    gs2::optional<StringHolder> m_Result;
-    /** 実行日時 */
-    gs2::optional<Int64> m_TryAt;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 試行回数 */
+        gs2::optional<Int32> tryNumber;
+        /** ステータスコード */
+        gs2::optional<Int32> statusCode;
+        /** レスポンスの内容 */
+        gs2::optional<StringHolder> result;
+        /** 実行日時 */
+        gs2::optional<Int64> tryAt;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            tryNumber(data.tryNumber),
+            statusCode(data.statusCode),
+            result(data.result),
+            tryAt(data.tryAt)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::jobQueue::JobResultBody& jobResultBody) :
+            tryNumber(jobResultBody.getTryNumber() ? *jobResultBody.getTryNumber() : 0),
+            statusCode(jobResultBody.getStatusCode() ? *jobResultBody.getStatusCode() : 0),
+            result(jobResultBody.getResult()),
+            tryAt(jobResultBody.getTryAt() ? *jobResultBody.getTryAt() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzJobResultBody() = default;
+    EzJobResultBody(const EzJobResultBody& ezJobResultBody) = default;
+    EzJobResultBody(EzJobResultBody&& ezJobResultBody) = default;
+    ~EzJobResultBody() = default;
 
     EzJobResultBody(gs2::jobQueue::JobResultBody jobResultBody) :
-        m_TryNumber(jobResultBody.getTryNumber() ? *jobResultBody.getTryNumber() : 0),
-        m_StatusCode(jobResultBody.getStatusCode() ? *jobResultBody.getStatusCode() : 0),
-        m_Result(jobResultBody.getResult()),
-        m_TryAt(jobResultBody.getTryAt() ? *jobResultBody.getTryAt() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(jobResultBody)
+    {}
+
+    EzJobResultBody& operator=(const EzJobResultBody& ezJobResultBody) = default;
+    EzJobResultBody& operator=(EzJobResultBody&& ezJobResultBody) = default;
+
+    EzJobResultBody deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzJobResultBody);
     }
 
     gs2::jobQueue::JobResultBody ToModel() const
     {
         gs2::jobQueue::JobResultBody jobResultBody;
-        jobResultBody.setTryNumber(*m_TryNumber);
-        jobResultBody.setStatusCode(*m_StatusCode);
-        jobResultBody.setResult(*m_Result);
-        jobResultBody.setTryAt(*m_TryAt);
+        jobResultBody.setTryNumber(getTryNumber());
+        jobResultBody.setStatusCode(getStatusCode());
+        jobResultBody.setResult(getResult());
+        jobResultBody.setTryAt(getTryAt());
         return jobResultBody;
     }
 
@@ -63,27 +102,22 @@ public:
 
     Int32 getTryNumber() const
     {
-        return *m_TryNumber;
+        return *ensureData().tryNumber;
     }
 
     Int32 getStatusCode() const
     {
-        return *m_StatusCode;
+        return *ensureData().statusCode;
     }
 
-    const gs2::StringHolder& getResult() const
+    const StringHolder& getResult() const
     {
-        return *m_Result;
-    }
-
-    gs2::StringHolder& getResult()
-    {
-        return *m_Result;
+        return *ensureData().result;
     }
 
     Int64 getTryAt() const
     {
-        return *m_TryAt;
+        return *ensureData().tryAt;
     }
 
     // ========================================
@@ -92,22 +126,22 @@ public:
 
     void setTryNumber(Int32 tryNumber)
     {
-        m_TryNumber = tryNumber;
+        ensureData().tryNumber = tryNumber;
     }
 
     void setStatusCode(Int32 statusCode)
     {
-        m_StatusCode = statusCode;
+        ensureData().statusCode = statusCode;
     }
 
-    void setResult(Char* result)
+    void setResult(StringHolder result)
     {
-        m_Result.emplace(result);
+        ensureData().result = std::move(result);
     }
 
     void setTryAt(Int64 tryAt)
     {
-        m_TryAt = tryAt;
+        ensureData().tryAt = tryAt;
     }
 
     EzJobResultBody& withTryNumber(Int32 tryNumber)
@@ -122,9 +156,9 @@ public:
         return *this;
     }
 
-    EzJobResultBody& withResult(Char* result)
+    EzJobResultBody& withResult(StringHolder result)
     {
-        setResult(result);
+        setResult(std::move(result));
         return *this;
     }
 

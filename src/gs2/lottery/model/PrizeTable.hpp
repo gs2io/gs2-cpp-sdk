@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "Prize.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace lottery {
@@ -51,52 +53,52 @@ private:
         /** 景品リスト */
         optional<List<Prize>> prizes;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             prizeTableId(data.prizeTableId),
             name(data.name),
-            metadata(data.metadata),
-            prizes(data.prizes)
-        {}
+            metadata(data.metadata)
+        {
+            if (data.prizes)
+            {
+                prizes = data.prizes->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            prizeTableId(std::move(data.prizeTableId)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            prizes(std::move(data.prizes))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "prizeTableId") == 0) {
+            if (std::strcmp(name_, "prizeTableId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->prizeTableId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "prizes") == 0) {
+            else if (std::strcmp(name_, "prizes") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -111,72 +113,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    PrizeTable() :
-        m_pData(nullptr)
-    {}
+    PrizeTable() = default;
+    PrizeTable(const PrizeTable& prizeTable) = default;
+    PrizeTable(PrizeTable&& prizeTable) = default;
+    ~PrizeTable() = default;
 
-    PrizeTable(const PrizeTable& prizeTable) :
-        Gs2Object(prizeTable),
-        m_pData(prizeTable.m_pData != nullptr ? new Data(*prizeTable.m_pData) : nullptr)
-    {}
+    PrizeTable& operator=(const PrizeTable& prizeTable) = default;
+    PrizeTable& operator=(PrizeTable&& prizeTable) = default;
 
-    PrizeTable(PrizeTable&& prizeTable) :
-        Gs2Object(std::move(prizeTable)),
-        m_pData(prizeTable.m_pData)
+    PrizeTable deepCopy() const
     {
-        prizeTable.m_pData = nullptr;
-    }
-
-    ~PrizeTable()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    PrizeTable& operator=(const PrizeTable& prizeTable)
-    {
-        Gs2Object::operator=(prizeTable);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*prizeTable.m_pData);
-
-        return *this;
-    }
-
-    PrizeTable& operator=(PrizeTable&& prizeTable)
-    {
-        Gs2Object::operator=(std::move(prizeTable));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = prizeTable.m_pData;
-        prizeTable.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(PrizeTable);
     }
 
     const PrizeTable* operator->() const
@@ -203,9 +153,9 @@ public:
      *
      * @param prizeTableId 排出確率テーブルマスター
      */
-    void setPrizeTableId(const Char* prizeTableId)
+    void setPrizeTableId(StringHolder prizeTableId)
     {
-        ensureData().prizeTableId.emplace(prizeTableId);
+        ensureData().prizeTableId.emplace(std::move(prizeTableId));
     }
 
     /**
@@ -213,9 +163,9 @@ public:
      *
      * @param prizeTableId 排出確率テーブルマスター
      */
-    PrizeTable& withPrizeTableId(const Char* prizeTableId)
+    PrizeTable& withPrizeTableId(StringHolder prizeTableId)
     {
-        setPrizeTableId(prizeTableId);
+        setPrizeTableId(std::move(prizeTableId));
         return *this;
     }
 
@@ -234,9 +184,9 @@ public:
      *
      * @param name 景品テーブル名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -244,9 +194,9 @@ public:
      *
      * @param name 景品テーブル名
      */
-    PrizeTable& withName(const Char* name)
+    PrizeTable& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -265,9 +215,9 @@ public:
      *
      * @param metadata 景品テーブルのメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -275,9 +225,9 @@ public:
      *
      * @param metadata 景品テーブルのメタデータ
      */
-    PrizeTable& withMetadata(const Char* metadata)
+    PrizeTable& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -296,9 +246,9 @@ public:
      *
      * @param prizes 景品リスト
      */
-    void setPrizes(const List<Prize>& prizes)
+    void setPrizes(List<Prize> prizes)
     {
-        ensureData().prizes.emplace(prizes);
+        ensureData().prizes.emplace(std::move(prizes));
     }
 
     /**
@@ -306,9 +256,9 @@ public:
      *
      * @param prizes 景品リスト
      */
-    PrizeTable& withPrizes(const List<Prize>& prizes)
+    PrizeTable& withPrizes(List<Prize> prizes)
     {
-        setPrizes(prizes);
+        setPrizes(std::move(prizes));
         return *this;
     }
 
@@ -323,7 +273,7 @@ inline bool operator!=(const PrizeTable& lhs, const PrizeTable& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

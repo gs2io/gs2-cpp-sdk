@@ -70,314 +70,1486 @@ namespace gs2 { namespace matchmaking {
 class Gs2MatchmakingRestClient : public AbstractGs2ClientBase
 {
 private:
-    static void write(detail::json::JsonWriter& writer, const Namespace& obj)
+
+    class DescribeNamespacesTask : public detail::Gs2RestSessionTask<DescribeNamespacesResult>
     {
-        writer.writeObjectStart();
+    private:
+        DescribeNamespacesRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/";
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeNamespacesTask(
+            DescribeNamespacesRequest request,
+            Gs2RestSessionTask<DescribeNamespacesResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeNamespacesResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeNamespacesTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateNamespaceTask : public detail::Gs2RestSessionTask<CreateNamespaceResult>
+    {
+    private:
+        CreateNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getName())
+            {
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getCreateGatheringTriggerType())
+            {
+                jsonWriter.writePropertyName("createGatheringTriggerType");
+                jsonWriter.writeCharArray(*m_Request.getCreateGatheringTriggerType());
+            }
+            if (m_Request.getCreateGatheringTriggerRealtimeNamespaceId())
+            {
+                jsonWriter.writePropertyName("createGatheringTriggerRealtimeNamespaceId");
+                jsonWriter.writeCharArray(*m_Request.getCreateGatheringTriggerRealtimeNamespaceId());
+            }
+            if (m_Request.getCreateGatheringTriggerScriptId())
+            {
+                jsonWriter.writePropertyName("createGatheringTriggerScriptId");
+                jsonWriter.writeCharArray(*m_Request.getCreateGatheringTriggerScriptId());
+            }
+            if (m_Request.getCompleteMatchmakingTriggerType())
+            {
+                jsonWriter.writePropertyName("completeMatchmakingTriggerType");
+                jsonWriter.writeCharArray(*m_Request.getCompleteMatchmakingTriggerType());
+            }
+            if (m_Request.getCompleteMatchmakingTriggerRealtimeNamespaceId())
+            {
+                jsonWriter.writePropertyName("completeMatchmakingTriggerRealtimeNamespaceId");
+                jsonWriter.writeCharArray(*m_Request.getCompleteMatchmakingTriggerRealtimeNamespaceId());
+            }
+            if (m_Request.getCompleteMatchmakingTriggerScriptId())
+            {
+                jsonWriter.writePropertyName("completeMatchmakingTriggerScriptId");
+                jsonWriter.writeCharArray(*m_Request.getCompleteMatchmakingTriggerScriptId());
+            }
+            if (m_Request.getJoinNotification())
+            {
+                jsonWriter.writePropertyName("joinNotification");
+                write(jsonWriter, *m_Request.getJoinNotification());
+            }
+            if (m_Request.getLeaveNotification())
+            {
+                jsonWriter.writePropertyName("leaveNotification");
+                write(jsonWriter, *m_Request.getLeaveNotification());
+            }
+            if (m_Request.getCompleteNotification())
+            {
+                jsonWriter.writePropertyName("completeNotification");
+                write(jsonWriter, *m_Request.getCompleteNotification());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        CreateNamespaceTask(
+            CreateNamespaceRequest request,
+            Gs2RestSessionTask<CreateNamespaceResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<CreateNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateNamespaceTask() GS2_OVERRIDE = default;
+    };
+
+    class GetNamespaceStatusTask : public detail::Gs2RestSessionTask<GetNamespaceStatusResult>
+    {
+    private:
+        GetNamespaceStatusRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/status";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetNamespaceStatusTask(
+            GetNamespaceStatusRequest request,
+            Gs2RestSessionTask<GetNamespaceStatusResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetNamespaceStatusResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetNamespaceStatusTask() GS2_OVERRIDE = default;
+    };
+
+    class GetNamespaceTask : public detail::Gs2RestSessionTask<GetNamespaceResult>
+    {
+    private:
+        GetNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetNamespaceTask(
+            GetNamespaceRequest request,
+            Gs2RestSessionTask<GetNamespaceResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetNamespaceTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateNamespaceTask : public detail::Gs2RestSessionTask<UpdateNamespaceResult>
+    {
+    private:
+        UpdateNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getCreateGatheringTriggerType())
+            {
+                jsonWriter.writePropertyName("createGatheringTriggerType");
+                jsonWriter.writeCharArray(*m_Request.getCreateGatheringTriggerType());
+            }
+            if (m_Request.getCreateGatheringTriggerRealtimeNamespaceId())
+            {
+                jsonWriter.writePropertyName("createGatheringTriggerRealtimeNamespaceId");
+                jsonWriter.writeCharArray(*m_Request.getCreateGatheringTriggerRealtimeNamespaceId());
+            }
+            if (m_Request.getCreateGatheringTriggerScriptId())
+            {
+                jsonWriter.writePropertyName("createGatheringTriggerScriptId");
+                jsonWriter.writeCharArray(*m_Request.getCreateGatheringTriggerScriptId());
+            }
+            if (m_Request.getCompleteMatchmakingTriggerType())
+            {
+                jsonWriter.writePropertyName("completeMatchmakingTriggerType");
+                jsonWriter.writeCharArray(*m_Request.getCompleteMatchmakingTriggerType());
+            }
+            if (m_Request.getCompleteMatchmakingTriggerRealtimeNamespaceId())
+            {
+                jsonWriter.writePropertyName("completeMatchmakingTriggerRealtimeNamespaceId");
+                jsonWriter.writeCharArray(*m_Request.getCompleteMatchmakingTriggerRealtimeNamespaceId());
+            }
+            if (m_Request.getCompleteMatchmakingTriggerScriptId())
+            {
+                jsonWriter.writePropertyName("completeMatchmakingTriggerScriptId");
+                jsonWriter.writeCharArray(*m_Request.getCompleteMatchmakingTriggerScriptId());
+            }
+            if (m_Request.getJoinNotification())
+            {
+                jsonWriter.writePropertyName("joinNotification");
+                write(jsonWriter, *m_Request.getJoinNotification());
+            }
+            if (m_Request.getLeaveNotification())
+            {
+                jsonWriter.writePropertyName("leaveNotification");
+                write(jsonWriter, *m_Request.getLeaveNotification());
+            }
+            if (m_Request.getCompleteNotification())
+            {
+                jsonWriter.writePropertyName("completeNotification");
+                write(jsonWriter, *m_Request.getCompleteNotification());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Put;
+        }
+
+    public:
+        UpdateNamespaceTask(
+            UpdateNamespaceRequest request,
+            Gs2RestSessionTask<UpdateNamespaceResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<UpdateNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateNamespaceTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteNamespaceTask : public detail::Gs2RestSessionTask<DeleteNamespaceResult>
+    {
+    private:
+        DeleteNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        DeleteNamespaceTask(
+            DeleteNamespaceRequest request,
+            Gs2RestSessionTask<DeleteNamespaceResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DeleteNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteNamespaceTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeGatheringsTask : public detail::Gs2RestSessionTask<DescribeGatheringsResult>
+    {
+    private:
+        DescribeGatheringsRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/gathering";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeGatheringsTask(
+            DescribeGatheringsRequest request,
+            Gs2RestSessionTask<DescribeGatheringsResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeGatheringsResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeGatheringsTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateGatheringTask : public detail::Gs2RestSessionTask<CreateGatheringResult>
+    {
+    private:
+        CreateGatheringRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/gathering";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getPlayer())
+            {
+                jsonWriter.writePropertyName("player");
+                write(jsonWriter, *m_Request.getPlayer());
+            }
+            if (m_Request.getAttributeRanges())
+            {
+                jsonWriter.writePropertyName("attributeRanges");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getAttributeRanges();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getCapacityOfRoles())
+            {
+                jsonWriter.writePropertyName("capacityOfRoles");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getCapacityOfRoles();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getAllowUserIds())
+            {
+                jsonWriter.writePropertyName("allowUserIds");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getAllowUserIds();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    jsonWriter.writeCharArray(list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        CreateGatheringTask(
+            CreateGatheringRequest request,
+            Gs2RestSessionTask<CreateGatheringResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<CreateGatheringResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateGatheringTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateGatheringByUserIdTask : public detail::Gs2RestSessionTask<CreateGatheringByUserIdResult>
+    {
+    private:
+        CreateGatheringByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/gathering/user/{userId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getPlayer())
+            {
+                jsonWriter.writePropertyName("player");
+                write(jsonWriter, *m_Request.getPlayer());
+            }
+            if (m_Request.getAttributeRanges())
+            {
+                jsonWriter.writePropertyName("attributeRanges");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getAttributeRanges();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getCapacityOfRoles())
+            {
+                jsonWriter.writePropertyName("capacityOfRoles");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getCapacityOfRoles();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getAllowUserIds())
+            {
+                jsonWriter.writePropertyName("allowUserIds");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getAllowUserIds();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    jsonWriter.writeCharArray(list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        CreateGatheringByUserIdTask(
+            CreateGatheringByUserIdRequest request,
+            Gs2RestSessionTask<CreateGatheringByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<CreateGatheringByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateGatheringByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateGatheringTask : public detail::Gs2RestSessionTask<UpdateGatheringResult>
+    {
+    private:
+        UpdateGatheringRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/gathering/{gatheringName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getGatheringName();
+                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getAttributeRanges())
+            {
+                jsonWriter.writePropertyName("attributeRanges");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getAttributeRanges();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        UpdateGatheringTask(
+            UpdateGatheringRequest request,
+            Gs2RestSessionTask<UpdateGatheringResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<UpdateGatheringResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateGatheringTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateGatheringByUserIdTask : public detail::Gs2RestSessionTask<UpdateGatheringByUserIdResult>
+    {
+    private:
+        UpdateGatheringByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/gathering/{gatheringName}/user/{userId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getGatheringName();
+                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getAttributeRanges())
+            {
+                jsonWriter.writePropertyName("attributeRanges");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getAttributeRanges();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        UpdateGatheringByUserIdTask(
+            UpdateGatheringByUserIdRequest request,
+            Gs2RestSessionTask<UpdateGatheringByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<UpdateGatheringByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateGatheringByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class DoMatchmakingByPlayerTask : public detail::Gs2RestSessionTask<DoMatchmakingByPlayerResult>
+    {
+    private:
+        DoMatchmakingByPlayerRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/gathering/player/do";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getPlayer())
+            {
+                jsonWriter.writePropertyName("player");
+                write(jsonWriter, *m_Request.getPlayer());
+            }
+            if (m_Request.getMatchmakingContextToken())
+            {
+                jsonWriter.writePropertyName("matchmakingContextToken");
+                jsonWriter.writeCharArray(*m_Request.getMatchmakingContextToken());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        DoMatchmakingByPlayerTask(
+            DoMatchmakingByPlayerRequest request,
+            Gs2RestSessionTask<DoMatchmakingByPlayerResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DoMatchmakingByPlayerResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DoMatchmakingByPlayerTask() GS2_OVERRIDE = default;
+    };
+
+    class DoMatchmakingTask : public detail::Gs2RestSessionTask<DoMatchmakingResult>
+    {
+    private:
+        DoMatchmakingRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/gathering/do";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getPlayer())
+            {
+                jsonWriter.writePropertyName("player");
+                write(jsonWriter, *m_Request.getPlayer());
+            }
+            if (m_Request.getMatchmakingContextToken())
+            {
+                jsonWriter.writePropertyName("matchmakingContextToken");
+                jsonWriter.writeCharArray(*m_Request.getMatchmakingContextToken());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        DoMatchmakingTask(
+            DoMatchmakingRequest request,
+            Gs2RestSessionTask<DoMatchmakingResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DoMatchmakingResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DoMatchmakingTask() GS2_OVERRIDE = default;
+    };
+
+    class GetGatheringTask : public detail::Gs2RestSessionTask<GetGatheringResult>
+    {
+    private:
+        GetGatheringRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/gathering/{gatheringName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getGatheringName();
+                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetGatheringTask(
+            GetGatheringRequest request,
+            Gs2RestSessionTask<GetGatheringResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetGatheringResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetGatheringTask() GS2_OVERRIDE = default;
+    };
+
+    class CancelMatchmakingTask : public detail::Gs2RestSessionTask<CancelMatchmakingResult>
+    {
+    private:
+        CancelMatchmakingRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/gathering/{gatheringName}/user/me";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getGatheringName();
+                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        CancelMatchmakingTask(
+            CancelMatchmakingRequest request,
+            Gs2RestSessionTask<CancelMatchmakingResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<CancelMatchmakingResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CancelMatchmakingTask() GS2_OVERRIDE = default;
+    };
+
+    class CancelMatchmakingByUserIdTask : public detail::Gs2RestSessionTask<CancelMatchmakingByUserIdResult>
+    {
+    private:
+        CancelMatchmakingByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/gathering/{gatheringName}/user/{userId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getGatheringName();
+                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        CancelMatchmakingByUserIdTask(
+            CancelMatchmakingByUserIdRequest request,
+            Gs2RestSessionTask<CancelMatchmakingByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<CancelMatchmakingByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CancelMatchmakingByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteGatheringTask : public detail::Gs2RestSessionTask<DeleteGatheringResult>
+    {
+    private:
+        DeleteGatheringRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/gathering/{gatheringName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getGatheringName();
+                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        DeleteGatheringTask(
+            DeleteGatheringRequest request,
+            Gs2RestSessionTask<DeleteGatheringResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DeleteGatheringResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteGatheringTask() GS2_OVERRIDE = default;
+    };
+
+private:
+    static void write(detail::json::JsonWriter& jsonWriter, const Namespace& obj)
+    {
+        jsonWriter.writeObjectStart();
         if (obj.getNamespaceId())
         {
-            writer.writePropertyName("namespaceId");
-            writer.writeCharArray(*obj.getNamespaceId());
+            jsonWriter.writePropertyName("namespaceId");
+            jsonWriter.writeCharArray(*obj.getNamespaceId());
         }
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*obj.getDescription());
+            jsonWriter.writePropertyName("description");
+            jsonWriter.writeCharArray(*obj.getDescription());
         }
         if (obj.getCreateGatheringTriggerType())
         {
-            writer.writePropertyName("createGatheringTriggerType");
-            writer.writeCharArray(*obj.getCreateGatheringTriggerType());
+            jsonWriter.writePropertyName("createGatheringTriggerType");
+            jsonWriter.writeCharArray(*obj.getCreateGatheringTriggerType());
         }
         if (obj.getCreateGatheringTriggerRealtimeNamespaceId())
         {
-            writer.writePropertyName("createGatheringTriggerRealtimeNamespaceId");
-            writer.writeCharArray(*obj.getCreateGatheringTriggerRealtimeNamespaceId());
+            jsonWriter.writePropertyName("createGatheringTriggerRealtimeNamespaceId");
+            jsonWriter.writeCharArray(*obj.getCreateGatheringTriggerRealtimeNamespaceId());
         }
         if (obj.getCreateGatheringTriggerScriptId())
         {
-            writer.writePropertyName("createGatheringTriggerScriptId");
-            writer.writeCharArray(*obj.getCreateGatheringTriggerScriptId());
+            jsonWriter.writePropertyName("createGatheringTriggerScriptId");
+            jsonWriter.writeCharArray(*obj.getCreateGatheringTriggerScriptId());
         }
         if (obj.getCompleteMatchmakingTriggerType())
         {
-            writer.writePropertyName("completeMatchmakingTriggerType");
-            writer.writeCharArray(*obj.getCompleteMatchmakingTriggerType());
+            jsonWriter.writePropertyName("completeMatchmakingTriggerType");
+            jsonWriter.writeCharArray(*obj.getCompleteMatchmakingTriggerType());
         }
         if (obj.getCompleteMatchmakingTriggerRealtimeNamespaceId())
         {
-            writer.writePropertyName("completeMatchmakingTriggerRealtimeNamespaceId");
-            writer.writeCharArray(*obj.getCompleteMatchmakingTriggerRealtimeNamespaceId());
+            jsonWriter.writePropertyName("completeMatchmakingTriggerRealtimeNamespaceId");
+            jsonWriter.writeCharArray(*obj.getCompleteMatchmakingTriggerRealtimeNamespaceId());
         }
         if (obj.getCompleteMatchmakingTriggerScriptId())
         {
-            writer.writePropertyName("completeMatchmakingTriggerScriptId");
-            writer.writeCharArray(*obj.getCompleteMatchmakingTriggerScriptId());
+            jsonWriter.writePropertyName("completeMatchmakingTriggerScriptId");
+            jsonWriter.writeCharArray(*obj.getCompleteMatchmakingTriggerScriptId());
         }
         if (obj.getJoinNotification())
         {
-            writer.writePropertyName("joinNotification");
-            write(writer, *obj.getJoinNotification());
+            jsonWriter.writePropertyName("joinNotification");
+            write(jsonWriter, *obj.getJoinNotification());
         }
         if (obj.getLeaveNotification())
         {
-            writer.writePropertyName("leaveNotification");
-            write(writer, *obj.getLeaveNotification());
+            jsonWriter.writePropertyName("leaveNotification");
+            write(jsonWriter, *obj.getLeaveNotification());
         }
         if (obj.getCompleteNotification())
         {
-            writer.writePropertyName("completeNotification");
-            write(writer, *obj.getCompleteNotification());
+            jsonWriter.writePropertyName("completeNotification");
+            write(jsonWriter, *obj.getCompleteNotification());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Gathering& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Gathering& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getGatheringId())
         {
-            writer.writePropertyName("gatheringId");
-            writer.writeCharArray(*obj.getGatheringId());
+            jsonWriter.writePropertyName("gatheringId");
+            jsonWriter.writeCharArray(*obj.getGatheringId());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getAttributeRanges())
         {
-            writer.writePropertyName("attributeRanges");
-            writer.writeArrayStart();
+            jsonWriter.writePropertyName("attributeRanges");
+            jsonWriter.writeArrayStart();
             auto& list = *obj.getAttributeRanges();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                write(writer, list[i]);
+                write(jsonWriter, list[i]);
             }
-            writer.writeArrayEnd();
+            jsonWriter.writeArrayEnd();
         }
         if (obj.getCapacityOfRoles())
         {
-            writer.writePropertyName("capacityOfRoles");
-            writer.writeArrayStart();
+            jsonWriter.writePropertyName("capacityOfRoles");
+            jsonWriter.writeArrayStart();
             auto& list = *obj.getCapacityOfRoles();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                write(writer, list[i]);
+                write(jsonWriter, list[i]);
             }
-            writer.writeArrayEnd();
+            jsonWriter.writeArrayEnd();
         }
         if (obj.getAllowUserIds())
         {
-            writer.writePropertyName("allowUserIds");
-            writer.writeArrayStart();
+            jsonWriter.writePropertyName("allowUserIds");
+            jsonWriter.writeArrayStart();
             auto& list = *obj.getAllowUserIds();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.writeCharArray(list[i]);
+                jsonWriter.writeCharArray(list[i]);
             }
-            writer.writeArrayEnd();
+            jsonWriter.writeArrayEnd();
         }
         if (obj.getMetadata())
         {
-            writer.writePropertyName("metadata");
-            writer.writeCharArray(*obj.getMetadata());
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const ResponseCache& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const ResponseCache& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getRegion())
         {
-            writer.writePropertyName("region");
-            writer.writeCharArray(*obj.getRegion());
+            jsonWriter.writePropertyName("region");
+            jsonWriter.writeCharArray(*obj.getRegion());
         }
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getResponseCacheId())
         {
-            writer.writePropertyName("responseCacheId");
-            writer.writeCharArray(*obj.getResponseCacheId());
+            jsonWriter.writePropertyName("responseCacheId");
+            jsonWriter.writeCharArray(*obj.getResponseCacheId());
         }
         if (obj.getRequestHash())
         {
-            writer.writePropertyName("requestHash");
-            writer.writeCharArray(*obj.getRequestHash());
+            jsonWriter.writePropertyName("requestHash");
+            jsonWriter.writeCharArray(*obj.getRequestHash());
         }
         if (obj.getResult())
         {
-            writer.writePropertyName("result");
-            writer.writeCharArray(*obj.getResult());
+            jsonWriter.writePropertyName("result");
+            jsonWriter.writeCharArray(*obj.getResult());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const NotificationSetting& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const NotificationSetting& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getGatewayNamespaceId())
         {
-            writer.writePropertyName("gatewayNamespaceId");
-            writer.writeCharArray(*obj.getGatewayNamespaceId());
+            jsonWriter.writePropertyName("gatewayNamespaceId");
+            jsonWriter.writeCharArray(*obj.getGatewayNamespaceId());
         }
         if (obj.getEnableTransferMobileNotification())
         {
-            writer.writePropertyName("enableTransferMobileNotification");
-            writer.writeBool(*obj.getEnableTransferMobileNotification());
+            jsonWriter.writePropertyName("enableTransferMobileNotification");
+            jsonWriter.writeBool(*obj.getEnableTransferMobileNotification());
         }
         if (obj.getSound())
         {
-            writer.writePropertyName("sound");
-            writer.writeCharArray(*obj.getSound());
+            jsonWriter.writePropertyName("sound");
+            jsonWriter.writeCharArray(*obj.getSound());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const AttributeRange& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const AttributeRange& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getMin())
         {
-            writer.writePropertyName("min");
-            writer.writeInt32(*obj.getMin());
+            jsonWriter.writePropertyName("min");
+            jsonWriter.writeInt32(*obj.getMin());
         }
         if (obj.getMax())
         {
-            writer.writePropertyName("max");
-            writer.writeInt32(*obj.getMax());
+            jsonWriter.writePropertyName("max");
+            jsonWriter.writeInt32(*obj.getMax());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const CapacityOfRole& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const CapacityOfRole& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getRoleName())
         {
-            writer.writePropertyName("roleName");
-            writer.writeCharArray(*obj.getRoleName());
+            jsonWriter.writePropertyName("roleName");
+            jsonWriter.writeCharArray(*obj.getRoleName());
         }
         if (obj.getRoleAliases())
         {
-            writer.writePropertyName("roleAliases");
-            writer.writeArrayStart();
+            jsonWriter.writePropertyName("roleAliases");
+            jsonWriter.writeArrayStart();
             auto& list = *obj.getRoleAliases();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.writeCharArray(list[i]);
+                jsonWriter.writeCharArray(list[i]);
             }
-            writer.writeArrayEnd();
+            jsonWriter.writeArrayEnd();
         }
         if (obj.getCapacity())
         {
-            writer.writePropertyName("capacity");
-            writer.writeInt32(*obj.getCapacity());
+            jsonWriter.writePropertyName("capacity");
+            jsonWriter.writeInt32(*obj.getCapacity());
         }
         if (obj.getParticipants())
         {
-            writer.writePropertyName("participants");
-            writer.writeArrayStart();
+            jsonWriter.writePropertyName("participants");
+            jsonWriter.writeArrayStart();
             auto& list = *obj.getParticipants();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                write(writer, list[i]);
+                write(jsonWriter, list[i]);
             }
-            writer.writeArrayEnd();
+            jsonWriter.writeArrayEnd();
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Attribute& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Attribute& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getValue())
         {
-            writer.writePropertyName("value");
-            writer.writeInt32(*obj.getValue());
+            jsonWriter.writePropertyName("value");
+            jsonWriter.writeInt32(*obj.getValue());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Player& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Player& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getUserId())
         {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*obj.getUserId());
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
         }
         if (obj.getAttributes())
         {
-            writer.writePropertyName("attributes");
-            writer.writeArrayStart();
+            jsonWriter.writePropertyName("attributes");
+            jsonWriter.writeArrayStart();
             auto& list = *obj.getAttributes();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                write(writer, list[i]);
+                write(jsonWriter, list[i]);
             }
-            writer.writeArrayEnd();
+            jsonWriter.writeArrayEnd();
         }
         if (obj.getRoleName())
         {
-            writer.writePropertyName("roleName");
-            writer.writeCharArray(*obj.getRoleName());
+            jsonWriter.writePropertyName("roleName");
+            jsonWriter.writeCharArray(*obj.getRoleName());
         }
         if (obj.getDenyUserIds())
         {
-            writer.writePropertyName("denyUserIds");
-            writer.writeArrayStart();
+            jsonWriter.writePropertyName("denyUserIds");
+            jsonWriter.writeArrayStart();
             auto& list = *obj.getDenyUserIds();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                writer.writeCharArray(list[i]);
+                jsonWriter.writeCharArray(list[i]);
             }
-            writer.writeArrayEnd();
+            jsonWriter.writeArrayEnd();
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
 
@@ -399,45 +1571,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeNamespaces(DescribeNamespacesRequest& request, std::function<void(AsyncDescribeNamespacesResult&)> callback)
+    void describeNamespaces(DescribeNamespacesRequest request, std::function<void(AsyncDescribeNamespacesResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeNamespacesResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/";
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getPageToken())
-        {
-            url += joint;
-            url += "pageToken=";
-            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getLimit())
-        {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DescribeNamespacesTask& task = *new DescribeNamespacesTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -446,92 +1583,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createNamespace(CreateNamespaceRequest& request, std::function<void(AsyncCreateNamespaceResult&)> callback)
+    void createNamespace(CreateNamespaceRequest request, std::function<void(AsyncCreateNamespaceResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateNamespaceResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getName())
-        {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*request.getName());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        if (request.getCreateGatheringTriggerType())
-        {
-            writer.writePropertyName("createGatheringTriggerType");
-            writer.writeCharArray(*request.getCreateGatheringTriggerType());
-        }
-        if (request.getCreateGatheringTriggerRealtimeNamespaceId())
-        {
-            writer.writePropertyName("createGatheringTriggerRealtimeNamespaceId");
-            writer.writeCharArray(*request.getCreateGatheringTriggerRealtimeNamespaceId());
-        }
-        if (request.getCreateGatheringTriggerScriptId())
-        {
-            writer.writePropertyName("createGatheringTriggerScriptId");
-            writer.writeCharArray(*request.getCreateGatheringTriggerScriptId());
-        }
-        if (request.getCompleteMatchmakingTriggerType())
-        {
-            writer.writePropertyName("completeMatchmakingTriggerType");
-            writer.writeCharArray(*request.getCompleteMatchmakingTriggerType());
-        }
-        if (request.getCompleteMatchmakingTriggerRealtimeNamespaceId())
-        {
-            writer.writePropertyName("completeMatchmakingTriggerRealtimeNamespaceId");
-            writer.writeCharArray(*request.getCompleteMatchmakingTriggerRealtimeNamespaceId());
-        }
-        if (request.getCompleteMatchmakingTriggerScriptId())
-        {
-            writer.writePropertyName("completeMatchmakingTriggerScriptId");
-            writer.writeCharArray(*request.getCompleteMatchmakingTriggerScriptId());
-        }
-        if (request.getJoinNotification())
-        {
-            writer.writePropertyName("joinNotification");
-            write(writer, *request.getJoinNotification());
-        }
-        if (request.getLeaveNotification())
-        {
-            writer.writePropertyName("leaveNotification");
-            write(writer, *request.getLeaveNotification());
-        }
-        if (request.getCompleteNotification())
-        {
-            writer.writePropertyName("completeNotification");
-            write(writer, *request.getCompleteNotification());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        CreateNamespaceTask& task = *new CreateNamespaceTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -540,35 +1595,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespaceStatus(GetNamespaceStatusRequest& request, std::function<void(AsyncGetNamespaceStatusResult&)> callback)
+    void getNamespaceStatus(GetNamespaceStatusRequest request, std::function<void(AsyncGetNamespaceStatusResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceStatusResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/status";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -577,35 +1607,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getNamespace(GetNamespaceRequest& request, std::function<void(AsyncGetNamespaceResult&)> callback)
+    void getNamespace(GetNamespaceRequest request, std::function<void(AsyncGetNamespaceResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetNamespaceResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        GetNamespaceTask& task = *new GetNamespaceTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -614,91 +1619,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateNamespace(UpdateNamespaceRequest& request, std::function<void(AsyncUpdateNamespaceResult&)> callback)
+    void updateNamespace(UpdateNamespaceRequest request, std::function<void(AsyncUpdateNamespaceResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateNamespaceResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("PUT");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        if (request.getCreateGatheringTriggerType())
-        {
-            writer.writePropertyName("createGatheringTriggerType");
-            writer.writeCharArray(*request.getCreateGatheringTriggerType());
-        }
-        if (request.getCreateGatheringTriggerRealtimeNamespaceId())
-        {
-            writer.writePropertyName("createGatheringTriggerRealtimeNamespaceId");
-            writer.writeCharArray(*request.getCreateGatheringTriggerRealtimeNamespaceId());
-        }
-        if (request.getCreateGatheringTriggerScriptId())
-        {
-            writer.writePropertyName("createGatheringTriggerScriptId");
-            writer.writeCharArray(*request.getCreateGatheringTriggerScriptId());
-        }
-        if (request.getCompleteMatchmakingTriggerType())
-        {
-            writer.writePropertyName("completeMatchmakingTriggerType");
-            writer.writeCharArray(*request.getCompleteMatchmakingTriggerType());
-        }
-        if (request.getCompleteMatchmakingTriggerRealtimeNamespaceId())
-        {
-            writer.writePropertyName("completeMatchmakingTriggerRealtimeNamespaceId");
-            writer.writeCharArray(*request.getCompleteMatchmakingTriggerRealtimeNamespaceId());
-        }
-        if (request.getCompleteMatchmakingTriggerScriptId())
-        {
-            writer.writePropertyName("completeMatchmakingTriggerScriptId");
-            writer.writeCharArray(*request.getCompleteMatchmakingTriggerScriptId());
-        }
-        if (request.getJoinNotification())
-        {
-            writer.writePropertyName("joinNotification");
-            write(writer, *request.getJoinNotification());
-        }
-        if (request.getLeaveNotification())
-        {
-            writer.writePropertyName("leaveNotification");
-            write(writer, *request.getLeaveNotification());
-        }
-        if (request.getCompleteNotification())
-        {
-            writer.writePropertyName("completeNotification");
-            write(writer, *request.getCompleteNotification());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        UpdateNamespaceTask& task = *new UpdateNamespaceTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -707,40 +1631,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteNamespace(DeleteNamespaceRequest& request, std::function<void(AsyncDeleteNamespaceResult&)> callback)
+    void deleteNamespace(DeleteNamespaceRequest request, std::function<void(AsyncDeleteNamespaceResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteNamespaceResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("DELETE");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-        {
-            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DeleteNamespaceTask& task = *new DeleteNamespaceTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -749,49 +1643,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeGatherings(DescribeGatheringsRequest& request, std::function<void(AsyncDescribeGatheringsResult&)> callback)
+    void describeGatherings(DescribeGatheringsRequest request, std::function<void(AsyncDescribeGatheringsResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeGatheringsResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/gathering";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getPageToken())
-        {
-            url += joint;
-            url += "pageToken=";
-            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getLimit())
-        {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DescribeGatheringsTask& task = *new DescribeGatheringsTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -824,87 +1679,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createGathering(CreateGatheringRequest& request, std::function<void(AsyncCreateGatheringResult&)> callback)
+    void createGathering(CreateGatheringRequest request, std::function<void(AsyncCreateGatheringResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateGatheringResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/gathering";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getPlayer())
-        {
-            writer.writePropertyName("player");
-            write(writer, *request.getPlayer());
-        }
-        if (request.getAttributeRanges())
-        {
-            writer.writePropertyName("attributeRanges");
-            writer.writeArrayStart();
-            auto& list = *request.getAttributeRanges();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        if (request.getCapacityOfRoles())
-        {
-            writer.writePropertyName("capacityOfRoles");
-            writer.writeArrayStart();
-            auto& list = *request.getCapacityOfRoles();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        if (request.getAllowUserIds())
-        {
-            writer.writePropertyName("allowUserIds");
-            writer.writeArrayStart();
-            auto& list = *request.getAllowUserIds();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                writer.writeCharArray(list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        CreateGatheringTask& task = *new CreateGatheringTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -937,87 +1715,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createGatheringByUserId(CreateGatheringByUserIdRequest& request, std::function<void(AsyncCreateGatheringByUserIdResult&)> callback)
+    void createGatheringByUserId(CreateGatheringByUserIdRequest request, std::function<void(AsyncCreateGatheringByUserIdResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateGatheringByUserIdResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/gathering/user/{userId}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getUserId();
-            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getPlayer())
-        {
-            writer.writePropertyName("player");
-            write(writer, *request.getPlayer());
-        }
-        if (request.getAttributeRanges())
-        {
-            writer.writePropertyName("attributeRanges");
-            writer.writeArrayStart();
-            auto& list = *request.getAttributeRanges();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        if (request.getCapacityOfRoles())
-        {
-            writer.writePropertyName("capacityOfRoles");
-            writer.writeArrayStart();
-            auto& list = *request.getCapacityOfRoles();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        if (request.getAllowUserIds())
-        {
-            writer.writePropertyName("allowUserIds");
-            writer.writeArrayStart();
-            auto& list = *request.getAllowUserIds();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                writer.writeCharArray(list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        CreateGatheringByUserIdTask& task = *new CreateGatheringByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1026,64 +1727,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateGathering(UpdateGatheringRequest& request, std::function<void(AsyncUpdateGatheringResult&)> callback)
+    void updateGathering(UpdateGatheringRequest request, std::function<void(AsyncUpdateGatheringResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateGatheringResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/gathering/{gatheringName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getGatheringName();
-            url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getAttributeRanges())
-        {
-            writer.writePropertyName("attributeRanges");
-            writer.writeArrayStart();
-            auto& list = *request.getAttributeRanges();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        UpdateGatheringTask& task = *new UpdateGatheringTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1092,64 +1739,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateGatheringByUserId(UpdateGatheringByUserIdRequest& request, std::function<void(AsyncUpdateGatheringByUserIdResult&)> callback)
+    void updateGatheringByUserId(UpdateGatheringByUserIdRequest request, std::function<void(AsyncUpdateGatheringByUserIdResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateGatheringByUserIdResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/gathering/{gatheringName}/user/{userId}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getGatheringName();
-            url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getUserId();
-            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getAttributeRanges())
-        {
-            writer.writePropertyName("attributeRanges");
-            writer.writeArrayStart();
-            auto& list = *request.getAttributeRanges();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(writer, list[i]);
-            }
-            writer.writeArrayEnd();
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        UpdateGatheringByUserIdTask& task = *new UpdateGatheringByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1162,51 +1755,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void doMatchmakingByPlayer(DoMatchmakingByPlayerRequest& request, std::function<void(AsyncDoMatchmakingByPlayerResult&)> callback)
+    void doMatchmakingByPlayer(DoMatchmakingByPlayerRequest request, std::function<void(AsyncDoMatchmakingByPlayerResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DoMatchmakingByPlayerResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/gathering/player/do";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getPlayer())
-        {
-            writer.writePropertyName("player");
-            write(writer, *request.getPlayer());
-        }
-        if (request.getMatchmakingContextToken())
-        {
-            writer.writePropertyName("matchmakingContextToken");
-            writer.writeCharArray(*request.getMatchmakingContextToken());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DoMatchmakingByPlayerTask& task = *new DoMatchmakingByPlayerTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1219,59 +1771,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void doMatchmaking(DoMatchmakingRequest& request, std::function<void(AsyncDoMatchmakingResult&)> callback)
+    void doMatchmaking(DoMatchmakingRequest request, std::function<void(AsyncDoMatchmakingResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DoMatchmakingResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/gathering/do";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getPlayer())
-        {
-            writer.writePropertyName("player");
-            write(writer, *request.getPlayer());
-        }
-        if (request.getMatchmakingContextToken())
-        {
-            writer.writePropertyName("matchmakingContextToken");
-            writer.writeCharArray(*request.getMatchmakingContextToken());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        DoMatchmakingTask& task = *new DoMatchmakingTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1280,39 +1783,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getGathering(GetGatheringRequest& request, std::function<void(AsyncGetGatheringResult&)> callback)
+    void getGathering(GetGatheringRequest request, std::function<void(AsyncGetGatheringResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetGatheringResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/gathering/{gatheringName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getGatheringName();
-            url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        GetGatheringTask& task = *new GetGatheringTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1323,52 +1797,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void cancelMatchmaking(CancelMatchmakingRequest& request, std::function<void(AsyncCancelMatchmakingResult&)> callback)
+    void cancelMatchmaking(CancelMatchmakingRequest request, std::function<void(AsyncCancelMatchmakingResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CancelMatchmakingResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("DELETE");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/gathering/{gatheringName}/user/me";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getGatheringName();
-            url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-        {
-            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getAccessToken())
-        {
-            httpRequest.SetHeader("X-GS2-ACCESS-TOKEN", static_cast<const Char*>(*request.getAccessToken()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        CancelMatchmakingTask& task = *new CancelMatchmakingTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1379,52 +1811,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void cancelMatchmakingByUserId(CancelMatchmakingByUserIdRequest& request, std::function<void(AsyncCancelMatchmakingByUserIdResult&)> callback)
+    void cancelMatchmakingByUserId(CancelMatchmakingByUserIdRequest request, std::function<void(AsyncCancelMatchmakingByUserIdResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CancelMatchmakingByUserIdResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("DELETE");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/gathering/{gatheringName}/user/{userId}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getGatheringName();
-            url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getUserId();
-            url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-        {
-            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        CancelMatchmakingByUserIdTask& task = *new CancelMatchmakingByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -1433,44 +1823,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteGathering(DeleteGatheringRequest& request, std::function<void(AsyncDeleteGatheringResult&)> callback)
+    void deleteGathering(DeleteGatheringRequest request, std::function<void(AsyncDeleteGatheringResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteGatheringResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("DELETE");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "matchmaking");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/{namespaceName}/gathering/{gatheringName}";
-        {
-            auto& value = request.getNamespaceName();
-            url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        {
-            auto& value = request.getGatheringName();
-            url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-        {
-            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DeleteGatheringTask& task = *new DeleteGatheringTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 protected:

@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace deploy {
@@ -54,8 +56,7 @@ private:
         /** 日時 */
         optional<Int64> eventAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -65,57 +66,55 @@ private:
             type(data.type),
             message(data.message),
             eventAt(data.eventAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            eventId(std::move(data.eventId)),
-            name(std::move(data.name)),
-            resourceName(std::move(data.resourceName)),
-            type(std::move(data.type)),
-            message(std::move(data.message)),
-            eventAt(std::move(data.eventAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "eventId") == 0) {
+            if (std::strcmp(name_, "eventId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->eventId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "resourceName") == 0) {
+            else if (std::strcmp(name_, "resourceName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->resourceName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "type") == 0) {
+            else if (std::strcmp(name_, "type") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->type.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "message") == 0) {
+            else if (std::strcmp(name_, "message") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->message.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "eventAt") == 0) {
+            else if (std::strcmp(name_, "eventAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->eventAt = jsonValue.GetInt64();
@@ -124,72 +123,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Event() :
-        m_pData(nullptr)
-    {}
+    Event() = default;
+    Event(const Event& event) = default;
+    Event(Event&& event) = default;
+    ~Event() = default;
 
-    Event(const Event& event) :
-        Gs2Object(event),
-        m_pData(event.m_pData != nullptr ? new Data(*event.m_pData) : nullptr)
-    {}
+    Event& operator=(const Event& event) = default;
+    Event& operator=(Event&& event) = default;
 
-    Event(Event&& event) :
-        Gs2Object(std::move(event)),
-        m_pData(event.m_pData)
+    Event deepCopy() const
     {
-        event.m_pData = nullptr;
-    }
-
-    ~Event()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Event& operator=(const Event& event)
-    {
-        Gs2Object::operator=(event);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*event.m_pData);
-
-        return *this;
-    }
-
-    Event& operator=(Event&& event)
-    {
-        Gs2Object::operator=(std::move(event));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = event.m_pData;
-        event.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Event);
     }
 
     const Event* operator->() const
@@ -216,9 +163,9 @@ public:
      *
      * @param eventId 発生したイベント
      */
-    void setEventId(const Char* eventId)
+    void setEventId(StringHolder eventId)
     {
-        ensureData().eventId.emplace(eventId);
+        ensureData().eventId.emplace(std::move(eventId));
     }
 
     /**
@@ -226,9 +173,9 @@ public:
      *
      * @param eventId 発生したイベント
      */
-    Event& withEventId(const Char* eventId)
+    Event& withEventId(StringHolder eventId)
     {
-        setEventId(eventId);
+        setEventId(std::move(eventId));
         return *this;
     }
 
@@ -247,9 +194,9 @@ public:
      *
      * @param name イベント名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -257,9 +204,9 @@ public:
      *
      * @param name イベント名
      */
-    Event& withName(const Char* name)
+    Event& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -278,9 +225,9 @@ public:
      *
      * @param resourceName イベントの種類
      */
-    void setResourceName(const Char* resourceName)
+    void setResourceName(StringHolder resourceName)
     {
-        ensureData().resourceName.emplace(resourceName);
+        ensureData().resourceName.emplace(std::move(resourceName));
     }
 
     /**
@@ -288,9 +235,9 @@ public:
      *
      * @param resourceName イベントの種類
      */
-    Event& withResourceName(const Char* resourceName)
+    Event& withResourceName(StringHolder resourceName)
     {
-        setResourceName(resourceName);
+        setResourceName(std::move(resourceName));
         return *this;
     }
 
@@ -309,9 +256,9 @@ public:
      *
      * @param type イベントの種類
      */
-    void setType(const Char* type)
+    void setType(StringHolder type)
     {
-        ensureData().type.emplace(type);
+        ensureData().type.emplace(std::move(type));
     }
 
     /**
@@ -319,9 +266,9 @@ public:
      *
      * @param type イベントの種類
      */
-    Event& withType(const Char* type)
+    Event& withType(StringHolder type)
     {
-        setType(type);
+        setType(std::move(type));
         return *this;
     }
 
@@ -340,9 +287,9 @@ public:
      *
      * @param message メッセージ
      */
-    void setMessage(const Char* message)
+    void setMessage(StringHolder message)
     {
-        ensureData().message.emplace(message);
+        ensureData().message.emplace(std::move(message));
     }
 
     /**
@@ -350,9 +297,9 @@ public:
      *
      * @param message メッセージ
      */
-    Event& withMessage(const Char* message)
+    Event& withMessage(StringHolder message)
     {
-        setMessage(message);
+        setMessage(std::move(message));
         return *this;
     }
 
@@ -398,7 +345,7 @@ inline bool operator!=(const Event& lhs, const Event& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

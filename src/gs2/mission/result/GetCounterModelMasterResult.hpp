@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace mission
 {
@@ -43,28 +45,28 @@ private:
         /** カウンターの種類マスター */
         optional<CounterModelMaster> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GetCounterModelMasterResult() :
-        m_pData(nullptr)
-    {}
+    GetCounterModelMasterResult() = default;
+    GetCounterModelMasterResult(const GetCounterModelMasterResult& getCounterModelMasterResult) = default;
+    GetCounterModelMasterResult(GetCounterModelMasterResult&& getCounterModelMasterResult) = default;
+    ~GetCounterModelMasterResult() = default;
 
-    GetCounterModelMasterResult(const GetCounterModelMasterResult& getCounterModelMasterResult) :
-        Gs2Object(getCounterModelMasterResult),
-        m_pData(getCounterModelMasterResult.m_pData != nullptr ? new Data(*getCounterModelMasterResult.m_pData) : nullptr)
-    {}
+    GetCounterModelMasterResult& operator=(const GetCounterModelMasterResult& getCounterModelMasterResult) = default;
+    GetCounterModelMasterResult& operator=(GetCounterModelMasterResult&& getCounterModelMasterResult) = default;
 
-    GetCounterModelMasterResult(GetCounterModelMasterResult&& getCounterModelMasterResult) :
-        Gs2Object(std::move(getCounterModelMasterResult)),
-        m_pData(getCounterModelMasterResult.m_pData)
+    GetCounterModelMasterResult deepCopy() const
     {
-        getCounterModelMasterResult.m_pData = nullptr;
-    }
-
-    ~GetCounterModelMasterResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetCounterModelMasterResult& operator=(const GetCounterModelMasterResult& getCounterModelMasterResult)
-    {
-        Gs2Object::operator=(getCounterModelMasterResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getCounterModelMasterResult.m_pData);
-
-        return *this;
-    }
-
-    GetCounterModelMasterResult& operator=(GetCounterModelMasterResult&& getCounterModelMasterResult)
-    {
-        Gs2Object::operator=(std::move(getCounterModelMasterResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getCounterModelMasterResult.m_pData;
-        getCounterModelMasterResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetCounterModelMasterResult);
     }
 
     const GetCounterModelMasterResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item カウンターの種類マスター
      */
-    void setItem(const CounterModelMaster& item)
+    void setItem(CounterModelMaster item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

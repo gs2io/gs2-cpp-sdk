@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace money
 {
@@ -45,30 +47,29 @@ private:
         /** スタンプタスクの実行結果を記録したコンテキスト */
         optional<StringHolder> newContextStack;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            item(data.item),
             newContextStack(data.newContextStack)
-        {}
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item)),
-            newContextStack(std::move(data.newContextStack))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -76,7 +77,8 @@ private:
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "newContextStack") == 0) {
+            else if (std::strcmp(name_, "newContextStack") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->newContextStack.emplace(jsonValue.GetString());
@@ -85,72 +87,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    WithdrawByStampTaskResult() :
-        m_pData(nullptr)
-    {}
+    WithdrawByStampTaskResult() = default;
+    WithdrawByStampTaskResult(const WithdrawByStampTaskResult& withdrawByStampTaskResult) = default;
+    WithdrawByStampTaskResult(WithdrawByStampTaskResult&& withdrawByStampTaskResult) = default;
+    ~WithdrawByStampTaskResult() = default;
 
-    WithdrawByStampTaskResult(const WithdrawByStampTaskResult& withdrawByStampTaskResult) :
-        Gs2Object(withdrawByStampTaskResult),
-        m_pData(withdrawByStampTaskResult.m_pData != nullptr ? new Data(*withdrawByStampTaskResult.m_pData) : nullptr)
-    {}
+    WithdrawByStampTaskResult& operator=(const WithdrawByStampTaskResult& withdrawByStampTaskResult) = default;
+    WithdrawByStampTaskResult& operator=(WithdrawByStampTaskResult&& withdrawByStampTaskResult) = default;
 
-    WithdrawByStampTaskResult(WithdrawByStampTaskResult&& withdrawByStampTaskResult) :
-        Gs2Object(std::move(withdrawByStampTaskResult)),
-        m_pData(withdrawByStampTaskResult.m_pData)
+    WithdrawByStampTaskResult deepCopy() const
     {
-        withdrawByStampTaskResult.m_pData = nullptr;
-    }
-
-    ~WithdrawByStampTaskResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    WithdrawByStampTaskResult& operator=(const WithdrawByStampTaskResult& withdrawByStampTaskResult)
-    {
-        Gs2Object::operator=(withdrawByStampTaskResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*withdrawByStampTaskResult.m_pData);
-
-        return *this;
-    }
-
-    WithdrawByStampTaskResult& operator=(WithdrawByStampTaskResult&& withdrawByStampTaskResult)
-    {
-        Gs2Object::operator=(std::move(withdrawByStampTaskResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = withdrawByStampTaskResult.m_pData;
-        withdrawByStampTaskResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(WithdrawByStampTaskResult);
     }
 
     const WithdrawByStampTaskResult* operator->() const
@@ -177,9 +127,9 @@ public:
      *
      * @param item 消費後のウォレット
      */
-    void setItem(const Wallet& item)
+    void setItem(Wallet item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
     /**
@@ -197,9 +147,9 @@ public:
      *
      * @param newContextStack スタンプタスクの実行結果を記録したコンテキスト
      */
-    void setNewContextStack(const Char* newContextStack)
+    void setNewContextStack(StringHolder newContextStack)
     {
-        ensureData().newContextStack.emplace(newContextStack);
+        ensureData().newContextStack.emplace(std::move(newContextStack));
     }
 
 

@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace lottery
 {
@@ -43,28 +45,28 @@ private:
         /** 排出確率テーブルのリスト */
         optional<List<PrizeTable>> items;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            items(data.items)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -79,72 +81,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DescribePrizeTablesResult() :
-        m_pData(nullptr)
-    {}
+    DescribePrizeTablesResult() = default;
+    DescribePrizeTablesResult(const DescribePrizeTablesResult& describePrizeTablesResult) = default;
+    DescribePrizeTablesResult(DescribePrizeTablesResult&& describePrizeTablesResult) = default;
+    ~DescribePrizeTablesResult() = default;
 
-    DescribePrizeTablesResult(const DescribePrizeTablesResult& describePrizeTablesResult) :
-        Gs2Object(describePrizeTablesResult),
-        m_pData(describePrizeTablesResult.m_pData != nullptr ? new Data(*describePrizeTablesResult.m_pData) : nullptr)
-    {}
+    DescribePrizeTablesResult& operator=(const DescribePrizeTablesResult& describePrizeTablesResult) = default;
+    DescribePrizeTablesResult& operator=(DescribePrizeTablesResult&& describePrizeTablesResult) = default;
 
-    DescribePrizeTablesResult(DescribePrizeTablesResult&& describePrizeTablesResult) :
-        Gs2Object(std::move(describePrizeTablesResult)),
-        m_pData(describePrizeTablesResult.m_pData)
+    DescribePrizeTablesResult deepCopy() const
     {
-        describePrizeTablesResult.m_pData = nullptr;
-    }
-
-    ~DescribePrizeTablesResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DescribePrizeTablesResult& operator=(const DescribePrizeTablesResult& describePrizeTablesResult)
-    {
-        Gs2Object::operator=(describePrizeTablesResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*describePrizeTablesResult.m_pData);
-
-        return *this;
-    }
-
-    DescribePrizeTablesResult& operator=(DescribePrizeTablesResult&& describePrizeTablesResult)
-    {
-        Gs2Object::operator=(std::move(describePrizeTablesResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = describePrizeTablesResult.m_pData;
-        describePrizeTablesResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribePrizeTablesResult);
     }
 
     const DescribePrizeTablesResult* operator->() const
@@ -171,9 +121,9 @@ public:
      *
      * @param items 排出確率テーブルのリスト
      */
-    void setItems(const List<PrizeTable>& items)
+    void setItems(List<PrizeTable> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
 

@@ -27,25 +27,62 @@ namespace gs2 { namespace ez { namespace showcase {
 class EzAcquireAction : public gs2::Gs2Object
 {
 private:
-    /** スタンプシートで実行するアクションの種類 */
-    gs2::optional<StringHolder> m_Action;
-    /** 入手リクエストのJSON */
-    gs2::optional<StringHolder> m_Request;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** スタンプシートで実行するアクションの種類 */
+        gs2::optional<StringHolder> action;
+        /** 入手リクエストのJSON */
+        gs2::optional<StringHolder> request;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            action(data.action),
+            request(data.request)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::showcase::AcquireAction& acquireAction) :
+            action(acquireAction.getAction()),
+            request(acquireAction.getRequest())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzAcquireAction() = default;
+    EzAcquireAction(const EzAcquireAction& ezAcquireAction) = default;
+    EzAcquireAction(EzAcquireAction&& ezAcquireAction) = default;
+    ~EzAcquireAction() = default;
 
     EzAcquireAction(gs2::showcase::AcquireAction acquireAction) :
-        m_Action(acquireAction.getAction()),
-        m_Request(acquireAction.getRequest())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(acquireAction)
+    {}
+
+    EzAcquireAction& operator=(const EzAcquireAction& ezAcquireAction) = default;
+    EzAcquireAction& operator=(EzAcquireAction&& ezAcquireAction) = default;
+
+    EzAcquireAction deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzAcquireAction);
     }
 
     gs2::showcase::AcquireAction ToModel() const
     {
         gs2::showcase::AcquireAction acquireAction;
-        acquireAction.setAction(*m_Action);
-        acquireAction.setRequest(*m_Request);
+        acquireAction.setAction(getAction());
+        acquireAction.setRequest(getRequest());
         return acquireAction;
     }
 
@@ -53,49 +90,39 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getAction() const
+    const StringHolder& getAction() const
     {
-        return *m_Action;
+        return *ensureData().action;
     }
 
-    gs2::StringHolder& getAction()
+    const StringHolder& getRequest() const
     {
-        return *m_Action;
-    }
-
-    const gs2::StringHolder& getRequest() const
-    {
-        return *m_Request;
-    }
-
-    gs2::StringHolder& getRequest()
-    {
-        return *m_Request;
+        return *ensureData().request;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setAction(Char* action)
+    void setAction(StringHolder action)
     {
-        m_Action.emplace(action);
+        ensureData().action = std::move(action);
     }
 
-    void setRequest(Char* request)
+    void setRequest(StringHolder request)
     {
-        m_Request.emplace(request);
+        ensureData().request = std::move(request);
     }
 
-    EzAcquireAction& withAction(Char* action)
+    EzAcquireAction& withAction(StringHolder action)
     {
-        setAction(action);
+        setAction(std::move(action));
         return *this;
     }
 
-    EzAcquireAction& withRequest(Char* request)
+    EzAcquireAction& withRequest(StringHolder request)
     {
-        setRequest(request);
+        setRequest(std::move(request));
         return *this;
     }
 };

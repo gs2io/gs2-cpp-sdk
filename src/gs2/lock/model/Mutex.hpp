@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace lock {
@@ -56,8 +58,7 @@ private:
         /** ロックの有効期限 */
         optional<Int64> ttlAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -68,64 +69,62 @@ private:
             referenceCount(data.referenceCount),
             createdAt(data.createdAt),
             ttlAt(data.ttlAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            mutexId(std::move(data.mutexId)),
-            userId(std::move(data.userId)),
-            propertyId(std::move(data.propertyId)),
-            transactionId(std::move(data.transactionId)),
-            referenceCount(std::move(data.referenceCount)),
-            createdAt(std::move(data.createdAt)),
-            ttlAt(std::move(data.ttlAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "mutexId") == 0) {
+            if (std::strcmp(name_, "mutexId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->mutexId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "propertyId") == 0) {
+            else if (std::strcmp(name_, "propertyId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->propertyId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "transactionId") == 0) {
+            else if (std::strcmp(name_, "transactionId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->transactionId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "referenceCount") == 0) {
+            else if (std::strcmp(name_, "referenceCount") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->referenceCount = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "ttlAt") == 0) {
+            else if (std::strcmp(name_, "ttlAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->ttlAt = jsonValue.GetInt64();
@@ -134,72 +133,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Mutex() :
-        m_pData(nullptr)
-    {}
+    Mutex() = default;
+    Mutex(const Mutex& mutex) = default;
+    Mutex(Mutex&& mutex) = default;
+    ~Mutex() = default;
 
-    Mutex(const Mutex& mutex) :
-        Gs2Object(mutex),
-        m_pData(mutex.m_pData != nullptr ? new Data(*mutex.m_pData) : nullptr)
-    {}
+    Mutex& operator=(const Mutex& mutex) = default;
+    Mutex& operator=(Mutex&& mutex) = default;
 
-    Mutex(Mutex&& mutex) :
-        Gs2Object(std::move(mutex)),
-        m_pData(mutex.m_pData)
+    Mutex deepCopy() const
     {
-        mutex.m_pData = nullptr;
-    }
-
-    ~Mutex()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Mutex& operator=(const Mutex& mutex)
-    {
-        Gs2Object::operator=(mutex);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*mutex.m_pData);
-
-        return *this;
-    }
-
-    Mutex& operator=(Mutex&& mutex)
-    {
-        Gs2Object::operator=(std::move(mutex));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = mutex.m_pData;
-        mutex.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Mutex);
     }
 
     const Mutex* operator->() const
@@ -226,9 +173,9 @@ public:
      *
      * @param mutexId ミューテックス
      */
-    void setMutexId(const Char* mutexId)
+    void setMutexId(StringHolder mutexId)
     {
-        ensureData().mutexId.emplace(mutexId);
+        ensureData().mutexId.emplace(std::move(mutexId));
     }
 
     /**
@@ -236,9 +183,9 @@ public:
      *
      * @param mutexId ミューテックス
      */
-    Mutex& withMutexId(const Char* mutexId)
+    Mutex& withMutexId(StringHolder mutexId)
     {
-        setMutexId(mutexId);
+        setMutexId(std::move(mutexId));
         return *this;
     }
 
@@ -257,9 +204,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -267,9 +214,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    Mutex& withUserId(const Char* userId)
+    Mutex& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -288,9 +235,9 @@ public:
      *
      * @param propertyId プロパティID
      */
-    void setPropertyId(const Char* propertyId)
+    void setPropertyId(StringHolder propertyId)
     {
-        ensureData().propertyId.emplace(propertyId);
+        ensureData().propertyId.emplace(std::move(propertyId));
     }
 
     /**
@@ -298,9 +245,9 @@ public:
      *
      * @param propertyId プロパティID
      */
-    Mutex& withPropertyId(const Char* propertyId)
+    Mutex& withPropertyId(StringHolder propertyId)
     {
-        setPropertyId(propertyId);
+        setPropertyId(std::move(propertyId));
         return *this;
     }
 
@@ -319,9 +266,9 @@ public:
      *
      * @param transactionId ロックを取得したトランザクションID
      */
-    void setTransactionId(const Char* transactionId)
+    void setTransactionId(StringHolder transactionId)
     {
-        ensureData().transactionId.emplace(transactionId);
+        ensureData().transactionId.emplace(std::move(transactionId));
     }
 
     /**
@@ -329,9 +276,9 @@ public:
      *
      * @param transactionId ロックを取得したトランザクションID
      */
-    Mutex& withTransactionId(const Char* transactionId)
+    Mutex& withTransactionId(StringHolder transactionId)
     {
-        setTransactionId(transactionId);
+        setTransactionId(std::move(transactionId));
         return *this;
     }
 
@@ -439,7 +386,7 @@ inline bool operator!=(const Mutex& lhs, const Mutex& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

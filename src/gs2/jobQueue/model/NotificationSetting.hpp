@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace jobQueue {
@@ -48,44 +50,41 @@ private:
         /** モバイルプッシュ通知で使用するサウンドファイル名 */
         optional<StringHolder> sound;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             gatewayNamespaceId(data.gatewayNamespaceId),
             enableTransferMobileNotification(data.enableTransferMobileNotification),
             sound(data.sound)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            gatewayNamespaceId(std::move(data.gatewayNamespaceId)),
-            enableTransferMobileNotification(std::move(data.enableTransferMobileNotification)),
-            sound(std::move(data.sound))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "gatewayNamespaceId") == 0) {
+            if (std::strcmp(name_, "gatewayNamespaceId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->gatewayNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "enableTransferMobileNotification") == 0) {
+            else if (std::strcmp(name_, "enableTransferMobileNotification") == 0)
+            {
                 if (jsonValue.IsBool())
                 {
                     this->enableTransferMobileNotification = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name_, "sound") == 0) {
+            else if (std::strcmp(name_, "sound") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->sound.emplace(jsonValue.GetString());
@@ -94,72 +93,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    NotificationSetting() :
-        m_pData(nullptr)
-    {}
+    NotificationSetting() = default;
+    NotificationSetting(const NotificationSetting& notificationSetting) = default;
+    NotificationSetting(NotificationSetting&& notificationSetting) = default;
+    ~NotificationSetting() = default;
 
-    NotificationSetting(const NotificationSetting& notificationSetting) :
-        Gs2Object(notificationSetting),
-        m_pData(notificationSetting.m_pData != nullptr ? new Data(*notificationSetting.m_pData) : nullptr)
-    {}
+    NotificationSetting& operator=(const NotificationSetting& notificationSetting) = default;
+    NotificationSetting& operator=(NotificationSetting&& notificationSetting) = default;
 
-    NotificationSetting(NotificationSetting&& notificationSetting) :
-        Gs2Object(std::move(notificationSetting)),
-        m_pData(notificationSetting.m_pData)
+    NotificationSetting deepCopy() const
     {
-        notificationSetting.m_pData = nullptr;
-    }
-
-    ~NotificationSetting()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    NotificationSetting& operator=(const NotificationSetting& notificationSetting)
-    {
-        Gs2Object::operator=(notificationSetting);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*notificationSetting.m_pData);
-
-        return *this;
-    }
-
-    NotificationSetting& operator=(NotificationSetting&& notificationSetting)
-    {
-        Gs2Object::operator=(std::move(notificationSetting));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = notificationSetting.m_pData;
-        notificationSetting.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(NotificationSetting);
     }
 
     const NotificationSetting* operator->() const
@@ -186,9 +133,9 @@ public:
      *
      * @param gatewayNamespaceId プッシュ通知に使用する GS2-Gateway のネームスペース のGRN
      */
-    void setGatewayNamespaceId(const Char* gatewayNamespaceId)
+    void setGatewayNamespaceId(StringHolder gatewayNamespaceId)
     {
-        ensureData().gatewayNamespaceId.emplace(gatewayNamespaceId);
+        ensureData().gatewayNamespaceId.emplace(std::move(gatewayNamespaceId));
     }
 
     /**
@@ -196,9 +143,9 @@ public:
      *
      * @param gatewayNamespaceId プッシュ通知に使用する GS2-Gateway のネームスペース のGRN
      */
-    NotificationSetting& withGatewayNamespaceId(const Char* gatewayNamespaceId)
+    NotificationSetting& withGatewayNamespaceId(StringHolder gatewayNamespaceId)
     {
-        setGatewayNamespaceId(gatewayNamespaceId);
+        setGatewayNamespaceId(std::move(gatewayNamespaceId));
         return *this;
     }
 
@@ -248,9 +195,9 @@ public:
      *
      * @param sound モバイルプッシュ通知で使用するサウンドファイル名
      */
-    void setSound(const Char* sound)
+    void setSound(StringHolder sound)
     {
-        ensureData().sound.emplace(sound);
+        ensureData().sound.emplace(std::move(sound));
     }
 
     /**
@@ -258,9 +205,9 @@ public:
      *
      * @param sound モバイルプッシュ通知で使用するサウンドファイル名
      */
-    NotificationSetting& withSound(const Char* sound)
+    NotificationSetting& withSound(StringHolder sound)
     {
-        setSound(sound);
+        setSound(std::move(sound));
         return *this;
     }
 
@@ -275,7 +222,7 @@ inline bool operator!=(const NotificationSetting& lhs, const NotificationSetting
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

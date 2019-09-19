@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace jobQueue
 {
@@ -47,32 +49,33 @@ private:
         /** None */
         optional<Bool> isLastJob;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            item(data.item),
-            result(data.result),
             isLastJob(data.isLastJob)
-        {}
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+            if (data.result)
+            {
+                result = data.result->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item)),
-            result(std::move(data.result)),
-            isLastJob(std::move(data.isLastJob))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -80,7 +83,8 @@ private:
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "result") == 0) {
+            else if (std::strcmp(name_, "result") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -88,7 +92,8 @@ private:
                     detail::json::JsonParser::parse(&this->result->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "isLastJob") == 0) {
+            else if (std::strcmp(name_, "isLastJob") == 0)
+            {
                 if (jsonValue.IsBool())
                 {
                     this->isLastJob = jsonValue.GetBool();
@@ -97,72 +102,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    RunByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    RunByUserIdResult() = default;
+    RunByUserIdResult(const RunByUserIdResult& runByUserIdResult) = default;
+    RunByUserIdResult(RunByUserIdResult&& runByUserIdResult) = default;
+    ~RunByUserIdResult() = default;
 
-    RunByUserIdResult(const RunByUserIdResult& runByUserIdResult) :
-        Gs2Object(runByUserIdResult),
-        m_pData(runByUserIdResult.m_pData != nullptr ? new Data(*runByUserIdResult.m_pData) : nullptr)
-    {}
+    RunByUserIdResult& operator=(const RunByUserIdResult& runByUserIdResult) = default;
+    RunByUserIdResult& operator=(RunByUserIdResult&& runByUserIdResult) = default;
 
-    RunByUserIdResult(RunByUserIdResult&& runByUserIdResult) :
-        Gs2Object(std::move(runByUserIdResult)),
-        m_pData(runByUserIdResult.m_pData)
+    RunByUserIdResult deepCopy() const
     {
-        runByUserIdResult.m_pData = nullptr;
-    }
-
-    ~RunByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    RunByUserIdResult& operator=(const RunByUserIdResult& runByUserIdResult)
-    {
-        Gs2Object::operator=(runByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*runByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    RunByUserIdResult& operator=(RunByUserIdResult&& runByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(runByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = runByUserIdResult.m_pData;
-        runByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(RunByUserIdResult);
     }
 
     const RunByUserIdResult* operator->() const
@@ -189,9 +142,9 @@ public:
      *
      * @param item ジョブ
      */
-    void setItem(const Job& item)
+    void setItem(Job item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
     /**
@@ -209,9 +162,9 @@ public:
      *
      * @param result ジョブの実行結果
      */
-    void setResult(const JobResultBody& result)
+    void setResult(JobResultBody result)
     {
-        ensureData().result.emplace(result);
+        ensureData().result.emplace(std::move(result));
     }
 
     /**

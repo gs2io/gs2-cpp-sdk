@@ -27,19 +27,57 @@ namespace gs2 { namespace ez { namespace distributor {
 class EzListDistributorModelsResult : public gs2::Gs2Object
 {
 private:
-    /** 配信設定のリスト */
-    List<EzDistributorModel> m_Items;
-
-public:
-    EzListDistributorModelsResult(const gs2::distributor::DescribeDistributorModelsResult& result)
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** 配信設定のリスト */
+        List<EzDistributorModel> items;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::distributor::DescribeDistributorModelsResult& describeDistributorModelsResult)
+        {
             {
-                m_Items += EzDistributorModel(list[i]);
+                auto& list = *describeDistributorModelsResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzDistributorModel(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListDistributorModelsResult() = default;
+    EzListDistributorModelsResult(const EzListDistributorModelsResult& result) = default;
+    EzListDistributorModelsResult(EzListDistributorModelsResult&& result) = default;
+    ~EzListDistributorModelsResult() = default;
+
+    EzListDistributorModelsResult(gs2::distributor::DescribeDistributorModelsResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListDistributorModelsResult& operator=(const EzListDistributorModelsResult& result) = default;
+    EzListDistributorModelsResult& operator=(EzListDistributorModelsResult&& result) = default;
+
+    EzListDistributorModelsResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListDistributorModelsResult);
     }
 
     static bool isConvertible(const gs2::distributor::DescribeDistributorModelsResult& result)
@@ -54,12 +92,7 @@ public:
 
     const List<EzDistributorModel>& getItems() const
     {
-        return m_Items;
-    }
-
-    List<EzDistributorModel>& getItems()
-    {
-        return m_Items;
+        return ensureData().items;
     }
 };
 

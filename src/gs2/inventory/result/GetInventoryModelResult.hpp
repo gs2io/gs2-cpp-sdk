@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inventory
 {
@@ -43,28 +45,28 @@ private:
         /** インベントリモデル */
         optional<InventoryModel> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GetInventoryModelResult() :
-        m_pData(nullptr)
-    {}
+    GetInventoryModelResult() = default;
+    GetInventoryModelResult(const GetInventoryModelResult& getInventoryModelResult) = default;
+    GetInventoryModelResult(GetInventoryModelResult&& getInventoryModelResult) = default;
+    ~GetInventoryModelResult() = default;
 
-    GetInventoryModelResult(const GetInventoryModelResult& getInventoryModelResult) :
-        Gs2Object(getInventoryModelResult),
-        m_pData(getInventoryModelResult.m_pData != nullptr ? new Data(*getInventoryModelResult.m_pData) : nullptr)
-    {}
+    GetInventoryModelResult& operator=(const GetInventoryModelResult& getInventoryModelResult) = default;
+    GetInventoryModelResult& operator=(GetInventoryModelResult&& getInventoryModelResult) = default;
 
-    GetInventoryModelResult(GetInventoryModelResult&& getInventoryModelResult) :
-        Gs2Object(std::move(getInventoryModelResult)),
-        m_pData(getInventoryModelResult.m_pData)
+    GetInventoryModelResult deepCopy() const
     {
-        getInventoryModelResult.m_pData = nullptr;
-    }
-
-    ~GetInventoryModelResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetInventoryModelResult& operator=(const GetInventoryModelResult& getInventoryModelResult)
-    {
-        Gs2Object::operator=(getInventoryModelResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getInventoryModelResult.m_pData);
-
-        return *this;
-    }
-
-    GetInventoryModelResult& operator=(GetInventoryModelResult&& getInventoryModelResult)
-    {
-        Gs2Object::operator=(std::move(getInventoryModelResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getInventoryModelResult.m_pData;
-        getInventoryModelResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetInventoryModelResult);
     }
 
     const GetInventoryModelResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item インベントリモデル
      */
-    void setItem(const InventoryModel& item)
+    void setItem(InventoryModel item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

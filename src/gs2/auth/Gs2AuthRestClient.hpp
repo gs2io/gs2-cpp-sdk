@@ -40,30 +40,164 @@ namespace gs2 { namespace auth {
 class Gs2AuthRestClient : public AbstractGs2ClientBase
 {
 private:
-    static void write(detail::json::JsonWriter& writer, const AccessToken& obj)
+
+    class LoginTask : public detail::Gs2RestSessionTask<LoginResult>
     {
-        writer.writeObjectStart();
+    private:
+        LoginRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "auth";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/login";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getTimeOffset())
+            {
+                jsonWriter.writePropertyName("timeOffset");
+                jsonWriter.writeInt32(*m_Request.getTimeOffset());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        LoginTask(
+            LoginRequest request,
+            Gs2RestSessionTask<LoginResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<LoginResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~LoginTask() GS2_OVERRIDE = default;
+    };
+
+    class LoginBySignatureTask : public detail::Gs2RestSessionTask<LoginBySignatureResult>
+    {
+    private:
+        LoginBySignatureRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "auth";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/login/signed";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getBody())
+            {
+                jsonWriter.writePropertyName("body");
+                jsonWriter.writeCharArray(*m_Request.getBody());
+            }
+            if (m_Request.getSignature())
+            {
+                jsonWriter.writePropertyName("signature");
+                jsonWriter.writeCharArray(*m_Request.getSignature());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        LoginBySignatureTask(
+            LoginBySignatureRequest request,
+            Gs2RestSessionTask<LoginBySignatureResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<LoginBySignatureResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~LoginBySignatureTask() GS2_OVERRIDE = default;
+    };
+
+private:
+    static void write(detail::json::JsonWriter& jsonWriter, const AccessToken& obj)
+    {
+        jsonWriter.writeObjectStart();
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getToken())
         {
-            writer.writePropertyName("token");
-            writer.writeCharArray(*obj.getToken());
+            jsonWriter.writePropertyName("token");
+            jsonWriter.writeCharArray(*obj.getToken());
         }
         if (obj.getUserId())
         {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*obj.getUserId());
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
         }
         if (obj.getExpire())
         {
-            writer.writePropertyName("expire");
-            writer.writeInt64(*obj.getExpire());
+            jsonWriter.writePropertyName("expire");
+            jsonWriter.writeInt64(*obj.getExpire());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
 
@@ -87,51 +221,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void login(LoginRequest& request, std::function<void(AsyncLoginResult&)> callback)
+    void login(LoginRequest request, std::function<void(AsyncLoginResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<LoginResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "auth");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/login";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getUserId())
-        {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*request.getUserId());
-        }
-        if (request.getTimeOffset())
-        {
-            writer.writePropertyName("timeOffset");
-            writer.writeInt32(*request.getTimeOffset());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        LoginTask& task = *new LoginTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -141,61 +234,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void loginBySignature(LoginBySignatureRequest& request, std::function<void(AsyncLoginBySignatureResult&)> callback)
+    void loginBySignature(LoginBySignatureRequest request, std::function<void(AsyncLoginBySignatureResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<LoginBySignatureResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "auth");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/login/signed";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getUserId())
-        {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*request.getUserId());
-        }
-        if (request.getKeyId())
-        {
-            writer.writePropertyName("keyId");
-            writer.writeCharArray(*request.getKeyId());
-        }
-        if (request.getBody())
-        {
-            writer.writePropertyName("body");
-            writer.writeCharArray(*request.getBody());
-        }
-        if (request.getSignature())
-        {
-            writer.writePropertyName("signature");
-            writer.writeCharArray(*request.getSignature());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        if (request.getDuplicationAvoider())
-        {
-            httpRequest.SetHeader("X-GS2-DUPLICATION-AVOIDER", static_cast<const Char*>(*request.getDuplicationAvoider()));
-        }
-        gs2RestSessionTask.execute();
+        LoginBySignatureTask& task = *new LoginBySignatureTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 protected:

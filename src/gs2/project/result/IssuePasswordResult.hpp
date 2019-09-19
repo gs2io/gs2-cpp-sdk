@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace project
 {
@@ -43,28 +45,25 @@ private:
         /** 新しいパスワード */
         optional<StringHolder> newPassword;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             newPassword(data.newPassword)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            newPassword(std::move(data.newPassword))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "newPassword") == 0) {
+            if (std::strcmp(name_, "newPassword") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->newPassword.emplace(jsonValue.GetString());
@@ -73,72 +72,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    IssuePasswordResult() :
-        m_pData(nullptr)
-    {}
+    IssuePasswordResult() = default;
+    IssuePasswordResult(const IssuePasswordResult& issuePasswordResult) = default;
+    IssuePasswordResult(IssuePasswordResult&& issuePasswordResult) = default;
+    ~IssuePasswordResult() = default;
 
-    IssuePasswordResult(const IssuePasswordResult& issuePasswordResult) :
-        Gs2Object(issuePasswordResult),
-        m_pData(issuePasswordResult.m_pData != nullptr ? new Data(*issuePasswordResult.m_pData) : nullptr)
-    {}
+    IssuePasswordResult& operator=(const IssuePasswordResult& issuePasswordResult) = default;
+    IssuePasswordResult& operator=(IssuePasswordResult&& issuePasswordResult) = default;
 
-    IssuePasswordResult(IssuePasswordResult&& issuePasswordResult) :
-        Gs2Object(std::move(issuePasswordResult)),
-        m_pData(issuePasswordResult.m_pData)
+    IssuePasswordResult deepCopy() const
     {
-        issuePasswordResult.m_pData = nullptr;
-    }
-
-    ~IssuePasswordResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    IssuePasswordResult& operator=(const IssuePasswordResult& issuePasswordResult)
-    {
-        Gs2Object::operator=(issuePasswordResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*issuePasswordResult.m_pData);
-
-        return *this;
-    }
-
-    IssuePasswordResult& operator=(IssuePasswordResult&& issuePasswordResult)
-    {
-        Gs2Object::operator=(std::move(issuePasswordResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = issuePasswordResult.m_pData;
-        issuePasswordResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(IssuePasswordResult);
     }
 
     const IssuePasswordResult* operator->() const
@@ -165,9 +112,9 @@ public:
      *
      * @param newPassword 新しいパスワード
      */
-    void setNewPassword(const Char* newPassword)
+    void setNewPassword(StringHolder newPassword)
     {
-        ensureData().newPassword.emplace(newPassword);
+        ensureData().newPassword.emplace(std::move(newPassword));
     }
 
 

@@ -68,86 +68,64 @@ private:
     class CreateAccountTask : public detail::Gs2WebSocketSessionTask<CreateAccountResult>
     {
     private:
-        CreateAccountRequest& m_Request;
+        CreateAccountRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "project";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "account";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "createAccount";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getEmail())
             {
-                writer.writePropertyName("email");
-                writer.writeCharArray(*m_Request.getEmail());
+                jsonWriter.writePropertyName("email");
+                jsonWriter.writeCharArray(*m_Request.getEmail());
             }
             if (m_Request.getFullName())
             {
-                writer.writePropertyName("fullName");
-                writer.writeCharArray(*m_Request.getFullName());
+                jsonWriter.writePropertyName("fullName");
+                jsonWriter.writeCharArray(*m_Request.getFullName());
             }
             if (m_Request.getCompanyName())
             {
-                writer.writePropertyName("companyName");
-                writer.writeCharArray(*m_Request.getCompanyName());
+                jsonWriter.writePropertyName("companyName");
+                jsonWriter.writeCharArray(*m_Request.getCompanyName());
             }
             if (m_Request.getPassword())
             {
-                writer.writePropertyName("password");
-                writer.writeCharArray(*m_Request.getPassword());
+                jsonWriter.writePropertyName("password");
+                jsonWriter.writeCharArray(*m_Request.getPassword());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("project");
-            writer.writePropertyName("component");
-            writer.writeCharArray("account");
-            writer.writePropertyName("function");
-            writer.writeCharArray("createAccount");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         CreateAccountTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            CreateAccountRequest& request,
+            CreateAccountRequest request,
             Gs2WebSocketSessionTask<CreateAccountResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<CreateAccountResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<CreateAccountResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~CreateAccountTask() GS2_OVERRIDE = default;
@@ -156,71 +134,49 @@ private:
     class VerifyTask : public detail::Gs2WebSocketSessionTask<VerifyResult>
     {
     private:
-        VerifyRequest& m_Request;
+        VerifyRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "project";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "account";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "verify";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getVerifyToken())
             {
-                writer.writePropertyName("verifyToken");
-                writer.writeCharArray(*m_Request.getVerifyToken());
+                jsonWriter.writePropertyName("verifyToken");
+                jsonWriter.writeCharArray(*m_Request.getVerifyToken());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("project");
-            writer.writePropertyName("component");
-            writer.writeCharArray("account");
-            writer.writePropertyName("function");
-            writer.writeCharArray("verify");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         VerifyTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            VerifyRequest& request,
+            VerifyRequest request,
             Gs2WebSocketSessionTask<VerifyResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<VerifyResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<VerifyResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~VerifyTask() GS2_OVERRIDE = default;
@@ -229,76 +185,54 @@ private:
     class SignInTask : public detail::Gs2WebSocketSessionTask<SignInResult>
     {
     private:
-        SignInRequest& m_Request;
+        SignInRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "project";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "account";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "signIn";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getEmail())
             {
-                writer.writePropertyName("email");
-                writer.writeCharArray(*m_Request.getEmail());
+                jsonWriter.writePropertyName("email");
+                jsonWriter.writeCharArray(*m_Request.getEmail());
             }
             if (m_Request.getPassword())
             {
-                writer.writePropertyName("password");
-                writer.writeCharArray(*m_Request.getPassword());
+                jsonWriter.writePropertyName("password");
+                jsonWriter.writeCharArray(*m_Request.getPassword());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("project");
-            writer.writePropertyName("component");
-            writer.writeCharArray("account");
-            writer.writePropertyName("function");
-            writer.writeCharArray("signIn");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         SignInTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            SignInRequest& request,
+            SignInRequest request,
             Gs2WebSocketSessionTask<SignInResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<SignInResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<SignInResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~SignInTask() GS2_OVERRIDE = default;
@@ -307,71 +241,49 @@ private:
     class IssueAccountTokenTask : public detail::Gs2WebSocketSessionTask<IssueAccountTokenResult>
     {
     private:
-        IssueAccountTokenRequest& m_Request;
+        IssueAccountTokenRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "project";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "account";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "issueAccountToken";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getAccountName())
             {
-                writer.writePropertyName("accountName");
-                writer.writeCharArray(*m_Request.getAccountName());
+                jsonWriter.writePropertyName("accountName");
+                jsonWriter.writeCharArray(*m_Request.getAccountName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("project");
-            writer.writePropertyName("component");
-            writer.writeCharArray("account");
-            writer.writePropertyName("function");
-            writer.writeCharArray("issueAccountToken");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         IssueAccountTokenTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            IssueAccountTokenRequest& request,
+            IssueAccountTokenRequest request,
             Gs2WebSocketSessionTask<IssueAccountTokenResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<IssueAccountTokenResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<IssueAccountTokenResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~IssueAccountTokenTask() GS2_OVERRIDE = default;
@@ -380,71 +292,49 @@ private:
     class ForgetTask : public detail::Gs2WebSocketSessionTask<ForgetResult>
     {
     private:
-        ForgetRequest& m_Request;
+        ForgetRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "project";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "account";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "forget";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getEmail())
             {
-                writer.writePropertyName("email");
-                writer.writeCharArray(*m_Request.getEmail());
+                jsonWriter.writePropertyName("email");
+                jsonWriter.writeCharArray(*m_Request.getEmail());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("project");
-            writer.writePropertyName("component");
-            writer.writeCharArray("account");
-            writer.writePropertyName("function");
-            writer.writeCharArray("forget");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         ForgetTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            ForgetRequest& request,
+            ForgetRequest request,
             Gs2WebSocketSessionTask<ForgetResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<ForgetResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<ForgetResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~ForgetTask() GS2_OVERRIDE = default;
@@ -453,71 +343,49 @@ private:
     class IssuePasswordTask : public detail::Gs2WebSocketSessionTask<IssuePasswordResult>
     {
     private:
-        IssuePasswordRequest& m_Request;
+        IssuePasswordRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "project";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "account";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "issuePassword";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getIssuePasswordToken())
             {
-                writer.writePropertyName("issuePasswordToken");
-                writer.writeCharArray(*m_Request.getIssuePasswordToken());
+                jsonWriter.writePropertyName("issuePasswordToken");
+                jsonWriter.writeCharArray(*m_Request.getIssuePasswordToken());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("project");
-            writer.writePropertyName("component");
-            writer.writeCharArray("account");
-            writer.writePropertyName("function");
-            writer.writeCharArray("issuePassword");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         IssuePasswordTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            IssuePasswordRequest& request,
+            IssuePasswordRequest request,
             Gs2WebSocketSessionTask<IssuePasswordResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<IssuePasswordResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<IssuePasswordResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~IssuePasswordTask() GS2_OVERRIDE = default;
@@ -526,91 +394,69 @@ private:
     class UpdateAccountTask : public detail::Gs2WebSocketSessionTask<UpdateAccountResult>
     {
     private:
-        UpdateAccountRequest& m_Request;
+        UpdateAccountRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "project";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "account";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateAccount";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getEmail())
             {
-                writer.writePropertyName("email");
-                writer.writeCharArray(*m_Request.getEmail());
+                jsonWriter.writePropertyName("email");
+                jsonWriter.writeCharArray(*m_Request.getEmail());
             }
             if (m_Request.getFullName())
             {
-                writer.writePropertyName("fullName");
-                writer.writeCharArray(*m_Request.getFullName());
+                jsonWriter.writePropertyName("fullName");
+                jsonWriter.writeCharArray(*m_Request.getFullName());
             }
             if (m_Request.getCompanyName())
             {
-                writer.writePropertyName("companyName");
-                writer.writeCharArray(*m_Request.getCompanyName());
+                jsonWriter.writePropertyName("companyName");
+                jsonWriter.writeCharArray(*m_Request.getCompanyName());
             }
             if (m_Request.getPassword())
             {
-                writer.writePropertyName("password");
-                writer.writeCharArray(*m_Request.getPassword());
+                jsonWriter.writePropertyName("password");
+                jsonWriter.writeCharArray(*m_Request.getPassword());
             }
             if (m_Request.getAccountToken())
             {
-                writer.writePropertyName("accountToken");
-                writer.writeCharArray(*m_Request.getAccountToken());
+                jsonWriter.writePropertyName("accountToken");
+                jsonWriter.writeCharArray(*m_Request.getAccountToken());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("project");
-            writer.writePropertyName("component");
-            writer.writeCharArray("account");
-            writer.writePropertyName("function");
-            writer.writeCharArray("updateAccount");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         UpdateAccountTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            UpdateAccountRequest& request,
+            UpdateAccountRequest request,
             Gs2WebSocketSessionTask<UpdateAccountResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<UpdateAccountResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<UpdateAccountResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~UpdateAccountTask() GS2_OVERRIDE = default;
@@ -619,66 +465,44 @@ private:
     class DeleteAccountTask : public detail::Gs2WebSocketSessionTask<void>
     {
     private:
-        DeleteAccountRequest& m_Request;
+        DeleteAccountRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "project";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "account";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteAccount";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("project");
-            writer.writePropertyName("component");
-            writer.writeCharArray("account");
-            writer.writePropertyName("function");
-            writer.writeCharArray("deleteAccount");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DeleteAccountTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DeleteAccountRequest& request,
+            DeleteAccountRequest request,
             Gs2WebSocketSessionTask<void>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<void>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<void>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DeleteAccountTask() GS2_OVERRIDE = default;
@@ -687,81 +511,59 @@ private:
     class DescribeProjectsTask : public detail::Gs2WebSocketSessionTask<DescribeProjectsResult>
     {
     private:
-        DescribeProjectsRequest& m_Request;
+        DescribeProjectsRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "project";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeProjects";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getAccountToken())
             {
-                writer.writePropertyName("accountToken");
-                writer.writeCharArray(*m_Request.getAccountToken());
+                jsonWriter.writePropertyName("accountToken");
+                jsonWriter.writeCharArray(*m_Request.getAccountToken());
             }
             if (m_Request.getPageToken())
             {
-                writer.writePropertyName("pageToken");
-                writer.writeCharArray(*m_Request.getPageToken());
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
             }
             if (m_Request.getLimit())
             {
-                writer.writePropertyName("limit");
-                writer.writeInt64(*m_Request.getLimit());
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("project");
-            writer.writePropertyName("component");
-            writer.writeCharArray("project");
-            writer.writePropertyName("function");
-            writer.writeCharArray("describeProjects");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DescribeProjectsTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DescribeProjectsRequest& request,
+            DescribeProjectsRequest request,
             Gs2WebSocketSessionTask<DescribeProjectsResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DescribeProjectsResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DescribeProjectsResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DescribeProjectsTask() GS2_OVERRIDE = default;
@@ -770,81 +572,59 @@ private:
     class CreateProjectTask : public detail::Gs2WebSocketSessionTask<CreateProjectResult>
     {
     private:
-        CreateProjectRequest& m_Request;
+        CreateProjectRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "project";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "createProject";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getAccountToken())
             {
-                writer.writePropertyName("accountToken");
-                writer.writeCharArray(*m_Request.getAccountToken());
+                jsonWriter.writePropertyName("accountToken");
+                jsonWriter.writeCharArray(*m_Request.getAccountToken());
             }
             if (m_Request.getName())
             {
-                writer.writePropertyName("name");
-                writer.writeCharArray(*m_Request.getName());
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
             }
             if (m_Request.getDescription())
             {
-                writer.writePropertyName("description");
-                writer.writeCharArray(*m_Request.getDescription());
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("project");
-            writer.writePropertyName("component");
-            writer.writeCharArray("project");
-            writer.writePropertyName("function");
-            writer.writeCharArray("createProject");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         CreateProjectTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            CreateProjectRequest& request,
+            CreateProjectRequest request,
             Gs2WebSocketSessionTask<CreateProjectResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<CreateProjectResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<CreateProjectResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~CreateProjectTask() GS2_OVERRIDE = default;
@@ -853,76 +633,54 @@ private:
     class GetProjectTask : public detail::Gs2WebSocketSessionTask<GetProjectResult>
     {
     private:
-        GetProjectRequest& m_Request;
+        GetProjectRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "project";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getProject";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getAccountToken())
             {
-                writer.writePropertyName("accountToken");
-                writer.writeCharArray(*m_Request.getAccountToken());
+                jsonWriter.writePropertyName("accountToken");
+                jsonWriter.writeCharArray(*m_Request.getAccountToken());
             }
             if (m_Request.getProjectName())
             {
-                writer.writePropertyName("projectName");
-                writer.writeCharArray(*m_Request.getProjectName());
+                jsonWriter.writePropertyName("projectName");
+                jsonWriter.writeCharArray(*m_Request.getProjectName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("project");
-            writer.writePropertyName("component");
-            writer.writeCharArray("project");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getProject");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         GetProjectTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetProjectRequest& request,
+            GetProjectRequest request,
             Gs2WebSocketSessionTask<GetProjectResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetProjectResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<GetProjectResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~GetProjectTask() GS2_OVERRIDE = default;
@@ -931,76 +689,54 @@ private:
     class GetProjectTokenTask : public detail::Gs2WebSocketSessionTask<GetProjectTokenResult>
     {
     private:
-        GetProjectTokenRequest& m_Request;
+        GetProjectTokenRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "project";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getProjectToken";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getProjectName())
             {
-                writer.writePropertyName("projectName");
-                writer.writeCharArray(*m_Request.getProjectName());
+                jsonWriter.writePropertyName("projectName");
+                jsonWriter.writeCharArray(*m_Request.getProjectName());
             }
             if (m_Request.getAccountToken())
             {
-                writer.writePropertyName("accountToken");
-                writer.writeCharArray(*m_Request.getAccountToken());
+                jsonWriter.writePropertyName("accountToken");
+                jsonWriter.writeCharArray(*m_Request.getAccountToken());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("project");
-            writer.writePropertyName("component");
-            writer.writeCharArray("project");
-            writer.writePropertyName("function");
-            writer.writeCharArray("getProjectToken");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         GetProjectTokenTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            GetProjectTokenRequest& request,
+            GetProjectTokenRequest request,
             Gs2WebSocketSessionTask<GetProjectTokenResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetProjectTokenResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<GetProjectTokenResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~GetProjectTokenTask() GS2_OVERRIDE = default;
@@ -1009,81 +745,59 @@ private:
     class UpdateProjectTask : public detail::Gs2WebSocketSessionTask<UpdateProjectResult>
     {
     private:
-        UpdateProjectRequest& m_Request;
+        UpdateProjectRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "project";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateProject";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getAccountToken())
             {
-                writer.writePropertyName("accountToken");
-                writer.writeCharArray(*m_Request.getAccountToken());
+                jsonWriter.writePropertyName("accountToken");
+                jsonWriter.writeCharArray(*m_Request.getAccountToken());
             }
             if (m_Request.getProjectName())
             {
-                writer.writePropertyName("projectName");
-                writer.writeCharArray(*m_Request.getProjectName());
+                jsonWriter.writePropertyName("projectName");
+                jsonWriter.writeCharArray(*m_Request.getProjectName());
             }
             if (m_Request.getDescription())
             {
-                writer.writePropertyName("description");
-                writer.writeCharArray(*m_Request.getDescription());
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("project");
-            writer.writePropertyName("component");
-            writer.writeCharArray("project");
-            writer.writePropertyName("function");
-            writer.writeCharArray("updateProject");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         UpdateProjectTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            UpdateProjectRequest& request,
+            UpdateProjectRequest request,
             Gs2WebSocketSessionTask<UpdateProjectResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<UpdateProjectResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<UpdateProjectResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~UpdateProjectTask() GS2_OVERRIDE = default;
@@ -1092,174 +806,151 @@ private:
     class DeleteProjectTask : public detail::Gs2WebSocketSessionTask<DeleteProjectResult>
     {
     private:
-        DeleteProjectRequest& m_Request;
+        DeleteProjectRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "project";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteProject";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getAccountToken())
             {
-                writer.writePropertyName("accountToken");
-                writer.writeCharArray(*m_Request.getAccountToken());
+                jsonWriter.writePropertyName("accountToken");
+                jsonWriter.writeCharArray(*m_Request.getAccountToken());
             }
             if (m_Request.getProjectName())
             {
-                writer.writePropertyName("projectName");
-                writer.writeCharArray(*m_Request.getProjectName());
+                jsonWriter.writePropertyName("projectName");
+                jsonWriter.writeCharArray(*m_Request.getProjectName());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("project");
-            writer.writePropertyName("component");
-            writer.writeCharArray("project");
-            writer.writePropertyName("function");
-            writer.writeCharArray("deleteProject");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         DeleteProjectTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            DeleteProjectRequest& request,
+            DeleteProjectRequest request,
             Gs2WebSocketSessionTask<DeleteProjectResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<DeleteProjectResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<DeleteProjectResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~DeleteProjectTask() GS2_OVERRIDE = default;
     };
 
 private:
-    static void write(detail::json::JsonWriter& writer, const Account& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Account& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getAccountId())
         {
-            writer.writePropertyName("accountId");
-            writer.writeCharArray(*obj.getAccountId());
+            jsonWriter.writePropertyName("accountId");
+            jsonWriter.writeCharArray(*obj.getAccountId());
         }
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getEmail())
         {
-            writer.writePropertyName("email");
-            writer.writeCharArray(*obj.getEmail());
+            jsonWriter.writePropertyName("email");
+            jsonWriter.writeCharArray(*obj.getEmail());
         }
         if (obj.getFullName())
         {
-            writer.writePropertyName("fullName");
-            writer.writeCharArray(*obj.getFullName());
+            jsonWriter.writePropertyName("fullName");
+            jsonWriter.writeCharArray(*obj.getFullName());
         }
         if (obj.getCompanyName())
         {
-            writer.writePropertyName("companyName");
-            writer.writeCharArray(*obj.getCompanyName());
+            jsonWriter.writePropertyName("companyName");
+            jsonWriter.writeCharArray(*obj.getCompanyName());
         }
         if (obj.getPassword())
         {
-            writer.writePropertyName("password");
-            writer.writeCharArray(*obj.getPassword());
+            jsonWriter.writePropertyName("password");
+            jsonWriter.writeCharArray(*obj.getPassword());
         }
         if (obj.getStatus())
         {
-            writer.writePropertyName("status");
-            writer.writeCharArray(*obj.getStatus());
+            jsonWriter.writePropertyName("status");
+            jsonWriter.writeCharArray(*obj.getStatus());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Project& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Project& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getProjectId())
         {
-            writer.writePropertyName("projectId");
-            writer.writeCharArray(*obj.getProjectId());
+            jsonWriter.writePropertyName("projectId");
+            jsonWriter.writeCharArray(*obj.getProjectId());
         }
         if (obj.getAccountName())
         {
-            writer.writePropertyName("accountName");
-            writer.writeCharArray(*obj.getAccountName());
+            jsonWriter.writePropertyName("accountName");
+            jsonWriter.writeCharArray(*obj.getAccountName());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*obj.getDescription());
+            jsonWriter.writePropertyName("description");
+            jsonWriter.writeCharArray(*obj.getDescription());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
-
 
 
 public:
@@ -1279,10 +970,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createAccount(CreateAccountRequest& request, std::function<void(AsyncCreateAccountResult&)> callback)
+    void createAccount(CreateAccountRequest request, std::function<void(AsyncCreateAccountResult)> callback)
     {
-        CreateAccountTask& task = *new CreateAccountTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        CreateAccountTask& task = *new CreateAccountTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1291,10 +982,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void verify(VerifyRequest& request, std::function<void(AsyncVerifyResult&)> callback)
+    void verify(VerifyRequest request, std::function<void(AsyncVerifyResult)> callback)
     {
-        VerifyTask& task = *new VerifyTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        VerifyTask& task = *new VerifyTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1303,10 +994,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void signIn(SignInRequest& request, std::function<void(AsyncSignInResult&)> callback)
+    void signIn(SignInRequest request, std::function<void(AsyncSignInResult)> callback)
     {
-        SignInTask& task = *new SignInTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        SignInTask& task = *new SignInTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1315,10 +1006,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void issueAccountToken(IssueAccountTokenRequest& request, std::function<void(AsyncIssueAccountTokenResult&)> callback)
+    void issueAccountToken(IssueAccountTokenRequest request, std::function<void(AsyncIssueAccountTokenResult)> callback)
     {
-        IssueAccountTokenTask& task = *new IssueAccountTokenTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        IssueAccountTokenTask& task = *new IssueAccountTokenTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1327,10 +1018,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void forget(ForgetRequest& request, std::function<void(AsyncForgetResult&)> callback)
+    void forget(ForgetRequest request, std::function<void(AsyncForgetResult)> callback)
     {
-        ForgetTask& task = *new ForgetTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        ForgetTask& task = *new ForgetTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1339,10 +1030,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void issuePassword(IssuePasswordRequest& request, std::function<void(AsyncIssuePasswordResult&)> callback)
+    void issuePassword(IssuePasswordRequest request, std::function<void(AsyncIssuePasswordResult)> callback)
     {
-        IssuePasswordTask& task = *new IssuePasswordTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        IssuePasswordTask& task = *new IssuePasswordTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1351,10 +1042,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateAccount(UpdateAccountRequest& request, std::function<void(AsyncUpdateAccountResult&)> callback)
+    void updateAccount(UpdateAccountRequest request, std::function<void(AsyncUpdateAccountResult)> callback)
     {
-        UpdateAccountTask& task = *new UpdateAccountTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        UpdateAccountTask& task = *new UpdateAccountTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1363,10 +1054,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteAccount(DeleteAccountRequest& request, std::function<void(AsyncDeleteAccountResult&)> callback)
+    void deleteAccount(DeleteAccountRequest request, std::function<void(AsyncDeleteAccountResult)> callback)
     {
-        DeleteAccountTask& task = *new DeleteAccountTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DeleteAccountTask& task = *new DeleteAccountTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1375,10 +1066,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeProjects(DescribeProjectsRequest& request, std::function<void(AsyncDescribeProjectsResult&)> callback)
+    void describeProjects(DescribeProjectsRequest request, std::function<void(AsyncDescribeProjectsResult)> callback)
     {
-        DescribeProjectsTask& task = *new DescribeProjectsTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DescribeProjectsTask& task = *new DescribeProjectsTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1387,10 +1078,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createProject(CreateProjectRequest& request, std::function<void(AsyncCreateProjectResult&)> callback)
+    void createProject(CreateProjectRequest request, std::function<void(AsyncCreateProjectResult)> callback)
     {
-        CreateProjectTask& task = *new CreateProjectTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        CreateProjectTask& task = *new CreateProjectTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1399,10 +1090,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getProject(GetProjectRequest& request, std::function<void(AsyncGetProjectResult&)> callback)
+    void getProject(GetProjectRequest request, std::function<void(AsyncGetProjectResult)> callback)
     {
-        GetProjectTask& task = *new GetProjectTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        GetProjectTask& task = *new GetProjectTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1411,10 +1102,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getProjectToken(GetProjectTokenRequest& request, std::function<void(AsyncGetProjectTokenResult&)> callback)
+    void getProjectToken(GetProjectTokenRequest request, std::function<void(AsyncGetProjectTokenResult)> callback)
     {
-        GetProjectTokenTask& task = *new GetProjectTokenTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        GetProjectTokenTask& task = *new GetProjectTokenTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1423,10 +1114,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateProject(UpdateProjectRequest& request, std::function<void(AsyncUpdateProjectResult&)> callback)
+    void updateProject(UpdateProjectRequest request, std::function<void(AsyncUpdateProjectResult)> callback)
     {
-        UpdateProjectTask& task = *new UpdateProjectTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        UpdateProjectTask& task = *new UpdateProjectTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -1435,10 +1126,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteProject(DeleteProjectRequest& request, std::function<void(AsyncDeleteProjectResult&)> callback)
+    void deleteProject(DeleteProjectRequest request, std::function<void(AsyncDeleteProjectResult)> callback)
     {
-        DeleteProjectTask& task = *new DeleteProjectTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        DeleteProjectTask& task = *new DeleteProjectTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 protected:

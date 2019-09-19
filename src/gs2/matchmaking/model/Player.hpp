@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "Attribute.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace matchmaking {
@@ -51,40 +53,41 @@ private:
         /** 参加を拒否するユーザIDリスト */
         optional<List<StringHolder>> denyUserIds;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             userId(data.userId),
-            attributes(data.attributes),
-            roleName(data.roleName),
-            denyUserIds(data.denyUserIds)
-        {}
+            roleName(data.roleName)
+        {
+            if (data.attributes)
+            {
+                attributes = data.attributes->deepCopy();
+            }
+            if (data.denyUserIds)
+            {
+                denyUserIds = data.denyUserIds->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            userId(std::move(data.userId)),
-            attributes(std::move(data.attributes)),
-            roleName(std::move(data.roleName)),
-            denyUserIds(std::move(data.denyUserIds))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "userId") == 0) {
+            if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "attributes") == 0) {
+            else if (std::strcmp(name_, "attributes") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -96,13 +99,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "roleName") == 0) {
+            else if (std::strcmp(name_, "roleName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->roleName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "denyUserIds") == 0) {
+            else if (std::strcmp(name_, "denyUserIds") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -120,72 +125,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Player() :
-        m_pData(nullptr)
-    {}
+    Player() = default;
+    Player(const Player& player) = default;
+    Player(Player&& player) = default;
+    ~Player() = default;
 
-    Player(const Player& player) :
-        Gs2Object(player),
-        m_pData(player.m_pData != nullptr ? new Data(*player.m_pData) : nullptr)
-    {}
+    Player& operator=(const Player& player) = default;
+    Player& operator=(Player&& player) = default;
 
-    Player(Player&& player) :
-        Gs2Object(std::move(player)),
-        m_pData(player.m_pData)
+    Player deepCopy() const
     {
-        player.m_pData = nullptr;
-    }
-
-    ~Player()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Player& operator=(const Player& player)
-    {
-        Gs2Object::operator=(player);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*player.m_pData);
-
-        return *this;
-    }
-
-    Player& operator=(Player&& player)
-    {
-        Gs2Object::operator=(std::move(player));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = player.m_pData;
-        player.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Player);
     }
 
     const Player* operator->() const
@@ -212,9 +165,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -222,9 +175,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    Player& withUserId(const Char* userId)
+    Player& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -243,9 +196,9 @@ public:
      *
      * @param attributes 属性値のリスト
      */
-    void setAttributes(const List<Attribute>& attributes)
+    void setAttributes(List<Attribute> attributes)
     {
-        ensureData().attributes.emplace(attributes);
+        ensureData().attributes.emplace(std::move(attributes));
     }
 
     /**
@@ -253,9 +206,9 @@ public:
      *
      * @param attributes 属性値のリスト
      */
-    Player& withAttributes(const List<Attribute>& attributes)
+    Player& withAttributes(List<Attribute> attributes)
     {
-        setAttributes(attributes);
+        setAttributes(std::move(attributes));
         return *this;
     }
 
@@ -274,9 +227,9 @@ public:
      *
      * @param roleName ロール名
      */
-    void setRoleName(const Char* roleName)
+    void setRoleName(StringHolder roleName)
     {
-        ensureData().roleName.emplace(roleName);
+        ensureData().roleName.emplace(std::move(roleName));
     }
 
     /**
@@ -284,9 +237,9 @@ public:
      *
      * @param roleName ロール名
      */
-    Player& withRoleName(const Char* roleName)
+    Player& withRoleName(StringHolder roleName)
     {
-        setRoleName(roleName);
+        setRoleName(std::move(roleName));
         return *this;
     }
 
@@ -305,9 +258,9 @@ public:
      *
      * @param denyUserIds 参加を拒否するユーザIDリスト
      */
-    void setDenyUserIds(const List<StringHolder>& denyUserIds)
+    void setDenyUserIds(List<StringHolder> denyUserIds)
     {
-        ensureData().denyUserIds.emplace(denyUserIds);
+        ensureData().denyUserIds.emplace(std::move(denyUserIds));
     }
 
     /**
@@ -315,9 +268,9 @@ public:
      *
      * @param denyUserIds 参加を拒否するユーザIDリスト
      */
-    Player& withDenyUserIds(const List<StringHolder>& denyUserIds)
+    Player& withDenyUserIds(List<StringHolder> denyUserIds)
     {
-        setDenyUserIds(denyUserIds);
+        setDenyUserIds(std::move(denyUserIds));
         return *this;
     }
 
@@ -332,7 +285,7 @@ inline bool operator!=(const Player& lhs, const Player& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

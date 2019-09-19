@@ -28,49 +28,95 @@ namespace gs2 { namespace ez { namespace stamina {
 class EzStaminaModel : public gs2::Gs2Object
 {
 private:
-    /** スタミナの種類名 */
-    gs2::optional<StringHolder> m_Name;
-    /** スタミナの種類のメタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** スタミナを回復する速度(秒) */
-    gs2::optional<Int32> m_RecoverIntervalMinutes;
-    /** 時間経過後に回復する量 */
-    gs2::optional<Int32> m_RecoverValue;
-    /** スタミナの最大値の初期値 */
-    gs2::optional<Int32> m_InitialCapacity;
-    /** 最大値を超えて回復するか */
-    gs2::optional<Bool> m_IsOverflow;
-    /** 溢れた状況での最大値 */
-    gs2::optional<Int32> m_MaxCapacity;
-    /** GS2-Experience と連携する際に使用するスタミナ最大値テーブル */
-    gs2::optional<EzMaxStaminaTable> m_MaxStaminaTable;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** スタミナの種類名 */
+        gs2::optional<StringHolder> name;
+        /** スタミナの種類のメタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** スタミナを回復する速度(秒) */
+        gs2::optional<Int32> recoverIntervalMinutes;
+        /** 時間経過後に回復する量 */
+        gs2::optional<Int32> recoverValue;
+        /** スタミナの最大値の初期値 */
+        gs2::optional<Int32> initialCapacity;
+        /** 最大値を超えて回復するか */
+        gs2::optional<Bool> isOverflow;
+        /** 溢れた状況での最大値 */
+        gs2::optional<Int32> maxCapacity;
+        /** GS2-Experience と連携する際に使用するスタミナ最大値テーブル */
+        gs2::optional<EzMaxStaminaTable> maxStaminaTable;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            metadata(data.metadata),
+            recoverIntervalMinutes(data.recoverIntervalMinutes),
+            recoverValue(data.recoverValue),
+            initialCapacity(data.initialCapacity),
+            isOverflow(data.isOverflow),
+            maxCapacity(data.maxCapacity)
+        {
+            if (data.maxStaminaTable)
+            {
+                maxStaminaTable = data.maxStaminaTable->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::stamina::StaminaModel& staminaModel) :
+            name(staminaModel.getName()),
+            metadata(staminaModel.getMetadata()),
+            recoverIntervalMinutes(staminaModel.getRecoverIntervalMinutes() ? *staminaModel.getRecoverIntervalMinutes() : 0),
+            recoverValue(staminaModel.getRecoverValue() ? *staminaModel.getRecoverValue() : 0),
+            initialCapacity(staminaModel.getInitialCapacity() ? *staminaModel.getInitialCapacity() : 0),
+            isOverflow(staminaModel.getIsOverflow() ? *staminaModel.getIsOverflow() : false),
+            maxCapacity(staminaModel.getMaxCapacity() ? *staminaModel.getMaxCapacity() : 0),
+            maxStaminaTable(*staminaModel.getMaxStaminaTable())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzStaminaModel() = default;
+    EzStaminaModel(const EzStaminaModel& ezStaminaModel) = default;
+    EzStaminaModel(EzStaminaModel&& ezStaminaModel) = default;
+    ~EzStaminaModel() = default;
 
     EzStaminaModel(gs2::stamina::StaminaModel staminaModel) :
-        m_Name(staminaModel.getName()),
-        m_Metadata(staminaModel.getMetadata()),
-        m_RecoverIntervalMinutes(staminaModel.getRecoverIntervalMinutes() ? *staminaModel.getRecoverIntervalMinutes() : 0),
-        m_RecoverValue(staminaModel.getRecoverValue() ? *staminaModel.getRecoverValue() : 0),
-        m_InitialCapacity(staminaModel.getInitialCapacity() ? *staminaModel.getInitialCapacity() : 0),
-        m_IsOverflow(staminaModel.getIsOverflow() ? *staminaModel.getIsOverflow() : false),
-        m_MaxCapacity(staminaModel.getMaxCapacity() ? *staminaModel.getMaxCapacity() : 0),
-        m_MaxStaminaTable(*staminaModel.getMaxStaminaTable())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(staminaModel)
+    {}
+
+    EzStaminaModel& operator=(const EzStaminaModel& ezStaminaModel) = default;
+    EzStaminaModel& operator=(EzStaminaModel&& ezStaminaModel) = default;
+
+    EzStaminaModel deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzStaminaModel);
     }
 
     gs2::stamina::StaminaModel ToModel() const
     {
         gs2::stamina::StaminaModel staminaModel;
-        staminaModel.setName(*m_Name);
-        staminaModel.setMetadata(*m_Metadata);
-        staminaModel.setRecoverIntervalMinutes(*m_RecoverIntervalMinutes);
-        staminaModel.setRecoverValue(*m_RecoverValue);
-        staminaModel.setInitialCapacity(*m_InitialCapacity);
-        staminaModel.setIsOverflow(*m_IsOverflow);
-        staminaModel.setMaxCapacity(*m_MaxCapacity);
-        staminaModel.setMaxStaminaTable(m_MaxStaminaTable->ToModel());
+        staminaModel.setName(getName());
+        staminaModel.setMetadata(getMetadata());
+        staminaModel.setRecoverIntervalMinutes(getRecoverIntervalMinutes());
+        staminaModel.setRecoverValue(getRecoverValue());
+        staminaModel.setInitialCapacity(getInitialCapacity());
+        staminaModel.setIsOverflow(getIsOverflow());
+        staminaModel.setMaxCapacity(getMaxCapacity());
+        staminaModel.setMaxStaminaTable(getMaxStaminaTable().ToModel());
         return staminaModel;
     }
 
@@ -78,119 +124,99 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
+        return *ensureData().name;
     }
 
-    gs2::StringHolder& getName()
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
-    }
-
-    const gs2::StringHolder& getMetadata() const
-    {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
+        return *ensureData().metadata;
     }
 
     Int32 getRecoverIntervalMinutes() const
     {
-        return *m_RecoverIntervalMinutes;
+        return *ensureData().recoverIntervalMinutes;
     }
 
     Int32 getRecoverValue() const
     {
-        return *m_RecoverValue;
+        return *ensureData().recoverValue;
     }
 
     Int32 getInitialCapacity() const
     {
-        return *m_InitialCapacity;
+        return *ensureData().initialCapacity;
     }
 
     Bool getIsOverflow() const
     {
-        return *m_IsOverflow;
+        return *ensureData().isOverflow;
     }
 
     Int32 getMaxCapacity() const
     {
-        return *m_MaxCapacity;
+        return *ensureData().maxCapacity;
     }
 
     const EzMaxStaminaTable& getMaxStaminaTable() const
     {
-        return *m_MaxStaminaTable;
-    }
-
-    EzMaxStaminaTable& getMaxStaminaTable()
-    {
-        return *m_MaxStaminaTable;
+        return *ensureData().maxStaminaTable;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
     void setRecoverIntervalMinutes(Int32 recoverIntervalMinutes)
     {
-        m_RecoverIntervalMinutes = recoverIntervalMinutes;
+        ensureData().recoverIntervalMinutes = recoverIntervalMinutes;
     }
 
     void setRecoverValue(Int32 recoverValue)
     {
-        m_RecoverValue = recoverValue;
+        ensureData().recoverValue = recoverValue;
     }
 
     void setInitialCapacity(Int32 initialCapacity)
     {
-        m_InitialCapacity = initialCapacity;
+        ensureData().initialCapacity = initialCapacity;
     }
 
     void setIsOverflow(Bool isOverflow)
     {
-        m_IsOverflow = isOverflow;
+        ensureData().isOverflow = isOverflow;
     }
 
     void setMaxCapacity(Int32 maxCapacity)
     {
-        m_MaxCapacity = maxCapacity;
+        ensureData().maxCapacity = maxCapacity;
     }
 
-    void setMaxStaminaTable(const EzMaxStaminaTable& maxStaminaTable)
+    void setMaxStaminaTable(EzMaxStaminaTable maxStaminaTable)
     {
-        m_MaxStaminaTable = maxStaminaTable;
+        ensureData().maxStaminaTable = std::move(maxStaminaTable);
     }
 
-    void setMaxStaminaTable(EzMaxStaminaTable&& maxStaminaTable)
+    EzStaminaModel& withName(StringHolder name)
     {
-        m_MaxStaminaTable = std::move(maxStaminaTable);
-    }
-
-    EzStaminaModel& withName(Char* name)
-    {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzStaminaModel& withMetadata(Char* metadata)
+    EzStaminaModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -224,13 +250,7 @@ public:
         return *this;
     }
 
-    EzStaminaModel& withMaxStaminaTable(const EzMaxStaminaTable& maxStaminaTable)
-    {
-        setMaxStaminaTable(maxStaminaTable);
-        return *this;
-    }
-
-    EzStaminaModel& withMaxStaminaTable(EzMaxStaminaTable&& maxStaminaTable)
+    EzStaminaModel& withMaxStaminaTable(EzMaxStaminaTable maxStaminaTable)
     {
         setMaxStaminaTable(std::move(maxStaminaTable));
         return *this;

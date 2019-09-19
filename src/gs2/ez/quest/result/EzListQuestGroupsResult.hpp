@@ -27,19 +27,57 @@ namespace gs2 { namespace ez { namespace quest {
 class EzListQuestGroupsResult : public gs2::Gs2Object
 {
 private:
-    /** クエストグループのリスト */
-    List<EzQuestGroupModel> m_Items;
-
-public:
-    EzListQuestGroupsResult(const gs2::quest::DescribeQuestGroupModelsResult& result)
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** クエストグループのリスト */
+        List<EzQuestGroupModel> items;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::quest::DescribeQuestGroupModelsResult& describeQuestGroupModelsResult)
+        {
             {
-                m_Items += EzQuestGroupModel(list[i]);
+                auto& list = *describeQuestGroupModelsResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzQuestGroupModel(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListQuestGroupsResult() = default;
+    EzListQuestGroupsResult(const EzListQuestGroupsResult& result) = default;
+    EzListQuestGroupsResult(EzListQuestGroupsResult&& result) = default;
+    ~EzListQuestGroupsResult() = default;
+
+    EzListQuestGroupsResult(gs2::quest::DescribeQuestGroupModelsResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListQuestGroupsResult& operator=(const EzListQuestGroupsResult& result) = default;
+    EzListQuestGroupsResult& operator=(EzListQuestGroupsResult&& result) = default;
+
+    EzListQuestGroupsResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListQuestGroupsResult);
     }
 
     static bool isConvertible(const gs2::quest::DescribeQuestGroupModelsResult& result)
@@ -54,12 +92,7 @@ public:
 
     const List<EzQuestGroupModel>& getItems() const
     {
-        return m_Items;
-    }
-
-    List<EzQuestGroupModel>& getItems()
-    {
-        return m_Items;
+        return ensureData().items;
     }
 };
 

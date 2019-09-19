@@ -27,37 +27,77 @@ namespace gs2 { namespace ez { namespace lock {
 class EzMutex : public gs2::Gs2Object
 {
 private:
-    /** ミューテックス */
-    gs2::optional<StringHolder> m_MutexId;
-    /** プロパティID */
-    gs2::optional<StringHolder> m_PropertyId;
-    /** ロックを取得したトランザクションID */
-    gs2::optional<StringHolder> m_TransactionId;
-    /** 参照回数 */
-    gs2::optional<Int32> m_ReferenceCount;
-    /** ロックの有効期限 */
-    gs2::optional<Int64> m_TtlAt;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ミューテックス */
+        gs2::optional<StringHolder> mutexId;
+        /** プロパティID */
+        gs2::optional<StringHolder> propertyId;
+        /** ロックを取得したトランザクションID */
+        gs2::optional<StringHolder> transactionId;
+        /** 参照回数 */
+        gs2::optional<Int32> referenceCount;
+        /** ロックの有効期限 */
+        gs2::optional<Int64> ttlAt;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            mutexId(data.mutexId),
+            propertyId(data.propertyId),
+            transactionId(data.transactionId),
+            referenceCount(data.referenceCount),
+            ttlAt(data.ttlAt)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::lock::Mutex& mutex) :
+            mutexId(mutex.getMutexId()),
+            propertyId(mutex.getPropertyId()),
+            transactionId(mutex.getTransactionId()),
+            referenceCount(mutex.getReferenceCount() ? *mutex.getReferenceCount() : 0),
+            ttlAt(mutex.getTtlAt() ? *mutex.getTtlAt() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzMutex() = default;
+    EzMutex(const EzMutex& ezMutex) = default;
+    EzMutex(EzMutex&& ezMutex) = default;
+    ~EzMutex() = default;
 
     EzMutex(gs2::lock::Mutex mutex) :
-        m_MutexId(mutex.getMutexId()),
-        m_PropertyId(mutex.getPropertyId()),
-        m_TransactionId(mutex.getTransactionId()),
-        m_ReferenceCount(mutex.getReferenceCount() ? *mutex.getReferenceCount() : 0),
-        m_TtlAt(mutex.getTtlAt() ? *mutex.getTtlAt() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(mutex)
+    {}
+
+    EzMutex& operator=(const EzMutex& ezMutex) = default;
+    EzMutex& operator=(EzMutex&& ezMutex) = default;
+
+    EzMutex deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzMutex);
     }
 
     gs2::lock::Mutex ToModel() const
     {
         gs2::lock::Mutex mutex;
-        mutex.setMutexId(*m_MutexId);
-        mutex.setPropertyId(*m_PropertyId);
-        mutex.setTransactionId(*m_TransactionId);
-        mutex.setReferenceCount(*m_ReferenceCount);
-        mutex.setTtlAt(*m_TtlAt);
+        mutex.setMutexId(getMutexId());
+        mutex.setPropertyId(getPropertyId());
+        mutex.setTransactionId(getTransactionId());
+        mutex.setReferenceCount(getReferenceCount());
+        mutex.setTtlAt(getTtlAt());
         return mutex;
     }
 
@@ -65,90 +105,75 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getMutexId() const
+    const StringHolder& getMutexId() const
     {
-        return *m_MutexId;
+        return *ensureData().mutexId;
     }
 
-    gs2::StringHolder& getMutexId()
+    const StringHolder& getPropertyId() const
     {
-        return *m_MutexId;
+        return *ensureData().propertyId;
     }
 
-    const gs2::StringHolder& getPropertyId() const
+    const StringHolder& getTransactionId() const
     {
-        return *m_PropertyId;
-    }
-
-    gs2::StringHolder& getPropertyId()
-    {
-        return *m_PropertyId;
-    }
-
-    const gs2::StringHolder& getTransactionId() const
-    {
-        return *m_TransactionId;
-    }
-
-    gs2::StringHolder& getTransactionId()
-    {
-        return *m_TransactionId;
+        return *ensureData().transactionId;
     }
 
     Int32 getReferenceCount() const
     {
-        return *m_ReferenceCount;
+        return *ensureData().referenceCount;
     }
 
     Int64 getTtlAt() const
     {
-        return *m_TtlAt;
+        return *ensureData().ttlAt;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setMutexId(Char* mutexId)
+    void setMutexId(StringHolder mutexId)
     {
-        m_MutexId.emplace(mutexId);
+        ensureData().mutexId = std::move(mutexId);
     }
 
-    void setPropertyId(Char* propertyId)
+    void setPropertyId(StringHolder propertyId)
     {
-        m_PropertyId.emplace(propertyId);
+        ensureData().propertyId = std::move(propertyId);
     }
 
-    void setTransactionId(Char* transactionId)
+    void setTransactionId(StringHolder transactionId)
     {
-        m_TransactionId.emplace(transactionId);
+        ensureData().transactionId = std::move(transactionId);
     }
 
     void setReferenceCount(Int32 referenceCount)
     {
-        m_ReferenceCount = referenceCount;
+        ensureData().referenceCount = referenceCount;
     }
 
     void setTtlAt(Int64 ttlAt)
     {
-        m_TtlAt = ttlAt;
+        ensureData().ttlAt = ttlAt;
     }
 
-    EzMutex& withMutexId(Char* mutexId)
+    EzMutex& withMutexId(StringHolder mutexId)
     {
-        setMutexId(mutexId);
+        setMutexId(std::move(mutexId));
         return *this;
     }
 
-    EzMutex& withPropertyId(Char* propertyId)
+    EzMutex& withPropertyId(StringHolder propertyId)
     {
-        setPropertyId(propertyId);
+        setPropertyId(std::move(propertyId));
         return *this;
     }
 
-    EzMutex& withTransactionId(Char* transactionId)
+    EzMutex& withTransactionId(StringHolder transactionId)
     {
-        setTransactionId(transactionId);
+        setTransactionId(std::move(transactionId));
         return *this;
     }
 

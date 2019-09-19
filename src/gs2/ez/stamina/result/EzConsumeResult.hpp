@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace stamina {
 class EzConsumeResult : public gs2::Gs2Object
 {
 private:
-    /** スタミナ */
-    EzStamina m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** スタミナ */
+        EzStamina item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::stamina::ConsumeStaminaResult& consumeStaminaResult) :
+            item(*consumeStaminaResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzConsumeResult(const gs2::stamina::ConsumeStaminaResult& result) :
-        m_Item(*result.getItem())
+    EzConsumeResult() = default;
+    EzConsumeResult(const EzConsumeResult& result) = default;
+    EzConsumeResult(EzConsumeResult&& result) = default;
+    ~EzConsumeResult() = default;
+
+    EzConsumeResult(gs2::stamina::ConsumeStaminaResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzConsumeResult& operator=(const EzConsumeResult& result) = default;
+    EzConsumeResult& operator=(EzConsumeResult&& result) = default;
+
+    EzConsumeResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzConsumeResult);
     }
 
     static bool isConvertible(const gs2::stamina::ConsumeStaminaResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzStamina& getItem() const
     {
-        return m_Item;
-    }
-
-    EzStamina& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

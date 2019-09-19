@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inbox
 {
@@ -45,30 +47,29 @@ private:
         /** スタンプシート */
         optional<StringHolder> stampSheet;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            item(data.item),
             stampSheet(data.stampSheet)
-        {}
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item)),
-            stampSheet(std::move(data.stampSheet))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -76,7 +77,8 @@ private:
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "stampSheet") == 0) {
+            else if (std::strcmp(name_, "stampSheet") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->stampSheet.emplace(jsonValue.GetString());
@@ -85,72 +87,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    ReadMessageByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    ReadMessageByUserIdResult() = default;
+    ReadMessageByUserIdResult(const ReadMessageByUserIdResult& readMessageByUserIdResult) = default;
+    ReadMessageByUserIdResult(ReadMessageByUserIdResult&& readMessageByUserIdResult) = default;
+    ~ReadMessageByUserIdResult() = default;
 
-    ReadMessageByUserIdResult(const ReadMessageByUserIdResult& readMessageByUserIdResult) :
-        Gs2Object(readMessageByUserIdResult),
-        m_pData(readMessageByUserIdResult.m_pData != nullptr ? new Data(*readMessageByUserIdResult.m_pData) : nullptr)
-    {}
+    ReadMessageByUserIdResult& operator=(const ReadMessageByUserIdResult& readMessageByUserIdResult) = default;
+    ReadMessageByUserIdResult& operator=(ReadMessageByUserIdResult&& readMessageByUserIdResult) = default;
 
-    ReadMessageByUserIdResult(ReadMessageByUserIdResult&& readMessageByUserIdResult) :
-        Gs2Object(std::move(readMessageByUserIdResult)),
-        m_pData(readMessageByUserIdResult.m_pData)
+    ReadMessageByUserIdResult deepCopy() const
     {
-        readMessageByUserIdResult.m_pData = nullptr;
-    }
-
-    ~ReadMessageByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    ReadMessageByUserIdResult& operator=(const ReadMessageByUserIdResult& readMessageByUserIdResult)
-    {
-        Gs2Object::operator=(readMessageByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*readMessageByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    ReadMessageByUserIdResult& operator=(ReadMessageByUserIdResult&& readMessageByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(readMessageByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = readMessageByUserIdResult.m_pData;
-        readMessageByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ReadMessageByUserIdResult);
     }
 
     const ReadMessageByUserIdResult* operator->() const
@@ -177,9 +127,9 @@ public:
      *
      * @param item メッセージ
      */
-    void setItem(const Message& item)
+    void setItem(Message item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
     /**
@@ -197,9 +147,9 @@ public:
      *
      * @param stampSheet スタンプシート
      */
-    void setStampSheet(const Char* stampSheet)
+    void setStampSheet(StringHolder stampSheet)
     {
-        ensureData().stampSheet.emplace(stampSheet);
+        ensureData().stampSheet.emplace(std::move(stampSheet));
     }
 
 

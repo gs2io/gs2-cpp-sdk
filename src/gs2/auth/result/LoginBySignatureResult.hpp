@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace auth
 {
@@ -47,44 +49,41 @@ private:
         /** 有効期限 */
         optional<Int64> expire;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             token(data.token),
             userId(data.userId),
             expire(data.expire)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            token(std::move(data.token)),
-            userId(std::move(data.userId)),
-            expire(std::move(data.expire))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "token") == 0) {
+            if (std::strcmp(name_, "token") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->token.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "expire") == 0) {
+            else if (std::strcmp(name_, "expire") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->expire = jsonValue.GetInt64();
@@ -93,72 +92,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    LoginBySignatureResult() :
-        m_pData(nullptr)
-    {}
+    LoginBySignatureResult() = default;
+    LoginBySignatureResult(const LoginBySignatureResult& loginBySignatureResult) = default;
+    LoginBySignatureResult(LoginBySignatureResult&& loginBySignatureResult) = default;
+    ~LoginBySignatureResult() = default;
 
-    LoginBySignatureResult(const LoginBySignatureResult& loginBySignatureResult) :
-        Gs2Object(loginBySignatureResult),
-        m_pData(loginBySignatureResult.m_pData != nullptr ? new Data(*loginBySignatureResult.m_pData) : nullptr)
-    {}
+    LoginBySignatureResult& operator=(const LoginBySignatureResult& loginBySignatureResult) = default;
+    LoginBySignatureResult& operator=(LoginBySignatureResult&& loginBySignatureResult) = default;
 
-    LoginBySignatureResult(LoginBySignatureResult&& loginBySignatureResult) :
-        Gs2Object(std::move(loginBySignatureResult)),
-        m_pData(loginBySignatureResult.m_pData)
+    LoginBySignatureResult deepCopy() const
     {
-        loginBySignatureResult.m_pData = nullptr;
-    }
-
-    ~LoginBySignatureResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    LoginBySignatureResult& operator=(const LoginBySignatureResult& loginBySignatureResult)
-    {
-        Gs2Object::operator=(loginBySignatureResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*loginBySignatureResult.m_pData);
-
-        return *this;
-    }
-
-    LoginBySignatureResult& operator=(LoginBySignatureResult&& loginBySignatureResult)
-    {
-        Gs2Object::operator=(std::move(loginBySignatureResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = loginBySignatureResult.m_pData;
-        loginBySignatureResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(LoginBySignatureResult);
     }
 
     const LoginBySignatureResult* operator->() const
@@ -185,9 +132,9 @@ public:
      *
      * @param token アクセストークン
      */
-    void setToken(const Char* token)
+    void setToken(StringHolder token)
     {
-        ensureData().token.emplace(token);
+        ensureData().token.emplace(std::move(token));
     }
 
     /**
@@ -205,9 +152,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**

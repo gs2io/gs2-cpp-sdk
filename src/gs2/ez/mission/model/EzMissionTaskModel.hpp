@@ -28,64 +28,110 @@ namespace gs2 { namespace ez { namespace mission {
 class EzMissionTaskModel : public gs2::Gs2Object
 {
 private:
-    /** タスク名 */
-    gs2::optional<StringHolder> m_Name;
-    /** メタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** カウンター名 */
-    gs2::optional<StringHolder> m_CounterName;
-    /** リセットタイミング */
-    gs2::optional<StringHolder> m_ResetType;
-    /** 目標値 */
-    gs2::optional<Int64> m_TargetValue;
-    /** ミッション達成時の報酬 */
-    gs2::optional<List<EzAcquireAction>> m_CompleteAcquireActions;
-    /** 達成報酬の受け取り可能な期間を指定するイベントマスター のGRN */
-    gs2::optional<StringHolder> m_ChallengePeriodEventId;
-    /** このタスクに挑戦するために達成しておく必要のあるタスクの名前 */
-    gs2::optional<StringHolder> m_PremiseMissionTaskName;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** タスク名 */
+        gs2::optional<StringHolder> name;
+        /** メタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** カウンター名 */
+        gs2::optional<StringHolder> counterName;
+        /** リセットタイミング */
+        gs2::optional<StringHolder> resetType;
+        /** 目標値 */
+        gs2::optional<Int64> targetValue;
+        /** ミッション達成時の報酬 */
+        gs2::optional<List<EzAcquireAction>> completeAcquireActions;
+        /** 達成報酬の受け取り可能な期間を指定するイベントマスター のGRN */
+        gs2::optional<StringHolder> challengePeriodEventId;
+        /** このタスクに挑戦するために達成しておく必要のあるタスクの名前 */
+        gs2::optional<StringHolder> premiseMissionTaskName;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            metadata(data.metadata),
+            counterName(data.counterName),
+            resetType(data.resetType),
+            targetValue(data.targetValue),
+            challengePeriodEventId(data.challengePeriodEventId),
+            premiseMissionTaskName(data.premiseMissionTaskName)
+        {
+            if (data.completeAcquireActions)
+            {
+                completeAcquireActions = data.completeAcquireActions->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::mission::MissionTaskModel& missionTaskModel) :
+            name(missionTaskModel.getName()),
+            metadata(missionTaskModel.getMetadata()),
+            counterName(missionTaskModel.getCounterName()),
+            resetType(missionTaskModel.getResetType()),
+            targetValue(missionTaskModel.getTargetValue() ? *missionTaskModel.getTargetValue() : 0),
+            challengePeriodEventId(missionTaskModel.getChallengePeriodEventId()),
+            premiseMissionTaskName(missionTaskModel.getPremiseMissionTaskName())
+        {
+            completeAcquireActions.emplace();
+            if (missionTaskModel.getCompleteAcquireActions())
+            {
+                for (int i = 0; i < missionTaskModel.getCompleteAcquireActions()->getCount(); ++i)
+                {
+                    *completeAcquireActions += EzAcquireAction((*missionTaskModel.getCompleteAcquireActions())[i]);
+                }
+            }
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzMissionTaskModel() = default;
+    EzMissionTaskModel(const EzMissionTaskModel& ezMissionTaskModel) = default;
+    EzMissionTaskModel(EzMissionTaskModel&& ezMissionTaskModel) = default;
+    ~EzMissionTaskModel() = default;
 
     EzMissionTaskModel(gs2::mission::MissionTaskModel missionTaskModel) :
-        m_Name(missionTaskModel.getName()),
-        m_Metadata(missionTaskModel.getMetadata()),
-        m_CounterName(missionTaskModel.getCounterName()),
-        m_ResetType(missionTaskModel.getResetType()),
-        m_TargetValue(missionTaskModel.getTargetValue() ? *missionTaskModel.getTargetValue() : 0),
-        m_ChallengePeriodEventId(missionTaskModel.getChallengePeriodEventId()),
-        m_PremiseMissionTaskName(missionTaskModel.getPremiseMissionTaskName())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(missionTaskModel)
+    {}
+
+    EzMissionTaskModel& operator=(const EzMissionTaskModel& ezMissionTaskModel) = default;
+    EzMissionTaskModel& operator=(EzMissionTaskModel&& ezMissionTaskModel) = default;
+
+    EzMissionTaskModel deepCopy() const
     {
-        m_CompleteAcquireActions.emplace();
-        if (missionTaskModel.getCompleteAcquireActions())
-        {
-            for (int i = 0; i < missionTaskModel.getCompleteAcquireActions()->getCount(); ++i)
-            {
-                *m_CompleteAcquireActions += EzAcquireAction((*missionTaskModel.getCompleteAcquireActions())[i]);
-            }
-        }
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzMissionTaskModel);
     }
 
     gs2::mission::MissionTaskModel ToModel() const
     {
         gs2::mission::MissionTaskModel missionTaskModel;
-        missionTaskModel.setName(*m_Name);
-        missionTaskModel.setMetadata(*m_Metadata);
-        missionTaskModel.setCounterName(*m_CounterName);
-        missionTaskModel.setResetType(*m_ResetType);
-        missionTaskModel.setTargetValue(*m_TargetValue);
+        missionTaskModel.setName(getName());
+        missionTaskModel.setMetadata(getMetadata());
+        missionTaskModel.setCounterName(getCounterName());
+        missionTaskModel.setResetType(getResetType());
+        missionTaskModel.setTargetValue(getTargetValue());
         {
             gs2::List<gs2::mission::AcquireAction> list;
-            auto& completeAcquireActions = *m_CompleteAcquireActions;
+            auto& completeAcquireActions = getCompleteAcquireActions();
             for (int i = 0; i < completeAcquireActions.getCount(); ++i)
             {
                 list += completeAcquireActions[i].ToModel();
             }
             missionTaskModel.setCompleteAcquireActions(list);
         }
-        missionTaskModel.setChallengePeriodEventId(*m_ChallengePeriodEventId);
-        missionTaskModel.setPremiseMissionTaskName(*m_PremiseMissionTaskName);
+        missionTaskModel.setChallengePeriodEventId(getChallengePeriodEventId());
+        missionTaskModel.setPremiseMissionTaskName(getPremiseMissionTaskName());
         return missionTaskModel;
     }
 
@@ -93,151 +139,111 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
+        return *ensureData().name;
     }
 
-    gs2::StringHolder& getName()
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
+        return *ensureData().metadata;
     }
 
-    const gs2::StringHolder& getMetadata() const
+    const StringHolder& getCounterName() const
     {
-        return *m_Metadata;
+        return *ensureData().counterName;
     }
 
-    gs2::StringHolder& getMetadata()
+    const StringHolder& getResetType() const
     {
-        return *m_Metadata;
-    }
-
-    const gs2::StringHolder& getCounterName() const
-    {
-        return *m_CounterName;
-    }
-
-    gs2::StringHolder& getCounterName()
-    {
-        return *m_CounterName;
-    }
-
-    const gs2::StringHolder& getResetType() const
-    {
-        return *m_ResetType;
-    }
-
-    gs2::StringHolder& getResetType()
-    {
-        return *m_ResetType;
+        return *ensureData().resetType;
     }
 
     Int64 getTargetValue() const
     {
-        return *m_TargetValue;
+        return *ensureData().targetValue;
     }
 
     const List<EzAcquireAction>& getCompleteAcquireActions() const
     {
-        return *m_CompleteAcquireActions;
+        return *ensureData().completeAcquireActions;
     }
 
-    List<EzAcquireAction>& getCompleteAcquireActions()
+    const StringHolder& getChallengePeriodEventId() const
     {
-        return *m_CompleteAcquireActions;
+        return *ensureData().challengePeriodEventId;
     }
 
-    const gs2::StringHolder& getChallengePeriodEventId() const
+    const StringHolder& getPremiseMissionTaskName() const
     {
-        return *m_ChallengePeriodEventId;
-    }
-
-    gs2::StringHolder& getChallengePeriodEventId()
-    {
-        return *m_ChallengePeriodEventId;
-    }
-
-    const gs2::StringHolder& getPremiseMissionTaskName() const
-    {
-        return *m_PremiseMissionTaskName;
-    }
-
-    gs2::StringHolder& getPremiseMissionTaskName()
-    {
-        return *m_PremiseMissionTaskName;
+        return *ensureData().premiseMissionTaskName;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
-    void setCounterName(Char* counterName)
+    void setCounterName(StringHolder counterName)
     {
-        m_CounterName.emplace(counterName);
+        ensureData().counterName = std::move(counterName);
     }
 
-    void setResetType(Char* resetType)
+    void setResetType(StringHolder resetType)
     {
-        m_ResetType.emplace(resetType);
+        ensureData().resetType = std::move(resetType);
     }
 
     void setTargetValue(Int64 targetValue)
     {
-        m_TargetValue = targetValue;
+        ensureData().targetValue = targetValue;
     }
 
-    void setCompleteAcquireActions(const List<EzAcquireAction>& completeAcquireActions)
+    void setCompleteAcquireActions(List<EzAcquireAction> completeAcquireActions)
     {
-        m_CompleteAcquireActions = completeAcquireActions;
+        ensureData().completeAcquireActions = std::move(completeAcquireActions);
     }
 
-    void setCompleteAcquireActions(List<EzAcquireAction>&& completeAcquireActions)
+    void setChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        m_CompleteAcquireActions = std::move(completeAcquireActions);
+        ensureData().challengePeriodEventId = std::move(challengePeriodEventId);
     }
 
-    void setChallengePeriodEventId(Char* challengePeriodEventId)
+    void setPremiseMissionTaskName(StringHolder premiseMissionTaskName)
     {
-        m_ChallengePeriodEventId.emplace(challengePeriodEventId);
+        ensureData().premiseMissionTaskName = std::move(premiseMissionTaskName);
     }
 
-    void setPremiseMissionTaskName(Char* premiseMissionTaskName)
+    EzMissionTaskModel& withName(StringHolder name)
     {
-        m_PremiseMissionTaskName.emplace(premiseMissionTaskName);
-    }
-
-    EzMissionTaskModel& withName(Char* name)
-    {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzMissionTaskModel& withMetadata(Char* metadata)
+    EzMissionTaskModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
-    EzMissionTaskModel& withCounterName(Char* counterName)
+    EzMissionTaskModel& withCounterName(StringHolder counterName)
     {
-        setCounterName(counterName);
+        setCounterName(std::move(counterName));
         return *this;
     }
 
-    EzMissionTaskModel& withResetType(Char* resetType)
+    EzMissionTaskModel& withResetType(StringHolder resetType)
     {
-        setResetType(resetType);
+        setResetType(std::move(resetType));
         return *this;
     }
 
@@ -247,27 +253,21 @@ public:
         return *this;
     }
 
-    EzMissionTaskModel& withCompleteAcquireActions(const List<EzAcquireAction>& completeAcquireActions)
-    {
-        setCompleteAcquireActions(completeAcquireActions);
-        return *this;
-    }
-
-    EzMissionTaskModel& withCompleteAcquireActions(List<EzAcquireAction>&& completeAcquireActions)
+    EzMissionTaskModel& withCompleteAcquireActions(List<EzAcquireAction> completeAcquireActions)
     {
         setCompleteAcquireActions(std::move(completeAcquireActions));
         return *this;
     }
 
-    EzMissionTaskModel& withChallengePeriodEventId(Char* challengePeriodEventId)
+    EzMissionTaskModel& withChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        setChallengePeriodEventId(challengePeriodEventId);
+        setChallengePeriodEventId(std::move(challengePeriodEventId));
         return *this;
     }
 
-    EzMissionTaskModel& withPremiseMissionTaskName(Char* premiseMissionTaskName)
+    EzMissionTaskModel& withPremiseMissionTaskName(StringHolder premiseMissionTaskName)
     {
-        setPremiseMissionTaskName(premiseMissionTaskName);
+        setPremiseMissionTaskName(std::move(premiseMissionTaskName));
         return *this;
     }
 };

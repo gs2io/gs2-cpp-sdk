@@ -27,29 +27,67 @@ namespace gs2 { namespace ez { namespace quest {
 class EzProgress : public gs2::Gs2Object
 {
 private:
-    /** クエスト挑戦 */
-    gs2::optional<StringHolder> m_ProgressId;
-    /** クエストモデル */
-    gs2::optional<StringHolder> m_QuestModelId;
-    /** 乱数シード */
-    gs2::optional<Int64> m_RandomSeed;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** クエスト挑戦 */
+        gs2::optional<StringHolder> progressId;
+        /** クエストモデル */
+        gs2::optional<StringHolder> questModelId;
+        /** 乱数シード */
+        gs2::optional<Int64> randomSeed;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            progressId(data.progressId),
+            questModelId(data.questModelId),
+            randomSeed(data.randomSeed)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::quest::Progress& progress) :
+            progressId(progress.getProgressId()),
+            questModelId(progress.getQuestModelId()),
+            randomSeed(progress.getRandomSeed() ? *progress.getRandomSeed() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzProgress() = default;
+    EzProgress(const EzProgress& ezProgress) = default;
+    EzProgress(EzProgress&& ezProgress) = default;
+    ~EzProgress() = default;
 
     EzProgress(gs2::quest::Progress progress) :
-        m_ProgressId(progress.getProgressId()),
-        m_QuestModelId(progress.getQuestModelId()),
-        m_RandomSeed(progress.getRandomSeed() ? *progress.getRandomSeed() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(progress)
+    {}
+
+    EzProgress& operator=(const EzProgress& ezProgress) = default;
+    EzProgress& operator=(EzProgress&& ezProgress) = default;
+
+    EzProgress deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzProgress);
     }
 
     gs2::quest::Progress ToModel() const
     {
         gs2::quest::Progress progress;
-        progress.setProgressId(*m_ProgressId);
-        progress.setQuestModelId(*m_QuestModelId);
-        progress.setRandomSeed(*m_RandomSeed);
+        progress.setProgressId(getProgressId());
+        progress.setQuestModelId(getQuestModelId());
+        progress.setRandomSeed(getRandomSeed());
         return progress;
     }
 
@@ -57,59 +95,49 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getProgressId() const
+    const StringHolder& getProgressId() const
     {
-        return *m_ProgressId;
+        return *ensureData().progressId;
     }
 
-    gs2::StringHolder& getProgressId()
+    const StringHolder& getQuestModelId() const
     {
-        return *m_ProgressId;
-    }
-
-    const gs2::StringHolder& getQuestModelId() const
-    {
-        return *m_QuestModelId;
-    }
-
-    gs2::StringHolder& getQuestModelId()
-    {
-        return *m_QuestModelId;
+        return *ensureData().questModelId;
     }
 
     Int64 getRandomSeed() const
     {
-        return *m_RandomSeed;
+        return *ensureData().randomSeed;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setProgressId(Char* progressId)
+    void setProgressId(StringHolder progressId)
     {
-        m_ProgressId.emplace(progressId);
+        ensureData().progressId = std::move(progressId);
     }
 
-    void setQuestModelId(Char* questModelId)
+    void setQuestModelId(StringHolder questModelId)
     {
-        m_QuestModelId.emplace(questModelId);
+        ensureData().questModelId = std::move(questModelId);
     }
 
     void setRandomSeed(Int64 randomSeed)
     {
-        m_RandomSeed = randomSeed;
+        ensureData().randomSeed = randomSeed;
     }
 
-    EzProgress& withProgressId(Char* progressId)
+    EzProgress& withProgressId(StringHolder progressId)
     {
-        setProgressId(progressId);
+        setProgressId(std::move(progressId));
         return *this;
     }
 
-    EzProgress& withQuestModelId(Char* questModelId)
+    EzProgress& withQuestModelId(StringHolder questModelId)
     {
-        setQuestModelId(questModelId);
+        setQuestModelId(std::move(questModelId));
         return *this;
     }
 

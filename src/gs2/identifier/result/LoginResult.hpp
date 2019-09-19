@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace identifier
 {
@@ -47,44 +49,41 @@ private:
         /** 有効期間(秒) */
         optional<Int32> expiresIn;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             accessToken(data.accessToken),
             tokenType(data.tokenType),
             expiresIn(data.expiresIn)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            accessToken(std::move(data.accessToken)),
-            tokenType(std::move(data.tokenType)),
-            expiresIn(std::move(data.expiresIn))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "accessToken") == 0) {
+            if (std::strcmp(name_, "accessToken") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->accessToken.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "tokenType") == 0) {
+            else if (std::strcmp(name_, "tokenType") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->tokenType.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "expiresIn") == 0) {
+            else if (std::strcmp(name_, "expiresIn") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->expiresIn = jsonValue.GetInt();
@@ -93,72 +92,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    LoginResult() :
-        m_pData(nullptr)
-    {}
+    LoginResult() = default;
+    LoginResult(const LoginResult& loginResult) = default;
+    LoginResult(LoginResult&& loginResult) = default;
+    ~LoginResult() = default;
 
-    LoginResult(const LoginResult& loginResult) :
-        Gs2Object(loginResult),
-        m_pData(loginResult.m_pData != nullptr ? new Data(*loginResult.m_pData) : nullptr)
-    {}
+    LoginResult& operator=(const LoginResult& loginResult) = default;
+    LoginResult& operator=(LoginResult&& loginResult) = default;
 
-    LoginResult(LoginResult&& loginResult) :
-        Gs2Object(std::move(loginResult)),
-        m_pData(loginResult.m_pData)
+    LoginResult deepCopy() const
     {
-        loginResult.m_pData = nullptr;
-    }
-
-    ~LoginResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    LoginResult& operator=(const LoginResult& loginResult)
-    {
-        Gs2Object::operator=(loginResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*loginResult.m_pData);
-
-        return *this;
-    }
-
-    LoginResult& operator=(LoginResult&& loginResult)
-    {
-        Gs2Object::operator=(std::move(loginResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = loginResult.m_pData;
-        loginResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(LoginResult);
     }
 
     const LoginResult* operator->() const
@@ -185,9 +132,9 @@ public:
      *
      * @param accessToken プロジェクトトークン
      */
-    void setAccessToken(const Char* accessToken)
+    void setAccessToken(StringHolder accessToken)
     {
-        ensureData().accessToken.emplace(accessToken);
+        ensureData().accessToken.emplace(std::move(accessToken));
     }
 
     /**
@@ -205,9 +152,9 @@ public:
      *
      * @param tokenType Bearer
      */
-    void setTokenType(const Char* tokenType)
+    void setTokenType(StringHolder tokenType)
     {
-        ensureData().tokenType.emplace(tokenType);
+        ensureData().tokenType.emplace(std::move(tokenType));
     }
 
     /**

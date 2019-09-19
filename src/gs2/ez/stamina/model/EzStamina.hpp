@@ -27,33 +27,72 @@ namespace gs2 { namespace ez { namespace stamina {
 class EzStamina : public gs2::Gs2Object
 {
 private:
-    /** スタミナモデルの名前 */
-    gs2::optional<StringHolder> m_StaminaName;
-    /** 最終更新時におけるスタミナ値 */
-    gs2::optional<Int32> m_Value;
-    /** スタミナの最大値 */
-    gs2::optional<Int32> m_MaxValue;
-    /** 次回スタミナが回復する時間 */
-    gs2::optional<Int64> m_NextRecoverAt;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** スタミナモデルの名前 */
+        gs2::optional<StringHolder> staminaName;
+        /** 最終更新時におけるスタミナ値 */
+        gs2::optional<Int32> value;
+        /** スタミナの最大値 */
+        gs2::optional<Int32> maxValue;
+        /** 次回スタミナが回復する時間 */
+        gs2::optional<Int64> nextRecoverAt;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            staminaName(data.staminaName),
+            value(data.value),
+            maxValue(data.maxValue),
+            nextRecoverAt(data.nextRecoverAt)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::stamina::Stamina& stamina) :
+            staminaName(stamina.getStaminaName()),
+            value(stamina.getValue() ? *stamina.getValue() : 0),
+            maxValue(stamina.getMaxValue() ? *stamina.getMaxValue() : 0),
+            nextRecoverAt(stamina.getNextRecoverAt() ? *stamina.getNextRecoverAt() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzStamina() = default;
+    EzStamina(const EzStamina& ezStamina) = default;
+    EzStamina(EzStamina&& ezStamina) = default;
+    ~EzStamina() = default;
 
     EzStamina(gs2::stamina::Stamina stamina) :
-        m_StaminaName(stamina.getStaminaName()),
-        m_Value(stamina.getValue() ? *stamina.getValue() : 0),
-        m_MaxValue(stamina.getMaxValue() ? *stamina.getMaxValue() : 0),
-        m_NextRecoverAt(stamina.getNextRecoverAt() ? *stamina.getNextRecoverAt() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(stamina)
+    {}
+
+    EzStamina& operator=(const EzStamina& ezStamina) = default;
+    EzStamina& operator=(EzStamina&& ezStamina) = default;
+
+    EzStamina deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzStamina);
     }
 
     gs2::stamina::Stamina ToModel() const
     {
         gs2::stamina::Stamina stamina;
-        stamina.setStaminaName(*m_StaminaName);
-        stamina.setValue(*m_Value);
-        stamina.setMaxValue(*m_MaxValue);
-        stamina.setNextRecoverAt(*m_NextRecoverAt);
+        stamina.setStaminaName(getStaminaName());
+        stamina.setValue(getValue());
+        stamina.setMaxValue(getMaxValue());
+        stamina.setNextRecoverAt(getNextRecoverAt());
         return stamina;
     }
 
@@ -61,58 +100,53 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getStaminaName() const
+    const StringHolder& getStaminaName() const
     {
-        return *m_StaminaName;
-    }
-
-    gs2::StringHolder& getStaminaName()
-    {
-        return *m_StaminaName;
+        return *ensureData().staminaName;
     }
 
     Int32 getValue() const
     {
-        return *m_Value;
+        return *ensureData().value;
     }
 
     Int32 getMaxValue() const
     {
-        return *m_MaxValue;
+        return *ensureData().maxValue;
     }
 
     Int64 getNextRecoverAt() const
     {
-        return *m_NextRecoverAt;
+        return *ensureData().nextRecoverAt;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setStaminaName(Char* staminaName)
+    void setStaminaName(StringHolder staminaName)
     {
-        m_StaminaName.emplace(staminaName);
+        ensureData().staminaName = std::move(staminaName);
     }
 
     void setValue(Int32 value)
     {
-        m_Value = value;
+        ensureData().value = value;
     }
 
     void setMaxValue(Int32 maxValue)
     {
-        m_MaxValue = maxValue;
+        ensureData().maxValue = maxValue;
     }
 
     void setNextRecoverAt(Int64 nextRecoverAt)
     {
-        m_NextRecoverAt = nextRecoverAt;
+        ensureData().nextRecoverAt = nextRecoverAt;
     }
 
-    EzStamina& withStaminaName(Char* staminaName)
+    EzStamina& withStaminaName(StringHolder staminaName)
     {
-        setStaminaName(staminaName);
+        setStaminaName(std::move(staminaName));
         return *this;
     }
 

@@ -18,6 +18,7 @@
 #define GS2_MISSION_MODEL_MODEL_HPP_
 
 #include <gs2/core/common.hpp>
+#include "notification.hpp"
 #include "CounterModel.hpp"
 #include "GitHubCheckoutSetting.hpp"
 #include "NotificationSetting.hpp"

@@ -28,22 +28,61 @@ namespace gs2 { namespace ez { namespace lottery {
 class EzDrawnPrize : public gs2::Gs2Object
 {
 private:
-    /** 入手アクションのリスト */
-    gs2::optional<List<EzAcquireAction>> m_AcquireActions;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 入手アクションのリスト */
+        gs2::optional<List<EzAcquireAction>> acquireActions;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            if (data.acquireActions)
+            {
+                acquireActions = data.acquireActions->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::lottery::DrawnPrize& drawnPrize)
+        {
+            acquireActions.emplace();
+            if (drawnPrize.getAcquireActions())
+            {
+                for (int i = 0; i < drawnPrize.getAcquireActions()->getCount(); ++i)
+                {
+                    *acquireActions += EzAcquireAction((*drawnPrize.getAcquireActions())[i]);
+                }
+            }
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzDrawnPrize() = default;
+    EzDrawnPrize(const EzDrawnPrize& ezDrawnPrize) = default;
+    EzDrawnPrize(EzDrawnPrize&& ezDrawnPrize) = default;
+    ~EzDrawnPrize() = default;
 
-    EzDrawnPrize(gs2::lottery::DrawnPrize drawnPrize)
+    EzDrawnPrize(gs2::lottery::DrawnPrize drawnPrize) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(drawnPrize)
+    {}
+
+    EzDrawnPrize& operator=(const EzDrawnPrize& ezDrawnPrize) = default;
+    EzDrawnPrize& operator=(EzDrawnPrize&& ezDrawnPrize) = default;
+
+    EzDrawnPrize deepCopy() const
     {
-        m_AcquireActions.emplace();
-        if (drawnPrize.getAcquireActions())
-        {
-            for (int i = 0; i < drawnPrize.getAcquireActions()->getCount(); ++i)
-            {
-                *m_AcquireActions += EzAcquireAction((*drawnPrize.getAcquireActions())[i]);
-            }
-        }
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDrawnPrize);
     }
 
     gs2::lottery::DrawnPrize ToModel() const
@@ -51,7 +90,7 @@ public:
         gs2::lottery::DrawnPrize drawnPrize;
         {
             gs2::List<gs2::lottery::AcquireAction> list;
-            auto& acquireActions = *m_AcquireActions;
+            auto& acquireActions = getAcquireActions();
             for (int i = 0; i < acquireActions.getCount(); ++i)
             {
                 list += acquireActions[i].ToModel();
@@ -67,35 +106,19 @@ public:
 
     const List<EzAcquireAction>& getAcquireActions() const
     {
-        return *m_AcquireActions;
-    }
-
-    List<EzAcquireAction>& getAcquireActions()
-    {
-        return *m_AcquireActions;
+        return *ensureData().acquireActions;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setAcquireActions(const List<EzAcquireAction>& acquireActions)
+    void setAcquireActions(List<EzAcquireAction> acquireActions)
     {
-        m_AcquireActions = acquireActions;
+        ensureData().acquireActions = std::move(acquireActions);
     }
 
-    void setAcquireActions(List<EzAcquireAction>&& acquireActions)
-    {
-        m_AcquireActions = std::move(acquireActions);
-    }
-
-    EzDrawnPrize& withAcquireActions(const List<EzAcquireAction>& acquireActions)
-    {
-        setAcquireActions(acquireActions);
-        return *this;
-    }
-
-    EzDrawnPrize& withAcquireActions(List<EzAcquireAction>&& acquireActions)
+    EzDrawnPrize& withAcquireActions(List<EzAcquireAction> acquireActions)
     {
         setAcquireActions(std::move(acquireActions));
         return *this;

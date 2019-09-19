@@ -27,25 +27,65 @@ namespace gs2 { namespace ez { namespace experience {
 class EzThreshold : public gs2::Gs2Object
 {
 private:
-    /** ランクアップ閾値のメタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** ランクアップ経験値閾値リスト */
-    gs2::optional<List<Int64>> m_Values;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ランクアップ閾値のメタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** ランクアップ経験値閾値リスト */
+        gs2::optional<List<Int64>> values;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            metadata(data.metadata)
+        {
+            if (data.values)
+            {
+                values = data.values->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::experience::Threshold& threshold) :
+            metadata(threshold.getMetadata()),
+            values(threshold.getValues())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzThreshold() = default;
+    EzThreshold(const EzThreshold& ezThreshold) = default;
+    EzThreshold(EzThreshold&& ezThreshold) = default;
+    ~EzThreshold() = default;
 
     EzThreshold(gs2::experience::Threshold threshold) :
-        m_Metadata(threshold.getMetadata()),
-        m_Values(threshold.getValues())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(threshold)
+    {}
+
+    EzThreshold& operator=(const EzThreshold& ezThreshold) = default;
+    EzThreshold& operator=(EzThreshold&& ezThreshold) = default;
+
+    EzThreshold deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzThreshold);
     }
 
     gs2::experience::Threshold ToModel() const
     {
         gs2::experience::Threshold threshold;
-        threshold.setMetadata(*m_Metadata);
-        threshold.setValues(*m_Values);
+        threshold.setMetadata(getMetadata());
+        threshold.setValues(getValues());
         return threshold;
     }
 
@@ -53,58 +93,37 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getMetadata() const
+    const StringHolder& getMetadata() const
     {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
+        return *ensureData().metadata;
     }
 
     const List<Int64>& getValues() const
     {
-        return *m_Values;
-    }
-
-    List<Int64>& getValues()
-    {
-        return *m_Values;
+        return *ensureData().values;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
-    void setValues(const List<Int64>& values)
+    void setValues(List<Int64> values)
     {
-        m_Values = values;
+        ensureData().values = std::move(values);
     }
 
-    void setValues(List<Int64>&& values)
+    EzThreshold& withMetadata(StringHolder metadata)
     {
-        m_Values = std::move(values);
-    }
-
-    EzThreshold& withMetadata(Char* metadata)
-    {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
-    EzThreshold& withValues(const List<Int64>& values)
-    {
-        setValues(values);
-        return *this;
-    }
-
-    EzThreshold& withValues(List<Int64>&& values)
+    EzThreshold& withValues(List<Int64> values)
     {
         setValues(std::move(values));
         return *this;

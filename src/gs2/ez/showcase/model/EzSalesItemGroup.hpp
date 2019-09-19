@@ -28,38 +28,79 @@ namespace gs2 { namespace ez { namespace showcase {
 class EzSalesItemGroup : public gs2::Gs2Object
 {
 private:
-    /** 商品グループ名 */
-    gs2::optional<StringHolder> m_Name;
-    /** メタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** 商品リスト */
-    gs2::optional<List<EzSalesItem>> m_SalesItems;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 商品グループ名 */
+        gs2::optional<StringHolder> name;
+        /** メタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** 商品リスト */
+        gs2::optional<List<EzSalesItem>> salesItems;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            metadata(data.metadata)
+        {
+            if (data.salesItems)
+            {
+                salesItems = data.salesItems->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::showcase::SalesItemGroup& salesItemGroup) :
+            name(salesItemGroup.getName()),
+            metadata(salesItemGroup.getMetadata())
+        {
+            salesItems.emplace();
+            if (salesItemGroup.getSalesItems())
+            {
+                for (int i = 0; i < salesItemGroup.getSalesItems()->getCount(); ++i)
+                {
+                    *salesItems += EzSalesItem((*salesItemGroup.getSalesItems())[i]);
+                }
+            }
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzSalesItemGroup() = default;
+    EzSalesItemGroup(const EzSalesItemGroup& ezSalesItemGroup) = default;
+    EzSalesItemGroup(EzSalesItemGroup&& ezSalesItemGroup) = default;
+    ~EzSalesItemGroup() = default;
 
     EzSalesItemGroup(gs2::showcase::SalesItemGroup salesItemGroup) :
-        m_Name(salesItemGroup.getName()),
-        m_Metadata(salesItemGroup.getMetadata())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(salesItemGroup)
+    {}
+
+    EzSalesItemGroup& operator=(const EzSalesItemGroup& ezSalesItemGroup) = default;
+    EzSalesItemGroup& operator=(EzSalesItemGroup&& ezSalesItemGroup) = default;
+
+    EzSalesItemGroup deepCopy() const
     {
-        m_SalesItems.emplace();
-        if (salesItemGroup.getSalesItems())
-        {
-            for (int i = 0; i < salesItemGroup.getSalesItems()->getCount(); ++i)
-            {
-                *m_SalesItems += EzSalesItem((*salesItemGroup.getSalesItems())[i]);
-            }
-        }
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzSalesItemGroup);
     }
 
     gs2::showcase::SalesItemGroup ToModel() const
     {
         gs2::showcase::SalesItemGroup salesItemGroup;
-        salesItemGroup.setName(*m_Name);
-        salesItemGroup.setMetadata(*m_Metadata);
+        salesItemGroup.setName(getName());
+        salesItemGroup.setMetadata(getMetadata());
         {
             gs2::List<gs2::showcase::SalesItem> list;
-            auto& salesItems = *m_SalesItems;
+            auto& salesItems = getSalesItems();
             for (int i = 0; i < salesItems.getCount(); ++i)
             {
                 list += salesItems[i].ToModel();
@@ -73,79 +114,53 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
+        return *ensureData().name;
     }
 
-    gs2::StringHolder& getName()
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
-    }
-
-    const gs2::StringHolder& getMetadata() const
-    {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
+        return *ensureData().metadata;
     }
 
     const List<EzSalesItem>& getSalesItems() const
     {
-        return *m_SalesItems;
-    }
-
-    List<EzSalesItem>& getSalesItems()
-    {
-        return *m_SalesItems;
+        return *ensureData().salesItems;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
-    void setSalesItems(const List<EzSalesItem>& salesItems)
+    void setSalesItems(List<EzSalesItem> salesItems)
     {
-        m_SalesItems = salesItems;
+        ensureData().salesItems = std::move(salesItems);
     }
 
-    void setSalesItems(List<EzSalesItem>&& salesItems)
+    EzSalesItemGroup& withName(StringHolder name)
     {
-        m_SalesItems = std::move(salesItems);
-    }
-
-    EzSalesItemGroup& withName(Char* name)
-    {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzSalesItemGroup& withMetadata(Char* metadata)
+    EzSalesItemGroup& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
-    EzSalesItemGroup& withSalesItems(const List<EzSalesItem>& salesItems)
-    {
-        setSalesItems(salesItems);
-        return *this;
-    }
-
-    EzSalesItemGroup& withSalesItems(List<EzSalesItem>&& salesItems)
+    EzSalesItemGroup& withSalesItems(List<EzSalesItem> salesItems)
     {
         setSalesItems(std::move(salesItems));
         return *this;

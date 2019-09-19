@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace script {
@@ -56,8 +58,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -68,64 +69,62 @@ private:
             script(data.script),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            scriptId(std::move(data.scriptId)),
-            ownerId(std::move(data.ownerId)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            script(std::move(data.script)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "scriptId") == 0) {
+            if (std::strcmp(name_, "scriptId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->scriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "script") == 0) {
+            else if (std::strcmp(name_, "script") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->script.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -134,72 +133,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Script() :
-        m_pData(nullptr)
-    {}
+    Script() = default;
+    Script(const Script& script) = default;
+    Script(Script&& script) = default;
+    ~Script() = default;
 
-    Script(const Script& script) :
-        Gs2Object(script),
-        m_pData(script.m_pData != nullptr ? new Data(*script.m_pData) : nullptr)
-    {}
+    Script& operator=(const Script& script) = default;
+    Script& operator=(Script&& script) = default;
 
-    Script(Script&& script) :
-        Gs2Object(std::move(script)),
-        m_pData(script.m_pData)
+    Script deepCopy() const
     {
-        script.m_pData = nullptr;
-    }
-
-    ~Script()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Script& operator=(const Script& script)
-    {
-        Gs2Object::operator=(script);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*script.m_pData);
-
-        return *this;
-    }
-
-    Script& operator=(Script&& script)
-    {
-        Gs2Object::operator=(std::move(script));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = script.m_pData;
-        script.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Script);
     }
 
     const Script* operator->() const
@@ -226,9 +173,9 @@ public:
      *
      * @param scriptId スクリプト
      */
-    void setScriptId(const Char* scriptId)
+    void setScriptId(StringHolder scriptId)
     {
-        ensureData().scriptId.emplace(scriptId);
+        ensureData().scriptId.emplace(std::move(scriptId));
     }
 
     /**
@@ -236,9 +183,9 @@ public:
      *
      * @param scriptId スクリプト
      */
-    Script& withScriptId(const Char* scriptId)
+    Script& withScriptId(StringHolder scriptId)
     {
-        setScriptId(scriptId);
+        setScriptId(std::move(scriptId));
         return *this;
     }
 
@@ -257,9 +204,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
@@ -267,9 +214,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    Script& withOwnerId(const Char* ownerId)
+    Script& withOwnerId(StringHolder ownerId)
     {
-        setOwnerId(ownerId);
+        setOwnerId(std::move(ownerId));
         return *this;
     }
 
@@ -288,9 +235,9 @@ public:
      *
      * @param name スクリプト名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -298,9 +245,9 @@ public:
      *
      * @param name スクリプト名
      */
-    Script& withName(const Char* name)
+    Script& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -319,9 +266,9 @@ public:
      *
      * @param description 説明文
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -329,9 +276,9 @@ public:
      *
      * @param description 説明文
      */
-    Script& withDescription(const Char* description)
+    Script& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -350,9 +297,9 @@ public:
      *
      * @param script Luaスクリプト
      */
-    void setScript(const Char* script)
+    void setScript(StringHolder script)
     {
-        ensureData().script.emplace(script);
+        ensureData().script.emplace(std::move(script));
     }
 
     /**
@@ -360,9 +307,9 @@ public:
      *
      * @param script Luaスクリプト
      */
-    Script& withScript(const Char* script)
+    Script& withScript(StringHolder script)
     {
-        setScript(script);
+        setScript(std::move(script));
         return *this;
     }
 
@@ -439,7 +386,7 @@ inline bool operator!=(const Script& lhs, const Script& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

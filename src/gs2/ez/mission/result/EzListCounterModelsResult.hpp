@@ -27,19 +27,57 @@ namespace gs2 { namespace ez { namespace mission {
 class EzListCounterModelsResult : public gs2::Gs2Object
 {
 private:
-    /** カウンターの種類のリスト */
-    List<EzCounterModel> m_Items;
-
-public:
-    EzListCounterModelsResult(const gs2::mission::DescribeCounterModelsResult& result)
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** カウンターの種類のリスト */
+        List<EzCounterModel> items;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::mission::DescribeCounterModelsResult& describeCounterModelsResult)
+        {
             {
-                m_Items += EzCounterModel(list[i]);
+                auto& list = *describeCounterModelsResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzCounterModel(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListCounterModelsResult() = default;
+    EzListCounterModelsResult(const EzListCounterModelsResult& result) = default;
+    EzListCounterModelsResult(EzListCounterModelsResult&& result) = default;
+    ~EzListCounterModelsResult() = default;
+
+    EzListCounterModelsResult(gs2::mission::DescribeCounterModelsResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListCounterModelsResult& operator=(const EzListCounterModelsResult& result) = default;
+    EzListCounterModelsResult& operator=(EzListCounterModelsResult&& result) = default;
+
+    EzListCounterModelsResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListCounterModelsResult);
     }
 
     static bool isConvertible(const gs2::mission::DescribeCounterModelsResult& result)
@@ -54,12 +92,7 @@ public:
 
     const List<EzCounterModel>& getItems() const
     {
-        return m_Items;
-    }
-
-    List<EzCounterModel>& getItems()
-    {
-        return m_Items;
+        return ensureData().items;
     }
 };
 

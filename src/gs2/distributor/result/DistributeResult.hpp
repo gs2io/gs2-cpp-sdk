@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace distributor
 {
@@ -47,32 +49,30 @@ private:
         /** レスポンス内容 */
         optional<StringHolder> result;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            distributeResource(data.distributeResource),
             inboxNamespaceId(data.inboxNamespaceId),
             result(data.result)
-        {}
+        {
+            if (data.distributeResource)
+            {
+                distributeResource = data.distributeResource->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            distributeResource(std::move(data.distributeResource)),
-            inboxNamespaceId(std::move(data.inboxNamespaceId)),
-            result(std::move(data.result))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "distributeResource") == 0) {
+            if (std::strcmp(name_, "distributeResource") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -80,13 +80,15 @@ private:
                     detail::json::JsonParser::parse(&this->distributeResource->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "inboxNamespaceId") == 0) {
+            else if (std::strcmp(name_, "inboxNamespaceId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->inboxNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "result") == 0) {
+            else if (std::strcmp(name_, "result") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->result.emplace(jsonValue.GetString());
@@ -95,72 +97,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DistributeResult() :
-        m_pData(nullptr)
-    {}
+    DistributeResult() = default;
+    DistributeResult(const DistributeResult& distributeResult) = default;
+    DistributeResult(DistributeResult&& distributeResult) = default;
+    ~DistributeResult() = default;
 
-    DistributeResult(const DistributeResult& distributeResult) :
-        Gs2Object(distributeResult),
-        m_pData(distributeResult.m_pData != nullptr ? new Data(*distributeResult.m_pData) : nullptr)
-    {}
+    DistributeResult& operator=(const DistributeResult& distributeResult) = default;
+    DistributeResult& operator=(DistributeResult&& distributeResult) = default;
 
-    DistributeResult(DistributeResult&& distributeResult) :
-        Gs2Object(std::move(distributeResult)),
-        m_pData(distributeResult.m_pData)
+    DistributeResult deepCopy() const
     {
-        distributeResult.m_pData = nullptr;
-    }
-
-    ~DistributeResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DistributeResult& operator=(const DistributeResult& distributeResult)
-    {
-        Gs2Object::operator=(distributeResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*distributeResult.m_pData);
-
-        return *this;
-    }
-
-    DistributeResult& operator=(DistributeResult&& distributeResult)
-    {
-        Gs2Object::operator=(std::move(distributeResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = distributeResult.m_pData;
-        distributeResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DistributeResult);
     }
 
     const DistributeResult* operator->() const
@@ -187,9 +137,9 @@ public:
      *
      * @param distributeResource 処理した DistributeResource
      */
-    void setDistributeResource(const DistributeResource& distributeResource)
+    void setDistributeResource(DistributeResource distributeResource)
     {
-        ensureData().distributeResource.emplace(distributeResource);
+        ensureData().distributeResource.emplace(std::move(distributeResource));
     }
 
     /**
@@ -207,9 +157,9 @@ public:
      *
      * @param inboxNamespaceId 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
      */
-    void setInboxNamespaceId(const Char* inboxNamespaceId)
+    void setInboxNamespaceId(StringHolder inboxNamespaceId)
     {
-        ensureData().inboxNamespaceId.emplace(inboxNamespaceId);
+        ensureData().inboxNamespaceId.emplace(std::move(inboxNamespaceId));
     }
 
     /**
@@ -227,9 +177,9 @@ public:
      *
      * @param result レスポンス内容
      */
-    void setResult(const Char* result)
+    void setResult(StringHolder result)
     {
-        ensureData().result.emplace(result);
+        ensureData().result.emplace(std::move(result));
     }
 
 

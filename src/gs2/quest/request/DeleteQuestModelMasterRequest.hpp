@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2QuestConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace quest
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** カテゴリ名 */
@@ -48,100 +50,48 @@ private:
         /** クエスト名 */
         optional<StringHolder> questName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             questGroupName(data.questGroupName),
             questName(data.questName)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            questGroupName(std::move(data.questGroupName)),
-            questName(std::move(data.questName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    DeleteQuestModelMasterRequest() :
-        m_pData(nullptr)
-    {}
+    DeleteQuestModelMasterRequest() = default;
+    DeleteQuestModelMasterRequest(const DeleteQuestModelMasterRequest& deleteQuestModelMasterRequest) = default;
+    DeleteQuestModelMasterRequest(DeleteQuestModelMasterRequest&& deleteQuestModelMasterRequest) = default;
+    ~DeleteQuestModelMasterRequest() GS2_OVERRIDE = default;
 
-    DeleteQuestModelMasterRequest(const DeleteQuestModelMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Quest(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    DeleteQuestModelMasterRequest& operator=(const DeleteQuestModelMasterRequest& deleteQuestModelMasterRequest) = default;
+    DeleteQuestModelMasterRequest& operator=(DeleteQuestModelMasterRequest&& deleteQuestModelMasterRequest) = default;
 
-    DeleteQuestModelMasterRequest(DeleteQuestModelMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Quest(std::move(obj)),
-        m_pData(obj.m_pData)
+    DeleteQuestModelMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~DeleteQuestModelMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DeleteQuestModelMasterRequest& operator=(const DeleteQuestModelMasterRequest& deleteQuestModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(deleteQuestModelMasterRequest);
-        Gs2Quest::operator=(deleteQuestModelMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*deleteQuestModelMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    DeleteQuestModelMasterRequest& operator=(DeleteQuestModelMasterRequest&& deleteQuestModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(deleteQuestModelMasterRequest));
-        Gs2Quest::operator=(std::move(deleteQuestModelMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = deleteQuestModelMasterRequest.m_pData;
-        deleteQuestModelMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteQuestModelMasterRequest);
     }
 
     const DeleteQuestModelMasterRequest* operator->() const
@@ -169,9 +119,9 @@ public:
      *
      * @param namespaceName カテゴリ名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -179,9 +129,9 @@ public:
      *
      * @param namespaceName カテゴリ名
      */
-    DeleteQuestModelMasterRequest& withNamespaceName(const Char* namespaceName)
+    DeleteQuestModelMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -200,9 +150,9 @@ public:
      *
      * @param questGroupName クエストグループモデル名
      */
-    void setQuestGroupName(const Char* questGroupName)
+    void setQuestGroupName(StringHolder questGroupName)
     {
-        ensureData().questGroupName.emplace(questGroupName);
+        ensureData().questGroupName.emplace(std::move(questGroupName));
     }
 
     /**
@@ -210,9 +160,9 @@ public:
      *
      * @param questGroupName クエストグループモデル名
      */
-    DeleteQuestModelMasterRequest& withQuestGroupName(const Char* questGroupName)
+    DeleteQuestModelMasterRequest& withQuestGroupName(StringHolder questGroupName)
     {
-        ensureData().questGroupName.emplace(questGroupName);
+        ensureData().questGroupName.emplace(std::move(questGroupName));
         return *this;
     }
 
@@ -231,9 +181,9 @@ public:
      *
      * @param questName クエスト名
      */
-    void setQuestName(const Char* questName)
+    void setQuestName(StringHolder questName)
     {
-        ensureData().questName.emplace(questName);
+        ensureData().questName.emplace(std::move(questName));
     }
 
     /**
@@ -241,9 +191,9 @@ public:
      *
      * @param questName クエスト名
      */
-    DeleteQuestModelMasterRequest& withQuestName(const Char* questName)
+    DeleteQuestModelMasterRequest& withQuestName(StringHolder questName)
     {
-        ensureData().questName.emplace(questName);
+        ensureData().questName.emplace(std::move(questName));
         return *this;
     }
 
@@ -254,33 +204,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    DeleteQuestModelMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    DeleteQuestModelMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    DeleteQuestModelMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    DeleteQuestModelMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -289,9 +215,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    DeleteQuestModelMasterRequest& withRequestId(const Char* gs2RequestId)
+    DeleteQuestModelMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

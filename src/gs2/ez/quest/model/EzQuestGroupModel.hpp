@@ -28,48 +28,90 @@ namespace gs2 { namespace ez { namespace quest {
 class EzQuestGroupModel : public gs2::Gs2Object
 {
 private:
-    /** クエストグループ名 */
-    gs2::optional<StringHolder> m_Name;
-    /** クエストグループのメタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** グループに属するクエスト */
-    gs2::optional<List<EzQuestModel>> m_Quests;
-    /** 挑戦可能な期間を指定するイベントマスター のGRN */
-    gs2::optional<StringHolder> m_ChallengePeriodEventId;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** クエストグループ名 */
+        gs2::optional<StringHolder> name;
+        /** クエストグループのメタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** グループに属するクエスト */
+        gs2::optional<List<EzQuestModel>> quests;
+        /** 挑戦可能な期間を指定するイベントマスター のGRN */
+        gs2::optional<StringHolder> challengePeriodEventId;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            metadata(data.metadata),
+            challengePeriodEventId(data.challengePeriodEventId)
+        {
+            if (data.quests)
+            {
+                quests = data.quests->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::quest::QuestGroupModel& questGroupModel) :
+            name(questGroupModel.getName()),
+            metadata(questGroupModel.getMetadata()),
+            challengePeriodEventId(questGroupModel.getChallengePeriodEventId())
+        {
+            quests.emplace();
+            if (questGroupModel.getQuests())
+            {
+                for (int i = 0; i < questGroupModel.getQuests()->getCount(); ++i)
+                {
+                    *quests += EzQuestModel((*questGroupModel.getQuests())[i]);
+                }
+            }
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzQuestGroupModel() = default;
+    EzQuestGroupModel(const EzQuestGroupModel& ezQuestGroupModel) = default;
+    EzQuestGroupModel(EzQuestGroupModel&& ezQuestGroupModel) = default;
+    ~EzQuestGroupModel() = default;
 
     EzQuestGroupModel(gs2::quest::QuestGroupModel questGroupModel) :
-        m_Name(questGroupModel.getName()),
-        m_Metadata(questGroupModel.getMetadata()),
-        m_ChallengePeriodEventId(questGroupModel.getChallengePeriodEventId())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(questGroupModel)
+    {}
+
+    EzQuestGroupModel& operator=(const EzQuestGroupModel& ezQuestGroupModel) = default;
+    EzQuestGroupModel& operator=(EzQuestGroupModel&& ezQuestGroupModel) = default;
+
+    EzQuestGroupModel deepCopy() const
     {
-        m_Quests.emplace();
-        if (questGroupModel.getQuests())
-        {
-            for (int i = 0; i < questGroupModel.getQuests()->getCount(); ++i)
-            {
-                *m_Quests += EzQuestModel((*questGroupModel.getQuests())[i]);
-            }
-        }
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzQuestGroupModel);
     }
 
     gs2::quest::QuestGroupModel ToModel() const
     {
         gs2::quest::QuestGroupModel questGroupModel;
-        questGroupModel.setName(*m_Name);
-        questGroupModel.setMetadata(*m_Metadata);
+        questGroupModel.setName(getName());
+        questGroupModel.setMetadata(getMetadata());
         {
             gs2::List<gs2::quest::QuestModel> list;
-            auto& quests = *m_Quests;
+            auto& quests = getQuests();
             for (int i = 0; i < quests.getCount(); ++i)
             {
                 list += quests[i].ToModel();
             }
             questGroupModel.setQuests(list);
         }
-        questGroupModel.setChallengePeriodEventId(*m_ChallengePeriodEventId);
+        questGroupModel.setChallengePeriodEventId(getChallengePeriodEventId());
         return questGroupModel;
     }
 
@@ -77,102 +119,71 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
+        return *ensureData().name;
     }
 
-    gs2::StringHolder& getName()
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
-    }
-
-    const gs2::StringHolder& getMetadata() const
-    {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
+        return *ensureData().metadata;
     }
 
     const List<EzQuestModel>& getQuests() const
     {
-        return *m_Quests;
+        return *ensureData().quests;
     }
 
-    List<EzQuestModel>& getQuests()
+    const StringHolder& getChallengePeriodEventId() const
     {
-        return *m_Quests;
-    }
-
-    const gs2::StringHolder& getChallengePeriodEventId() const
-    {
-        return *m_ChallengePeriodEventId;
-    }
-
-    gs2::StringHolder& getChallengePeriodEventId()
-    {
-        return *m_ChallengePeriodEventId;
+        return *ensureData().challengePeriodEventId;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
-    void setQuests(const List<EzQuestModel>& quests)
+    void setQuests(List<EzQuestModel> quests)
     {
-        m_Quests = quests;
+        ensureData().quests = std::move(quests);
     }
 
-    void setQuests(List<EzQuestModel>&& quests)
+    void setChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        m_Quests = std::move(quests);
+        ensureData().challengePeriodEventId = std::move(challengePeriodEventId);
     }
 
-    void setChallengePeriodEventId(Char* challengePeriodEventId)
+    EzQuestGroupModel& withName(StringHolder name)
     {
-        m_ChallengePeriodEventId.emplace(challengePeriodEventId);
-    }
-
-    EzQuestGroupModel& withName(Char* name)
-    {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzQuestGroupModel& withMetadata(Char* metadata)
+    EzQuestGroupModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
-    EzQuestGroupModel& withQuests(const List<EzQuestModel>& quests)
-    {
-        setQuests(quests);
-        return *this;
-    }
-
-    EzQuestGroupModel& withQuests(List<EzQuestModel>&& quests)
+    EzQuestGroupModel& withQuests(List<EzQuestModel> quests)
     {
         setQuests(std::move(quests));
         return *this;
     }
 
-    EzQuestGroupModel& withChallengePeriodEventId(Char* challengePeriodEventId)
+    EzQuestGroupModel& withChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        setChallengePeriodEventId(challengePeriodEventId);
+        setChallengePeriodEventId(std::move(challengePeriodEventId));
         return *this;
     }
 };

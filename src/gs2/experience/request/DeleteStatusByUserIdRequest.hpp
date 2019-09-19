@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ExperienceConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace experience
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -52,104 +54,50 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             userId(data.userId),
             experienceName(data.experienceName),
             propertyId(data.propertyId),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            userId(std::move(data.userId)),
-            experienceName(std::move(data.experienceName)),
-            propertyId(std::move(data.propertyId)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    DeleteStatusByUserIdRequest() :
-        m_pData(nullptr)
-    {}
+    DeleteStatusByUserIdRequest() = default;
+    DeleteStatusByUserIdRequest(const DeleteStatusByUserIdRequest& deleteStatusByUserIdRequest) = default;
+    DeleteStatusByUserIdRequest(DeleteStatusByUserIdRequest&& deleteStatusByUserIdRequest) = default;
+    ~DeleteStatusByUserIdRequest() GS2_OVERRIDE = default;
 
-    DeleteStatusByUserIdRequest(const DeleteStatusByUserIdRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Experience(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    DeleteStatusByUserIdRequest& operator=(const DeleteStatusByUserIdRequest& deleteStatusByUserIdRequest) = default;
+    DeleteStatusByUserIdRequest& operator=(DeleteStatusByUserIdRequest&& deleteStatusByUserIdRequest) = default;
 
-    DeleteStatusByUserIdRequest(DeleteStatusByUserIdRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Experience(std::move(obj)),
-        m_pData(obj.m_pData)
+    DeleteStatusByUserIdRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~DeleteStatusByUserIdRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DeleteStatusByUserIdRequest& operator=(const DeleteStatusByUserIdRequest& deleteStatusByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(deleteStatusByUserIdRequest);
-        Gs2Experience::operator=(deleteStatusByUserIdRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*deleteStatusByUserIdRequest.m_pData);
-
-        return *this;
-    }
-
-    DeleteStatusByUserIdRequest& operator=(DeleteStatusByUserIdRequest&& deleteStatusByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(deleteStatusByUserIdRequest));
-        Gs2Experience::operator=(std::move(deleteStatusByUserIdRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = deleteStatusByUserIdRequest.m_pData;
-        deleteStatusByUserIdRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteStatusByUserIdRequest);
     }
 
     const DeleteStatusByUserIdRequest* operator->() const
@@ -177,9 +125,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -187,9 +135,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    DeleteStatusByUserIdRequest& withNamespaceName(const Char* namespaceName)
+    DeleteStatusByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -208,9 +156,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -218,9 +166,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    DeleteStatusByUserIdRequest& withUserId(const Char* userId)
+    DeleteStatusByUserIdRequest& withUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
         return *this;
     }
 
@@ -239,9 +187,9 @@ public:
      *
      * @param experienceName 経験値の種類の名前
      */
-    void setExperienceName(const Char* experienceName)
+    void setExperienceName(StringHolder experienceName)
     {
-        ensureData().experienceName.emplace(experienceName);
+        ensureData().experienceName.emplace(std::move(experienceName));
     }
 
     /**
@@ -249,9 +197,9 @@ public:
      *
      * @param experienceName 経験値の種類の名前
      */
-    DeleteStatusByUserIdRequest& withExperienceName(const Char* experienceName)
+    DeleteStatusByUserIdRequest& withExperienceName(StringHolder experienceName)
     {
-        ensureData().experienceName.emplace(experienceName);
+        ensureData().experienceName.emplace(std::move(experienceName));
         return *this;
     }
 
@@ -270,9 +218,9 @@ public:
      *
      * @param propertyId プロパティID
      */
-    void setPropertyId(const Char* propertyId)
+    void setPropertyId(StringHolder propertyId)
     {
-        ensureData().propertyId.emplace(propertyId);
+        ensureData().propertyId.emplace(std::move(propertyId));
     }
 
     /**
@@ -280,9 +228,9 @@ public:
      *
      * @param propertyId プロパティID
      */
-    DeleteStatusByUserIdRequest& withPropertyId(const Char* propertyId)
+    DeleteStatusByUserIdRequest& withPropertyId(StringHolder propertyId)
     {
-        ensureData().propertyId.emplace(propertyId);
+        ensureData().propertyId.emplace(std::move(propertyId));
         return *this;
     }
 
@@ -301,9 +249,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -311,9 +259,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    DeleteStatusByUserIdRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    DeleteStatusByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -324,33 +272,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    DeleteStatusByUserIdRequest& withGs2ClientId(const Char* gs2ClientId)
+    DeleteStatusByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    DeleteStatusByUserIdRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    DeleteStatusByUserIdRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -359,9 +283,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    DeleteStatusByUserIdRequest& withRequestId(const Char* gs2RequestId)
+    DeleteStatusByUserIdRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

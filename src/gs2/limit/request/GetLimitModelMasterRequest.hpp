@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2LimitConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace limit
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -46,98 +48,47 @@ private:
         /** 回数制限の種類名 */
         optional<StringHolder> limitName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             limitName(data.limitName)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            limitName(std::move(data.limitName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    GetLimitModelMasterRequest() :
-        m_pData(nullptr)
-    {}
+    GetLimitModelMasterRequest() = default;
+    GetLimitModelMasterRequest(const GetLimitModelMasterRequest& getLimitModelMasterRequest) = default;
+    GetLimitModelMasterRequest(GetLimitModelMasterRequest&& getLimitModelMasterRequest) = default;
+    ~GetLimitModelMasterRequest() GS2_OVERRIDE = default;
 
-    GetLimitModelMasterRequest(const GetLimitModelMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Limit(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    GetLimitModelMasterRequest& operator=(const GetLimitModelMasterRequest& getLimitModelMasterRequest) = default;
+    GetLimitModelMasterRequest& operator=(GetLimitModelMasterRequest&& getLimitModelMasterRequest) = default;
 
-    GetLimitModelMasterRequest(GetLimitModelMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Limit(std::move(obj)),
-        m_pData(obj.m_pData)
+    GetLimitModelMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~GetLimitModelMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetLimitModelMasterRequest& operator=(const GetLimitModelMasterRequest& getLimitModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(getLimitModelMasterRequest);
-        Gs2Limit::operator=(getLimitModelMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getLimitModelMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    GetLimitModelMasterRequest& operator=(GetLimitModelMasterRequest&& getLimitModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(getLimitModelMasterRequest));
-        Gs2Limit::operator=(std::move(getLimitModelMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getLimitModelMasterRequest.m_pData;
-        getLimitModelMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetLimitModelMasterRequest);
     }
 
     const GetLimitModelMasterRequest* operator->() const
@@ -165,9 +116,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -175,9 +126,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    GetLimitModelMasterRequest& withNamespaceName(const Char* namespaceName)
+    GetLimitModelMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -196,9 +147,9 @@ public:
      *
      * @param limitName 回数制限の種類名
      */
-    void setLimitName(const Char* limitName)
+    void setLimitName(StringHolder limitName)
     {
-        ensureData().limitName.emplace(limitName);
+        ensureData().limitName.emplace(std::move(limitName));
     }
 
     /**
@@ -206,9 +157,9 @@ public:
      *
      * @param limitName 回数制限の種類名
      */
-    GetLimitModelMasterRequest& withLimitName(const Char* limitName)
+    GetLimitModelMasterRequest& withLimitName(StringHolder limitName)
     {
-        ensureData().limitName.emplace(limitName);
+        ensureData().limitName.emplace(std::move(limitName));
         return *this;
     }
 
@@ -219,33 +170,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    GetLimitModelMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    GetLimitModelMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    GetLimitModelMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    GetLimitModelMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -254,9 +181,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    GetLimitModelMasterRequest& withRequestId(const Char* gs2RequestId)
+    GetLimitModelMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

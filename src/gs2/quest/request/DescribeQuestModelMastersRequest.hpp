@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2QuestConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace quest
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** カテゴリ名 */
@@ -50,102 +52,49 @@ private:
         /** データの取得件数 */
         optional<Int64> limit;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             questGroupName(data.questGroupName),
             pageToken(data.pageToken),
             limit(data.limit)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            questGroupName(std::move(data.questGroupName)),
-            pageToken(std::move(data.pageToken)),
-            limit(std::move(data.limit))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    DescribeQuestModelMastersRequest() :
-        m_pData(nullptr)
-    {}
+    DescribeQuestModelMastersRequest() = default;
+    DescribeQuestModelMastersRequest(const DescribeQuestModelMastersRequest& describeQuestModelMastersRequest) = default;
+    DescribeQuestModelMastersRequest(DescribeQuestModelMastersRequest&& describeQuestModelMastersRequest) = default;
+    ~DescribeQuestModelMastersRequest() GS2_OVERRIDE = default;
 
-    DescribeQuestModelMastersRequest(const DescribeQuestModelMastersRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Quest(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    DescribeQuestModelMastersRequest& operator=(const DescribeQuestModelMastersRequest& describeQuestModelMastersRequest) = default;
+    DescribeQuestModelMastersRequest& operator=(DescribeQuestModelMastersRequest&& describeQuestModelMastersRequest) = default;
 
-    DescribeQuestModelMastersRequest(DescribeQuestModelMastersRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Quest(std::move(obj)),
-        m_pData(obj.m_pData)
+    DescribeQuestModelMastersRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~DescribeQuestModelMastersRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DescribeQuestModelMastersRequest& operator=(const DescribeQuestModelMastersRequest& describeQuestModelMastersRequest)
-    {
-        Gs2BasicRequest::operator=(describeQuestModelMastersRequest);
-        Gs2Quest::operator=(describeQuestModelMastersRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*describeQuestModelMastersRequest.m_pData);
-
-        return *this;
-    }
-
-    DescribeQuestModelMastersRequest& operator=(DescribeQuestModelMastersRequest&& describeQuestModelMastersRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(describeQuestModelMastersRequest));
-        Gs2Quest::operator=(std::move(describeQuestModelMastersRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = describeQuestModelMastersRequest.m_pData;
-        describeQuestModelMastersRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeQuestModelMastersRequest);
     }
 
     const DescribeQuestModelMastersRequest* operator->() const
@@ -173,9 +122,9 @@ public:
      *
      * @param namespaceName カテゴリ名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -183,9 +132,9 @@ public:
      *
      * @param namespaceName カテゴリ名
      */
-    DescribeQuestModelMastersRequest& withNamespaceName(const Char* namespaceName)
+    DescribeQuestModelMastersRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -204,9 +153,9 @@ public:
      *
      * @param questGroupName クエストグループモデル名
      */
-    void setQuestGroupName(const Char* questGroupName)
+    void setQuestGroupName(StringHolder questGroupName)
     {
-        ensureData().questGroupName.emplace(questGroupName);
+        ensureData().questGroupName.emplace(std::move(questGroupName));
     }
 
     /**
@@ -214,9 +163,9 @@ public:
      *
      * @param questGroupName クエストグループモデル名
      */
-    DescribeQuestModelMastersRequest& withQuestGroupName(const Char* questGroupName)
+    DescribeQuestModelMastersRequest& withQuestGroupName(StringHolder questGroupName)
     {
-        ensureData().questGroupName.emplace(questGroupName);
+        ensureData().questGroupName.emplace(std::move(questGroupName));
         return *this;
     }
 
@@ -235,9 +184,9 @@ public:
      *
      * @param pageToken データの取得を開始する位置を指定するトークン
      */
-    void setPageToken(const Char* pageToken)
+    void setPageToken(StringHolder pageToken)
     {
-        ensureData().pageToken.emplace(pageToken);
+        ensureData().pageToken.emplace(std::move(pageToken));
     }
 
     /**
@@ -245,9 +194,9 @@ public:
      *
      * @param pageToken データの取得を開始する位置を指定するトークン
      */
-    DescribeQuestModelMastersRequest& withPageToken(const Char* pageToken)
+    DescribeQuestModelMastersRequest& withPageToken(StringHolder pageToken)
     {
-        ensureData().pageToken.emplace(pageToken);
+        ensureData().pageToken.emplace(std::move(pageToken));
         return *this;
     }
 
@@ -289,33 +238,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    DescribeQuestModelMastersRequest& withGs2ClientId(const Char* gs2ClientId)
+    DescribeQuestModelMastersRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    DescribeQuestModelMastersRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    DescribeQuestModelMastersRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -324,9 +249,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    DescribeQuestModelMastersRequest& withRequestId(const Char* gs2RequestId)
+    DescribeQuestModelMastersRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

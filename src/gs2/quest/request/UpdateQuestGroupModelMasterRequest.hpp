@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2QuestConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace quest
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** カテゴリ名 */
@@ -52,104 +54,50 @@ private:
         /** 挑戦可能な期間を指定するイベントマスター のGRN */
         optional<StringHolder> challengePeriodEventId;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             questGroupName(data.questGroupName),
             description(data.description),
             metadata(data.metadata),
             challengePeriodEventId(data.challengePeriodEventId)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            questGroupName(std::move(data.questGroupName)),
-            description(std::move(data.description)),
-            metadata(std::move(data.metadata)),
-            challengePeriodEventId(std::move(data.challengePeriodEventId))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    UpdateQuestGroupModelMasterRequest() :
-        m_pData(nullptr)
-    {}
+    UpdateQuestGroupModelMasterRequest() = default;
+    UpdateQuestGroupModelMasterRequest(const UpdateQuestGroupModelMasterRequest& updateQuestGroupModelMasterRequest) = default;
+    UpdateQuestGroupModelMasterRequest(UpdateQuestGroupModelMasterRequest&& updateQuestGroupModelMasterRequest) = default;
+    ~UpdateQuestGroupModelMasterRequest() GS2_OVERRIDE = default;
 
-    UpdateQuestGroupModelMasterRequest(const UpdateQuestGroupModelMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Quest(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    UpdateQuestGroupModelMasterRequest& operator=(const UpdateQuestGroupModelMasterRequest& updateQuestGroupModelMasterRequest) = default;
+    UpdateQuestGroupModelMasterRequest& operator=(UpdateQuestGroupModelMasterRequest&& updateQuestGroupModelMasterRequest) = default;
 
-    UpdateQuestGroupModelMasterRequest(UpdateQuestGroupModelMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Quest(std::move(obj)),
-        m_pData(obj.m_pData)
+    UpdateQuestGroupModelMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~UpdateQuestGroupModelMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateQuestGroupModelMasterRequest& operator=(const UpdateQuestGroupModelMasterRequest& updateQuestGroupModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(updateQuestGroupModelMasterRequest);
-        Gs2Quest::operator=(updateQuestGroupModelMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateQuestGroupModelMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    UpdateQuestGroupModelMasterRequest& operator=(UpdateQuestGroupModelMasterRequest&& updateQuestGroupModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(updateQuestGroupModelMasterRequest));
-        Gs2Quest::operator=(std::move(updateQuestGroupModelMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateQuestGroupModelMasterRequest.m_pData;
-        updateQuestGroupModelMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateQuestGroupModelMasterRequest);
     }
 
     const UpdateQuestGroupModelMasterRequest* operator->() const
@@ -177,9 +125,9 @@ public:
      *
      * @param namespaceName カテゴリ名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -187,9 +135,9 @@ public:
      *
      * @param namespaceName カテゴリ名
      */
-    UpdateQuestGroupModelMasterRequest& withNamespaceName(const Char* namespaceName)
+    UpdateQuestGroupModelMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -208,9 +156,9 @@ public:
      *
      * @param questGroupName クエストグループモデル名
      */
-    void setQuestGroupName(const Char* questGroupName)
+    void setQuestGroupName(StringHolder questGroupName)
     {
-        ensureData().questGroupName.emplace(questGroupName);
+        ensureData().questGroupName.emplace(std::move(questGroupName));
     }
 
     /**
@@ -218,9 +166,9 @@ public:
      *
      * @param questGroupName クエストグループモデル名
      */
-    UpdateQuestGroupModelMasterRequest& withQuestGroupName(const Char* questGroupName)
+    UpdateQuestGroupModelMasterRequest& withQuestGroupName(StringHolder questGroupName)
     {
-        ensureData().questGroupName.emplace(questGroupName);
+        ensureData().questGroupName.emplace(std::move(questGroupName));
         return *this;
     }
 
@@ -239,9 +187,9 @@ public:
      *
      * @param description クエストグループマスターの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -249,9 +197,9 @@ public:
      *
      * @param description クエストグループマスターの説明
      */
-    UpdateQuestGroupModelMasterRequest& withDescription(const Char* description)
+    UpdateQuestGroupModelMasterRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -270,9 +218,9 @@ public:
      *
      * @param metadata クエストグループのメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -280,9 +228,9 @@ public:
      *
      * @param metadata クエストグループのメタデータ
      */
-    UpdateQuestGroupModelMasterRequest& withMetadata(const Char* metadata)
+    UpdateQuestGroupModelMasterRequest& withMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
         return *this;
     }
 
@@ -301,9 +249,9 @@ public:
      *
      * @param challengePeriodEventId 挑戦可能な期間を指定するイベントマスター のGRN
      */
-    void setChallengePeriodEventId(const Char* challengePeriodEventId)
+    void setChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        ensureData().challengePeriodEventId.emplace(challengePeriodEventId);
+        ensureData().challengePeriodEventId.emplace(std::move(challengePeriodEventId));
     }
 
     /**
@@ -311,9 +259,9 @@ public:
      *
      * @param challengePeriodEventId 挑戦可能な期間を指定するイベントマスター のGRN
      */
-    UpdateQuestGroupModelMasterRequest& withChallengePeriodEventId(const Char* challengePeriodEventId)
+    UpdateQuestGroupModelMasterRequest& withChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        ensureData().challengePeriodEventId.emplace(challengePeriodEventId);
+        ensureData().challengePeriodEventId.emplace(std::move(challengePeriodEventId));
         return *this;
     }
 
@@ -324,33 +272,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    UpdateQuestGroupModelMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    UpdateQuestGroupModelMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    UpdateQuestGroupModelMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    UpdateQuestGroupModelMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -359,9 +283,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    UpdateQuestGroupModelMasterRequest& withRequestId(const Char* gs2RequestId)
+    UpdateQuestGroupModelMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

@@ -28,48 +28,90 @@ namespace gs2 { namespace ez { namespace mission {
 class EzMissionGroupModel : public gs2::Gs2Object
 {
 private:
-    /** グループ名 */
-    gs2::optional<StringHolder> m_Name;
-    /** メタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** タスクリスト */
-    gs2::optional<List<EzMissionTaskModel>> m_Tasks;
-    /** ミッションを達成したときの通知先ネームスペース のGRN */
-    gs2::optional<StringHolder> m_CompleteNotificationNamespaceId;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** グループ名 */
+        gs2::optional<StringHolder> name;
+        /** メタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** タスクリスト */
+        gs2::optional<List<EzMissionTaskModel>> tasks;
+        /** ミッションを達成したときの通知先ネームスペース のGRN */
+        gs2::optional<StringHolder> completeNotificationNamespaceId;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            metadata(data.metadata),
+            completeNotificationNamespaceId(data.completeNotificationNamespaceId)
+        {
+            if (data.tasks)
+            {
+                tasks = data.tasks->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::mission::MissionGroupModel& missionGroupModel) :
+            name(missionGroupModel.getName()),
+            metadata(missionGroupModel.getMetadata()),
+            completeNotificationNamespaceId(missionGroupModel.getCompleteNotificationNamespaceId())
+        {
+            tasks.emplace();
+            if (missionGroupModel.getTasks())
+            {
+                for (int i = 0; i < missionGroupModel.getTasks()->getCount(); ++i)
+                {
+                    *tasks += EzMissionTaskModel((*missionGroupModel.getTasks())[i]);
+                }
+            }
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzMissionGroupModel() = default;
+    EzMissionGroupModel(const EzMissionGroupModel& ezMissionGroupModel) = default;
+    EzMissionGroupModel(EzMissionGroupModel&& ezMissionGroupModel) = default;
+    ~EzMissionGroupModel() = default;
 
     EzMissionGroupModel(gs2::mission::MissionGroupModel missionGroupModel) :
-        m_Name(missionGroupModel.getName()),
-        m_Metadata(missionGroupModel.getMetadata()),
-        m_CompleteNotificationNamespaceId(missionGroupModel.getCompleteNotificationNamespaceId())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(missionGroupModel)
+    {}
+
+    EzMissionGroupModel& operator=(const EzMissionGroupModel& ezMissionGroupModel) = default;
+    EzMissionGroupModel& operator=(EzMissionGroupModel&& ezMissionGroupModel) = default;
+
+    EzMissionGroupModel deepCopy() const
     {
-        m_Tasks.emplace();
-        if (missionGroupModel.getTasks())
-        {
-            for (int i = 0; i < missionGroupModel.getTasks()->getCount(); ++i)
-            {
-                *m_Tasks += EzMissionTaskModel((*missionGroupModel.getTasks())[i]);
-            }
-        }
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzMissionGroupModel);
     }
 
     gs2::mission::MissionGroupModel ToModel() const
     {
         gs2::mission::MissionGroupModel missionGroupModel;
-        missionGroupModel.setName(*m_Name);
-        missionGroupModel.setMetadata(*m_Metadata);
+        missionGroupModel.setName(getName());
+        missionGroupModel.setMetadata(getMetadata());
         {
             gs2::List<gs2::mission::MissionTaskModel> list;
-            auto& tasks = *m_Tasks;
+            auto& tasks = getTasks();
             for (int i = 0; i < tasks.getCount(); ++i)
             {
                 list += tasks[i].ToModel();
             }
             missionGroupModel.setTasks(list);
         }
-        missionGroupModel.setCompleteNotificationNamespaceId(*m_CompleteNotificationNamespaceId);
+        missionGroupModel.setCompleteNotificationNamespaceId(getCompleteNotificationNamespaceId());
         return missionGroupModel;
     }
 
@@ -77,102 +119,71 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
+        return *ensureData().name;
     }
 
-    gs2::StringHolder& getName()
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
-    }
-
-    const gs2::StringHolder& getMetadata() const
-    {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
+        return *ensureData().metadata;
     }
 
     const List<EzMissionTaskModel>& getTasks() const
     {
-        return *m_Tasks;
+        return *ensureData().tasks;
     }
 
-    List<EzMissionTaskModel>& getTasks()
+    const StringHolder& getCompleteNotificationNamespaceId() const
     {
-        return *m_Tasks;
-    }
-
-    const gs2::StringHolder& getCompleteNotificationNamespaceId() const
-    {
-        return *m_CompleteNotificationNamespaceId;
-    }
-
-    gs2::StringHolder& getCompleteNotificationNamespaceId()
-    {
-        return *m_CompleteNotificationNamespaceId;
+        return *ensureData().completeNotificationNamespaceId;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
-    void setTasks(const List<EzMissionTaskModel>& tasks)
+    void setTasks(List<EzMissionTaskModel> tasks)
     {
-        m_Tasks = tasks;
+        ensureData().tasks = std::move(tasks);
     }
 
-    void setTasks(List<EzMissionTaskModel>&& tasks)
+    void setCompleteNotificationNamespaceId(StringHolder completeNotificationNamespaceId)
     {
-        m_Tasks = std::move(tasks);
+        ensureData().completeNotificationNamespaceId = std::move(completeNotificationNamespaceId);
     }
 
-    void setCompleteNotificationNamespaceId(Char* completeNotificationNamespaceId)
+    EzMissionGroupModel& withName(StringHolder name)
     {
-        m_CompleteNotificationNamespaceId.emplace(completeNotificationNamespaceId);
-    }
-
-    EzMissionGroupModel& withName(Char* name)
-    {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzMissionGroupModel& withMetadata(Char* metadata)
+    EzMissionGroupModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
-    EzMissionGroupModel& withTasks(const List<EzMissionTaskModel>& tasks)
-    {
-        setTasks(tasks);
-        return *this;
-    }
-
-    EzMissionGroupModel& withTasks(List<EzMissionTaskModel>&& tasks)
+    EzMissionGroupModel& withTasks(List<EzMissionTaskModel> tasks)
     {
         setTasks(std::move(tasks));
         return *this;
     }
 
-    EzMissionGroupModel& withCompleteNotificationNamespaceId(Char* completeNotificationNamespaceId)
+    EzMissionGroupModel& withCompleteNotificationNamespaceId(StringHolder completeNotificationNamespaceId)
     {
-        setCompleteNotificationNamespaceId(completeNotificationNamespaceId);
+        setCompleteNotificationNamespaceId(std::move(completeNotificationNamespaceId));
         return *this;
     }
 };

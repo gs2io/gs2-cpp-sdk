@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2LotteryConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace lottery
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -46,98 +48,47 @@ private:
         /** 排出確率テーブル名 */
         optional<StringHolder> prizeTableName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             prizeTableName(data.prizeTableName)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            prizeTableName(std::move(data.prizeTableName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    GetPrizeTableMasterRequest() :
-        m_pData(nullptr)
-    {}
+    GetPrizeTableMasterRequest() = default;
+    GetPrizeTableMasterRequest(const GetPrizeTableMasterRequest& getPrizeTableMasterRequest) = default;
+    GetPrizeTableMasterRequest(GetPrizeTableMasterRequest&& getPrizeTableMasterRequest) = default;
+    ~GetPrizeTableMasterRequest() GS2_OVERRIDE = default;
 
-    GetPrizeTableMasterRequest(const GetPrizeTableMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Lottery(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    GetPrizeTableMasterRequest& operator=(const GetPrizeTableMasterRequest& getPrizeTableMasterRequest) = default;
+    GetPrizeTableMasterRequest& operator=(GetPrizeTableMasterRequest&& getPrizeTableMasterRequest) = default;
 
-    GetPrizeTableMasterRequest(GetPrizeTableMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Lottery(std::move(obj)),
-        m_pData(obj.m_pData)
+    GetPrizeTableMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~GetPrizeTableMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetPrizeTableMasterRequest& operator=(const GetPrizeTableMasterRequest& getPrizeTableMasterRequest)
-    {
-        Gs2BasicRequest::operator=(getPrizeTableMasterRequest);
-        Gs2Lottery::operator=(getPrizeTableMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getPrizeTableMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    GetPrizeTableMasterRequest& operator=(GetPrizeTableMasterRequest&& getPrizeTableMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(getPrizeTableMasterRequest));
-        Gs2Lottery::operator=(std::move(getPrizeTableMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getPrizeTableMasterRequest.m_pData;
-        getPrizeTableMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetPrizeTableMasterRequest);
     }
 
     const GetPrizeTableMasterRequest* operator->() const
@@ -165,9 +116,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -175,9 +126,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    GetPrizeTableMasterRequest& withNamespaceName(const Char* namespaceName)
+    GetPrizeTableMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -196,9 +147,9 @@ public:
      *
      * @param prizeTableName 排出確率テーブル名
      */
-    void setPrizeTableName(const Char* prizeTableName)
+    void setPrizeTableName(StringHolder prizeTableName)
     {
-        ensureData().prizeTableName.emplace(prizeTableName);
+        ensureData().prizeTableName.emplace(std::move(prizeTableName));
     }
 
     /**
@@ -206,9 +157,9 @@ public:
      *
      * @param prizeTableName 排出確率テーブル名
      */
-    GetPrizeTableMasterRequest& withPrizeTableName(const Char* prizeTableName)
+    GetPrizeTableMasterRequest& withPrizeTableName(StringHolder prizeTableName)
     {
-        ensureData().prizeTableName.emplace(prizeTableName);
+        ensureData().prizeTableName.emplace(std::move(prizeTableName));
         return *this;
     }
 
@@ -219,33 +170,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    GetPrizeTableMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    GetPrizeTableMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    GetPrizeTableMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    GetPrizeTableMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -254,9 +181,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    GetPrizeTableMasterRequest& withRequestId(const Char* gs2RequestId)
+    GetPrizeTableMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

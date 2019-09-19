@@ -27,19 +27,57 @@ namespace gs2 { namespace ez { namespace quest {
 class EzListQuestsResult : public gs2::Gs2Object
 {
 private:
-    /** Noneのリスト */
-    List<EzQuestModel> m_Items;
-
-public:
-    EzListQuestsResult(const gs2::quest::DescribeQuestModelsResult& result)
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** Noneのリスト */
+        List<EzQuestModel> items;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::quest::DescribeQuestModelsResult& describeQuestModelsResult)
+        {
             {
-                m_Items += EzQuestModel(list[i]);
+                auto& list = *describeQuestModelsResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzQuestModel(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListQuestsResult() = default;
+    EzListQuestsResult(const EzListQuestsResult& result) = default;
+    EzListQuestsResult(EzListQuestsResult&& result) = default;
+    ~EzListQuestsResult() = default;
+
+    EzListQuestsResult(gs2::quest::DescribeQuestModelsResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListQuestsResult& operator=(const EzListQuestsResult& result) = default;
+    EzListQuestsResult& operator=(EzListQuestsResult&& result) = default;
+
+    EzListQuestsResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListQuestsResult);
     }
 
     static bool isConvertible(const gs2::quest::DescribeQuestModelsResult& result)
@@ -54,12 +92,7 @@ public:
 
     const List<EzQuestModel>& getItems() const
     {
-        return m_Items;
-    }
-
-    List<EzQuestModel>& getItems()
-    {
-        return m_Items;
+        return ensureData().items;
     }
 };
 

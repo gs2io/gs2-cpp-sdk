@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace quest {
 class EzGetQuestGroupResult : public gs2::Gs2Object
 {
 private:
-    /** クエストグループ */
-    EzQuestGroupModel m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** クエストグループ */
+        EzQuestGroupModel item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::quest::GetQuestGroupModelResult& getQuestGroupModelResult) :
+            item(*getQuestGroupModelResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetQuestGroupResult(const gs2::quest::GetQuestGroupModelResult& result) :
-        m_Item(*result.getItem())
+    EzGetQuestGroupResult() = default;
+    EzGetQuestGroupResult(const EzGetQuestGroupResult& result) = default;
+    EzGetQuestGroupResult(EzGetQuestGroupResult&& result) = default;
+    ~EzGetQuestGroupResult() = default;
+
+    EzGetQuestGroupResult(gs2::quest::GetQuestGroupModelResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetQuestGroupResult& operator=(const EzGetQuestGroupResult& result) = default;
+    EzGetQuestGroupResult& operator=(EzGetQuestGroupResult&& result) = default;
+
+    EzGetQuestGroupResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetQuestGroupResult);
     }
 
     static bool isConvertible(const gs2::quest::GetQuestGroupModelResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzQuestGroupModel& getItem() const
     {
-        return m_Item;
-    }
-
-    EzQuestGroupModel& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

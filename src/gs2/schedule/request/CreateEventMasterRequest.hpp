@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ScheduleConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace schedule
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -60,11 +62,10 @@ private:
         /** イベントの開催期間(秒) */
         optional<Int32> relativeDuration;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             name(data.name),
             description(data.description),
@@ -74,98 +75,41 @@ private:
             absoluteEnd(data.absoluteEnd),
             relativeTriggerName(data.relativeTriggerName),
             relativeDuration(data.relativeDuration)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            metadata(std::move(data.metadata)),
-            scheduleType(std::move(data.scheduleType)),
-            absoluteBegin(std::move(data.absoluteBegin)),
-            absoluteEnd(std::move(data.absoluteEnd)),
-            relativeTriggerName(std::move(data.relativeTriggerName)),
-            relativeDuration(std::move(data.relativeDuration))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CreateEventMasterRequest() :
-        m_pData(nullptr)
-    {}
+    CreateEventMasterRequest() = default;
+    CreateEventMasterRequest(const CreateEventMasterRequest& createEventMasterRequest) = default;
+    CreateEventMasterRequest(CreateEventMasterRequest&& createEventMasterRequest) = default;
+    ~CreateEventMasterRequest() GS2_OVERRIDE = default;
 
-    CreateEventMasterRequest(const CreateEventMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Schedule(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CreateEventMasterRequest& operator=(const CreateEventMasterRequest& createEventMasterRequest) = default;
+    CreateEventMasterRequest& operator=(CreateEventMasterRequest&& createEventMasterRequest) = default;
 
-    CreateEventMasterRequest(CreateEventMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Schedule(std::move(obj)),
-        m_pData(obj.m_pData)
+    CreateEventMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CreateEventMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateEventMasterRequest& operator=(const CreateEventMasterRequest& createEventMasterRequest)
-    {
-        Gs2BasicRequest::operator=(createEventMasterRequest);
-        Gs2Schedule::operator=(createEventMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createEventMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    CreateEventMasterRequest& operator=(CreateEventMasterRequest&& createEventMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(createEventMasterRequest));
-        Gs2Schedule::operator=(std::move(createEventMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createEventMasterRequest.m_pData;
-        createEventMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateEventMasterRequest);
     }
 
     const CreateEventMasterRequest* operator->() const
@@ -193,9 +137,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -203,9 +147,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    CreateEventMasterRequest& withNamespaceName(const Char* namespaceName)
+    CreateEventMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -224,9 +168,9 @@ public:
      *
      * @param name イベントの種類名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -234,9 +178,9 @@ public:
      *
      * @param name イベントの種類名
      */
-    CreateEventMasterRequest& withName(const Char* name)
+    CreateEventMasterRequest& withName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
         return *this;
     }
 
@@ -255,9 +199,9 @@ public:
      *
      * @param description イベントマスターの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -265,9 +209,9 @@ public:
      *
      * @param description イベントマスターの説明
      */
-    CreateEventMasterRequest& withDescription(const Char* description)
+    CreateEventMasterRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -286,9 +230,9 @@ public:
      *
      * @param metadata イベントの種類のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -296,9 +240,9 @@ public:
      *
      * @param metadata イベントの種類のメタデータ
      */
-    CreateEventMasterRequest& withMetadata(const Char* metadata)
+    CreateEventMasterRequest& withMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
         return *this;
     }
 
@@ -317,9 +261,9 @@ public:
      *
      * @param scheduleType イベント期間の種類
      */
-    void setScheduleType(const Char* scheduleType)
+    void setScheduleType(StringHolder scheduleType)
     {
-        ensureData().scheduleType.emplace(scheduleType);
+        ensureData().scheduleType.emplace(std::move(scheduleType));
     }
 
     /**
@@ -327,9 +271,9 @@ public:
      *
      * @param scheduleType イベント期間の種類
      */
-    CreateEventMasterRequest& withScheduleType(const Char* scheduleType)
+    CreateEventMasterRequest& withScheduleType(StringHolder scheduleType)
     {
-        ensureData().scheduleType.emplace(scheduleType);
+        ensureData().scheduleType.emplace(std::move(scheduleType));
         return *this;
     }
 
@@ -410,9 +354,9 @@ public:
      *
      * @param relativeTriggerName イベントの開始トリガー名
      */
-    void setRelativeTriggerName(const Char* relativeTriggerName)
+    void setRelativeTriggerName(StringHolder relativeTriggerName)
     {
-        ensureData().relativeTriggerName.emplace(relativeTriggerName);
+        ensureData().relativeTriggerName.emplace(std::move(relativeTriggerName));
     }
 
     /**
@@ -420,9 +364,9 @@ public:
      *
      * @param relativeTriggerName イベントの開始トリガー名
      */
-    CreateEventMasterRequest& withRelativeTriggerName(const Char* relativeTriggerName)
+    CreateEventMasterRequest& withRelativeTriggerName(StringHolder relativeTriggerName)
     {
-        ensureData().relativeTriggerName.emplace(relativeTriggerName);
+        ensureData().relativeTriggerName.emplace(std::move(relativeTriggerName));
         return *this;
     }
 
@@ -464,33 +408,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CreateEventMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    CreateEventMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CreateEventMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CreateEventMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -499,9 +419,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CreateEventMasterRequest& withRequestId(const Char* gs2RequestId)
+    CreateEventMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

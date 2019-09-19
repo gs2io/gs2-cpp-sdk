@@ -44,81 +44,59 @@ private:
     class LoginTask : public detail::Gs2WebSocketSessionTask<LoginResult>
     {
     private:
-        LoginRequest& m_Request;
+        LoginRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "auth";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "accessToken";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "login";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getUserId())
             {
-                writer.writePropertyName("userId");
-                writer.writeCharArray(*m_Request.getUserId());
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
             }
             if (m_Request.getTimeOffset())
             {
-                writer.writePropertyName("timeOffset");
-                writer.writeInt32(*m_Request.getTimeOffset());
+                jsonWriter.writePropertyName("timeOffset");
+                jsonWriter.writeInt32(*m_Request.getTimeOffset());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
             if (m_Request.getDuplicationAvoider())
             {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("auth");
-            writer.writePropertyName("component");
-            writer.writeCharArray("accessToken");
-            writer.writePropertyName("function");
-            writer.writeCharArray("login");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         LoginTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            LoginRequest& request,
+            LoginRequest request,
             Gs2WebSocketSessionTask<LoginResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<LoginResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<LoginResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~LoginTask() GS2_OVERRIDE = default;
@@ -127,123 +105,100 @@ private:
     class LoginBySignatureTask : public detail::Gs2WebSocketSessionTask<LoginBySignatureResult>
     {
     private:
-        LoginBySignatureRequest& m_Request;
+        LoginBySignatureRequest m_Request;
 
-        void sendImpl(
-            const StringHolder& clientId,
-            const StringHolder& projectToken,
-            const detail::Gs2SessionTaskId& gs2SessionTaskId
-        ) GS2_OVERRIDE
+        const char* getServiceName() const GS2_OVERRIDE
         {
-            detail::json::JsonWriter writer;
+            return "auth";
+        }
 
-            writer.writeObjectStart();
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "accessToken";
+        }
 
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "loginBySignature";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
             if (m_Request.getContextStack())
             {
-                writer.writePropertyName("contextStack");
-                writer.writeCharArray(*m_Request.getContextStack());
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
             if (m_Request.getUserId())
             {
-                writer.writePropertyName("userId");
-                writer.writeCharArray(*m_Request.getUserId());
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
             }
             if (m_Request.getKeyId())
             {
-                writer.writePropertyName("keyId");
-                writer.writeCharArray(*m_Request.getKeyId());
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
             }
             if (m_Request.getBody())
             {
-                writer.writePropertyName("body");
-                writer.writeCharArray(*m_Request.getBody());
+                jsonWriter.writePropertyName("body");
+                jsonWriter.writeCharArray(*m_Request.getBody());
             }
             if (m_Request.getSignature())
             {
-                writer.writePropertyName("signature");
-                writer.writeCharArray(*m_Request.getSignature());
+                jsonWriter.writePropertyName("signature");
+                jsonWriter.writeCharArray(*m_Request.getSignature());
             }
             if (m_Request.getRequestId())
             {
-                writer.writePropertyName("xGs2RequestId");
-                writer.writeCharArray(*m_Request.getRequestId());
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
             }
             if (m_Request.getDuplicationAvoider())
             {
-                writer.writePropertyName("xGs2DuplicationAvoider");
-                writer.writeCharArray(*m_Request.getDuplicationAvoider());
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
             }
-
-            writer.writePropertyName("xGs2ClientId");
-            writer.writeCharArray(clientId);
-            writer.writePropertyName("xGs2ProjectToken");
-            writer.writeCharArray(projectToken);
-
-            writer.writePropertyName("x_gs2");
-            writer.writeObjectStart();
-            writer.writePropertyName("service");
-            writer.writeCharArray("auth");
-            writer.writePropertyName("component");
-            writer.writeCharArray("accessToken");
-            writer.writePropertyName("function");
-            writer.writeCharArray("loginBySignature");
-            writer.writePropertyName("contentType");
-            writer.writeCharArray("application/json");
-            writer.writePropertyName("requestId");
-            {
-                char buffer[16];
-                gs2SessionTaskId.exportTo(buffer, sizeof(buffer));
-                writer.writeCharArray(buffer);
-            }
-            writer.writeObjectEnd();
-
-            writer.writeObjectEnd();
-
-            auto body = writer.toString();
-            send(body);
         }
 
     public:
         LoginBySignatureTask(
-            Gs2WebSocketSession& gs2WebSocketSession,
-            LoginBySignatureRequest& request,
+            LoginBySignatureRequest request,
             Gs2WebSocketSessionTask<LoginBySignatureResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<LoginBySignatureResult>(gs2WebSocketSession, callback),
-            m_Request(request)
+            Gs2WebSocketSessionTask<LoginBySignatureResult>(callback),
+            m_Request(std::move(request))
         {}
 
         ~LoginBySignatureTask() GS2_OVERRIDE = default;
     };
 
 private:
-    static void write(detail::json::JsonWriter& writer, const AccessToken& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const AccessToken& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getToken())
         {
-            writer.writePropertyName("token");
-            writer.writeCharArray(*obj.getToken());
+            jsonWriter.writePropertyName("token");
+            jsonWriter.writeCharArray(*obj.getToken());
         }
         if (obj.getUserId())
         {
-            writer.writePropertyName("userId");
-            writer.writeCharArray(*obj.getUserId());
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
         }
         if (obj.getExpire())
         {
-            writer.writePropertyName("expire");
-            writer.writeInt64(*obj.getExpire());
+            jsonWriter.writePropertyName("expire");
+            jsonWriter.writeInt64(*obj.getExpire());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
-
 
 
 public:
@@ -265,10 +220,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void login(LoginRequest& request, std::function<void(AsyncLoginResult&)> callback)
+    void login(LoginRequest request, std::function<void(AsyncLoginResult)> callback)
     {
-        LoginTask& task = *new LoginTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        LoginTask& task = *new LoginTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -278,10 +233,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void loginBySignature(LoginBySignatureRequest& request, std::function<void(AsyncLoginBySignatureResult&)> callback)
+    void loginBySignature(LoginBySignatureRequest request, std::function<void(AsyncLoginBySignatureResult)> callback)
     {
-        LoginBySignatureTask& task = *new LoginBySignatureTask(getGs2WebSocketSession(), request, callback);
-        task.execute();
+        LoginBySignatureTask& task = *new LoginBySignatureTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 protected:

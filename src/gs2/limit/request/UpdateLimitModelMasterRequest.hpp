@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2LimitConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace limit
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -58,11 +60,10 @@ private:
         /** リセット時刻 */
         optional<Int32> resetHour;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             limitName(data.limitName),
             description(data.description),
@@ -71,97 +72,41 @@ private:
             resetDayOfMonth(data.resetDayOfMonth),
             resetDayOfWeek(data.resetDayOfWeek),
             resetHour(data.resetHour)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            limitName(std::move(data.limitName)),
-            description(std::move(data.description)),
-            metadata(std::move(data.metadata)),
-            resetType(std::move(data.resetType)),
-            resetDayOfMonth(std::move(data.resetDayOfMonth)),
-            resetDayOfWeek(std::move(data.resetDayOfWeek)),
-            resetHour(std::move(data.resetHour))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    UpdateLimitModelMasterRequest() :
-        m_pData(nullptr)
-    {}
+    UpdateLimitModelMasterRequest() = default;
+    UpdateLimitModelMasterRequest(const UpdateLimitModelMasterRequest& updateLimitModelMasterRequest) = default;
+    UpdateLimitModelMasterRequest(UpdateLimitModelMasterRequest&& updateLimitModelMasterRequest) = default;
+    ~UpdateLimitModelMasterRequest() GS2_OVERRIDE = default;
 
-    UpdateLimitModelMasterRequest(const UpdateLimitModelMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Limit(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    UpdateLimitModelMasterRequest& operator=(const UpdateLimitModelMasterRequest& updateLimitModelMasterRequest) = default;
+    UpdateLimitModelMasterRequest& operator=(UpdateLimitModelMasterRequest&& updateLimitModelMasterRequest) = default;
 
-    UpdateLimitModelMasterRequest(UpdateLimitModelMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Limit(std::move(obj)),
-        m_pData(obj.m_pData)
+    UpdateLimitModelMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~UpdateLimitModelMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateLimitModelMasterRequest& operator=(const UpdateLimitModelMasterRequest& updateLimitModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(updateLimitModelMasterRequest);
-        Gs2Limit::operator=(updateLimitModelMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateLimitModelMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    UpdateLimitModelMasterRequest& operator=(UpdateLimitModelMasterRequest&& updateLimitModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(updateLimitModelMasterRequest));
-        Gs2Limit::operator=(std::move(updateLimitModelMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateLimitModelMasterRequest.m_pData;
-        updateLimitModelMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateLimitModelMasterRequest);
     }
 
     const UpdateLimitModelMasterRequest* operator->() const
@@ -189,9 +134,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -199,9 +144,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    UpdateLimitModelMasterRequest& withNamespaceName(const Char* namespaceName)
+    UpdateLimitModelMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -220,9 +165,9 @@ public:
      *
      * @param limitName 回数制限の種類名
      */
-    void setLimitName(const Char* limitName)
+    void setLimitName(StringHolder limitName)
     {
-        ensureData().limitName.emplace(limitName);
+        ensureData().limitName.emplace(std::move(limitName));
     }
 
     /**
@@ -230,9 +175,9 @@ public:
      *
      * @param limitName 回数制限の種類名
      */
-    UpdateLimitModelMasterRequest& withLimitName(const Char* limitName)
+    UpdateLimitModelMasterRequest& withLimitName(StringHolder limitName)
     {
-        ensureData().limitName.emplace(limitName);
+        ensureData().limitName.emplace(std::move(limitName));
         return *this;
     }
 
@@ -251,9 +196,9 @@ public:
      *
      * @param description 回数制限の種類マスターの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -261,9 +206,9 @@ public:
      *
      * @param description 回数制限の種類マスターの説明
      */
-    UpdateLimitModelMasterRequest& withDescription(const Char* description)
+    UpdateLimitModelMasterRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -282,9 +227,9 @@ public:
      *
      * @param metadata 回数制限の種類のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -292,9 +237,9 @@ public:
      *
      * @param metadata 回数制限の種類のメタデータ
      */
-    UpdateLimitModelMasterRequest& withMetadata(const Char* metadata)
+    UpdateLimitModelMasterRequest& withMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
         return *this;
     }
 
@@ -313,9 +258,9 @@ public:
      *
      * @param resetType リセットタイミング
      */
-    void setResetType(const Char* resetType)
+    void setResetType(StringHolder resetType)
     {
-        ensureData().resetType.emplace(resetType);
+        ensureData().resetType.emplace(std::move(resetType));
     }
 
     /**
@@ -323,9 +268,9 @@ public:
      *
      * @param resetType リセットタイミング
      */
-    UpdateLimitModelMasterRequest& withResetType(const Char* resetType)
+    UpdateLimitModelMasterRequest& withResetType(StringHolder resetType)
     {
-        ensureData().resetType.emplace(resetType);
+        ensureData().resetType.emplace(std::move(resetType));
         return *this;
     }
 
@@ -375,9 +320,9 @@ public:
      *
      * @param resetDayOfWeek リセットする曜日
      */
-    void setResetDayOfWeek(const Char* resetDayOfWeek)
+    void setResetDayOfWeek(StringHolder resetDayOfWeek)
     {
-        ensureData().resetDayOfWeek.emplace(resetDayOfWeek);
+        ensureData().resetDayOfWeek.emplace(std::move(resetDayOfWeek));
     }
 
     /**
@@ -385,9 +330,9 @@ public:
      *
      * @param resetDayOfWeek リセットする曜日
      */
-    UpdateLimitModelMasterRequest& withResetDayOfWeek(const Char* resetDayOfWeek)
+    UpdateLimitModelMasterRequest& withResetDayOfWeek(StringHolder resetDayOfWeek)
     {
-        ensureData().resetDayOfWeek.emplace(resetDayOfWeek);
+        ensureData().resetDayOfWeek.emplace(std::move(resetDayOfWeek));
         return *this;
     }
 
@@ -429,33 +374,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    UpdateLimitModelMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    UpdateLimitModelMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    UpdateLimitModelMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    UpdateLimitModelMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -464,9 +385,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    UpdateLimitModelMasterRequest& withRequestId(const Char* gs2RequestId)
+    UpdateLimitModelMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

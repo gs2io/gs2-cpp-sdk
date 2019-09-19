@@ -52,8 +52,8 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">カテゴリー名</param>
     void listInventoryModels(
-        std::function<void(AsyncEzListInventoryModelsResult&)> callback,
-        const Char* namespaceName
+        std::function<void(AsyncEzListInventoryModelsResult)> callback,
+        StringHolder namespaceName
     );
 
     /// <summary>
@@ -64,9 +64,9 @@ public:
     /// <param name="namespaceName">カテゴリー名</param>
     /// <param name="inventoryName">インベントリの種類名</param>
     void getInventoryModel(
-        std::function<void(AsyncEzGetInventoryModelResult&)> callback,
-        const Char* namespaceName,
-        const Char* inventoryName
+        std::function<void(AsyncEzGetInventoryModelResult)> callback,
+        StringHolder namespaceName,
+        StringHolder inventoryName
     );
 
     /// <summary>
@@ -77,9 +77,9 @@ public:
     /// <param name="namespaceName">カテゴリー名</param>
     /// <param name="inventoryName">インベントリの種類名</param>
     void listItemModels(
-        std::function<void(AsyncEzListItemModelsResult&)> callback,
-        const Char* namespaceName,
-        const Char* inventoryName
+        std::function<void(AsyncEzListItemModelsResult)> callback,
+        StringHolder namespaceName,
+        StringHolder inventoryName
     );
 
     /// <summary>
@@ -91,10 +91,10 @@ public:
     /// <param name="inventoryName">インベントリの種類名</param>
     /// <param name="itemName">アイテムモデルの種類名</param>
     void getItemModel(
-        std::function<void(AsyncEzGetItemModelResult&)> callback,
-        const Char* namespaceName,
-        const Char* inventoryName,
-        const Char* itemName
+        std::function<void(AsyncEzGetItemModelResult)> callback,
+        StringHolder namespaceName,
+        StringHolder inventoryName,
+        StringHolder itemName
     );
 
     /// <summary>
@@ -110,10 +110,10 @@ public:
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
     void listInventories(
-        std::function<void(AsyncEzListInventoriesResult&)> callback,
+        std::function<void(AsyncEzListInventoriesResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* pageToken=nullptr,
+        StringHolder namespaceName,
+        gs2::optional<StringHolder> pageToken=gs2::nullopt,
         gs2::optional<Int64> limit=gs2::nullopt
     );
 
@@ -127,10 +127,10 @@ public:
     /// <param name="namespaceName">カテゴリー名</param>
     /// <param name="inventoryName">インベントリの種類名</param>
     void getInventory(
-        std::function<void(AsyncEzGetInventoryResult&)> callback,
+        std::function<void(AsyncEzGetInventoryResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* inventoryName
+        StringHolder namespaceName,
+        StringHolder inventoryName
     );
 
     /// <summary>
@@ -145,11 +145,11 @@ public:
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
     void listItems(
-        std::function<void(AsyncEzListItemsResult&)> callback,
+        std::function<void(AsyncEzListItemsResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* inventoryName,
-        const Char* pageToken=nullptr,
+        StringHolder namespaceName,
+        StringHolder inventoryName,
+        gs2::optional<StringHolder> pageToken=gs2::nullopt,
         gs2::optional<Int64> limit=gs2::nullopt
     );
 
@@ -169,11 +169,11 @@ public:
     /// <param name="inventoryName">インベントリの種類名</param>
     /// <param name="itemName">アイテムモデルの種類名</param>
     void getItem(
-        std::function<void(AsyncEzGetItemResult&)> callback,
+        std::function<void(AsyncEzGetItemResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* inventoryName,
-        const Char* itemName
+        StringHolder namespaceName,
+        StringHolder inventoryName,
+        StringHolder itemName
     );
 
     /// <summary>
@@ -196,11 +196,11 @@ public:
     /// <param name="itemName">アイテムマスターの名前</param>
     /// <param name="consumeCount">消費する量</param>
     void consume(
-        std::function<void(AsyncEzConsumeResult&)> callback,
+        std::function<void(AsyncEzConsumeResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* inventoryName,
-        const Char* itemName,
+        StringHolder namespaceName,
+        StringHolder inventoryName,
+        StringHolder itemName,
         Int64 consumeCount
     );
 };

@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "DisplayItem.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace showcase {
@@ -51,46 +53,45 @@ private:
         /** 販売期間とするイベントマスター のGRN */
         optional<StringHolder> salesPeriodEventId;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             name(data.name),
             metadata(data.metadata),
-            displayItems(data.displayItems),
             salesPeriodEventId(data.salesPeriodEventId)
-        {}
+        {
+            if (data.displayItems)
+            {
+                displayItems = data.displayItems->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            displayItems(std::move(data.displayItems)),
-            salesPeriodEventId(std::move(data.salesPeriodEventId))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "name") == 0) {
+            if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "displayItems") == 0) {
+            else if (std::strcmp(name_, "displayItems") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -102,7 +103,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "salesPeriodEventId") == 0) {
+            else if (std::strcmp(name_, "salesPeriodEventId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->salesPeriodEventId.emplace(jsonValue.GetString());
@@ -111,72 +113,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Showcase() :
-        m_pData(nullptr)
-    {}
+    Showcase() = default;
+    Showcase(const Showcase& showcase) = default;
+    Showcase(Showcase&& showcase) = default;
+    ~Showcase() = default;
 
-    Showcase(const Showcase& showcase) :
-        Gs2Object(showcase),
-        m_pData(showcase.m_pData != nullptr ? new Data(*showcase.m_pData) : nullptr)
-    {}
+    Showcase& operator=(const Showcase& showcase) = default;
+    Showcase& operator=(Showcase&& showcase) = default;
 
-    Showcase(Showcase&& showcase) :
-        Gs2Object(std::move(showcase)),
-        m_pData(showcase.m_pData)
+    Showcase deepCopy() const
     {
-        showcase.m_pData = nullptr;
-    }
-
-    ~Showcase()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Showcase& operator=(const Showcase& showcase)
-    {
-        Gs2Object::operator=(showcase);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*showcase.m_pData);
-
-        return *this;
-    }
-
-    Showcase& operator=(Showcase&& showcase)
-    {
-        Gs2Object::operator=(std::move(showcase));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = showcase.m_pData;
-        showcase.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Showcase);
     }
 
     const Showcase* operator->() const
@@ -203,9 +153,9 @@ public:
      *
      * @param name 商品名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -213,9 +163,9 @@ public:
      *
      * @param name 商品名
      */
-    Showcase& withName(const Char* name)
+    Showcase& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -234,9 +184,9 @@ public:
      *
      * @param metadata 商品のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -244,9 +194,9 @@ public:
      *
      * @param metadata 商品のメタデータ
      */
-    Showcase& withMetadata(const Char* metadata)
+    Showcase& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -265,9 +215,9 @@ public:
      *
      * @param displayItems インベントリに格納可能なアイテムモデル一覧
      */
-    void setDisplayItems(const List<DisplayItem>& displayItems)
+    void setDisplayItems(List<DisplayItem> displayItems)
     {
-        ensureData().displayItems.emplace(displayItems);
+        ensureData().displayItems.emplace(std::move(displayItems));
     }
 
     /**
@@ -275,9 +225,9 @@ public:
      *
      * @param displayItems インベントリに格納可能なアイテムモデル一覧
      */
-    Showcase& withDisplayItems(const List<DisplayItem>& displayItems)
+    Showcase& withDisplayItems(List<DisplayItem> displayItems)
     {
-        setDisplayItems(displayItems);
+        setDisplayItems(std::move(displayItems));
         return *this;
     }
 
@@ -296,9 +246,9 @@ public:
      *
      * @param salesPeriodEventId 販売期間とするイベントマスター のGRN
      */
-    void setSalesPeriodEventId(const Char* salesPeriodEventId)
+    void setSalesPeriodEventId(StringHolder salesPeriodEventId)
     {
-        ensureData().salesPeriodEventId.emplace(salesPeriodEventId);
+        ensureData().salesPeriodEventId.emplace(std::move(salesPeriodEventId));
     }
 
     /**
@@ -306,9 +256,9 @@ public:
      *
      * @param salesPeriodEventId 販売期間とするイベントマスター のGRN
      */
-    Showcase& withSalesPeriodEventId(const Char* salesPeriodEventId)
+    Showcase& withSalesPeriodEventId(StringHolder salesPeriodEventId)
     {
-        setSalesPeriodEventId(salesPeriodEventId);
+        setSalesPeriodEventId(std::move(salesPeriodEventId));
         return *this;
     }
 
@@ -323,7 +273,7 @@ inline bool operator!=(const Showcase& lhs, const Showcase& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

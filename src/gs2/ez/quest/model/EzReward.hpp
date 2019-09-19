@@ -27,33 +27,72 @@ namespace gs2 { namespace ez { namespace quest {
 class EzReward : public gs2::Gs2Object
 {
 private:
-    /** スタンプシートで実行するアクションの種類 */
-    gs2::optional<StringHolder> m_Action;
-    /** リクエストモデル */
-    gs2::optional<StringHolder> m_Request;
-    /** 入手するリソースGRN */
-    gs2::optional<StringHolder> m_ItemId;
-    /** 入手する数量 */
-    gs2::optional<Int32> m_Value;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** スタンプシートで実行するアクションの種類 */
+        gs2::optional<StringHolder> action;
+        /** リクエストモデル */
+        gs2::optional<StringHolder> request;
+        /** 入手するリソースGRN */
+        gs2::optional<StringHolder> itemId;
+        /** 入手する数量 */
+        gs2::optional<Int32> value;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            action(data.action),
+            request(data.request),
+            itemId(data.itemId),
+            value(data.value)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::quest::Reward& reward) :
+            action(reward.getAction()),
+            request(reward.getRequest()),
+            itemId(reward.getItemId()),
+            value(reward.getValue() ? *reward.getValue() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzReward() = default;
+    EzReward(const EzReward& ezReward) = default;
+    EzReward(EzReward&& ezReward) = default;
+    ~EzReward() = default;
 
     EzReward(gs2::quest::Reward reward) :
-        m_Action(reward.getAction()),
-        m_Request(reward.getRequest()),
-        m_ItemId(reward.getItemId()),
-        m_Value(reward.getValue() ? *reward.getValue() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(reward)
+    {}
+
+    EzReward& operator=(const EzReward& ezReward) = default;
+    EzReward& operator=(EzReward&& ezReward) = default;
+
+    EzReward deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzReward);
     }
 
     gs2::quest::Reward ToModel() const
     {
         gs2::quest::Reward reward;
-        reward.setAction(*m_Action);
-        reward.setRequest(*m_Request);
-        reward.setItemId(*m_ItemId);
-        reward.setValue(*m_Value);
+        reward.setAction(getAction());
+        reward.setRequest(getRequest());
+        reward.setItemId(getItemId());
+        reward.setValue(getValue());
         return reward;
     }
 
@@ -61,80 +100,65 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getAction() const
+    const StringHolder& getAction() const
     {
-        return *m_Action;
+        return *ensureData().action;
     }
 
-    gs2::StringHolder& getAction()
+    const StringHolder& getRequest() const
     {
-        return *m_Action;
+        return *ensureData().request;
     }
 
-    const gs2::StringHolder& getRequest() const
+    const StringHolder& getItemId() const
     {
-        return *m_Request;
-    }
-
-    gs2::StringHolder& getRequest()
-    {
-        return *m_Request;
-    }
-
-    const gs2::StringHolder& getItemId() const
-    {
-        return *m_ItemId;
-    }
-
-    gs2::StringHolder& getItemId()
-    {
-        return *m_ItemId;
+        return *ensureData().itemId;
     }
 
     Int32 getValue() const
     {
-        return *m_Value;
+        return *ensureData().value;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setAction(Char* action)
+    void setAction(StringHolder action)
     {
-        m_Action.emplace(action);
+        ensureData().action = std::move(action);
     }
 
-    void setRequest(Char* request)
+    void setRequest(StringHolder request)
     {
-        m_Request.emplace(request);
+        ensureData().request = std::move(request);
     }
 
-    void setItemId(Char* itemId)
+    void setItemId(StringHolder itemId)
     {
-        m_ItemId.emplace(itemId);
+        ensureData().itemId = std::move(itemId);
     }
 
     void setValue(Int32 value)
     {
-        m_Value = value;
+        ensureData().value = value;
     }
 
-    EzReward& withAction(Char* action)
+    EzReward& withAction(StringHolder action)
     {
-        setAction(action);
+        setAction(std::move(action));
         return *this;
     }
 
-    EzReward& withRequest(Char* request)
+    EzReward& withRequest(StringHolder request)
     {
-        setRequest(request);
+        setRequest(std::move(request));
         return *this;
     }
 
-    EzReward& withItemId(Char* itemId)
+    EzReward& withItemId(StringHolder itemId)
     {
-        setItemId(itemId);
+        setItemId(std::move(itemId));
         return *this;
     }
 

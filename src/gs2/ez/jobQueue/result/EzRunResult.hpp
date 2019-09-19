@@ -27,25 +27,71 @@ namespace gs2 { namespace ez { namespace jobQueue {
 class EzRunResult : public gs2::Gs2Object
 {
 private:
-    /** ジョブ */
-    optional<EzJob> m_Item;
-    /** ジョブの実行結果 */
-    optional<EzJobResultBody> m_Result;
-    /** None */
-    Bool m_IsLastJob;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ジョブ */
+        optional<EzJob> item;
+        /** ジョブの実行結果 */
+        optional<EzJobResultBody> result;
+        /** None */
+        Bool isLastJob;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            isLastJob(data.isLastJob)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+            if (data.result)
+            {
+                result = data.result->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::jobQueue::RunResult& runResult) :
+            isLastJob(*runResult.getIsLastJob())
+        {
+            if (runResult.getItem())
+            {
+                item = EzJob(*runResult.getItem());
+            }
+            if (runResult.getResult())
+            {
+                result = EzJobResultBody(*runResult.getResult());
+            }
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzRunResult(const gs2::jobQueue::RunResult& result) :
-        m_IsLastJob(*result.getIsLastJob())
+    EzRunResult() = default;
+    EzRunResult(const EzRunResult& result) = default;
+    EzRunResult(EzRunResult&& result) = default;
+    ~EzRunResult() = default;
+
+    EzRunResult(gs2::jobQueue::RunResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzRunResult& operator=(const EzRunResult& result) = default;
+    EzRunResult& operator=(EzRunResult&& result) = default;
+
+    EzRunResult deepCopy() const
     {
-        if (result.getItem())
-        {
-            m_Item = EzJob(*result.getItem());
-        }
-        if (result.getResult())
-        {
-            m_Result = EzJobResultBody(*result.getResult());
-        }
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRunResult);
     }
 
     static bool isConvertible(const gs2::jobQueue::RunResult& result)
@@ -60,27 +106,17 @@ public:
 
     const optional<EzJob>& getItem() const
     {
-        return m_Item;
-    }
-
-    optional<EzJob>& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 
     const optional<EzJobResultBody>& getResult() const
     {
-        return m_Result;
-    }
-
-    optional<EzJobResultBody>& getResult()
-    {
-        return m_Result;
+        return ensureData().result;
     }
 
     Bool getIsLastJob() const
     {
-        return m_IsLastJob;
+        return ensureData().isLastJob;
     }
 };
 

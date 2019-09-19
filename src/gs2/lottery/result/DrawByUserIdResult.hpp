@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace lottery
 {
@@ -47,32 +49,33 @@ private:
         /** ボックスから取り出したアイテムのリスト */
         optional<BoxItems> boxItems;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            items(data.items),
-            stampSheet(data.stampSheet),
-            boxItems(data.boxItems)
-        {}
+            stampSheet(data.stampSheet)
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+            if (data.boxItems)
+            {
+                boxItems = data.boxItems->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items)),
-            stampSheet(std::move(data.stampSheet)),
-            boxItems(std::move(data.boxItems))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -84,13 +87,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "stampSheet") == 0) {
+            else if (std::strcmp(name_, "stampSheet") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->stampSheet.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "boxItems") == 0) {
+            else if (std::strcmp(name_, "boxItems") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -101,72 +106,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DrawByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    DrawByUserIdResult() = default;
+    DrawByUserIdResult(const DrawByUserIdResult& drawByUserIdResult) = default;
+    DrawByUserIdResult(DrawByUserIdResult&& drawByUserIdResult) = default;
+    ~DrawByUserIdResult() = default;
 
-    DrawByUserIdResult(const DrawByUserIdResult& drawByUserIdResult) :
-        Gs2Object(drawByUserIdResult),
-        m_pData(drawByUserIdResult.m_pData != nullptr ? new Data(*drawByUserIdResult.m_pData) : nullptr)
-    {}
+    DrawByUserIdResult& operator=(const DrawByUserIdResult& drawByUserIdResult) = default;
+    DrawByUserIdResult& operator=(DrawByUserIdResult&& drawByUserIdResult) = default;
 
-    DrawByUserIdResult(DrawByUserIdResult&& drawByUserIdResult) :
-        Gs2Object(std::move(drawByUserIdResult)),
-        m_pData(drawByUserIdResult.m_pData)
+    DrawByUserIdResult deepCopy() const
     {
-        drawByUserIdResult.m_pData = nullptr;
-    }
-
-    ~DrawByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DrawByUserIdResult& operator=(const DrawByUserIdResult& drawByUserIdResult)
-    {
-        Gs2Object::operator=(drawByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*drawByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    DrawByUserIdResult& operator=(DrawByUserIdResult&& drawByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(drawByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = drawByUserIdResult.m_pData;
-        drawByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DrawByUserIdResult);
     }
 
     const DrawByUserIdResult* operator->() const
@@ -193,9 +146,9 @@ public:
      *
      * @param items 抽選結果の景品リスト
      */
-    void setItems(const List<DrawnPrize>& items)
+    void setItems(List<DrawnPrize> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
     /**
@@ -213,9 +166,9 @@ public:
      *
      * @param stampSheet 排出された景品を入手するスタンプシート
      */
-    void setStampSheet(const Char* stampSheet)
+    void setStampSheet(StringHolder stampSheet)
     {
-        ensureData().stampSheet.emplace(stampSheet);
+        ensureData().stampSheet.emplace(std::move(stampSheet));
     }
 
     /**
@@ -233,9 +186,9 @@ public:
      *
      * @param boxItems ボックスから取り出したアイテムのリスト
      */
-    void setBoxItems(const BoxItems& boxItems)
+    void setBoxItems(BoxItems boxItems)
     {
-        ensureData().boxItems.emplace(boxItems);
+        ensureData().boxItems.emplace(std::move(boxItems));
     }
 
 

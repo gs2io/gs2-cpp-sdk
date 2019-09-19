@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace quest {
@@ -46,36 +48,33 @@ private:
         /** 値 */
         optional<StringHolder> value;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             key(data.key),
             value(data.value)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            key(std::move(data.key)),
-            value(std::move(data.value))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "key") == 0) {
+            if (std::strcmp(name_, "key") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->key.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "value") == 0) {
+            else if (std::strcmp(name_, "value") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->value.emplace(jsonValue.GetString());
@@ -84,72 +83,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Config() :
-        m_pData(nullptr)
-    {}
+    Config() = default;
+    Config(const Config& config) = default;
+    Config(Config&& config) = default;
+    ~Config() = default;
 
-    Config(const Config& config) :
-        Gs2Object(config),
-        m_pData(config.m_pData != nullptr ? new Data(*config.m_pData) : nullptr)
-    {}
+    Config& operator=(const Config& config) = default;
+    Config& operator=(Config&& config) = default;
 
-    Config(Config&& config) :
-        Gs2Object(std::move(config)),
-        m_pData(config.m_pData)
+    Config deepCopy() const
     {
-        config.m_pData = nullptr;
-    }
-
-    ~Config()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Config& operator=(const Config& config)
-    {
-        Gs2Object::operator=(config);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*config.m_pData);
-
-        return *this;
-    }
-
-    Config& operator=(Config&& config)
-    {
-        Gs2Object::operator=(std::move(config));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = config.m_pData;
-        config.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Config);
     }
 
     const Config* operator->() const
@@ -176,9 +123,9 @@ public:
      *
      * @param key 名前
      */
-    void setKey(const Char* key)
+    void setKey(StringHolder key)
     {
-        ensureData().key.emplace(key);
+        ensureData().key.emplace(std::move(key));
     }
 
     /**
@@ -186,9 +133,9 @@ public:
      *
      * @param key 名前
      */
-    Config& withKey(const Char* key)
+    Config& withKey(StringHolder key)
     {
-        setKey(key);
+        setKey(std::move(key));
         return *this;
     }
 
@@ -207,9 +154,9 @@ public:
      *
      * @param value 値
      */
-    void setValue(const Char* value)
+    void setValue(StringHolder value)
     {
-        ensureData().value.emplace(value);
+        ensureData().value.emplace(std::move(value));
     }
 
     /**
@@ -217,9 +164,9 @@ public:
      *
      * @param value 値
      */
-    Config& withValue(const Char* value)
+    Config& withValue(StringHolder value)
     {
-        setValue(value);
+        setValue(std::move(value));
         return *this;
     }
 
@@ -234,7 +181,7 @@ inline bool operator!=(const Config& lhs, const Config& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

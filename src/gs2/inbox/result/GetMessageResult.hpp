@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inbox
 {
@@ -43,28 +45,28 @@ private:
         /** メッセージ */
         optional<Message> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GetMessageResult() :
-        m_pData(nullptr)
-    {}
+    GetMessageResult() = default;
+    GetMessageResult(const GetMessageResult& getMessageResult) = default;
+    GetMessageResult(GetMessageResult&& getMessageResult) = default;
+    ~GetMessageResult() = default;
 
-    GetMessageResult(const GetMessageResult& getMessageResult) :
-        Gs2Object(getMessageResult),
-        m_pData(getMessageResult.m_pData != nullptr ? new Data(*getMessageResult.m_pData) : nullptr)
-    {}
+    GetMessageResult& operator=(const GetMessageResult& getMessageResult) = default;
+    GetMessageResult& operator=(GetMessageResult&& getMessageResult) = default;
 
-    GetMessageResult(GetMessageResult&& getMessageResult) :
-        Gs2Object(std::move(getMessageResult)),
-        m_pData(getMessageResult.m_pData)
+    GetMessageResult deepCopy() const
     {
-        getMessageResult.m_pData = nullptr;
-    }
-
-    ~GetMessageResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetMessageResult& operator=(const GetMessageResult& getMessageResult)
-    {
-        Gs2Object::operator=(getMessageResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getMessageResult.m_pData);
-
-        return *this;
-    }
-
-    GetMessageResult& operator=(GetMessageResult&& getMessageResult)
-    {
-        Gs2Object::operator=(std::move(getMessageResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getMessageResult.m_pData;
-        getMessageResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetMessageResult);
     }
 
     const GetMessageResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item メッセージ
      */
-    void setItem(const Message& item)
+    void setItem(Message item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

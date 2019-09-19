@@ -27,22 +27,61 @@ namespace gs2 { namespace ez { namespace quest {
 class EzDescribeCompletedQuestListsResult : public gs2::Gs2Object
 {
 private:
-    /** クエスト進行のリスト */
-    List<EzCompletedQuestList> m_Items;
-    /** リストの続きを取得するためのページトークン */
-    optional<StringHolder> m_NextPageToken;
-
-public:
-    EzDescribeCompletedQuestListsResult(const gs2::quest::DescribeCompletedQuestListsResult& result) :
-        m_NextPageToken(result.getNextPageToken())
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** クエスト進行のリスト */
+        List<EzCompletedQuestList> items;
+        /** リストの続きを取得するためのページトークン */
+        optional<StringHolder> nextPageToken;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            nextPageToken(data.nextPageToken)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::quest::DescribeCompletedQuestListsResult& describeCompletedQuestListsResult) :
+            nextPageToken(describeCompletedQuestListsResult.getNextPageToken())
+        {
             {
-                m_Items += EzCompletedQuestList(list[i]);
+                auto& list = *describeCompletedQuestListsResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzCompletedQuestList(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzDescribeCompletedQuestListsResult() = default;
+    EzDescribeCompletedQuestListsResult(const EzDescribeCompletedQuestListsResult& result) = default;
+    EzDescribeCompletedQuestListsResult(EzDescribeCompletedQuestListsResult&& result) = default;
+    ~EzDescribeCompletedQuestListsResult() = default;
+
+    EzDescribeCompletedQuestListsResult(gs2::quest::DescribeCompletedQuestListsResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzDescribeCompletedQuestListsResult& operator=(const EzDescribeCompletedQuestListsResult& result) = default;
+    EzDescribeCompletedQuestListsResult& operator=(EzDescribeCompletedQuestListsResult&& result) = default;
+
+    EzDescribeCompletedQuestListsResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDescribeCompletedQuestListsResult);
     }
 
     static bool isConvertible(const gs2::quest::DescribeCompletedQuestListsResult& result)
@@ -57,22 +96,12 @@ public:
 
     const List<EzCompletedQuestList>& getItems() const
     {
-        return m_Items;
+        return ensureData().items;
     }
 
-    List<EzCompletedQuestList>& getItems()
+    const optional<StringHolder>& getNextPageToken() const
     {
-        return m_Items;
-    }
-
-    const optional<gs2::StringHolder>& getNextPageToken() const
-    {
-        return m_NextPageToken;
-    }
-
-    optional<gs2::StringHolder>& getNextPageToken()
-    {
-        return m_NextPageToken;
+        return ensureData().nextPageToken;
     }
 };
 

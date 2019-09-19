@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace money {
@@ -48,44 +50,41 @@ private:
         /** 完了時に使用する GS2-JobQueue のネームスペース のGRN */
         optional<StringHolder> doneTriggerQueueNamespaceId;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             triggerScriptId(data.triggerScriptId),
             doneTriggerScriptId(data.doneTriggerScriptId),
             doneTriggerQueueNamespaceId(data.doneTriggerQueueNamespaceId)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            triggerScriptId(std::move(data.triggerScriptId)),
-            doneTriggerScriptId(std::move(data.doneTriggerScriptId)),
-            doneTriggerQueueNamespaceId(std::move(data.doneTriggerQueueNamespaceId))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "triggerScriptId") == 0) {
+            if (std::strcmp(name_, "triggerScriptId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->triggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "doneTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "doneTriggerScriptId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->doneTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "doneTriggerQueueNamespaceId") == 0) {
+            else if (std::strcmp(name_, "doneTriggerQueueNamespaceId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->doneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
@@ -94,72 +93,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    ScriptSetting() :
-        m_pData(nullptr)
-    {}
+    ScriptSetting() = default;
+    ScriptSetting(const ScriptSetting& scriptSetting) = default;
+    ScriptSetting(ScriptSetting&& scriptSetting) = default;
+    ~ScriptSetting() = default;
 
-    ScriptSetting(const ScriptSetting& scriptSetting) :
-        Gs2Object(scriptSetting),
-        m_pData(scriptSetting.m_pData != nullptr ? new Data(*scriptSetting.m_pData) : nullptr)
-    {}
+    ScriptSetting& operator=(const ScriptSetting& scriptSetting) = default;
+    ScriptSetting& operator=(ScriptSetting&& scriptSetting) = default;
 
-    ScriptSetting(ScriptSetting&& scriptSetting) :
-        Gs2Object(std::move(scriptSetting)),
-        m_pData(scriptSetting.m_pData)
+    ScriptSetting deepCopy() const
     {
-        scriptSetting.m_pData = nullptr;
-    }
-
-    ~ScriptSetting()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    ScriptSetting& operator=(const ScriptSetting& scriptSetting)
-    {
-        Gs2Object::operator=(scriptSetting);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*scriptSetting.m_pData);
-
-        return *this;
-    }
-
-    ScriptSetting& operator=(ScriptSetting&& scriptSetting)
-    {
-        Gs2Object::operator=(std::move(scriptSetting));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = scriptSetting.m_pData;
-        scriptSetting.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ScriptSetting);
     }
 
     const ScriptSetting* operator->() const
@@ -186,9 +133,9 @@ public:
      *
      * @param triggerScriptId 実行前に使用する GS2-Script のスクリプト のGRN
      */
-    void setTriggerScriptId(const Char* triggerScriptId)
+    void setTriggerScriptId(StringHolder triggerScriptId)
     {
-        ensureData().triggerScriptId.emplace(triggerScriptId);
+        ensureData().triggerScriptId.emplace(std::move(triggerScriptId));
     }
 
     /**
@@ -196,9 +143,9 @@ public:
      *
      * @param triggerScriptId 実行前に使用する GS2-Script のスクリプト のGRN
      */
-    ScriptSetting& withTriggerScriptId(const Char* triggerScriptId)
+    ScriptSetting& withTriggerScriptId(StringHolder triggerScriptId)
     {
-        setTriggerScriptId(triggerScriptId);
+        setTriggerScriptId(std::move(triggerScriptId));
         return *this;
     }
 
@@ -217,9 +164,9 @@ public:
      *
      * @param doneTriggerScriptId 完了時に使用する GS2-Script のスクリプト のGRN
      */
-    void setDoneTriggerScriptId(const Char* doneTriggerScriptId)
+    void setDoneTriggerScriptId(StringHolder doneTriggerScriptId)
     {
-        ensureData().doneTriggerScriptId.emplace(doneTriggerScriptId);
+        ensureData().doneTriggerScriptId.emplace(std::move(doneTriggerScriptId));
     }
 
     /**
@@ -227,9 +174,9 @@ public:
      *
      * @param doneTriggerScriptId 完了時に使用する GS2-Script のスクリプト のGRN
      */
-    ScriptSetting& withDoneTriggerScriptId(const Char* doneTriggerScriptId)
+    ScriptSetting& withDoneTriggerScriptId(StringHolder doneTriggerScriptId)
     {
-        setDoneTriggerScriptId(doneTriggerScriptId);
+        setDoneTriggerScriptId(std::move(doneTriggerScriptId));
         return *this;
     }
 
@@ -248,9 +195,9 @@ public:
      *
      * @param doneTriggerQueueNamespaceId 完了時に使用する GS2-JobQueue のネームスペース のGRN
      */
-    void setDoneTriggerQueueNamespaceId(const Char* doneTriggerQueueNamespaceId)
+    void setDoneTriggerQueueNamespaceId(StringHolder doneTriggerQueueNamespaceId)
     {
-        ensureData().doneTriggerQueueNamespaceId.emplace(doneTriggerQueueNamespaceId);
+        ensureData().doneTriggerQueueNamespaceId.emplace(std::move(doneTriggerQueueNamespaceId));
     }
 
     /**
@@ -258,9 +205,9 @@ public:
      *
      * @param doneTriggerQueueNamespaceId 完了時に使用する GS2-JobQueue のネームスペース のGRN
      */
-    ScriptSetting& withDoneTriggerQueueNamespaceId(const Char* doneTriggerQueueNamespaceId)
+    ScriptSetting& withDoneTriggerQueueNamespaceId(StringHolder doneTriggerQueueNamespaceId)
     {
-        setDoneTriggerQueueNamespaceId(doneTriggerQueueNamespaceId);
+        setDoneTriggerQueueNamespaceId(std::move(doneTriggerQueueNamespaceId));
         return *this;
     }
 
@@ -275,7 +222,7 @@ inline bool operator!=(const ScriptSetting& lhs, const ScriptSetting& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

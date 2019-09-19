@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace deploy
 {
@@ -43,28 +45,25 @@ private:
         /** None */
         optional<StringHolder> status;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             status(data.status)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            status(std::move(data.status))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "status") == 0) {
+            if (std::strcmp(name_, "status") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->status.emplace(jsonValue.GetString());
@@ -73,72 +72,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GetStackStatusResult() :
-        m_pData(nullptr)
-    {}
+    GetStackStatusResult() = default;
+    GetStackStatusResult(const GetStackStatusResult& getStackStatusResult) = default;
+    GetStackStatusResult(GetStackStatusResult&& getStackStatusResult) = default;
+    ~GetStackStatusResult() = default;
 
-    GetStackStatusResult(const GetStackStatusResult& getStackStatusResult) :
-        Gs2Object(getStackStatusResult),
-        m_pData(getStackStatusResult.m_pData != nullptr ? new Data(*getStackStatusResult.m_pData) : nullptr)
-    {}
+    GetStackStatusResult& operator=(const GetStackStatusResult& getStackStatusResult) = default;
+    GetStackStatusResult& operator=(GetStackStatusResult&& getStackStatusResult) = default;
 
-    GetStackStatusResult(GetStackStatusResult&& getStackStatusResult) :
-        Gs2Object(std::move(getStackStatusResult)),
-        m_pData(getStackStatusResult.m_pData)
+    GetStackStatusResult deepCopy() const
     {
-        getStackStatusResult.m_pData = nullptr;
-    }
-
-    ~GetStackStatusResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetStackStatusResult& operator=(const GetStackStatusResult& getStackStatusResult)
-    {
-        Gs2Object::operator=(getStackStatusResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getStackStatusResult.m_pData);
-
-        return *this;
-    }
-
-    GetStackStatusResult& operator=(GetStackStatusResult&& getStackStatusResult)
-    {
-        Gs2Object::operator=(std::move(getStackStatusResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getStackStatusResult.m_pData;
-        getStackStatusResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetStackStatusResult);
     }
 
     const GetStackStatusResult* operator->() const
@@ -165,9 +112,9 @@ public:
      *
      * @param status None
      */
-    void setStatus(const Char* status)
+    void setStatus(StringHolder status)
     {
-        ensureData().status.emplace(status);
+        ensureData().status.emplace(std::move(status));
     }
 
 

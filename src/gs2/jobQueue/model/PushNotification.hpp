@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace jobQueue {
@@ -44,22 +46,18 @@ private:
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             namespaceName(data.namespaceName)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            namespaceName(std::move(data.namespaceName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
@@ -74,72 +72,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    PushNotification() :
-        m_pData(nullptr)
-    {}
+    PushNotification() = default;
+    PushNotification(const PushNotification& pushNotification) = default;
+    PushNotification(PushNotification&& pushNotification) = default;
+    ~PushNotification() = default;
 
-    PushNotification(const PushNotification& pushNotification) :
-        Gs2Object(pushNotification),
-        m_pData(pushNotification.m_pData != nullptr ? new Data(*pushNotification.m_pData) : nullptr)
-    {}
+    PushNotification& operator=(const PushNotification& pushNotification) = default;
+    PushNotification& operator=(PushNotification&& pushNotification) = default;
 
-    PushNotification(PushNotification&& pushNotification) :
-        Gs2Object(std::move(pushNotification)),
-        m_pData(pushNotification.m_pData)
+    PushNotification deepCopy() const
     {
-        pushNotification.m_pData = nullptr;
-    }
-
-    ~PushNotification()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    PushNotification& operator=(const PushNotification& pushNotification)
-    {
-        Gs2Object::operator=(pushNotification);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*pushNotification.m_pData);
-
-        return *this;
-    }
-
-    PushNotification& operator=(PushNotification&& pushNotification)
-    {
-        Gs2Object::operator=(std::move(pushNotification));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = pushNotification.m_pData;
-        pushNotification.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(PushNotification);
     }
 
     const PushNotification* operator->() const
@@ -166,9 +112,11 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(
+            std::move(namespaceName)
+        );
     }
 
     /**
@@ -176,9 +124,11 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    PushNotification& withNamespaceName(const Char* namespaceName)
+    PushNotification& withNamespaceName(StringHolder namespaceName)
     {
-        setNamespaceName(namespaceName);
+        setNamespaceName(
+            std::move(namespaceName)
+        );
         return *this;
     }
 
@@ -193,7 +143,7 @@ inline bool operator!=(const PushNotification& lhs, const PushNotification& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (lhs.m_pData || lhr.m_pData)
         {
             return true;
         }

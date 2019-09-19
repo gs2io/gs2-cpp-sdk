@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace account {
 class EzDoTakeOverResult : public gs2::Gs2Object
 {
 private:
-    /** ゲームプレイヤーアカウント */
-    EzAccount m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ゲームプレイヤーアカウント */
+        EzAccount item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::account::DoTakeOverResult& doTakeOverResult) :
+            item(*doTakeOverResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzDoTakeOverResult(const gs2::account::DoTakeOverResult& result) :
-        m_Item(*result.getItem())
+    EzDoTakeOverResult() = default;
+    EzDoTakeOverResult(const EzDoTakeOverResult& result) = default;
+    EzDoTakeOverResult(EzDoTakeOverResult&& result) = default;
+    ~EzDoTakeOverResult() = default;
+
+    EzDoTakeOverResult(gs2::account::DoTakeOverResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzDoTakeOverResult& operator=(const EzDoTakeOverResult& result) = default;
+    EzDoTakeOverResult& operator=(EzDoTakeOverResult&& result) = default;
+
+    EzDoTakeOverResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDoTakeOverResult);
     }
 
     static bool isConvertible(const gs2::account::DoTakeOverResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzAccount& getItem() const
     {
-        return m_Item;
-    }
-
-    EzAccount& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

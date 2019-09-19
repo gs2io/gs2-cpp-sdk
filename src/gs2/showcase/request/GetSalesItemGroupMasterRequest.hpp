@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ShowcaseConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace showcase
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -46,98 +48,47 @@ private:
         /** 商品名 */
         optional<StringHolder> salesItemGroupName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             salesItemGroupName(data.salesItemGroupName)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            salesItemGroupName(std::move(data.salesItemGroupName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    GetSalesItemGroupMasterRequest() :
-        m_pData(nullptr)
-    {}
+    GetSalesItemGroupMasterRequest() = default;
+    GetSalesItemGroupMasterRequest(const GetSalesItemGroupMasterRequest& getSalesItemGroupMasterRequest) = default;
+    GetSalesItemGroupMasterRequest(GetSalesItemGroupMasterRequest&& getSalesItemGroupMasterRequest) = default;
+    ~GetSalesItemGroupMasterRequest() GS2_OVERRIDE = default;
 
-    GetSalesItemGroupMasterRequest(const GetSalesItemGroupMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Showcase(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    GetSalesItemGroupMasterRequest& operator=(const GetSalesItemGroupMasterRequest& getSalesItemGroupMasterRequest) = default;
+    GetSalesItemGroupMasterRequest& operator=(GetSalesItemGroupMasterRequest&& getSalesItemGroupMasterRequest) = default;
 
-    GetSalesItemGroupMasterRequest(GetSalesItemGroupMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Showcase(std::move(obj)),
-        m_pData(obj.m_pData)
+    GetSalesItemGroupMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~GetSalesItemGroupMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetSalesItemGroupMasterRequest& operator=(const GetSalesItemGroupMasterRequest& getSalesItemGroupMasterRequest)
-    {
-        Gs2BasicRequest::operator=(getSalesItemGroupMasterRequest);
-        Gs2Showcase::operator=(getSalesItemGroupMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getSalesItemGroupMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    GetSalesItemGroupMasterRequest& operator=(GetSalesItemGroupMasterRequest&& getSalesItemGroupMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(getSalesItemGroupMasterRequest));
-        Gs2Showcase::operator=(std::move(getSalesItemGroupMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getSalesItemGroupMasterRequest.m_pData;
-        getSalesItemGroupMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetSalesItemGroupMasterRequest);
     }
 
     const GetSalesItemGroupMasterRequest* operator->() const
@@ -165,9 +116,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -175,9 +126,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    GetSalesItemGroupMasterRequest& withNamespaceName(const Char* namespaceName)
+    GetSalesItemGroupMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -196,9 +147,9 @@ public:
      *
      * @param salesItemGroupName 商品名
      */
-    void setSalesItemGroupName(const Char* salesItemGroupName)
+    void setSalesItemGroupName(StringHolder salesItemGroupName)
     {
-        ensureData().salesItemGroupName.emplace(salesItemGroupName);
+        ensureData().salesItemGroupName.emplace(std::move(salesItemGroupName));
     }
 
     /**
@@ -206,9 +157,9 @@ public:
      *
      * @param salesItemGroupName 商品名
      */
-    GetSalesItemGroupMasterRequest& withSalesItemGroupName(const Char* salesItemGroupName)
+    GetSalesItemGroupMasterRequest& withSalesItemGroupName(StringHolder salesItemGroupName)
     {
-        ensureData().salesItemGroupName.emplace(salesItemGroupName);
+        ensureData().salesItemGroupName.emplace(std::move(salesItemGroupName));
         return *this;
     }
 
@@ -219,33 +170,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    GetSalesItemGroupMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    GetSalesItemGroupMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    GetSalesItemGroupMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    GetSalesItemGroupMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -254,9 +181,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    GetSalesItemGroupMasterRequest& withRequestId(const Char* gs2RequestId)
+    GetSalesItemGroupMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

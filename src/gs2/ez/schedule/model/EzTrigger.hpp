@@ -27,33 +27,72 @@ namespace gs2 { namespace ez { namespace schedule {
 class EzTrigger : public gs2::Gs2Object
 {
 private:
-    /** トリガー */
-    gs2::optional<StringHolder> m_TriggerId;
-    /** トリガーの名前 */
-    gs2::optional<StringHolder> m_Name;
-    /** 作成日時 */
-    gs2::optional<Int64> m_CreatedAt;
-    /** トリガーの有効期限 */
-    gs2::optional<Int64> m_ExpiresAt;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** トリガー */
+        gs2::optional<StringHolder> triggerId;
+        /** トリガーの名前 */
+        gs2::optional<StringHolder> name;
+        /** 作成日時 */
+        gs2::optional<Int64> createdAt;
+        /** トリガーの有効期限 */
+        gs2::optional<Int64> expiresAt;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            triggerId(data.triggerId),
+            name(data.name),
+            createdAt(data.createdAt),
+            expiresAt(data.expiresAt)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::schedule::Trigger& trigger) :
+            triggerId(trigger.getTriggerId()),
+            name(trigger.getName()),
+            createdAt(trigger.getCreatedAt() ? *trigger.getCreatedAt() : 0),
+            expiresAt(trigger.getExpiresAt() ? *trigger.getExpiresAt() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzTrigger() = default;
+    EzTrigger(const EzTrigger& ezTrigger) = default;
+    EzTrigger(EzTrigger&& ezTrigger) = default;
+    ~EzTrigger() = default;
 
     EzTrigger(gs2::schedule::Trigger trigger) :
-        m_TriggerId(trigger.getTriggerId()),
-        m_Name(trigger.getName()),
-        m_CreatedAt(trigger.getCreatedAt() ? *trigger.getCreatedAt() : 0),
-        m_ExpiresAt(trigger.getExpiresAt() ? *trigger.getExpiresAt() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(trigger)
+    {}
+
+    EzTrigger& operator=(const EzTrigger& ezTrigger) = default;
+    EzTrigger& operator=(EzTrigger&& ezTrigger) = default;
+
+    EzTrigger deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzTrigger);
     }
 
     gs2::schedule::Trigger ToModel() const
     {
         gs2::schedule::Trigger trigger;
-        trigger.setTriggerId(*m_TriggerId);
-        trigger.setName(*m_Name);
-        trigger.setCreatedAt(*m_CreatedAt);
-        trigger.setExpiresAt(*m_ExpiresAt);
+        trigger.setTriggerId(getTriggerId());
+        trigger.setName(getName());
+        trigger.setCreatedAt(getCreatedAt());
+        trigger.setExpiresAt(getExpiresAt());
         return trigger;
     }
 
@@ -61,69 +100,59 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getTriggerId() const
+    const StringHolder& getTriggerId() const
     {
-        return *m_TriggerId;
+        return *ensureData().triggerId;
     }
 
-    gs2::StringHolder& getTriggerId()
+    const StringHolder& getName() const
     {
-        return *m_TriggerId;
-    }
-
-    const gs2::StringHolder& getName() const
-    {
-        return *m_Name;
-    }
-
-    gs2::StringHolder& getName()
-    {
-        return *m_Name;
+        return *ensureData().name;
     }
 
     Int64 getCreatedAt() const
     {
-        return *m_CreatedAt;
+        return *ensureData().createdAt;
     }
 
     Int64 getExpiresAt() const
     {
-        return *m_ExpiresAt;
+        return *ensureData().expiresAt;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setTriggerId(Char* triggerId)
+    void setTriggerId(StringHolder triggerId)
     {
-        m_TriggerId.emplace(triggerId);
+        ensureData().triggerId = std::move(triggerId);
     }
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
     void setCreatedAt(Int64 createdAt)
     {
-        m_CreatedAt = createdAt;
+        ensureData().createdAt = createdAt;
     }
 
     void setExpiresAt(Int64 expiresAt)
     {
-        m_ExpiresAt = expiresAt;
+        ensureData().expiresAt = expiresAt;
     }
 
-    EzTrigger& withTriggerId(Char* triggerId)
+    EzTrigger& withTriggerId(StringHolder triggerId)
     {
-        setTriggerId(triggerId);
+        setTriggerId(std::move(triggerId));
         return *this;
     }
 
-    EzTrigger& withName(Char* name)
+    EzTrigger& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 

@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2DeployConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace deploy
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** スタック名 */
@@ -46,98 +48,47 @@ private:
         /** 作成中のリソース名 */
         optional<StringHolder> resourceName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             stackName(data.stackName),
             resourceName(data.resourceName)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            stackName(std::move(data.stackName)),
-            resourceName(std::move(data.resourceName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    GetResourceRequest() :
-        m_pData(nullptr)
-    {}
+    GetResourceRequest() = default;
+    GetResourceRequest(const GetResourceRequest& getResourceRequest) = default;
+    GetResourceRequest(GetResourceRequest&& getResourceRequest) = default;
+    ~GetResourceRequest() GS2_OVERRIDE = default;
 
-    GetResourceRequest(const GetResourceRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Deploy(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    GetResourceRequest& operator=(const GetResourceRequest& getResourceRequest) = default;
+    GetResourceRequest& operator=(GetResourceRequest&& getResourceRequest) = default;
 
-    GetResourceRequest(GetResourceRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Deploy(std::move(obj)),
-        m_pData(obj.m_pData)
+    GetResourceRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~GetResourceRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetResourceRequest& operator=(const GetResourceRequest& getResourceRequest)
-    {
-        Gs2BasicRequest::operator=(getResourceRequest);
-        Gs2Deploy::operator=(getResourceRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getResourceRequest.m_pData);
-
-        return *this;
-    }
-
-    GetResourceRequest& operator=(GetResourceRequest&& getResourceRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(getResourceRequest));
-        Gs2Deploy::operator=(std::move(getResourceRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getResourceRequest.m_pData;
-        getResourceRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetResourceRequest);
     }
 
     const GetResourceRequest* operator->() const
@@ -165,9 +116,9 @@ public:
      *
      * @param stackName スタック名
      */
-    void setStackName(const Char* stackName)
+    void setStackName(StringHolder stackName)
     {
-        ensureData().stackName.emplace(stackName);
+        ensureData().stackName.emplace(std::move(stackName));
     }
 
     /**
@@ -175,9 +126,9 @@ public:
      *
      * @param stackName スタック名
      */
-    GetResourceRequest& withStackName(const Char* stackName)
+    GetResourceRequest& withStackName(StringHolder stackName)
     {
-        ensureData().stackName.emplace(stackName);
+        ensureData().stackName.emplace(std::move(stackName));
         return *this;
     }
 
@@ -196,9 +147,9 @@ public:
      *
      * @param resourceName 作成中のリソース名
      */
-    void setResourceName(const Char* resourceName)
+    void setResourceName(StringHolder resourceName)
     {
-        ensureData().resourceName.emplace(resourceName);
+        ensureData().resourceName.emplace(std::move(resourceName));
     }
 
     /**
@@ -206,9 +157,9 @@ public:
      *
      * @param resourceName 作成中のリソース名
      */
-    GetResourceRequest& withResourceName(const Char* resourceName)
+    GetResourceRequest& withResourceName(StringHolder resourceName)
     {
-        ensureData().resourceName.emplace(resourceName);
+        ensureData().resourceName.emplace(std::move(resourceName));
         return *this;
     }
 
@@ -219,33 +170,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    GetResourceRequest& withGs2ClientId(const Char* gs2ClientId)
+    GetResourceRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    GetResourceRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    GetResourceRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -254,9 +181,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    GetResourceRequest& withRequestId(const Char* gs2RequestId)
+    GetResourceRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

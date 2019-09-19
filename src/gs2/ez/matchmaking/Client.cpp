@@ -28,9 +28,9 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::createGathering(
-    std::function<void(AsyncEzCreateGatheringResult&)> callback,
+    std::function<void(AsyncEzCreateGatheringResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
+    StringHolder namespaceName,
     EzPlayer player,
     List<EzCapacityOfRole> capacityOfRoles,
     List<StringHolder> allowUserIds,
@@ -61,7 +61,7 @@ void Client::createGathering(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.createGathering(
         request,
-        [callback](gs2::matchmaking::AsyncCreateGatheringResult& r)
+        [callback](gs2::matchmaking::AsyncCreateGatheringResult r)
         {
             if (r.getError())
             {
@@ -87,10 +87,10 @@ void Client::createGathering(
 }
 
 void Client::updateGathering(
-    std::function<void(AsyncEzUpdateGatheringResult&)> callback,
+    std::function<void(AsyncEzUpdateGatheringResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* gatheringName,
+    StringHolder namespaceName,
+    StringHolder gatheringName,
     gs2::optional<List<EzAttributeRange>> attributeRanges
 )
 {
@@ -109,7 +109,7 @@ void Client::updateGathering(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.updateGathering(
         request,
-        [callback](gs2::matchmaking::AsyncUpdateGatheringResult& r)
+        [callback](gs2::matchmaking::AsyncUpdateGatheringResult r)
         {
             if (r.getError())
             {
@@ -135,11 +135,11 @@ void Client::updateGathering(
 }
 
 void Client::doMatchmaking(
-    std::function<void(AsyncEzDoMatchmakingResult&)> callback,
+    std::function<void(AsyncEzDoMatchmakingResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
+    StringHolder namespaceName,
     EzPlayer player,
-    const Char* matchmakingContextToken
+    gs2::optional<StringHolder> matchmakingContextToken
 )
 {
     gs2::matchmaking::DoMatchmakingRequest request;
@@ -147,12 +147,12 @@ void Client::doMatchmaking(
     request.setPlayer(player.ToModel());
     if (matchmakingContextToken)
     {
-        request.setMatchmakingContextToken(matchmakingContextToken);
+        request.setMatchmakingContextToken(std::move(*matchmakingContextToken));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.doMatchmaking(
         request,
-        [callback](gs2::matchmaking::AsyncDoMatchmakingResult& r)
+        [callback](gs2::matchmaking::AsyncDoMatchmakingResult r)
         {
             if (r.getError())
             {
@@ -178,9 +178,9 @@ void Client::doMatchmaking(
 }
 
 void Client::getGathering(
-    std::function<void(AsyncEzGetGatheringResult&)> callback,
-    const Char* namespaceName,
-    const Char* gatheringName
+    std::function<void(AsyncEzGetGatheringResult)> callback,
+    StringHolder namespaceName,
+    StringHolder gatheringName
 )
 {
     gs2::matchmaking::GetGatheringRequest request;
@@ -188,7 +188,7 @@ void Client::getGathering(
     request.setGatheringName(gatheringName);
     m_Client.getGathering(
         request,
-        [callback](gs2::matchmaking::AsyncGetGatheringResult& r)
+        [callback](gs2::matchmaking::AsyncGetGatheringResult r)
         {
             if (r.getError())
             {
@@ -214,10 +214,10 @@ void Client::getGathering(
 }
 
 void Client::cancelMatchmaking(
-    std::function<void(AsyncEzCancelMatchmakingResult&)> callback,
+    std::function<void(AsyncEzCancelMatchmakingResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* gatheringName
+    StringHolder namespaceName,
+    StringHolder gatheringName
 )
 {
     gs2::matchmaking::CancelMatchmakingRequest request;
@@ -226,7 +226,7 @@ void Client::cancelMatchmaking(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.cancelMatchmaking(
         request,
-        [callback](gs2::matchmaking::AsyncCancelMatchmakingResult& r)
+        [callback](gs2::matchmaking::AsyncCancelMatchmakingResult r)
         {
             if (r.getError())
             {

@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace mission {
@@ -56,58 +58,58 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             completeId(data.completeId),
             userId(data.userId),
             missionGroupName(data.missionGroupName),
-            completedMissionTaskNames(data.completedMissionTaskNames),
-            receivedMissionTaskNames(data.receivedMissionTaskNames),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.completedMissionTaskNames)
+            {
+                completedMissionTaskNames = data.completedMissionTaskNames->deepCopy();
+            }
+            if (data.receivedMissionTaskNames)
+            {
+                receivedMissionTaskNames = data.receivedMissionTaskNames->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            completeId(std::move(data.completeId)),
-            userId(std::move(data.userId)),
-            missionGroupName(std::move(data.missionGroupName)),
-            completedMissionTaskNames(std::move(data.completedMissionTaskNames)),
-            receivedMissionTaskNames(std::move(data.receivedMissionTaskNames)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "completeId") == 0) {
+            if (std::strcmp(name_, "completeId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->completeId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "missionGroupName") == 0) {
+            else if (std::strcmp(name_, "missionGroupName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->missionGroupName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "completedMissionTaskNames") == 0) {
+            else if (std::strcmp(name_, "completedMissionTaskNames") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -122,7 +124,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "receivedMissionTaskNames") == 0) {
+            else if (std::strcmp(name_, "receivedMissionTaskNames") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -137,13 +140,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -152,72 +157,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Complete() :
-        m_pData(nullptr)
-    {}
+    Complete() = default;
+    Complete(const Complete& complete) = default;
+    Complete(Complete&& complete) = default;
+    ~Complete() = default;
 
-    Complete(const Complete& complete) :
-        Gs2Object(complete),
-        m_pData(complete.m_pData != nullptr ? new Data(*complete.m_pData) : nullptr)
-    {}
+    Complete& operator=(const Complete& complete) = default;
+    Complete& operator=(Complete&& complete) = default;
 
-    Complete(Complete&& complete) :
-        Gs2Object(std::move(complete)),
-        m_pData(complete.m_pData)
+    Complete deepCopy() const
     {
-        complete.m_pData = nullptr;
-    }
-
-    ~Complete()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Complete& operator=(const Complete& complete)
-    {
-        Gs2Object::operator=(complete);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*complete.m_pData);
-
-        return *this;
-    }
-
-    Complete& operator=(Complete&& complete)
-    {
-        Gs2Object::operator=(std::move(complete));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = complete.m_pData;
-        complete.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Complete);
     }
 
     const Complete* operator->() const
@@ -244,9 +197,9 @@ public:
      *
      * @param completeId 達成状況
      */
-    void setCompleteId(const Char* completeId)
+    void setCompleteId(StringHolder completeId)
     {
-        ensureData().completeId.emplace(completeId);
+        ensureData().completeId.emplace(std::move(completeId));
     }
 
     /**
@@ -254,9 +207,9 @@ public:
      *
      * @param completeId 達成状況
      */
-    Complete& withCompleteId(const Char* completeId)
+    Complete& withCompleteId(StringHolder completeId)
     {
-        setCompleteId(completeId);
+        setCompleteId(std::move(completeId));
         return *this;
     }
 
@@ -275,9 +228,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -285,9 +238,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    Complete& withUserId(const Char* userId)
+    Complete& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -306,9 +259,9 @@ public:
      *
      * @param missionGroupName ミッショングループ名
      */
-    void setMissionGroupName(const Char* missionGroupName)
+    void setMissionGroupName(StringHolder missionGroupName)
     {
-        ensureData().missionGroupName.emplace(missionGroupName);
+        ensureData().missionGroupName.emplace(std::move(missionGroupName));
     }
 
     /**
@@ -316,9 +269,9 @@ public:
      *
      * @param missionGroupName ミッショングループ名
      */
-    Complete& withMissionGroupName(const Char* missionGroupName)
+    Complete& withMissionGroupName(StringHolder missionGroupName)
     {
-        setMissionGroupName(missionGroupName);
+        setMissionGroupName(std::move(missionGroupName));
         return *this;
     }
 
@@ -337,9 +290,9 @@ public:
      *
      * @param completedMissionTaskNames 達成済みのタスク名リスト
      */
-    void setCompletedMissionTaskNames(const List<StringHolder>& completedMissionTaskNames)
+    void setCompletedMissionTaskNames(List<StringHolder> completedMissionTaskNames)
     {
-        ensureData().completedMissionTaskNames.emplace(completedMissionTaskNames);
+        ensureData().completedMissionTaskNames.emplace(std::move(completedMissionTaskNames));
     }
 
     /**
@@ -347,9 +300,9 @@ public:
      *
      * @param completedMissionTaskNames 達成済みのタスク名リスト
      */
-    Complete& withCompletedMissionTaskNames(const List<StringHolder>& completedMissionTaskNames)
+    Complete& withCompletedMissionTaskNames(List<StringHolder> completedMissionTaskNames)
     {
-        setCompletedMissionTaskNames(completedMissionTaskNames);
+        setCompletedMissionTaskNames(std::move(completedMissionTaskNames));
         return *this;
     }
 
@@ -368,9 +321,9 @@ public:
      *
      * @param receivedMissionTaskNames 報酬の受け取り済みのタスク名リスト
      */
-    void setReceivedMissionTaskNames(const List<StringHolder>& receivedMissionTaskNames)
+    void setReceivedMissionTaskNames(List<StringHolder> receivedMissionTaskNames)
     {
-        ensureData().receivedMissionTaskNames.emplace(receivedMissionTaskNames);
+        ensureData().receivedMissionTaskNames.emplace(std::move(receivedMissionTaskNames));
     }
 
     /**
@@ -378,9 +331,9 @@ public:
      *
      * @param receivedMissionTaskNames 報酬の受け取り済みのタスク名リスト
      */
-    Complete& withReceivedMissionTaskNames(const List<StringHolder>& receivedMissionTaskNames)
+    Complete& withReceivedMissionTaskNames(List<StringHolder> receivedMissionTaskNames)
     {
-        setReceivedMissionTaskNames(receivedMissionTaskNames);
+        setReceivedMissionTaskNames(std::move(receivedMissionTaskNames));
         return *this;
     }
 
@@ -457,7 +410,7 @@ inline bool operator!=(const Complete& lhs, const Complete& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

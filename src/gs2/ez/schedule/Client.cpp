@@ -28,9 +28,9 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::listTriggers(
-    std::function<void(AsyncEzListTriggersResult&)> callback,
+    std::function<void(AsyncEzListTriggersResult)> callback,
     GameSession& session,
-    const Char* namespaceName
+    StringHolder namespaceName
 )
 {
     gs2::schedule::DescribeTriggersRequest request;
@@ -38,7 +38,7 @@ void Client::listTriggers(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.describeTriggers(
         request,
-        [callback](gs2::schedule::AsyncDescribeTriggersResult& r)
+        [callback](gs2::schedule::AsyncDescribeTriggersResult r)
         {
             if (r.getError())
             {
@@ -64,10 +64,10 @@ void Client::listTriggers(
 }
 
 void Client::getTrigger(
-    std::function<void(AsyncEzGetTriggerResult&)> callback,
+    std::function<void(AsyncEzGetTriggerResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* triggerName
+    StringHolder namespaceName,
+    StringHolder triggerName
 )
 {
     gs2::schedule::GetTriggerRequest request;
@@ -76,7 +76,7 @@ void Client::getTrigger(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.getTrigger(
         request,
-        [callback](gs2::schedule::AsyncGetTriggerResult& r)
+        [callback](gs2::schedule::AsyncGetTriggerResult r)
         {
             if (r.getError())
             {
@@ -102,9 +102,9 @@ void Client::getTrigger(
 }
 
 void Client::listEvents(
-    std::function<void(AsyncEzListEventsResult&)> callback,
+    std::function<void(AsyncEzListEventsResult)> callback,
     GameSession& session,
-    const Char* namespaceName
+    StringHolder namespaceName
 )
 {
     gs2::schedule::DescribeEventsRequest request;
@@ -112,7 +112,7 @@ void Client::listEvents(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.describeEvents(
         request,
-        [callback](gs2::schedule::AsyncDescribeEventsResult& r)
+        [callback](gs2::schedule::AsyncDescribeEventsResult r)
         {
             if (r.getError())
             {
@@ -138,10 +138,10 @@ void Client::listEvents(
 }
 
 void Client::getEvent(
-    std::function<void(AsyncEzGetEventResult&)> callback,
+    std::function<void(AsyncEzGetEventResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* eventName
+    StringHolder namespaceName,
+    StringHolder eventName
 )
 {
     gs2::schedule::GetEventRequest request;
@@ -150,7 +150,7 @@ void Client::getEvent(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.getEvent(
         request,
-        [callback](gs2::schedule::AsyncGetEventResult& r)
+        [callback](gs2::schedule::AsyncGetEventResult r)
         {
             if (r.getError())
             {

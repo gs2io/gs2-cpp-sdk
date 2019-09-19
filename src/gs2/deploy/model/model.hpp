@@ -18,6 +18,7 @@
 #define GS2_DEPLOY_MODEL_MODEL_HPP_
 
 #include <gs2/core/common.hpp>
+#include "notification.hpp"
 #include "Stack.hpp"
 #include "Resource.hpp"
 #include "WorkingStack.hpp"

@@ -27,37 +27,80 @@ namespace gs2 { namespace ez { namespace distributor {
 class EzDistributorModel : public gs2::Gs2Object
 {
 private:
-    /** ディストリビューターの種類名 */
-    gs2::optional<StringHolder> m_Name;
-    /** ディストリビューターの種類のメタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** 所持品の配布処理の権限判定に使用する ユーザ のGRN */
-    gs2::optional<StringHolder> m_AssumeUserId;
-    /** 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN */
-    gs2::optional<StringHolder> m_InboxNamespaceId;
-    /** ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト */
-    gs2::optional<List<StringHolder>> m_WhiteListTargetIds;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ディストリビューターの種類名 */
+        gs2::optional<StringHolder> name;
+        /** ディストリビューターの種類のメタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** 所持品の配布処理の権限判定に使用する ユーザ のGRN */
+        gs2::optional<StringHolder> assumeUserId;
+        /** 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN */
+        gs2::optional<StringHolder> inboxNamespaceId;
+        /** ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト */
+        gs2::optional<List<StringHolder>> whiteListTargetIds;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            metadata(data.metadata),
+            assumeUserId(data.assumeUserId),
+            inboxNamespaceId(data.inboxNamespaceId)
+        {
+            if (data.whiteListTargetIds)
+            {
+                whiteListTargetIds = data.whiteListTargetIds->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::distributor::DistributorModel& distributorModel) :
+            name(distributorModel.getName()),
+            metadata(distributorModel.getMetadata()),
+            assumeUserId(distributorModel.getAssumeUserId()),
+            inboxNamespaceId(distributorModel.getInboxNamespaceId()),
+            whiteListTargetIds(distributorModel.getWhiteListTargetIds())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzDistributorModel() = default;
+    EzDistributorModel(const EzDistributorModel& ezDistributorModel) = default;
+    EzDistributorModel(EzDistributorModel&& ezDistributorModel) = default;
+    ~EzDistributorModel() = default;
 
     EzDistributorModel(gs2::distributor::DistributorModel distributorModel) :
-        m_Name(distributorModel.getName()),
-        m_Metadata(distributorModel.getMetadata()),
-        m_AssumeUserId(distributorModel.getAssumeUserId()),
-        m_InboxNamespaceId(distributorModel.getInboxNamespaceId()),
-        m_WhiteListTargetIds(distributorModel.getWhiteListTargetIds())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(distributorModel)
+    {}
+
+    EzDistributorModel& operator=(const EzDistributorModel& ezDistributorModel) = default;
+    EzDistributorModel& operator=(EzDistributorModel&& ezDistributorModel) = default;
+
+    EzDistributorModel deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDistributorModel);
     }
 
     gs2::distributor::DistributorModel ToModel() const
     {
         gs2::distributor::DistributorModel distributorModel;
-        distributorModel.setName(*m_Name);
-        distributorModel.setMetadata(*m_Metadata);
-        distributorModel.setAssumeUserId(*m_AssumeUserId);
-        distributorModel.setInboxNamespaceId(*m_InboxNamespaceId);
-        distributorModel.setWhiteListTargetIds(*m_WhiteListTargetIds);
+        distributorModel.setName(getName());
+        distributorModel.setMetadata(getMetadata());
+        distributorModel.setAssumeUserId(getAssumeUserId());
+        distributorModel.setInboxNamespaceId(getInboxNamespaceId());
+        distributorModel.setWhiteListTargetIds(getWhiteListTargetIds());
         return distributorModel;
     }
 
@@ -65,121 +108,85 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
+        return *ensureData().name;
     }
 
-    gs2::StringHolder& getName()
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
+        return *ensureData().metadata;
     }
 
-    const gs2::StringHolder& getMetadata() const
+    const StringHolder& getAssumeUserId() const
     {
-        return *m_Metadata;
+        return *ensureData().assumeUserId;
     }
 
-    gs2::StringHolder& getMetadata()
+    const StringHolder& getInboxNamespaceId() const
     {
-        return *m_Metadata;
-    }
-
-    const gs2::StringHolder& getAssumeUserId() const
-    {
-        return *m_AssumeUserId;
-    }
-
-    gs2::StringHolder& getAssumeUserId()
-    {
-        return *m_AssumeUserId;
-    }
-
-    const gs2::StringHolder& getInboxNamespaceId() const
-    {
-        return *m_InboxNamespaceId;
-    }
-
-    gs2::StringHolder& getInboxNamespaceId()
-    {
-        return *m_InboxNamespaceId;
+        return *ensureData().inboxNamespaceId;
     }
 
     const List<StringHolder>& getWhiteListTargetIds() const
     {
-        return *m_WhiteListTargetIds;
-    }
-
-    List<StringHolder>& getWhiteListTargetIds()
-    {
-        return *m_WhiteListTargetIds;
+        return *ensureData().whiteListTargetIds;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
-    void setAssumeUserId(Char* assumeUserId)
+    void setAssumeUserId(StringHolder assumeUserId)
     {
-        m_AssumeUserId.emplace(assumeUserId);
+        ensureData().assumeUserId = std::move(assumeUserId);
     }
 
-    void setInboxNamespaceId(Char* inboxNamespaceId)
+    void setInboxNamespaceId(StringHolder inboxNamespaceId)
     {
-        m_InboxNamespaceId.emplace(inboxNamespaceId);
+        ensureData().inboxNamespaceId = std::move(inboxNamespaceId);
     }
 
-    void setWhiteListTargetIds(const List<StringHolder>& whiteListTargetIds)
+    void setWhiteListTargetIds(List<StringHolder> whiteListTargetIds)
     {
-        m_WhiteListTargetIds = whiteListTargetIds;
+        ensureData().whiteListTargetIds = std::move(whiteListTargetIds);
     }
 
-    void setWhiteListTargetIds(List<StringHolder>&& whiteListTargetIds)
+    EzDistributorModel& withName(StringHolder name)
     {
-        m_WhiteListTargetIds = std::move(whiteListTargetIds);
-    }
-
-    EzDistributorModel& withName(Char* name)
-    {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzDistributorModel& withMetadata(Char* metadata)
+    EzDistributorModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
-    EzDistributorModel& withAssumeUserId(Char* assumeUserId)
+    EzDistributorModel& withAssumeUserId(StringHolder assumeUserId)
     {
-        setAssumeUserId(assumeUserId);
+        setAssumeUserId(std::move(assumeUserId));
         return *this;
     }
 
-    EzDistributorModel& withInboxNamespaceId(Char* inboxNamespaceId)
+    EzDistributorModel& withInboxNamespaceId(StringHolder inboxNamespaceId)
     {
-        setInboxNamespaceId(inboxNamespaceId);
+        setInboxNamespaceId(std::move(inboxNamespaceId));
         return *this;
     }
 
-    EzDistributorModel& withWhiteListTargetIds(const List<StringHolder>& whiteListTargetIds)
-    {
-        setWhiteListTargetIds(whiteListTargetIds);
-        return *this;
-    }
-
-    EzDistributorModel& withWhiteListTargetIds(List<StringHolder>&& whiteListTargetIds)
+    EzDistributorModel& withWhiteListTargetIds(List<StringHolder> whiteListTargetIds)
     {
         setWhiteListTargetIds(std::move(whiteListTargetIds));
         return *this;

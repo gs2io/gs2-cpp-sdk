@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace money
 {
@@ -43,28 +45,28 @@ private:
         /** レシート */
         optional<Receipt> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    RecordReceiptResult() :
-        m_pData(nullptr)
-    {}
+    RecordReceiptResult() = default;
+    RecordReceiptResult(const RecordReceiptResult& recordReceiptResult) = default;
+    RecordReceiptResult(RecordReceiptResult&& recordReceiptResult) = default;
+    ~RecordReceiptResult() = default;
 
-    RecordReceiptResult(const RecordReceiptResult& recordReceiptResult) :
-        Gs2Object(recordReceiptResult),
-        m_pData(recordReceiptResult.m_pData != nullptr ? new Data(*recordReceiptResult.m_pData) : nullptr)
-    {}
+    RecordReceiptResult& operator=(const RecordReceiptResult& recordReceiptResult) = default;
+    RecordReceiptResult& operator=(RecordReceiptResult&& recordReceiptResult) = default;
 
-    RecordReceiptResult(RecordReceiptResult&& recordReceiptResult) :
-        Gs2Object(std::move(recordReceiptResult)),
-        m_pData(recordReceiptResult.m_pData)
+    RecordReceiptResult deepCopy() const
     {
-        recordReceiptResult.m_pData = nullptr;
-    }
-
-    ~RecordReceiptResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    RecordReceiptResult& operator=(const RecordReceiptResult& recordReceiptResult)
-    {
-        Gs2Object::operator=(recordReceiptResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*recordReceiptResult.m_pData);
-
-        return *this;
-    }
-
-    RecordReceiptResult& operator=(RecordReceiptResult&& recordReceiptResult)
-    {
-        Gs2Object::operator=(std::move(recordReceiptResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = recordReceiptResult.m_pData;
-        recordReceiptResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(RecordReceiptResult);
     }
 
     const RecordReceiptResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item レシート
      */
-    void setItem(const Receipt& item)
+    void setItem(Receipt item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

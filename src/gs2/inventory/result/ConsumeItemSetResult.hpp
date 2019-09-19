@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inventory
 {
@@ -47,32 +49,36 @@ private:
         /** インベントリ */
         optional<Inventory> inventory;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            items(data.items),
-            itemModel(data.itemModel),
-            inventory(data.inventory)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+            if (data.itemModel)
+            {
+                itemModel = data.itemModel->deepCopy();
+            }
+            if (data.inventory)
+            {
+                inventory = data.inventory->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items)),
-            itemModel(std::move(data.itemModel)),
-            inventory(std::move(data.inventory))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -84,7 +90,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "itemModel") == 0) {
+            else if (std::strcmp(name_, "itemModel") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -92,7 +99,8 @@ private:
                     detail::json::JsonParser::parse(&this->itemModel->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "inventory") == 0) {
+            else if (std::strcmp(name_, "inventory") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -103,72 +111,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    ConsumeItemSetResult() :
-        m_pData(nullptr)
-    {}
+    ConsumeItemSetResult() = default;
+    ConsumeItemSetResult(const ConsumeItemSetResult& consumeItemSetResult) = default;
+    ConsumeItemSetResult(ConsumeItemSetResult&& consumeItemSetResult) = default;
+    ~ConsumeItemSetResult() = default;
 
-    ConsumeItemSetResult(const ConsumeItemSetResult& consumeItemSetResult) :
-        Gs2Object(consumeItemSetResult),
-        m_pData(consumeItemSetResult.m_pData != nullptr ? new Data(*consumeItemSetResult.m_pData) : nullptr)
-    {}
+    ConsumeItemSetResult& operator=(const ConsumeItemSetResult& consumeItemSetResult) = default;
+    ConsumeItemSetResult& operator=(ConsumeItemSetResult&& consumeItemSetResult) = default;
 
-    ConsumeItemSetResult(ConsumeItemSetResult&& consumeItemSetResult) :
-        Gs2Object(std::move(consumeItemSetResult)),
-        m_pData(consumeItemSetResult.m_pData)
+    ConsumeItemSetResult deepCopy() const
     {
-        consumeItemSetResult.m_pData = nullptr;
-    }
-
-    ~ConsumeItemSetResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    ConsumeItemSetResult& operator=(const ConsumeItemSetResult& consumeItemSetResult)
-    {
-        Gs2Object::operator=(consumeItemSetResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*consumeItemSetResult.m_pData);
-
-        return *this;
-    }
-
-    ConsumeItemSetResult& operator=(ConsumeItemSetResult&& consumeItemSetResult)
-    {
-        Gs2Object::operator=(std::move(consumeItemSetResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = consumeItemSetResult.m_pData;
-        consumeItemSetResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ConsumeItemSetResult);
     }
 
     const ConsumeItemSetResult* operator->() const
@@ -195,9 +151,9 @@ public:
      *
      * @param items 消費後の有効期限ごとのアイテム所持数量のリスト
      */
-    void setItems(const List<ItemSet>& items)
+    void setItems(List<ItemSet> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
     /**
@@ -215,9 +171,9 @@ public:
      *
      * @param itemModel アイテムモデル
      */
-    void setItemModel(const ItemModel& itemModel)
+    void setItemModel(ItemModel itemModel)
     {
-        ensureData().itemModel.emplace(itemModel);
+        ensureData().itemModel.emplace(std::move(itemModel));
     }
 
     /**
@@ -235,9 +191,9 @@ public:
      *
      * @param inventory インベントリ
      */
-    void setInventory(const Inventory& inventory)
+    void setInventory(Inventory inventory)
     {
-        ensureData().inventory.emplace(inventory);
+        ensureData().inventory.emplace(std::move(inventory));
     }
 
 

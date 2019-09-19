@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace mission {
 class EzGetCounterModelResult : public gs2::Gs2Object
 {
 private:
-    /** カウンターの種類 */
-    EzCounterModel m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** カウンターの種類 */
+        EzCounterModel item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::mission::GetCounterModelResult& getCounterModelResult) :
+            item(*getCounterModelResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetCounterModelResult(const gs2::mission::GetCounterModelResult& result) :
-        m_Item(*result.getItem())
+    EzGetCounterModelResult() = default;
+    EzGetCounterModelResult(const EzGetCounterModelResult& result) = default;
+    EzGetCounterModelResult(EzGetCounterModelResult&& result) = default;
+    ~EzGetCounterModelResult() = default;
+
+    EzGetCounterModelResult(gs2::mission::GetCounterModelResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetCounterModelResult& operator=(const EzGetCounterModelResult& result) = default;
+    EzGetCounterModelResult& operator=(EzGetCounterModelResult&& result) = default;
+
+    EzGetCounterModelResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetCounterModelResult);
     }
 
     static bool isConvertible(const gs2::mission::GetCounterModelResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzCounterModel& getItem() const
     {
-        return m_Item;
-    }
-
-    EzCounterModel& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

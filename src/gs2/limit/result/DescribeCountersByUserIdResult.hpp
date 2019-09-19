@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace limit
 {
@@ -45,30 +47,29 @@ private:
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            items(data.items),
             nextPageToken(data.nextPageToken)
-        {}
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items)),
-            nextPageToken(std::move(data.nextPageToken))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -80,7 +81,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "nextPageToken") == 0) {
+            else if (std::strcmp(name_, "nextPageToken") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->nextPageToken.emplace(jsonValue.GetString());
@@ -89,72 +91,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DescribeCountersByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    DescribeCountersByUserIdResult() = default;
+    DescribeCountersByUserIdResult(const DescribeCountersByUserIdResult& describeCountersByUserIdResult) = default;
+    DescribeCountersByUserIdResult(DescribeCountersByUserIdResult&& describeCountersByUserIdResult) = default;
+    ~DescribeCountersByUserIdResult() = default;
 
-    DescribeCountersByUserIdResult(const DescribeCountersByUserIdResult& describeCountersByUserIdResult) :
-        Gs2Object(describeCountersByUserIdResult),
-        m_pData(describeCountersByUserIdResult.m_pData != nullptr ? new Data(*describeCountersByUserIdResult.m_pData) : nullptr)
-    {}
+    DescribeCountersByUserIdResult& operator=(const DescribeCountersByUserIdResult& describeCountersByUserIdResult) = default;
+    DescribeCountersByUserIdResult& operator=(DescribeCountersByUserIdResult&& describeCountersByUserIdResult) = default;
 
-    DescribeCountersByUserIdResult(DescribeCountersByUserIdResult&& describeCountersByUserIdResult) :
-        Gs2Object(std::move(describeCountersByUserIdResult)),
-        m_pData(describeCountersByUserIdResult.m_pData)
+    DescribeCountersByUserIdResult deepCopy() const
     {
-        describeCountersByUserIdResult.m_pData = nullptr;
-    }
-
-    ~DescribeCountersByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DescribeCountersByUserIdResult& operator=(const DescribeCountersByUserIdResult& describeCountersByUserIdResult)
-    {
-        Gs2Object::operator=(describeCountersByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*describeCountersByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    DescribeCountersByUserIdResult& operator=(DescribeCountersByUserIdResult&& describeCountersByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(describeCountersByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = describeCountersByUserIdResult.m_pData;
-        describeCountersByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeCountersByUserIdResult);
     }
 
     const DescribeCountersByUserIdResult* operator->() const
@@ -181,9 +131,9 @@ public:
      *
      * @param items カウンターのリスト
      */
-    void setItems(const List<Counter>& items)
+    void setItems(List<Counter> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
     /**
@@ -201,9 +151,9 @@ public:
      *
      * @param nextPageToken リストの続きを取得するためのページトークン
      */
-    void setNextPageToken(const Char* nextPageToken)
+    void setNextPageToken(StringHolder nextPageToken)
     {
-        ensureData().nextPageToken.emplace(nextPageToken);
+        ensureData().nextPageToken.emplace(std::move(nextPageToken));
     }
 
 

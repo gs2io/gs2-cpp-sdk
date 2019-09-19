@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace money
 {
@@ -45,30 +47,29 @@ private:
         /** 消費した通貨の価格 */
         optional<Float> price;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            item(data.item),
             price(data.price)
-        {}
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item)),
-            price(std::move(data.price))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -76,7 +77,8 @@ private:
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "price") == 0) {
+            else if (std::strcmp(name_, "price") == 0)
+            {
                 if (jsonValue.IsFloat())
                 {
                     this->price = jsonValue.GetFloat();
@@ -85,72 +87,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    WithdrawByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    WithdrawByUserIdResult() = default;
+    WithdrawByUserIdResult(const WithdrawByUserIdResult& withdrawByUserIdResult) = default;
+    WithdrawByUserIdResult(WithdrawByUserIdResult&& withdrawByUserIdResult) = default;
+    ~WithdrawByUserIdResult() = default;
 
-    WithdrawByUserIdResult(const WithdrawByUserIdResult& withdrawByUserIdResult) :
-        Gs2Object(withdrawByUserIdResult),
-        m_pData(withdrawByUserIdResult.m_pData != nullptr ? new Data(*withdrawByUserIdResult.m_pData) : nullptr)
-    {}
+    WithdrawByUserIdResult& operator=(const WithdrawByUserIdResult& withdrawByUserIdResult) = default;
+    WithdrawByUserIdResult& operator=(WithdrawByUserIdResult&& withdrawByUserIdResult) = default;
 
-    WithdrawByUserIdResult(WithdrawByUserIdResult&& withdrawByUserIdResult) :
-        Gs2Object(std::move(withdrawByUserIdResult)),
-        m_pData(withdrawByUserIdResult.m_pData)
+    WithdrawByUserIdResult deepCopy() const
     {
-        withdrawByUserIdResult.m_pData = nullptr;
-    }
-
-    ~WithdrawByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    WithdrawByUserIdResult& operator=(const WithdrawByUserIdResult& withdrawByUserIdResult)
-    {
-        Gs2Object::operator=(withdrawByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*withdrawByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    WithdrawByUserIdResult& operator=(WithdrawByUserIdResult&& withdrawByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(withdrawByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = withdrawByUserIdResult.m_pData;
-        withdrawByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(WithdrawByUserIdResult);
     }
 
     const WithdrawByUserIdResult* operator->() const
@@ -177,9 +127,9 @@ public:
      *
      * @param item 消費後のウォレット
      */
-    void setItem(const Wallet& item)
+    void setItem(Wallet item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
     /**

@@ -28,15 +28,15 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::listInventoryModels(
-    std::function<void(AsyncEzListInventoryModelsResult&)> callback,
-    const Char* namespaceName
+    std::function<void(AsyncEzListInventoryModelsResult)> callback,
+    StringHolder namespaceName
 )
 {
     gs2::inventory::DescribeInventoryModelsRequest request;
     request.setNamespaceName(namespaceName);
     m_Client.describeInventoryModels(
         request,
-        [callback](gs2::inventory::AsyncDescribeInventoryModelsResult& r)
+        [callback](gs2::inventory::AsyncDescribeInventoryModelsResult r)
         {
             if (r.getError())
             {
@@ -62,9 +62,9 @@ void Client::listInventoryModels(
 }
 
 void Client::getInventoryModel(
-    std::function<void(AsyncEzGetInventoryModelResult&)> callback,
-    const Char* namespaceName,
-    const Char* inventoryName
+    std::function<void(AsyncEzGetInventoryModelResult)> callback,
+    StringHolder namespaceName,
+    StringHolder inventoryName
 )
 {
     gs2::inventory::GetInventoryModelRequest request;
@@ -72,7 +72,7 @@ void Client::getInventoryModel(
     request.setInventoryName(inventoryName);
     m_Client.getInventoryModel(
         request,
-        [callback](gs2::inventory::AsyncGetInventoryModelResult& r)
+        [callback](gs2::inventory::AsyncGetInventoryModelResult r)
         {
             if (r.getError())
             {
@@ -98,9 +98,9 @@ void Client::getInventoryModel(
 }
 
 void Client::listItemModels(
-    std::function<void(AsyncEzListItemModelsResult&)> callback,
-    const Char* namespaceName,
-    const Char* inventoryName
+    std::function<void(AsyncEzListItemModelsResult)> callback,
+    StringHolder namespaceName,
+    StringHolder inventoryName
 )
 {
     gs2::inventory::DescribeItemModelsRequest request;
@@ -108,7 +108,7 @@ void Client::listItemModels(
     request.setInventoryName(inventoryName);
     m_Client.describeItemModels(
         request,
-        [callback](gs2::inventory::AsyncDescribeItemModelsResult& r)
+        [callback](gs2::inventory::AsyncDescribeItemModelsResult r)
         {
             if (r.getError())
             {
@@ -134,10 +134,10 @@ void Client::listItemModels(
 }
 
 void Client::getItemModel(
-    std::function<void(AsyncEzGetItemModelResult&)> callback,
-    const Char* namespaceName,
-    const Char* inventoryName,
-    const Char* itemName
+    std::function<void(AsyncEzGetItemModelResult)> callback,
+    StringHolder namespaceName,
+    StringHolder inventoryName,
+    StringHolder itemName
 )
 {
     gs2::inventory::GetItemModelRequest request;
@@ -146,7 +146,7 @@ void Client::getItemModel(
     request.setItemName(itemName);
     m_Client.getItemModel(
         request,
-        [callback](gs2::inventory::AsyncGetItemModelResult& r)
+        [callback](gs2::inventory::AsyncGetItemModelResult r)
         {
             if (r.getError())
             {
@@ -172,10 +172,10 @@ void Client::getItemModel(
 }
 
 void Client::listInventories(
-    std::function<void(AsyncEzListInventoriesResult&)> callback,
+    std::function<void(AsyncEzListInventoriesResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* pageToken,
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> pageToken,
     gs2::optional<Int64> limit
 )
 {
@@ -183,16 +183,16 @@ void Client::listInventories(
     request.setNamespaceName(namespaceName);
     if (pageToken)
     {
-        request.setPageToken(pageToken);
+        request.setPageToken(std::move(*pageToken));
     }
     if (limit)
     {
-        request.setLimit(*limit);
+        request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.describeInventories(
         request,
-        [callback](gs2::inventory::AsyncDescribeInventoriesResult& r)
+        [callback](gs2::inventory::AsyncDescribeInventoriesResult r)
         {
             if (r.getError())
             {
@@ -218,10 +218,10 @@ void Client::listInventories(
 }
 
 void Client::getInventory(
-    std::function<void(AsyncEzGetInventoryResult&)> callback,
+    std::function<void(AsyncEzGetInventoryResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* inventoryName
+    StringHolder namespaceName,
+    StringHolder inventoryName
 )
 {
     gs2::inventory::GetInventoryRequest request;
@@ -230,7 +230,7 @@ void Client::getInventory(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.getInventory(
         request,
-        [callback](gs2::inventory::AsyncGetInventoryResult& r)
+        [callback](gs2::inventory::AsyncGetInventoryResult r)
         {
             if (r.getError())
             {
@@ -256,11 +256,11 @@ void Client::getInventory(
 }
 
 void Client::listItems(
-    std::function<void(AsyncEzListItemsResult&)> callback,
+    std::function<void(AsyncEzListItemsResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* inventoryName,
-    const Char* pageToken,
+    StringHolder namespaceName,
+    StringHolder inventoryName,
+    gs2::optional<StringHolder> pageToken,
     gs2::optional<Int64> limit
 )
 {
@@ -269,16 +269,16 @@ void Client::listItems(
     request.setInventoryName(inventoryName);
     if (pageToken)
     {
-        request.setPageToken(pageToken);
+        request.setPageToken(std::move(*pageToken));
     }
     if (limit)
     {
-        request.setLimit(*limit);
+        request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.describeItemSets(
         request,
-        [callback](gs2::inventory::AsyncDescribeItemSetsResult& r)
+        [callback](gs2::inventory::AsyncDescribeItemSetsResult r)
         {
             if (r.getError())
             {
@@ -304,11 +304,11 @@ void Client::listItems(
 }
 
 void Client::getItem(
-    std::function<void(AsyncEzGetItemResult&)> callback,
+    std::function<void(AsyncEzGetItemResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* inventoryName,
-    const Char* itemName
+    StringHolder namespaceName,
+    StringHolder inventoryName,
+    StringHolder itemName
 )
 {
     gs2::inventory::GetItemSetRequest request;
@@ -318,7 +318,7 @@ void Client::getItem(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.getItemSet(
         request,
-        [callback](gs2::inventory::AsyncGetItemSetResult& r)
+        [callback](gs2::inventory::AsyncGetItemSetResult r)
         {
             if (r.getError())
             {
@@ -344,11 +344,11 @@ void Client::getItem(
 }
 
 void Client::consume(
-    std::function<void(AsyncEzConsumeResult&)> callback,
+    std::function<void(AsyncEzConsumeResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* inventoryName,
-    const Char* itemName,
+    StringHolder namespaceName,
+    StringHolder inventoryName,
+    StringHolder itemName,
     Int64 consumeCount
 )
 {
@@ -360,7 +360,7 @@ void Client::consume(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.consumeItemSet(
         request,
-        [callback](gs2::inventory::AsyncConsumeItemSetResult& r)
+        [callback](gs2::inventory::AsyncConsumeItemSetResult r)
         {
             if (r.getError())
             {

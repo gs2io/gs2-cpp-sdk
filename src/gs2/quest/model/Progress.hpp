@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "Reward.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace quest {
@@ -59,8 +61,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -69,62 +70,61 @@ private:
             transactionId(data.transactionId),
             questModelId(data.questModelId),
             randomSeed(data.randomSeed),
-            rewards(data.rewards),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.rewards)
+            {
+                rewards = data.rewards->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            progressId(std::move(data.progressId)),
-            userId(std::move(data.userId)),
-            transactionId(std::move(data.transactionId)),
-            questModelId(std::move(data.questModelId)),
-            randomSeed(std::move(data.randomSeed)),
-            rewards(std::move(data.rewards)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "progressId") == 0) {
+            if (std::strcmp(name_, "progressId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->progressId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "transactionId") == 0) {
+            else if (std::strcmp(name_, "transactionId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->transactionId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "questModelId") == 0) {
+            else if (std::strcmp(name_, "questModelId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->questModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "randomSeed") == 0) {
+            else if (std::strcmp(name_, "randomSeed") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->randomSeed = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "rewards") == 0) {
+            else if (std::strcmp(name_, "rewards") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -136,13 +136,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -151,72 +153,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Progress() :
-        m_pData(nullptr)
-    {}
+    Progress() = default;
+    Progress(const Progress& progress) = default;
+    Progress(Progress&& progress) = default;
+    ~Progress() = default;
 
-    Progress(const Progress& progress) :
-        Gs2Object(progress),
-        m_pData(progress.m_pData != nullptr ? new Data(*progress.m_pData) : nullptr)
-    {}
+    Progress& operator=(const Progress& progress) = default;
+    Progress& operator=(Progress&& progress) = default;
 
-    Progress(Progress&& progress) :
-        Gs2Object(std::move(progress)),
-        m_pData(progress.m_pData)
+    Progress deepCopy() const
     {
-        progress.m_pData = nullptr;
-    }
-
-    ~Progress()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Progress& operator=(const Progress& progress)
-    {
-        Gs2Object::operator=(progress);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*progress.m_pData);
-
-        return *this;
-    }
-
-    Progress& operator=(Progress&& progress)
-    {
-        Gs2Object::operator=(std::move(progress));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = progress.m_pData;
-        progress.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Progress);
     }
 
     const Progress* operator->() const
@@ -243,9 +193,9 @@ public:
      *
      * @param progressId クエスト挑戦
      */
-    void setProgressId(const Char* progressId)
+    void setProgressId(StringHolder progressId)
     {
-        ensureData().progressId.emplace(progressId);
+        ensureData().progressId.emplace(std::move(progressId));
     }
 
     /**
@@ -253,9 +203,9 @@ public:
      *
      * @param progressId クエスト挑戦
      */
-    Progress& withProgressId(const Char* progressId)
+    Progress& withProgressId(StringHolder progressId)
     {
-        setProgressId(progressId);
+        setProgressId(std::move(progressId));
         return *this;
     }
 
@@ -274,9 +224,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -284,9 +234,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    Progress& withUserId(const Char* userId)
+    Progress& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -305,9 +255,9 @@ public:
      *
      * @param transactionId トランザクションID
      */
-    void setTransactionId(const Char* transactionId)
+    void setTransactionId(StringHolder transactionId)
     {
-        ensureData().transactionId.emplace(transactionId);
+        ensureData().transactionId.emplace(std::move(transactionId));
     }
 
     /**
@@ -315,9 +265,9 @@ public:
      *
      * @param transactionId トランザクションID
      */
-    Progress& withTransactionId(const Char* transactionId)
+    Progress& withTransactionId(StringHolder transactionId)
     {
-        setTransactionId(transactionId);
+        setTransactionId(std::move(transactionId));
         return *this;
     }
 
@@ -336,9 +286,9 @@ public:
      *
      * @param questModelId クエストモデル
      */
-    void setQuestModelId(const Char* questModelId)
+    void setQuestModelId(StringHolder questModelId)
     {
-        ensureData().questModelId.emplace(questModelId);
+        ensureData().questModelId.emplace(std::move(questModelId));
     }
 
     /**
@@ -346,9 +296,9 @@ public:
      *
      * @param questModelId クエストモデル
      */
-    Progress& withQuestModelId(const Char* questModelId)
+    Progress& withQuestModelId(StringHolder questModelId)
     {
-        setQuestModelId(questModelId);
+        setQuestModelId(std::move(questModelId));
         return *this;
     }
 
@@ -398,9 +348,9 @@ public:
      *
      * @param rewards クエストで得られる報酬の上限
      */
-    void setRewards(const List<Reward>& rewards)
+    void setRewards(List<Reward> rewards)
     {
-        ensureData().rewards.emplace(rewards);
+        ensureData().rewards.emplace(std::move(rewards));
     }
 
     /**
@@ -408,9 +358,9 @@ public:
      *
      * @param rewards クエストで得られる報酬の上限
      */
-    Progress& withRewards(const List<Reward>& rewards)
+    Progress& withRewards(List<Reward> rewards)
     {
-        setRewards(rewards);
+        setRewards(std::move(rewards));
         return *this;
     }
 
@@ -487,7 +437,7 @@ inline bool operator!=(const Progress& lhs, const Progress& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

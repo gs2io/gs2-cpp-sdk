@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inventory
 {
@@ -49,34 +51,37 @@ private:
         /** 所持数量の上限を超えて受け取れずに GS2-Inbox に転送したアイテムの数量 */
         optional<Int64> overflowCount;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            items(data.items),
-            itemModel(data.itemModel),
-            inventory(data.inventory),
             overflowCount(data.overflowCount)
-        {}
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+            if (data.itemModel)
+            {
+                itemModel = data.itemModel->deepCopy();
+            }
+            if (data.inventory)
+            {
+                inventory = data.inventory->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items)),
-            itemModel(std::move(data.itemModel)),
-            inventory(std::move(data.inventory)),
-            overflowCount(std::move(data.overflowCount))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -88,7 +93,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "itemModel") == 0) {
+            else if (std::strcmp(name_, "itemModel") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -96,7 +102,8 @@ private:
                     detail::json::JsonParser::parse(&this->itemModel->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "inventory") == 0) {
+            else if (std::strcmp(name_, "inventory") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -104,7 +111,8 @@ private:
                     detail::json::JsonParser::parse(&this->inventory->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "overflowCount") == 0) {
+            else if (std::strcmp(name_, "overflowCount") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->overflowCount = jsonValue.GetInt64();
@@ -113,72 +121,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    AcquireItemSetByStampSheetResult() :
-        m_pData(nullptr)
-    {}
+    AcquireItemSetByStampSheetResult() = default;
+    AcquireItemSetByStampSheetResult(const AcquireItemSetByStampSheetResult& acquireItemSetByStampSheetResult) = default;
+    AcquireItemSetByStampSheetResult(AcquireItemSetByStampSheetResult&& acquireItemSetByStampSheetResult) = default;
+    ~AcquireItemSetByStampSheetResult() = default;
 
-    AcquireItemSetByStampSheetResult(const AcquireItemSetByStampSheetResult& acquireItemSetByStampSheetResult) :
-        Gs2Object(acquireItemSetByStampSheetResult),
-        m_pData(acquireItemSetByStampSheetResult.m_pData != nullptr ? new Data(*acquireItemSetByStampSheetResult.m_pData) : nullptr)
-    {}
+    AcquireItemSetByStampSheetResult& operator=(const AcquireItemSetByStampSheetResult& acquireItemSetByStampSheetResult) = default;
+    AcquireItemSetByStampSheetResult& operator=(AcquireItemSetByStampSheetResult&& acquireItemSetByStampSheetResult) = default;
 
-    AcquireItemSetByStampSheetResult(AcquireItemSetByStampSheetResult&& acquireItemSetByStampSheetResult) :
-        Gs2Object(std::move(acquireItemSetByStampSheetResult)),
-        m_pData(acquireItemSetByStampSheetResult.m_pData)
+    AcquireItemSetByStampSheetResult deepCopy() const
     {
-        acquireItemSetByStampSheetResult.m_pData = nullptr;
-    }
-
-    ~AcquireItemSetByStampSheetResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    AcquireItemSetByStampSheetResult& operator=(const AcquireItemSetByStampSheetResult& acquireItemSetByStampSheetResult)
-    {
-        Gs2Object::operator=(acquireItemSetByStampSheetResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*acquireItemSetByStampSheetResult.m_pData);
-
-        return *this;
-    }
-
-    AcquireItemSetByStampSheetResult& operator=(AcquireItemSetByStampSheetResult&& acquireItemSetByStampSheetResult)
-    {
-        Gs2Object::operator=(std::move(acquireItemSetByStampSheetResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = acquireItemSetByStampSheetResult.m_pData;
-        acquireItemSetByStampSheetResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(AcquireItemSetByStampSheetResult);
     }
 
     const AcquireItemSetByStampSheetResult* operator->() const
@@ -205,9 +161,9 @@ public:
      *
      * @param items 加算後の有効期限ごとのアイテム所持数量のリスト
      */
-    void setItems(const List<ItemSet>& items)
+    void setItems(List<ItemSet> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
     /**
@@ -225,9 +181,9 @@ public:
      *
      * @param itemModel アイテムモデル
      */
-    void setItemModel(const ItemModel& itemModel)
+    void setItemModel(ItemModel itemModel)
     {
-        ensureData().itemModel.emplace(itemModel);
+        ensureData().itemModel.emplace(std::move(itemModel));
     }
 
     /**
@@ -245,9 +201,9 @@ public:
      *
      * @param inventory インベントリ
      */
-    void setInventory(const Inventory& inventory)
+    void setInventory(Inventory inventory)
     {
-        ensureData().inventory.emplace(inventory);
+        ensureData().inventory.emplace(std::move(inventory));
     }
 
     /**

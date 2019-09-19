@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2IdentifierConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace identifier
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ユーザー名 */
@@ -46,98 +48,47 @@ private:
         /** クライアントID */
         optional<StringHolder> clientId;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             userName(data.userName),
             clientId(data.clientId)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            userName(std::move(data.userName)),
-            clientId(std::move(data.clientId))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    GetIdentifierRequest() :
-        m_pData(nullptr)
-    {}
+    GetIdentifierRequest() = default;
+    GetIdentifierRequest(const GetIdentifierRequest& getIdentifierRequest) = default;
+    GetIdentifierRequest(GetIdentifierRequest&& getIdentifierRequest) = default;
+    ~GetIdentifierRequest() GS2_OVERRIDE = default;
 
-    GetIdentifierRequest(const GetIdentifierRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Identifier(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    GetIdentifierRequest& operator=(const GetIdentifierRequest& getIdentifierRequest) = default;
+    GetIdentifierRequest& operator=(GetIdentifierRequest&& getIdentifierRequest) = default;
 
-    GetIdentifierRequest(GetIdentifierRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Identifier(std::move(obj)),
-        m_pData(obj.m_pData)
+    GetIdentifierRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~GetIdentifierRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetIdentifierRequest& operator=(const GetIdentifierRequest& getIdentifierRequest)
-    {
-        Gs2BasicRequest::operator=(getIdentifierRequest);
-        Gs2Identifier::operator=(getIdentifierRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getIdentifierRequest.m_pData);
-
-        return *this;
-    }
-
-    GetIdentifierRequest& operator=(GetIdentifierRequest&& getIdentifierRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(getIdentifierRequest));
-        Gs2Identifier::operator=(std::move(getIdentifierRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getIdentifierRequest.m_pData;
-        getIdentifierRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetIdentifierRequest);
     }
 
     const GetIdentifierRequest* operator->() const
@@ -165,9 +116,9 @@ public:
      *
      * @param userName ユーザー名
      */
-    void setUserName(const Char* userName)
+    void setUserName(StringHolder userName)
     {
-        ensureData().userName.emplace(userName);
+        ensureData().userName.emplace(std::move(userName));
     }
 
     /**
@@ -175,9 +126,9 @@ public:
      *
      * @param userName ユーザー名
      */
-    GetIdentifierRequest& withUserName(const Char* userName)
+    GetIdentifierRequest& withUserName(StringHolder userName)
     {
-        ensureData().userName.emplace(userName);
+        ensureData().userName.emplace(std::move(userName));
         return *this;
     }
 
@@ -196,9 +147,9 @@ public:
      *
      * @param clientId クライアントID
      */
-    void setClientId(const Char* clientId)
+    void setClientId(StringHolder clientId)
     {
-        ensureData().clientId.emplace(clientId);
+        ensureData().clientId.emplace(std::move(clientId));
     }
 
     /**
@@ -206,9 +157,9 @@ public:
      *
      * @param clientId クライアントID
      */
-    GetIdentifierRequest& withClientId(const Char* clientId)
+    GetIdentifierRequest& withClientId(StringHolder clientId)
     {
-        ensureData().clientId.emplace(clientId);
+        ensureData().clientId.emplace(std::move(clientId));
         return *this;
     }
 
@@ -219,33 +170,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    GetIdentifierRequest& withGs2ClientId(const Char* gs2ClientId)
+    GetIdentifierRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    GetIdentifierRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    GetIdentifierRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -254,9 +181,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    GetIdentifierRequest& withRequestId(const Char* gs2RequestId)
+    GetIdentifierRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

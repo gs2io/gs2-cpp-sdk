@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2KeyConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace key
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -52,104 +54,50 @@ private:
         /** APIキーの暗号化に使用する暗号鍵名 */
         optional<StringHolder> encryptionKeyName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             name(data.name),
             description(data.description),
             apiKey(data.apiKey),
             encryptionKeyName(data.encryptionKeyName)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            apiKey(std::move(data.apiKey)),
-            encryptionKeyName(std::move(data.encryptionKeyName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CreateGitHubApiKeyRequest() :
-        m_pData(nullptr)
-    {}
+    CreateGitHubApiKeyRequest() = default;
+    CreateGitHubApiKeyRequest(const CreateGitHubApiKeyRequest& createGitHubApiKeyRequest) = default;
+    CreateGitHubApiKeyRequest(CreateGitHubApiKeyRequest&& createGitHubApiKeyRequest) = default;
+    ~CreateGitHubApiKeyRequest() GS2_OVERRIDE = default;
 
-    CreateGitHubApiKeyRequest(const CreateGitHubApiKeyRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Key(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CreateGitHubApiKeyRequest& operator=(const CreateGitHubApiKeyRequest& createGitHubApiKeyRequest) = default;
+    CreateGitHubApiKeyRequest& operator=(CreateGitHubApiKeyRequest&& createGitHubApiKeyRequest) = default;
 
-    CreateGitHubApiKeyRequest(CreateGitHubApiKeyRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Key(std::move(obj)),
-        m_pData(obj.m_pData)
+    CreateGitHubApiKeyRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CreateGitHubApiKeyRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateGitHubApiKeyRequest& operator=(const CreateGitHubApiKeyRequest& createGitHubApiKeyRequest)
-    {
-        Gs2BasicRequest::operator=(createGitHubApiKeyRequest);
-        Gs2Key::operator=(createGitHubApiKeyRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createGitHubApiKeyRequest.m_pData);
-
-        return *this;
-    }
-
-    CreateGitHubApiKeyRequest& operator=(CreateGitHubApiKeyRequest&& createGitHubApiKeyRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(createGitHubApiKeyRequest));
-        Gs2Key::operator=(std::move(createGitHubApiKeyRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createGitHubApiKeyRequest.m_pData;
-        createGitHubApiKeyRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateGitHubApiKeyRequest);
     }
 
     const CreateGitHubApiKeyRequest* operator->() const
@@ -177,9 +125,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -187,9 +135,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    CreateGitHubApiKeyRequest& withNamespaceName(const Char* namespaceName)
+    CreateGitHubApiKeyRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -208,9 +156,9 @@ public:
      *
      * @param name GitHub APIキー名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -218,9 +166,9 @@ public:
      *
      * @param name GitHub APIキー名
      */
-    CreateGitHubApiKeyRequest& withName(const Char* name)
+    CreateGitHubApiKeyRequest& withName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
         return *this;
     }
 
@@ -239,9 +187,9 @@ public:
      *
      * @param description 説明文
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -249,9 +197,9 @@ public:
      *
      * @param description 説明文
      */
-    CreateGitHubApiKeyRequest& withDescription(const Char* description)
+    CreateGitHubApiKeyRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -270,9 +218,9 @@ public:
      *
      * @param apiKey APIキー
      */
-    void setApiKey(const Char* apiKey)
+    void setApiKey(StringHolder apiKey)
     {
-        ensureData().apiKey.emplace(apiKey);
+        ensureData().apiKey.emplace(std::move(apiKey));
     }
 
     /**
@@ -280,9 +228,9 @@ public:
      *
      * @param apiKey APIキー
      */
-    CreateGitHubApiKeyRequest& withApiKey(const Char* apiKey)
+    CreateGitHubApiKeyRequest& withApiKey(StringHolder apiKey)
     {
-        ensureData().apiKey.emplace(apiKey);
+        ensureData().apiKey.emplace(std::move(apiKey));
         return *this;
     }
 
@@ -301,9 +249,9 @@ public:
      *
      * @param encryptionKeyName APIキーの暗号化に使用する暗号鍵名
      */
-    void setEncryptionKeyName(const Char* encryptionKeyName)
+    void setEncryptionKeyName(StringHolder encryptionKeyName)
     {
-        ensureData().encryptionKeyName.emplace(encryptionKeyName);
+        ensureData().encryptionKeyName.emplace(std::move(encryptionKeyName));
     }
 
     /**
@@ -311,9 +259,9 @@ public:
      *
      * @param encryptionKeyName APIキーの暗号化に使用する暗号鍵名
      */
-    CreateGitHubApiKeyRequest& withEncryptionKeyName(const Char* encryptionKeyName)
+    CreateGitHubApiKeyRequest& withEncryptionKeyName(StringHolder encryptionKeyName)
     {
-        ensureData().encryptionKeyName.emplace(encryptionKeyName);
+        ensureData().encryptionKeyName.emplace(std::move(encryptionKeyName));
         return *this;
     }
 
@@ -324,33 +272,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CreateGitHubApiKeyRequest& withGs2ClientId(const Char* gs2ClientId)
+    CreateGitHubApiKeyRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CreateGitHubApiKeyRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CreateGitHubApiKeyRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -359,9 +283,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CreateGitHubApiKeyRequest& withRequestId(const Char* gs2RequestId)
+    CreateGitHubApiKeyRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

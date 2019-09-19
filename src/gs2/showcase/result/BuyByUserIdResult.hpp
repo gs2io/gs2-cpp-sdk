@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace showcase
 {
@@ -45,30 +47,29 @@ private:
         /** 購入処理の実行に使用するスタンプシート */
         optional<StringHolder> stampSheet;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            item(data.item),
             stampSheet(data.stampSheet)
-        {}
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item)),
-            stampSheet(std::move(data.stampSheet))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -76,7 +77,8 @@ private:
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "stampSheet") == 0) {
+            else if (std::strcmp(name_, "stampSheet") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->stampSheet.emplace(jsonValue.GetString());
@@ -85,72 +87,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    BuyByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    BuyByUserIdResult() = default;
+    BuyByUserIdResult(const BuyByUserIdResult& buyByUserIdResult) = default;
+    BuyByUserIdResult(BuyByUserIdResult&& buyByUserIdResult) = default;
+    ~BuyByUserIdResult() = default;
 
-    BuyByUserIdResult(const BuyByUserIdResult& buyByUserIdResult) :
-        Gs2Object(buyByUserIdResult),
-        m_pData(buyByUserIdResult.m_pData != nullptr ? new Data(*buyByUserIdResult.m_pData) : nullptr)
-    {}
+    BuyByUserIdResult& operator=(const BuyByUserIdResult& buyByUserIdResult) = default;
+    BuyByUserIdResult& operator=(BuyByUserIdResult&& buyByUserIdResult) = default;
 
-    BuyByUserIdResult(BuyByUserIdResult&& buyByUserIdResult) :
-        Gs2Object(std::move(buyByUserIdResult)),
-        m_pData(buyByUserIdResult.m_pData)
+    BuyByUserIdResult deepCopy() const
     {
-        buyByUserIdResult.m_pData = nullptr;
-    }
-
-    ~BuyByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    BuyByUserIdResult& operator=(const BuyByUserIdResult& buyByUserIdResult)
-    {
-        Gs2Object::operator=(buyByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*buyByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    BuyByUserIdResult& operator=(BuyByUserIdResult&& buyByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(buyByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = buyByUserIdResult.m_pData;
-        buyByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(BuyByUserIdResult);
     }
 
     const BuyByUserIdResult* operator->() const
@@ -177,9 +127,9 @@ public:
      *
      * @param item 商品
      */
-    void setItem(const SalesItem& item)
+    void setItem(SalesItem item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
     /**
@@ -197,9 +147,9 @@ public:
      *
      * @param stampSheet 購入処理の実行に使用するスタンプシート
      */
-    void setStampSheet(const Char* stampSheet)
+    void setStampSheet(StringHolder stampSheet)
     {
-        ensureData().stampSheet.emplace(stampSheet);
+        ensureData().stampSheet.emplace(std::move(stampSheet));
     }
 
 

@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace money {
 class EzGetResult : public gs2::Gs2Object
 {
 private:
-    /** ウォレット */
-    EzWalletDetail m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ウォレット */
+        EzWalletDetail item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::money::GetWalletResult& getWalletResult) :
+            item(*getWalletResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetResult(const gs2::money::GetWalletResult& result) :
-        m_Item(*result.getItem())
+    EzGetResult() = default;
+    EzGetResult(const EzGetResult& result) = default;
+    EzGetResult(EzGetResult&& result) = default;
+    ~EzGetResult() = default;
+
+    EzGetResult(gs2::money::GetWalletResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetResult& operator=(const EzGetResult& result) = default;
+    EzGetResult& operator=(EzGetResult&& result) = default;
+
+    EzGetResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetResult);
     }
 
     static bool isConvertible(const gs2::money::GetWalletResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzWalletDetail& getItem() const
     {
-        return m_Item;
-    }
-
-    EzWalletDetail& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

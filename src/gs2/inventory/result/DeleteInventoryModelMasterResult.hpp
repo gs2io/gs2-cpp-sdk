@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inventory
 {
@@ -43,28 +45,28 @@ private:
         /** 削除したインベントリモデルマスター */
         optional<InventoryModelMaster> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DeleteInventoryModelMasterResult() :
-        m_pData(nullptr)
-    {}
+    DeleteInventoryModelMasterResult() = default;
+    DeleteInventoryModelMasterResult(const DeleteInventoryModelMasterResult& deleteInventoryModelMasterResult) = default;
+    DeleteInventoryModelMasterResult(DeleteInventoryModelMasterResult&& deleteInventoryModelMasterResult) = default;
+    ~DeleteInventoryModelMasterResult() = default;
 
-    DeleteInventoryModelMasterResult(const DeleteInventoryModelMasterResult& deleteInventoryModelMasterResult) :
-        Gs2Object(deleteInventoryModelMasterResult),
-        m_pData(deleteInventoryModelMasterResult.m_pData != nullptr ? new Data(*deleteInventoryModelMasterResult.m_pData) : nullptr)
-    {}
+    DeleteInventoryModelMasterResult& operator=(const DeleteInventoryModelMasterResult& deleteInventoryModelMasterResult) = default;
+    DeleteInventoryModelMasterResult& operator=(DeleteInventoryModelMasterResult&& deleteInventoryModelMasterResult) = default;
 
-    DeleteInventoryModelMasterResult(DeleteInventoryModelMasterResult&& deleteInventoryModelMasterResult) :
-        Gs2Object(std::move(deleteInventoryModelMasterResult)),
-        m_pData(deleteInventoryModelMasterResult.m_pData)
+    DeleteInventoryModelMasterResult deepCopy() const
     {
-        deleteInventoryModelMasterResult.m_pData = nullptr;
-    }
-
-    ~DeleteInventoryModelMasterResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DeleteInventoryModelMasterResult& operator=(const DeleteInventoryModelMasterResult& deleteInventoryModelMasterResult)
-    {
-        Gs2Object::operator=(deleteInventoryModelMasterResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*deleteInventoryModelMasterResult.m_pData);
-
-        return *this;
-    }
-
-    DeleteInventoryModelMasterResult& operator=(DeleteInventoryModelMasterResult&& deleteInventoryModelMasterResult)
-    {
-        Gs2Object::operator=(std::move(deleteInventoryModelMasterResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = deleteInventoryModelMasterResult.m_pData;
-        deleteInventoryModelMasterResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteInventoryModelMasterResult);
     }
 
     const DeleteInventoryModelMasterResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 削除したインベントリモデルマスター
      */
-    void setItem(const InventoryModelMaster& item)
+    void setItem(InventoryModelMaster item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

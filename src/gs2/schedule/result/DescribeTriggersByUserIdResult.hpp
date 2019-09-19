@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace schedule
 {
@@ -45,30 +47,29 @@ private:
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            items(data.items),
             nextPageToken(data.nextPageToken)
-        {}
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items)),
-            nextPageToken(std::move(data.nextPageToken))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -80,7 +81,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "nextPageToken") == 0) {
+            else if (std::strcmp(name_, "nextPageToken") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->nextPageToken.emplace(jsonValue.GetString());
@@ -89,72 +91,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DescribeTriggersByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    DescribeTriggersByUserIdResult() = default;
+    DescribeTriggersByUserIdResult(const DescribeTriggersByUserIdResult& describeTriggersByUserIdResult) = default;
+    DescribeTriggersByUserIdResult(DescribeTriggersByUserIdResult&& describeTriggersByUserIdResult) = default;
+    ~DescribeTriggersByUserIdResult() = default;
 
-    DescribeTriggersByUserIdResult(const DescribeTriggersByUserIdResult& describeTriggersByUserIdResult) :
-        Gs2Object(describeTriggersByUserIdResult),
-        m_pData(describeTriggersByUserIdResult.m_pData != nullptr ? new Data(*describeTriggersByUserIdResult.m_pData) : nullptr)
-    {}
+    DescribeTriggersByUserIdResult& operator=(const DescribeTriggersByUserIdResult& describeTriggersByUserIdResult) = default;
+    DescribeTriggersByUserIdResult& operator=(DescribeTriggersByUserIdResult&& describeTriggersByUserIdResult) = default;
 
-    DescribeTriggersByUserIdResult(DescribeTriggersByUserIdResult&& describeTriggersByUserIdResult) :
-        Gs2Object(std::move(describeTriggersByUserIdResult)),
-        m_pData(describeTriggersByUserIdResult.m_pData)
+    DescribeTriggersByUserIdResult deepCopy() const
     {
-        describeTriggersByUserIdResult.m_pData = nullptr;
-    }
-
-    ~DescribeTriggersByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DescribeTriggersByUserIdResult& operator=(const DescribeTriggersByUserIdResult& describeTriggersByUserIdResult)
-    {
-        Gs2Object::operator=(describeTriggersByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*describeTriggersByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    DescribeTriggersByUserIdResult& operator=(DescribeTriggersByUserIdResult&& describeTriggersByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(describeTriggersByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = describeTriggersByUserIdResult.m_pData;
-        describeTriggersByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeTriggersByUserIdResult);
     }
 
     const DescribeTriggersByUserIdResult* operator->() const
@@ -181,9 +131,9 @@ public:
      *
      * @param items トリガーのリスト
      */
-    void setItems(const List<Trigger>& items)
+    void setItems(List<Trigger> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
     /**
@@ -201,9 +151,9 @@ public:
      *
      * @param nextPageToken リストの続きを取得するためのページトークン
      */
-    void setNextPageToken(const Char* nextPageToken)
+    void setNextPageToken(StringHolder nextPageToken)
     {
-        ensureData().nextPageToken.emplace(nextPageToken);
+        ensureData().nextPageToken.emplace(std::move(nextPageToken));
     }
 
 

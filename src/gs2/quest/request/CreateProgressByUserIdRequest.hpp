@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2QuestConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace quest
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** カテゴリ名 */
@@ -54,106 +56,54 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             userId(data.userId),
             questModelId(data.questModelId),
             force(data.force),
-            config(data.config),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+            if (data.config)
+            {
+                config = data.config->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            userId(std::move(data.userId)),
-            questModelId(std::move(data.questModelId)),
-            force(std::move(data.force)),
-            config(std::move(data.config)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CreateProgressByUserIdRequest() :
-        m_pData(nullptr)
-    {}
+    CreateProgressByUserIdRequest() = default;
+    CreateProgressByUserIdRequest(const CreateProgressByUserIdRequest& createProgressByUserIdRequest) = default;
+    CreateProgressByUserIdRequest(CreateProgressByUserIdRequest&& createProgressByUserIdRequest) = default;
+    ~CreateProgressByUserIdRequest() GS2_OVERRIDE = default;
 
-    CreateProgressByUserIdRequest(const CreateProgressByUserIdRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Quest(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CreateProgressByUserIdRequest& operator=(const CreateProgressByUserIdRequest& createProgressByUserIdRequest) = default;
+    CreateProgressByUserIdRequest& operator=(CreateProgressByUserIdRequest&& createProgressByUserIdRequest) = default;
 
-    CreateProgressByUserIdRequest(CreateProgressByUserIdRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Quest(std::move(obj)),
-        m_pData(obj.m_pData)
+    CreateProgressByUserIdRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CreateProgressByUserIdRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateProgressByUserIdRequest& operator=(const CreateProgressByUserIdRequest& createProgressByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(createProgressByUserIdRequest);
-        Gs2Quest::operator=(createProgressByUserIdRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createProgressByUserIdRequest.m_pData);
-
-        return *this;
-    }
-
-    CreateProgressByUserIdRequest& operator=(CreateProgressByUserIdRequest&& createProgressByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(createProgressByUserIdRequest));
-        Gs2Quest::operator=(std::move(createProgressByUserIdRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createProgressByUserIdRequest.m_pData;
-        createProgressByUserIdRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateProgressByUserIdRequest);
     }
 
     const CreateProgressByUserIdRequest* operator->() const
@@ -181,9 +131,9 @@ public:
      *
      * @param namespaceName カテゴリ名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -191,9 +141,9 @@ public:
      *
      * @param namespaceName カテゴリ名
      */
-    CreateProgressByUserIdRequest& withNamespaceName(const Char* namespaceName)
+    CreateProgressByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -212,9 +162,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -222,9 +172,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    CreateProgressByUserIdRequest& withUserId(const Char* userId)
+    CreateProgressByUserIdRequest& withUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
         return *this;
     }
 
@@ -243,9 +193,9 @@ public:
      *
      * @param questModelId クエストモデル
      */
-    void setQuestModelId(const Char* questModelId)
+    void setQuestModelId(StringHolder questModelId)
     {
-        ensureData().questModelId.emplace(questModelId);
+        ensureData().questModelId.emplace(std::move(questModelId));
     }
 
     /**
@@ -253,9 +203,9 @@ public:
      *
      * @param questModelId クエストモデル
      */
-    CreateProgressByUserIdRequest& withQuestModelId(const Char* questModelId)
+    CreateProgressByUserIdRequest& withQuestModelId(StringHolder questModelId)
     {
-        ensureData().questModelId.emplace(questModelId);
+        ensureData().questModelId.emplace(std::move(questModelId));
         return *this;
     }
 
@@ -305,9 +255,9 @@ public:
      *
      * @param config スタンプシートの変数に適用する設定値
      */
-    void setConfig(const List<Config>& config)
+    void setConfig(List<Config> config)
     {
-        ensureData().config.emplace(config);
+        ensureData().config.emplace(std::move(config));
     }
 
     /**
@@ -315,9 +265,9 @@ public:
      *
      * @param config スタンプシートの変数に適用する設定値
      */
-    CreateProgressByUserIdRequest& withConfig(const List<Config>& config)
+    CreateProgressByUserIdRequest& withConfig(List<Config> config)
     {
-        ensureData().config.emplace(config);
+        ensureData().config.emplace(std::move(config));
         return *this;
     }
 
@@ -336,9 +286,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -346,9 +296,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    CreateProgressByUserIdRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    CreateProgressByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -359,33 +309,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CreateProgressByUserIdRequest& withGs2ClientId(const Char* gs2ClientId)
+    CreateProgressByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CreateProgressByUserIdRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CreateProgressByUserIdRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -394,9 +320,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CreateProgressByUserIdRequest& withRequestId(const Char* gs2RequestId)
+    CreateProgressByUserIdRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

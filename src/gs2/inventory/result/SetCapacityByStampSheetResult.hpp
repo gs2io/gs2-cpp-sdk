@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inventory
 {
@@ -43,28 +45,28 @@ private:
         /** 更新後のインベントリ */
         optional<Inventory> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    SetCapacityByStampSheetResult() :
-        m_pData(nullptr)
-    {}
+    SetCapacityByStampSheetResult() = default;
+    SetCapacityByStampSheetResult(const SetCapacityByStampSheetResult& setCapacityByStampSheetResult) = default;
+    SetCapacityByStampSheetResult(SetCapacityByStampSheetResult&& setCapacityByStampSheetResult) = default;
+    ~SetCapacityByStampSheetResult() = default;
 
-    SetCapacityByStampSheetResult(const SetCapacityByStampSheetResult& setCapacityByStampSheetResult) :
-        Gs2Object(setCapacityByStampSheetResult),
-        m_pData(setCapacityByStampSheetResult.m_pData != nullptr ? new Data(*setCapacityByStampSheetResult.m_pData) : nullptr)
-    {}
+    SetCapacityByStampSheetResult& operator=(const SetCapacityByStampSheetResult& setCapacityByStampSheetResult) = default;
+    SetCapacityByStampSheetResult& operator=(SetCapacityByStampSheetResult&& setCapacityByStampSheetResult) = default;
 
-    SetCapacityByStampSheetResult(SetCapacityByStampSheetResult&& setCapacityByStampSheetResult) :
-        Gs2Object(std::move(setCapacityByStampSheetResult)),
-        m_pData(setCapacityByStampSheetResult.m_pData)
+    SetCapacityByStampSheetResult deepCopy() const
     {
-        setCapacityByStampSheetResult.m_pData = nullptr;
-    }
-
-    ~SetCapacityByStampSheetResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    SetCapacityByStampSheetResult& operator=(const SetCapacityByStampSheetResult& setCapacityByStampSheetResult)
-    {
-        Gs2Object::operator=(setCapacityByStampSheetResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*setCapacityByStampSheetResult.m_pData);
-
-        return *this;
-    }
-
-    SetCapacityByStampSheetResult& operator=(SetCapacityByStampSheetResult&& setCapacityByStampSheetResult)
-    {
-        Gs2Object::operator=(std::move(setCapacityByStampSheetResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = setCapacityByStampSheetResult.m_pData;
-        setCapacityByStampSheetResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(SetCapacityByStampSheetResult);
     }
 
     const SetCapacityByStampSheetResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 更新後のインベントリ
      */
-    void setItem(const Inventory& item)
+    void setItem(Inventory item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

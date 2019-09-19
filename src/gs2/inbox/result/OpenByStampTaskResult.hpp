@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inbox
 {
@@ -45,30 +47,29 @@ private:
         /** スタンプタスクの実行結果を記録したコンテキスト */
         optional<StringHolder> newContextStack;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            item(data.item),
             newContextStack(data.newContextStack)
-        {}
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item)),
-            newContextStack(std::move(data.newContextStack))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -76,7 +77,8 @@ private:
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "newContextStack") == 0) {
+            else if (std::strcmp(name_, "newContextStack") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->newContextStack.emplace(jsonValue.GetString());
@@ -85,72 +87,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    OpenByStampTaskResult() :
-        m_pData(nullptr)
-    {}
+    OpenByStampTaskResult() = default;
+    OpenByStampTaskResult(const OpenByStampTaskResult& openByStampTaskResult) = default;
+    OpenByStampTaskResult(OpenByStampTaskResult&& openByStampTaskResult) = default;
+    ~OpenByStampTaskResult() = default;
 
-    OpenByStampTaskResult(const OpenByStampTaskResult& openByStampTaskResult) :
-        Gs2Object(openByStampTaskResult),
-        m_pData(openByStampTaskResult.m_pData != nullptr ? new Data(*openByStampTaskResult.m_pData) : nullptr)
-    {}
+    OpenByStampTaskResult& operator=(const OpenByStampTaskResult& openByStampTaskResult) = default;
+    OpenByStampTaskResult& operator=(OpenByStampTaskResult&& openByStampTaskResult) = default;
 
-    OpenByStampTaskResult(OpenByStampTaskResult&& openByStampTaskResult) :
-        Gs2Object(std::move(openByStampTaskResult)),
-        m_pData(openByStampTaskResult.m_pData)
+    OpenByStampTaskResult deepCopy() const
     {
-        openByStampTaskResult.m_pData = nullptr;
-    }
-
-    ~OpenByStampTaskResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    OpenByStampTaskResult& operator=(const OpenByStampTaskResult& openByStampTaskResult)
-    {
-        Gs2Object::operator=(openByStampTaskResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*openByStampTaskResult.m_pData);
-
-        return *this;
-    }
-
-    OpenByStampTaskResult& operator=(OpenByStampTaskResult&& openByStampTaskResult)
-    {
-        Gs2Object::operator=(std::move(openByStampTaskResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = openByStampTaskResult.m_pData;
-        openByStampTaskResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(OpenByStampTaskResult);
     }
 
     const OpenByStampTaskResult* operator->() const
@@ -177,9 +127,9 @@ public:
      *
      * @param item メッセージ
      */
-    void setItem(const Message& item)
+    void setItem(Message item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
     /**
@@ -197,9 +147,9 @@ public:
      *
      * @param newContextStack スタンプタスクの実行結果を記録したコンテキスト
      */
-    void setNewContextStack(const Char* newContextStack)
+    void setNewContextStack(StringHolder newContextStack)
     {
-        ensureData().newContextStack.emplace(newContextStack);
+        ensureData().newContextStack.emplace(std::move(newContextStack));
     }
 
 

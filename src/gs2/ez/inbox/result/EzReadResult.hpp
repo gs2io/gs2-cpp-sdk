@@ -27,16 +27,55 @@ namespace gs2 { namespace ez { namespace inbox {
 class EzReadResult : public gs2::Gs2Object
 {
 private:
-    /** メッセージ */
-    EzMessage m_Item;
-    /** スタンプシート */
-    StringHolder m_StampSheet;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** メッセージ */
+        EzMessage item;
+        /** スタンプシート */
+        StringHolder stampSheet;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            stampSheet(data.stampSheet)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::inbox::ReadMessageResult& readMessageResult) :
+            item(*readMessageResult.getItem()),
+            stampSheet(*readMessageResult.getStampSheet())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzReadResult(const gs2::inbox::ReadMessageResult& result) :
-        m_Item(*result.getItem()),
-        m_StampSheet(*result.getStampSheet())
+    EzReadResult() = default;
+    EzReadResult(const EzReadResult& result) = default;
+    EzReadResult(EzReadResult&& result) = default;
+    ~EzReadResult() = default;
+
+    EzReadResult(gs2::inbox::ReadMessageResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzReadResult& operator=(const EzReadResult& result) = default;
+    EzReadResult& operator=(EzReadResult&& result) = default;
+
+    EzReadResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzReadResult);
     }
 
     static bool isConvertible(const gs2::inbox::ReadMessageResult& result)
@@ -52,22 +91,12 @@ public:
 
     const EzMessage& getItem() const
     {
-        return m_Item;
+        return ensureData().item;
     }
 
-    EzMessage& getItem()
+    const StringHolder& getStampSheet() const
     {
-        return m_Item;
-    }
-
-    const gs2::StringHolder& getStampSheet() const
-    {
-        return m_StampSheet;
-    }
-
-    gs2::StringHolder& getStampSheet()
-    {
-        return m_StampSheet;
+        return ensureData().stampSheet;
     }
 };
 

@@ -27,25 +27,62 @@ namespace gs2 { namespace ez { namespace distributor {
 class EzDistributeResource : public gs2::Gs2Object
 {
 private:
-    /** スタンプシートで実行するアクションの種類 */
-    gs2::optional<StringHolder> m_Action;
-    /** 加算リクエストのJSON */
-    gs2::optional<StringHolder> m_Request;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** スタンプシートで実行するアクションの種類 */
+        gs2::optional<StringHolder> action;
+        /** 加算リクエストのJSON */
+        gs2::optional<StringHolder> request;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            action(data.action),
+            request(data.request)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::distributor::DistributeResource& distributeResource) :
+            action(distributeResource.getAction()),
+            request(distributeResource.getRequest())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzDistributeResource() = default;
+    EzDistributeResource(const EzDistributeResource& ezDistributeResource) = default;
+    EzDistributeResource(EzDistributeResource&& ezDistributeResource) = default;
+    ~EzDistributeResource() = default;
 
     EzDistributeResource(gs2::distributor::DistributeResource distributeResource) :
-        m_Action(distributeResource.getAction()),
-        m_Request(distributeResource.getRequest())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(distributeResource)
+    {}
+
+    EzDistributeResource& operator=(const EzDistributeResource& ezDistributeResource) = default;
+    EzDistributeResource& operator=(EzDistributeResource&& ezDistributeResource) = default;
+
+    EzDistributeResource deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDistributeResource);
     }
 
     gs2::distributor::DistributeResource ToModel() const
     {
         gs2::distributor::DistributeResource distributeResource;
-        distributeResource.setAction(*m_Action);
-        distributeResource.setRequest(*m_Request);
+        distributeResource.setAction(getAction());
+        distributeResource.setRequest(getRequest());
         return distributeResource;
     }
 
@@ -53,49 +90,39 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getAction() const
+    const StringHolder& getAction() const
     {
-        return *m_Action;
+        return *ensureData().action;
     }
 
-    gs2::StringHolder& getAction()
+    const StringHolder& getRequest() const
     {
-        return *m_Action;
-    }
-
-    const gs2::StringHolder& getRequest() const
-    {
-        return *m_Request;
-    }
-
-    gs2::StringHolder& getRequest()
-    {
-        return *m_Request;
+        return *ensureData().request;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setAction(Char* action)
+    void setAction(StringHolder action)
     {
-        m_Action.emplace(action);
+        ensureData().action = std::move(action);
     }
 
-    void setRequest(Char* request)
+    void setRequest(StringHolder request)
     {
-        m_Request.emplace(request);
+        ensureData().request = std::move(request);
     }
 
-    EzDistributeResource& withAction(Char* action)
+    EzDistributeResource& withAction(StringHolder action)
     {
-        setAction(action);
+        setAction(std::move(action));
         return *this;
     }
 
-    EzDistributeResource& withRequest(Char* request)
+    EzDistributeResource& withRequest(StringHolder request)
     {
-        setRequest(request);
+        setRequest(std::move(request));
         return *this;
     }
 };

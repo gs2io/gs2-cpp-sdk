@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace quest
 {
@@ -45,30 +47,29 @@ private:
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            items(data.items),
             nextPageToken(data.nextPageToken)
-        {}
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items)),
-            nextPageToken(std::move(data.nextPageToken))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -80,7 +81,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "nextPageToken") == 0) {
+            else if (std::strcmp(name_, "nextPageToken") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->nextPageToken.emplace(jsonValue.GetString());
@@ -89,72 +91,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DescribeCompletedQuestListsByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    DescribeCompletedQuestListsByUserIdResult() = default;
+    DescribeCompletedQuestListsByUserIdResult(const DescribeCompletedQuestListsByUserIdResult& describeCompletedQuestListsByUserIdResult) = default;
+    DescribeCompletedQuestListsByUserIdResult(DescribeCompletedQuestListsByUserIdResult&& describeCompletedQuestListsByUserIdResult) = default;
+    ~DescribeCompletedQuestListsByUserIdResult() = default;
 
-    DescribeCompletedQuestListsByUserIdResult(const DescribeCompletedQuestListsByUserIdResult& describeCompletedQuestListsByUserIdResult) :
-        Gs2Object(describeCompletedQuestListsByUserIdResult),
-        m_pData(describeCompletedQuestListsByUserIdResult.m_pData != nullptr ? new Data(*describeCompletedQuestListsByUserIdResult.m_pData) : nullptr)
-    {}
+    DescribeCompletedQuestListsByUserIdResult& operator=(const DescribeCompletedQuestListsByUserIdResult& describeCompletedQuestListsByUserIdResult) = default;
+    DescribeCompletedQuestListsByUserIdResult& operator=(DescribeCompletedQuestListsByUserIdResult&& describeCompletedQuestListsByUserIdResult) = default;
 
-    DescribeCompletedQuestListsByUserIdResult(DescribeCompletedQuestListsByUserIdResult&& describeCompletedQuestListsByUserIdResult) :
-        Gs2Object(std::move(describeCompletedQuestListsByUserIdResult)),
-        m_pData(describeCompletedQuestListsByUserIdResult.m_pData)
+    DescribeCompletedQuestListsByUserIdResult deepCopy() const
     {
-        describeCompletedQuestListsByUserIdResult.m_pData = nullptr;
-    }
-
-    ~DescribeCompletedQuestListsByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DescribeCompletedQuestListsByUserIdResult& operator=(const DescribeCompletedQuestListsByUserIdResult& describeCompletedQuestListsByUserIdResult)
-    {
-        Gs2Object::operator=(describeCompletedQuestListsByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*describeCompletedQuestListsByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    DescribeCompletedQuestListsByUserIdResult& operator=(DescribeCompletedQuestListsByUserIdResult&& describeCompletedQuestListsByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(describeCompletedQuestListsByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = describeCompletedQuestListsByUserIdResult.m_pData;
-        describeCompletedQuestListsByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeCompletedQuestListsByUserIdResult);
     }
 
     const DescribeCompletedQuestListsByUserIdResult* operator->() const
@@ -181,9 +131,9 @@ public:
      *
      * @param items クエスト進行のリスト
      */
-    void setItems(const List<CompletedQuestList>& items)
+    void setItems(List<CompletedQuestList> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
     /**
@@ -201,9 +151,9 @@ public:
      *
      * @param nextPageToken リストの続きを取得するためのページトークン
      */
-    void setNextPageToken(const Char* nextPageToken)
+    void setNextPageToken(StringHolder nextPageToken)
     {
-        ensureData().nextPageToken.emplace(nextPageToken);
+        ensureData().nextPageToken.emplace(std::move(nextPageToken));
     }
 
 

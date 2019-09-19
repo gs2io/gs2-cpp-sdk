@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace distributor {
 class EzRunStampSheetResult : public gs2::Gs2Object
 {
 private:
-    /** レスポンス内容 */
-    StringHolder m_Result;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** レスポンス内容 */
+        StringHolder result;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            result(data.result)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::distributor::RunStampSheetResult& runStampSheetResult) :
+            result(*runStampSheetResult.getResult())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzRunStampSheetResult(const gs2::distributor::RunStampSheetResult& result) :
-        m_Result(*result.getResult())
+    EzRunStampSheetResult() = default;
+    EzRunStampSheetResult(const EzRunStampSheetResult& result) = default;
+    EzRunStampSheetResult(EzRunStampSheetResult&& result) = default;
+    ~EzRunStampSheetResult() = default;
+
+    EzRunStampSheetResult(gs2::distributor::RunStampSheetResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzRunStampSheetResult& operator=(const EzRunStampSheetResult& result) = default;
+    EzRunStampSheetResult& operator=(EzRunStampSheetResult&& result) = default;
+
+    EzRunStampSheetResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRunStampSheetResult);
     }
 
     static bool isConvertible(const gs2::distributor::RunStampSheetResult& result)
@@ -46,14 +84,9 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getResult() const
+    const StringHolder& getResult() const
     {
-        return m_Result;
-    }
-
-    gs2::StringHolder& getResult()
-    {
-        return m_Result;
+        return ensureData().result;
     }
 };
 

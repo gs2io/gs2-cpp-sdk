@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace experience {
 class EzGetStatusResult : public gs2::Gs2Object
 {
 private:
-    /** ステータス */
-    EzStatus m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ステータス */
+        EzStatus item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::experience::GetStatusResult& getStatusResult) :
+            item(*getStatusResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetStatusResult(const gs2::experience::GetStatusResult& result) :
-        m_Item(*result.getItem())
+    EzGetStatusResult() = default;
+    EzGetStatusResult(const EzGetStatusResult& result) = default;
+    EzGetStatusResult(EzGetStatusResult&& result) = default;
+    ~EzGetStatusResult() = default;
+
+    EzGetStatusResult(gs2::experience::GetStatusResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetStatusResult& operator=(const EzGetStatusResult& result) = default;
+    EzGetStatusResult& operator=(EzGetStatusResult&& result) = default;
+
+    EzGetStatusResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetStatusResult);
     }
 
     static bool isConvertible(const gs2::experience::GetStatusResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzStatus& getItem() const
     {
-        return m_Item;
-    }
-
-    EzStatus& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace schedule {
@@ -58,8 +60,7 @@ private:
         /** イベントの開催期間(秒) */
         optional<Int32> relativeDuration;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -71,71 +72,69 @@ private:
             absoluteEnd(data.absoluteEnd),
             relativeTriggerName(data.relativeTriggerName),
             relativeDuration(data.relativeDuration)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            eventId(std::move(data.eventId)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            scheduleType(std::move(data.scheduleType)),
-            absoluteBegin(std::move(data.absoluteBegin)),
-            absoluteEnd(std::move(data.absoluteEnd)),
-            relativeTriggerName(std::move(data.relativeTriggerName)),
-            relativeDuration(std::move(data.relativeDuration))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "eventId") == 0) {
+            if (std::strcmp(name_, "eventId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->eventId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "scheduleType") == 0) {
+            else if (std::strcmp(name_, "scheduleType") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->scheduleType.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "absoluteBegin") == 0) {
+            else if (std::strcmp(name_, "absoluteBegin") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->absoluteBegin = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "absoluteEnd") == 0) {
+            else if (std::strcmp(name_, "absoluteEnd") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->absoluteEnd = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "relativeTriggerName") == 0) {
+            else if (std::strcmp(name_, "relativeTriggerName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->relativeTriggerName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "relativeDuration") == 0) {
+            else if (std::strcmp(name_, "relativeDuration") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->relativeDuration = jsonValue.GetInt();
@@ -144,72 +143,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Event() :
-        m_pData(nullptr)
-    {}
+    Event() = default;
+    Event(const Event& event) = default;
+    Event(Event&& event) = default;
+    ~Event() = default;
 
-    Event(const Event& event) :
-        Gs2Object(event),
-        m_pData(event.m_pData != nullptr ? new Data(*event.m_pData) : nullptr)
-    {}
+    Event& operator=(const Event& event) = default;
+    Event& operator=(Event&& event) = default;
 
-    Event(Event&& event) :
-        Gs2Object(std::move(event)),
-        m_pData(event.m_pData)
+    Event deepCopy() const
     {
-        event.m_pData = nullptr;
-    }
-
-    ~Event()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Event& operator=(const Event& event)
-    {
-        Gs2Object::operator=(event);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*event.m_pData);
-
-        return *this;
-    }
-
-    Event& operator=(Event&& event)
-    {
-        Gs2Object::operator=(std::move(event));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = event.m_pData;
-        event.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Event);
     }
 
     const Event* operator->() const
@@ -236,9 +183,9 @@ public:
      *
      * @param eventId イベントマスター
      */
-    void setEventId(const Char* eventId)
+    void setEventId(StringHolder eventId)
     {
-        ensureData().eventId.emplace(eventId);
+        ensureData().eventId.emplace(std::move(eventId));
     }
 
     /**
@@ -246,9 +193,9 @@ public:
      *
      * @param eventId イベントマスター
      */
-    Event& withEventId(const Char* eventId)
+    Event& withEventId(StringHolder eventId)
     {
-        setEventId(eventId);
+        setEventId(std::move(eventId));
         return *this;
     }
 
@@ -267,9 +214,9 @@ public:
      *
      * @param name イベントの種類名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -277,9 +224,9 @@ public:
      *
      * @param name イベントの種類名
      */
-    Event& withName(const Char* name)
+    Event& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -298,9 +245,9 @@ public:
      *
      * @param metadata イベントの種類のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -308,9 +255,9 @@ public:
      *
      * @param metadata イベントの種類のメタデータ
      */
-    Event& withMetadata(const Char* metadata)
+    Event& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -329,9 +276,9 @@ public:
      *
      * @param scheduleType イベント期間の種類
      */
-    void setScheduleType(const Char* scheduleType)
+    void setScheduleType(StringHolder scheduleType)
     {
-        ensureData().scheduleType.emplace(scheduleType);
+        ensureData().scheduleType.emplace(std::move(scheduleType));
     }
 
     /**
@@ -339,9 +286,9 @@ public:
      *
      * @param scheduleType イベント期間の種類
      */
-    Event& withScheduleType(const Char* scheduleType)
+    Event& withScheduleType(StringHolder scheduleType)
     {
-        setScheduleType(scheduleType);
+        setScheduleType(std::move(scheduleType));
         return *this;
     }
 
@@ -422,9 +369,9 @@ public:
      *
      * @param relativeTriggerName イベントの開始トリガー
      */
-    void setRelativeTriggerName(const Char* relativeTriggerName)
+    void setRelativeTriggerName(StringHolder relativeTriggerName)
     {
-        ensureData().relativeTriggerName.emplace(relativeTriggerName);
+        ensureData().relativeTriggerName.emplace(std::move(relativeTriggerName));
     }
 
     /**
@@ -432,9 +379,9 @@ public:
      *
      * @param relativeTriggerName イベントの開始トリガー
      */
-    Event& withRelativeTriggerName(const Char* relativeTriggerName)
+    Event& withRelativeTriggerName(StringHolder relativeTriggerName)
     {
-        setRelativeTriggerName(relativeTriggerName);
+        setRelativeTriggerName(std::move(relativeTriggerName));
         return *this;
     }
 
@@ -480,7 +427,7 @@ inline bool operator!=(const Event& lhs, const Event& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

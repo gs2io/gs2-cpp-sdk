@@ -30,74 +30,128 @@ namespace gs2 { namespace ez { namespace quest {
 class EzQuestModel : public gs2::Gs2Object
 {
 private:
-    /** クエストモデル名 */
-    gs2::optional<StringHolder> m_Name;
-    /** クエストモデルのメタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** クエストの内容 */
-    gs2::optional<List<EzContents>> m_Contents;
-    /** 挑戦可能な期間を指定するイベントマスター のGRN */
-    gs2::optional<StringHolder> m_ChallengePeriodEventId;
-    /** クエストの参加料 */
-    gs2::optional<List<EzConsumeAction>> m_ConsumeActions;
-    /** クエスト失敗時の報酬 */
-    gs2::optional<List<EzAcquireAction>> m_FailedAcquireActions;
-    /** クエストに挑戦するためにクリアしておく必要のあるクエスト名 */
-    gs2::optional<List<StringHolder>> m_PremiseQuestNames;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** クエストモデル名 */
+        gs2::optional<StringHolder> name;
+        /** クエストモデルのメタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** クエストの内容 */
+        gs2::optional<List<EzContents>> contents;
+        /** 挑戦可能な期間を指定するイベントマスター のGRN */
+        gs2::optional<StringHolder> challengePeriodEventId;
+        /** クエストの参加料 */
+        gs2::optional<List<EzConsumeAction>> consumeActions;
+        /** クエスト失敗時の報酬 */
+        gs2::optional<List<EzAcquireAction>> failedAcquireActions;
+        /** クエストに挑戦するためにクリアしておく必要のあるクエスト名 */
+        gs2::optional<List<StringHolder>> premiseQuestNames;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            metadata(data.metadata),
+            challengePeriodEventId(data.challengePeriodEventId)
+        {
+            if (data.contents)
+            {
+                contents = data.contents->deepCopy();
+            }
+            if (data.consumeActions)
+            {
+                consumeActions = data.consumeActions->deepCopy();
+            }
+            if (data.failedAcquireActions)
+            {
+                failedAcquireActions = data.failedAcquireActions->deepCopy();
+            }
+            if (data.premiseQuestNames)
+            {
+                premiseQuestNames = data.premiseQuestNames->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::quest::QuestModel& questModel) :
+            name(questModel.getName()),
+            metadata(questModel.getMetadata()),
+            challengePeriodEventId(questModel.getChallengePeriodEventId()),
+            premiseQuestNames(questModel.getPremiseQuestNames())
+        {
+            contents.emplace();
+            if (questModel.getContents())
+            {
+                for (int i = 0; i < questModel.getContents()->getCount(); ++i)
+                {
+                    *contents += EzContents((*questModel.getContents())[i]);
+                }
+            }
+            consumeActions.emplace();
+            if (questModel.getConsumeActions())
+            {
+                for (int i = 0; i < questModel.getConsumeActions()->getCount(); ++i)
+                {
+                    *consumeActions += EzConsumeAction((*questModel.getConsumeActions())[i]);
+                }
+            }
+            failedAcquireActions.emplace();
+            if (questModel.getFailedAcquireActions())
+            {
+                for (int i = 0; i < questModel.getFailedAcquireActions()->getCount(); ++i)
+                {
+                    *failedAcquireActions += EzAcquireAction((*questModel.getFailedAcquireActions())[i]);
+                }
+            }
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzQuestModel() = default;
+    EzQuestModel(const EzQuestModel& ezQuestModel) = default;
+    EzQuestModel(EzQuestModel&& ezQuestModel) = default;
+    ~EzQuestModel() = default;
 
     EzQuestModel(gs2::quest::QuestModel questModel) :
-        m_Name(questModel.getName()),
-        m_Metadata(questModel.getMetadata()),
-        m_ChallengePeriodEventId(questModel.getChallengePeriodEventId()),
-        m_PremiseQuestNames(questModel.getPremiseQuestNames())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(questModel)
+    {}
+
+    EzQuestModel& operator=(const EzQuestModel& ezQuestModel) = default;
+    EzQuestModel& operator=(EzQuestModel&& ezQuestModel) = default;
+
+    EzQuestModel deepCopy() const
     {
-        m_Contents.emplace();
-        if (questModel.getContents())
-        {
-            for (int i = 0; i < questModel.getContents()->getCount(); ++i)
-            {
-                *m_Contents += EzContents((*questModel.getContents())[i]);
-            }
-        }
-        m_ConsumeActions.emplace();
-        if (questModel.getConsumeActions())
-        {
-            for (int i = 0; i < questModel.getConsumeActions()->getCount(); ++i)
-            {
-                *m_ConsumeActions += EzConsumeAction((*questModel.getConsumeActions())[i]);
-            }
-        }
-        m_FailedAcquireActions.emplace();
-        if (questModel.getFailedAcquireActions())
-        {
-            for (int i = 0; i < questModel.getFailedAcquireActions()->getCount(); ++i)
-            {
-                *m_FailedAcquireActions += EzAcquireAction((*questModel.getFailedAcquireActions())[i]);
-            }
-        }
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzQuestModel);
     }
 
     gs2::quest::QuestModel ToModel() const
     {
         gs2::quest::QuestModel questModel;
-        questModel.setName(*m_Name);
-        questModel.setMetadata(*m_Metadata);
+        questModel.setName(getName());
+        questModel.setMetadata(getMetadata());
         {
             gs2::List<gs2::quest::Contents> list;
-            auto& contents = *m_Contents;
+            auto& contents = getContents();
             for (int i = 0; i < contents.getCount(); ++i)
             {
                 list += contents[i].ToModel();
             }
             questModel.setContents(list);
         }
-        questModel.setChallengePeriodEventId(*m_ChallengePeriodEventId);
+        questModel.setChallengePeriodEventId(getChallengePeriodEventId());
         {
             gs2::List<gs2::quest::ConsumeAction> list;
-            auto& consumeActions = *m_ConsumeActions;
+            auto& consumeActions = getConsumeActions();
             for (int i = 0; i < consumeActions.getCount(); ++i)
             {
                 list += consumeActions[i].ToModel();
@@ -106,14 +160,14 @@ public:
         }
         {
             gs2::List<gs2::quest::AcquireAction> list;
-            auto& failedAcquireActions = *m_FailedAcquireActions;
+            auto& failedAcquireActions = getFailedAcquireActions();
             for (int i = 0; i < failedAcquireActions.getCount(); ++i)
             {
                 list += failedAcquireActions[i].ToModel();
             }
             questModel.setFailedAcquireActions(list);
         }
-        questModel.setPremiseQuestNames(*m_PremiseQuestNames);
+        questModel.setPremiseQuestNames(getPremiseQuestNames());
         return questModel;
     }
 
@@ -121,196 +175,117 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
+        return *ensureData().name;
     }
 
-    gs2::StringHolder& getName()
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
-    }
-
-    const gs2::StringHolder& getMetadata() const
-    {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
+        return *ensureData().metadata;
     }
 
     const List<EzContents>& getContents() const
     {
-        return *m_Contents;
+        return *ensureData().contents;
     }
 
-    List<EzContents>& getContents()
+    const StringHolder& getChallengePeriodEventId() const
     {
-        return *m_Contents;
-    }
-
-    const gs2::StringHolder& getChallengePeriodEventId() const
-    {
-        return *m_ChallengePeriodEventId;
-    }
-
-    gs2::StringHolder& getChallengePeriodEventId()
-    {
-        return *m_ChallengePeriodEventId;
+        return *ensureData().challengePeriodEventId;
     }
 
     const List<EzConsumeAction>& getConsumeActions() const
     {
-        return *m_ConsumeActions;
-    }
-
-    List<EzConsumeAction>& getConsumeActions()
-    {
-        return *m_ConsumeActions;
+        return *ensureData().consumeActions;
     }
 
     const List<EzAcquireAction>& getFailedAcquireActions() const
     {
-        return *m_FailedAcquireActions;
-    }
-
-    List<EzAcquireAction>& getFailedAcquireActions()
-    {
-        return *m_FailedAcquireActions;
+        return *ensureData().failedAcquireActions;
     }
 
     const List<StringHolder>& getPremiseQuestNames() const
     {
-        return *m_PremiseQuestNames;
-    }
-
-    List<StringHolder>& getPremiseQuestNames()
-    {
-        return *m_PremiseQuestNames;
+        return *ensureData().premiseQuestNames;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
-    void setContents(const List<EzContents>& contents)
+    void setContents(List<EzContents> contents)
     {
-        m_Contents = contents;
+        ensureData().contents = std::move(contents);
     }
 
-    void setContents(List<EzContents>&& contents)
+    void setChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        m_Contents = std::move(contents);
+        ensureData().challengePeriodEventId = std::move(challengePeriodEventId);
     }
 
-    void setChallengePeriodEventId(Char* challengePeriodEventId)
+    void setConsumeActions(List<EzConsumeAction> consumeActions)
     {
-        m_ChallengePeriodEventId.emplace(challengePeriodEventId);
+        ensureData().consumeActions = std::move(consumeActions);
     }
 
-    void setConsumeActions(const List<EzConsumeAction>& consumeActions)
+    void setFailedAcquireActions(List<EzAcquireAction> failedAcquireActions)
     {
-        m_ConsumeActions = consumeActions;
+        ensureData().failedAcquireActions = std::move(failedAcquireActions);
     }
 
-    void setConsumeActions(List<EzConsumeAction>&& consumeActions)
+    void setPremiseQuestNames(List<StringHolder> premiseQuestNames)
     {
-        m_ConsumeActions = std::move(consumeActions);
+        ensureData().premiseQuestNames = std::move(premiseQuestNames);
     }
 
-    void setFailedAcquireActions(const List<EzAcquireAction>& failedAcquireActions)
+    EzQuestModel& withName(StringHolder name)
     {
-        m_FailedAcquireActions = failedAcquireActions;
-    }
-
-    void setFailedAcquireActions(List<EzAcquireAction>&& failedAcquireActions)
-    {
-        m_FailedAcquireActions = std::move(failedAcquireActions);
-    }
-
-    void setPremiseQuestNames(const List<StringHolder>& premiseQuestNames)
-    {
-        m_PremiseQuestNames = premiseQuestNames;
-    }
-
-    void setPremiseQuestNames(List<StringHolder>&& premiseQuestNames)
-    {
-        m_PremiseQuestNames = std::move(premiseQuestNames);
-    }
-
-    EzQuestModel& withName(Char* name)
-    {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzQuestModel& withMetadata(Char* metadata)
+    EzQuestModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
-    EzQuestModel& withContents(const List<EzContents>& contents)
-    {
-        setContents(contents);
-        return *this;
-    }
-
-    EzQuestModel& withContents(List<EzContents>&& contents)
+    EzQuestModel& withContents(List<EzContents> contents)
     {
         setContents(std::move(contents));
         return *this;
     }
 
-    EzQuestModel& withChallengePeriodEventId(Char* challengePeriodEventId)
+    EzQuestModel& withChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        setChallengePeriodEventId(challengePeriodEventId);
+        setChallengePeriodEventId(std::move(challengePeriodEventId));
         return *this;
     }
 
-    EzQuestModel& withConsumeActions(const List<EzConsumeAction>& consumeActions)
-    {
-        setConsumeActions(consumeActions);
-        return *this;
-    }
-
-    EzQuestModel& withConsumeActions(List<EzConsumeAction>&& consumeActions)
+    EzQuestModel& withConsumeActions(List<EzConsumeAction> consumeActions)
     {
         setConsumeActions(std::move(consumeActions));
         return *this;
     }
 
-    EzQuestModel& withFailedAcquireActions(const List<EzAcquireAction>& failedAcquireActions)
-    {
-        setFailedAcquireActions(failedAcquireActions);
-        return *this;
-    }
-
-    EzQuestModel& withFailedAcquireActions(List<EzAcquireAction>&& failedAcquireActions)
+    EzQuestModel& withFailedAcquireActions(List<EzAcquireAction> failedAcquireActions)
     {
         setFailedAcquireActions(std::move(failedAcquireActions));
         return *this;
     }
 
-    EzQuestModel& withPremiseQuestNames(const List<StringHolder>& premiseQuestNames)
-    {
-        setPremiseQuestNames(premiseQuestNames);
-        return *this;
-    }
-
-    EzQuestModel& withPremiseQuestNames(List<StringHolder>&& premiseQuestNames)
+    EzQuestModel& withPremiseQuestNames(List<StringHolder> premiseQuestNames)
     {
         setPremiseQuestNames(std::move(premiseQuestNames));
         return *this;

@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace lottery
 {
@@ -43,28 +45,28 @@ private:
         /** 抽選の種類のリスト */
         optional<List<LotteryModel>> items;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            items(data.items)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -79,72 +81,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DescribeLotteryModelsResult() :
-        m_pData(nullptr)
-    {}
+    DescribeLotteryModelsResult() = default;
+    DescribeLotteryModelsResult(const DescribeLotteryModelsResult& describeLotteryModelsResult) = default;
+    DescribeLotteryModelsResult(DescribeLotteryModelsResult&& describeLotteryModelsResult) = default;
+    ~DescribeLotteryModelsResult() = default;
 
-    DescribeLotteryModelsResult(const DescribeLotteryModelsResult& describeLotteryModelsResult) :
-        Gs2Object(describeLotteryModelsResult),
-        m_pData(describeLotteryModelsResult.m_pData != nullptr ? new Data(*describeLotteryModelsResult.m_pData) : nullptr)
-    {}
+    DescribeLotteryModelsResult& operator=(const DescribeLotteryModelsResult& describeLotteryModelsResult) = default;
+    DescribeLotteryModelsResult& operator=(DescribeLotteryModelsResult&& describeLotteryModelsResult) = default;
 
-    DescribeLotteryModelsResult(DescribeLotteryModelsResult&& describeLotteryModelsResult) :
-        Gs2Object(std::move(describeLotteryModelsResult)),
-        m_pData(describeLotteryModelsResult.m_pData)
+    DescribeLotteryModelsResult deepCopy() const
     {
-        describeLotteryModelsResult.m_pData = nullptr;
-    }
-
-    ~DescribeLotteryModelsResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DescribeLotteryModelsResult& operator=(const DescribeLotteryModelsResult& describeLotteryModelsResult)
-    {
-        Gs2Object::operator=(describeLotteryModelsResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*describeLotteryModelsResult.m_pData);
-
-        return *this;
-    }
-
-    DescribeLotteryModelsResult& operator=(DescribeLotteryModelsResult&& describeLotteryModelsResult)
-    {
-        Gs2Object::operator=(std::move(describeLotteryModelsResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = describeLotteryModelsResult.m_pData;
-        describeLotteryModelsResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeLotteryModelsResult);
     }
 
     const DescribeLotteryModelsResult* operator->() const
@@ -171,9 +121,9 @@ public:
      *
      * @param items 抽選の種類のリスト
      */
-    void setItems(const List<LotteryModel>& items)
+    void setItems(List<LotteryModel> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
 

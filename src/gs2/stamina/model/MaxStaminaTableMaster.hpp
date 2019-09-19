@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace stamina {
@@ -54,8 +56,7 @@ private:
         /** ランク毎のスタミナの最大値テーブル */
         optional<List<Int32>> values;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -63,59 +64,60 @@ private:
             name(data.name),
             metadata(data.metadata),
             description(data.description),
-            experienceModelId(data.experienceModelId),
-            values(data.values)
-        {}
+            experienceModelId(data.experienceModelId)
+        {
+            if (data.values)
+            {
+                values = data.values->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            maxStaminaTableId(std::move(data.maxStaminaTableId)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            description(std::move(data.description)),
-            experienceModelId(std::move(data.experienceModelId)),
-            values(std::move(data.values))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "maxStaminaTableId") == 0) {
+            if (std::strcmp(name_, "maxStaminaTableId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->maxStaminaTableId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "experienceModelId") == 0) {
+            else if (std::strcmp(name_, "experienceModelId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->experienceModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "values") == 0) {
+            else if (std::strcmp(name_, "values") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -131,72 +133,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    MaxStaminaTableMaster() :
-        m_pData(nullptr)
-    {}
+    MaxStaminaTableMaster() = default;
+    MaxStaminaTableMaster(const MaxStaminaTableMaster& maxStaminaTableMaster) = default;
+    MaxStaminaTableMaster(MaxStaminaTableMaster&& maxStaminaTableMaster) = default;
+    ~MaxStaminaTableMaster() = default;
 
-    MaxStaminaTableMaster(const MaxStaminaTableMaster& maxStaminaTableMaster) :
-        Gs2Object(maxStaminaTableMaster),
-        m_pData(maxStaminaTableMaster.m_pData != nullptr ? new Data(*maxStaminaTableMaster.m_pData) : nullptr)
-    {}
+    MaxStaminaTableMaster& operator=(const MaxStaminaTableMaster& maxStaminaTableMaster) = default;
+    MaxStaminaTableMaster& operator=(MaxStaminaTableMaster&& maxStaminaTableMaster) = default;
 
-    MaxStaminaTableMaster(MaxStaminaTableMaster&& maxStaminaTableMaster) :
-        Gs2Object(std::move(maxStaminaTableMaster)),
-        m_pData(maxStaminaTableMaster.m_pData)
+    MaxStaminaTableMaster deepCopy() const
     {
-        maxStaminaTableMaster.m_pData = nullptr;
-    }
-
-    ~MaxStaminaTableMaster()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    MaxStaminaTableMaster& operator=(const MaxStaminaTableMaster& maxStaminaTableMaster)
-    {
-        Gs2Object::operator=(maxStaminaTableMaster);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*maxStaminaTableMaster.m_pData);
-
-        return *this;
-    }
-
-    MaxStaminaTableMaster& operator=(MaxStaminaTableMaster&& maxStaminaTableMaster)
-    {
-        Gs2Object::operator=(std::move(maxStaminaTableMaster));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = maxStaminaTableMaster.m_pData;
-        maxStaminaTableMaster.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(MaxStaminaTableMaster);
     }
 
     const MaxStaminaTableMaster* operator->() const
@@ -223,9 +173,9 @@ public:
      *
      * @param maxStaminaTableId スタミナの最大値テーブルマスター
      */
-    void setMaxStaminaTableId(const Char* maxStaminaTableId)
+    void setMaxStaminaTableId(StringHolder maxStaminaTableId)
     {
-        ensureData().maxStaminaTableId.emplace(maxStaminaTableId);
+        ensureData().maxStaminaTableId.emplace(std::move(maxStaminaTableId));
     }
 
     /**
@@ -233,9 +183,9 @@ public:
      *
      * @param maxStaminaTableId スタミナの最大値テーブルマスター
      */
-    MaxStaminaTableMaster& withMaxStaminaTableId(const Char* maxStaminaTableId)
+    MaxStaminaTableMaster& withMaxStaminaTableId(StringHolder maxStaminaTableId)
     {
-        setMaxStaminaTableId(maxStaminaTableId);
+        setMaxStaminaTableId(std::move(maxStaminaTableId));
         return *this;
     }
 
@@ -254,9 +204,9 @@ public:
      *
      * @param name 最大スタミナ値テーブル名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -264,9 +214,9 @@ public:
      *
      * @param name 最大スタミナ値テーブル名
      */
-    MaxStaminaTableMaster& withName(const Char* name)
+    MaxStaminaTableMaster& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -285,9 +235,9 @@ public:
      *
      * @param metadata 最大スタミナ値テーブルのメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -295,9 +245,9 @@ public:
      *
      * @param metadata 最大スタミナ値テーブルのメタデータ
      */
-    MaxStaminaTableMaster& withMetadata(const Char* metadata)
+    MaxStaminaTableMaster& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -316,9 +266,9 @@ public:
      *
      * @param description スタミナの最大値テーブルマスターの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -326,9 +276,9 @@ public:
      *
      * @param description スタミナの最大値テーブルマスターの説明
      */
-    MaxStaminaTableMaster& withDescription(const Char* description)
+    MaxStaminaTableMaster& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -347,9 +297,9 @@ public:
      *
      * @param experienceModelId 経験値の種類マスター のGRN
      */
-    void setExperienceModelId(const Char* experienceModelId)
+    void setExperienceModelId(StringHolder experienceModelId)
     {
-        ensureData().experienceModelId.emplace(experienceModelId);
+        ensureData().experienceModelId.emplace(std::move(experienceModelId));
     }
 
     /**
@@ -357,9 +307,9 @@ public:
      *
      * @param experienceModelId 経験値の種類マスター のGRN
      */
-    MaxStaminaTableMaster& withExperienceModelId(const Char* experienceModelId)
+    MaxStaminaTableMaster& withExperienceModelId(StringHolder experienceModelId)
     {
-        setExperienceModelId(experienceModelId);
+        setExperienceModelId(std::move(experienceModelId));
         return *this;
     }
 
@@ -378,9 +328,9 @@ public:
      *
      * @param values ランク毎のスタミナの最大値テーブル
      */
-    void setValues(const List<Int32>& values)
+    void setValues(List<Int32> values)
     {
-        ensureData().values.emplace(values);
+        ensureData().values.emplace(std::move(values));
     }
 
     /**
@@ -388,9 +338,9 @@ public:
      *
      * @param values ランク毎のスタミナの最大値テーブル
      */
-    MaxStaminaTableMaster& withValues(const List<Int32>& values)
+    MaxStaminaTableMaster& withValues(List<Int32> values)
     {
-        setValues(values);
+        setValues(std::move(values));
         return *this;
     }
 
@@ -405,7 +355,7 @@ inline bool operator!=(const MaxStaminaTableMaster& lhs, const MaxStaminaTableMa
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

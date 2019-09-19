@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "ItemModel.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace inventory {
@@ -55,8 +57,7 @@ private:
         /** インベントリに格納可能なアイテムモデル一覧 */
         optional<List<ItemModel>> itemModels;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -64,59 +65,60 @@ private:
             name(data.name),
             metadata(data.metadata),
             initialCapacity(data.initialCapacity),
-            maxCapacity(data.maxCapacity),
-            itemModels(data.itemModels)
-        {}
+            maxCapacity(data.maxCapacity)
+        {
+            if (data.itemModels)
+            {
+                itemModels = data.itemModels->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            inventoryModelId(std::move(data.inventoryModelId)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            initialCapacity(std::move(data.initialCapacity)),
-            maxCapacity(std::move(data.maxCapacity)),
-            itemModels(std::move(data.itemModels))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "inventoryModelId") == 0) {
+            if (std::strcmp(name_, "inventoryModelId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->inventoryModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "initialCapacity") == 0) {
+            else if (std::strcmp(name_, "initialCapacity") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->initialCapacity = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "maxCapacity") == 0) {
+            else if (std::strcmp(name_, "maxCapacity") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->maxCapacity = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "itemModels") == 0) {
+            else if (std::strcmp(name_, "itemModels") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -131,72 +133,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    InventoryModel() :
-        m_pData(nullptr)
-    {}
+    InventoryModel() = default;
+    InventoryModel(const InventoryModel& inventoryModel) = default;
+    InventoryModel(InventoryModel&& inventoryModel) = default;
+    ~InventoryModel() = default;
 
-    InventoryModel(const InventoryModel& inventoryModel) :
-        Gs2Object(inventoryModel),
-        m_pData(inventoryModel.m_pData != nullptr ? new Data(*inventoryModel.m_pData) : nullptr)
-    {}
+    InventoryModel& operator=(const InventoryModel& inventoryModel) = default;
+    InventoryModel& operator=(InventoryModel&& inventoryModel) = default;
 
-    InventoryModel(InventoryModel&& inventoryModel) :
-        Gs2Object(std::move(inventoryModel)),
-        m_pData(inventoryModel.m_pData)
+    InventoryModel deepCopy() const
     {
-        inventoryModel.m_pData = nullptr;
-    }
-
-    ~InventoryModel()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    InventoryModel& operator=(const InventoryModel& inventoryModel)
-    {
-        Gs2Object::operator=(inventoryModel);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*inventoryModel.m_pData);
-
-        return *this;
-    }
-
-    InventoryModel& operator=(InventoryModel&& inventoryModel)
-    {
-        Gs2Object::operator=(std::move(inventoryModel));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = inventoryModel.m_pData;
-        inventoryModel.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(InventoryModel);
     }
 
     const InventoryModel* operator->() const
@@ -223,9 +173,9 @@ public:
      *
      * @param inventoryModelId インベントリモデルマスター
      */
-    void setInventoryModelId(const Char* inventoryModelId)
+    void setInventoryModelId(StringHolder inventoryModelId)
     {
-        ensureData().inventoryModelId.emplace(inventoryModelId);
+        ensureData().inventoryModelId.emplace(std::move(inventoryModelId));
     }
 
     /**
@@ -233,9 +183,9 @@ public:
      *
      * @param inventoryModelId インベントリモデルマスター
      */
-    InventoryModel& withInventoryModelId(const Char* inventoryModelId)
+    InventoryModel& withInventoryModelId(StringHolder inventoryModelId)
     {
-        setInventoryModelId(inventoryModelId);
+        setInventoryModelId(std::move(inventoryModelId));
         return *this;
     }
 
@@ -254,9 +204,9 @@ public:
      *
      * @param name インベントリの種類名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -264,9 +214,9 @@ public:
      *
      * @param name インベントリの種類名
      */
-    InventoryModel& withName(const Char* name)
+    InventoryModel& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -285,9 +235,9 @@ public:
      *
      * @param metadata インベントリの種類のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -295,9 +245,9 @@ public:
      *
      * @param metadata インベントリの種類のメタデータ
      */
-    InventoryModel& withMetadata(const Char* metadata)
+    InventoryModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -378,9 +328,9 @@ public:
      *
      * @param itemModels インベントリに格納可能なアイテムモデル一覧
      */
-    void setItemModels(const List<ItemModel>& itemModels)
+    void setItemModels(List<ItemModel> itemModels)
     {
-        ensureData().itemModels.emplace(itemModels);
+        ensureData().itemModels.emplace(std::move(itemModels));
     }
 
     /**
@@ -388,9 +338,9 @@ public:
      *
      * @param itemModels インベントリに格納可能なアイテムモデル一覧
      */
-    InventoryModel& withItemModels(const List<ItemModel>& itemModels)
+    InventoryModel& withItemModels(List<ItemModel> itemModels)
     {
-        setItemModels(itemModels);
+        setItemModels(std::move(itemModels));
         return *this;
     }
 
@@ -405,7 +355,7 @@ inline bool operator!=(const InventoryModel& lhs, const InventoryModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

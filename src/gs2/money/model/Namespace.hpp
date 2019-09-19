@@ -22,10 +22,12 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "ScriptSetting.hpp"
 #include "ScriptSetting.hpp"
 #include "ScriptSetting.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace money {
@@ -77,8 +79,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -92,103 +93,105 @@ private:
             appleKey(data.appleKey),
             googleKey(data.googleKey),
             enableFakeReceipt(data.enableFakeReceipt),
-            createWalletScript(data.createWalletScript),
-            depositScript(data.depositScript),
-            withdrawScript(data.withdrawScript),
             balance(data.balance),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.createWalletScript)
+            {
+                createWalletScript = data.createWalletScript->deepCopy();
+            }
+            if (data.depositScript)
+            {
+                depositScript = data.depositScript->deepCopy();
+            }
+            if (data.withdrawScript)
+            {
+                withdrawScript = data.withdrawScript->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            namespaceId(std::move(data.namespaceId)),
-            ownerId(std::move(data.ownerId)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            priority(std::move(data.priority)),
-            shareFree(std::move(data.shareFree)),
-            currency(std::move(data.currency)),
-            appleKey(std::move(data.appleKey)),
-            googleKey(std::move(data.googleKey)),
-            enableFakeReceipt(std::move(data.enableFakeReceipt)),
-            createWalletScript(std::move(data.createWalletScript)),
-            depositScript(std::move(data.depositScript)),
-            withdrawScript(std::move(data.withdrawScript)),
-            balance(std::move(data.balance)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "namespaceId") == 0) {
+            if (std::strcmp(name_, "namespaceId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->namespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "priority") == 0) {
+            else if (std::strcmp(name_, "priority") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->priority.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "shareFree") == 0) {
+            else if (std::strcmp(name_, "shareFree") == 0)
+            {
                 if (jsonValue.IsBool())
                 {
                     this->shareFree = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name_, "currency") == 0) {
+            else if (std::strcmp(name_, "currency") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->currency.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "appleKey") == 0) {
+            else if (std::strcmp(name_, "appleKey") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->appleKey.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "googleKey") == 0) {
+            else if (std::strcmp(name_, "googleKey") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->googleKey.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "enableFakeReceipt") == 0) {
+            else if (std::strcmp(name_, "enableFakeReceipt") == 0)
+            {
                 if (jsonValue.IsBool())
                 {
                     this->enableFakeReceipt = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name_, "createWalletScript") == 0) {
+            else if (std::strcmp(name_, "createWalletScript") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -196,7 +199,8 @@ private:
                     detail::json::JsonParser::parse(&this->createWalletScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "depositScript") == 0) {
+            else if (std::strcmp(name_, "depositScript") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -204,7 +208,8 @@ private:
                     detail::json::JsonParser::parse(&this->depositScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "withdrawScript") == 0) {
+            else if (std::strcmp(name_, "withdrawScript") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -212,19 +217,22 @@ private:
                     detail::json::JsonParser::parse(&this->withdrawScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "balance") == 0) {
+            else if (std::strcmp(name_, "balance") == 0)
+            {
                 if (jsonValue.IsDouble())
                 {
                     this->balance = jsonValue.GetDouble();
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -233,72 +241,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Namespace() :
-        m_pData(nullptr)
-    {}
+    Namespace() = default;
+    Namespace(const Namespace& namespace_) = default;
+    Namespace(Namespace&& namespace_) = default;
+    ~Namespace() = default;
 
-    Namespace(const Namespace& namespace_) :
-        Gs2Object(namespace_),
-        m_pData(namespace_.m_pData != nullptr ? new Data(*namespace_.m_pData) : nullptr)
-    {}
+    Namespace& operator=(const Namespace& namespace_) = default;
+    Namespace& operator=(Namespace&& namespace_) = default;
 
-    Namespace(Namespace&& namespace_) :
-        Gs2Object(std::move(namespace_)),
-        m_pData(namespace_.m_pData)
+    Namespace deepCopy() const
     {
-        namespace_.m_pData = nullptr;
-    }
-
-    ~Namespace()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Namespace& operator=(const Namespace& namespace_)
-    {
-        Gs2Object::operator=(namespace_);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*namespace_.m_pData);
-
-        return *this;
-    }
-
-    Namespace& operator=(Namespace&& namespace_)
-    {
-        Gs2Object::operator=(std::move(namespace_));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = namespace_.m_pData;
-        namespace_.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Namespace);
     }
 
     const Namespace* operator->() const
@@ -325,9 +281,9 @@ public:
      *
      * @param namespaceId ネームスペース
      */
-    void setNamespaceId(const Char* namespaceId)
+    void setNamespaceId(StringHolder namespaceId)
     {
-        ensureData().namespaceId.emplace(namespaceId);
+        ensureData().namespaceId.emplace(std::move(namespaceId));
     }
 
     /**
@@ -335,9 +291,9 @@ public:
      *
      * @param namespaceId ネームスペース
      */
-    Namespace& withNamespaceId(const Char* namespaceId)
+    Namespace& withNamespaceId(StringHolder namespaceId)
     {
-        setNamespaceId(namespaceId);
+        setNamespaceId(std::move(namespaceId));
         return *this;
     }
 
@@ -356,9 +312,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
@@ -366,9 +322,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    Namespace& withOwnerId(const Char* ownerId)
+    Namespace& withOwnerId(StringHolder ownerId)
     {
-        setOwnerId(ownerId);
+        setOwnerId(std::move(ownerId));
         return *this;
     }
 
@@ -387,9 +343,9 @@ public:
      *
      * @param name ネームスペースの名前
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -397,9 +353,9 @@ public:
      *
      * @param name ネームスペースの名前
      */
-    Namespace& withName(const Char* name)
+    Namespace& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -418,9 +374,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -428,9 +384,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    Namespace& withDescription(const Char* description)
+    Namespace& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -449,9 +405,9 @@ public:
      *
      * @param priority 消費優先度
      */
-    void setPriority(const Char* priority)
+    void setPriority(StringHolder priority)
     {
-        ensureData().priority.emplace(priority);
+        ensureData().priority.emplace(std::move(priority));
     }
 
     /**
@@ -459,9 +415,9 @@ public:
      *
      * @param priority 消費優先度
      */
-    Namespace& withPriority(const Char* priority)
+    Namespace& withPriority(StringHolder priority)
     {
-        setPriority(priority);
+        setPriority(std::move(priority));
         return *this;
     }
 
@@ -511,9 +467,9 @@ public:
      *
      * @param currency 通貨の種類
      */
-    void setCurrency(const Char* currency)
+    void setCurrency(StringHolder currency)
     {
-        ensureData().currency.emplace(currency);
+        ensureData().currency.emplace(std::move(currency));
     }
 
     /**
@@ -521,9 +477,9 @@ public:
      *
      * @param currency 通貨の種類
      */
-    Namespace& withCurrency(const Char* currency)
+    Namespace& withCurrency(StringHolder currency)
     {
-        setCurrency(currency);
+        setCurrency(std::move(currency));
         return *this;
     }
 
@@ -542,9 +498,9 @@ public:
      *
      * @param appleKey Apple AppStore のバンドルID
      */
-    void setAppleKey(const Char* appleKey)
+    void setAppleKey(StringHolder appleKey)
     {
-        ensureData().appleKey.emplace(appleKey);
+        ensureData().appleKey.emplace(std::move(appleKey));
     }
 
     /**
@@ -552,9 +508,9 @@ public:
      *
      * @param appleKey Apple AppStore のバンドルID
      */
-    Namespace& withAppleKey(const Char* appleKey)
+    Namespace& withAppleKey(StringHolder appleKey)
     {
-        setAppleKey(appleKey);
+        setAppleKey(std::move(appleKey));
         return *this;
     }
 
@@ -573,9 +529,9 @@ public:
      *
      * @param googleKey Google PlayStore の秘密鍵
      */
-    void setGoogleKey(const Char* googleKey)
+    void setGoogleKey(StringHolder googleKey)
     {
-        ensureData().googleKey.emplace(googleKey);
+        ensureData().googleKey.emplace(std::move(googleKey));
     }
 
     /**
@@ -583,9 +539,9 @@ public:
      *
      * @param googleKey Google PlayStore の秘密鍵
      */
-    Namespace& withGoogleKey(const Char* googleKey)
+    Namespace& withGoogleKey(StringHolder googleKey)
     {
-        setGoogleKey(googleKey);
+        setGoogleKey(std::move(googleKey));
         return *this;
     }
 
@@ -635,9 +591,9 @@ public:
      *
      * @param createWalletScript ウォレット新規作成したときに実行するスクリプト
      */
-    void setCreateWalletScript(const ScriptSetting& createWalletScript)
+    void setCreateWalletScript(ScriptSetting createWalletScript)
     {
-        ensureData().createWalletScript.emplace(createWalletScript);
+        ensureData().createWalletScript.emplace(std::move(createWalletScript));
     }
 
     /**
@@ -645,9 +601,9 @@ public:
      *
      * @param createWalletScript ウォレット新規作成したときに実行するスクリプト
      */
-    Namespace& withCreateWalletScript(const ScriptSetting& createWalletScript)
+    Namespace& withCreateWalletScript(ScriptSetting createWalletScript)
     {
-        setCreateWalletScript(createWalletScript);
+        setCreateWalletScript(std::move(createWalletScript));
         return *this;
     }
 
@@ -666,9 +622,9 @@ public:
      *
      * @param depositScript ウォレット残高加算したときに実行するスクリプト
      */
-    void setDepositScript(const ScriptSetting& depositScript)
+    void setDepositScript(ScriptSetting depositScript)
     {
-        ensureData().depositScript.emplace(depositScript);
+        ensureData().depositScript.emplace(std::move(depositScript));
     }
 
     /**
@@ -676,9 +632,9 @@ public:
      *
      * @param depositScript ウォレット残高加算したときに実行するスクリプト
      */
-    Namespace& withDepositScript(const ScriptSetting& depositScript)
+    Namespace& withDepositScript(ScriptSetting depositScript)
     {
-        setDepositScript(depositScript);
+        setDepositScript(std::move(depositScript));
         return *this;
     }
 
@@ -697,9 +653,9 @@ public:
      *
      * @param withdrawScript ウォレット残高消費したときに実行するスクリプト
      */
-    void setWithdrawScript(const ScriptSetting& withdrawScript)
+    void setWithdrawScript(ScriptSetting withdrawScript)
     {
-        ensureData().withdrawScript.emplace(withdrawScript);
+        ensureData().withdrawScript.emplace(std::move(withdrawScript));
     }
 
     /**
@@ -707,9 +663,9 @@ public:
      *
      * @param withdrawScript ウォレット残高消費したときに実行するスクリプト
      */
-    Namespace& withWithdrawScript(const ScriptSetting& withdrawScript)
+    Namespace& withWithdrawScript(ScriptSetting withdrawScript)
     {
-        setWithdrawScript(withdrawScript);
+        setWithdrawScript(std::move(withdrawScript));
         return *this;
     }
 
@@ -817,7 +773,7 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

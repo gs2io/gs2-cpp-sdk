@@ -27,33 +27,72 @@ namespace gs2 { namespace ez { namespace inventory {
 class EzInventory : public gs2::Gs2Object
 {
 private:
-    /** インベントリ */
-    gs2::optional<StringHolder> m_InventoryId;
-    /** インベントリモデル名 */
-    gs2::optional<StringHolder> m_InventoryName;
-    /** 現在のインベントリのキャパシティ使用量 */
-    gs2::optional<Int32> m_CurrentInventoryCapacityUsage;
-    /** 現在のインベントリの最大キャパシティ */
-    gs2::optional<Int32> m_CurrentInventoryMaxCapacity;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** インベントリ */
+        gs2::optional<StringHolder> inventoryId;
+        /** インベントリモデル名 */
+        gs2::optional<StringHolder> inventoryName;
+        /** 現在のインベントリのキャパシティ使用量 */
+        gs2::optional<Int32> currentInventoryCapacityUsage;
+        /** 現在のインベントリの最大キャパシティ */
+        gs2::optional<Int32> currentInventoryMaxCapacity;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            inventoryId(data.inventoryId),
+            inventoryName(data.inventoryName),
+            currentInventoryCapacityUsage(data.currentInventoryCapacityUsage),
+            currentInventoryMaxCapacity(data.currentInventoryMaxCapacity)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::inventory::Inventory& inventory) :
+            inventoryId(inventory.getInventoryId()),
+            inventoryName(inventory.getInventoryName()),
+            currentInventoryCapacityUsage(inventory.getCurrentInventoryCapacityUsage() ? *inventory.getCurrentInventoryCapacityUsage() : 0),
+            currentInventoryMaxCapacity(inventory.getCurrentInventoryMaxCapacity() ? *inventory.getCurrentInventoryMaxCapacity() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzInventory() = default;
+    EzInventory(const EzInventory& ezInventory) = default;
+    EzInventory(EzInventory&& ezInventory) = default;
+    ~EzInventory() = default;
 
     EzInventory(gs2::inventory::Inventory inventory) :
-        m_InventoryId(inventory.getInventoryId()),
-        m_InventoryName(inventory.getInventoryName()),
-        m_CurrentInventoryCapacityUsage(inventory.getCurrentInventoryCapacityUsage() ? *inventory.getCurrentInventoryCapacityUsage() : 0),
-        m_CurrentInventoryMaxCapacity(inventory.getCurrentInventoryMaxCapacity() ? *inventory.getCurrentInventoryMaxCapacity() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(inventory)
+    {}
+
+    EzInventory& operator=(const EzInventory& ezInventory) = default;
+    EzInventory& operator=(EzInventory&& ezInventory) = default;
+
+    EzInventory deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzInventory);
     }
 
     gs2::inventory::Inventory ToModel() const
     {
         gs2::inventory::Inventory inventory;
-        inventory.setInventoryId(*m_InventoryId);
-        inventory.setInventoryName(*m_InventoryName);
-        inventory.setCurrentInventoryCapacityUsage(*m_CurrentInventoryCapacityUsage);
-        inventory.setCurrentInventoryMaxCapacity(*m_CurrentInventoryMaxCapacity);
+        inventory.setInventoryId(getInventoryId());
+        inventory.setInventoryName(getInventoryName());
+        inventory.setCurrentInventoryCapacityUsage(getCurrentInventoryCapacityUsage());
+        inventory.setCurrentInventoryMaxCapacity(getCurrentInventoryMaxCapacity());
         return inventory;
     }
 
@@ -61,69 +100,59 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getInventoryId() const
+    const StringHolder& getInventoryId() const
     {
-        return *m_InventoryId;
+        return *ensureData().inventoryId;
     }
 
-    gs2::StringHolder& getInventoryId()
+    const StringHolder& getInventoryName() const
     {
-        return *m_InventoryId;
-    }
-
-    const gs2::StringHolder& getInventoryName() const
-    {
-        return *m_InventoryName;
-    }
-
-    gs2::StringHolder& getInventoryName()
-    {
-        return *m_InventoryName;
+        return *ensureData().inventoryName;
     }
 
     Int32 getCurrentInventoryCapacityUsage() const
     {
-        return *m_CurrentInventoryCapacityUsage;
+        return *ensureData().currentInventoryCapacityUsage;
     }
 
     Int32 getCurrentInventoryMaxCapacity() const
     {
-        return *m_CurrentInventoryMaxCapacity;
+        return *ensureData().currentInventoryMaxCapacity;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setInventoryId(Char* inventoryId)
+    void setInventoryId(StringHolder inventoryId)
     {
-        m_InventoryId.emplace(inventoryId);
+        ensureData().inventoryId = std::move(inventoryId);
     }
 
-    void setInventoryName(Char* inventoryName)
+    void setInventoryName(StringHolder inventoryName)
     {
-        m_InventoryName.emplace(inventoryName);
+        ensureData().inventoryName = std::move(inventoryName);
     }
 
     void setCurrentInventoryCapacityUsage(Int32 currentInventoryCapacityUsage)
     {
-        m_CurrentInventoryCapacityUsage = currentInventoryCapacityUsage;
+        ensureData().currentInventoryCapacityUsage = currentInventoryCapacityUsage;
     }
 
     void setCurrentInventoryMaxCapacity(Int32 currentInventoryMaxCapacity)
     {
-        m_CurrentInventoryMaxCapacity = currentInventoryMaxCapacity;
+        ensureData().currentInventoryMaxCapacity = currentInventoryMaxCapacity;
     }
 
-    EzInventory& withInventoryId(Char* inventoryId)
+    EzInventory& withInventoryId(StringHolder inventoryId)
     {
-        setInventoryId(inventoryId);
+        setInventoryId(std::move(inventoryId));
         return *this;
     }
 
-    EzInventory& withInventoryName(Char* inventoryName)
+    EzInventory& withInventoryName(StringHolder inventoryName)
     {
-        setInventoryName(inventoryName);
+        setInventoryName(std::move(inventoryName));
         return *this;
     }
 

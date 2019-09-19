@@ -18,6 +18,7 @@
 #define GS2_GATEWAY_MODEL_MODEL_HPP_
 
 #include <gs2/core/common.hpp>
+#include "notification.hpp"
 #include "Namespace.hpp"
 #include "WebSocketSession.hpp"
 #include "FirebaseToken.hpp"

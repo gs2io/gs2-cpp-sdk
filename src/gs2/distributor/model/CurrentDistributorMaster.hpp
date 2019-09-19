@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace distributor {
@@ -46,36 +48,33 @@ private:
         /** マスターデータ */
         optional<StringHolder> settings;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             namespaceName(data.namespaceName),
             settings(data.settings)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            settings(std::move(data.settings))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "namespaceName") == 0) {
+            if (std::strcmp(name_, "namespaceName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->namespaceName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "settings") == 0) {
+            else if (std::strcmp(name_, "settings") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->settings.emplace(jsonValue.GetString());
@@ -84,72 +83,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    CurrentDistributorMaster() :
-        m_pData(nullptr)
-    {}
+    CurrentDistributorMaster() = default;
+    CurrentDistributorMaster(const CurrentDistributorMaster& currentDistributorMaster) = default;
+    CurrentDistributorMaster(CurrentDistributorMaster&& currentDistributorMaster) = default;
+    ~CurrentDistributorMaster() = default;
 
-    CurrentDistributorMaster(const CurrentDistributorMaster& currentDistributorMaster) :
-        Gs2Object(currentDistributorMaster),
-        m_pData(currentDistributorMaster.m_pData != nullptr ? new Data(*currentDistributorMaster.m_pData) : nullptr)
-    {}
+    CurrentDistributorMaster& operator=(const CurrentDistributorMaster& currentDistributorMaster) = default;
+    CurrentDistributorMaster& operator=(CurrentDistributorMaster&& currentDistributorMaster) = default;
 
-    CurrentDistributorMaster(CurrentDistributorMaster&& currentDistributorMaster) :
-        Gs2Object(std::move(currentDistributorMaster)),
-        m_pData(currentDistributorMaster.m_pData)
+    CurrentDistributorMaster deepCopy() const
     {
-        currentDistributorMaster.m_pData = nullptr;
-    }
-
-    ~CurrentDistributorMaster()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CurrentDistributorMaster& operator=(const CurrentDistributorMaster& currentDistributorMaster)
-    {
-        Gs2Object::operator=(currentDistributorMaster);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*currentDistributorMaster.m_pData);
-
-        return *this;
-    }
-
-    CurrentDistributorMaster& operator=(CurrentDistributorMaster&& currentDistributorMaster)
-    {
-        Gs2Object::operator=(std::move(currentDistributorMaster));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = currentDistributorMaster.m_pData;
-        currentDistributorMaster.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CurrentDistributorMaster);
     }
 
     const CurrentDistributorMaster* operator->() const
@@ -176,9 +123,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -186,9 +133,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    CurrentDistributorMaster& withNamespaceName(const Char* namespaceName)
+    CurrentDistributorMaster& withNamespaceName(StringHolder namespaceName)
     {
-        setNamespaceName(namespaceName);
+        setNamespaceName(std::move(namespaceName));
         return *this;
     }
 
@@ -207,9 +154,9 @@ public:
      *
      * @param settings マスターデータ
      */
-    void setSettings(const Char* settings)
+    void setSettings(StringHolder settings)
     {
-        ensureData().settings.emplace(settings);
+        ensureData().settings.emplace(std::move(settings));
     }
 
     /**
@@ -217,9 +164,9 @@ public:
      *
      * @param settings マスターデータ
      */
-    CurrentDistributorMaster& withSettings(const Char* settings)
+    CurrentDistributorMaster& withSettings(StringHolder settings)
     {
-        setSettings(settings);
+        setSettings(std::move(settings));
         return *this;
     }
 
@@ -234,7 +181,7 @@ inline bool operator!=(const CurrentDistributorMaster& lhs, const CurrentDistrib
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

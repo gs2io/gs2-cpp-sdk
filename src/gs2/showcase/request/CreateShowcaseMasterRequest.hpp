@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ShowcaseConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace showcase
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -54,106 +56,54 @@ private:
         /** 販売期間とするイベントマスター のGRN */
         optional<StringHolder> salesPeriodEventId;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             name(data.name),
             description(data.description),
             metadata(data.metadata),
-            displayItems(data.displayItems),
             salesPeriodEventId(data.salesPeriodEventId)
-        {}
+        {
+            if (data.displayItems)
+            {
+                displayItems = data.displayItems->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            metadata(std::move(data.metadata)),
-            displayItems(std::move(data.displayItems)),
-            salesPeriodEventId(std::move(data.salesPeriodEventId))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CreateShowcaseMasterRequest() :
-        m_pData(nullptr)
-    {}
+    CreateShowcaseMasterRequest() = default;
+    CreateShowcaseMasterRequest(const CreateShowcaseMasterRequest& createShowcaseMasterRequest) = default;
+    CreateShowcaseMasterRequest(CreateShowcaseMasterRequest&& createShowcaseMasterRequest) = default;
+    ~CreateShowcaseMasterRequest() GS2_OVERRIDE = default;
 
-    CreateShowcaseMasterRequest(const CreateShowcaseMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Showcase(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CreateShowcaseMasterRequest& operator=(const CreateShowcaseMasterRequest& createShowcaseMasterRequest) = default;
+    CreateShowcaseMasterRequest& operator=(CreateShowcaseMasterRequest&& createShowcaseMasterRequest) = default;
 
-    CreateShowcaseMasterRequest(CreateShowcaseMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Showcase(std::move(obj)),
-        m_pData(obj.m_pData)
+    CreateShowcaseMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CreateShowcaseMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateShowcaseMasterRequest& operator=(const CreateShowcaseMasterRequest& createShowcaseMasterRequest)
-    {
-        Gs2BasicRequest::operator=(createShowcaseMasterRequest);
-        Gs2Showcase::operator=(createShowcaseMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createShowcaseMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    CreateShowcaseMasterRequest& operator=(CreateShowcaseMasterRequest&& createShowcaseMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(createShowcaseMasterRequest));
-        Gs2Showcase::operator=(std::move(createShowcaseMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createShowcaseMasterRequest.m_pData;
-        createShowcaseMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateShowcaseMasterRequest);
     }
 
     const CreateShowcaseMasterRequest* operator->() const
@@ -181,9 +131,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -191,9 +141,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    CreateShowcaseMasterRequest& withNamespaceName(const Char* namespaceName)
+    CreateShowcaseMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -212,9 +162,9 @@ public:
      *
      * @param name 陳列棚名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -222,9 +172,9 @@ public:
      *
      * @param name 陳列棚名
      */
-    CreateShowcaseMasterRequest& withName(const Char* name)
+    CreateShowcaseMasterRequest& withName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
         return *this;
     }
 
@@ -243,9 +193,9 @@ public:
      *
      * @param description 陳列棚マスターの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -253,9 +203,9 @@ public:
      *
      * @param description 陳列棚マスターの説明
      */
-    CreateShowcaseMasterRequest& withDescription(const Char* description)
+    CreateShowcaseMasterRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -274,9 +224,9 @@ public:
      *
      * @param metadata 商品のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -284,9 +234,9 @@ public:
      *
      * @param metadata 商品のメタデータ
      */
-    CreateShowcaseMasterRequest& withMetadata(const Char* metadata)
+    CreateShowcaseMasterRequest& withMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
         return *this;
     }
 
@@ -305,9 +255,9 @@ public:
      *
      * @param displayItems 陳列する商品モデル一覧
      */
-    void setDisplayItems(const List<DisplayItemMaster>& displayItems)
+    void setDisplayItems(List<DisplayItemMaster> displayItems)
     {
-        ensureData().displayItems.emplace(displayItems);
+        ensureData().displayItems.emplace(std::move(displayItems));
     }
 
     /**
@@ -315,9 +265,9 @@ public:
      *
      * @param displayItems 陳列する商品モデル一覧
      */
-    CreateShowcaseMasterRequest& withDisplayItems(const List<DisplayItemMaster>& displayItems)
+    CreateShowcaseMasterRequest& withDisplayItems(List<DisplayItemMaster> displayItems)
     {
-        ensureData().displayItems.emplace(displayItems);
+        ensureData().displayItems.emplace(std::move(displayItems));
         return *this;
     }
 
@@ -336,9 +286,9 @@ public:
      *
      * @param salesPeriodEventId 販売期間とするイベントマスター のGRN
      */
-    void setSalesPeriodEventId(const Char* salesPeriodEventId)
+    void setSalesPeriodEventId(StringHolder salesPeriodEventId)
     {
-        ensureData().salesPeriodEventId.emplace(salesPeriodEventId);
+        ensureData().salesPeriodEventId.emplace(std::move(salesPeriodEventId));
     }
 
     /**
@@ -346,9 +296,9 @@ public:
      *
      * @param salesPeriodEventId 販売期間とするイベントマスター のGRN
      */
-    CreateShowcaseMasterRequest& withSalesPeriodEventId(const Char* salesPeriodEventId)
+    CreateShowcaseMasterRequest& withSalesPeriodEventId(StringHolder salesPeriodEventId)
     {
-        ensureData().salesPeriodEventId.emplace(salesPeriodEventId);
+        ensureData().salesPeriodEventId.emplace(std::move(salesPeriodEventId));
         return *this;
     }
 
@@ -359,33 +309,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CreateShowcaseMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    CreateShowcaseMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CreateShowcaseMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CreateShowcaseMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -394,9 +320,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CreateShowcaseMasterRequest& withRequestId(const Char* gs2RequestId)
+    CreateShowcaseMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

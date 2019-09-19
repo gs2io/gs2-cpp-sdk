@@ -27,19 +27,57 @@ namespace gs2 { namespace ez { namespace showcase {
 class EzListResult : public gs2::Gs2Object
 {
 private:
-    /** 陳列棚のリスト */
-    List<EzShowcase> m_Items;
-
-public:
-    EzListResult(const gs2::showcase::DescribeShowcasesResult& result)
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** 陳列棚のリスト */
+        List<EzShowcase> items;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::showcase::DescribeShowcasesResult& describeShowcasesResult)
+        {
             {
-                m_Items += EzShowcase(list[i]);
+                auto& list = *describeShowcasesResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzShowcase(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListResult() = default;
+    EzListResult(const EzListResult& result) = default;
+    EzListResult(EzListResult&& result) = default;
+    ~EzListResult() = default;
+
+    EzListResult(gs2::showcase::DescribeShowcasesResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListResult& operator=(const EzListResult& result) = default;
+    EzListResult& operator=(EzListResult&& result) = default;
+
+    EzListResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListResult);
     }
 
     static bool isConvertible(const gs2::showcase::DescribeShowcasesResult& result)
@@ -54,12 +92,7 @@ public:
 
     const List<EzShowcase>& getItems() const
     {
-        return m_Items;
-    }
-
-    List<EzShowcase>& getItems()
-    {
-        return m_Items;
+        return ensureData().items;
     }
 };
 

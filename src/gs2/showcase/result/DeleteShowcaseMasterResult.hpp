@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace showcase
 {
@@ -43,28 +45,28 @@ private:
         /** 削除した陳列棚マスター */
         optional<ShowcaseMaster> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DeleteShowcaseMasterResult() :
-        m_pData(nullptr)
-    {}
+    DeleteShowcaseMasterResult() = default;
+    DeleteShowcaseMasterResult(const DeleteShowcaseMasterResult& deleteShowcaseMasterResult) = default;
+    DeleteShowcaseMasterResult(DeleteShowcaseMasterResult&& deleteShowcaseMasterResult) = default;
+    ~DeleteShowcaseMasterResult() = default;
 
-    DeleteShowcaseMasterResult(const DeleteShowcaseMasterResult& deleteShowcaseMasterResult) :
-        Gs2Object(deleteShowcaseMasterResult),
-        m_pData(deleteShowcaseMasterResult.m_pData != nullptr ? new Data(*deleteShowcaseMasterResult.m_pData) : nullptr)
-    {}
+    DeleteShowcaseMasterResult& operator=(const DeleteShowcaseMasterResult& deleteShowcaseMasterResult) = default;
+    DeleteShowcaseMasterResult& operator=(DeleteShowcaseMasterResult&& deleteShowcaseMasterResult) = default;
 
-    DeleteShowcaseMasterResult(DeleteShowcaseMasterResult&& deleteShowcaseMasterResult) :
-        Gs2Object(std::move(deleteShowcaseMasterResult)),
-        m_pData(deleteShowcaseMasterResult.m_pData)
+    DeleteShowcaseMasterResult deepCopy() const
     {
-        deleteShowcaseMasterResult.m_pData = nullptr;
-    }
-
-    ~DeleteShowcaseMasterResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DeleteShowcaseMasterResult& operator=(const DeleteShowcaseMasterResult& deleteShowcaseMasterResult)
-    {
-        Gs2Object::operator=(deleteShowcaseMasterResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*deleteShowcaseMasterResult.m_pData);
-
-        return *this;
-    }
-
-    DeleteShowcaseMasterResult& operator=(DeleteShowcaseMasterResult&& deleteShowcaseMasterResult)
-    {
-        Gs2Object::operator=(std::move(deleteShowcaseMasterResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = deleteShowcaseMasterResult.m_pData;
-        deleteShowcaseMasterResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteShowcaseMasterResult);
     }
 
     const DeleteShowcaseMasterResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 削除した陳列棚マスター
      */
-    void setItem(const ShowcaseMaster& item)
+    void setItem(ShowcaseMaster item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

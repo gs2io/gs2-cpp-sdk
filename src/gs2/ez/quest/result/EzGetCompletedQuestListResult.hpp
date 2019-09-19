@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace quest {
 class EzGetCompletedQuestListResult : public gs2::Gs2Object
 {
 private:
-    /** クエスト進行 */
-    EzCompletedQuestList m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** クエスト進行 */
+        EzCompletedQuestList item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::quest::GetCompletedQuestListResult& getCompletedQuestListResult) :
+            item(*getCompletedQuestListResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetCompletedQuestListResult(const gs2::quest::GetCompletedQuestListResult& result) :
-        m_Item(*result.getItem())
+    EzGetCompletedQuestListResult() = default;
+    EzGetCompletedQuestListResult(const EzGetCompletedQuestListResult& result) = default;
+    EzGetCompletedQuestListResult(EzGetCompletedQuestListResult&& result) = default;
+    ~EzGetCompletedQuestListResult() = default;
+
+    EzGetCompletedQuestListResult(gs2::quest::GetCompletedQuestListResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetCompletedQuestListResult& operator=(const EzGetCompletedQuestListResult& result) = default;
+    EzGetCompletedQuestListResult& operator=(EzGetCompletedQuestListResult&& result) = default;
+
+    EzGetCompletedQuestListResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetCompletedQuestListResult);
     }
 
     static bool isConvertible(const gs2::quest::GetCompletedQuestListResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzCompletedQuestList& getItem() const
     {
-        return m_Item;
-    }
-
-    EzCompletedQuestList& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

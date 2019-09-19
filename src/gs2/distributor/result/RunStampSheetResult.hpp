@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace distributor
 {
@@ -43,28 +45,25 @@ private:
         /** レスポンス内容 */
         optional<StringHolder> result;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             result(data.result)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            result(std::move(data.result))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "result") == 0) {
+            if (std::strcmp(name_, "result") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->result.emplace(jsonValue.GetString());
@@ -73,72 +72,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    RunStampSheetResult() :
-        m_pData(nullptr)
-    {}
+    RunStampSheetResult() = default;
+    RunStampSheetResult(const RunStampSheetResult& runStampSheetResult) = default;
+    RunStampSheetResult(RunStampSheetResult&& runStampSheetResult) = default;
+    ~RunStampSheetResult() = default;
 
-    RunStampSheetResult(const RunStampSheetResult& runStampSheetResult) :
-        Gs2Object(runStampSheetResult),
-        m_pData(runStampSheetResult.m_pData != nullptr ? new Data(*runStampSheetResult.m_pData) : nullptr)
-    {}
+    RunStampSheetResult& operator=(const RunStampSheetResult& runStampSheetResult) = default;
+    RunStampSheetResult& operator=(RunStampSheetResult&& runStampSheetResult) = default;
 
-    RunStampSheetResult(RunStampSheetResult&& runStampSheetResult) :
-        Gs2Object(std::move(runStampSheetResult)),
-        m_pData(runStampSheetResult.m_pData)
+    RunStampSheetResult deepCopy() const
     {
-        runStampSheetResult.m_pData = nullptr;
-    }
-
-    ~RunStampSheetResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    RunStampSheetResult& operator=(const RunStampSheetResult& runStampSheetResult)
-    {
-        Gs2Object::operator=(runStampSheetResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*runStampSheetResult.m_pData);
-
-        return *this;
-    }
-
-    RunStampSheetResult& operator=(RunStampSheetResult&& runStampSheetResult)
-    {
-        Gs2Object::operator=(std::move(runStampSheetResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = runStampSheetResult.m_pData;
-        runStampSheetResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(RunStampSheetResult);
     }
 
     const RunStampSheetResult* operator->() const
@@ -165,9 +112,9 @@ public:
      *
      * @param result レスポンス内容
      */
-    void setResult(const Char* result)
+    void setResult(StringHolder result)
     {
-        ensureData().result.emplace(result);
+        ensureData().result.emplace(std::move(result));
     }
 
 

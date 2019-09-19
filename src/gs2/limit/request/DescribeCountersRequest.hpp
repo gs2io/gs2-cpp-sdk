@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2LimitConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace limit
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** アクセストークン */
@@ -54,106 +56,51 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             limitName(data.limitName),
             pageToken(data.pageToken),
             limit(data.limit),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            accessToken(std::move(data.accessToken)),
-            namespaceName(std::move(data.namespaceName)),
-            limitName(std::move(data.limitName)),
-            pageToken(std::move(data.pageToken)),
-            limit(std::move(data.limit)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    DescribeCountersRequest() :
-        m_pData(nullptr)
-    {}
+    DescribeCountersRequest() = default;
+    DescribeCountersRequest(const DescribeCountersRequest& describeCountersRequest) = default;
+    DescribeCountersRequest(DescribeCountersRequest&& describeCountersRequest) = default;
+    ~DescribeCountersRequest() GS2_OVERRIDE = default;
 
-    DescribeCountersRequest(const DescribeCountersRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Limit(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    DescribeCountersRequest& operator=(const DescribeCountersRequest& describeCountersRequest) = default;
+    DescribeCountersRequest& operator=(DescribeCountersRequest&& describeCountersRequest) = default;
 
-    DescribeCountersRequest(DescribeCountersRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Limit(std::move(obj)),
-        m_pData(obj.m_pData)
+    DescribeCountersRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~DescribeCountersRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DescribeCountersRequest& operator=(const DescribeCountersRequest& describeCountersRequest)
-    {
-        Gs2BasicRequest::operator=(describeCountersRequest);
-        Gs2Limit::operator=(describeCountersRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*describeCountersRequest.m_pData);
-
-        return *this;
-    }
-
-    DescribeCountersRequest& operator=(DescribeCountersRequest&& describeCountersRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(describeCountersRequest));
-        Gs2Limit::operator=(std::move(describeCountersRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = describeCountersRequest.m_pData;
-        describeCountersRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeCountersRequest);
     }
 
     const DescribeCountersRequest* operator->() const
@@ -171,7 +118,8 @@ public:
      *
      * @return アクセストークン
      */
-    const gs2::optional<StringHolder>& getAccessToken() const {
+    const gs2::optional<StringHolder>& getAccessToken() const
+    {
         return ensureData().accessToken;
     }
 
@@ -180,8 +128,9 @@ public:
      *
      * @param accessToken アクセストークン
      */
-    void setAccessToken(const Char* accessToken) {
-        ensureData().accessToken.emplace(accessToken);
+    void setAccessToken(StringHolder accessToken)
+    {
+        ensureData().accessToken.emplace(std::move(accessToken));
     }
 
     /**
@@ -190,8 +139,9 @@ public:
      * @param accessToken アクセストークン
      * @return this
      */
-    DescribeCountersRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
+    DescribeCountersRequest& withAccessToken(StringHolder accessToken)
+    {
+        setAccessToken(std::move(accessToken));
         return *this;
     }
 
@@ -210,9 +160,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -220,9 +170,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    DescribeCountersRequest& withNamespaceName(const Char* namespaceName)
+    DescribeCountersRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -241,9 +191,9 @@ public:
      *
      * @param limitName 回数制限の種類の名前
      */
-    void setLimitName(const Char* limitName)
+    void setLimitName(StringHolder limitName)
     {
-        ensureData().limitName.emplace(limitName);
+        ensureData().limitName.emplace(std::move(limitName));
     }
 
     /**
@@ -251,9 +201,9 @@ public:
      *
      * @param limitName 回数制限の種類の名前
      */
-    DescribeCountersRequest& withLimitName(const Char* limitName)
+    DescribeCountersRequest& withLimitName(StringHolder limitName)
     {
-        ensureData().limitName.emplace(limitName);
+        ensureData().limitName.emplace(std::move(limitName));
         return *this;
     }
 
@@ -272,9 +222,9 @@ public:
      *
      * @param pageToken データの取得を開始する位置を指定するトークン
      */
-    void setPageToken(const Char* pageToken)
+    void setPageToken(StringHolder pageToken)
     {
-        ensureData().pageToken.emplace(pageToken);
+        ensureData().pageToken.emplace(std::move(pageToken));
     }
 
     /**
@@ -282,9 +232,9 @@ public:
      *
      * @param pageToken データの取得を開始する位置を指定するトークン
      */
-    DescribeCountersRequest& withPageToken(const Char* pageToken)
+    DescribeCountersRequest& withPageToken(StringHolder pageToken)
     {
-        ensureData().pageToken.emplace(pageToken);
+        ensureData().pageToken.emplace(std::move(pageToken));
         return *this;
     }
 
@@ -334,9 +284,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -344,9 +294,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    DescribeCountersRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    DescribeCountersRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -357,33 +307,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    DescribeCountersRequest& withGs2ClientId(const Char* gs2ClientId)
+    DescribeCountersRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    DescribeCountersRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    DescribeCountersRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -392,9 +318,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    DescribeCountersRequest& withRequestId(const Char* gs2RequestId)
+    DescribeCountersRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

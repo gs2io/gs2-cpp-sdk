@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace stamina {
 class EzGetStaminaModelResult : public gs2::Gs2Object
 {
 private:
-    /** スタミナモデル */
-    EzStaminaModel m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** スタミナモデル */
+        EzStaminaModel item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::stamina::GetStaminaModelResult& getStaminaModelResult) :
+            item(*getStaminaModelResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetStaminaModelResult(const gs2::stamina::GetStaminaModelResult& result) :
-        m_Item(*result.getItem())
+    EzGetStaminaModelResult() = default;
+    EzGetStaminaModelResult(const EzGetStaminaModelResult& result) = default;
+    EzGetStaminaModelResult(EzGetStaminaModelResult&& result) = default;
+    ~EzGetStaminaModelResult() = default;
+
+    EzGetStaminaModelResult(gs2::stamina::GetStaminaModelResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetStaminaModelResult& operator=(const EzGetStaminaModelResult& result) = default;
+    EzGetStaminaModelResult& operator=(EzGetStaminaModelResult&& result) = default;
+
+    EzGetStaminaModelResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetStaminaModelResult);
     }
 
     static bool isConvertible(const gs2::stamina::GetStaminaModelResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzStaminaModel& getItem() const
     {
-        return m_Item;
-    }
-
-    EzStaminaModel& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

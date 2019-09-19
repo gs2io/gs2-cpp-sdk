@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace limit {
 class EzGetLimitModelResult : public gs2::Gs2Object
 {
 private:
-    /** 回数制限の種類 */
-    EzLimitModel m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 回数制限の種類 */
+        EzLimitModel item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::limit::GetLimitModelResult& getLimitModelResult) :
+            item(*getLimitModelResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetLimitModelResult(const gs2::limit::GetLimitModelResult& result) :
-        m_Item(*result.getItem())
+    EzGetLimitModelResult() = default;
+    EzGetLimitModelResult(const EzGetLimitModelResult& result) = default;
+    EzGetLimitModelResult(EzGetLimitModelResult&& result) = default;
+    ~EzGetLimitModelResult() = default;
+
+    EzGetLimitModelResult(gs2::limit::GetLimitModelResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetLimitModelResult& operator=(const EzGetLimitModelResult& result) = default;
+    EzGetLimitModelResult& operator=(EzGetLimitModelResult&& result) = default;
+
+    EzGetLimitModelResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetLimitModelResult);
     }
 
     static bool isConvertible(const gs2::limit::GetLimitModelResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzLimitModel& getItem() const
     {
-        return m_Item;
-    }
-
-    EzLimitModel& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

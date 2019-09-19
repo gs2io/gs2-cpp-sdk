@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace account {
 class EzUpdateTakeOverSettingResult : public gs2::Gs2Object
 {
 private:
-    /** 引き継ぎ設定 */
-    EzTakeOver m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 引き継ぎ設定 */
+        EzTakeOver item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::account::UpdateTakeOverResult& updateTakeOverResult) :
+            item(*updateTakeOverResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzUpdateTakeOverSettingResult(const gs2::account::UpdateTakeOverResult& result) :
-        m_Item(*result.getItem())
+    EzUpdateTakeOverSettingResult() = default;
+    EzUpdateTakeOverSettingResult(const EzUpdateTakeOverSettingResult& result) = default;
+    EzUpdateTakeOverSettingResult(EzUpdateTakeOverSettingResult&& result) = default;
+    ~EzUpdateTakeOverSettingResult() = default;
+
+    EzUpdateTakeOverSettingResult(gs2::account::UpdateTakeOverResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzUpdateTakeOverSettingResult& operator=(const EzUpdateTakeOverSettingResult& result) = default;
+    EzUpdateTakeOverSettingResult& operator=(EzUpdateTakeOverSettingResult&& result) = default;
+
+    EzUpdateTakeOverSettingResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzUpdateTakeOverSettingResult);
     }
 
     static bool isConvertible(const gs2::account::UpdateTakeOverResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzTakeOver& getItem() const
     {
-        return m_Item;
-    }
-
-    EzTakeOver& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

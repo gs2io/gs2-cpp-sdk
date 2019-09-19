@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace lottery
 {
@@ -43,28 +45,28 @@ private:
         /** 抽選の種類 */
         optional<LotteryModel> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GetLotteryModelResult() :
-        m_pData(nullptr)
-    {}
+    GetLotteryModelResult() = default;
+    GetLotteryModelResult(const GetLotteryModelResult& getLotteryModelResult) = default;
+    GetLotteryModelResult(GetLotteryModelResult&& getLotteryModelResult) = default;
+    ~GetLotteryModelResult() = default;
 
-    GetLotteryModelResult(const GetLotteryModelResult& getLotteryModelResult) :
-        Gs2Object(getLotteryModelResult),
-        m_pData(getLotteryModelResult.m_pData != nullptr ? new Data(*getLotteryModelResult.m_pData) : nullptr)
-    {}
+    GetLotteryModelResult& operator=(const GetLotteryModelResult& getLotteryModelResult) = default;
+    GetLotteryModelResult& operator=(GetLotteryModelResult&& getLotteryModelResult) = default;
 
-    GetLotteryModelResult(GetLotteryModelResult&& getLotteryModelResult) :
-        Gs2Object(std::move(getLotteryModelResult)),
-        m_pData(getLotteryModelResult.m_pData)
+    GetLotteryModelResult deepCopy() const
     {
-        getLotteryModelResult.m_pData = nullptr;
-    }
-
-    ~GetLotteryModelResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetLotteryModelResult& operator=(const GetLotteryModelResult& getLotteryModelResult)
-    {
-        Gs2Object::operator=(getLotteryModelResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getLotteryModelResult.m_pData);
-
-        return *this;
-    }
-
-    GetLotteryModelResult& operator=(GetLotteryModelResult&& getLotteryModelResult)
-    {
-        Gs2Object::operator=(std::move(getLotteryModelResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getLotteryModelResult.m_pData;
-        getLotteryModelResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetLotteryModelResult);
     }
 
     const GetLotteryModelResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 抽選の種類
      */
-    void setItem(const LotteryModel& item)
+    void setItem(LotteryModel item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

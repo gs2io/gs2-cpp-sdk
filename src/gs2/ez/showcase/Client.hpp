@@ -47,9 +47,9 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     void list(
-        std::function<void(AsyncEzListResult&)> callback,
+        std::function<void(AsyncEzListResult)> callback,
         GameSession& session,
-        const Char* namespaceName
+        StringHolder namespaceName
     );
 
     /// <summary>
@@ -62,10 +62,10 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="displayItemId">陳列商品ID</param>
     void buy(
-        std::function<void(AsyncEzBuyResult&)> callback,
+        std::function<void(AsyncEzBuyResult)> callback,
         GameSession& session,
-        const Char* namespaceName,
-        const Char* displayItemId=nullptr
+        StringHolder namespaceName,
+        gs2::optional<StringHolder> displayItemId=gs2::nullopt
     );
 };
 

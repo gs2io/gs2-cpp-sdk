@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace quest
 {
@@ -43,28 +45,28 @@ private:
         /** クエストグループのリスト */
         optional<List<QuestGroupModel>> items;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            items(data.items)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -79,72 +81,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DescribeQuestGroupModelsResult() :
-        m_pData(nullptr)
-    {}
+    DescribeQuestGroupModelsResult() = default;
+    DescribeQuestGroupModelsResult(const DescribeQuestGroupModelsResult& describeQuestGroupModelsResult) = default;
+    DescribeQuestGroupModelsResult(DescribeQuestGroupModelsResult&& describeQuestGroupModelsResult) = default;
+    ~DescribeQuestGroupModelsResult() = default;
 
-    DescribeQuestGroupModelsResult(const DescribeQuestGroupModelsResult& describeQuestGroupModelsResult) :
-        Gs2Object(describeQuestGroupModelsResult),
-        m_pData(describeQuestGroupModelsResult.m_pData != nullptr ? new Data(*describeQuestGroupModelsResult.m_pData) : nullptr)
-    {}
+    DescribeQuestGroupModelsResult& operator=(const DescribeQuestGroupModelsResult& describeQuestGroupModelsResult) = default;
+    DescribeQuestGroupModelsResult& operator=(DescribeQuestGroupModelsResult&& describeQuestGroupModelsResult) = default;
 
-    DescribeQuestGroupModelsResult(DescribeQuestGroupModelsResult&& describeQuestGroupModelsResult) :
-        Gs2Object(std::move(describeQuestGroupModelsResult)),
-        m_pData(describeQuestGroupModelsResult.m_pData)
+    DescribeQuestGroupModelsResult deepCopy() const
     {
-        describeQuestGroupModelsResult.m_pData = nullptr;
-    }
-
-    ~DescribeQuestGroupModelsResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DescribeQuestGroupModelsResult& operator=(const DescribeQuestGroupModelsResult& describeQuestGroupModelsResult)
-    {
-        Gs2Object::operator=(describeQuestGroupModelsResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*describeQuestGroupModelsResult.m_pData);
-
-        return *this;
-    }
-
-    DescribeQuestGroupModelsResult& operator=(DescribeQuestGroupModelsResult&& describeQuestGroupModelsResult)
-    {
-        Gs2Object::operator=(std::move(describeQuestGroupModelsResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = describeQuestGroupModelsResult.m_pData;
-        describeQuestGroupModelsResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeQuestGroupModelsResult);
     }
 
     const DescribeQuestGroupModelsResult* operator->() const
@@ -171,9 +121,9 @@ public:
      *
      * @param items クエストグループのリスト
      */
-    void setItems(const List<QuestGroupModel>& items)
+    void setItems(List<QuestGroupModel> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
 

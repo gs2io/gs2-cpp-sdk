@@ -64,96 +64,904 @@ namespace gs2 { namespace project {
 class Gs2ProjectRestClient : public AbstractGs2ClientBase
 {
 private:
-    static void write(detail::json::JsonWriter& writer, const Account& obj)
+
+    class CreateAccountTask : public detail::Gs2RestSessionTask<CreateAccountResult>
     {
-        writer.writeObjectStart();
+    private:
+        CreateAccountRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/account";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getEmail())
+            {
+                jsonWriter.writePropertyName("email");
+                jsonWriter.writeCharArray(*m_Request.getEmail());
+            }
+            if (m_Request.getFullName())
+            {
+                jsonWriter.writePropertyName("fullName");
+                jsonWriter.writeCharArray(*m_Request.getFullName());
+            }
+            if (m_Request.getCompanyName())
+            {
+                jsonWriter.writePropertyName("companyName");
+                jsonWriter.writeCharArray(*m_Request.getCompanyName());
+            }
+            if (m_Request.getPassword())
+            {
+                jsonWriter.writePropertyName("password");
+                jsonWriter.writeCharArray(*m_Request.getPassword());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        CreateAccountTask(
+            CreateAccountRequest request,
+            Gs2RestSessionTask<CreateAccountResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<CreateAccountResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateAccountTask() GS2_OVERRIDE = default;
+    };
+
+    class VerifyTask : public detail::Gs2RestSessionTask<VerifyResult>
+    {
+    private:
+        VerifyRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/account/verify";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getVerifyToken())
+            {
+                jsonWriter.writePropertyName("verifyToken");
+                jsonWriter.writeCharArray(*m_Request.getVerifyToken());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        VerifyTask(
+            VerifyRequest request,
+            Gs2RestSessionTask<VerifyResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<VerifyResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~VerifyTask() GS2_OVERRIDE = default;
+    };
+
+    class SignInTask : public detail::Gs2RestSessionTask<SignInResult>
+    {
+    private:
+        SignInRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/account/signIn";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getEmail())
+            {
+                jsonWriter.writePropertyName("email");
+                jsonWriter.writeCharArray(*m_Request.getEmail());
+            }
+            if (m_Request.getPassword())
+            {
+                jsonWriter.writePropertyName("password");
+                jsonWriter.writeCharArray(*m_Request.getPassword());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        SignInTask(
+            SignInRequest request,
+            Gs2RestSessionTask<SignInResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<SignInResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~SignInTask() GS2_OVERRIDE = default;
+    };
+
+    class IssueAccountTokenTask : public detail::Gs2RestSessionTask<IssueAccountTokenResult>
+    {
+    private:
+        IssueAccountTokenRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/account/accountToken";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getAccountName())
+            {
+                jsonWriter.writePropertyName("accountName");
+                jsonWriter.writeCharArray(*m_Request.getAccountName());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        IssueAccountTokenTask(
+            IssueAccountTokenRequest request,
+            Gs2RestSessionTask<IssueAccountTokenResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<IssueAccountTokenResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~IssueAccountTokenTask() GS2_OVERRIDE = default;
+    };
+
+    class ForgetTask : public detail::Gs2RestSessionTask<ForgetResult>
+    {
+    private:
+        ForgetRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/account/forget";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getEmail())
+            {
+                jsonWriter.writePropertyName("email");
+                jsonWriter.writeCharArray(*m_Request.getEmail());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        ForgetTask(
+            ForgetRequest request,
+            Gs2RestSessionTask<ForgetResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<ForgetResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~ForgetTask() GS2_OVERRIDE = default;
+    };
+
+    class IssuePasswordTask : public detail::Gs2RestSessionTask<IssuePasswordResult>
+    {
+    private:
+        IssuePasswordRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/account/password/issue";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getIssuePasswordToken())
+            {
+                jsonWriter.writePropertyName("issuePasswordToken");
+                jsonWriter.writeCharArray(*m_Request.getIssuePasswordToken());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        IssuePasswordTask(
+            IssuePasswordRequest request,
+            Gs2RestSessionTask<IssuePasswordResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<IssuePasswordResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~IssuePasswordTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateAccountTask : public detail::Gs2RestSessionTask<UpdateAccountResult>
+    {
+    private:
+        UpdateAccountRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/account";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getEmail())
+            {
+                jsonWriter.writePropertyName("email");
+                jsonWriter.writeCharArray(*m_Request.getEmail());
+            }
+            if (m_Request.getFullName())
+            {
+                jsonWriter.writePropertyName("fullName");
+                jsonWriter.writeCharArray(*m_Request.getFullName());
+            }
+            if (m_Request.getCompanyName())
+            {
+                jsonWriter.writePropertyName("companyName");
+                jsonWriter.writeCharArray(*m_Request.getCompanyName());
+            }
+            if (m_Request.getPassword())
+            {
+                jsonWriter.writePropertyName("password");
+                jsonWriter.writeCharArray(*m_Request.getPassword());
+            }
+            if (m_Request.getAccountToken())
+            {
+                jsonWriter.writePropertyName("accountToken");
+                jsonWriter.writeCharArray(*m_Request.getAccountToken());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Put;
+        }
+
+    public:
+        UpdateAccountTask(
+            UpdateAccountRequest request,
+            Gs2RestSessionTask<UpdateAccountResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<UpdateAccountResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateAccountTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteAccountTask : public detail::Gs2RestSessionTask<void>
+    {
+    private:
+        DeleteAccountRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/account";
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        DeleteAccountTask(
+            DeleteAccountRequest request,
+            Gs2RestSessionTask<void>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<void>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteAccountTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeProjectsTask : public detail::Gs2RestSessionTask<DescribeProjectsResult>
+    {
+    private:
+        DescribeProjectsRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/account/me/project";
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getAccountToken())
+            {
+                url += joint;
+                url += "accountToken=";
+                url += detail::StringVariable(*m_Request.getAccountToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeProjectsTask(
+            DescribeProjectsRequest request,
+            Gs2RestSessionTask<DescribeProjectsResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeProjectsResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeProjectsTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateProjectTask : public detail::Gs2RestSessionTask<CreateProjectResult>
+    {
+    private:
+        CreateProjectRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/account/me/project";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getAccountToken())
+            {
+                jsonWriter.writePropertyName("accountToken");
+                jsonWriter.writeCharArray(*m_Request.getAccountToken());
+            }
+            if (m_Request.getName())
+            {
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        CreateProjectTask(
+            CreateProjectRequest request,
+            Gs2RestSessionTask<CreateProjectResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<CreateProjectResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateProjectTask() GS2_OVERRIDE = default;
+    };
+
+    class GetProjectTask : public detail::Gs2RestSessionTask<GetProjectResult>
+    {
+    private:
+        GetProjectRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/account/me/project/{projectName}";
+            {
+                auto& value = m_Request.getProjectName();
+                url.replace("{projectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getAccountToken())
+            {
+                url += joint;
+                url += "accountToken=";
+                url += detail::StringVariable(*m_Request.getAccountToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetProjectTask(
+            GetProjectRequest request,
+            Gs2RestSessionTask<GetProjectResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetProjectResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetProjectTask() GS2_OVERRIDE = default;
+    };
+
+    class GetProjectTokenTask : public detail::Gs2RestSessionTask<GetProjectTokenResult>
+    {
+    private:
+        GetProjectTokenRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/project/{projectName}/projectToken";
+            {
+                auto& value = m_Request.getProjectName();
+                url.replace("{projectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getAccountToken())
+            {
+                jsonWriter.writePropertyName("accountToken");
+                jsonWriter.writeCharArray(*m_Request.getAccountToken());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        GetProjectTokenTask(
+            GetProjectTokenRequest request,
+            Gs2RestSessionTask<GetProjectTokenResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetProjectTokenResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetProjectTokenTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateProjectTask : public detail::Gs2RestSessionTask<UpdateProjectResult>
+    {
+    private:
+        UpdateProjectRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/account/me/project/{projectName}";
+            {
+                auto& value = m_Request.getProjectName();
+                url.replace("{projectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getAccountToken())
+            {
+                jsonWriter.writePropertyName("accountToken");
+                jsonWriter.writeCharArray(*m_Request.getAccountToken());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Put;
+        }
+
+    public:
+        UpdateProjectTask(
+            UpdateProjectRequest request,
+            Gs2RestSessionTask<UpdateProjectResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<UpdateProjectResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateProjectTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteProjectTask : public detail::Gs2RestSessionTask<DeleteProjectResult>
+    {
+    private:
+        DeleteProjectRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/account/me/project/{projectName}";
+            {
+                auto& value = m_Request.getProjectName();
+                url.replace("{projectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getAccountToken())
+            {
+                url += joint;
+                url += "accountToken=";
+                url += detail::StringVariable(*m_Request.getAccountToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        DeleteProjectTask(
+            DeleteProjectRequest request,
+            Gs2RestSessionTask<DeleteProjectResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DeleteProjectResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteProjectTask() GS2_OVERRIDE = default;
+    };
+
+private:
+    static void write(detail::json::JsonWriter& jsonWriter, const Account& obj)
+    {
+        jsonWriter.writeObjectStart();
         if (obj.getAccountId())
         {
-            writer.writePropertyName("accountId");
-            writer.writeCharArray(*obj.getAccountId());
+            jsonWriter.writePropertyName("accountId");
+            jsonWriter.writeCharArray(*obj.getAccountId());
         }
         if (obj.getOwnerId())
         {
-            writer.writePropertyName("ownerId");
-            writer.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getEmail())
         {
-            writer.writePropertyName("email");
-            writer.writeCharArray(*obj.getEmail());
+            jsonWriter.writePropertyName("email");
+            jsonWriter.writeCharArray(*obj.getEmail());
         }
         if (obj.getFullName())
         {
-            writer.writePropertyName("fullName");
-            writer.writeCharArray(*obj.getFullName());
+            jsonWriter.writePropertyName("fullName");
+            jsonWriter.writeCharArray(*obj.getFullName());
         }
         if (obj.getCompanyName())
         {
-            writer.writePropertyName("companyName");
-            writer.writeCharArray(*obj.getCompanyName());
+            jsonWriter.writePropertyName("companyName");
+            jsonWriter.writeCharArray(*obj.getCompanyName());
         }
         if (obj.getPassword())
         {
-            writer.writePropertyName("password");
-            writer.writeCharArray(*obj.getPassword());
+            jsonWriter.writePropertyName("password");
+            jsonWriter.writeCharArray(*obj.getPassword());
         }
         if (obj.getStatus())
         {
-            writer.writePropertyName("status");
-            writer.writeCharArray(*obj.getStatus());
+            jsonWriter.writePropertyName("status");
+            jsonWriter.writeCharArray(*obj.getStatus());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& writer, const Project& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Project& obj)
     {
-        writer.writeObjectStart();
+        jsonWriter.writeObjectStart();
         if (obj.getProjectId())
         {
-            writer.writePropertyName("projectId");
-            writer.writeCharArray(*obj.getProjectId());
+            jsonWriter.writePropertyName("projectId");
+            jsonWriter.writeCharArray(*obj.getProjectId());
         }
         if (obj.getAccountName())
         {
-            writer.writePropertyName("accountName");
-            writer.writeCharArray(*obj.getAccountName());
+            jsonWriter.writePropertyName("accountName");
+            jsonWriter.writeCharArray(*obj.getAccountName());
         }
         if (obj.getName())
         {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*obj.getName());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
         if (obj.getDescription())
         {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*obj.getDescription());
+            jsonWriter.writePropertyName("description");
+            jsonWriter.writeCharArray(*obj.getDescription());
         }
         if (obj.getCreatedAt())
         {
-            writer.writePropertyName("createdAt");
-            writer.writeInt64(*obj.getCreatedAt());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
         }
         if (obj.getUpdatedAt())
         {
-            writer.writePropertyName("updatedAt");
-            writer.writeInt64(*obj.getUpdatedAt());
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
-        writer.writeObjectEnd();
+        jsonWriter.writeObjectEnd();
     }
 
 
@@ -175,57 +983,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createAccount(CreateAccountRequest& request, std::function<void(AsyncCreateAccountResult&)> callback)
+    void createAccount(CreateAccountRequest request, std::function<void(AsyncCreateAccountResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateAccountResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "project");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/account";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getEmail())
-        {
-            writer.writePropertyName("email");
-            writer.writeCharArray(*request.getEmail());
-        }
-        if (request.getFullName())
-        {
-            writer.writePropertyName("fullName");
-            writer.writeCharArray(*request.getFullName());
-        }
-        if (request.getCompanyName())
-        {
-            writer.writePropertyName("companyName");
-            writer.writeCharArray(*request.getCompanyName());
-        }
-        if (request.getPassword())
-        {
-            writer.writePropertyName("password");
-            writer.writeCharArray(*request.getPassword());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        CreateAccountTask& task = *new CreateAccountTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -234,42 +995,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void verify(VerifyRequest& request, std::function<void(AsyncVerifyResult&)> callback)
+    void verify(VerifyRequest request, std::function<void(AsyncVerifyResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<VerifyResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "project");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/account/verify";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getVerifyToken())
-        {
-            writer.writePropertyName("verifyToken");
-            writer.writeCharArray(*request.getVerifyToken());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        VerifyTask& task = *new VerifyTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -278,47 +1007,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void signIn(SignInRequest& request, std::function<void(AsyncSignInResult&)> callback)
+    void signIn(SignInRequest request, std::function<void(AsyncSignInResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<SignInResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "project");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/account/signIn";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getEmail())
-        {
-            writer.writePropertyName("email");
-            writer.writeCharArray(*request.getEmail());
-        }
-        if (request.getPassword())
-        {
-            writer.writePropertyName("password");
-            writer.writeCharArray(*request.getPassword());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        SignInTask& task = *new SignInTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -327,42 +1019,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void issueAccountToken(IssueAccountTokenRequest& request, std::function<void(AsyncIssueAccountTokenResult&)> callback)
+    void issueAccountToken(IssueAccountTokenRequest request, std::function<void(AsyncIssueAccountTokenResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<IssueAccountTokenResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "project");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/account/accountToken";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getAccountName())
-        {
-            writer.writePropertyName("accountName");
-            writer.writeCharArray(*request.getAccountName());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        IssueAccountTokenTask& task = *new IssueAccountTokenTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -371,42 +1031,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void forget(ForgetRequest& request, std::function<void(AsyncForgetResult&)> callback)
+    void forget(ForgetRequest request, std::function<void(AsyncForgetResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<ForgetResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "project");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/account/forget";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getEmail())
-        {
-            writer.writePropertyName("email");
-            writer.writeCharArray(*request.getEmail());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        ForgetTask& task = *new ForgetTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -415,42 +1043,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void issuePassword(IssuePasswordRequest& request, std::function<void(AsyncIssuePasswordResult&)> callback)
+    void issuePassword(IssuePasswordRequest request, std::function<void(AsyncIssuePasswordResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<IssuePasswordResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "project");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/account/password/issue";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getIssuePasswordToken())
-        {
-            writer.writePropertyName("issuePasswordToken");
-            writer.writeCharArray(*request.getIssuePasswordToken());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        IssuePasswordTask& task = *new IssuePasswordTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -459,62 +1055,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateAccount(UpdateAccountRequest& request, std::function<void(AsyncUpdateAccountResult&)> callback)
+    void updateAccount(UpdateAccountRequest request, std::function<void(AsyncUpdateAccountResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateAccountResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("PUT");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "project");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/account";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getEmail())
-        {
-            writer.writePropertyName("email");
-            writer.writeCharArray(*request.getEmail());
-        }
-        if (request.getFullName())
-        {
-            writer.writePropertyName("fullName");
-            writer.writeCharArray(*request.getFullName());
-        }
-        if (request.getCompanyName())
-        {
-            writer.writePropertyName("companyName");
-            writer.writeCharArray(*request.getCompanyName());
-        }
-        if (request.getPassword())
-        {
-            writer.writePropertyName("password");
-            writer.writeCharArray(*request.getPassword());
-        }
-        if (request.getAccountToken())
-        {
-            writer.writePropertyName("accountToken");
-            writer.writeCharArray(*request.getAccountToken());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        UpdateAccountTask& task = *new UpdateAccountTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -523,36 +1067,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteAccount(DeleteAccountRequest& request, std::function<void(AsyncDeleteAccountResult&)> callback)
+    void deleteAccount(DeleteAccountRequest request, std::function<void(AsyncDeleteAccountResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<void>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("DELETE");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "project");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/account";
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-        {
-            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DeleteAccountTask& task = *new DeleteAccountTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -561,52 +1079,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void describeProjects(DescribeProjectsRequest& request, std::function<void(AsyncDescribeProjectsResult&)> callback)
+    void describeProjects(DescribeProjectsRequest request, std::function<void(AsyncDescribeProjectsResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DescribeProjectsResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "project");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/account/me/project";
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getAccountToken())
-        {
-            url += joint;
-            url += "accountToken=";
-            url += detail::StringVariable(*request.getAccountToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getPageToken())
-        {
-            url += joint;
-            url += "pageToken=";
-            url += detail::StringVariable(*request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getLimit())
-        {
-            url += joint;
-            url += "limit=";
-            url += detail::StringVariable(*request.getLimit()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DescribeProjectsTask& task = *new DescribeProjectsTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -615,52 +1091,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void createProject(CreateProjectRequest& request, std::function<void(AsyncCreateProjectResult&)> callback)
+    void createProject(CreateProjectRequest request, std::function<void(AsyncCreateProjectResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<CreateProjectResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "project");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/account/me/project";
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getAccountToken())
-        {
-            writer.writePropertyName("accountToken");
-            writer.writeCharArray(*request.getAccountToken());
-        }
-        if (request.getName())
-        {
-            writer.writePropertyName("name");
-            writer.writeCharArray(*request.getName());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        CreateProjectTask& task = *new CreateProjectTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -669,42 +1103,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getProject(GetProjectRequest& request, std::function<void(AsyncGetProjectResult&)> callback)
+    void getProject(GetProjectRequest request, std::function<void(AsyncGetProjectResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetProjectResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("GET");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "project");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/account/me/project/{projectName}";
-        {
-            auto& value = request.getProjectName();
-            url.replace("{projectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getAccountToken())
-        {
-            url += joint;
-            url += "accountToken=";
-            url += detail::StringVariable(*request.getAccountToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        GetProjectTask& task = *new GetProjectTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -713,46 +1115,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void getProjectToken(GetProjectTokenRequest& request, std::function<void(AsyncGetProjectTokenResult&)> callback)
+    void getProjectToken(GetProjectTokenRequest request, std::function<void(AsyncGetProjectTokenResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<GetProjectTokenResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("POST");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "project");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/project/{projectName}/projectToken";
-        {
-            auto& value = request.getProjectName();
-            url.replace("{projectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getAccountToken())
-        {
-            writer.writePropertyName("accountToken");
-            writer.writeCharArray(*request.getAccountToken());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        GetProjectTokenTask& task = *new GetProjectTokenTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -761,51 +1127,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void updateProject(UpdateProjectRequest& request, std::function<void(AsyncUpdateProjectResult&)> callback)
+    void updateProject(UpdateProjectRequest request, std::function<void(AsyncUpdateProjectResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<UpdateProjectResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("PUT");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "project");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/account/me/project/{projectName}";
-        {
-            auto& value = request.getProjectName();
-            url.replace("{projectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-        httpRequest.SetURL(url.c_str());
-        detail::json::JsonWriter writer;
-
-        writer.writeObjectStart();
-        if (request.getContextStack())
-        {
-            writer.writePropertyName("contextStack");
-            writer.writeCharArray(*request.getContextStack());
-        }
-        if (request.getAccountToken())
-        {
-            writer.writePropertyName("accountToken");
-            writer.writeCharArray(*request.getAccountToken());
-        }
-        if (request.getDescription())
-        {
-            writer.writePropertyName("description");
-            writer.writeCharArray(*request.getDescription());
-        }
-        writer.writeObjectEnd();
-        {
-            auto body = writer.toString();
-            TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        UpdateProjectTask& task = *new UpdateProjectTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 	/**
@@ -814,47 +1139,10 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void deleteProject(DeleteProjectRequest& request, std::function<void(AsyncDeleteProjectResult&)> callback)
+    void deleteProject(DeleteProjectRequest request, std::function<void(AsyncDeleteProjectResult)> callback)
     {
-        auto& gs2RestSessionTask = *new detail::Gs2RestSessionTask<DeleteProjectResult>(getGs2RestSession(), callback);
-        auto& httpRequest = gs2RestSessionTask.getGs2HttpTask().getHttpRequest();
-        httpRequest.SetVerb("DELETE");
-        detail::StringVariable url(Gs2RestSession::EndpointHost);
-        url.replace("{service}", "project");
-        url.replace("{region}", getGs2RestSession().getRegion().getName());
-        url += "/account/me/project/{projectName}";
-        {
-            auto& value = request.getProjectName();
-            url.replace("{projectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-        }
-
-        Char joint[] = { '?', '\0' };
-        if (request.getContextStack())
-        {
-            url += joint;
-            url += "contextStack=";
-            url += detail::StringVariable(*request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        if (request.getAccountToken())
-        {
-            url += joint;
-            url += "accountToken=";
-            url += detail::StringVariable(*request.getAccountToken(), detail::StringVariable::UrlSafeEncode()).c_str();
-            joint[0] = '&';
-        }
-        httpRequest.SetURL(url.c_str());
-        {
-            TArray<uint8> content(reinterpret_cast<const uint8*>("[]"), sizeof("[]") - 1);
-            httpRequest.SetContent(content);
-        }
-        httpRequest.SetHeader("Content-Type", "application/json");
-
-        if (request.getRequestId())
-        {
-            httpRequest.SetHeader("X-GS2-REQUEST-ID", static_cast<const Char*>(*request.getRequestId()));
-        }
-        gs2RestSessionTask.execute();
+        DeleteProjectTask& task = *new DeleteProjectTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
     }
 
 protected:

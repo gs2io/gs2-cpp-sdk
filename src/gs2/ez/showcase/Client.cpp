@@ -28,9 +28,9 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::list(
-    std::function<void(AsyncEzListResult&)> callback,
+    std::function<void(AsyncEzListResult)> callback,
     GameSession& session,
-    const Char* namespaceName
+    StringHolder namespaceName
 )
 {
     gs2::showcase::DescribeShowcasesRequest request;
@@ -38,7 +38,7 @@ void Client::list(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.describeShowcases(
         request,
-        [callback](gs2::showcase::AsyncDescribeShowcasesResult& r)
+        [callback](gs2::showcase::AsyncDescribeShowcasesResult r)
         {
             if (r.getError())
             {
@@ -64,22 +64,22 @@ void Client::list(
 }
 
 void Client::buy(
-    std::function<void(AsyncEzBuyResult&)> callback,
+    std::function<void(AsyncEzBuyResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* displayItemId
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> displayItemId
 )
 {
     gs2::showcase::BuyRequest request;
     request.setNamespaceName(namespaceName);
     if (displayItemId)
     {
-        request.setDisplayItemId(displayItemId);
+        request.setDisplayItemId(std::move(*displayItemId));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.buy(
         request,
-        [callback](gs2::showcase::AsyncBuyResult& r)
+        [callback](gs2::showcase::AsyncBuyResult r)
         {
             if (r.getError())
             {

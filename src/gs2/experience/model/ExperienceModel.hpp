@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "Threshold.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace experience {
@@ -57,8 +59,7 @@ private:
         /** ランクアップ閾値 */
         optional<Threshold> rankThreshold;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -67,66 +68,67 @@ private:
             metadata(data.metadata),
             defaultExperience(data.defaultExperience),
             defaultRankCap(data.defaultRankCap),
-            maxRankCap(data.maxRankCap),
-            rankThreshold(data.rankThreshold)
-        {}
+            maxRankCap(data.maxRankCap)
+        {
+            if (data.rankThreshold)
+            {
+                rankThreshold = data.rankThreshold->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            experienceModelId(std::move(data.experienceModelId)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            defaultExperience(std::move(data.defaultExperience)),
-            defaultRankCap(std::move(data.defaultRankCap)),
-            maxRankCap(std::move(data.maxRankCap)),
-            rankThreshold(std::move(data.rankThreshold))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "experienceModelId") == 0) {
+            if (std::strcmp(name_, "experienceModelId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->experienceModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "defaultExperience") == 0) {
+            else if (std::strcmp(name_, "defaultExperience") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->defaultExperience = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "defaultRankCap") == 0) {
+            else if (std::strcmp(name_, "defaultRankCap") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->defaultRankCap = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "maxRankCap") == 0) {
+            else if (std::strcmp(name_, "maxRankCap") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->maxRankCap = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "rankThreshold") == 0) {
+            else if (std::strcmp(name_, "rankThreshold") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -137,72 +139,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    ExperienceModel() :
-        m_pData(nullptr)
-    {}
+    ExperienceModel() = default;
+    ExperienceModel(const ExperienceModel& experienceModel) = default;
+    ExperienceModel(ExperienceModel&& experienceModel) = default;
+    ~ExperienceModel() = default;
 
-    ExperienceModel(const ExperienceModel& experienceModel) :
-        Gs2Object(experienceModel),
-        m_pData(experienceModel.m_pData != nullptr ? new Data(*experienceModel.m_pData) : nullptr)
-    {}
+    ExperienceModel& operator=(const ExperienceModel& experienceModel) = default;
+    ExperienceModel& operator=(ExperienceModel&& experienceModel) = default;
 
-    ExperienceModel(ExperienceModel&& experienceModel) :
-        Gs2Object(std::move(experienceModel)),
-        m_pData(experienceModel.m_pData)
+    ExperienceModel deepCopy() const
     {
-        experienceModel.m_pData = nullptr;
-    }
-
-    ~ExperienceModel()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    ExperienceModel& operator=(const ExperienceModel& experienceModel)
-    {
-        Gs2Object::operator=(experienceModel);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*experienceModel.m_pData);
-
-        return *this;
-    }
-
-    ExperienceModel& operator=(ExperienceModel&& experienceModel)
-    {
-        Gs2Object::operator=(std::move(experienceModel));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = experienceModel.m_pData;
-        experienceModel.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ExperienceModel);
     }
 
     const ExperienceModel* operator->() const
@@ -229,9 +179,9 @@ public:
      *
      * @param experienceModelId 経験値の種類マスター
      */
-    void setExperienceModelId(const Char* experienceModelId)
+    void setExperienceModelId(StringHolder experienceModelId)
     {
-        ensureData().experienceModelId.emplace(experienceModelId);
+        ensureData().experienceModelId.emplace(std::move(experienceModelId));
     }
 
     /**
@@ -239,9 +189,9 @@ public:
      *
      * @param experienceModelId 経験値の種類マスター
      */
-    ExperienceModel& withExperienceModelId(const Char* experienceModelId)
+    ExperienceModel& withExperienceModelId(StringHolder experienceModelId)
     {
-        setExperienceModelId(experienceModelId);
+        setExperienceModelId(std::move(experienceModelId));
         return *this;
     }
 
@@ -260,9 +210,9 @@ public:
      *
      * @param name 経験値の種類名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -270,9 +220,9 @@ public:
      *
      * @param name 経験値の種類名
      */
-    ExperienceModel& withName(const Char* name)
+    ExperienceModel& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -291,9 +241,9 @@ public:
      *
      * @param metadata 経験値の種類のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -301,9 +251,9 @@ public:
      *
      * @param metadata 経験値の種類のメタデータ
      */
-    ExperienceModel& withMetadata(const Char* metadata)
+    ExperienceModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -415,9 +365,9 @@ public:
      *
      * @param rankThreshold ランクアップ閾値
      */
-    void setRankThreshold(const Threshold& rankThreshold)
+    void setRankThreshold(Threshold rankThreshold)
     {
-        ensureData().rankThreshold.emplace(rankThreshold);
+        ensureData().rankThreshold.emplace(std::move(rankThreshold));
     }
 
     /**
@@ -425,9 +375,9 @@ public:
      *
      * @param rankThreshold ランクアップ閾値
      */
-    ExperienceModel& withRankThreshold(const Threshold& rankThreshold)
+    ExperienceModel& withRankThreshold(Threshold rankThreshold)
     {
-        setRankThreshold(rankThreshold);
+        setRankThreshold(std::move(rankThreshold));
         return *this;
     }
 
@@ -442,7 +392,7 @@ inline bool operator!=(const ExperienceModel& lhs, const ExperienceModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

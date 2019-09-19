@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2InventoryConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inventory
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** スタンプシート */
@@ -48,100 +50,48 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             stampSheet(data.stampSheet),
             keyId(data.keyId),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            stampSheet(std::move(data.stampSheet)),
-            keyId(std::move(data.keyId)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    AcquireItemSetByStampSheetRequest() :
-        m_pData(nullptr)
-    {}
+    AcquireItemSetByStampSheetRequest() = default;
+    AcquireItemSetByStampSheetRequest(const AcquireItemSetByStampSheetRequest& acquireItemSetByStampSheetRequest) = default;
+    AcquireItemSetByStampSheetRequest(AcquireItemSetByStampSheetRequest&& acquireItemSetByStampSheetRequest) = default;
+    ~AcquireItemSetByStampSheetRequest() GS2_OVERRIDE = default;
 
-    AcquireItemSetByStampSheetRequest(const AcquireItemSetByStampSheetRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Inventory(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    AcquireItemSetByStampSheetRequest& operator=(const AcquireItemSetByStampSheetRequest& acquireItemSetByStampSheetRequest) = default;
+    AcquireItemSetByStampSheetRequest& operator=(AcquireItemSetByStampSheetRequest&& acquireItemSetByStampSheetRequest) = default;
 
-    AcquireItemSetByStampSheetRequest(AcquireItemSetByStampSheetRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Inventory(std::move(obj)),
-        m_pData(obj.m_pData)
+    AcquireItemSetByStampSheetRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~AcquireItemSetByStampSheetRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    AcquireItemSetByStampSheetRequest& operator=(const AcquireItemSetByStampSheetRequest& acquireItemSetByStampSheetRequest)
-    {
-        Gs2BasicRequest::operator=(acquireItemSetByStampSheetRequest);
-        Gs2Inventory::operator=(acquireItemSetByStampSheetRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*acquireItemSetByStampSheetRequest.m_pData);
-
-        return *this;
-    }
-
-    AcquireItemSetByStampSheetRequest& operator=(AcquireItemSetByStampSheetRequest&& acquireItemSetByStampSheetRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(acquireItemSetByStampSheetRequest));
-        Gs2Inventory::operator=(std::move(acquireItemSetByStampSheetRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = acquireItemSetByStampSheetRequest.m_pData;
-        acquireItemSetByStampSheetRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(AcquireItemSetByStampSheetRequest);
     }
 
     const AcquireItemSetByStampSheetRequest* operator->() const
@@ -169,9 +119,9 @@ public:
      *
      * @param stampSheet スタンプシート
      */
-    void setStampSheet(const Char* stampSheet)
+    void setStampSheet(StringHolder stampSheet)
     {
-        ensureData().stampSheet.emplace(stampSheet);
+        ensureData().stampSheet.emplace(std::move(stampSheet));
     }
 
     /**
@@ -179,9 +129,9 @@ public:
      *
      * @param stampSheet スタンプシート
      */
-    AcquireItemSetByStampSheetRequest& withStampSheet(const Char* stampSheet)
+    AcquireItemSetByStampSheetRequest& withStampSheet(StringHolder stampSheet)
     {
-        ensureData().stampSheet.emplace(stampSheet);
+        ensureData().stampSheet.emplace(std::move(stampSheet));
         return *this;
     }
 
@@ -200,9 +150,9 @@ public:
      *
      * @param keyId スタンプシートの署名検証に使用する 暗号鍵 のGRN
      */
-    void setKeyId(const Char* keyId)
+    void setKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
     }
 
     /**
@@ -210,9 +160,9 @@ public:
      *
      * @param keyId スタンプシートの署名検証に使用する 暗号鍵 のGRN
      */
-    AcquireItemSetByStampSheetRequest& withKeyId(const Char* keyId)
+    AcquireItemSetByStampSheetRequest& withKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
         return *this;
     }
 
@@ -231,9 +181,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -241,9 +191,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    AcquireItemSetByStampSheetRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    AcquireItemSetByStampSheetRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -254,33 +204,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    AcquireItemSetByStampSheetRequest& withGs2ClientId(const Char* gs2ClientId)
+    AcquireItemSetByStampSheetRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    AcquireItemSetByStampSheetRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    AcquireItemSetByStampSheetRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -289,9 +215,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    AcquireItemSetByStampSheetRequest& withRequestId(const Char* gs2RequestId)
+    AcquireItemSetByStampSheetRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace quest
 {
@@ -43,28 +45,28 @@ private:
         /** Noneのリスト */
         optional<List<QuestModel>> items;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            items(data.items)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -79,72 +81,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DescribeQuestModelsResult() :
-        m_pData(nullptr)
-    {}
+    DescribeQuestModelsResult() = default;
+    DescribeQuestModelsResult(const DescribeQuestModelsResult& describeQuestModelsResult) = default;
+    DescribeQuestModelsResult(DescribeQuestModelsResult&& describeQuestModelsResult) = default;
+    ~DescribeQuestModelsResult() = default;
 
-    DescribeQuestModelsResult(const DescribeQuestModelsResult& describeQuestModelsResult) :
-        Gs2Object(describeQuestModelsResult),
-        m_pData(describeQuestModelsResult.m_pData != nullptr ? new Data(*describeQuestModelsResult.m_pData) : nullptr)
-    {}
+    DescribeQuestModelsResult& operator=(const DescribeQuestModelsResult& describeQuestModelsResult) = default;
+    DescribeQuestModelsResult& operator=(DescribeQuestModelsResult&& describeQuestModelsResult) = default;
 
-    DescribeQuestModelsResult(DescribeQuestModelsResult&& describeQuestModelsResult) :
-        Gs2Object(std::move(describeQuestModelsResult)),
-        m_pData(describeQuestModelsResult.m_pData)
+    DescribeQuestModelsResult deepCopy() const
     {
-        describeQuestModelsResult.m_pData = nullptr;
-    }
-
-    ~DescribeQuestModelsResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DescribeQuestModelsResult& operator=(const DescribeQuestModelsResult& describeQuestModelsResult)
-    {
-        Gs2Object::operator=(describeQuestModelsResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*describeQuestModelsResult.m_pData);
-
-        return *this;
-    }
-
-    DescribeQuestModelsResult& operator=(DescribeQuestModelsResult&& describeQuestModelsResult)
-    {
-        Gs2Object::operator=(std::move(describeQuestModelsResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = describeQuestModelsResult.m_pData;
-        describeQuestModelsResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeQuestModelsResult);
     }
 
     const DescribeQuestModelsResult* operator->() const
@@ -171,9 +121,9 @@ public:
      *
      * @param items Noneのリスト
      */
-    void setItems(const List<QuestModel>& items)
+    void setItems(List<QuestModel> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
 

@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2MissionConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace mission
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -70,11 +72,10 @@ private:
         /** ミッションのタスクを達成したときのプッシュ通知 */
         optional<NotificationSetting> completeNotification;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             name(data.name),
             description(data.description),
             missionCompleteTriggerScriptId(data.missionCompleteTriggerScriptId),
@@ -87,105 +88,46 @@ private:
             receiveRewardsDoneTriggerScriptId(data.receiveRewardsDoneTriggerScriptId),
             receiveRewardsDoneTriggerQueueNamespaceId(data.receiveRewardsDoneTriggerQueueNamespaceId),
             queueNamespaceId(data.queueNamespaceId),
-            keyId(data.keyId),
-            completeNotification(data.completeNotification)
-        {}
+            keyId(data.keyId)
+        {
+            if (data.completeNotification)
+            {
+                completeNotification = data.completeNotification->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            missionCompleteTriggerScriptId(std::move(data.missionCompleteTriggerScriptId)),
-            missionCompleteDoneTriggerScriptId(std::move(data.missionCompleteDoneTriggerScriptId)),
-            missionCompleteDoneTriggerQueueNamespaceId(std::move(data.missionCompleteDoneTriggerQueueNamespaceId)),
-            counterIncrementTriggerScriptId(std::move(data.counterIncrementTriggerScriptId)),
-            counterIncrementDoneTriggerScriptId(std::move(data.counterIncrementDoneTriggerScriptId)),
-            counterIncrementDoneTriggerQueueNamespaceId(std::move(data.counterIncrementDoneTriggerQueueNamespaceId)),
-            receiveRewardsTriggerScriptId(std::move(data.receiveRewardsTriggerScriptId)),
-            receiveRewardsDoneTriggerScriptId(std::move(data.receiveRewardsDoneTriggerScriptId)),
-            receiveRewardsDoneTriggerQueueNamespaceId(std::move(data.receiveRewardsDoneTriggerQueueNamespaceId)),
-            queueNamespaceId(std::move(data.queueNamespaceId)),
-            keyId(std::move(data.keyId)),
-            completeNotification(std::move(data.completeNotification))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CreateNamespaceRequest() :
-        m_pData(nullptr)
-    {}
+    CreateNamespaceRequest() = default;
+    CreateNamespaceRequest(const CreateNamespaceRequest& createNamespaceRequest) = default;
+    CreateNamespaceRequest(CreateNamespaceRequest&& createNamespaceRequest) = default;
+    ~CreateNamespaceRequest() GS2_OVERRIDE = default;
 
-    CreateNamespaceRequest(const CreateNamespaceRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Mission(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CreateNamespaceRequest& operator=(const CreateNamespaceRequest& createNamespaceRequest) = default;
+    CreateNamespaceRequest& operator=(CreateNamespaceRequest&& createNamespaceRequest) = default;
 
-    CreateNamespaceRequest(CreateNamespaceRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Mission(std::move(obj)),
-        m_pData(obj.m_pData)
+    CreateNamespaceRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CreateNamespaceRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateNamespaceRequest& operator=(const CreateNamespaceRequest& createNamespaceRequest)
-    {
-        Gs2BasicRequest::operator=(createNamespaceRequest);
-        Gs2Mission::operator=(createNamespaceRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createNamespaceRequest.m_pData);
-
-        return *this;
-    }
-
-    CreateNamespaceRequest& operator=(CreateNamespaceRequest&& createNamespaceRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(createNamespaceRequest));
-        Gs2Mission::operator=(std::move(createNamespaceRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createNamespaceRequest.m_pData;
-        createNamespaceRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateNamespaceRequest);
     }
 
     const CreateNamespaceRequest* operator->() const
@@ -213,9 +155,9 @@ public:
      *
      * @param name ネームスペース名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -223,9 +165,9 @@ public:
      *
      * @param name ネームスペース名
      */
-    CreateNamespaceRequest& withName(const Char* name)
+    CreateNamespaceRequest& withName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
         return *this;
     }
 
@@ -244,9 +186,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -254,9 +196,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    CreateNamespaceRequest& withDescription(const Char* description)
+    CreateNamespaceRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -275,9 +217,9 @@ public:
      *
      * @param missionCompleteTriggerScriptId ミッション達成時 に実行されるスクリプト のGRN
      */
-    void setMissionCompleteTriggerScriptId(const Char* missionCompleteTriggerScriptId)
+    void setMissionCompleteTriggerScriptId(StringHolder missionCompleteTriggerScriptId)
     {
-        ensureData().missionCompleteTriggerScriptId.emplace(missionCompleteTriggerScriptId);
+        ensureData().missionCompleteTriggerScriptId.emplace(std::move(missionCompleteTriggerScriptId));
     }
 
     /**
@@ -285,9 +227,9 @@ public:
      *
      * @param missionCompleteTriggerScriptId ミッション達成時 に実行されるスクリプト のGRN
      */
-    CreateNamespaceRequest& withMissionCompleteTriggerScriptId(const Char* missionCompleteTriggerScriptId)
+    CreateNamespaceRequest& withMissionCompleteTriggerScriptId(StringHolder missionCompleteTriggerScriptId)
     {
-        ensureData().missionCompleteTriggerScriptId.emplace(missionCompleteTriggerScriptId);
+        ensureData().missionCompleteTriggerScriptId.emplace(std::move(missionCompleteTriggerScriptId));
         return *this;
     }
 
@@ -306,9 +248,9 @@ public:
      *
      * @param missionCompleteDoneTriggerScriptId ミッション達成完了時 に実行されるスクリプト のGRN
      */
-    void setMissionCompleteDoneTriggerScriptId(const Char* missionCompleteDoneTriggerScriptId)
+    void setMissionCompleteDoneTriggerScriptId(StringHolder missionCompleteDoneTriggerScriptId)
     {
-        ensureData().missionCompleteDoneTriggerScriptId.emplace(missionCompleteDoneTriggerScriptId);
+        ensureData().missionCompleteDoneTriggerScriptId.emplace(std::move(missionCompleteDoneTriggerScriptId));
     }
 
     /**
@@ -316,9 +258,9 @@ public:
      *
      * @param missionCompleteDoneTriggerScriptId ミッション達成完了時 に実行されるスクリプト のGRN
      */
-    CreateNamespaceRequest& withMissionCompleteDoneTriggerScriptId(const Char* missionCompleteDoneTriggerScriptId)
+    CreateNamespaceRequest& withMissionCompleteDoneTriggerScriptId(StringHolder missionCompleteDoneTriggerScriptId)
     {
-        ensureData().missionCompleteDoneTriggerScriptId.emplace(missionCompleteDoneTriggerScriptId);
+        ensureData().missionCompleteDoneTriggerScriptId.emplace(std::move(missionCompleteDoneTriggerScriptId));
         return *this;
     }
 
@@ -337,9 +279,9 @@ public:
      *
      * @param missionCompleteDoneTriggerQueueNamespaceId ミッション達成完了時 にジョブが登録されるネームスペース のGRN
      */
-    void setMissionCompleteDoneTriggerQueueNamespaceId(const Char* missionCompleteDoneTriggerQueueNamespaceId)
+    void setMissionCompleteDoneTriggerQueueNamespaceId(StringHolder missionCompleteDoneTriggerQueueNamespaceId)
     {
-        ensureData().missionCompleteDoneTriggerQueueNamespaceId.emplace(missionCompleteDoneTriggerQueueNamespaceId);
+        ensureData().missionCompleteDoneTriggerQueueNamespaceId.emplace(std::move(missionCompleteDoneTriggerQueueNamespaceId));
     }
 
     /**
@@ -347,9 +289,9 @@ public:
      *
      * @param missionCompleteDoneTriggerQueueNamespaceId ミッション達成完了時 にジョブが登録されるネームスペース のGRN
      */
-    CreateNamespaceRequest& withMissionCompleteDoneTriggerQueueNamespaceId(const Char* missionCompleteDoneTriggerQueueNamespaceId)
+    CreateNamespaceRequest& withMissionCompleteDoneTriggerQueueNamespaceId(StringHolder missionCompleteDoneTriggerQueueNamespaceId)
     {
-        ensureData().missionCompleteDoneTriggerQueueNamespaceId.emplace(missionCompleteDoneTriggerQueueNamespaceId);
+        ensureData().missionCompleteDoneTriggerQueueNamespaceId.emplace(std::move(missionCompleteDoneTriggerQueueNamespaceId));
         return *this;
     }
 
@@ -368,9 +310,9 @@ public:
      *
      * @param counterIncrementTriggerScriptId カウンター上昇時 に実行されるスクリプト のGRN
      */
-    void setCounterIncrementTriggerScriptId(const Char* counterIncrementTriggerScriptId)
+    void setCounterIncrementTriggerScriptId(StringHolder counterIncrementTriggerScriptId)
     {
-        ensureData().counterIncrementTriggerScriptId.emplace(counterIncrementTriggerScriptId);
+        ensureData().counterIncrementTriggerScriptId.emplace(std::move(counterIncrementTriggerScriptId));
     }
 
     /**
@@ -378,9 +320,9 @@ public:
      *
      * @param counterIncrementTriggerScriptId カウンター上昇時 に実行されるスクリプト のGRN
      */
-    CreateNamespaceRequest& withCounterIncrementTriggerScriptId(const Char* counterIncrementTriggerScriptId)
+    CreateNamespaceRequest& withCounterIncrementTriggerScriptId(StringHolder counterIncrementTriggerScriptId)
     {
-        ensureData().counterIncrementTriggerScriptId.emplace(counterIncrementTriggerScriptId);
+        ensureData().counterIncrementTriggerScriptId.emplace(std::move(counterIncrementTriggerScriptId));
         return *this;
     }
 
@@ -399,9 +341,9 @@ public:
      *
      * @param counterIncrementDoneTriggerScriptId カウンター上昇完了時 に実行されるスクリプト のGRN
      */
-    void setCounterIncrementDoneTriggerScriptId(const Char* counterIncrementDoneTriggerScriptId)
+    void setCounterIncrementDoneTriggerScriptId(StringHolder counterIncrementDoneTriggerScriptId)
     {
-        ensureData().counterIncrementDoneTriggerScriptId.emplace(counterIncrementDoneTriggerScriptId);
+        ensureData().counterIncrementDoneTriggerScriptId.emplace(std::move(counterIncrementDoneTriggerScriptId));
     }
 
     /**
@@ -409,9 +351,9 @@ public:
      *
      * @param counterIncrementDoneTriggerScriptId カウンター上昇完了時 に実行されるスクリプト のGRN
      */
-    CreateNamespaceRequest& withCounterIncrementDoneTriggerScriptId(const Char* counterIncrementDoneTriggerScriptId)
+    CreateNamespaceRequest& withCounterIncrementDoneTriggerScriptId(StringHolder counterIncrementDoneTriggerScriptId)
     {
-        ensureData().counterIncrementDoneTriggerScriptId.emplace(counterIncrementDoneTriggerScriptId);
+        ensureData().counterIncrementDoneTriggerScriptId.emplace(std::move(counterIncrementDoneTriggerScriptId));
         return *this;
     }
 
@@ -430,9 +372,9 @@ public:
      *
      * @param counterIncrementDoneTriggerQueueNamespaceId カウンター上昇完了時 にジョブが登録されるネームスペース のGRN
      */
-    void setCounterIncrementDoneTriggerQueueNamespaceId(const Char* counterIncrementDoneTriggerQueueNamespaceId)
+    void setCounterIncrementDoneTriggerQueueNamespaceId(StringHolder counterIncrementDoneTriggerQueueNamespaceId)
     {
-        ensureData().counterIncrementDoneTriggerQueueNamespaceId.emplace(counterIncrementDoneTriggerQueueNamespaceId);
+        ensureData().counterIncrementDoneTriggerQueueNamespaceId.emplace(std::move(counterIncrementDoneTriggerQueueNamespaceId));
     }
 
     /**
@@ -440,9 +382,9 @@ public:
      *
      * @param counterIncrementDoneTriggerQueueNamespaceId カウンター上昇完了時 にジョブが登録されるネームスペース のGRN
      */
-    CreateNamespaceRequest& withCounterIncrementDoneTriggerQueueNamespaceId(const Char* counterIncrementDoneTriggerQueueNamespaceId)
+    CreateNamespaceRequest& withCounterIncrementDoneTriggerQueueNamespaceId(StringHolder counterIncrementDoneTriggerQueueNamespaceId)
     {
-        ensureData().counterIncrementDoneTriggerQueueNamespaceId.emplace(counterIncrementDoneTriggerQueueNamespaceId);
+        ensureData().counterIncrementDoneTriggerQueueNamespaceId.emplace(std::move(counterIncrementDoneTriggerQueueNamespaceId));
         return *this;
     }
 
@@ -461,9 +403,9 @@ public:
      *
      * @param receiveRewardsTriggerScriptId 報酬受け取り時 に実行されるスクリプト のGRN
      */
-    void setReceiveRewardsTriggerScriptId(const Char* receiveRewardsTriggerScriptId)
+    void setReceiveRewardsTriggerScriptId(StringHolder receiveRewardsTriggerScriptId)
     {
-        ensureData().receiveRewardsTriggerScriptId.emplace(receiveRewardsTriggerScriptId);
+        ensureData().receiveRewardsTriggerScriptId.emplace(std::move(receiveRewardsTriggerScriptId));
     }
 
     /**
@@ -471,9 +413,9 @@ public:
      *
      * @param receiveRewardsTriggerScriptId 報酬受け取り時 に実行されるスクリプト のGRN
      */
-    CreateNamespaceRequest& withReceiveRewardsTriggerScriptId(const Char* receiveRewardsTriggerScriptId)
+    CreateNamespaceRequest& withReceiveRewardsTriggerScriptId(StringHolder receiveRewardsTriggerScriptId)
     {
-        ensureData().receiveRewardsTriggerScriptId.emplace(receiveRewardsTriggerScriptId);
+        ensureData().receiveRewardsTriggerScriptId.emplace(std::move(receiveRewardsTriggerScriptId));
         return *this;
     }
 
@@ -492,9 +434,9 @@ public:
      *
      * @param receiveRewardsDoneTriggerScriptId 報酬受け取り完了時 に実行されるスクリプト のGRN
      */
-    void setReceiveRewardsDoneTriggerScriptId(const Char* receiveRewardsDoneTriggerScriptId)
+    void setReceiveRewardsDoneTriggerScriptId(StringHolder receiveRewardsDoneTriggerScriptId)
     {
-        ensureData().receiveRewardsDoneTriggerScriptId.emplace(receiveRewardsDoneTriggerScriptId);
+        ensureData().receiveRewardsDoneTriggerScriptId.emplace(std::move(receiveRewardsDoneTriggerScriptId));
     }
 
     /**
@@ -502,9 +444,9 @@ public:
      *
      * @param receiveRewardsDoneTriggerScriptId 報酬受け取り完了時 に実行されるスクリプト のGRN
      */
-    CreateNamespaceRequest& withReceiveRewardsDoneTriggerScriptId(const Char* receiveRewardsDoneTriggerScriptId)
+    CreateNamespaceRequest& withReceiveRewardsDoneTriggerScriptId(StringHolder receiveRewardsDoneTriggerScriptId)
     {
-        ensureData().receiveRewardsDoneTriggerScriptId.emplace(receiveRewardsDoneTriggerScriptId);
+        ensureData().receiveRewardsDoneTriggerScriptId.emplace(std::move(receiveRewardsDoneTriggerScriptId));
         return *this;
     }
 
@@ -523,9 +465,9 @@ public:
      *
      * @param receiveRewardsDoneTriggerQueueNamespaceId 報酬受け取り完了時 にジョブが登録されるネームスペース のGRN
      */
-    void setReceiveRewardsDoneTriggerQueueNamespaceId(const Char* receiveRewardsDoneTriggerQueueNamespaceId)
+    void setReceiveRewardsDoneTriggerQueueNamespaceId(StringHolder receiveRewardsDoneTriggerQueueNamespaceId)
     {
-        ensureData().receiveRewardsDoneTriggerQueueNamespaceId.emplace(receiveRewardsDoneTriggerQueueNamespaceId);
+        ensureData().receiveRewardsDoneTriggerQueueNamespaceId.emplace(std::move(receiveRewardsDoneTriggerQueueNamespaceId));
     }
 
     /**
@@ -533,9 +475,9 @@ public:
      *
      * @param receiveRewardsDoneTriggerQueueNamespaceId 報酬受け取り完了時 にジョブが登録されるネームスペース のGRN
      */
-    CreateNamespaceRequest& withReceiveRewardsDoneTriggerQueueNamespaceId(const Char* receiveRewardsDoneTriggerQueueNamespaceId)
+    CreateNamespaceRequest& withReceiveRewardsDoneTriggerQueueNamespaceId(StringHolder receiveRewardsDoneTriggerQueueNamespaceId)
     {
-        ensureData().receiveRewardsDoneTriggerQueueNamespaceId.emplace(receiveRewardsDoneTriggerQueueNamespaceId);
+        ensureData().receiveRewardsDoneTriggerQueueNamespaceId.emplace(std::move(receiveRewardsDoneTriggerQueueNamespaceId));
         return *this;
     }
 
@@ -554,9 +496,9 @@ public:
      *
      * @param queueNamespaceId 報酬付与処理をジョブとして追加するキューネームスペース のGRN
      */
-    void setQueueNamespaceId(const Char* queueNamespaceId)
+    void setQueueNamespaceId(StringHolder queueNamespaceId)
     {
-        ensureData().queueNamespaceId.emplace(queueNamespaceId);
+        ensureData().queueNamespaceId.emplace(std::move(queueNamespaceId));
     }
 
     /**
@@ -564,9 +506,9 @@ public:
      *
      * @param queueNamespaceId 報酬付与処理をジョブとして追加するキューネームスペース のGRN
      */
-    CreateNamespaceRequest& withQueueNamespaceId(const Char* queueNamespaceId)
+    CreateNamespaceRequest& withQueueNamespaceId(StringHolder queueNamespaceId)
     {
-        ensureData().queueNamespaceId.emplace(queueNamespaceId);
+        ensureData().queueNamespaceId.emplace(std::move(queueNamespaceId));
         return *this;
     }
 
@@ -585,9 +527,9 @@ public:
      *
      * @param keyId 報酬付与処理のスタンプシートで使用する暗号鍵GRN
      */
-    void setKeyId(const Char* keyId)
+    void setKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
     }
 
     /**
@@ -595,9 +537,9 @@ public:
      *
      * @param keyId 報酬付与処理のスタンプシートで使用する暗号鍵GRN
      */
-    CreateNamespaceRequest& withKeyId(const Char* keyId)
+    CreateNamespaceRequest& withKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
         return *this;
     }
 
@@ -616,9 +558,9 @@ public:
      *
      * @param completeNotification ミッションのタスクを達成したときのプッシュ通知
      */
-    void setCompleteNotification(const NotificationSetting& completeNotification)
+    void setCompleteNotification(NotificationSetting completeNotification)
     {
-        ensureData().completeNotification.emplace(completeNotification);
+        ensureData().completeNotification.emplace(std::move(completeNotification));
     }
 
     /**
@@ -626,9 +568,9 @@ public:
      *
      * @param completeNotification ミッションのタスクを達成したときのプッシュ通知
      */
-    CreateNamespaceRequest& withCompleteNotification(const NotificationSetting& completeNotification)
+    CreateNamespaceRequest& withCompleteNotification(NotificationSetting completeNotification)
     {
-        ensureData().completeNotification.emplace(completeNotification);
+        ensureData().completeNotification.emplace(std::move(completeNotification));
         return *this;
     }
 
@@ -639,33 +581,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CreateNamespaceRequest& withGs2ClientId(const Char* gs2ClientId)
+    CreateNamespaceRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CreateNamespaceRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CreateNamespaceRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -674,9 +592,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CreateNamespaceRequest& withRequestId(const Char* gs2RequestId)
+    CreateNamespaceRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

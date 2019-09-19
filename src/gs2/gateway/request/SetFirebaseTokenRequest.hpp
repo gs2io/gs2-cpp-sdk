@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2GatewayConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace gateway
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** アクセストークン */
@@ -50,102 +52,49 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             token(data.token),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            accessToken(std::move(data.accessToken)),
-            namespaceName(std::move(data.namespaceName)),
-            token(std::move(data.token)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    SetFirebaseTokenRequest() :
-        m_pData(nullptr)
-    {}
+    SetFirebaseTokenRequest() = default;
+    SetFirebaseTokenRequest(const SetFirebaseTokenRequest& setFirebaseTokenRequest) = default;
+    SetFirebaseTokenRequest(SetFirebaseTokenRequest&& setFirebaseTokenRequest) = default;
+    ~SetFirebaseTokenRequest() GS2_OVERRIDE = default;
 
-    SetFirebaseTokenRequest(const SetFirebaseTokenRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Gateway(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    SetFirebaseTokenRequest& operator=(const SetFirebaseTokenRequest& setFirebaseTokenRequest) = default;
+    SetFirebaseTokenRequest& operator=(SetFirebaseTokenRequest&& setFirebaseTokenRequest) = default;
 
-    SetFirebaseTokenRequest(SetFirebaseTokenRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Gateway(std::move(obj)),
-        m_pData(obj.m_pData)
+    SetFirebaseTokenRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~SetFirebaseTokenRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    SetFirebaseTokenRequest& operator=(const SetFirebaseTokenRequest& setFirebaseTokenRequest)
-    {
-        Gs2BasicRequest::operator=(setFirebaseTokenRequest);
-        Gs2Gateway::operator=(setFirebaseTokenRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*setFirebaseTokenRequest.m_pData);
-
-        return *this;
-    }
-
-    SetFirebaseTokenRequest& operator=(SetFirebaseTokenRequest&& setFirebaseTokenRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(setFirebaseTokenRequest));
-        Gs2Gateway::operator=(std::move(setFirebaseTokenRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = setFirebaseTokenRequest.m_pData;
-        setFirebaseTokenRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(SetFirebaseTokenRequest);
     }
 
     const SetFirebaseTokenRequest* operator->() const
@@ -163,7 +112,8 @@ public:
      *
      * @return アクセストークン
      */
-    const gs2::optional<StringHolder>& getAccessToken() const {
+    const gs2::optional<StringHolder>& getAccessToken() const
+    {
         return ensureData().accessToken;
     }
 
@@ -172,8 +122,9 @@ public:
      *
      * @param accessToken アクセストークン
      */
-    void setAccessToken(const Char* accessToken) {
-        ensureData().accessToken.emplace(accessToken);
+    void setAccessToken(StringHolder accessToken)
+    {
+        ensureData().accessToken.emplace(std::move(accessToken));
     }
 
     /**
@@ -182,8 +133,9 @@ public:
      * @param accessToken アクセストークン
      * @return this
      */
-    SetFirebaseTokenRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
+    SetFirebaseTokenRequest& withAccessToken(StringHolder accessToken)
+    {
+        setAccessToken(std::move(accessToken));
         return *this;
     }
 
@@ -202,9 +154,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -212,9 +164,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    SetFirebaseTokenRequest& withNamespaceName(const Char* namespaceName)
+    SetFirebaseTokenRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -233,9 +185,9 @@ public:
      *
      * @param token Firebase Cloud Messaging のデバイストークン
      */
-    void setToken(const Char* token)
+    void setToken(StringHolder token)
     {
-        ensureData().token.emplace(token);
+        ensureData().token.emplace(std::move(token));
     }
 
     /**
@@ -243,9 +195,9 @@ public:
      *
      * @param token Firebase Cloud Messaging のデバイストークン
      */
-    SetFirebaseTokenRequest& withToken(const Char* token)
+    SetFirebaseTokenRequest& withToken(StringHolder token)
     {
-        ensureData().token.emplace(token);
+        ensureData().token.emplace(std::move(token));
         return *this;
     }
 
@@ -264,9 +216,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -274,9 +226,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    SetFirebaseTokenRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    SetFirebaseTokenRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -287,33 +239,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    SetFirebaseTokenRequest& withGs2ClientId(const Char* gs2ClientId)
+    SetFirebaseTokenRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    SetFirebaseTokenRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    SetFirebaseTokenRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -322,9 +250,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    SetFirebaseTokenRequest& withRequestId(const Char* gs2RequestId)
+    SetFirebaseTokenRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

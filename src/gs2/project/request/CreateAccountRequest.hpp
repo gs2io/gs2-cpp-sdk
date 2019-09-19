@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ProjectConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace project
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** メールアドレス */
@@ -50,102 +52,49 @@ private:
         /** パスワード */
         optional<StringHolder> password;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             email(data.email),
             fullName(data.fullName),
             companyName(data.companyName),
             password(data.password)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            email(std::move(data.email)),
-            fullName(std::move(data.fullName)),
-            companyName(std::move(data.companyName)),
-            password(std::move(data.password))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CreateAccountRequest() :
-        m_pData(nullptr)
-    {}
+    CreateAccountRequest() = default;
+    CreateAccountRequest(const CreateAccountRequest& createAccountRequest) = default;
+    CreateAccountRequest(CreateAccountRequest&& createAccountRequest) = default;
+    ~CreateAccountRequest() GS2_OVERRIDE = default;
 
-    CreateAccountRequest(const CreateAccountRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Project(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CreateAccountRequest& operator=(const CreateAccountRequest& createAccountRequest) = default;
+    CreateAccountRequest& operator=(CreateAccountRequest&& createAccountRequest) = default;
 
-    CreateAccountRequest(CreateAccountRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Project(std::move(obj)),
-        m_pData(obj.m_pData)
+    CreateAccountRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CreateAccountRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateAccountRequest& operator=(const CreateAccountRequest& createAccountRequest)
-    {
-        Gs2BasicRequest::operator=(createAccountRequest);
-        Gs2Project::operator=(createAccountRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createAccountRequest.m_pData);
-
-        return *this;
-    }
-
-    CreateAccountRequest& operator=(CreateAccountRequest&& createAccountRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(createAccountRequest));
-        Gs2Project::operator=(std::move(createAccountRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createAccountRequest.m_pData;
-        createAccountRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateAccountRequest);
     }
 
     const CreateAccountRequest* operator->() const
@@ -173,9 +122,9 @@ public:
      *
      * @param email メールアドレス
      */
-    void setEmail(const Char* email)
+    void setEmail(StringHolder email)
     {
-        ensureData().email.emplace(email);
+        ensureData().email.emplace(std::move(email));
     }
 
     /**
@@ -183,9 +132,9 @@ public:
      *
      * @param email メールアドレス
      */
-    CreateAccountRequest& withEmail(const Char* email)
+    CreateAccountRequest& withEmail(StringHolder email)
     {
-        ensureData().email.emplace(email);
+        ensureData().email.emplace(std::move(email));
         return *this;
     }
 
@@ -204,9 +153,9 @@ public:
      *
      * @param fullName フルネーム
      */
-    void setFullName(const Char* fullName)
+    void setFullName(StringHolder fullName)
     {
-        ensureData().fullName.emplace(fullName);
+        ensureData().fullName.emplace(std::move(fullName));
     }
 
     /**
@@ -214,9 +163,9 @@ public:
      *
      * @param fullName フルネーム
      */
-    CreateAccountRequest& withFullName(const Char* fullName)
+    CreateAccountRequest& withFullName(StringHolder fullName)
     {
-        ensureData().fullName.emplace(fullName);
+        ensureData().fullName.emplace(std::move(fullName));
         return *this;
     }
 
@@ -235,9 +184,9 @@ public:
      *
      * @param companyName 会社名
      */
-    void setCompanyName(const Char* companyName)
+    void setCompanyName(StringHolder companyName)
     {
-        ensureData().companyName.emplace(companyName);
+        ensureData().companyName.emplace(std::move(companyName));
     }
 
     /**
@@ -245,9 +194,9 @@ public:
      *
      * @param companyName 会社名
      */
-    CreateAccountRequest& withCompanyName(const Char* companyName)
+    CreateAccountRequest& withCompanyName(StringHolder companyName)
     {
-        ensureData().companyName.emplace(companyName);
+        ensureData().companyName.emplace(std::move(companyName));
         return *this;
     }
 
@@ -266,9 +215,9 @@ public:
      *
      * @param password パスワード
      */
-    void setPassword(const Char* password)
+    void setPassword(StringHolder password)
     {
-        ensureData().password.emplace(password);
+        ensureData().password.emplace(std::move(password));
     }
 
     /**
@@ -276,9 +225,9 @@ public:
      *
      * @param password パスワード
      */
-    CreateAccountRequest& withPassword(const Char* password)
+    CreateAccountRequest& withPassword(StringHolder password)
     {
-        ensureData().password.emplace(password);
+        ensureData().password.emplace(std::move(password));
         return *this;
     }
 
@@ -289,33 +238,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CreateAccountRequest& withGs2ClientId(const Char* gs2ClientId)
+    CreateAccountRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CreateAccountRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CreateAccountRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -324,9 +249,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CreateAccountRequest& withRequestId(const Char* gs2RequestId)
+    CreateAccountRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

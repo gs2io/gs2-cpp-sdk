@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace jobQueue {
@@ -54,8 +56,7 @@ private:
         /** 作成日時 */
         optional<Int64> tryAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -65,57 +66,55 @@ private:
             statusCode(data.statusCode),
             result(data.result),
             tryAt(data.tryAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            jobResultId(std::move(data.jobResultId)),
-            jobId(std::move(data.jobId)),
-            tryNumber(std::move(data.tryNumber)),
-            statusCode(std::move(data.statusCode)),
-            result(std::move(data.result)),
-            tryAt(std::move(data.tryAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "jobResultId") == 0) {
+            if (std::strcmp(name_, "jobResultId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->jobResultId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "jobId") == 0) {
+            else if (std::strcmp(name_, "jobId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->jobId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "tryNumber") == 0) {
+            else if (std::strcmp(name_, "tryNumber") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->tryNumber = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "statusCode") == 0) {
+            else if (std::strcmp(name_, "statusCode") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->statusCode = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "result") == 0) {
+            else if (std::strcmp(name_, "result") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->result.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "tryAt") == 0) {
+            else if (std::strcmp(name_, "tryAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->tryAt = jsonValue.GetInt64();
@@ -124,72 +123,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    JobResult() :
-        m_pData(nullptr)
-    {}
+    JobResult() = default;
+    JobResult(const JobResult& jobResult) = default;
+    JobResult(JobResult&& jobResult) = default;
+    ~JobResult() = default;
 
-    JobResult(const JobResult& jobResult) :
-        Gs2Object(jobResult),
-        m_pData(jobResult.m_pData != nullptr ? new Data(*jobResult.m_pData) : nullptr)
-    {}
+    JobResult& operator=(const JobResult& jobResult) = default;
+    JobResult& operator=(JobResult&& jobResult) = default;
 
-    JobResult(JobResult&& jobResult) :
-        Gs2Object(std::move(jobResult)),
-        m_pData(jobResult.m_pData)
+    JobResult deepCopy() const
     {
-        jobResult.m_pData = nullptr;
-    }
-
-    ~JobResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    JobResult& operator=(const JobResult& jobResult)
-    {
-        Gs2Object::operator=(jobResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*jobResult.m_pData);
-
-        return *this;
-    }
-
-    JobResult& operator=(JobResult&& jobResult)
-    {
-        Gs2Object::operator=(std::move(jobResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = jobResult.m_pData;
-        jobResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(JobResult);
     }
 
     const JobResult* operator->() const
@@ -216,9 +163,9 @@ public:
      *
      * @param jobResultId ジョブ実行結果
      */
-    void setJobResultId(const Char* jobResultId)
+    void setJobResultId(StringHolder jobResultId)
     {
-        ensureData().jobResultId.emplace(jobResultId);
+        ensureData().jobResultId.emplace(std::move(jobResultId));
     }
 
     /**
@@ -226,9 +173,9 @@ public:
      *
      * @param jobResultId ジョブ実行結果
      */
-    JobResult& withJobResultId(const Char* jobResultId)
+    JobResult& withJobResultId(StringHolder jobResultId)
     {
-        setJobResultId(jobResultId);
+        setJobResultId(std::move(jobResultId));
         return *this;
     }
 
@@ -247,9 +194,9 @@ public:
      *
      * @param jobId ジョブ
      */
-    void setJobId(const Char* jobId)
+    void setJobId(StringHolder jobId)
     {
-        ensureData().jobId.emplace(jobId);
+        ensureData().jobId.emplace(std::move(jobId));
     }
 
     /**
@@ -257,9 +204,9 @@ public:
      *
      * @param jobId ジョブ
      */
-    JobResult& withJobId(const Char* jobId)
+    JobResult& withJobId(StringHolder jobId)
     {
-        setJobId(jobId);
+        setJobId(std::move(jobId));
         return *this;
     }
 
@@ -340,9 +287,9 @@ public:
      *
      * @param result レスポンスの内容
      */
-    void setResult(const Char* result)
+    void setResult(StringHolder result)
     {
-        ensureData().result.emplace(result);
+        ensureData().result.emplace(std::move(result));
     }
 
     /**
@@ -350,9 +297,9 @@ public:
      *
      * @param result レスポンスの内容
      */
-    JobResult& withResult(const Char* result)
+    JobResult& withResult(StringHolder result)
     {
-        setResult(result);
+        setResult(std::move(result));
         return *this;
     }
 
@@ -398,7 +345,7 @@ inline bool operator!=(const JobResult& lhs, const JobResult& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

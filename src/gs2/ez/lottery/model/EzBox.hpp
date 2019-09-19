@@ -27,25 +27,65 @@ namespace gs2 { namespace ez { namespace lottery {
 class EzBox : public gs2::Gs2Object
 {
 private:
-    /** 排出確率テーブル名 */
-    gs2::optional<StringHolder> m_PrizeTableName;
-    /** 排出済み景品のインデックスのリスト */
-    gs2::optional<List<Int32>> m_DrawnIndexes;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 排出確率テーブル名 */
+        gs2::optional<StringHolder> prizeTableName;
+        /** 排出済み景品のインデックスのリスト */
+        gs2::optional<List<Int32>> drawnIndexes;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            prizeTableName(data.prizeTableName)
+        {
+            if (data.drawnIndexes)
+            {
+                drawnIndexes = data.drawnIndexes->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::lottery::Box& box) :
+            prizeTableName(box.getPrizeTableName()),
+            drawnIndexes(box.getDrawnIndexes())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzBox() = default;
+    EzBox(const EzBox& ezBox) = default;
+    EzBox(EzBox&& ezBox) = default;
+    ~EzBox() = default;
 
     EzBox(gs2::lottery::Box box) :
-        m_PrizeTableName(box.getPrizeTableName()),
-        m_DrawnIndexes(box.getDrawnIndexes())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(box)
+    {}
+
+    EzBox& operator=(const EzBox& ezBox) = default;
+    EzBox& operator=(EzBox&& ezBox) = default;
+
+    EzBox deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzBox);
     }
 
     gs2::lottery::Box ToModel() const
     {
         gs2::lottery::Box box;
-        box.setPrizeTableName(*m_PrizeTableName);
-        box.setDrawnIndexes(*m_DrawnIndexes);
+        box.setPrizeTableName(getPrizeTableName());
+        box.setDrawnIndexes(getDrawnIndexes());
         return box;
     }
 
@@ -53,58 +93,37 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getPrizeTableName() const
+    const StringHolder& getPrizeTableName() const
     {
-        return *m_PrizeTableName;
-    }
-
-    gs2::StringHolder& getPrizeTableName()
-    {
-        return *m_PrizeTableName;
+        return *ensureData().prizeTableName;
     }
 
     const List<Int32>& getDrawnIndexes() const
     {
-        return *m_DrawnIndexes;
-    }
-
-    List<Int32>& getDrawnIndexes()
-    {
-        return *m_DrawnIndexes;
+        return *ensureData().drawnIndexes;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setPrizeTableName(Char* prizeTableName)
+    void setPrizeTableName(StringHolder prizeTableName)
     {
-        m_PrizeTableName.emplace(prizeTableName);
+        ensureData().prizeTableName = std::move(prizeTableName);
     }
 
-    void setDrawnIndexes(const List<Int32>& drawnIndexes)
+    void setDrawnIndexes(List<Int32> drawnIndexes)
     {
-        m_DrawnIndexes = drawnIndexes;
+        ensureData().drawnIndexes = std::move(drawnIndexes);
     }
 
-    void setDrawnIndexes(List<Int32>&& drawnIndexes)
+    EzBox& withPrizeTableName(StringHolder prizeTableName)
     {
-        m_DrawnIndexes = std::move(drawnIndexes);
-    }
-
-    EzBox& withPrizeTableName(Char* prizeTableName)
-    {
-        setPrizeTableName(prizeTableName);
+        setPrizeTableName(std::move(prizeTableName));
         return *this;
     }
 
-    EzBox& withDrawnIndexes(const List<Int32>& drawnIndexes)
-    {
-        setDrawnIndexes(drawnIndexes);
-        return *this;
-    }
-
-    EzBox& withDrawnIndexes(List<Int32>&& drawnIndexes)
+    EzBox& withDrawnIndexes(List<Int32> drawnIndexes)
     {
         setDrawnIndexes(std::move(drawnIndexes));
         return *this;

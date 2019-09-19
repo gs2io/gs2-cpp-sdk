@@ -28,38 +28,79 @@ namespace gs2 { namespace ez { namespace showcase {
 class EzShowcase : public gs2::Gs2Object
 {
 private:
-    /** 商品名 */
-    gs2::optional<StringHolder> m_Name;
-    /** 商品のメタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** インベントリに格納可能なアイテムモデル一覧 */
-    gs2::optional<List<EzDisplayItem>> m_DisplayItems;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 商品名 */
+        gs2::optional<StringHolder> name;
+        /** 商品のメタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** インベントリに格納可能なアイテムモデル一覧 */
+        gs2::optional<List<EzDisplayItem>> displayItems;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            metadata(data.metadata)
+        {
+            if (data.displayItems)
+            {
+                displayItems = data.displayItems->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::showcase::Showcase& showcase) :
+            name(showcase.getName()),
+            metadata(showcase.getMetadata())
+        {
+            displayItems.emplace();
+            if (showcase.getDisplayItems())
+            {
+                for (int i = 0; i < showcase.getDisplayItems()->getCount(); ++i)
+                {
+                    *displayItems += EzDisplayItem((*showcase.getDisplayItems())[i]);
+                }
+            }
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzShowcase() = default;
+    EzShowcase(const EzShowcase& ezShowcase) = default;
+    EzShowcase(EzShowcase&& ezShowcase) = default;
+    ~EzShowcase() = default;
 
     EzShowcase(gs2::showcase::Showcase showcase) :
-        m_Name(showcase.getName()),
-        m_Metadata(showcase.getMetadata())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(showcase)
+    {}
+
+    EzShowcase& operator=(const EzShowcase& ezShowcase) = default;
+    EzShowcase& operator=(EzShowcase&& ezShowcase) = default;
+
+    EzShowcase deepCopy() const
     {
-        m_DisplayItems.emplace();
-        if (showcase.getDisplayItems())
-        {
-            for (int i = 0; i < showcase.getDisplayItems()->getCount(); ++i)
-            {
-                *m_DisplayItems += EzDisplayItem((*showcase.getDisplayItems())[i]);
-            }
-        }
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzShowcase);
     }
 
     gs2::showcase::Showcase ToModel() const
     {
         gs2::showcase::Showcase showcase;
-        showcase.setName(*m_Name);
-        showcase.setMetadata(*m_Metadata);
+        showcase.setName(getName());
+        showcase.setMetadata(getMetadata());
         {
             gs2::List<gs2::showcase::DisplayItem> list;
-            auto& displayItems = *m_DisplayItems;
+            auto& displayItems = getDisplayItems();
             for (int i = 0; i < displayItems.getCount(); ++i)
             {
                 list += displayItems[i].ToModel();
@@ -73,79 +114,53 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
+        return *ensureData().name;
     }
 
-    gs2::StringHolder& getName()
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
-    }
-
-    const gs2::StringHolder& getMetadata() const
-    {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
+        return *ensureData().metadata;
     }
 
     const List<EzDisplayItem>& getDisplayItems() const
     {
-        return *m_DisplayItems;
-    }
-
-    List<EzDisplayItem>& getDisplayItems()
-    {
-        return *m_DisplayItems;
+        return *ensureData().displayItems;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
-    void setDisplayItems(const List<EzDisplayItem>& displayItems)
+    void setDisplayItems(List<EzDisplayItem> displayItems)
     {
-        m_DisplayItems = displayItems;
+        ensureData().displayItems = std::move(displayItems);
     }
 
-    void setDisplayItems(List<EzDisplayItem>&& displayItems)
+    EzShowcase& withName(StringHolder name)
     {
-        m_DisplayItems = std::move(displayItems);
-    }
-
-    EzShowcase& withName(Char* name)
-    {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzShowcase& withMetadata(Char* metadata)
+    EzShowcase& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
-    EzShowcase& withDisplayItems(const List<EzDisplayItem>& displayItems)
-    {
-        setDisplayItems(displayItems);
-        return *this;
-    }
-
-    EzShowcase& withDisplayItems(List<EzDisplayItem>&& displayItems)
+    EzShowcase& withDisplayItems(List<EzDisplayItem> displayItems)
     {
         setDisplayItems(std::move(displayItems));
         return *this;

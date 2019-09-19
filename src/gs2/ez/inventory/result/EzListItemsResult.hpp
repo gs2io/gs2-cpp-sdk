@@ -27,22 +27,61 @@ namespace gs2 { namespace ez { namespace inventory {
 class EzListItemsResult : public gs2::Gs2Object
 {
 private:
-    /** 有効期限ごとのアイテム所持数量のリスト */
-    List<EzItemSet> m_Items;
-    /** リストの続きを取得するためのページトークン */
-    optional<StringHolder> m_NextPageToken;
-
-public:
-    EzListItemsResult(const gs2::inventory::DescribeItemSetsResult& result) :
-        m_NextPageToken(result.getNextPageToken())
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** 有効期限ごとのアイテム所持数量のリスト */
+        List<EzItemSet> items;
+        /** リストの続きを取得するためのページトークン */
+        optional<StringHolder> nextPageToken;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            nextPageToken(data.nextPageToken)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::inventory::DescribeItemSetsResult& describeItemSetsResult) :
+            nextPageToken(describeItemSetsResult.getNextPageToken())
+        {
             {
-                m_Items += EzItemSet(list[i]);
+                auto& list = *describeItemSetsResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzItemSet(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListItemsResult() = default;
+    EzListItemsResult(const EzListItemsResult& result) = default;
+    EzListItemsResult(EzListItemsResult&& result) = default;
+    ~EzListItemsResult() = default;
+
+    EzListItemsResult(gs2::inventory::DescribeItemSetsResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListItemsResult& operator=(const EzListItemsResult& result) = default;
+    EzListItemsResult& operator=(EzListItemsResult&& result) = default;
+
+    EzListItemsResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListItemsResult);
     }
 
     static bool isConvertible(const gs2::inventory::DescribeItemSetsResult& result)
@@ -57,22 +96,12 @@ public:
 
     const List<EzItemSet>& getItems() const
     {
-        return m_Items;
+        return ensureData().items;
     }
 
-    List<EzItemSet>& getItems()
+    const optional<StringHolder>& getNextPageToken() const
     {
-        return m_Items;
-    }
-
-    const optional<gs2::StringHolder>& getNextPageToken() const
-    {
-        return m_NextPageToken;
-    }
-
-    optional<gs2::StringHolder>& getNextPageToken()
-    {
-        return m_NextPageToken;
+        return ensureData().nextPageToken;
     }
 };
 

@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "AcquireAction.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace inbox {
@@ -59,8 +61,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> readAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -69,62 +70,61 @@ private:
             userId(data.userId),
             metadata(data.metadata),
             isRead(data.isRead),
-            readAcquireActions(data.readAcquireActions),
             receivedAt(data.receivedAt),
             readAt(data.readAt)
-        {}
+        {
+            if (data.readAcquireActions)
+            {
+                readAcquireActions = data.readAcquireActions->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            messageId(std::move(data.messageId)),
-            name(std::move(data.name)),
-            userId(std::move(data.userId)),
-            metadata(std::move(data.metadata)),
-            isRead(std::move(data.isRead)),
-            readAcquireActions(std::move(data.readAcquireActions)),
-            receivedAt(std::move(data.receivedAt)),
-            readAt(std::move(data.readAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "messageId") == 0) {
+            if (std::strcmp(name_, "messageId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->messageId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "isRead") == 0) {
+            else if (std::strcmp(name_, "isRead") == 0)
+            {
                 if (jsonValue.IsBool())
                 {
                     this->isRead = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name_, "readAcquireActions") == 0) {
+            else if (std::strcmp(name_, "readAcquireActions") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -136,13 +136,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "receivedAt") == 0) {
+            else if (std::strcmp(name_, "receivedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->receivedAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "readAt") == 0) {
+            else if (std::strcmp(name_, "readAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->readAt = jsonValue.GetInt64();
@@ -151,72 +153,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Message() :
-        m_pData(nullptr)
-    {}
+    Message() = default;
+    Message(const Message& message) = default;
+    Message(Message&& message) = default;
+    ~Message() = default;
 
-    Message(const Message& message) :
-        Gs2Object(message),
-        m_pData(message.m_pData != nullptr ? new Data(*message.m_pData) : nullptr)
-    {}
+    Message& operator=(const Message& message) = default;
+    Message& operator=(Message&& message) = default;
 
-    Message(Message&& message) :
-        Gs2Object(std::move(message)),
-        m_pData(message.m_pData)
+    Message deepCopy() const
     {
-        message.m_pData = nullptr;
-    }
-
-    ~Message()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Message& operator=(const Message& message)
-    {
-        Gs2Object::operator=(message);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*message.m_pData);
-
-        return *this;
-    }
-
-    Message& operator=(Message&& message)
-    {
-        Gs2Object::operator=(std::move(message));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = message.m_pData;
-        message.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Message);
     }
 
     const Message* operator->() const
@@ -243,9 +193,9 @@ public:
      *
      * @param messageId メッセージ
      */
-    void setMessageId(const Char* messageId)
+    void setMessageId(StringHolder messageId)
     {
-        ensureData().messageId.emplace(messageId);
+        ensureData().messageId.emplace(std::move(messageId));
     }
 
     /**
@@ -253,9 +203,9 @@ public:
      *
      * @param messageId メッセージ
      */
-    Message& withMessageId(const Char* messageId)
+    Message& withMessageId(StringHolder messageId)
     {
-        setMessageId(messageId);
+        setMessageId(std::move(messageId));
         return *this;
     }
 
@@ -274,9 +224,9 @@ public:
      *
      * @param name メッセージID
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -284,9 +234,9 @@ public:
      *
      * @param name メッセージID
      */
-    Message& withName(const Char* name)
+    Message& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -305,9 +255,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -315,9 +265,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    Message& withUserId(const Char* userId)
+    Message& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -336,9 +286,9 @@ public:
      *
      * @param metadata メッセージの内容に相当するメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -346,9 +296,9 @@ public:
      *
      * @param metadata メッセージの内容に相当するメタデータ
      */
-    Message& withMetadata(const Char* metadata)
+    Message& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -398,9 +348,9 @@ public:
      *
      * @param readAcquireActions 開封時に実行する入手アクション
      */
-    void setReadAcquireActions(const List<AcquireAction>& readAcquireActions)
+    void setReadAcquireActions(List<AcquireAction> readAcquireActions)
     {
-        ensureData().readAcquireActions.emplace(readAcquireActions);
+        ensureData().readAcquireActions.emplace(std::move(readAcquireActions));
     }
 
     /**
@@ -408,9 +358,9 @@ public:
      *
      * @param readAcquireActions 開封時に実行する入手アクション
      */
-    Message& withReadAcquireActions(const List<AcquireAction>& readAcquireActions)
+    Message& withReadAcquireActions(List<AcquireAction> readAcquireActions)
     {
-        setReadAcquireActions(readAcquireActions);
+        setReadAcquireActions(std::move(readAcquireActions));
         return *this;
     }
 
@@ -487,7 +437,7 @@ inline bool operator!=(const Message& lhs, const Message& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

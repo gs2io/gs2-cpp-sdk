@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace inventory {
 class EzGetItemModelResult : public gs2::Gs2Object
 {
 private:
-    /** None */
-    EzItemModel m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** None */
+        EzItemModel item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::inventory::GetItemModelResult& getItemModelResult) :
+            item(*getItemModelResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetItemModelResult(const gs2::inventory::GetItemModelResult& result) :
-        m_Item(*result.getItem())
+    EzGetItemModelResult() = default;
+    EzGetItemModelResult(const EzGetItemModelResult& result) = default;
+    EzGetItemModelResult(EzGetItemModelResult&& result) = default;
+    ~EzGetItemModelResult() = default;
+
+    EzGetItemModelResult(gs2::inventory::GetItemModelResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetItemModelResult& operator=(const EzGetItemModelResult& result) = default;
+    EzGetItemModelResult& operator=(EzGetItemModelResult&& result) = default;
+
+    EzGetItemModelResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetItemModelResult);
     }
 
     static bool isConvertible(const gs2::inventory::GetItemModelResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzItemModel& getItem() const
     {
-        return m_Item;
-    }
-
-    EzItemModel& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

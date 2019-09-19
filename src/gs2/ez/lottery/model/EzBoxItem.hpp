@@ -28,28 +28,69 @@ namespace gs2 { namespace ez { namespace lottery {
 class EzBoxItem : public gs2::Gs2Object
 {
 private:
-    /** 入手アクションのリスト */
-    gs2::optional<List<EzAcquireAction>> m_AcquireActions;
-    /** 残り数量 */
-    gs2::optional<Int32> m_Remaining;
-    /** 初期数量 */
-    gs2::optional<Int32> m_Initial;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 入手アクションのリスト */
+        gs2::optional<List<EzAcquireAction>> acquireActions;
+        /** 残り数量 */
+        gs2::optional<Int32> remaining;
+        /** 初期数量 */
+        gs2::optional<Int32> initial;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            remaining(data.remaining),
+            initial(data.initial)
+        {
+            if (data.acquireActions)
+            {
+                acquireActions = data.acquireActions->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::lottery::BoxItem& boxItem) :
+            remaining(boxItem.getRemaining() ? *boxItem.getRemaining() : 0),
+            initial(boxItem.getInitial() ? *boxItem.getInitial() : 0)
+        {
+            acquireActions.emplace();
+            if (boxItem.getAcquireActions())
+            {
+                for (int i = 0; i < boxItem.getAcquireActions()->getCount(); ++i)
+                {
+                    *acquireActions += EzAcquireAction((*boxItem.getAcquireActions())[i]);
+                }
+            }
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzBoxItem() = default;
+    EzBoxItem(const EzBoxItem& ezBoxItem) = default;
+    EzBoxItem(EzBoxItem&& ezBoxItem) = default;
+    ~EzBoxItem() = default;
 
     EzBoxItem(gs2::lottery::BoxItem boxItem) :
-        m_Remaining(boxItem.getRemaining() ? *boxItem.getRemaining() : 0),
-        m_Initial(boxItem.getInitial() ? *boxItem.getInitial() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(boxItem)
+    {}
+
+    EzBoxItem& operator=(const EzBoxItem& ezBoxItem) = default;
+    EzBoxItem& operator=(EzBoxItem&& ezBoxItem) = default;
+
+    EzBoxItem deepCopy() const
     {
-        m_AcquireActions.emplace();
-        if (boxItem.getAcquireActions())
-        {
-            for (int i = 0; i < boxItem.getAcquireActions()->getCount(); ++i)
-            {
-                *m_AcquireActions += EzAcquireAction((*boxItem.getAcquireActions())[i]);
-            }
-        }
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzBoxItem);
     }
 
     gs2::lottery::BoxItem ToModel() const
@@ -57,15 +98,15 @@ public:
         gs2::lottery::BoxItem boxItem;
         {
             gs2::List<gs2::lottery::AcquireAction> list;
-            auto& acquireActions = *m_AcquireActions;
+            auto& acquireActions = getAcquireActions();
             for (int i = 0; i < acquireActions.getCount(); ++i)
             {
                 list += acquireActions[i].ToModel();
             }
             boxItem.setAcquireActions(list);
         }
-        boxItem.setRemaining(*m_Remaining);
-        boxItem.setInitial(*m_Initial);
+        boxItem.setRemaining(getRemaining());
+        boxItem.setInitial(getInitial());
         return boxItem;
     }
 
@@ -75,55 +116,39 @@ public:
 
     const List<EzAcquireAction>& getAcquireActions() const
     {
-        return *m_AcquireActions;
-    }
-
-    List<EzAcquireAction>& getAcquireActions()
-    {
-        return *m_AcquireActions;
+        return *ensureData().acquireActions;
     }
 
     Int32 getRemaining() const
     {
-        return *m_Remaining;
+        return *ensureData().remaining;
     }
 
     Int32 getInitial() const
     {
-        return *m_Initial;
+        return *ensureData().initial;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setAcquireActions(const List<EzAcquireAction>& acquireActions)
+    void setAcquireActions(List<EzAcquireAction> acquireActions)
     {
-        m_AcquireActions = acquireActions;
-    }
-
-    void setAcquireActions(List<EzAcquireAction>&& acquireActions)
-    {
-        m_AcquireActions = std::move(acquireActions);
+        ensureData().acquireActions = std::move(acquireActions);
     }
 
     void setRemaining(Int32 remaining)
     {
-        m_Remaining = remaining;
+        ensureData().remaining = remaining;
     }
 
     void setInitial(Int32 initial)
     {
-        m_Initial = initial;
+        ensureData().initial = initial;
     }
 
-    EzBoxItem& withAcquireActions(const List<EzAcquireAction>& acquireActions)
-    {
-        setAcquireActions(acquireActions);
-        return *this;
-    }
-
-    EzBoxItem& withAcquireActions(List<EzAcquireAction>&& acquireActions)
+    EzBoxItem& withAcquireActions(List<EzAcquireAction> acquireActions)
     {
         setAcquireActions(std::move(acquireActions));
         return *this;

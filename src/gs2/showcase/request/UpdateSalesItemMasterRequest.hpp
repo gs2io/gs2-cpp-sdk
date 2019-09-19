@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ShowcaseConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace showcase
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -54,106 +56,57 @@ private:
         /** 入手アクションリスト */
         optional<List<AcquireAction>> acquireActions;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             salesItemName(data.salesItemName),
             description(data.description),
-            metadata(data.metadata),
-            consumeActions(data.consumeActions),
-            acquireActions(data.acquireActions)
-        {}
+            metadata(data.metadata)
+        {
+            if (data.consumeActions)
+            {
+                consumeActions = data.consumeActions->deepCopy();
+            }
+            if (data.acquireActions)
+            {
+                acquireActions = data.acquireActions->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            salesItemName(std::move(data.salesItemName)),
-            description(std::move(data.description)),
-            metadata(std::move(data.metadata)),
-            consumeActions(std::move(data.consumeActions)),
-            acquireActions(std::move(data.acquireActions))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    UpdateSalesItemMasterRequest() :
-        m_pData(nullptr)
-    {}
+    UpdateSalesItemMasterRequest() = default;
+    UpdateSalesItemMasterRequest(const UpdateSalesItemMasterRequest& updateSalesItemMasterRequest) = default;
+    UpdateSalesItemMasterRequest(UpdateSalesItemMasterRequest&& updateSalesItemMasterRequest) = default;
+    ~UpdateSalesItemMasterRequest() GS2_OVERRIDE = default;
 
-    UpdateSalesItemMasterRequest(const UpdateSalesItemMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Showcase(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    UpdateSalesItemMasterRequest& operator=(const UpdateSalesItemMasterRequest& updateSalesItemMasterRequest) = default;
+    UpdateSalesItemMasterRequest& operator=(UpdateSalesItemMasterRequest&& updateSalesItemMasterRequest) = default;
 
-    UpdateSalesItemMasterRequest(UpdateSalesItemMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Showcase(std::move(obj)),
-        m_pData(obj.m_pData)
+    UpdateSalesItemMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~UpdateSalesItemMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateSalesItemMasterRequest& operator=(const UpdateSalesItemMasterRequest& updateSalesItemMasterRequest)
-    {
-        Gs2BasicRequest::operator=(updateSalesItemMasterRequest);
-        Gs2Showcase::operator=(updateSalesItemMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateSalesItemMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    UpdateSalesItemMasterRequest& operator=(UpdateSalesItemMasterRequest&& updateSalesItemMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(updateSalesItemMasterRequest));
-        Gs2Showcase::operator=(std::move(updateSalesItemMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateSalesItemMasterRequest.m_pData;
-        updateSalesItemMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateSalesItemMasterRequest);
     }
 
     const UpdateSalesItemMasterRequest* operator->() const
@@ -181,9 +134,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -191,9 +144,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    UpdateSalesItemMasterRequest& withNamespaceName(const Char* namespaceName)
+    UpdateSalesItemMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -212,9 +165,9 @@ public:
      *
      * @param salesItemName 商品名
      */
-    void setSalesItemName(const Char* salesItemName)
+    void setSalesItemName(StringHolder salesItemName)
     {
-        ensureData().salesItemName.emplace(salesItemName);
+        ensureData().salesItemName.emplace(std::move(salesItemName));
     }
 
     /**
@@ -222,9 +175,9 @@ public:
      *
      * @param salesItemName 商品名
      */
-    UpdateSalesItemMasterRequest& withSalesItemName(const Char* salesItemName)
+    UpdateSalesItemMasterRequest& withSalesItemName(StringHolder salesItemName)
     {
-        ensureData().salesItemName.emplace(salesItemName);
+        ensureData().salesItemName.emplace(std::move(salesItemName));
         return *this;
     }
 
@@ -243,9 +196,9 @@ public:
      *
      * @param description 商品マスターの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -253,9 +206,9 @@ public:
      *
      * @param description 商品マスターの説明
      */
-    UpdateSalesItemMasterRequest& withDescription(const Char* description)
+    UpdateSalesItemMasterRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -274,9 +227,9 @@ public:
      *
      * @param metadata 商品のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -284,9 +237,9 @@ public:
      *
      * @param metadata 商品のメタデータ
      */
-    UpdateSalesItemMasterRequest& withMetadata(const Char* metadata)
+    UpdateSalesItemMasterRequest& withMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
         return *this;
     }
 
@@ -305,9 +258,9 @@ public:
      *
      * @param consumeActions 消費アクションリスト
      */
-    void setConsumeActions(const List<ConsumeAction>& consumeActions)
+    void setConsumeActions(List<ConsumeAction> consumeActions)
     {
-        ensureData().consumeActions.emplace(consumeActions);
+        ensureData().consumeActions.emplace(std::move(consumeActions));
     }
 
     /**
@@ -315,9 +268,9 @@ public:
      *
      * @param consumeActions 消費アクションリスト
      */
-    UpdateSalesItemMasterRequest& withConsumeActions(const List<ConsumeAction>& consumeActions)
+    UpdateSalesItemMasterRequest& withConsumeActions(List<ConsumeAction> consumeActions)
     {
-        ensureData().consumeActions.emplace(consumeActions);
+        ensureData().consumeActions.emplace(std::move(consumeActions));
         return *this;
     }
 
@@ -336,9 +289,9 @@ public:
      *
      * @param acquireActions 入手アクションリスト
      */
-    void setAcquireActions(const List<AcquireAction>& acquireActions)
+    void setAcquireActions(List<AcquireAction> acquireActions)
     {
-        ensureData().acquireActions.emplace(acquireActions);
+        ensureData().acquireActions.emplace(std::move(acquireActions));
     }
 
     /**
@@ -346,9 +299,9 @@ public:
      *
      * @param acquireActions 入手アクションリスト
      */
-    UpdateSalesItemMasterRequest& withAcquireActions(const List<AcquireAction>& acquireActions)
+    UpdateSalesItemMasterRequest& withAcquireActions(List<AcquireAction> acquireActions)
     {
-        ensureData().acquireActions.emplace(acquireActions);
+        ensureData().acquireActions.emplace(std::move(acquireActions));
         return *this;
     }
 
@@ -359,33 +312,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    UpdateSalesItemMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    UpdateSalesItemMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    UpdateSalesItemMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    UpdateSalesItemMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -394,9 +323,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    UpdateSalesItemMasterRequest& withRequestId(const Char* gs2RequestId)
+    UpdateSalesItemMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

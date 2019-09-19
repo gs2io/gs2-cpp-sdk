@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2QuestConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace quest
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** スタンプシート */
@@ -50,102 +52,52 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             stampSheet(data.stampSheet),
             keyId(data.keyId),
-            config(data.config),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+            if (data.config)
+            {
+                config = data.config->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            stampSheet(std::move(data.stampSheet)),
-            keyId(std::move(data.keyId)),
-            config(std::move(data.config)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CreateProgressByStampSheetRequest() :
-        m_pData(nullptr)
-    {}
+    CreateProgressByStampSheetRequest() = default;
+    CreateProgressByStampSheetRequest(const CreateProgressByStampSheetRequest& createProgressByStampSheetRequest) = default;
+    CreateProgressByStampSheetRequest(CreateProgressByStampSheetRequest&& createProgressByStampSheetRequest) = default;
+    ~CreateProgressByStampSheetRequest() GS2_OVERRIDE = default;
 
-    CreateProgressByStampSheetRequest(const CreateProgressByStampSheetRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Quest(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CreateProgressByStampSheetRequest& operator=(const CreateProgressByStampSheetRequest& createProgressByStampSheetRequest) = default;
+    CreateProgressByStampSheetRequest& operator=(CreateProgressByStampSheetRequest&& createProgressByStampSheetRequest) = default;
 
-    CreateProgressByStampSheetRequest(CreateProgressByStampSheetRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Quest(std::move(obj)),
-        m_pData(obj.m_pData)
+    CreateProgressByStampSheetRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CreateProgressByStampSheetRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateProgressByStampSheetRequest& operator=(const CreateProgressByStampSheetRequest& createProgressByStampSheetRequest)
-    {
-        Gs2BasicRequest::operator=(createProgressByStampSheetRequest);
-        Gs2Quest::operator=(createProgressByStampSheetRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createProgressByStampSheetRequest.m_pData);
-
-        return *this;
-    }
-
-    CreateProgressByStampSheetRequest& operator=(CreateProgressByStampSheetRequest&& createProgressByStampSheetRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(createProgressByStampSheetRequest));
-        Gs2Quest::operator=(std::move(createProgressByStampSheetRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createProgressByStampSheetRequest.m_pData;
-        createProgressByStampSheetRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateProgressByStampSheetRequest);
     }
 
     const CreateProgressByStampSheetRequest* operator->() const
@@ -173,9 +125,9 @@ public:
      *
      * @param stampSheet スタンプシート
      */
-    void setStampSheet(const Char* stampSheet)
+    void setStampSheet(StringHolder stampSheet)
     {
-        ensureData().stampSheet.emplace(stampSheet);
+        ensureData().stampSheet.emplace(std::move(stampSheet));
     }
 
     /**
@@ -183,9 +135,9 @@ public:
      *
      * @param stampSheet スタンプシート
      */
-    CreateProgressByStampSheetRequest& withStampSheet(const Char* stampSheet)
+    CreateProgressByStampSheetRequest& withStampSheet(StringHolder stampSheet)
     {
-        ensureData().stampSheet.emplace(stampSheet);
+        ensureData().stampSheet.emplace(std::move(stampSheet));
         return *this;
     }
 
@@ -204,9 +156,9 @@ public:
      *
      * @param keyId スタンプシートの署名検証に使用する 暗号鍵 のGRN
      */
-    void setKeyId(const Char* keyId)
+    void setKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
     }
 
     /**
@@ -214,9 +166,9 @@ public:
      *
      * @param keyId スタンプシートの署名検証に使用する 暗号鍵 のGRN
      */
-    CreateProgressByStampSheetRequest& withKeyId(const Char* keyId)
+    CreateProgressByStampSheetRequest& withKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
         return *this;
     }
 
@@ -235,9 +187,9 @@ public:
      *
      * @param config スタンプシートの変数に適用する設定値
      */
-    void setConfig(const List<Config>& config)
+    void setConfig(List<Config> config)
     {
-        ensureData().config.emplace(config);
+        ensureData().config.emplace(std::move(config));
     }
 
     /**
@@ -245,9 +197,9 @@ public:
      *
      * @param config スタンプシートの変数に適用する設定値
      */
-    CreateProgressByStampSheetRequest& withConfig(const List<Config>& config)
+    CreateProgressByStampSheetRequest& withConfig(List<Config> config)
     {
-        ensureData().config.emplace(config);
+        ensureData().config.emplace(std::move(config));
         return *this;
     }
 
@@ -266,9 +218,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -276,9 +228,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    CreateProgressByStampSheetRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    CreateProgressByStampSheetRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -289,33 +241,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CreateProgressByStampSheetRequest& withGs2ClientId(const Char* gs2ClientId)
+    CreateProgressByStampSheetRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CreateProgressByStampSheetRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CreateProgressByStampSheetRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -324,9 +252,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CreateProgressByStampSheetRequest& withRequestId(const Char* gs2RequestId)
+    CreateProgressByStampSheetRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

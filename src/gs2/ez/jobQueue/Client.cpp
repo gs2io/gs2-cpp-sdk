@@ -28,9 +28,9 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::run(
-    std::function<void(AsyncEzRunResult&)> callback,
+    std::function<void(AsyncEzRunResult)> callback,
     GameSession& session,
-    const Char* namespaceName
+    StringHolder namespaceName
 )
 {
     gs2::jobQueue::RunRequest request;
@@ -38,7 +38,7 @@ void Client::run(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.run(
         request,
-        [callback](gs2::jobQueue::AsyncRunResult& r)
+        [callback](gs2::jobQueue::AsyncRunResult r)
         {
             if (r.getError())
             {

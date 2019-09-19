@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace jobQueue
 {
@@ -43,28 +45,28 @@ private:
         /** ジョブ */
         optional<Job> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GetJobByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    GetJobByUserIdResult() = default;
+    GetJobByUserIdResult(const GetJobByUserIdResult& getJobByUserIdResult) = default;
+    GetJobByUserIdResult(GetJobByUserIdResult&& getJobByUserIdResult) = default;
+    ~GetJobByUserIdResult() = default;
 
-    GetJobByUserIdResult(const GetJobByUserIdResult& getJobByUserIdResult) :
-        Gs2Object(getJobByUserIdResult),
-        m_pData(getJobByUserIdResult.m_pData != nullptr ? new Data(*getJobByUserIdResult.m_pData) : nullptr)
-    {}
+    GetJobByUserIdResult& operator=(const GetJobByUserIdResult& getJobByUserIdResult) = default;
+    GetJobByUserIdResult& operator=(GetJobByUserIdResult&& getJobByUserIdResult) = default;
 
-    GetJobByUserIdResult(GetJobByUserIdResult&& getJobByUserIdResult) :
-        Gs2Object(std::move(getJobByUserIdResult)),
-        m_pData(getJobByUserIdResult.m_pData)
+    GetJobByUserIdResult deepCopy() const
     {
-        getJobByUserIdResult.m_pData = nullptr;
-    }
-
-    ~GetJobByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetJobByUserIdResult& operator=(const GetJobByUserIdResult& getJobByUserIdResult)
-    {
-        Gs2Object::operator=(getJobByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getJobByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    GetJobByUserIdResult& operator=(GetJobByUserIdResult&& getJobByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(getJobByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getJobByUserIdResult.m_pData;
-        getJobByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetJobByUserIdResult);
     }
 
     const GetJobByUserIdResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item ジョブ
      */
-    void setItem(const Job& item)
+    void setItem(Job item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

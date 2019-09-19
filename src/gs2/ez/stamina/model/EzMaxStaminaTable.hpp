@@ -27,33 +27,75 @@ namespace gs2 { namespace ez { namespace stamina {
 class EzMaxStaminaTable : public gs2::Gs2Object
 {
 private:
-    /** 最大スタミナ値テーブル名 */
-    gs2::optional<StringHolder> m_Name;
-    /** 最大スタミナ値テーブルのメタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** 経験値の種類マスター のGRN */
-    gs2::optional<StringHolder> m_ExperienceModelId;
-    /** ランク毎のスタミナの最大値テーブル */
-    gs2::optional<List<Int32>> m_Values;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 最大スタミナ値テーブル名 */
+        gs2::optional<StringHolder> name;
+        /** 最大スタミナ値テーブルのメタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** 経験値の種類マスター のGRN */
+        gs2::optional<StringHolder> experienceModelId;
+        /** ランク毎のスタミナの最大値テーブル */
+        gs2::optional<List<Int32>> values;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            metadata(data.metadata),
+            experienceModelId(data.experienceModelId)
+        {
+            if (data.values)
+            {
+                values = data.values->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::stamina::MaxStaminaTable& maxStaminaTable) :
+            name(maxStaminaTable.getName()),
+            metadata(maxStaminaTable.getMetadata()),
+            experienceModelId(maxStaminaTable.getExperienceModelId()),
+            values(maxStaminaTable.getValues())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzMaxStaminaTable() = default;
+    EzMaxStaminaTable(const EzMaxStaminaTable& ezMaxStaminaTable) = default;
+    EzMaxStaminaTable(EzMaxStaminaTable&& ezMaxStaminaTable) = default;
+    ~EzMaxStaminaTable() = default;
 
     EzMaxStaminaTable(gs2::stamina::MaxStaminaTable maxStaminaTable) :
-        m_Name(maxStaminaTable.getName()),
-        m_Metadata(maxStaminaTable.getMetadata()),
-        m_ExperienceModelId(maxStaminaTable.getExperienceModelId()),
-        m_Values(maxStaminaTable.getValues())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(maxStaminaTable)
+    {}
+
+    EzMaxStaminaTable& operator=(const EzMaxStaminaTable& ezMaxStaminaTable) = default;
+    EzMaxStaminaTable& operator=(EzMaxStaminaTable&& ezMaxStaminaTable) = default;
+
+    EzMaxStaminaTable deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzMaxStaminaTable);
     }
 
     gs2::stamina::MaxStaminaTable ToModel() const
     {
         gs2::stamina::MaxStaminaTable maxStaminaTable;
-        maxStaminaTable.setName(*m_Name);
-        maxStaminaTable.setMetadata(*m_Metadata);
-        maxStaminaTable.setExperienceModelId(*m_ExperienceModelId);
-        maxStaminaTable.setValues(*m_Values);
+        maxStaminaTable.setName(getName());
+        maxStaminaTable.setMetadata(getMetadata());
+        maxStaminaTable.setExperienceModelId(getExperienceModelId());
+        maxStaminaTable.setValues(getValues());
         return maxStaminaTable;
     }
 
@@ -61,100 +103,69 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
+        return *ensureData().name;
     }
 
-    gs2::StringHolder& getName()
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
+        return *ensureData().metadata;
     }
 
-    const gs2::StringHolder& getMetadata() const
+    const StringHolder& getExperienceModelId() const
     {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
-    }
-
-    const gs2::StringHolder& getExperienceModelId() const
-    {
-        return *m_ExperienceModelId;
-    }
-
-    gs2::StringHolder& getExperienceModelId()
-    {
-        return *m_ExperienceModelId;
+        return *ensureData().experienceModelId;
     }
 
     const List<Int32>& getValues() const
     {
-        return *m_Values;
-    }
-
-    List<Int32>& getValues()
-    {
-        return *m_Values;
+        return *ensureData().values;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
-    void setExperienceModelId(Char* experienceModelId)
+    void setExperienceModelId(StringHolder experienceModelId)
     {
-        m_ExperienceModelId.emplace(experienceModelId);
+        ensureData().experienceModelId = std::move(experienceModelId);
     }
 
-    void setValues(const List<Int32>& values)
+    void setValues(List<Int32> values)
     {
-        m_Values = values;
+        ensureData().values = std::move(values);
     }
 
-    void setValues(List<Int32>&& values)
+    EzMaxStaminaTable& withName(StringHolder name)
     {
-        m_Values = std::move(values);
-    }
-
-    EzMaxStaminaTable& withName(Char* name)
-    {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzMaxStaminaTable& withMetadata(Char* metadata)
+    EzMaxStaminaTable& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
-    EzMaxStaminaTable& withExperienceModelId(Char* experienceModelId)
+    EzMaxStaminaTable& withExperienceModelId(StringHolder experienceModelId)
     {
-        setExperienceModelId(experienceModelId);
+        setExperienceModelId(std::move(experienceModelId));
         return *this;
     }
 
-    EzMaxStaminaTable& withValues(const List<Int32>& values)
-    {
-        setValues(values);
-        return *this;
-    }
-
-    EzMaxStaminaTable& withValues(List<Int32>&& values)
+    EzMaxStaminaTable& withValues(List<Int32> values)
     {
         setValues(std::move(values));
         return *this;

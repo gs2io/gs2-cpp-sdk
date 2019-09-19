@@ -28,25 +28,65 @@ namespace gs2 { namespace ez { namespace lottery {
 class EzProbability : public gs2::Gs2Object
 {
 private:
-    /** 景品の種類 */
-    gs2::optional<EzDrawnPrize> m_Prize;
-    /** 排出確率(0.0〜1.0) */
-    gs2::optional<Float> m_Rate;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 景品の種類 */
+        gs2::optional<EzDrawnPrize> prize;
+        /** 排出確率(0.0〜1.0) */
+        gs2::optional<Float> rate;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            rate(data.rate)
+        {
+            if (data.prize)
+            {
+                prize = data.prize->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::lottery::Probability& probability) :
+            prize(*probability.getPrize()),
+            rate(probability.getRate() ? *probability.getRate() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzProbability() = default;
+    EzProbability(const EzProbability& ezProbability) = default;
+    EzProbability(EzProbability&& ezProbability) = default;
+    ~EzProbability() = default;
 
     EzProbability(gs2::lottery::Probability probability) :
-        m_Prize(*probability.getPrize()),
-        m_Rate(probability.getRate() ? *probability.getRate() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(probability)
+    {}
+
+    EzProbability& operator=(const EzProbability& ezProbability) = default;
+    EzProbability& operator=(EzProbability&& ezProbability) = default;
+
+    EzProbability deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzProbability);
     }
 
     gs2::lottery::Probability ToModel() const
     {
         gs2::lottery::Probability probability;
-        probability.setPrize(m_Prize->ToModel());
-        probability.setRate(*m_Rate);
+        probability.setPrize(getPrize().ToModel());
+        probability.setRate(getRate());
         return probability;
     }
 
@@ -56,45 +96,29 @@ public:
 
     const EzDrawnPrize& getPrize() const
     {
-        return *m_Prize;
-    }
-
-    EzDrawnPrize& getPrize()
-    {
-        return *m_Prize;
+        return *ensureData().prize;
     }
 
     Float getRate() const
     {
-        return *m_Rate;
+        return *ensureData().rate;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setPrize(const EzDrawnPrize& prize)
+    void setPrize(EzDrawnPrize prize)
     {
-        m_Prize = prize;
-    }
-
-    void setPrize(EzDrawnPrize&& prize)
-    {
-        m_Prize = std::move(prize);
+        ensureData().prize = std::move(prize);
     }
 
     void setRate(Float rate)
     {
-        m_Rate = rate;
+        ensureData().rate = rate;
     }
 
-    EzProbability& withPrize(const EzDrawnPrize& prize)
-    {
-        setPrize(prize);
-        return *this;
-    }
-
-    EzProbability& withPrize(EzDrawnPrize&& prize)
+    EzProbability& withPrize(EzDrawnPrize prize)
     {
         setPrize(std::move(prize));
         return *this;

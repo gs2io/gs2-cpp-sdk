@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inventory
 {
@@ -49,34 +51,37 @@ private:
         /** スタンプタスクの実行結果を記録したコンテキスト */
         optional<StringHolder> newContextStack;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            items(data.items),
-            itemModel(data.itemModel),
-            inventory(data.inventory),
             newContextStack(data.newContextStack)
-        {}
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+            if (data.itemModel)
+            {
+                itemModel = data.itemModel->deepCopy();
+            }
+            if (data.inventory)
+            {
+                inventory = data.inventory->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items)),
-            itemModel(std::move(data.itemModel)),
-            inventory(std::move(data.inventory)),
-            newContextStack(std::move(data.newContextStack))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -88,7 +93,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "itemModel") == 0) {
+            else if (std::strcmp(name_, "itemModel") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -96,7 +102,8 @@ private:
                     detail::json::JsonParser::parse(&this->itemModel->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "inventory") == 0) {
+            else if (std::strcmp(name_, "inventory") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -104,7 +111,8 @@ private:
                     detail::json::JsonParser::parse(&this->inventory->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "newContextStack") == 0) {
+            else if (std::strcmp(name_, "newContextStack") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->newContextStack.emplace(jsonValue.GetString());
@@ -113,72 +121,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    ConsumeItemSetByStampTaskResult() :
-        m_pData(nullptr)
-    {}
+    ConsumeItemSetByStampTaskResult() = default;
+    ConsumeItemSetByStampTaskResult(const ConsumeItemSetByStampTaskResult& consumeItemSetByStampTaskResult) = default;
+    ConsumeItemSetByStampTaskResult(ConsumeItemSetByStampTaskResult&& consumeItemSetByStampTaskResult) = default;
+    ~ConsumeItemSetByStampTaskResult() = default;
 
-    ConsumeItemSetByStampTaskResult(const ConsumeItemSetByStampTaskResult& consumeItemSetByStampTaskResult) :
-        Gs2Object(consumeItemSetByStampTaskResult),
-        m_pData(consumeItemSetByStampTaskResult.m_pData != nullptr ? new Data(*consumeItemSetByStampTaskResult.m_pData) : nullptr)
-    {}
+    ConsumeItemSetByStampTaskResult& operator=(const ConsumeItemSetByStampTaskResult& consumeItemSetByStampTaskResult) = default;
+    ConsumeItemSetByStampTaskResult& operator=(ConsumeItemSetByStampTaskResult&& consumeItemSetByStampTaskResult) = default;
 
-    ConsumeItemSetByStampTaskResult(ConsumeItemSetByStampTaskResult&& consumeItemSetByStampTaskResult) :
-        Gs2Object(std::move(consumeItemSetByStampTaskResult)),
-        m_pData(consumeItemSetByStampTaskResult.m_pData)
+    ConsumeItemSetByStampTaskResult deepCopy() const
     {
-        consumeItemSetByStampTaskResult.m_pData = nullptr;
-    }
-
-    ~ConsumeItemSetByStampTaskResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    ConsumeItemSetByStampTaskResult& operator=(const ConsumeItemSetByStampTaskResult& consumeItemSetByStampTaskResult)
-    {
-        Gs2Object::operator=(consumeItemSetByStampTaskResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*consumeItemSetByStampTaskResult.m_pData);
-
-        return *this;
-    }
-
-    ConsumeItemSetByStampTaskResult& operator=(ConsumeItemSetByStampTaskResult&& consumeItemSetByStampTaskResult)
-    {
-        Gs2Object::operator=(std::move(consumeItemSetByStampTaskResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = consumeItemSetByStampTaskResult.m_pData;
-        consumeItemSetByStampTaskResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ConsumeItemSetByStampTaskResult);
     }
 
     const ConsumeItemSetByStampTaskResult* operator->() const
@@ -205,9 +161,9 @@ public:
      *
      * @param items 消費後の有効期限ごとのアイテム所持数量のリスト
      */
-    void setItems(const List<ItemSet>& items)
+    void setItems(List<ItemSet> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
     /**
@@ -225,9 +181,9 @@ public:
      *
      * @param itemModel アイテムモデル
      */
-    void setItemModel(const ItemModel& itemModel)
+    void setItemModel(ItemModel itemModel)
     {
-        ensureData().itemModel.emplace(itemModel);
+        ensureData().itemModel.emplace(std::move(itemModel));
     }
 
     /**
@@ -245,9 +201,9 @@ public:
      *
      * @param inventory インベントリ
      */
-    void setInventory(const Inventory& inventory)
+    void setInventory(Inventory inventory)
     {
-        ensureData().inventory.emplace(inventory);
+        ensureData().inventory.emplace(std::move(inventory));
     }
 
     /**
@@ -265,9 +221,9 @@ public:
      *
      * @param newContextStack スタンプタスクの実行結果を記録したコンテキスト
      */
-    void setNewContextStack(const Char* newContextStack)
+    void setNewContextStack(StringHolder newContextStack)
     {
-        ensureData().newContextStack.emplace(newContextStack);
+        ensureData().newContextStack.emplace(std::move(newContextStack));
     }
 
 

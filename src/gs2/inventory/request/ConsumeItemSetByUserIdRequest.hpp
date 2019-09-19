@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2InventoryConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inventory
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** カテゴリー名 */
@@ -56,11 +58,10 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             inventoryName(data.inventoryName),
             userId(data.userId),
@@ -68,96 +69,41 @@ private:
             consumeCount(data.consumeCount),
             expiresAt(data.expiresAt),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            inventoryName(std::move(data.inventoryName)),
-            userId(std::move(data.userId)),
-            itemName(std::move(data.itemName)),
-            consumeCount(std::move(data.consumeCount)),
-            expiresAt(std::move(data.expiresAt)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    ConsumeItemSetByUserIdRequest() :
-        m_pData(nullptr)
-    {}
+    ConsumeItemSetByUserIdRequest() = default;
+    ConsumeItemSetByUserIdRequest(const ConsumeItemSetByUserIdRequest& consumeItemSetByUserIdRequest) = default;
+    ConsumeItemSetByUserIdRequest(ConsumeItemSetByUserIdRequest&& consumeItemSetByUserIdRequest) = default;
+    ~ConsumeItemSetByUserIdRequest() GS2_OVERRIDE = default;
 
-    ConsumeItemSetByUserIdRequest(const ConsumeItemSetByUserIdRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Inventory(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    ConsumeItemSetByUserIdRequest& operator=(const ConsumeItemSetByUserIdRequest& consumeItemSetByUserIdRequest) = default;
+    ConsumeItemSetByUserIdRequest& operator=(ConsumeItemSetByUserIdRequest&& consumeItemSetByUserIdRequest) = default;
 
-    ConsumeItemSetByUserIdRequest(ConsumeItemSetByUserIdRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Inventory(std::move(obj)),
-        m_pData(obj.m_pData)
+    ConsumeItemSetByUserIdRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~ConsumeItemSetByUserIdRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    ConsumeItemSetByUserIdRequest& operator=(const ConsumeItemSetByUserIdRequest& consumeItemSetByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(consumeItemSetByUserIdRequest);
-        Gs2Inventory::operator=(consumeItemSetByUserIdRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*consumeItemSetByUserIdRequest.m_pData);
-
-        return *this;
-    }
-
-    ConsumeItemSetByUserIdRequest& operator=(ConsumeItemSetByUserIdRequest&& consumeItemSetByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(consumeItemSetByUserIdRequest));
-        Gs2Inventory::operator=(std::move(consumeItemSetByUserIdRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = consumeItemSetByUserIdRequest.m_pData;
-        consumeItemSetByUserIdRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ConsumeItemSetByUserIdRequest);
     }
 
     const ConsumeItemSetByUserIdRequest* operator->() const
@@ -185,9 +131,9 @@ public:
      *
      * @param namespaceName カテゴリー名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -195,9 +141,9 @@ public:
      *
      * @param namespaceName カテゴリー名
      */
-    ConsumeItemSetByUserIdRequest& withNamespaceName(const Char* namespaceName)
+    ConsumeItemSetByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -216,9 +162,9 @@ public:
      *
      * @param inventoryName インベントリの名前
      */
-    void setInventoryName(const Char* inventoryName)
+    void setInventoryName(StringHolder inventoryName)
     {
-        ensureData().inventoryName.emplace(inventoryName);
+        ensureData().inventoryName.emplace(std::move(inventoryName));
     }
 
     /**
@@ -226,9 +172,9 @@ public:
      *
      * @param inventoryName インベントリの名前
      */
-    ConsumeItemSetByUserIdRequest& withInventoryName(const Char* inventoryName)
+    ConsumeItemSetByUserIdRequest& withInventoryName(StringHolder inventoryName)
     {
-        ensureData().inventoryName.emplace(inventoryName);
+        ensureData().inventoryName.emplace(std::move(inventoryName));
         return *this;
     }
 
@@ -247,9 +193,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -257,9 +203,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    ConsumeItemSetByUserIdRequest& withUserId(const Char* userId)
+    ConsumeItemSetByUserIdRequest& withUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
         return *this;
     }
 
@@ -278,9 +224,9 @@ public:
      *
      * @param itemName アイテムマスターの名前
      */
-    void setItemName(const Char* itemName)
+    void setItemName(StringHolder itemName)
     {
-        ensureData().itemName.emplace(itemName);
+        ensureData().itemName.emplace(std::move(itemName));
     }
 
     /**
@@ -288,9 +234,9 @@ public:
      *
      * @param itemName アイテムマスターの名前
      */
-    ConsumeItemSetByUserIdRequest& withItemName(const Char* itemName)
+    ConsumeItemSetByUserIdRequest& withItemName(StringHolder itemName)
     {
-        ensureData().itemName.emplace(itemName);
+        ensureData().itemName.emplace(std::move(itemName));
         return *this;
     }
 
@@ -371,9 +317,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -381,9 +327,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    ConsumeItemSetByUserIdRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    ConsumeItemSetByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -394,33 +340,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    ConsumeItemSetByUserIdRequest& withGs2ClientId(const Char* gs2ClientId)
+    ConsumeItemSetByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    ConsumeItemSetByUserIdRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    ConsumeItemSetByUserIdRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -429,9 +351,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    ConsumeItemSetByUserIdRequest& withRequestId(const Char* gs2RequestId)
+    ConsumeItemSetByUserIdRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

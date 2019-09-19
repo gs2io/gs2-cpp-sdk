@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ExperienceConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace experience
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -54,106 +56,60 @@ private:
         /** ランクキャップ変化したときに実行するスクリプト */
         optional<ScriptSetting> changeRankCapScript;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             description(data.description),
-            experienceCapScriptId(data.experienceCapScriptId),
-            changeExperienceScript(data.changeExperienceScript),
-            changeRankScript(data.changeRankScript),
-            changeRankCapScript(data.changeRankCapScript)
-        {}
+            experienceCapScriptId(data.experienceCapScriptId)
+        {
+            if (data.changeExperienceScript)
+            {
+                changeExperienceScript = data.changeExperienceScript->deepCopy();
+            }
+            if (data.changeRankScript)
+            {
+                changeRankScript = data.changeRankScript->deepCopy();
+            }
+            if (data.changeRankCapScript)
+            {
+                changeRankCapScript = data.changeRankCapScript->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            description(std::move(data.description)),
-            experienceCapScriptId(std::move(data.experienceCapScriptId)),
-            changeExperienceScript(std::move(data.changeExperienceScript)),
-            changeRankScript(std::move(data.changeRankScript)),
-            changeRankCapScript(std::move(data.changeRankCapScript))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    UpdateNamespaceRequest() :
-        m_pData(nullptr)
-    {}
+    UpdateNamespaceRequest() = default;
+    UpdateNamespaceRequest(const UpdateNamespaceRequest& updateNamespaceRequest) = default;
+    UpdateNamespaceRequest(UpdateNamespaceRequest&& updateNamespaceRequest) = default;
+    ~UpdateNamespaceRequest() GS2_OVERRIDE = default;
 
-    UpdateNamespaceRequest(const UpdateNamespaceRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Experience(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    UpdateNamespaceRequest& operator=(const UpdateNamespaceRequest& updateNamespaceRequest) = default;
+    UpdateNamespaceRequest& operator=(UpdateNamespaceRequest&& updateNamespaceRequest) = default;
 
-    UpdateNamespaceRequest(UpdateNamespaceRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Experience(std::move(obj)),
-        m_pData(obj.m_pData)
+    UpdateNamespaceRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~UpdateNamespaceRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateNamespaceRequest& operator=(const UpdateNamespaceRequest& updateNamespaceRequest)
-    {
-        Gs2BasicRequest::operator=(updateNamespaceRequest);
-        Gs2Experience::operator=(updateNamespaceRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateNamespaceRequest.m_pData);
-
-        return *this;
-    }
-
-    UpdateNamespaceRequest& operator=(UpdateNamespaceRequest&& updateNamespaceRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(updateNamespaceRequest));
-        Gs2Experience::operator=(std::move(updateNamespaceRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateNamespaceRequest.m_pData;
-        updateNamespaceRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateNamespaceRequest);
     }
 
     const UpdateNamespaceRequest* operator->() const
@@ -181,9 +137,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -191,9 +147,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    UpdateNamespaceRequest& withNamespaceName(const Char* namespaceName)
+    UpdateNamespaceRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -212,9 +168,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -222,9 +178,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    UpdateNamespaceRequest& withDescription(const Char* description)
+    UpdateNamespaceRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -243,9 +199,9 @@ public:
      *
      * @param experienceCapScriptId ランクキャップ取得時 に実行されるスクリプト のGRN
      */
-    void setExperienceCapScriptId(const Char* experienceCapScriptId)
+    void setExperienceCapScriptId(StringHolder experienceCapScriptId)
     {
-        ensureData().experienceCapScriptId.emplace(experienceCapScriptId);
+        ensureData().experienceCapScriptId.emplace(std::move(experienceCapScriptId));
     }
 
     /**
@@ -253,9 +209,9 @@ public:
      *
      * @param experienceCapScriptId ランクキャップ取得時 に実行されるスクリプト のGRN
      */
-    UpdateNamespaceRequest& withExperienceCapScriptId(const Char* experienceCapScriptId)
+    UpdateNamespaceRequest& withExperienceCapScriptId(StringHolder experienceCapScriptId)
     {
-        ensureData().experienceCapScriptId.emplace(experienceCapScriptId);
+        ensureData().experienceCapScriptId.emplace(std::move(experienceCapScriptId));
         return *this;
     }
 
@@ -274,9 +230,9 @@ public:
      *
      * @param changeExperienceScript 経験値変化したときに実行するスクリプト
      */
-    void setChangeExperienceScript(const ScriptSetting& changeExperienceScript)
+    void setChangeExperienceScript(ScriptSetting changeExperienceScript)
     {
-        ensureData().changeExperienceScript.emplace(changeExperienceScript);
+        ensureData().changeExperienceScript.emplace(std::move(changeExperienceScript));
     }
 
     /**
@@ -284,9 +240,9 @@ public:
      *
      * @param changeExperienceScript 経験値変化したときに実行するスクリプト
      */
-    UpdateNamespaceRequest& withChangeExperienceScript(const ScriptSetting& changeExperienceScript)
+    UpdateNamespaceRequest& withChangeExperienceScript(ScriptSetting changeExperienceScript)
     {
-        ensureData().changeExperienceScript.emplace(changeExperienceScript);
+        ensureData().changeExperienceScript.emplace(std::move(changeExperienceScript));
         return *this;
     }
 
@@ -305,9 +261,9 @@ public:
      *
      * @param changeRankScript ランク変化したときに実行するスクリプト
      */
-    void setChangeRankScript(const ScriptSetting& changeRankScript)
+    void setChangeRankScript(ScriptSetting changeRankScript)
     {
-        ensureData().changeRankScript.emplace(changeRankScript);
+        ensureData().changeRankScript.emplace(std::move(changeRankScript));
     }
 
     /**
@@ -315,9 +271,9 @@ public:
      *
      * @param changeRankScript ランク変化したときに実行するスクリプト
      */
-    UpdateNamespaceRequest& withChangeRankScript(const ScriptSetting& changeRankScript)
+    UpdateNamespaceRequest& withChangeRankScript(ScriptSetting changeRankScript)
     {
-        ensureData().changeRankScript.emplace(changeRankScript);
+        ensureData().changeRankScript.emplace(std::move(changeRankScript));
         return *this;
     }
 
@@ -336,9 +292,9 @@ public:
      *
      * @param changeRankCapScript ランクキャップ変化したときに実行するスクリプト
      */
-    void setChangeRankCapScript(const ScriptSetting& changeRankCapScript)
+    void setChangeRankCapScript(ScriptSetting changeRankCapScript)
     {
-        ensureData().changeRankCapScript.emplace(changeRankCapScript);
+        ensureData().changeRankCapScript.emplace(std::move(changeRankCapScript));
     }
 
     /**
@@ -346,9 +302,9 @@ public:
      *
      * @param changeRankCapScript ランクキャップ変化したときに実行するスクリプト
      */
-    UpdateNamespaceRequest& withChangeRankCapScript(const ScriptSetting& changeRankCapScript)
+    UpdateNamespaceRequest& withChangeRankCapScript(ScriptSetting changeRankCapScript)
     {
-        ensureData().changeRankCapScript.emplace(changeRankCapScript);
+        ensureData().changeRankCapScript.emplace(std::move(changeRankCapScript));
         return *this;
     }
 
@@ -359,33 +315,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    UpdateNamespaceRequest& withGs2ClientId(const Char* gs2ClientId)
+    UpdateNamespaceRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    UpdateNamespaceRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    UpdateNamespaceRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -394,9 +326,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    UpdateNamespaceRequest& withRequestId(const Char* gs2RequestId)
+    UpdateNamespaceRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

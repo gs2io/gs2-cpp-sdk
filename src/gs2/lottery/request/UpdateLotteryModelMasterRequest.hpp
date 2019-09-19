@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2LotteryConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace lottery
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -58,11 +60,10 @@ private:
         /** 抽選テーブルを確定するスクリプト のGRN */
         optional<StringHolder> choicePrizeTableScriptId;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             lotteryName(data.lotteryName),
             description(data.description),
@@ -71,97 +72,41 @@ private:
             method(data.method),
             prizeTableName(data.prizeTableName),
             choicePrizeTableScriptId(data.choicePrizeTableScriptId)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            lotteryName(std::move(data.lotteryName)),
-            description(std::move(data.description)),
-            metadata(std::move(data.metadata)),
-            mode(std::move(data.mode)),
-            method(std::move(data.method)),
-            prizeTableName(std::move(data.prizeTableName)),
-            choicePrizeTableScriptId(std::move(data.choicePrizeTableScriptId))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    UpdateLotteryModelMasterRequest() :
-        m_pData(nullptr)
-    {}
+    UpdateLotteryModelMasterRequest() = default;
+    UpdateLotteryModelMasterRequest(const UpdateLotteryModelMasterRequest& updateLotteryModelMasterRequest) = default;
+    UpdateLotteryModelMasterRequest(UpdateLotteryModelMasterRequest&& updateLotteryModelMasterRequest) = default;
+    ~UpdateLotteryModelMasterRequest() GS2_OVERRIDE = default;
 
-    UpdateLotteryModelMasterRequest(const UpdateLotteryModelMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Lottery(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    UpdateLotteryModelMasterRequest& operator=(const UpdateLotteryModelMasterRequest& updateLotteryModelMasterRequest) = default;
+    UpdateLotteryModelMasterRequest& operator=(UpdateLotteryModelMasterRequest&& updateLotteryModelMasterRequest) = default;
 
-    UpdateLotteryModelMasterRequest(UpdateLotteryModelMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Lottery(std::move(obj)),
-        m_pData(obj.m_pData)
+    UpdateLotteryModelMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~UpdateLotteryModelMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateLotteryModelMasterRequest& operator=(const UpdateLotteryModelMasterRequest& updateLotteryModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(updateLotteryModelMasterRequest);
-        Gs2Lottery::operator=(updateLotteryModelMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateLotteryModelMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    UpdateLotteryModelMasterRequest& operator=(UpdateLotteryModelMasterRequest&& updateLotteryModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(updateLotteryModelMasterRequest));
-        Gs2Lottery::operator=(std::move(updateLotteryModelMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateLotteryModelMasterRequest.m_pData;
-        updateLotteryModelMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateLotteryModelMasterRequest);
     }
 
     const UpdateLotteryModelMasterRequest* operator->() const
@@ -189,9 +134,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -199,9 +144,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    UpdateLotteryModelMasterRequest& withNamespaceName(const Char* namespaceName)
+    UpdateLotteryModelMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -220,9 +165,9 @@ public:
      *
      * @param lotteryName 抽選モデルの種類名
      */
-    void setLotteryName(const Char* lotteryName)
+    void setLotteryName(StringHolder lotteryName)
     {
-        ensureData().lotteryName.emplace(lotteryName);
+        ensureData().lotteryName.emplace(std::move(lotteryName));
     }
 
     /**
@@ -230,9 +175,9 @@ public:
      *
      * @param lotteryName 抽選モデルの種類名
      */
-    UpdateLotteryModelMasterRequest& withLotteryName(const Char* lotteryName)
+    UpdateLotteryModelMasterRequest& withLotteryName(StringHolder lotteryName)
     {
-        ensureData().lotteryName.emplace(lotteryName);
+        ensureData().lotteryName.emplace(std::move(lotteryName));
         return *this;
     }
 
@@ -251,9 +196,9 @@ public:
      *
      * @param description 抽選の種類マスターの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -261,9 +206,9 @@ public:
      *
      * @param description 抽選の種類マスターの説明
      */
-    UpdateLotteryModelMasterRequest& withDescription(const Char* description)
+    UpdateLotteryModelMasterRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -282,9 +227,9 @@ public:
      *
      * @param metadata 抽選モデルの種類のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -292,9 +237,9 @@ public:
      *
      * @param metadata 抽選モデルの種類のメタデータ
      */
-    UpdateLotteryModelMasterRequest& withMetadata(const Char* metadata)
+    UpdateLotteryModelMasterRequest& withMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
         return *this;
     }
 
@@ -313,9 +258,9 @@ public:
      *
      * @param mode 抽選モード
      */
-    void setMode(const Char* mode)
+    void setMode(StringHolder mode)
     {
-        ensureData().mode.emplace(mode);
+        ensureData().mode.emplace(std::move(mode));
     }
 
     /**
@@ -323,9 +268,9 @@ public:
      *
      * @param mode 抽選モード
      */
-    UpdateLotteryModelMasterRequest& withMode(const Char* mode)
+    UpdateLotteryModelMasterRequest& withMode(StringHolder mode)
     {
-        ensureData().mode.emplace(mode);
+        ensureData().mode.emplace(std::move(mode));
         return *this;
     }
 
@@ -344,9 +289,9 @@ public:
      *
      * @param method 抽選方法
      */
-    void setMethod(const Char* method)
+    void setMethod(StringHolder method)
     {
-        ensureData().method.emplace(method);
+        ensureData().method.emplace(std::move(method));
     }
 
     /**
@@ -354,9 +299,9 @@ public:
      *
      * @param method 抽選方法
      */
-    UpdateLotteryModelMasterRequest& withMethod(const Char* method)
+    UpdateLotteryModelMasterRequest& withMethod(StringHolder method)
     {
-        ensureData().method.emplace(method);
+        ensureData().method.emplace(std::move(method));
         return *this;
     }
 
@@ -375,9 +320,9 @@ public:
      *
      * @param prizeTableName 景品テーブルの名前
      */
-    void setPrizeTableName(const Char* prizeTableName)
+    void setPrizeTableName(StringHolder prizeTableName)
     {
-        ensureData().prizeTableName.emplace(prizeTableName);
+        ensureData().prizeTableName.emplace(std::move(prizeTableName));
     }
 
     /**
@@ -385,9 +330,9 @@ public:
      *
      * @param prizeTableName 景品テーブルの名前
      */
-    UpdateLotteryModelMasterRequest& withPrizeTableName(const Char* prizeTableName)
+    UpdateLotteryModelMasterRequest& withPrizeTableName(StringHolder prizeTableName)
     {
-        ensureData().prizeTableName.emplace(prizeTableName);
+        ensureData().prizeTableName.emplace(std::move(prizeTableName));
         return *this;
     }
 
@@ -406,9 +351,9 @@ public:
      *
      * @param choicePrizeTableScriptId 抽選テーブルを確定するスクリプト のGRN
      */
-    void setChoicePrizeTableScriptId(const Char* choicePrizeTableScriptId)
+    void setChoicePrizeTableScriptId(StringHolder choicePrizeTableScriptId)
     {
-        ensureData().choicePrizeTableScriptId.emplace(choicePrizeTableScriptId);
+        ensureData().choicePrizeTableScriptId.emplace(std::move(choicePrizeTableScriptId));
     }
 
     /**
@@ -416,9 +361,9 @@ public:
      *
      * @param choicePrizeTableScriptId 抽選テーブルを確定するスクリプト のGRN
      */
-    UpdateLotteryModelMasterRequest& withChoicePrizeTableScriptId(const Char* choicePrizeTableScriptId)
+    UpdateLotteryModelMasterRequest& withChoicePrizeTableScriptId(StringHolder choicePrizeTableScriptId)
     {
-        ensureData().choicePrizeTableScriptId.emplace(choicePrizeTableScriptId);
+        ensureData().choicePrizeTableScriptId.emplace(std::move(choicePrizeTableScriptId));
         return *this;
     }
 
@@ -429,33 +374,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    UpdateLotteryModelMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    UpdateLotteryModelMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    UpdateLotteryModelMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    UpdateLotteryModelMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -464,9 +385,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    UpdateLotteryModelMasterRequest& withRequestId(const Char* gs2RequestId)
+    UpdateLotteryModelMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

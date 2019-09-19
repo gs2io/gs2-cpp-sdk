@@ -27,16 +27,55 @@ namespace gs2 { namespace ez { namespace money {
 class EzWithdrawResult : public gs2::Gs2Object
 {
 private:
-    /** 消費後のウォレット */
-    EzWalletDetail m_Item;
-    /** 消費した通貨の価格 */
-    Float m_Price;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 消費後のウォレット */
+        EzWalletDetail item;
+        /** 消費した通貨の価格 */
+        Float price;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            price(data.price)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::money::WithdrawResult& withdrawResult) :
+            item(*withdrawResult.getItem()),
+            price(*withdrawResult.getPrice())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzWithdrawResult(const gs2::money::WithdrawResult& result) :
-        m_Item(*result.getItem()),
-        m_Price(*result.getPrice())
+    EzWithdrawResult() = default;
+    EzWithdrawResult(const EzWithdrawResult& result) = default;
+    EzWithdrawResult(EzWithdrawResult&& result) = default;
+    ~EzWithdrawResult() = default;
+
+    EzWithdrawResult(gs2::money::WithdrawResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzWithdrawResult& operator=(const EzWithdrawResult& result) = default;
+    EzWithdrawResult& operator=(EzWithdrawResult&& result) = default;
+
+    EzWithdrawResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzWithdrawResult);
     }
 
     static bool isConvertible(const gs2::money::WithdrawResult& result)
@@ -52,17 +91,12 @@ public:
 
     const EzWalletDetail& getItem() const
     {
-        return m_Item;
-    }
-
-    EzWalletDetail& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 
     Float getPrice() const
     {
-        return m_Price;
+        return ensureData().price;
     }
 };
 

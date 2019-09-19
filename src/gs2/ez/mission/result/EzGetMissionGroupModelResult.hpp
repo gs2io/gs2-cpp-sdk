@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace mission {
 class EzGetMissionGroupModelResult : public gs2::Gs2Object
 {
 private:
-    /** ミッショングループ */
-    EzMissionGroupModel m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ミッショングループ */
+        EzMissionGroupModel item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::mission::GetMissionGroupModelResult& getMissionGroupModelResult) :
+            item(*getMissionGroupModelResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetMissionGroupModelResult(const gs2::mission::GetMissionGroupModelResult& result) :
-        m_Item(*result.getItem())
+    EzGetMissionGroupModelResult() = default;
+    EzGetMissionGroupModelResult(const EzGetMissionGroupModelResult& result) = default;
+    EzGetMissionGroupModelResult(EzGetMissionGroupModelResult&& result) = default;
+    ~EzGetMissionGroupModelResult() = default;
+
+    EzGetMissionGroupModelResult(gs2::mission::GetMissionGroupModelResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetMissionGroupModelResult& operator=(const EzGetMissionGroupModelResult& result) = default;
+    EzGetMissionGroupModelResult& operator=(EzGetMissionGroupModelResult&& result) = default;
+
+    EzGetMissionGroupModelResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetMissionGroupModelResult);
     }
 
     static bool isConvertible(const gs2::mission::GetMissionGroupModelResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzMissionGroupModel& getItem() const
     {
-        return m_Item;
-    }
-
-    EzMissionGroupModel& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

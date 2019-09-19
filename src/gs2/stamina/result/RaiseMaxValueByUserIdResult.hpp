@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace stamina
 {
@@ -43,28 +45,28 @@ private:
         /** スタミナ */
         optional<Stamina> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    RaiseMaxValueByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    RaiseMaxValueByUserIdResult() = default;
+    RaiseMaxValueByUserIdResult(const RaiseMaxValueByUserIdResult& raiseMaxValueByUserIdResult) = default;
+    RaiseMaxValueByUserIdResult(RaiseMaxValueByUserIdResult&& raiseMaxValueByUserIdResult) = default;
+    ~RaiseMaxValueByUserIdResult() = default;
 
-    RaiseMaxValueByUserIdResult(const RaiseMaxValueByUserIdResult& raiseMaxValueByUserIdResult) :
-        Gs2Object(raiseMaxValueByUserIdResult),
-        m_pData(raiseMaxValueByUserIdResult.m_pData != nullptr ? new Data(*raiseMaxValueByUserIdResult.m_pData) : nullptr)
-    {}
+    RaiseMaxValueByUserIdResult& operator=(const RaiseMaxValueByUserIdResult& raiseMaxValueByUserIdResult) = default;
+    RaiseMaxValueByUserIdResult& operator=(RaiseMaxValueByUserIdResult&& raiseMaxValueByUserIdResult) = default;
 
-    RaiseMaxValueByUserIdResult(RaiseMaxValueByUserIdResult&& raiseMaxValueByUserIdResult) :
-        Gs2Object(std::move(raiseMaxValueByUserIdResult)),
-        m_pData(raiseMaxValueByUserIdResult.m_pData)
+    RaiseMaxValueByUserIdResult deepCopy() const
     {
-        raiseMaxValueByUserIdResult.m_pData = nullptr;
-    }
-
-    ~RaiseMaxValueByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    RaiseMaxValueByUserIdResult& operator=(const RaiseMaxValueByUserIdResult& raiseMaxValueByUserIdResult)
-    {
-        Gs2Object::operator=(raiseMaxValueByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*raiseMaxValueByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    RaiseMaxValueByUserIdResult& operator=(RaiseMaxValueByUserIdResult&& raiseMaxValueByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(raiseMaxValueByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = raiseMaxValueByUserIdResult.m_pData;
-        raiseMaxValueByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(RaiseMaxValueByUserIdResult);
     }
 
     const RaiseMaxValueByUserIdResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item スタミナ
      */
-    void setItem(const Stamina& item)
+    void setItem(Stamina item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

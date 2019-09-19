@@ -28,11 +28,11 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::lock(
-    std::function<void(AsyncEzLockResult&)> callback,
+    std::function<void(AsyncEzLockResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* propertyId,
-    const Char* transactionId,
+    StringHolder namespaceName,
+    StringHolder propertyId,
+    StringHolder transactionId,
     Int64 ttl
 )
 {
@@ -44,7 +44,7 @@ void Client::lock(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.lock(
         request,
-        [callback](gs2::lock::AsyncLockResult& r)
+        [callback](gs2::lock::AsyncLockResult r)
         {
             if (r.getError())
             {
@@ -70,11 +70,11 @@ void Client::lock(
 }
 
 void Client::unlock(
-    std::function<void(AsyncEzUnlockResult&)> callback,
+    std::function<void(AsyncEzUnlockResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* propertyId,
-    const Char* transactionId
+    StringHolder namespaceName,
+    StringHolder propertyId,
+    StringHolder transactionId
 )
 {
     gs2::lock::UnlockRequest request;
@@ -84,7 +84,7 @@ void Client::unlock(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.unlock(
         request,
-        [callback](gs2::lock::AsyncUnlockResult& r)
+        [callback](gs2::lock::AsyncUnlockResult r)
         {
             if (r.getError())
             {

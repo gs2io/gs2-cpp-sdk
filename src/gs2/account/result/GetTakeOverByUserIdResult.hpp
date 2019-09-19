@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace account
 {
@@ -43,28 +45,28 @@ private:
         /** 引き継ぎ設定 */
         optional<TakeOver> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GetTakeOverByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    GetTakeOverByUserIdResult() = default;
+    GetTakeOverByUserIdResult(const GetTakeOverByUserIdResult& getTakeOverByUserIdResult) = default;
+    GetTakeOverByUserIdResult(GetTakeOverByUserIdResult&& getTakeOverByUserIdResult) = default;
+    ~GetTakeOverByUserIdResult() = default;
 
-    GetTakeOverByUserIdResult(const GetTakeOverByUserIdResult& getTakeOverByUserIdResult) :
-        Gs2Object(getTakeOverByUserIdResult),
-        m_pData(getTakeOverByUserIdResult.m_pData != nullptr ? new Data(*getTakeOverByUserIdResult.m_pData) : nullptr)
-    {}
+    GetTakeOverByUserIdResult& operator=(const GetTakeOverByUserIdResult& getTakeOverByUserIdResult) = default;
+    GetTakeOverByUserIdResult& operator=(GetTakeOverByUserIdResult&& getTakeOverByUserIdResult) = default;
 
-    GetTakeOverByUserIdResult(GetTakeOverByUserIdResult&& getTakeOverByUserIdResult) :
-        Gs2Object(std::move(getTakeOverByUserIdResult)),
-        m_pData(getTakeOverByUserIdResult.m_pData)
+    GetTakeOverByUserIdResult deepCopy() const
     {
-        getTakeOverByUserIdResult.m_pData = nullptr;
-    }
-
-    ~GetTakeOverByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetTakeOverByUserIdResult& operator=(const GetTakeOverByUserIdResult& getTakeOverByUserIdResult)
-    {
-        Gs2Object::operator=(getTakeOverByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getTakeOverByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    GetTakeOverByUserIdResult& operator=(GetTakeOverByUserIdResult&& getTakeOverByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(getTakeOverByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getTakeOverByUserIdResult.m_pData;
-        getTakeOverByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetTakeOverByUserIdResult);
     }
 
     const GetTakeOverByUserIdResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 引き継ぎ設定
      */
-    void setItem(const TakeOver& item)
+    void setItem(TakeOver item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

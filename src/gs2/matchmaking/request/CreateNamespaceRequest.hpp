@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2MatchmakingConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace matchmaking
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -64,11 +66,10 @@ private:
         /** マッチメイキングが完了したときのプッシュ通知 */
         optional<NotificationSetting> completeNotification;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             name(data.name),
             description(data.description),
             createGatheringTriggerType(data.createGatheringTriggerType),
@@ -76,104 +77,54 @@ private:
             createGatheringTriggerScriptId(data.createGatheringTriggerScriptId),
             completeMatchmakingTriggerType(data.completeMatchmakingTriggerType),
             completeMatchmakingTriggerRealtimeNamespaceId(data.completeMatchmakingTriggerRealtimeNamespaceId),
-            completeMatchmakingTriggerScriptId(data.completeMatchmakingTriggerScriptId),
-            joinNotification(data.joinNotification),
-            leaveNotification(data.leaveNotification),
-            completeNotification(data.completeNotification)
-        {}
+            completeMatchmakingTriggerScriptId(data.completeMatchmakingTriggerScriptId)
+        {
+            if (data.joinNotification)
+            {
+                joinNotification = data.joinNotification->deepCopy();
+            }
+            if (data.leaveNotification)
+            {
+                leaveNotification = data.leaveNotification->deepCopy();
+            }
+            if (data.completeNotification)
+            {
+                completeNotification = data.completeNotification->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            createGatheringTriggerType(std::move(data.createGatheringTriggerType)),
-            createGatheringTriggerRealtimeNamespaceId(std::move(data.createGatheringTriggerRealtimeNamespaceId)),
-            createGatheringTriggerScriptId(std::move(data.createGatheringTriggerScriptId)),
-            completeMatchmakingTriggerType(std::move(data.completeMatchmakingTriggerType)),
-            completeMatchmakingTriggerRealtimeNamespaceId(std::move(data.completeMatchmakingTriggerRealtimeNamespaceId)),
-            completeMatchmakingTriggerScriptId(std::move(data.completeMatchmakingTriggerScriptId)),
-            joinNotification(std::move(data.joinNotification)),
-            leaveNotification(std::move(data.leaveNotification)),
-            completeNotification(std::move(data.completeNotification))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CreateNamespaceRequest() :
-        m_pData(nullptr)
-    {}
+    CreateNamespaceRequest() = default;
+    CreateNamespaceRequest(const CreateNamespaceRequest& createNamespaceRequest) = default;
+    CreateNamespaceRequest(CreateNamespaceRequest&& createNamespaceRequest) = default;
+    ~CreateNamespaceRequest() GS2_OVERRIDE = default;
 
-    CreateNamespaceRequest(const CreateNamespaceRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Matchmaking(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CreateNamespaceRequest& operator=(const CreateNamespaceRequest& createNamespaceRequest) = default;
+    CreateNamespaceRequest& operator=(CreateNamespaceRequest&& createNamespaceRequest) = default;
 
-    CreateNamespaceRequest(CreateNamespaceRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Matchmaking(std::move(obj)),
-        m_pData(obj.m_pData)
+    CreateNamespaceRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CreateNamespaceRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateNamespaceRequest& operator=(const CreateNamespaceRequest& createNamespaceRequest)
-    {
-        Gs2BasicRequest::operator=(createNamespaceRequest);
-        Gs2Matchmaking::operator=(createNamespaceRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createNamespaceRequest.m_pData);
-
-        return *this;
-    }
-
-    CreateNamespaceRequest& operator=(CreateNamespaceRequest&& createNamespaceRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(createNamespaceRequest));
-        Gs2Matchmaking::operator=(std::move(createNamespaceRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createNamespaceRequest.m_pData;
-        createNamespaceRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateNamespaceRequest);
     }
 
     const CreateNamespaceRequest* operator->() const
@@ -201,9 +152,9 @@ public:
      *
      * @param name ネームスペース名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -211,9 +162,9 @@ public:
      *
      * @param name ネームスペース名
      */
-    CreateNamespaceRequest& withName(const Char* name)
+    CreateNamespaceRequest& withName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
         return *this;
     }
 
@@ -232,9 +183,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -242,9 +193,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    CreateNamespaceRequest& withDescription(const Char* description)
+    CreateNamespaceRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -263,9 +214,9 @@ public:
      *
      * @param createGatheringTriggerType ギャザリング新規作成時のアクション
      */
-    void setCreateGatheringTriggerType(const Char* createGatheringTriggerType)
+    void setCreateGatheringTriggerType(StringHolder createGatheringTriggerType)
     {
-        ensureData().createGatheringTriggerType.emplace(createGatheringTriggerType);
+        ensureData().createGatheringTriggerType.emplace(std::move(createGatheringTriggerType));
     }
 
     /**
@@ -273,9 +224,9 @@ public:
      *
      * @param createGatheringTriggerType ギャザリング新規作成時のアクション
      */
-    CreateNamespaceRequest& withCreateGatheringTriggerType(const Char* createGatheringTriggerType)
+    CreateNamespaceRequest& withCreateGatheringTriggerType(StringHolder createGatheringTriggerType)
     {
-        ensureData().createGatheringTriggerType.emplace(createGatheringTriggerType);
+        ensureData().createGatheringTriggerType.emplace(std::move(createGatheringTriggerType));
         return *this;
     }
 
@@ -294,9 +245,9 @@ public:
      *
      * @param createGatheringTriggerRealtimeNamespaceId ギャザリング新規作成時 にルームを作成するネームスペース のGRN
      */
-    void setCreateGatheringTriggerRealtimeNamespaceId(const Char* createGatheringTriggerRealtimeNamespaceId)
+    void setCreateGatheringTriggerRealtimeNamespaceId(StringHolder createGatheringTriggerRealtimeNamespaceId)
     {
-        ensureData().createGatheringTriggerRealtimeNamespaceId.emplace(createGatheringTriggerRealtimeNamespaceId);
+        ensureData().createGatheringTriggerRealtimeNamespaceId.emplace(std::move(createGatheringTriggerRealtimeNamespaceId));
     }
 
     /**
@@ -304,9 +255,9 @@ public:
      *
      * @param createGatheringTriggerRealtimeNamespaceId ギャザリング新規作成時 にルームを作成するネームスペース のGRN
      */
-    CreateNamespaceRequest& withCreateGatheringTriggerRealtimeNamespaceId(const Char* createGatheringTriggerRealtimeNamespaceId)
+    CreateNamespaceRequest& withCreateGatheringTriggerRealtimeNamespaceId(StringHolder createGatheringTriggerRealtimeNamespaceId)
     {
-        ensureData().createGatheringTriggerRealtimeNamespaceId.emplace(createGatheringTriggerRealtimeNamespaceId);
+        ensureData().createGatheringTriggerRealtimeNamespaceId.emplace(std::move(createGatheringTriggerRealtimeNamespaceId));
         return *this;
     }
 
@@ -325,9 +276,9 @@ public:
      *
      * @param createGatheringTriggerScriptId ギャザリング新規作成時 に実行されるスクリプト のGRN
      */
-    void setCreateGatheringTriggerScriptId(const Char* createGatheringTriggerScriptId)
+    void setCreateGatheringTriggerScriptId(StringHolder createGatheringTriggerScriptId)
     {
-        ensureData().createGatheringTriggerScriptId.emplace(createGatheringTriggerScriptId);
+        ensureData().createGatheringTriggerScriptId.emplace(std::move(createGatheringTriggerScriptId));
     }
 
     /**
@@ -335,9 +286,9 @@ public:
      *
      * @param createGatheringTriggerScriptId ギャザリング新規作成時 に実行されるスクリプト のGRN
      */
-    CreateNamespaceRequest& withCreateGatheringTriggerScriptId(const Char* createGatheringTriggerScriptId)
+    CreateNamespaceRequest& withCreateGatheringTriggerScriptId(StringHolder createGatheringTriggerScriptId)
     {
-        ensureData().createGatheringTriggerScriptId.emplace(createGatheringTriggerScriptId);
+        ensureData().createGatheringTriggerScriptId.emplace(std::move(createGatheringTriggerScriptId));
         return *this;
     }
 
@@ -356,9 +307,9 @@ public:
      *
      * @param completeMatchmakingTriggerType マッチメイキング完了時のアクション
      */
-    void setCompleteMatchmakingTriggerType(const Char* completeMatchmakingTriggerType)
+    void setCompleteMatchmakingTriggerType(StringHolder completeMatchmakingTriggerType)
     {
-        ensureData().completeMatchmakingTriggerType.emplace(completeMatchmakingTriggerType);
+        ensureData().completeMatchmakingTriggerType.emplace(std::move(completeMatchmakingTriggerType));
     }
 
     /**
@@ -366,9 +317,9 @@ public:
      *
      * @param completeMatchmakingTriggerType マッチメイキング完了時のアクション
      */
-    CreateNamespaceRequest& withCompleteMatchmakingTriggerType(const Char* completeMatchmakingTriggerType)
+    CreateNamespaceRequest& withCompleteMatchmakingTriggerType(StringHolder completeMatchmakingTriggerType)
     {
-        ensureData().completeMatchmakingTriggerType.emplace(completeMatchmakingTriggerType);
+        ensureData().completeMatchmakingTriggerType.emplace(std::move(completeMatchmakingTriggerType));
         return *this;
     }
 
@@ -387,9 +338,9 @@ public:
      *
      * @param completeMatchmakingTriggerRealtimeNamespaceId マッチメイキング完了時 にルームを作成するネームスペース のGRN
      */
-    void setCompleteMatchmakingTriggerRealtimeNamespaceId(const Char* completeMatchmakingTriggerRealtimeNamespaceId)
+    void setCompleteMatchmakingTriggerRealtimeNamespaceId(StringHolder completeMatchmakingTriggerRealtimeNamespaceId)
     {
-        ensureData().completeMatchmakingTriggerRealtimeNamespaceId.emplace(completeMatchmakingTriggerRealtimeNamespaceId);
+        ensureData().completeMatchmakingTriggerRealtimeNamespaceId.emplace(std::move(completeMatchmakingTriggerRealtimeNamespaceId));
     }
 
     /**
@@ -397,9 +348,9 @@ public:
      *
      * @param completeMatchmakingTriggerRealtimeNamespaceId マッチメイキング完了時 にルームを作成するネームスペース のGRN
      */
-    CreateNamespaceRequest& withCompleteMatchmakingTriggerRealtimeNamespaceId(const Char* completeMatchmakingTriggerRealtimeNamespaceId)
+    CreateNamespaceRequest& withCompleteMatchmakingTriggerRealtimeNamespaceId(StringHolder completeMatchmakingTriggerRealtimeNamespaceId)
     {
-        ensureData().completeMatchmakingTriggerRealtimeNamespaceId.emplace(completeMatchmakingTriggerRealtimeNamespaceId);
+        ensureData().completeMatchmakingTriggerRealtimeNamespaceId.emplace(std::move(completeMatchmakingTriggerRealtimeNamespaceId));
         return *this;
     }
 
@@ -418,9 +369,9 @@ public:
      *
      * @param completeMatchmakingTriggerScriptId マッチメイキング完了時 に実行されるスクリプト のGRN
      */
-    void setCompleteMatchmakingTriggerScriptId(const Char* completeMatchmakingTriggerScriptId)
+    void setCompleteMatchmakingTriggerScriptId(StringHolder completeMatchmakingTriggerScriptId)
     {
-        ensureData().completeMatchmakingTriggerScriptId.emplace(completeMatchmakingTriggerScriptId);
+        ensureData().completeMatchmakingTriggerScriptId.emplace(std::move(completeMatchmakingTriggerScriptId));
     }
 
     /**
@@ -428,9 +379,9 @@ public:
      *
      * @param completeMatchmakingTriggerScriptId マッチメイキング完了時 に実行されるスクリプト のGRN
      */
-    CreateNamespaceRequest& withCompleteMatchmakingTriggerScriptId(const Char* completeMatchmakingTriggerScriptId)
+    CreateNamespaceRequest& withCompleteMatchmakingTriggerScriptId(StringHolder completeMatchmakingTriggerScriptId)
     {
-        ensureData().completeMatchmakingTriggerScriptId.emplace(completeMatchmakingTriggerScriptId);
+        ensureData().completeMatchmakingTriggerScriptId.emplace(std::move(completeMatchmakingTriggerScriptId));
         return *this;
     }
 
@@ -449,9 +400,9 @@ public:
      *
      * @param joinNotification ギャザリングに新規プレイヤーが参加したときのプッシュ通知
      */
-    void setJoinNotification(const NotificationSetting& joinNotification)
+    void setJoinNotification(NotificationSetting joinNotification)
     {
-        ensureData().joinNotification.emplace(joinNotification);
+        ensureData().joinNotification.emplace(std::move(joinNotification));
     }
 
     /**
@@ -459,9 +410,9 @@ public:
      *
      * @param joinNotification ギャザリングに新規プレイヤーが参加したときのプッシュ通知
      */
-    CreateNamespaceRequest& withJoinNotification(const NotificationSetting& joinNotification)
+    CreateNamespaceRequest& withJoinNotification(NotificationSetting joinNotification)
     {
-        ensureData().joinNotification.emplace(joinNotification);
+        ensureData().joinNotification.emplace(std::move(joinNotification));
         return *this;
     }
 
@@ -480,9 +431,9 @@ public:
      *
      * @param leaveNotification ギャザリングからプレイヤーが離脱したときのプッシュ通知
      */
-    void setLeaveNotification(const NotificationSetting& leaveNotification)
+    void setLeaveNotification(NotificationSetting leaveNotification)
     {
-        ensureData().leaveNotification.emplace(leaveNotification);
+        ensureData().leaveNotification.emplace(std::move(leaveNotification));
     }
 
     /**
@@ -490,9 +441,9 @@ public:
      *
      * @param leaveNotification ギャザリングからプレイヤーが離脱したときのプッシュ通知
      */
-    CreateNamespaceRequest& withLeaveNotification(const NotificationSetting& leaveNotification)
+    CreateNamespaceRequest& withLeaveNotification(NotificationSetting leaveNotification)
     {
-        ensureData().leaveNotification.emplace(leaveNotification);
+        ensureData().leaveNotification.emplace(std::move(leaveNotification));
         return *this;
     }
 
@@ -511,9 +462,9 @@ public:
      *
      * @param completeNotification マッチメイキングが完了したときのプッシュ通知
      */
-    void setCompleteNotification(const NotificationSetting& completeNotification)
+    void setCompleteNotification(NotificationSetting completeNotification)
     {
-        ensureData().completeNotification.emplace(completeNotification);
+        ensureData().completeNotification.emplace(std::move(completeNotification));
     }
 
     /**
@@ -521,9 +472,9 @@ public:
      *
      * @param completeNotification マッチメイキングが完了したときのプッシュ通知
      */
-    CreateNamespaceRequest& withCompleteNotification(const NotificationSetting& completeNotification)
+    CreateNamespaceRequest& withCompleteNotification(NotificationSetting completeNotification)
     {
-        ensureData().completeNotification.emplace(completeNotification);
+        ensureData().completeNotification.emplace(std::move(completeNotification));
         return *this;
     }
 
@@ -534,33 +485,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CreateNamespaceRequest& withGs2ClientId(const Char* gs2ClientId)
+    CreateNamespaceRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CreateNamespaceRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CreateNamespaceRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -569,9 +496,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CreateNamespaceRequest& withRequestId(const Char* gs2RequestId)
+    CreateNamespaceRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

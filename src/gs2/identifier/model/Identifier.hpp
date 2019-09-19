@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace identifier {
@@ -52,8 +54,7 @@ private:
         /** 作成日時 */
         optional<Int64> createdAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -62,50 +63,48 @@ private:
             userName(data.userName),
             clientSecret(data.clientSecret),
             createdAt(data.createdAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            ownerId(std::move(data.ownerId)),
-            clientId(std::move(data.clientId)),
-            userName(std::move(data.userName)),
-            clientSecret(std::move(data.clientSecret)),
-            createdAt(std::move(data.createdAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "ownerId") == 0) {
+            if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "clientId") == 0) {
+            else if (std::strcmp(name_, "clientId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->clientId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userName") == 0) {
+            else if (std::strcmp(name_, "userName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "clientSecret") == 0) {
+            else if (std::strcmp(name_, "clientSecret") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->clientSecret.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
@@ -114,72 +113,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Identifier() :
-        m_pData(nullptr)
-    {}
+    Identifier() = default;
+    Identifier(const Identifier& identifier) = default;
+    Identifier(Identifier&& identifier) = default;
+    ~Identifier() = default;
 
-    Identifier(const Identifier& identifier) :
-        Gs2Object(identifier),
-        m_pData(identifier.m_pData != nullptr ? new Data(*identifier.m_pData) : nullptr)
-    {}
+    Identifier& operator=(const Identifier& identifier) = default;
+    Identifier& operator=(Identifier&& identifier) = default;
 
-    Identifier(Identifier&& identifier) :
-        Gs2Object(std::move(identifier)),
-        m_pData(identifier.m_pData)
+    Identifier deepCopy() const
     {
-        identifier.m_pData = nullptr;
-    }
-
-    ~Identifier()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Identifier& operator=(const Identifier& identifier)
-    {
-        Gs2Object::operator=(identifier);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*identifier.m_pData);
-
-        return *this;
-    }
-
-    Identifier& operator=(Identifier&& identifier)
-    {
-        Gs2Object::operator=(std::move(identifier));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = identifier.m_pData;
-        identifier.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Identifier);
     }
 
     const Identifier* operator->() const
@@ -206,9 +153,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
@@ -216,9 +163,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    Identifier& withOwnerId(const Char* ownerId)
+    Identifier& withOwnerId(StringHolder ownerId)
     {
-        setOwnerId(ownerId);
+        setOwnerId(std::move(ownerId));
         return *this;
     }
 
@@ -237,9 +184,9 @@ public:
      *
      * @param clientId クライアントID
      */
-    void setClientId(const Char* clientId)
+    void setClientId(StringHolder clientId)
     {
-        ensureData().clientId.emplace(clientId);
+        ensureData().clientId.emplace(std::move(clientId));
     }
 
     /**
@@ -247,9 +194,9 @@ public:
      *
      * @param clientId クライアントID
      */
-    Identifier& withClientId(const Char* clientId)
+    Identifier& withClientId(StringHolder clientId)
     {
-        setClientId(clientId);
+        setClientId(std::move(clientId));
         return *this;
     }
 
@@ -268,9 +215,9 @@ public:
      *
      * @param userName ユーザー名
      */
-    void setUserName(const Char* userName)
+    void setUserName(StringHolder userName)
     {
-        ensureData().userName.emplace(userName);
+        ensureData().userName.emplace(std::move(userName));
     }
 
     /**
@@ -278,9 +225,9 @@ public:
      *
      * @param userName ユーザー名
      */
-    Identifier& withUserName(const Char* userName)
+    Identifier& withUserName(StringHolder userName)
     {
-        setUserName(userName);
+        setUserName(std::move(userName));
         return *this;
     }
 
@@ -299,9 +246,9 @@ public:
      *
      * @param clientSecret クライアントシークレット
      */
-    void setClientSecret(const Char* clientSecret)
+    void setClientSecret(StringHolder clientSecret)
     {
-        ensureData().clientSecret.emplace(clientSecret);
+        ensureData().clientSecret.emplace(std::move(clientSecret));
     }
 
     /**
@@ -309,9 +256,9 @@ public:
      *
      * @param clientSecret クライアントシークレット
      */
-    Identifier& withClientSecret(const Char* clientSecret)
+    Identifier& withClientSecret(StringHolder clientSecret)
     {
-        setClientSecret(clientSecret);
+        setClientSecret(std::move(clientSecret));
         return *this;
     }
 
@@ -357,7 +304,7 @@ inline bool operator!=(const Identifier& lhs, const Identifier& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

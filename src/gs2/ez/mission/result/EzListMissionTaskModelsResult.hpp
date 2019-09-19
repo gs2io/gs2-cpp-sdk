@@ -27,19 +27,57 @@ namespace gs2 { namespace ez { namespace mission {
 class EzListMissionTaskModelsResult : public gs2::Gs2Object
 {
 private:
-    /** ミッションタスクのリスト */
-    List<EzMissionTaskModel> m_Items;
-
-public:
-    EzListMissionTaskModelsResult(const gs2::mission::DescribeMissionTaskModelsResult& result)
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** ミッションタスクのリスト */
+        List<EzMissionTaskModel> items;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::mission::DescribeMissionTaskModelsResult& describeMissionTaskModelsResult)
+        {
             {
-                m_Items += EzMissionTaskModel(list[i]);
+                auto& list = *describeMissionTaskModelsResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzMissionTaskModel(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListMissionTaskModelsResult() = default;
+    EzListMissionTaskModelsResult(const EzListMissionTaskModelsResult& result) = default;
+    EzListMissionTaskModelsResult(EzListMissionTaskModelsResult&& result) = default;
+    ~EzListMissionTaskModelsResult() = default;
+
+    EzListMissionTaskModelsResult(gs2::mission::DescribeMissionTaskModelsResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListMissionTaskModelsResult& operator=(const EzListMissionTaskModelsResult& result) = default;
+    EzListMissionTaskModelsResult& operator=(EzListMissionTaskModelsResult&& result) = default;
+
+    EzListMissionTaskModelsResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListMissionTaskModelsResult);
     }
 
     static bool isConvertible(const gs2::mission::DescribeMissionTaskModelsResult& result)
@@ -54,12 +92,7 @@ public:
 
     const List<EzMissionTaskModel>& getItems() const
     {
-        return m_Items;
-    }
-
-    List<EzMissionTaskModel>& getItems()
-    {
-        return m_Items;
+        return ensureData().items;
     }
 };
 

@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace schedule {
 class EzGetTriggerResult : public gs2::Gs2Object
 {
 private:
-    /** トリガー */
-    EzTrigger m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** トリガー */
+        EzTrigger item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::schedule::GetTriggerResult& getTriggerResult) :
+            item(*getTriggerResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetTriggerResult(const gs2::schedule::GetTriggerResult& result) :
-        m_Item(*result.getItem())
+    EzGetTriggerResult() = default;
+    EzGetTriggerResult(const EzGetTriggerResult& result) = default;
+    EzGetTriggerResult(EzGetTriggerResult&& result) = default;
+    ~EzGetTriggerResult() = default;
+
+    EzGetTriggerResult(gs2::schedule::GetTriggerResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzGetTriggerResult& operator=(const EzGetTriggerResult& result) = default;
+    EzGetTriggerResult& operator=(EzGetTriggerResult&& result) = default;
+
+    EzGetTriggerResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetTriggerResult);
     }
 
     static bool isConvertible(const gs2::schedule::GetTriggerResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzTrigger& getItem() const
     {
-        return m_Item;
-    }
-
-    EzTrigger& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

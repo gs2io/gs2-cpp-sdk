@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace account {
@@ -54,8 +56,7 @@ private:
         /** 作成日時 */
         optional<Int64> createdAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -65,57 +66,55 @@ private:
             userIdentifier(data.userIdentifier),
             password(data.password),
             createdAt(data.createdAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            takeOverId(std::move(data.takeOverId)),
-            userId(std::move(data.userId)),
-            type(std::move(data.type)),
-            userIdentifier(std::move(data.userIdentifier)),
-            password(std::move(data.password)),
-            createdAt(std::move(data.createdAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "takeOverId") == 0) {
+            if (std::strcmp(name_, "takeOverId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->takeOverId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "type") == 0) {
+            else if (std::strcmp(name_, "type") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->type = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "userIdentifier") == 0) {
+            else if (std::strcmp(name_, "userIdentifier") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userIdentifier.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "password") == 0) {
+            else if (std::strcmp(name_, "password") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->password.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
@@ -124,72 +123,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    TakeOver() :
-        m_pData(nullptr)
-    {}
+    TakeOver() = default;
+    TakeOver(const TakeOver& takeOver) = default;
+    TakeOver(TakeOver&& takeOver) = default;
+    ~TakeOver() = default;
 
-    TakeOver(const TakeOver& takeOver) :
-        Gs2Object(takeOver),
-        m_pData(takeOver.m_pData != nullptr ? new Data(*takeOver.m_pData) : nullptr)
-    {}
+    TakeOver& operator=(const TakeOver& takeOver) = default;
+    TakeOver& operator=(TakeOver&& takeOver) = default;
 
-    TakeOver(TakeOver&& takeOver) :
-        Gs2Object(std::move(takeOver)),
-        m_pData(takeOver.m_pData)
+    TakeOver deepCopy() const
     {
-        takeOver.m_pData = nullptr;
-    }
-
-    ~TakeOver()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    TakeOver& operator=(const TakeOver& takeOver)
-    {
-        Gs2Object::operator=(takeOver);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*takeOver.m_pData);
-
-        return *this;
-    }
-
-    TakeOver& operator=(TakeOver&& takeOver)
-    {
-        Gs2Object::operator=(std::move(takeOver));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = takeOver.m_pData;
-        takeOver.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(TakeOver);
     }
 
     const TakeOver* operator->() const
@@ -216,9 +163,9 @@ public:
      *
      * @param takeOverId 引き継ぎ設定
      */
-    void setTakeOverId(const Char* takeOverId)
+    void setTakeOverId(StringHolder takeOverId)
     {
-        ensureData().takeOverId.emplace(takeOverId);
+        ensureData().takeOverId.emplace(std::move(takeOverId));
     }
 
     /**
@@ -226,9 +173,9 @@ public:
      *
      * @param takeOverId 引き継ぎ設定
      */
-    TakeOver& withTakeOverId(const Char* takeOverId)
+    TakeOver& withTakeOverId(StringHolder takeOverId)
     {
-        setTakeOverId(takeOverId);
+        setTakeOverId(std::move(takeOverId));
         return *this;
     }
 
@@ -247,9 +194,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -257,9 +204,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    TakeOver& withUserId(const Char* userId)
+    TakeOver& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -309,9 +256,9 @@ public:
      *
      * @param userIdentifier 引き継ぎ用ユーザーID
      */
-    void setUserIdentifier(const Char* userIdentifier)
+    void setUserIdentifier(StringHolder userIdentifier)
     {
-        ensureData().userIdentifier.emplace(userIdentifier);
+        ensureData().userIdentifier.emplace(std::move(userIdentifier));
     }
 
     /**
@@ -319,9 +266,9 @@ public:
      *
      * @param userIdentifier 引き継ぎ用ユーザーID
      */
-    TakeOver& withUserIdentifier(const Char* userIdentifier)
+    TakeOver& withUserIdentifier(StringHolder userIdentifier)
     {
-        setUserIdentifier(userIdentifier);
+        setUserIdentifier(std::move(userIdentifier));
         return *this;
     }
 
@@ -340,9 +287,9 @@ public:
      *
      * @param password パスワード
      */
-    void setPassword(const Char* password)
+    void setPassword(StringHolder password)
     {
-        ensureData().password.emplace(password);
+        ensureData().password.emplace(std::move(password));
     }
 
     /**
@@ -350,9 +297,9 @@ public:
      *
      * @param password パスワード
      */
-    TakeOver& withPassword(const Char* password)
+    TakeOver& withPassword(StringHolder password)
     {
-        setPassword(password);
+        setPassword(std::move(password));
         return *this;
     }
 
@@ -398,7 +345,7 @@ inline bool operator!=(const TakeOver& lhs, const TakeOver& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

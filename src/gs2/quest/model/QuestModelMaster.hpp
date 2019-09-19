@@ -22,10 +22,12 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "Contents.hpp"
 #include "ConsumeAction.hpp"
 #include "AcquireAction.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace quest {
@@ -69,8 +71,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -79,70 +80,74 @@ private:
             name(data.name),
             description(data.description),
             metadata(data.metadata),
-            contents(data.contents),
             challengePeriodEventId(data.challengePeriodEventId),
-            consumeActions(data.consumeActions),
-            failedAcquireActions(data.failedAcquireActions),
-            premiseQuestNames(data.premiseQuestNames),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.contents)
+            {
+                contents = data.contents->deepCopy();
+            }
+            if (data.consumeActions)
+            {
+                consumeActions = data.consumeActions->deepCopy();
+            }
+            if (data.failedAcquireActions)
+            {
+                failedAcquireActions = data.failedAcquireActions->deepCopy();
+            }
+            if (data.premiseQuestNames)
+            {
+                premiseQuestNames = data.premiseQuestNames->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            questModelId(std::move(data.questModelId)),
-            questGroupName(std::move(data.questGroupName)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            metadata(std::move(data.metadata)),
-            contents(std::move(data.contents)),
-            challengePeriodEventId(std::move(data.challengePeriodEventId)),
-            consumeActions(std::move(data.consumeActions)),
-            failedAcquireActions(std::move(data.failedAcquireActions)),
-            premiseQuestNames(std::move(data.premiseQuestNames)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "questModelId") == 0) {
+            if (std::strcmp(name_, "questModelId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->questModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "questGroupName") == 0) {
+            else if (std::strcmp(name_, "questGroupName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->questGroupName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "contents") == 0) {
+            else if (std::strcmp(name_, "contents") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -154,13 +159,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "challengePeriodEventId") == 0) {
+            else if (std::strcmp(name_, "challengePeriodEventId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->challengePeriodEventId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "consumeActions") == 0) {
+            else if (std::strcmp(name_, "consumeActions") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -172,7 +179,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "failedAcquireActions") == 0) {
+            else if (std::strcmp(name_, "failedAcquireActions") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -184,7 +192,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "premiseQuestNames") == 0) {
+            else if (std::strcmp(name_, "premiseQuestNames") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -199,13 +208,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -214,72 +225,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    QuestModelMaster() :
-        m_pData(nullptr)
-    {}
+    QuestModelMaster() = default;
+    QuestModelMaster(const QuestModelMaster& questModelMaster) = default;
+    QuestModelMaster(QuestModelMaster&& questModelMaster) = default;
+    ~QuestModelMaster() = default;
 
-    QuestModelMaster(const QuestModelMaster& questModelMaster) :
-        Gs2Object(questModelMaster),
-        m_pData(questModelMaster.m_pData != nullptr ? new Data(*questModelMaster.m_pData) : nullptr)
-    {}
+    QuestModelMaster& operator=(const QuestModelMaster& questModelMaster) = default;
+    QuestModelMaster& operator=(QuestModelMaster&& questModelMaster) = default;
 
-    QuestModelMaster(QuestModelMaster&& questModelMaster) :
-        Gs2Object(std::move(questModelMaster)),
-        m_pData(questModelMaster.m_pData)
+    QuestModelMaster deepCopy() const
     {
-        questModelMaster.m_pData = nullptr;
-    }
-
-    ~QuestModelMaster()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    QuestModelMaster& operator=(const QuestModelMaster& questModelMaster)
-    {
-        Gs2Object::operator=(questModelMaster);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*questModelMaster.m_pData);
-
-        return *this;
-    }
-
-    QuestModelMaster& operator=(QuestModelMaster&& questModelMaster)
-    {
-        Gs2Object::operator=(std::move(questModelMaster));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = questModelMaster.m_pData;
-        questModelMaster.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(QuestModelMaster);
     }
 
     const QuestModelMaster* operator->() const
@@ -306,9 +265,9 @@ public:
      *
      * @param questModelId クエストモデルマスター
      */
-    void setQuestModelId(const Char* questModelId)
+    void setQuestModelId(StringHolder questModelId)
     {
-        ensureData().questModelId.emplace(questModelId);
+        ensureData().questModelId.emplace(std::move(questModelId));
     }
 
     /**
@@ -316,9 +275,9 @@ public:
      *
      * @param questModelId クエストモデルマスター
      */
-    QuestModelMaster& withQuestModelId(const Char* questModelId)
+    QuestModelMaster& withQuestModelId(StringHolder questModelId)
     {
-        setQuestModelId(questModelId);
+        setQuestModelId(std::move(questModelId));
         return *this;
     }
 
@@ -337,9 +296,9 @@ public:
      *
      * @param questGroupName クエストグループモデル名
      */
-    void setQuestGroupName(const Char* questGroupName)
+    void setQuestGroupName(StringHolder questGroupName)
     {
-        ensureData().questGroupName.emplace(questGroupName);
+        ensureData().questGroupName.emplace(std::move(questGroupName));
     }
 
     /**
@@ -347,9 +306,9 @@ public:
      *
      * @param questGroupName クエストグループモデル名
      */
-    QuestModelMaster& withQuestGroupName(const Char* questGroupName)
+    QuestModelMaster& withQuestGroupName(StringHolder questGroupName)
     {
-        setQuestGroupName(questGroupName);
+        setQuestGroupName(std::move(questGroupName));
         return *this;
     }
 
@@ -368,9 +327,9 @@ public:
      *
      * @param name クエスト名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -378,9 +337,9 @@ public:
      *
      * @param name クエスト名
      */
-    QuestModelMaster& withName(const Char* name)
+    QuestModelMaster& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -399,9 +358,9 @@ public:
      *
      * @param description クエストモデルの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -409,9 +368,9 @@ public:
      *
      * @param description クエストモデルの説明
      */
-    QuestModelMaster& withDescription(const Char* description)
+    QuestModelMaster& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -430,9 +389,9 @@ public:
      *
      * @param metadata クエストのメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -440,9 +399,9 @@ public:
      *
      * @param metadata クエストのメタデータ
      */
-    QuestModelMaster& withMetadata(const Char* metadata)
+    QuestModelMaster& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -461,9 +420,9 @@ public:
      *
      * @param contents クエストの内容
      */
-    void setContents(const List<Contents>& contents)
+    void setContents(List<Contents> contents)
     {
-        ensureData().contents.emplace(contents);
+        ensureData().contents.emplace(std::move(contents));
     }
 
     /**
@@ -471,9 +430,9 @@ public:
      *
      * @param contents クエストの内容
      */
-    QuestModelMaster& withContents(const List<Contents>& contents)
+    QuestModelMaster& withContents(List<Contents> contents)
     {
-        setContents(contents);
+        setContents(std::move(contents));
         return *this;
     }
 
@@ -492,9 +451,9 @@ public:
      *
      * @param challengePeriodEventId 挑戦可能な期間を指定するイベントマスター のGRN
      */
-    void setChallengePeriodEventId(const Char* challengePeriodEventId)
+    void setChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        ensureData().challengePeriodEventId.emplace(challengePeriodEventId);
+        ensureData().challengePeriodEventId.emplace(std::move(challengePeriodEventId));
     }
 
     /**
@@ -502,9 +461,9 @@ public:
      *
      * @param challengePeriodEventId 挑戦可能な期間を指定するイベントマスター のGRN
      */
-    QuestModelMaster& withChallengePeriodEventId(const Char* challengePeriodEventId)
+    QuestModelMaster& withChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        setChallengePeriodEventId(challengePeriodEventId);
+        setChallengePeriodEventId(std::move(challengePeriodEventId));
         return *this;
     }
 
@@ -523,9 +482,9 @@ public:
      *
      * @param consumeActions クエストの参加料
      */
-    void setConsumeActions(const List<ConsumeAction>& consumeActions)
+    void setConsumeActions(List<ConsumeAction> consumeActions)
     {
-        ensureData().consumeActions.emplace(consumeActions);
+        ensureData().consumeActions.emplace(std::move(consumeActions));
     }
 
     /**
@@ -533,9 +492,9 @@ public:
      *
      * @param consumeActions クエストの参加料
      */
-    QuestModelMaster& withConsumeActions(const List<ConsumeAction>& consumeActions)
+    QuestModelMaster& withConsumeActions(List<ConsumeAction> consumeActions)
     {
-        setConsumeActions(consumeActions);
+        setConsumeActions(std::move(consumeActions));
         return *this;
     }
 
@@ -554,9 +513,9 @@ public:
      *
      * @param failedAcquireActions クエスト失敗時の報酬
      */
-    void setFailedAcquireActions(const List<AcquireAction>& failedAcquireActions)
+    void setFailedAcquireActions(List<AcquireAction> failedAcquireActions)
     {
-        ensureData().failedAcquireActions.emplace(failedAcquireActions);
+        ensureData().failedAcquireActions.emplace(std::move(failedAcquireActions));
     }
 
     /**
@@ -564,9 +523,9 @@ public:
      *
      * @param failedAcquireActions クエスト失敗時の報酬
      */
-    QuestModelMaster& withFailedAcquireActions(const List<AcquireAction>& failedAcquireActions)
+    QuestModelMaster& withFailedAcquireActions(List<AcquireAction> failedAcquireActions)
     {
-        setFailedAcquireActions(failedAcquireActions);
+        setFailedAcquireActions(std::move(failedAcquireActions));
         return *this;
     }
 
@@ -585,9 +544,9 @@ public:
      *
      * @param premiseQuestNames クエストに挑戦するためにクリアしておく必要のあるクエスト名
      */
-    void setPremiseQuestNames(const List<StringHolder>& premiseQuestNames)
+    void setPremiseQuestNames(List<StringHolder> premiseQuestNames)
     {
-        ensureData().premiseQuestNames.emplace(premiseQuestNames);
+        ensureData().premiseQuestNames.emplace(std::move(premiseQuestNames));
     }
 
     /**
@@ -595,9 +554,9 @@ public:
      *
      * @param premiseQuestNames クエストに挑戦するためにクリアしておく必要のあるクエスト名
      */
-    QuestModelMaster& withPremiseQuestNames(const List<StringHolder>& premiseQuestNames)
+    QuestModelMaster& withPremiseQuestNames(List<StringHolder> premiseQuestNames)
     {
-        setPremiseQuestNames(premiseQuestNames);
+        setPremiseQuestNames(std::move(premiseQuestNames));
         return *this;
     }
 
@@ -674,7 +633,7 @@ inline bool operator!=(const QuestModelMaster& lhs, const QuestModelMaster& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

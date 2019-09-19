@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace showcase
 {
@@ -43,28 +45,28 @@ private:
         /** 現在有効な現在有効な陳列棚マスター */
         optional<CurrentShowcaseMaster> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GetCurrentShowcaseMasterResult() :
-        m_pData(nullptr)
-    {}
+    GetCurrentShowcaseMasterResult() = default;
+    GetCurrentShowcaseMasterResult(const GetCurrentShowcaseMasterResult& getCurrentShowcaseMasterResult) = default;
+    GetCurrentShowcaseMasterResult(GetCurrentShowcaseMasterResult&& getCurrentShowcaseMasterResult) = default;
+    ~GetCurrentShowcaseMasterResult() = default;
 
-    GetCurrentShowcaseMasterResult(const GetCurrentShowcaseMasterResult& getCurrentShowcaseMasterResult) :
-        Gs2Object(getCurrentShowcaseMasterResult),
-        m_pData(getCurrentShowcaseMasterResult.m_pData != nullptr ? new Data(*getCurrentShowcaseMasterResult.m_pData) : nullptr)
-    {}
+    GetCurrentShowcaseMasterResult& operator=(const GetCurrentShowcaseMasterResult& getCurrentShowcaseMasterResult) = default;
+    GetCurrentShowcaseMasterResult& operator=(GetCurrentShowcaseMasterResult&& getCurrentShowcaseMasterResult) = default;
 
-    GetCurrentShowcaseMasterResult(GetCurrentShowcaseMasterResult&& getCurrentShowcaseMasterResult) :
-        Gs2Object(std::move(getCurrentShowcaseMasterResult)),
-        m_pData(getCurrentShowcaseMasterResult.m_pData)
+    GetCurrentShowcaseMasterResult deepCopy() const
     {
-        getCurrentShowcaseMasterResult.m_pData = nullptr;
-    }
-
-    ~GetCurrentShowcaseMasterResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetCurrentShowcaseMasterResult& operator=(const GetCurrentShowcaseMasterResult& getCurrentShowcaseMasterResult)
-    {
-        Gs2Object::operator=(getCurrentShowcaseMasterResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getCurrentShowcaseMasterResult.m_pData);
-
-        return *this;
-    }
-
-    GetCurrentShowcaseMasterResult& operator=(GetCurrentShowcaseMasterResult&& getCurrentShowcaseMasterResult)
-    {
-        Gs2Object::operator=(std::move(getCurrentShowcaseMasterResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getCurrentShowcaseMasterResult.m_pData;
-        getCurrentShowcaseMasterResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetCurrentShowcaseMasterResult);
     }
 
     const GetCurrentShowcaseMasterResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 現在有効な現在有効な陳列棚マスター
      */
-    void setItem(const CurrentShowcaseMaster& item)
+    void setItem(CurrentShowcaseMaster item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

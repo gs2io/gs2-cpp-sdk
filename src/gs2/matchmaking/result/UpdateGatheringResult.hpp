@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace matchmaking
 {
@@ -43,28 +45,28 @@ private:
         /** ギャザリング */
         optional<Gathering> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    UpdateGatheringResult() :
-        m_pData(nullptr)
-    {}
+    UpdateGatheringResult() = default;
+    UpdateGatheringResult(const UpdateGatheringResult& updateGatheringResult) = default;
+    UpdateGatheringResult(UpdateGatheringResult&& updateGatheringResult) = default;
+    ~UpdateGatheringResult() = default;
 
-    UpdateGatheringResult(const UpdateGatheringResult& updateGatheringResult) :
-        Gs2Object(updateGatheringResult),
-        m_pData(updateGatheringResult.m_pData != nullptr ? new Data(*updateGatheringResult.m_pData) : nullptr)
-    {}
+    UpdateGatheringResult& operator=(const UpdateGatheringResult& updateGatheringResult) = default;
+    UpdateGatheringResult& operator=(UpdateGatheringResult&& updateGatheringResult) = default;
 
-    UpdateGatheringResult(UpdateGatheringResult&& updateGatheringResult) :
-        Gs2Object(std::move(updateGatheringResult)),
-        m_pData(updateGatheringResult.m_pData)
+    UpdateGatheringResult deepCopy() const
     {
-        updateGatheringResult.m_pData = nullptr;
-    }
-
-    ~UpdateGatheringResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateGatheringResult& operator=(const UpdateGatheringResult& updateGatheringResult)
-    {
-        Gs2Object::operator=(updateGatheringResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateGatheringResult.m_pData);
-
-        return *this;
-    }
-
-    UpdateGatheringResult& operator=(UpdateGatheringResult&& updateGatheringResult)
-    {
-        Gs2Object::operator=(std::move(updateGatheringResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateGatheringResult.m_pData;
-        updateGatheringResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateGatheringResult);
     }
 
     const UpdateGatheringResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item ギャザリング
      */
-    void setItem(const Gathering& item)
+    void setItem(Gathering item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

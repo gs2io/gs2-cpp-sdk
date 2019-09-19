@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2QuestConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace quest
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** カテゴリ名 */
@@ -56,108 +58,55 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             questGroupName(data.questGroupName),
             questName(data.questName),
             userId(data.userId),
             force(data.force),
-            config(data.config),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+            if (data.config)
+            {
+                config = data.config->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            questGroupName(std::move(data.questGroupName)),
-            questName(std::move(data.questName)),
-            userId(std::move(data.userId)),
-            force(std::move(data.force)),
-            config(std::move(data.config)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    StartByUserIdRequest() :
-        m_pData(nullptr)
-    {}
+    StartByUserIdRequest() = default;
+    StartByUserIdRequest(const StartByUserIdRequest& startByUserIdRequest) = default;
+    StartByUserIdRequest(StartByUserIdRequest&& startByUserIdRequest) = default;
+    ~StartByUserIdRequest() GS2_OVERRIDE = default;
 
-    StartByUserIdRequest(const StartByUserIdRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Quest(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    StartByUserIdRequest& operator=(const StartByUserIdRequest& startByUserIdRequest) = default;
+    StartByUserIdRequest& operator=(StartByUserIdRequest&& startByUserIdRequest) = default;
 
-    StartByUserIdRequest(StartByUserIdRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Quest(std::move(obj)),
-        m_pData(obj.m_pData)
+    StartByUserIdRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~StartByUserIdRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    StartByUserIdRequest& operator=(const StartByUserIdRequest& startByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(startByUserIdRequest);
-        Gs2Quest::operator=(startByUserIdRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*startByUserIdRequest.m_pData);
-
-        return *this;
-    }
-
-    StartByUserIdRequest& operator=(StartByUserIdRequest&& startByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(startByUserIdRequest));
-        Gs2Quest::operator=(std::move(startByUserIdRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = startByUserIdRequest.m_pData;
-        startByUserIdRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(StartByUserIdRequest);
     }
 
     const StartByUserIdRequest* operator->() const
@@ -185,9 +134,9 @@ public:
      *
      * @param namespaceName カテゴリ名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -195,9 +144,9 @@ public:
      *
      * @param namespaceName カテゴリ名
      */
-    StartByUserIdRequest& withNamespaceName(const Char* namespaceName)
+    StartByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -216,9 +165,9 @@ public:
      *
      * @param questGroupName クエストグループ名
      */
-    void setQuestGroupName(const Char* questGroupName)
+    void setQuestGroupName(StringHolder questGroupName)
     {
-        ensureData().questGroupName.emplace(questGroupName);
+        ensureData().questGroupName.emplace(std::move(questGroupName));
     }
 
     /**
@@ -226,9 +175,9 @@ public:
      *
      * @param questGroupName クエストグループ名
      */
-    StartByUserIdRequest& withQuestGroupName(const Char* questGroupName)
+    StartByUserIdRequest& withQuestGroupName(StringHolder questGroupName)
     {
-        ensureData().questGroupName.emplace(questGroupName);
+        ensureData().questGroupName.emplace(std::move(questGroupName));
         return *this;
     }
 
@@ -247,9 +196,9 @@ public:
      *
      * @param questName クエストモデル名
      */
-    void setQuestName(const Char* questName)
+    void setQuestName(StringHolder questName)
     {
-        ensureData().questName.emplace(questName);
+        ensureData().questName.emplace(std::move(questName));
     }
 
     /**
@@ -257,9 +206,9 @@ public:
      *
      * @param questName クエストモデル名
      */
-    StartByUserIdRequest& withQuestName(const Char* questName)
+    StartByUserIdRequest& withQuestName(StringHolder questName)
     {
-        ensureData().questName.emplace(questName);
+        ensureData().questName.emplace(std::move(questName));
         return *this;
     }
 
@@ -278,9 +227,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -288,9 +237,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    StartByUserIdRequest& withUserId(const Char* userId)
+    StartByUserIdRequest& withUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
         return *this;
     }
 
@@ -340,9 +289,9 @@ public:
      *
      * @param config スタンプシートの変数に適用する設定値
      */
-    void setConfig(const List<Config>& config)
+    void setConfig(List<Config> config)
     {
-        ensureData().config.emplace(config);
+        ensureData().config.emplace(std::move(config));
     }
 
     /**
@@ -350,9 +299,9 @@ public:
      *
      * @param config スタンプシートの変数に適用する設定値
      */
-    StartByUserIdRequest& withConfig(const List<Config>& config)
+    StartByUserIdRequest& withConfig(List<Config> config)
     {
-        ensureData().config.emplace(config);
+        ensureData().config.emplace(std::move(config));
         return *this;
     }
 
@@ -371,9 +320,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -381,9 +330,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    StartByUserIdRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    StartByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -394,33 +343,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    StartByUserIdRequest& withGs2ClientId(const Char* gs2ClientId)
+    StartByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    StartByUserIdRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    StartByUserIdRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -429,9 +354,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    StartByUserIdRequest& withRequestId(const Char* gs2RequestId)
+    StartByUserIdRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

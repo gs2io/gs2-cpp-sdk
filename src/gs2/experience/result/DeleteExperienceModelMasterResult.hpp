@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace experience
 {
@@ -43,28 +45,28 @@ private:
         /** 削除した経験値の種類マスター */
         optional<ExperienceModelMaster> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DeleteExperienceModelMasterResult() :
-        m_pData(nullptr)
-    {}
+    DeleteExperienceModelMasterResult() = default;
+    DeleteExperienceModelMasterResult(const DeleteExperienceModelMasterResult& deleteExperienceModelMasterResult) = default;
+    DeleteExperienceModelMasterResult(DeleteExperienceModelMasterResult&& deleteExperienceModelMasterResult) = default;
+    ~DeleteExperienceModelMasterResult() = default;
 
-    DeleteExperienceModelMasterResult(const DeleteExperienceModelMasterResult& deleteExperienceModelMasterResult) :
-        Gs2Object(deleteExperienceModelMasterResult),
-        m_pData(deleteExperienceModelMasterResult.m_pData != nullptr ? new Data(*deleteExperienceModelMasterResult.m_pData) : nullptr)
-    {}
+    DeleteExperienceModelMasterResult& operator=(const DeleteExperienceModelMasterResult& deleteExperienceModelMasterResult) = default;
+    DeleteExperienceModelMasterResult& operator=(DeleteExperienceModelMasterResult&& deleteExperienceModelMasterResult) = default;
 
-    DeleteExperienceModelMasterResult(DeleteExperienceModelMasterResult&& deleteExperienceModelMasterResult) :
-        Gs2Object(std::move(deleteExperienceModelMasterResult)),
-        m_pData(deleteExperienceModelMasterResult.m_pData)
+    DeleteExperienceModelMasterResult deepCopy() const
     {
-        deleteExperienceModelMasterResult.m_pData = nullptr;
-    }
-
-    ~DeleteExperienceModelMasterResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DeleteExperienceModelMasterResult& operator=(const DeleteExperienceModelMasterResult& deleteExperienceModelMasterResult)
-    {
-        Gs2Object::operator=(deleteExperienceModelMasterResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*deleteExperienceModelMasterResult.m_pData);
-
-        return *this;
-    }
-
-    DeleteExperienceModelMasterResult& operator=(DeleteExperienceModelMasterResult&& deleteExperienceModelMasterResult)
-    {
-        Gs2Object::operator=(std::move(deleteExperienceModelMasterResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = deleteExperienceModelMasterResult.m_pData;
-        deleteExperienceModelMasterResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteExperienceModelMasterResult);
     }
 
     const DeleteExperienceModelMasterResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 削除した経験値の種類マスター
      */
-    void setItem(const ExperienceModelMaster& item)
+    void setItem(ExperienceModelMaster item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

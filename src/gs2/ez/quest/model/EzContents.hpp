@@ -28,34 +28,74 @@ namespace gs2 { namespace ez { namespace quest {
 class EzContents : public gs2::Gs2Object
 {
 private:
-    /** クエストモデルのメタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** クエストクリア時の報酬 */
-    gs2::optional<List<EzAcquireAction>> m_CompleteAcquireActions;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** クエストモデルのメタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** クエストクリア時の報酬 */
+        gs2::optional<List<EzAcquireAction>> completeAcquireActions;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            metadata(data.metadata)
+        {
+            if (data.completeAcquireActions)
+            {
+                completeAcquireActions = data.completeAcquireActions->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::quest::Contents& contents) :
+            metadata(contents.getMetadata())
+        {
+            completeAcquireActions.emplace();
+            if (contents.getCompleteAcquireActions())
+            {
+                for (int i = 0; i < contents.getCompleteAcquireActions()->getCount(); ++i)
+                {
+                    *completeAcquireActions += EzAcquireAction((*contents.getCompleteAcquireActions())[i]);
+                }
+            }
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzContents() = default;
+    EzContents(const EzContents& ezContents) = default;
+    EzContents(EzContents&& ezContents) = default;
+    ~EzContents() = default;
 
     EzContents(gs2::quest::Contents contents) :
-        m_Metadata(contents.getMetadata())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(contents)
+    {}
+
+    EzContents& operator=(const EzContents& ezContents) = default;
+    EzContents& operator=(EzContents&& ezContents) = default;
+
+    EzContents deepCopy() const
     {
-        m_CompleteAcquireActions.emplace();
-        if (contents.getCompleteAcquireActions())
-        {
-            for (int i = 0; i < contents.getCompleteAcquireActions()->getCount(); ++i)
-            {
-                *m_CompleteAcquireActions += EzAcquireAction((*contents.getCompleteAcquireActions())[i]);
-            }
-        }
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzContents);
     }
 
     gs2::quest::Contents ToModel() const
     {
         gs2::quest::Contents contents;
-        contents.setMetadata(*m_Metadata);
+        contents.setMetadata(getMetadata());
         {
             gs2::List<gs2::quest::AcquireAction> list;
-            auto& completeAcquireActions = *m_CompleteAcquireActions;
+            auto& completeAcquireActions = getCompleteAcquireActions();
             for (int i = 0; i < completeAcquireActions.getCount(); ++i)
             {
                 list += completeAcquireActions[i].ToModel();
@@ -69,58 +109,37 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getMetadata() const
+    const StringHolder& getMetadata() const
     {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
+        return *ensureData().metadata;
     }
 
     const List<EzAcquireAction>& getCompleteAcquireActions() const
     {
-        return *m_CompleteAcquireActions;
-    }
-
-    List<EzAcquireAction>& getCompleteAcquireActions()
-    {
-        return *m_CompleteAcquireActions;
+        return *ensureData().completeAcquireActions;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
-    void setCompleteAcquireActions(const List<EzAcquireAction>& completeAcquireActions)
+    void setCompleteAcquireActions(List<EzAcquireAction> completeAcquireActions)
     {
-        m_CompleteAcquireActions = completeAcquireActions;
+        ensureData().completeAcquireActions = std::move(completeAcquireActions);
     }
 
-    void setCompleteAcquireActions(List<EzAcquireAction>&& completeAcquireActions)
+    EzContents& withMetadata(StringHolder metadata)
     {
-        m_CompleteAcquireActions = std::move(completeAcquireActions);
-    }
-
-    EzContents& withMetadata(Char* metadata)
-    {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
-    EzContents& withCompleteAcquireActions(const List<EzAcquireAction>& completeAcquireActions)
-    {
-        setCompleteAcquireActions(completeAcquireActions);
-        return *this;
-    }
-
-    EzContents& withCompleteAcquireActions(List<EzAcquireAction>&& completeAcquireActions)
+    EzContents& withCompleteAcquireActions(List<EzAcquireAction> completeAcquireActions)
     {
         setCompleteAcquireActions(std::move(completeAcquireActions));
         return *this;

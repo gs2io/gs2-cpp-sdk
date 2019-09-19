@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ProjectConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace project
 {
@@ -38,102 +40,52 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** GS2アカウントの名前 */
         optional<StringHolder> accountName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             accountName(data.accountName)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            accountName(std::move(data.accountName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    IssueAccountTokenRequest() :
-        m_pData(nullptr)
-    {}
+    IssueAccountTokenRequest() = default;
+    IssueAccountTokenRequest(const IssueAccountTokenRequest& issueAccountTokenRequest) = default;
+    IssueAccountTokenRequest(IssueAccountTokenRequest&& issueAccountTokenRequest) = default;
+    ~IssueAccountTokenRequest() GS2_OVERRIDE = default;
 
-    IssueAccountTokenRequest(const IssueAccountTokenRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Project(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    IssueAccountTokenRequest& operator=(const IssueAccountTokenRequest& issueAccountTokenRequest) = default;
+    IssueAccountTokenRequest& operator=(IssueAccountTokenRequest&& issueAccountTokenRequest) = default;
 
-    IssueAccountTokenRequest(IssueAccountTokenRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Project(std::move(obj)),
-        m_pData(obj.m_pData)
+    IssueAccountTokenRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~IssueAccountTokenRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    IssueAccountTokenRequest& operator=(const IssueAccountTokenRequest& issueAccountTokenRequest)
-    {
-        Gs2BasicRequest::operator=(issueAccountTokenRequest);
-        Gs2Project::operator=(issueAccountTokenRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*issueAccountTokenRequest.m_pData);
-
-        return *this;
-    }
-
-    IssueAccountTokenRequest& operator=(IssueAccountTokenRequest&& issueAccountTokenRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(issueAccountTokenRequest));
-        Gs2Project::operator=(std::move(issueAccountTokenRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = issueAccountTokenRequest.m_pData;
-        issueAccountTokenRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(IssueAccountTokenRequest);
     }
 
     const IssueAccountTokenRequest* operator->() const
@@ -161,9 +113,9 @@ public:
      *
      * @param accountName GS2アカウントの名前
      */
-    void setAccountName(const Char* accountName)
+    void setAccountName(StringHolder accountName)
     {
-        ensureData().accountName.emplace(accountName);
+        ensureData().accountName.emplace(std::move(accountName));
     }
 
     /**
@@ -171,9 +123,9 @@ public:
      *
      * @param accountName GS2アカウントの名前
      */
-    IssueAccountTokenRequest& withAccountName(const Char* accountName)
+    IssueAccountTokenRequest& withAccountName(StringHolder accountName)
     {
-        ensureData().accountName.emplace(accountName);
+        ensureData().accountName.emplace(std::move(accountName));
         return *this;
     }
 
@@ -184,33 +136,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    IssueAccountTokenRequest& withGs2ClientId(const Char* gs2ClientId)
+    IssueAccountTokenRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    IssueAccountTokenRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    IssueAccountTokenRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -219,9 +147,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    IssueAccountTokenRequest& withRequestId(const Char* gs2RequestId)
+    IssueAccountTokenRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

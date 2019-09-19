@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2MatchmakingConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace matchmaking
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** アクセストークン */
@@ -52,104 +54,53 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             accessToken(data.accessToken),
             namespaceName(data.namespaceName),
-            player(data.player),
             matchmakingContextToken(data.matchmakingContextToken),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+            if (data.player)
+            {
+                player = data.player->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            accessToken(std::move(data.accessToken)),
-            namespaceName(std::move(data.namespaceName)),
-            player(std::move(data.player)),
-            matchmakingContextToken(std::move(data.matchmakingContextToken)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    DoMatchmakingRequest() :
-        m_pData(nullptr)
-    {}
+    DoMatchmakingRequest() = default;
+    DoMatchmakingRequest(const DoMatchmakingRequest& doMatchmakingRequest) = default;
+    DoMatchmakingRequest(DoMatchmakingRequest&& doMatchmakingRequest) = default;
+    ~DoMatchmakingRequest() GS2_OVERRIDE = default;
 
-    DoMatchmakingRequest(const DoMatchmakingRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Matchmaking(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    DoMatchmakingRequest& operator=(const DoMatchmakingRequest& doMatchmakingRequest) = default;
+    DoMatchmakingRequest& operator=(DoMatchmakingRequest&& doMatchmakingRequest) = default;
 
-    DoMatchmakingRequest(DoMatchmakingRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Matchmaking(std::move(obj)),
-        m_pData(obj.m_pData)
+    DoMatchmakingRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~DoMatchmakingRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DoMatchmakingRequest& operator=(const DoMatchmakingRequest& doMatchmakingRequest)
-    {
-        Gs2BasicRequest::operator=(doMatchmakingRequest);
-        Gs2Matchmaking::operator=(doMatchmakingRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*doMatchmakingRequest.m_pData);
-
-        return *this;
-    }
-
-    DoMatchmakingRequest& operator=(DoMatchmakingRequest&& doMatchmakingRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(doMatchmakingRequest));
-        Gs2Matchmaking::operator=(std::move(doMatchmakingRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = doMatchmakingRequest.m_pData;
-        doMatchmakingRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DoMatchmakingRequest);
     }
 
     const DoMatchmakingRequest* operator->() const
@@ -167,7 +118,8 @@ public:
      *
      * @return アクセストークン
      */
-    const gs2::optional<StringHolder>& getAccessToken() const {
+    const gs2::optional<StringHolder>& getAccessToken() const
+    {
         return ensureData().accessToken;
     }
 
@@ -176,8 +128,9 @@ public:
      *
      * @param accessToken アクセストークン
      */
-    void setAccessToken(const Char* accessToken) {
-        ensureData().accessToken.emplace(accessToken);
+    void setAccessToken(StringHolder accessToken)
+    {
+        ensureData().accessToken.emplace(std::move(accessToken));
     }
 
     /**
@@ -186,8 +139,9 @@ public:
      * @param accessToken アクセストークン
      * @return this
      */
-    DoMatchmakingRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
+    DoMatchmakingRequest& withAccessToken(StringHolder accessToken)
+    {
+        setAccessToken(std::move(accessToken));
         return *this;
     }
 
@@ -206,9 +160,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -216,9 +170,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    DoMatchmakingRequest& withNamespaceName(const Char* namespaceName)
+    DoMatchmakingRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -237,9 +191,9 @@ public:
      *
      * @param player 自身のプレイヤー情報
      */
-    void setPlayer(const Player& player)
+    void setPlayer(Player player)
     {
-        ensureData().player.emplace(player);
+        ensureData().player.emplace(std::move(player));
     }
 
     /**
@@ -247,9 +201,9 @@ public:
      *
      * @param player 自身のプレイヤー情報
      */
-    DoMatchmakingRequest& withPlayer(const Player& player)
+    DoMatchmakingRequest& withPlayer(Player player)
     {
-        ensureData().player.emplace(player);
+        ensureData().player.emplace(std::move(player));
         return *this;
     }
 
@@ -268,9 +222,9 @@ public:
      *
      * @param matchmakingContextToken 検索の再開に使用する マッチメイキングの状態を保持するトークン
      */
-    void setMatchmakingContextToken(const Char* matchmakingContextToken)
+    void setMatchmakingContextToken(StringHolder matchmakingContextToken)
     {
-        ensureData().matchmakingContextToken.emplace(matchmakingContextToken);
+        ensureData().matchmakingContextToken.emplace(std::move(matchmakingContextToken));
     }
 
     /**
@@ -278,9 +232,9 @@ public:
      *
      * @param matchmakingContextToken 検索の再開に使用する マッチメイキングの状態を保持するトークン
      */
-    DoMatchmakingRequest& withMatchmakingContextToken(const Char* matchmakingContextToken)
+    DoMatchmakingRequest& withMatchmakingContextToken(StringHolder matchmakingContextToken)
     {
-        ensureData().matchmakingContextToken.emplace(matchmakingContextToken);
+        ensureData().matchmakingContextToken.emplace(std::move(matchmakingContextToken));
         return *this;
     }
 
@@ -299,9 +253,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -309,9 +263,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    DoMatchmakingRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    DoMatchmakingRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -322,33 +276,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    DoMatchmakingRequest& withGs2ClientId(const Char* gs2ClientId)
+    DoMatchmakingRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    DoMatchmakingRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    DoMatchmakingRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -357,9 +287,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    DoMatchmakingRequest& withRequestId(const Char* gs2RequestId)
+    DoMatchmakingRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "QuestModel.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace quest {
@@ -53,54 +55,53 @@ private:
         /** 挑戦可能な期間を指定するイベントマスター のGRN */
         optional<StringHolder> challengePeriodEventId;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             questGroupModelId(data.questGroupModelId),
             name(data.name),
             metadata(data.metadata),
-            quests(data.quests),
             challengePeriodEventId(data.challengePeriodEventId)
-        {}
+        {
+            if (data.quests)
+            {
+                quests = data.quests->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            questGroupModelId(std::move(data.questGroupModelId)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            quests(std::move(data.quests)),
-            challengePeriodEventId(std::move(data.challengePeriodEventId))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "questGroupModelId") == 0) {
+            if (std::strcmp(name_, "questGroupModelId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->questGroupModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "quests") == 0) {
+            else if (std::strcmp(name_, "quests") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -112,7 +113,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "challengePeriodEventId") == 0) {
+            else if (std::strcmp(name_, "challengePeriodEventId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->challengePeriodEventId.emplace(jsonValue.GetString());
@@ -121,72 +123,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    QuestGroupModel() :
-        m_pData(nullptr)
-    {}
+    QuestGroupModel() = default;
+    QuestGroupModel(const QuestGroupModel& questGroupModel) = default;
+    QuestGroupModel(QuestGroupModel&& questGroupModel) = default;
+    ~QuestGroupModel() = default;
 
-    QuestGroupModel(const QuestGroupModel& questGroupModel) :
-        Gs2Object(questGroupModel),
-        m_pData(questGroupModel.m_pData != nullptr ? new Data(*questGroupModel.m_pData) : nullptr)
-    {}
+    QuestGroupModel& operator=(const QuestGroupModel& questGroupModel) = default;
+    QuestGroupModel& operator=(QuestGroupModel&& questGroupModel) = default;
 
-    QuestGroupModel(QuestGroupModel&& questGroupModel) :
-        Gs2Object(std::move(questGroupModel)),
-        m_pData(questGroupModel.m_pData)
+    QuestGroupModel deepCopy() const
     {
-        questGroupModel.m_pData = nullptr;
-    }
-
-    ~QuestGroupModel()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    QuestGroupModel& operator=(const QuestGroupModel& questGroupModel)
-    {
-        Gs2Object::operator=(questGroupModel);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*questGroupModel.m_pData);
-
-        return *this;
-    }
-
-    QuestGroupModel& operator=(QuestGroupModel&& questGroupModel)
-    {
-        Gs2Object::operator=(std::move(questGroupModel));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = questGroupModel.m_pData;
-        questGroupModel.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(QuestGroupModel);
     }
 
     const QuestGroupModel* operator->() const
@@ -213,9 +163,9 @@ public:
      *
      * @param questGroupModelId クエストグループ
      */
-    void setQuestGroupModelId(const Char* questGroupModelId)
+    void setQuestGroupModelId(StringHolder questGroupModelId)
     {
-        ensureData().questGroupModelId.emplace(questGroupModelId);
+        ensureData().questGroupModelId.emplace(std::move(questGroupModelId));
     }
 
     /**
@@ -223,9 +173,9 @@ public:
      *
      * @param questGroupModelId クエストグループ
      */
-    QuestGroupModel& withQuestGroupModelId(const Char* questGroupModelId)
+    QuestGroupModel& withQuestGroupModelId(StringHolder questGroupModelId)
     {
-        setQuestGroupModelId(questGroupModelId);
+        setQuestGroupModelId(std::move(questGroupModelId));
         return *this;
     }
 
@@ -244,9 +194,9 @@ public:
      *
      * @param name クエストグループ名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -254,9 +204,9 @@ public:
      *
      * @param name クエストグループ名
      */
-    QuestGroupModel& withName(const Char* name)
+    QuestGroupModel& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -275,9 +225,9 @@ public:
      *
      * @param metadata クエストグループのメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -285,9 +235,9 @@ public:
      *
      * @param metadata クエストグループのメタデータ
      */
-    QuestGroupModel& withMetadata(const Char* metadata)
+    QuestGroupModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -306,9 +256,9 @@ public:
      *
      * @param quests グループに属するクエスト
      */
-    void setQuests(const List<QuestModel>& quests)
+    void setQuests(List<QuestModel> quests)
     {
-        ensureData().quests.emplace(quests);
+        ensureData().quests.emplace(std::move(quests));
     }
 
     /**
@@ -316,9 +266,9 @@ public:
      *
      * @param quests グループに属するクエスト
      */
-    QuestGroupModel& withQuests(const List<QuestModel>& quests)
+    QuestGroupModel& withQuests(List<QuestModel> quests)
     {
-        setQuests(quests);
+        setQuests(std::move(quests));
         return *this;
     }
 
@@ -337,9 +287,9 @@ public:
      *
      * @param challengePeriodEventId 挑戦可能な期間を指定するイベントマスター のGRN
      */
-    void setChallengePeriodEventId(const Char* challengePeriodEventId)
+    void setChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        ensureData().challengePeriodEventId.emplace(challengePeriodEventId);
+        ensureData().challengePeriodEventId.emplace(std::move(challengePeriodEventId));
     }
 
     /**
@@ -347,9 +297,9 @@ public:
      *
      * @param challengePeriodEventId 挑戦可能な期間を指定するイベントマスター のGRN
      */
-    QuestGroupModel& withChallengePeriodEventId(const Char* challengePeriodEventId)
+    QuestGroupModel& withChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        setChallengePeriodEventId(challengePeriodEventId);
+        setChallengePeriodEventId(std::move(challengePeriodEventId));
         return *this;
     }
 
@@ -364,7 +314,7 @@ inline bool operator!=(const QuestGroupModel& lhs, const QuestGroupModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

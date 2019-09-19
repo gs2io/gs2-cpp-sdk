@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace distributor {
@@ -56,8 +58,7 @@ private:
         /** タグ名 */
         optional<StringHolder> tagName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -68,64 +69,62 @@ private:
             commitHash(data.commitHash),
             branchName(data.branchName),
             tagName(data.tagName)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            gitHubApiKeyId(std::move(data.gitHubApiKeyId)),
-            repositoryName(std::move(data.repositoryName)),
-            sourcePath(std::move(data.sourcePath)),
-            referenceType(std::move(data.referenceType)),
-            commitHash(std::move(data.commitHash)),
-            branchName(std::move(data.branchName)),
-            tagName(std::move(data.tagName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "gitHubApiKeyId") == 0) {
+            if (std::strcmp(name_, "gitHubApiKeyId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->gitHubApiKeyId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "repositoryName") == 0) {
+            else if (std::strcmp(name_, "repositoryName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->repositoryName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "sourcePath") == 0) {
+            else if (std::strcmp(name_, "sourcePath") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->sourcePath.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "referenceType") == 0) {
+            else if (std::strcmp(name_, "referenceType") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->referenceType.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "commitHash") == 0) {
+            else if (std::strcmp(name_, "commitHash") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->commitHash.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "branchName") == 0) {
+            else if (std::strcmp(name_, "branchName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->branchName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "tagName") == 0) {
+            else if (std::strcmp(name_, "tagName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->tagName.emplace(jsonValue.GetString());
@@ -134,72 +133,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    GitHubCheckoutSetting() :
-        m_pData(nullptr)
-    {}
+    GitHubCheckoutSetting() = default;
+    GitHubCheckoutSetting(const GitHubCheckoutSetting& gitHubCheckoutSetting) = default;
+    GitHubCheckoutSetting(GitHubCheckoutSetting&& gitHubCheckoutSetting) = default;
+    ~GitHubCheckoutSetting() = default;
 
-    GitHubCheckoutSetting(const GitHubCheckoutSetting& gitHubCheckoutSetting) :
-        Gs2Object(gitHubCheckoutSetting),
-        m_pData(gitHubCheckoutSetting.m_pData != nullptr ? new Data(*gitHubCheckoutSetting.m_pData) : nullptr)
-    {}
+    GitHubCheckoutSetting& operator=(const GitHubCheckoutSetting& gitHubCheckoutSetting) = default;
+    GitHubCheckoutSetting& operator=(GitHubCheckoutSetting&& gitHubCheckoutSetting) = default;
 
-    GitHubCheckoutSetting(GitHubCheckoutSetting&& gitHubCheckoutSetting) :
-        Gs2Object(std::move(gitHubCheckoutSetting)),
-        m_pData(gitHubCheckoutSetting.m_pData)
+    GitHubCheckoutSetting deepCopy() const
     {
-        gitHubCheckoutSetting.m_pData = nullptr;
-    }
-
-    ~GitHubCheckoutSetting()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GitHubCheckoutSetting& operator=(const GitHubCheckoutSetting& gitHubCheckoutSetting)
-    {
-        Gs2Object::operator=(gitHubCheckoutSetting);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*gitHubCheckoutSetting.m_pData);
-
-        return *this;
-    }
-
-    GitHubCheckoutSetting& operator=(GitHubCheckoutSetting&& gitHubCheckoutSetting)
-    {
-        Gs2Object::operator=(std::move(gitHubCheckoutSetting));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = gitHubCheckoutSetting.m_pData;
-        gitHubCheckoutSetting.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GitHubCheckoutSetting);
     }
 
     const GitHubCheckoutSetting* operator->() const
@@ -226,9 +173,9 @@ public:
      *
      * @param gitHubApiKeyId リソースの取得に使用するGitHub のAPIキー のGRN
      */
-    void setGitHubApiKeyId(const Char* gitHubApiKeyId)
+    void setGitHubApiKeyId(StringHolder gitHubApiKeyId)
     {
-        ensureData().gitHubApiKeyId.emplace(gitHubApiKeyId);
+        ensureData().gitHubApiKeyId.emplace(std::move(gitHubApiKeyId));
     }
 
     /**
@@ -236,9 +183,9 @@ public:
      *
      * @param gitHubApiKeyId リソースの取得に使用するGitHub のAPIキー のGRN
      */
-    GitHubCheckoutSetting& withGitHubApiKeyId(const Char* gitHubApiKeyId)
+    GitHubCheckoutSetting& withGitHubApiKeyId(StringHolder gitHubApiKeyId)
     {
-        setGitHubApiKeyId(gitHubApiKeyId);
+        setGitHubApiKeyId(std::move(gitHubApiKeyId));
         return *this;
     }
 
@@ -257,9 +204,9 @@ public:
      *
      * @param repositoryName リポジトリ名
      */
-    void setRepositoryName(const Char* repositoryName)
+    void setRepositoryName(StringHolder repositoryName)
     {
-        ensureData().repositoryName.emplace(repositoryName);
+        ensureData().repositoryName.emplace(std::move(repositoryName));
     }
 
     /**
@@ -267,9 +214,9 @@ public:
      *
      * @param repositoryName リポジトリ名
      */
-    GitHubCheckoutSetting& withRepositoryName(const Char* repositoryName)
+    GitHubCheckoutSetting& withRepositoryName(StringHolder repositoryName)
     {
-        setRepositoryName(repositoryName);
+        setRepositoryName(std::move(repositoryName));
         return *this;
     }
 
@@ -288,9 +235,9 @@ public:
      *
      * @param sourcePath ソースコードのファイルパス
      */
-    void setSourcePath(const Char* sourcePath)
+    void setSourcePath(StringHolder sourcePath)
     {
-        ensureData().sourcePath.emplace(sourcePath);
+        ensureData().sourcePath.emplace(std::move(sourcePath));
     }
 
     /**
@@ -298,9 +245,9 @@ public:
      *
      * @param sourcePath ソースコードのファイルパス
      */
-    GitHubCheckoutSetting& withSourcePath(const Char* sourcePath)
+    GitHubCheckoutSetting& withSourcePath(StringHolder sourcePath)
     {
-        setSourcePath(sourcePath);
+        setSourcePath(std::move(sourcePath));
         return *this;
     }
 
@@ -319,9 +266,9 @@ public:
      *
      * @param referenceType コードの取得元
      */
-    void setReferenceType(const Char* referenceType)
+    void setReferenceType(StringHolder referenceType)
     {
-        ensureData().referenceType.emplace(referenceType);
+        ensureData().referenceType.emplace(std::move(referenceType));
     }
 
     /**
@@ -329,9 +276,9 @@ public:
      *
      * @param referenceType コードの取得元
      */
-    GitHubCheckoutSetting& withReferenceType(const Char* referenceType)
+    GitHubCheckoutSetting& withReferenceType(StringHolder referenceType)
     {
-        setReferenceType(referenceType);
+        setReferenceType(std::move(referenceType));
         return *this;
     }
 
@@ -350,9 +297,9 @@ public:
      *
      * @param commitHash コミットハッシュ
      */
-    void setCommitHash(const Char* commitHash)
+    void setCommitHash(StringHolder commitHash)
     {
-        ensureData().commitHash.emplace(commitHash);
+        ensureData().commitHash.emplace(std::move(commitHash));
     }
 
     /**
@@ -360,9 +307,9 @@ public:
      *
      * @param commitHash コミットハッシュ
      */
-    GitHubCheckoutSetting& withCommitHash(const Char* commitHash)
+    GitHubCheckoutSetting& withCommitHash(StringHolder commitHash)
     {
-        setCommitHash(commitHash);
+        setCommitHash(std::move(commitHash));
         return *this;
     }
 
@@ -381,9 +328,9 @@ public:
      *
      * @param branchName ブランチ名
      */
-    void setBranchName(const Char* branchName)
+    void setBranchName(StringHolder branchName)
     {
-        ensureData().branchName.emplace(branchName);
+        ensureData().branchName.emplace(std::move(branchName));
     }
 
     /**
@@ -391,9 +338,9 @@ public:
      *
      * @param branchName ブランチ名
      */
-    GitHubCheckoutSetting& withBranchName(const Char* branchName)
+    GitHubCheckoutSetting& withBranchName(StringHolder branchName)
     {
-        setBranchName(branchName);
+        setBranchName(std::move(branchName));
         return *this;
     }
 
@@ -412,9 +359,9 @@ public:
      *
      * @param tagName タグ名
      */
-    void setTagName(const Char* tagName)
+    void setTagName(StringHolder tagName)
     {
-        ensureData().tagName.emplace(tagName);
+        ensureData().tagName.emplace(std::move(tagName));
     }
 
     /**
@@ -422,9 +369,9 @@ public:
      *
      * @param tagName タグ名
      */
-    GitHubCheckoutSetting& withTagName(const Char* tagName)
+    GitHubCheckoutSetting& withTagName(StringHolder tagName)
     {
-        setTagName(tagName);
+        setTagName(std::move(tagName));
         return *this;
     }
 
@@ -439,7 +386,7 @@ inline bool operator!=(const GitHubCheckoutSetting& lhs, const GitHubCheckoutSet
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

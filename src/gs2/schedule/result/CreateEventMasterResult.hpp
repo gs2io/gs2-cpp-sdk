@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace schedule
 {
@@ -43,28 +45,28 @@ private:
         /** 作成したイベントマスター */
         optional<EventMaster> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    CreateEventMasterResult() :
-        m_pData(nullptr)
-    {}
+    CreateEventMasterResult() = default;
+    CreateEventMasterResult(const CreateEventMasterResult& createEventMasterResult) = default;
+    CreateEventMasterResult(CreateEventMasterResult&& createEventMasterResult) = default;
+    ~CreateEventMasterResult() = default;
 
-    CreateEventMasterResult(const CreateEventMasterResult& createEventMasterResult) :
-        Gs2Object(createEventMasterResult),
-        m_pData(createEventMasterResult.m_pData != nullptr ? new Data(*createEventMasterResult.m_pData) : nullptr)
-    {}
+    CreateEventMasterResult& operator=(const CreateEventMasterResult& createEventMasterResult) = default;
+    CreateEventMasterResult& operator=(CreateEventMasterResult&& createEventMasterResult) = default;
 
-    CreateEventMasterResult(CreateEventMasterResult&& createEventMasterResult) :
-        Gs2Object(std::move(createEventMasterResult)),
-        m_pData(createEventMasterResult.m_pData)
+    CreateEventMasterResult deepCopy() const
     {
-        createEventMasterResult.m_pData = nullptr;
-    }
-
-    ~CreateEventMasterResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateEventMasterResult& operator=(const CreateEventMasterResult& createEventMasterResult)
-    {
-        Gs2Object::operator=(createEventMasterResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createEventMasterResult.m_pData);
-
-        return *this;
-    }
-
-    CreateEventMasterResult& operator=(CreateEventMasterResult&& createEventMasterResult)
-    {
-        Gs2Object::operator=(std::move(createEventMasterResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createEventMasterResult.m_pData;
-        createEventMasterResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateEventMasterResult);
     }
 
     const CreateEventMasterResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 作成したイベントマスター
      */
-    void setItem(const EventMaster& item)
+    void setItem(EventMaster item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

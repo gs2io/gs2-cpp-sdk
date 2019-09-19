@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace deploy {
@@ -58,8 +60,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -71,71 +72,69 @@ private:
             status(data.status),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            stackId(std::move(data.stackId)),
-            ownerId(std::move(data.ownerId)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            template_(std::move(data.template_)),
-            status(std::move(data.status)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "stackId") == 0) {
+            if (std::strcmp(name_, "stackId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->stackId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "template") == 0) {
+            else if (std::strcmp(name_, "template") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->template_.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "status") == 0) {
+            else if (std::strcmp(name_, "status") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->status.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -144,72 +143,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Stack() :
-        m_pData(nullptr)
-    {}
+    Stack() = default;
+    Stack(const Stack& stack) = default;
+    Stack(Stack&& stack) = default;
+    ~Stack() = default;
 
-    Stack(const Stack& stack) :
-        Gs2Object(stack),
-        m_pData(stack.m_pData != nullptr ? new Data(*stack.m_pData) : nullptr)
-    {}
+    Stack& operator=(const Stack& stack) = default;
+    Stack& operator=(Stack&& stack) = default;
 
-    Stack(Stack&& stack) :
-        Gs2Object(std::move(stack)),
-        m_pData(stack.m_pData)
+    Stack deepCopy() const
     {
-        stack.m_pData = nullptr;
-    }
-
-    ~Stack()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Stack& operator=(const Stack& stack)
-    {
-        Gs2Object::operator=(stack);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*stack.m_pData);
-
-        return *this;
-    }
-
-    Stack& operator=(Stack&& stack)
-    {
-        Gs2Object::operator=(std::move(stack));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = stack.m_pData;
-        stack.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Stack);
     }
 
     const Stack* operator->() const
@@ -236,9 +183,9 @@ public:
      *
      * @param stackId スタック
      */
-    void setStackId(const Char* stackId)
+    void setStackId(StringHolder stackId)
     {
-        ensureData().stackId.emplace(stackId);
+        ensureData().stackId.emplace(std::move(stackId));
     }
 
     /**
@@ -246,9 +193,9 @@ public:
      *
      * @param stackId スタック
      */
-    Stack& withStackId(const Char* stackId)
+    Stack& withStackId(StringHolder stackId)
     {
-        setStackId(stackId);
+        setStackId(std::move(stackId));
         return *this;
     }
 
@@ -267,9 +214,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
@@ -277,9 +224,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    Stack& withOwnerId(const Char* ownerId)
+    Stack& withOwnerId(StringHolder ownerId)
     {
-        setOwnerId(ownerId);
+        setOwnerId(std::move(ownerId));
         return *this;
     }
 
@@ -298,9 +245,9 @@ public:
      *
      * @param name スタック名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -308,9 +255,9 @@ public:
      *
      * @param name スタック名
      */
-    Stack& withName(const Char* name)
+    Stack& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -329,9 +276,9 @@ public:
      *
      * @param description スタックの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -339,9 +286,9 @@ public:
      *
      * @param description スタックの説明
      */
-    Stack& withDescription(const Char* description)
+    Stack& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -360,9 +307,9 @@ public:
      *
      * @param template_ テンプレートデータ
      */
-    void setTemplate(const Char* template_)
+    void setTemplate(StringHolder template_)
     {
-        ensureData().template_.emplace(template_);
+        ensureData().template_.emplace(std::move(template_));
     }
 
     /**
@@ -370,9 +317,9 @@ public:
      *
      * @param template_ テンプレートデータ
      */
-    Stack& withTemplate(const Char* template_)
+    Stack& withTemplate(StringHolder template_)
     {
-        setTemplate(template_);
+        setTemplate(std::move(template_));
         return *this;
     }
 
@@ -391,9 +338,9 @@ public:
      *
      * @param status 実行状態
      */
-    void setStatus(const Char* status)
+    void setStatus(StringHolder status)
     {
-        ensureData().status.emplace(status);
+        ensureData().status.emplace(std::move(status));
     }
 
     /**
@@ -401,9 +348,9 @@ public:
      *
      * @param status 実行状態
      */
-    Stack& withStatus(const Char* status)
+    Stack& withStatus(StringHolder status)
     {
-        setStatus(status);
+        setStatus(std::move(status));
         return *this;
     }
 
@@ -480,7 +427,7 @@ inline bool operator!=(const Stack& lhs, const Stack& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

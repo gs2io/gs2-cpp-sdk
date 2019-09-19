@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2MissionConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace mission
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -54,106 +56,54 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             missionGroupName(data.missionGroupName),
             missionTaskName(data.missionTaskName),
             userId(data.userId),
-            config(data.config),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+            if (data.config)
+            {
+                config = data.config->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            missionGroupName(std::move(data.missionGroupName)),
-            missionTaskName(std::move(data.missionTaskName)),
-            userId(std::move(data.userId)),
-            config(std::move(data.config)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    CompleteByUserIdRequest() :
-        m_pData(nullptr)
-    {}
+    CompleteByUserIdRequest() = default;
+    CompleteByUserIdRequest(const CompleteByUserIdRequest& completeByUserIdRequest) = default;
+    CompleteByUserIdRequest(CompleteByUserIdRequest&& completeByUserIdRequest) = default;
+    ~CompleteByUserIdRequest() GS2_OVERRIDE = default;
 
-    CompleteByUserIdRequest(const CompleteByUserIdRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Mission(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    CompleteByUserIdRequest& operator=(const CompleteByUserIdRequest& completeByUserIdRequest) = default;
+    CompleteByUserIdRequest& operator=(CompleteByUserIdRequest&& completeByUserIdRequest) = default;
 
-    CompleteByUserIdRequest(CompleteByUserIdRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Mission(std::move(obj)),
-        m_pData(obj.m_pData)
+    CompleteByUserIdRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~CompleteByUserIdRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CompleteByUserIdRequest& operator=(const CompleteByUserIdRequest& completeByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(completeByUserIdRequest);
-        Gs2Mission::operator=(completeByUserIdRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*completeByUserIdRequest.m_pData);
-
-        return *this;
-    }
-
-    CompleteByUserIdRequest& operator=(CompleteByUserIdRequest&& completeByUserIdRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(completeByUserIdRequest));
-        Gs2Mission::operator=(std::move(completeByUserIdRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = completeByUserIdRequest.m_pData;
-        completeByUserIdRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CompleteByUserIdRequest);
     }
 
     const CompleteByUserIdRequest* operator->() const
@@ -181,9 +131,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -191,9 +141,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    CompleteByUserIdRequest& withNamespaceName(const Char* namespaceName)
+    CompleteByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -212,9 +162,9 @@ public:
      *
      * @param missionGroupName ミッショングループ名
      */
-    void setMissionGroupName(const Char* missionGroupName)
+    void setMissionGroupName(StringHolder missionGroupName)
     {
-        ensureData().missionGroupName.emplace(missionGroupName);
+        ensureData().missionGroupName.emplace(std::move(missionGroupName));
     }
 
     /**
@@ -222,9 +172,9 @@ public:
      *
      * @param missionGroupName ミッショングループ名
      */
-    CompleteByUserIdRequest& withMissionGroupName(const Char* missionGroupName)
+    CompleteByUserIdRequest& withMissionGroupName(StringHolder missionGroupName)
     {
-        ensureData().missionGroupName.emplace(missionGroupName);
+        ensureData().missionGroupName.emplace(std::move(missionGroupName));
         return *this;
     }
 
@@ -243,9 +193,9 @@ public:
      *
      * @param missionTaskName タスク名
      */
-    void setMissionTaskName(const Char* missionTaskName)
+    void setMissionTaskName(StringHolder missionTaskName)
     {
-        ensureData().missionTaskName.emplace(missionTaskName);
+        ensureData().missionTaskName.emplace(std::move(missionTaskName));
     }
 
     /**
@@ -253,9 +203,9 @@ public:
      *
      * @param missionTaskName タスク名
      */
-    CompleteByUserIdRequest& withMissionTaskName(const Char* missionTaskName)
+    CompleteByUserIdRequest& withMissionTaskName(StringHolder missionTaskName)
     {
-        ensureData().missionTaskName.emplace(missionTaskName);
+        ensureData().missionTaskName.emplace(std::move(missionTaskName));
         return *this;
     }
 
@@ -274,9 +224,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -284,9 +234,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    CompleteByUserIdRequest& withUserId(const Char* userId)
+    CompleteByUserIdRequest& withUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
         return *this;
     }
 
@@ -305,9 +255,9 @@ public:
      *
      * @param config スタンプシートの変数に適用する設定値
      */
-    void setConfig(const List<Config>& config)
+    void setConfig(List<Config> config)
     {
-        ensureData().config.emplace(config);
+        ensureData().config.emplace(std::move(config));
     }
 
     /**
@@ -315,9 +265,9 @@ public:
      *
      * @param config スタンプシートの変数に適用する設定値
      */
-    CompleteByUserIdRequest& withConfig(const List<Config>& config)
+    CompleteByUserIdRequest& withConfig(List<Config> config)
     {
-        ensureData().config.emplace(config);
+        ensureData().config.emplace(std::move(config));
         return *this;
     }
 
@@ -336,9 +286,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -346,9 +296,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    CompleteByUserIdRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    CompleteByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -359,33 +309,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    CompleteByUserIdRequest& withGs2ClientId(const Char* gs2ClientId)
+    CompleteByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    CompleteByUserIdRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    CompleteByUserIdRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -394,9 +320,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    CompleteByUserIdRequest& withRequestId(const Char* gs2RequestId)
+    CompleteByUserIdRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

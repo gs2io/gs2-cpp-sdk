@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace account {
 class EzCreateResult : public gs2::Gs2Object
 {
 private:
-    /** 作成したゲームプレイヤーアカウント */
-    EzAccount m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 作成したゲームプレイヤーアカウント */
+        EzAccount item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::account::CreateAccountResult& createAccountResult) :
+            item(*createAccountResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzCreateResult(const gs2::account::CreateAccountResult& result) :
-        m_Item(*result.getItem())
+    EzCreateResult() = default;
+    EzCreateResult(const EzCreateResult& result) = default;
+    EzCreateResult(EzCreateResult&& result) = default;
+    ~EzCreateResult() = default;
+
+    EzCreateResult(gs2::account::CreateAccountResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzCreateResult& operator=(const EzCreateResult& result) = default;
+    EzCreateResult& operator=(EzCreateResult&& result) = default;
+
+    EzCreateResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCreateResult);
     }
 
     static bool isConvertible(const gs2::account::CreateAccountResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzAccount& getItem() const
     {
-        return m_Item;
-    }
-
-    EzAccount& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

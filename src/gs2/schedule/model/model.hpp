@@ -18,6 +18,7 @@
 #define GS2_SCHEDULE_MODEL_MODEL_HPP_
 
 #include <gs2/core/common.hpp>
+#include "notification.hpp"
 #include "Namespace.hpp"
 #include "EventMaster.hpp"
 #include "Trigger.hpp"

@@ -27,25 +27,65 @@ namespace gs2 { namespace ez { namespace quest {
 class EzCompletedQuestList : public gs2::Gs2Object
 {
 private:
-    /** クエストグループ名 */
-    gs2::optional<StringHolder> m_QuestGroupName;
-    /** 攻略済みのクエスト名一覧のリスト */
-    gs2::optional<List<StringHolder>> m_CompleteQuestNames;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** クエストグループ名 */
+        gs2::optional<StringHolder> questGroupName;
+        /** 攻略済みのクエスト名一覧のリスト */
+        gs2::optional<List<StringHolder>> completeQuestNames;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            questGroupName(data.questGroupName)
+        {
+            if (data.completeQuestNames)
+            {
+                completeQuestNames = data.completeQuestNames->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::quest::CompletedQuestList& completedQuestList) :
+            questGroupName(completedQuestList.getQuestGroupName()),
+            completeQuestNames(completedQuestList.getCompleteQuestNames())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzCompletedQuestList() = default;
+    EzCompletedQuestList(const EzCompletedQuestList& ezCompletedQuestList) = default;
+    EzCompletedQuestList(EzCompletedQuestList&& ezCompletedQuestList) = default;
+    ~EzCompletedQuestList() = default;
 
     EzCompletedQuestList(gs2::quest::CompletedQuestList completedQuestList) :
-        m_QuestGroupName(completedQuestList.getQuestGroupName()),
-        m_CompleteQuestNames(completedQuestList.getCompleteQuestNames())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(completedQuestList)
+    {}
+
+    EzCompletedQuestList& operator=(const EzCompletedQuestList& ezCompletedQuestList) = default;
+    EzCompletedQuestList& operator=(EzCompletedQuestList&& ezCompletedQuestList) = default;
+
+    EzCompletedQuestList deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCompletedQuestList);
     }
 
     gs2::quest::CompletedQuestList ToModel() const
     {
         gs2::quest::CompletedQuestList completedQuestList;
-        completedQuestList.setQuestGroupName(*m_QuestGroupName);
-        completedQuestList.setCompleteQuestNames(*m_CompleteQuestNames);
+        completedQuestList.setQuestGroupName(getQuestGroupName());
+        completedQuestList.setCompleteQuestNames(getCompleteQuestNames());
         return completedQuestList;
     }
 
@@ -53,58 +93,37 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getQuestGroupName() const
+    const StringHolder& getQuestGroupName() const
     {
-        return *m_QuestGroupName;
-    }
-
-    gs2::StringHolder& getQuestGroupName()
-    {
-        return *m_QuestGroupName;
+        return *ensureData().questGroupName;
     }
 
     const List<StringHolder>& getCompleteQuestNames() const
     {
-        return *m_CompleteQuestNames;
-    }
-
-    List<StringHolder>& getCompleteQuestNames()
-    {
-        return *m_CompleteQuestNames;
+        return *ensureData().completeQuestNames;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setQuestGroupName(Char* questGroupName)
+    void setQuestGroupName(StringHolder questGroupName)
     {
-        m_QuestGroupName.emplace(questGroupName);
+        ensureData().questGroupName = std::move(questGroupName);
     }
 
-    void setCompleteQuestNames(const List<StringHolder>& completeQuestNames)
+    void setCompleteQuestNames(List<StringHolder> completeQuestNames)
     {
-        m_CompleteQuestNames = completeQuestNames;
+        ensureData().completeQuestNames = std::move(completeQuestNames);
     }
 
-    void setCompleteQuestNames(List<StringHolder>&& completeQuestNames)
+    EzCompletedQuestList& withQuestGroupName(StringHolder questGroupName)
     {
-        m_CompleteQuestNames = std::move(completeQuestNames);
-    }
-
-    EzCompletedQuestList& withQuestGroupName(Char* questGroupName)
-    {
-        setQuestGroupName(questGroupName);
+        setQuestGroupName(std::move(questGroupName));
         return *this;
     }
 
-    EzCompletedQuestList& withCompleteQuestNames(const List<StringHolder>& completeQuestNames)
-    {
-        setCompleteQuestNames(completeQuestNames);
-        return *this;
-    }
-
-    EzCompletedQuestList& withCompleteQuestNames(List<StringHolder>&& completeQuestNames)
+    EzCompletedQuestList& withCompleteQuestNames(List<StringHolder> completeQuestNames)
     {
         setCompleteQuestNames(std::move(completeQuestNames));
         return *this;

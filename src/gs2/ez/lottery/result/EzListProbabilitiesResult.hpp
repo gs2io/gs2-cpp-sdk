@@ -27,19 +27,57 @@ namespace gs2 { namespace ez { namespace lottery {
 class EzListProbabilitiesResult : public gs2::Gs2Object
 {
 private:
-    /** 景品の当選確率リスト */
-    List<EzProbability> m_Items;
-
-public:
-    EzListProbabilitiesResult(const gs2::lottery::DescribeProbabilitiesResult& result)
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** 景品の当選確率リスト */
+        List<EzProbability> items;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::lottery::DescribeProbabilitiesResult& describeProbabilitiesResult)
+        {
             {
-                m_Items += EzProbability(list[i]);
+                auto& list = *describeProbabilitiesResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzProbability(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListProbabilitiesResult() = default;
+    EzListProbabilitiesResult(const EzListProbabilitiesResult& result) = default;
+    EzListProbabilitiesResult(EzListProbabilitiesResult&& result) = default;
+    ~EzListProbabilitiesResult() = default;
+
+    EzListProbabilitiesResult(gs2::lottery::DescribeProbabilitiesResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListProbabilitiesResult& operator=(const EzListProbabilitiesResult& result) = default;
+    EzListProbabilitiesResult& operator=(EzListProbabilitiesResult&& result) = default;
+
+    EzListProbabilitiesResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListProbabilitiesResult);
     }
 
     static bool isConvertible(const gs2::lottery::DescribeProbabilitiesResult& result)
@@ -54,12 +92,7 @@ public:
 
     const List<EzProbability>& getItems() const
     {
-        return m_Items;
-    }
-
-    List<EzProbability>& getItems()
-    {
-        return m_Items;
+        return ensureData().items;
     }
 };
 

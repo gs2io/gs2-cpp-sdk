@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace limit {
@@ -56,8 +58,7 @@ private:
         /** リセット時刻 */
         optional<Int32> resetHour;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -68,64 +69,62 @@ private:
             resetDayOfMonth(data.resetDayOfMonth),
             resetDayOfWeek(data.resetDayOfWeek),
             resetHour(data.resetHour)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            limitModelId(std::move(data.limitModelId)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            resetType(std::move(data.resetType)),
-            resetDayOfMonth(std::move(data.resetDayOfMonth)),
-            resetDayOfWeek(std::move(data.resetDayOfWeek)),
-            resetHour(std::move(data.resetHour))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "limitModelId") == 0) {
+            if (std::strcmp(name_, "limitModelId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->limitModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "resetType") == 0) {
+            else if (std::strcmp(name_, "resetType") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->resetType.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "resetDayOfMonth") == 0) {
+            else if (std::strcmp(name_, "resetDayOfMonth") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->resetDayOfMonth = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "resetDayOfWeek") == 0) {
+            else if (std::strcmp(name_, "resetDayOfWeek") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->resetDayOfWeek.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "resetHour") == 0) {
+            else if (std::strcmp(name_, "resetHour") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->resetHour = jsonValue.GetInt();
@@ -134,72 +133,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    LimitModel() :
-        m_pData(nullptr)
-    {}
+    LimitModel() = default;
+    LimitModel(const LimitModel& limitModel) = default;
+    LimitModel(LimitModel&& limitModel) = default;
+    ~LimitModel() = default;
 
-    LimitModel(const LimitModel& limitModel) :
-        Gs2Object(limitModel),
-        m_pData(limitModel.m_pData != nullptr ? new Data(*limitModel.m_pData) : nullptr)
-    {}
+    LimitModel& operator=(const LimitModel& limitModel) = default;
+    LimitModel& operator=(LimitModel&& limitModel) = default;
 
-    LimitModel(LimitModel&& limitModel) :
-        Gs2Object(std::move(limitModel)),
-        m_pData(limitModel.m_pData)
+    LimitModel deepCopy() const
     {
-        limitModel.m_pData = nullptr;
-    }
-
-    ~LimitModel()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    LimitModel& operator=(const LimitModel& limitModel)
-    {
-        Gs2Object::operator=(limitModel);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*limitModel.m_pData);
-
-        return *this;
-    }
-
-    LimitModel& operator=(LimitModel&& limitModel)
-    {
-        Gs2Object::operator=(std::move(limitModel));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = limitModel.m_pData;
-        limitModel.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(LimitModel);
     }
 
     const LimitModel* operator->() const
@@ -226,9 +173,9 @@ public:
      *
      * @param limitModelId 回数制限の種類
      */
-    void setLimitModelId(const Char* limitModelId)
+    void setLimitModelId(StringHolder limitModelId)
     {
-        ensureData().limitModelId.emplace(limitModelId);
+        ensureData().limitModelId.emplace(std::move(limitModelId));
     }
 
     /**
@@ -236,9 +183,9 @@ public:
      *
      * @param limitModelId 回数制限の種類
      */
-    LimitModel& withLimitModelId(const Char* limitModelId)
+    LimitModel& withLimitModelId(StringHolder limitModelId)
     {
-        setLimitModelId(limitModelId);
+        setLimitModelId(std::move(limitModelId));
         return *this;
     }
 
@@ -257,9 +204,9 @@ public:
      *
      * @param name 回数制限の種類名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -267,9 +214,9 @@ public:
      *
      * @param name 回数制限の種類名
      */
-    LimitModel& withName(const Char* name)
+    LimitModel& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -288,9 +235,9 @@ public:
      *
      * @param metadata 回数制限の種類のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -298,9 +245,9 @@ public:
      *
      * @param metadata 回数制限の種類のメタデータ
      */
-    LimitModel& withMetadata(const Char* metadata)
+    LimitModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -319,9 +266,9 @@ public:
      *
      * @param resetType リセットタイミング
      */
-    void setResetType(const Char* resetType)
+    void setResetType(StringHolder resetType)
     {
-        ensureData().resetType.emplace(resetType);
+        ensureData().resetType.emplace(std::move(resetType));
     }
 
     /**
@@ -329,9 +276,9 @@ public:
      *
      * @param resetType リセットタイミング
      */
-    LimitModel& withResetType(const Char* resetType)
+    LimitModel& withResetType(StringHolder resetType)
     {
-        setResetType(resetType);
+        setResetType(std::move(resetType));
         return *this;
     }
 
@@ -381,9 +328,9 @@ public:
      *
      * @param resetDayOfWeek リセットする曜日
      */
-    void setResetDayOfWeek(const Char* resetDayOfWeek)
+    void setResetDayOfWeek(StringHolder resetDayOfWeek)
     {
-        ensureData().resetDayOfWeek.emplace(resetDayOfWeek);
+        ensureData().resetDayOfWeek.emplace(std::move(resetDayOfWeek));
     }
 
     /**
@@ -391,9 +338,9 @@ public:
      *
      * @param resetDayOfWeek リセットする曜日
      */
-    LimitModel& withResetDayOfWeek(const Char* resetDayOfWeek)
+    LimitModel& withResetDayOfWeek(StringHolder resetDayOfWeek)
     {
-        setResetDayOfWeek(resetDayOfWeek);
+        setResetDayOfWeek(std::move(resetDayOfWeek));
         return *this;
     }
 
@@ -439,7 +386,7 @@ inline bool operator!=(const LimitModel& lhs, const LimitModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

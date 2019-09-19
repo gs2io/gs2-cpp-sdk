@@ -27,29 +27,67 @@ namespace gs2 { namespace ez { namespace auth {
 class EzAccessToken : public gs2::Gs2Object
 {
 private:
-    /** アクセストークン */
-    gs2::optional<StringHolder> m_Token;
-    /** ユーザーID */
-    gs2::optional<StringHolder> m_UserId;
-    /** 有効期限 */
-    gs2::optional<Int64> m_Expire;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** アクセストークン */
+        gs2::optional<StringHolder> token;
+        /** ユーザーID */
+        gs2::optional<StringHolder> userId;
+        /** 有効期限 */
+        gs2::optional<Int64> expire;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            token(data.token),
+            userId(data.userId),
+            expire(data.expire)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::auth::AccessToken& accessToken) :
+            token(accessToken.getToken()),
+            userId(accessToken.getUserId()),
+            expire(accessToken.getExpire() ? *accessToken.getExpire() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzAccessToken() = default;
+    EzAccessToken(const EzAccessToken& ezAccessToken) = default;
+    EzAccessToken(EzAccessToken&& ezAccessToken) = default;
+    ~EzAccessToken() = default;
 
     EzAccessToken(gs2::auth::AccessToken accessToken) :
-        m_Token(accessToken.getToken()),
-        m_UserId(accessToken.getUserId()),
-        m_Expire(accessToken.getExpire() ? *accessToken.getExpire() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(accessToken)
+    {}
+
+    EzAccessToken& operator=(const EzAccessToken& ezAccessToken) = default;
+    EzAccessToken& operator=(EzAccessToken&& ezAccessToken) = default;
+
+    EzAccessToken deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzAccessToken);
     }
 
     gs2::auth::AccessToken ToModel() const
     {
         gs2::auth::AccessToken accessToken;
-        accessToken.setToken(*m_Token);
-        accessToken.setUserId(*m_UserId);
-        accessToken.setExpire(*m_Expire);
+        accessToken.setToken(getToken());
+        accessToken.setUserId(getUserId());
+        accessToken.setExpire(getExpire());
         return accessToken;
     }
 
@@ -57,59 +95,49 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getToken() const
+    const StringHolder& getToken() const
     {
-        return *m_Token;
+        return *ensureData().token;
     }
 
-    gs2::StringHolder& getToken()
+    const StringHolder& getUserId() const
     {
-        return *m_Token;
-    }
-
-    const gs2::StringHolder& getUserId() const
-    {
-        return *m_UserId;
-    }
-
-    gs2::StringHolder& getUserId()
-    {
-        return *m_UserId;
+        return *ensureData().userId;
     }
 
     Int64 getExpire() const
     {
-        return *m_Expire;
+        return *ensureData().expire;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setToken(Char* token)
+    void setToken(StringHolder token)
     {
-        m_Token.emplace(token);
+        ensureData().token = std::move(token);
     }
 
-    void setUserId(Char* userId)
+    void setUserId(StringHolder userId)
     {
-        m_UserId.emplace(userId);
+        ensureData().userId = std::move(userId);
     }
 
     void setExpire(Int64 expire)
     {
-        m_Expire = expire;
+        ensureData().expire = expire;
     }
 
-    EzAccessToken& withToken(Char* token)
+    EzAccessToken& withToken(StringHolder token)
     {
-        setToken(token);
+        setToken(std::move(token));
         return *this;
     }
 
-    EzAccessToken& withUserId(Char* userId)
+    EzAccessToken& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 

@@ -28,15 +28,15 @@ Client::Client(gs2::ez::Profile& profile) :
 }
 
 void Client::listExperienceModels(
-    std::function<void(AsyncEzListExperienceModelsResult&)> callback,
-    const Char* namespaceName
+    std::function<void(AsyncEzListExperienceModelsResult)> callback,
+    StringHolder namespaceName
 )
 {
     gs2::experience::DescribeExperienceModelsRequest request;
     request.setNamespaceName(namespaceName);
     m_Client.describeExperienceModels(
         request,
-        [callback](gs2::experience::AsyncDescribeExperienceModelsResult& r)
+        [callback](gs2::experience::AsyncDescribeExperienceModelsResult r)
         {
             if (r.getError())
             {
@@ -62,9 +62,9 @@ void Client::listExperienceModels(
 }
 
 void Client::getExperienceModel(
-    std::function<void(AsyncEzGetExperienceModelResult&)> callback,
-    const Char* namespaceName,
-    const Char* experienceName
+    std::function<void(AsyncEzGetExperienceModelResult)> callback,
+    StringHolder namespaceName,
+    StringHolder experienceName
 )
 {
     gs2::experience::GetExperienceModelRequest request;
@@ -72,7 +72,7 @@ void Client::getExperienceModel(
     request.setExperienceName(experienceName);
     m_Client.getExperienceModel(
         request,
-        [callback](gs2::experience::AsyncGetExperienceModelResult& r)
+        [callback](gs2::experience::AsyncGetExperienceModelResult r)
         {
             if (r.getError())
             {
@@ -98,11 +98,11 @@ void Client::getExperienceModel(
 }
 
 void Client::listStatuses(
-    std::function<void(AsyncEzListStatusesResult&)> callback,
+    std::function<void(AsyncEzListStatusesResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* experienceName,
-    const Char* pageToken,
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> experienceName,
+    gs2::optional<StringHolder> pageToken,
     gs2::optional<Int64> limit
 )
 {
@@ -110,20 +110,20 @@ void Client::listStatuses(
     request.setNamespaceName(namespaceName);
     if (experienceName)
     {
-        request.setExperienceName(experienceName);
+        request.setExperienceName(std::move(*experienceName));
     }
     if (pageToken)
     {
-        request.setPageToken(pageToken);
+        request.setPageToken(std::move(*pageToken));
     }
     if (limit)
     {
-        request.setLimit(*limit);
+        request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.describeStatuses(
         request,
-        [callback](gs2::experience::AsyncDescribeStatusesResult& r)
+        [callback](gs2::experience::AsyncDescribeStatusesResult r)
         {
             if (r.getError())
             {
@@ -149,11 +149,11 @@ void Client::listStatuses(
 }
 
 void Client::getStatus(
-    std::function<void(AsyncEzGetStatusResult&)> callback,
+    std::function<void(AsyncEzGetStatusResult)> callback,
     GameSession& session,
-    const Char* namespaceName,
-    const Char* experienceName,
-    const Char* propertyId
+    StringHolder namespaceName,
+    StringHolder experienceName,
+    StringHolder propertyId
 )
 {
     gs2::experience::GetStatusRequest request;
@@ -163,7 +163,7 @@ void Client::getStatus(
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.getStatus(
         request,
-        [callback](gs2::experience::AsyncGetStatusResult& r)
+        [callback](gs2::experience::AsyncGetStatusResult r)
         {
             if (r.getError())
             {

@@ -22,9 +22,11 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "ConsumeAction.hpp"
 #include "AcquireAction.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace showcase {
@@ -60,8 +62,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -69,57 +70,58 @@ private:
             name(data.name),
             description(data.description),
             metadata(data.metadata),
-            consumeActions(data.consumeActions),
-            acquireActions(data.acquireActions),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.consumeActions)
+            {
+                consumeActions = data.consumeActions->deepCopy();
+            }
+            if (data.acquireActions)
+            {
+                acquireActions = data.acquireActions->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            salesItemId(std::move(data.salesItemId)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            metadata(std::move(data.metadata)),
-            consumeActions(std::move(data.consumeActions)),
-            acquireActions(std::move(data.acquireActions)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "salesItemId") == 0) {
+            if (std::strcmp(name_, "salesItemId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->salesItemId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "consumeActions") == 0) {
+            else if (std::strcmp(name_, "consumeActions") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -131,7 +133,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "acquireActions") == 0) {
+            else if (std::strcmp(name_, "acquireActions") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -143,13 +146,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -158,72 +163,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    SalesItemMaster() :
-        m_pData(nullptr)
-    {}
+    SalesItemMaster() = default;
+    SalesItemMaster(const SalesItemMaster& salesItemMaster) = default;
+    SalesItemMaster(SalesItemMaster&& salesItemMaster) = default;
+    ~SalesItemMaster() = default;
 
-    SalesItemMaster(const SalesItemMaster& salesItemMaster) :
-        Gs2Object(salesItemMaster),
-        m_pData(salesItemMaster.m_pData != nullptr ? new Data(*salesItemMaster.m_pData) : nullptr)
-    {}
+    SalesItemMaster& operator=(const SalesItemMaster& salesItemMaster) = default;
+    SalesItemMaster& operator=(SalesItemMaster&& salesItemMaster) = default;
 
-    SalesItemMaster(SalesItemMaster&& salesItemMaster) :
-        Gs2Object(std::move(salesItemMaster)),
-        m_pData(salesItemMaster.m_pData)
+    SalesItemMaster deepCopy() const
     {
-        salesItemMaster.m_pData = nullptr;
-    }
-
-    ~SalesItemMaster()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    SalesItemMaster& operator=(const SalesItemMaster& salesItemMaster)
-    {
-        Gs2Object::operator=(salesItemMaster);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*salesItemMaster.m_pData);
-
-        return *this;
-    }
-
-    SalesItemMaster& operator=(SalesItemMaster&& salesItemMaster)
-    {
-        Gs2Object::operator=(std::move(salesItemMaster));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = salesItemMaster.m_pData;
-        salesItemMaster.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(SalesItemMaster);
     }
 
     const SalesItemMaster* operator->() const
@@ -250,9 +203,9 @@ public:
      *
      * @param salesItemId 商品マスター
      */
-    void setSalesItemId(const Char* salesItemId)
+    void setSalesItemId(StringHolder salesItemId)
     {
-        ensureData().salesItemId.emplace(salesItemId);
+        ensureData().salesItemId.emplace(std::move(salesItemId));
     }
 
     /**
@@ -260,9 +213,9 @@ public:
      *
      * @param salesItemId 商品マスター
      */
-    SalesItemMaster& withSalesItemId(const Char* salesItemId)
+    SalesItemMaster& withSalesItemId(StringHolder salesItemId)
     {
-        setSalesItemId(salesItemId);
+        setSalesItemId(std::move(salesItemId));
         return *this;
     }
 
@@ -281,9 +234,9 @@ public:
      *
      * @param name 商品名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -291,9 +244,9 @@ public:
      *
      * @param name 商品名
      */
-    SalesItemMaster& withName(const Char* name)
+    SalesItemMaster& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -312,9 +265,9 @@ public:
      *
      * @param description 商品マスターの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -322,9 +275,9 @@ public:
      *
      * @param description 商品マスターの説明
      */
-    SalesItemMaster& withDescription(const Char* description)
+    SalesItemMaster& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -343,9 +296,9 @@ public:
      *
      * @param metadata 商品のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -353,9 +306,9 @@ public:
      *
      * @param metadata 商品のメタデータ
      */
-    SalesItemMaster& withMetadata(const Char* metadata)
+    SalesItemMaster& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -374,9 +327,9 @@ public:
      *
      * @param consumeActions 消費アクションリスト
      */
-    void setConsumeActions(const List<ConsumeAction>& consumeActions)
+    void setConsumeActions(List<ConsumeAction> consumeActions)
     {
-        ensureData().consumeActions.emplace(consumeActions);
+        ensureData().consumeActions.emplace(std::move(consumeActions));
     }
 
     /**
@@ -384,9 +337,9 @@ public:
      *
      * @param consumeActions 消費アクションリスト
      */
-    SalesItemMaster& withConsumeActions(const List<ConsumeAction>& consumeActions)
+    SalesItemMaster& withConsumeActions(List<ConsumeAction> consumeActions)
     {
-        setConsumeActions(consumeActions);
+        setConsumeActions(std::move(consumeActions));
         return *this;
     }
 
@@ -405,9 +358,9 @@ public:
      *
      * @param acquireActions 入手アクションリスト
      */
-    void setAcquireActions(const List<AcquireAction>& acquireActions)
+    void setAcquireActions(List<AcquireAction> acquireActions)
     {
-        ensureData().acquireActions.emplace(acquireActions);
+        ensureData().acquireActions.emplace(std::move(acquireActions));
     }
 
     /**
@@ -415,9 +368,9 @@ public:
      *
      * @param acquireActions 入手アクションリスト
      */
-    SalesItemMaster& withAcquireActions(const List<AcquireAction>& acquireActions)
+    SalesItemMaster& withAcquireActions(List<AcquireAction> acquireActions)
     {
-        setAcquireActions(acquireActions);
+        setAcquireActions(std::move(acquireActions));
         return *this;
     }
 
@@ -494,7 +447,7 @@ inline bool operator!=(const SalesItemMaster& lhs, const SalesItemMaster& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

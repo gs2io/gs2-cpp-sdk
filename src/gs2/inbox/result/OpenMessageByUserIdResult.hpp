@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inbox
 {
@@ -43,28 +45,28 @@ private:
         /** メッセージ */
         optional<Message> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    OpenMessageByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    OpenMessageByUserIdResult() = default;
+    OpenMessageByUserIdResult(const OpenMessageByUserIdResult& openMessageByUserIdResult) = default;
+    OpenMessageByUserIdResult(OpenMessageByUserIdResult&& openMessageByUserIdResult) = default;
+    ~OpenMessageByUserIdResult() = default;
 
-    OpenMessageByUserIdResult(const OpenMessageByUserIdResult& openMessageByUserIdResult) :
-        Gs2Object(openMessageByUserIdResult),
-        m_pData(openMessageByUserIdResult.m_pData != nullptr ? new Data(*openMessageByUserIdResult.m_pData) : nullptr)
-    {}
+    OpenMessageByUserIdResult& operator=(const OpenMessageByUserIdResult& openMessageByUserIdResult) = default;
+    OpenMessageByUserIdResult& operator=(OpenMessageByUserIdResult&& openMessageByUserIdResult) = default;
 
-    OpenMessageByUserIdResult(OpenMessageByUserIdResult&& openMessageByUserIdResult) :
-        Gs2Object(std::move(openMessageByUserIdResult)),
-        m_pData(openMessageByUserIdResult.m_pData)
+    OpenMessageByUserIdResult deepCopy() const
     {
-        openMessageByUserIdResult.m_pData = nullptr;
-    }
-
-    ~OpenMessageByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    OpenMessageByUserIdResult& operator=(const OpenMessageByUserIdResult& openMessageByUserIdResult)
-    {
-        Gs2Object::operator=(openMessageByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*openMessageByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    OpenMessageByUserIdResult& operator=(OpenMessageByUserIdResult&& openMessageByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(openMessageByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = openMessageByUserIdResult.m_pData;
-        openMessageByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(OpenMessageByUserIdResult);
     }
 
     const OpenMessageByUserIdResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item メッセージ
      */
-    void setItem(const Message& item)
+    void setItem(Message item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

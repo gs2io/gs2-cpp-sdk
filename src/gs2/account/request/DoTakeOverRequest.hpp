@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2AccountConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace account
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -50,102 +52,49 @@ private:
         /** パスワード */
         optional<StringHolder> password;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             type(data.type),
             userIdentifier(data.userIdentifier),
             password(data.password)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            type(std::move(data.type)),
-            userIdentifier(std::move(data.userIdentifier)),
-            password(std::move(data.password))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    DoTakeOverRequest() :
-        m_pData(nullptr)
-    {}
+    DoTakeOverRequest() = default;
+    DoTakeOverRequest(const DoTakeOverRequest& doTakeOverRequest) = default;
+    DoTakeOverRequest(DoTakeOverRequest&& doTakeOverRequest) = default;
+    ~DoTakeOverRequest() GS2_OVERRIDE = default;
 
-    DoTakeOverRequest(const DoTakeOverRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Account(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    DoTakeOverRequest& operator=(const DoTakeOverRequest& doTakeOverRequest) = default;
+    DoTakeOverRequest& operator=(DoTakeOverRequest&& doTakeOverRequest) = default;
 
-    DoTakeOverRequest(DoTakeOverRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Account(std::move(obj)),
-        m_pData(obj.m_pData)
+    DoTakeOverRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~DoTakeOverRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DoTakeOverRequest& operator=(const DoTakeOverRequest& doTakeOverRequest)
-    {
-        Gs2BasicRequest::operator=(doTakeOverRequest);
-        Gs2Account::operator=(doTakeOverRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*doTakeOverRequest.m_pData);
-
-        return *this;
-    }
-
-    DoTakeOverRequest& operator=(DoTakeOverRequest&& doTakeOverRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(doTakeOverRequest));
-        Gs2Account::operator=(std::move(doTakeOverRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = doTakeOverRequest.m_pData;
-        doTakeOverRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DoTakeOverRequest);
     }
 
     const DoTakeOverRequest* operator->() const
@@ -173,9 +122,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -183,9 +132,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    DoTakeOverRequest& withNamespaceName(const Char* namespaceName)
+    DoTakeOverRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -235,9 +184,9 @@ public:
      *
      * @param userIdentifier 引き継ぎ用ユーザーID
      */
-    void setUserIdentifier(const Char* userIdentifier)
+    void setUserIdentifier(StringHolder userIdentifier)
     {
-        ensureData().userIdentifier.emplace(userIdentifier);
+        ensureData().userIdentifier.emplace(std::move(userIdentifier));
     }
 
     /**
@@ -245,9 +194,9 @@ public:
      *
      * @param userIdentifier 引き継ぎ用ユーザーID
      */
-    DoTakeOverRequest& withUserIdentifier(const Char* userIdentifier)
+    DoTakeOverRequest& withUserIdentifier(StringHolder userIdentifier)
     {
-        ensureData().userIdentifier.emplace(userIdentifier);
+        ensureData().userIdentifier.emplace(std::move(userIdentifier));
         return *this;
     }
 
@@ -266,9 +215,9 @@ public:
      *
      * @param password パスワード
      */
-    void setPassword(const Char* password)
+    void setPassword(StringHolder password)
     {
-        ensureData().password.emplace(password);
+        ensureData().password.emplace(std::move(password));
     }
 
     /**
@@ -276,9 +225,9 @@ public:
      *
      * @param password パスワード
      */
-    DoTakeOverRequest& withPassword(const Char* password)
+    DoTakeOverRequest& withPassword(StringHolder password)
     {
-        ensureData().password.emplace(password);
+        ensureData().password.emplace(std::move(password));
         return *this;
     }
 
@@ -289,33 +238,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    DoTakeOverRequest& withGs2ClientId(const Char* gs2ClientId)
+    DoTakeOverRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    DoTakeOverRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    DoTakeOverRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -324,9 +249,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    DoTakeOverRequest& withRequestId(const Char* gs2RequestId)
+    DoTakeOverRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "MissionTaskModel.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace mission {
@@ -53,54 +55,53 @@ private:
         /** ミッションを達成したときの通知先ネームスペース のGRN */
         optional<StringHolder> completeNotificationNamespaceId;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             missionGroupId(data.missionGroupId),
             name(data.name),
             metadata(data.metadata),
-            tasks(data.tasks),
             completeNotificationNamespaceId(data.completeNotificationNamespaceId)
-        {}
+        {
+            if (data.tasks)
+            {
+                tasks = data.tasks->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            missionGroupId(std::move(data.missionGroupId)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            tasks(std::move(data.tasks)),
-            completeNotificationNamespaceId(std::move(data.completeNotificationNamespaceId))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "missionGroupId") == 0) {
+            if (std::strcmp(name_, "missionGroupId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->missionGroupId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "tasks") == 0) {
+            else if (std::strcmp(name_, "tasks") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -112,7 +113,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "completeNotificationNamespaceId") == 0) {
+            else if (std::strcmp(name_, "completeNotificationNamespaceId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->completeNotificationNamespaceId.emplace(jsonValue.GetString());
@@ -121,72 +123,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    MissionGroupModel() :
-        m_pData(nullptr)
-    {}
+    MissionGroupModel() = default;
+    MissionGroupModel(const MissionGroupModel& missionGroupModel) = default;
+    MissionGroupModel(MissionGroupModel&& missionGroupModel) = default;
+    ~MissionGroupModel() = default;
 
-    MissionGroupModel(const MissionGroupModel& missionGroupModel) :
-        Gs2Object(missionGroupModel),
-        m_pData(missionGroupModel.m_pData != nullptr ? new Data(*missionGroupModel.m_pData) : nullptr)
-    {}
+    MissionGroupModel& operator=(const MissionGroupModel& missionGroupModel) = default;
+    MissionGroupModel& operator=(MissionGroupModel&& missionGroupModel) = default;
 
-    MissionGroupModel(MissionGroupModel&& missionGroupModel) :
-        Gs2Object(std::move(missionGroupModel)),
-        m_pData(missionGroupModel.m_pData)
+    MissionGroupModel deepCopy() const
     {
-        missionGroupModel.m_pData = nullptr;
-    }
-
-    ~MissionGroupModel()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    MissionGroupModel& operator=(const MissionGroupModel& missionGroupModel)
-    {
-        Gs2Object::operator=(missionGroupModel);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*missionGroupModel.m_pData);
-
-        return *this;
-    }
-
-    MissionGroupModel& operator=(MissionGroupModel&& missionGroupModel)
-    {
-        Gs2Object::operator=(std::move(missionGroupModel));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = missionGroupModel.m_pData;
-        missionGroupModel.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(MissionGroupModel);
     }
 
     const MissionGroupModel* operator->() const
@@ -213,9 +163,9 @@ public:
      *
      * @param missionGroupId ミッショングループ
      */
-    void setMissionGroupId(const Char* missionGroupId)
+    void setMissionGroupId(StringHolder missionGroupId)
     {
-        ensureData().missionGroupId.emplace(missionGroupId);
+        ensureData().missionGroupId.emplace(std::move(missionGroupId));
     }
 
     /**
@@ -223,9 +173,9 @@ public:
      *
      * @param missionGroupId ミッショングループ
      */
-    MissionGroupModel& withMissionGroupId(const Char* missionGroupId)
+    MissionGroupModel& withMissionGroupId(StringHolder missionGroupId)
     {
-        setMissionGroupId(missionGroupId);
+        setMissionGroupId(std::move(missionGroupId));
         return *this;
     }
 
@@ -244,9 +194,9 @@ public:
      *
      * @param name グループ名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -254,9 +204,9 @@ public:
      *
      * @param name グループ名
      */
-    MissionGroupModel& withName(const Char* name)
+    MissionGroupModel& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -275,9 +225,9 @@ public:
      *
      * @param metadata メタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -285,9 +235,9 @@ public:
      *
      * @param metadata メタデータ
      */
-    MissionGroupModel& withMetadata(const Char* metadata)
+    MissionGroupModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -306,9 +256,9 @@ public:
      *
      * @param tasks タスクリスト
      */
-    void setTasks(const List<MissionTaskModel>& tasks)
+    void setTasks(List<MissionTaskModel> tasks)
     {
-        ensureData().tasks.emplace(tasks);
+        ensureData().tasks.emplace(std::move(tasks));
     }
 
     /**
@@ -316,9 +266,9 @@ public:
      *
      * @param tasks タスクリスト
      */
-    MissionGroupModel& withTasks(const List<MissionTaskModel>& tasks)
+    MissionGroupModel& withTasks(List<MissionTaskModel> tasks)
     {
-        setTasks(tasks);
+        setTasks(std::move(tasks));
         return *this;
     }
 
@@ -337,9 +287,9 @@ public:
      *
      * @param completeNotificationNamespaceId ミッションを達成したときの通知先ネームスペース のGRN
      */
-    void setCompleteNotificationNamespaceId(const Char* completeNotificationNamespaceId)
+    void setCompleteNotificationNamespaceId(StringHolder completeNotificationNamespaceId)
     {
-        ensureData().completeNotificationNamespaceId.emplace(completeNotificationNamespaceId);
+        ensureData().completeNotificationNamespaceId.emplace(std::move(completeNotificationNamespaceId));
     }
 
     /**
@@ -347,9 +297,9 @@ public:
      *
      * @param completeNotificationNamespaceId ミッションを達成したときの通知先ネームスペース のGRN
      */
-    MissionGroupModel& withCompleteNotificationNamespaceId(const Char* completeNotificationNamespaceId)
+    MissionGroupModel& withCompleteNotificationNamespaceId(StringHolder completeNotificationNamespaceId)
     {
-        setCompleteNotificationNamespaceId(completeNotificationNamespaceId);
+        setCompleteNotificationNamespaceId(std::move(completeNotificationNamespaceId));
         return *this;
     }
 
@@ -364,7 +314,7 @@ inline bool operator!=(const MissionGroupModel& lhs, const MissionGroupModel& lh
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

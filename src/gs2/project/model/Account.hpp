@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace project {
@@ -62,8 +64,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -77,85 +78,83 @@ private:
             status(data.status),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            accountId(std::move(data.accountId)),
-            ownerId(std::move(data.ownerId)),
-            name(std::move(data.name)),
-            email(std::move(data.email)),
-            fullName(std::move(data.fullName)),
-            companyName(std::move(data.companyName)),
-            password(std::move(data.password)),
-            status(std::move(data.status)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "accountId") == 0) {
+            if (std::strcmp(name_, "accountId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->accountId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "email") == 0) {
+            else if (std::strcmp(name_, "email") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->email.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "fullName") == 0) {
+            else if (std::strcmp(name_, "fullName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->fullName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "companyName") == 0) {
+            else if (std::strcmp(name_, "companyName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->companyName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "password") == 0) {
+            else if (std::strcmp(name_, "password") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->password.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "status") == 0) {
+            else if (std::strcmp(name_, "status") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->status.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -164,72 +163,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Account() :
-        m_pData(nullptr)
-    {}
+    Account() = default;
+    Account(const Account& account) = default;
+    Account(Account&& account) = default;
+    ~Account() = default;
 
-    Account(const Account& account) :
-        Gs2Object(account),
-        m_pData(account.m_pData != nullptr ? new Data(*account.m_pData) : nullptr)
-    {}
+    Account& operator=(const Account& account) = default;
+    Account& operator=(Account&& account) = default;
 
-    Account(Account&& account) :
-        Gs2Object(std::move(account)),
-        m_pData(account.m_pData)
+    Account deepCopy() const
     {
-        account.m_pData = nullptr;
-    }
-
-    ~Account()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Account& operator=(const Account& account)
-    {
-        Gs2Object::operator=(account);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*account.m_pData);
-
-        return *this;
-    }
-
-    Account& operator=(Account&& account)
-    {
-        Gs2Object::operator=(std::move(account));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = account.m_pData;
-        account.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Account);
     }
 
     const Account* operator->() const
@@ -256,9 +203,9 @@ public:
      *
      * @param accountId GS2アカウント
      */
-    void setAccountId(const Char* accountId)
+    void setAccountId(StringHolder accountId)
     {
-        ensureData().accountId.emplace(accountId);
+        ensureData().accountId.emplace(std::move(accountId));
     }
 
     /**
@@ -266,9 +213,9 @@ public:
      *
      * @param accountId GS2アカウント
      */
-    Account& withAccountId(const Char* accountId)
+    Account& withAccountId(StringHolder accountId)
     {
-        setAccountId(accountId);
+        setAccountId(std::move(accountId));
         return *this;
     }
 
@@ -287,9 +234,9 @@ public:
      *
      * @param ownerId None
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
@@ -297,9 +244,9 @@ public:
      *
      * @param ownerId None
      */
-    Account& withOwnerId(const Char* ownerId)
+    Account& withOwnerId(StringHolder ownerId)
     {
-        setOwnerId(ownerId);
+        setOwnerId(std::move(ownerId));
         return *this;
     }
 
@@ -318,9 +265,9 @@ public:
      *
      * @param name GS2アカウントの名前
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -328,9 +275,9 @@ public:
      *
      * @param name GS2アカウントの名前
      */
-    Account& withName(const Char* name)
+    Account& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -349,9 +296,9 @@ public:
      *
      * @param email メールアドレス
      */
-    void setEmail(const Char* email)
+    void setEmail(StringHolder email)
     {
-        ensureData().email.emplace(email);
+        ensureData().email.emplace(std::move(email));
     }
 
     /**
@@ -359,9 +306,9 @@ public:
      *
      * @param email メールアドレス
      */
-    Account& withEmail(const Char* email)
+    Account& withEmail(StringHolder email)
     {
-        setEmail(email);
+        setEmail(std::move(email));
         return *this;
     }
 
@@ -380,9 +327,9 @@ public:
      *
      * @param fullName フルネーム
      */
-    void setFullName(const Char* fullName)
+    void setFullName(StringHolder fullName)
     {
-        ensureData().fullName.emplace(fullName);
+        ensureData().fullName.emplace(std::move(fullName));
     }
 
     /**
@@ -390,9 +337,9 @@ public:
      *
      * @param fullName フルネーム
      */
-    Account& withFullName(const Char* fullName)
+    Account& withFullName(StringHolder fullName)
     {
-        setFullName(fullName);
+        setFullName(std::move(fullName));
         return *this;
     }
 
@@ -411,9 +358,9 @@ public:
      *
      * @param companyName 会社名
      */
-    void setCompanyName(const Char* companyName)
+    void setCompanyName(StringHolder companyName)
     {
-        ensureData().companyName.emplace(companyName);
+        ensureData().companyName.emplace(std::move(companyName));
     }
 
     /**
@@ -421,9 +368,9 @@ public:
      *
      * @param companyName 会社名
      */
-    Account& withCompanyName(const Char* companyName)
+    Account& withCompanyName(StringHolder companyName)
     {
-        setCompanyName(companyName);
+        setCompanyName(std::move(companyName));
         return *this;
     }
 
@@ -442,9 +389,9 @@ public:
      *
      * @param password パスワード
      */
-    void setPassword(const Char* password)
+    void setPassword(StringHolder password)
     {
-        ensureData().password.emplace(password);
+        ensureData().password.emplace(std::move(password));
     }
 
     /**
@@ -452,9 +399,9 @@ public:
      *
      * @param password パスワード
      */
-    Account& withPassword(const Char* password)
+    Account& withPassword(StringHolder password)
     {
-        setPassword(password);
+        setPassword(std::move(password));
         return *this;
     }
 
@@ -473,9 +420,9 @@ public:
      *
      * @param status ステータス
      */
-    void setStatus(const Char* status)
+    void setStatus(StringHolder status)
     {
-        ensureData().status.emplace(status);
+        ensureData().status.emplace(std::move(status));
     }
 
     /**
@@ -483,9 +430,9 @@ public:
      *
      * @param status ステータス
      */
-    Account& withStatus(const Char* status)
+    Account& withStatus(StringHolder status)
     {
-        setStatus(status);
+        setStatus(std::move(status));
         return *this;
     }
 
@@ -562,7 +509,7 @@ inline bool operator!=(const Account& lhs, const Account& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

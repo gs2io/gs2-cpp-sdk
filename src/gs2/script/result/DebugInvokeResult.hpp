@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace script
 {
@@ -51,60 +53,60 @@ private:
         /** 標準出力の内容のリスト */
         optional<List<StringHolder>> output;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             code(data.code),
             result(data.result),
             executeTime(data.executeTime),
-            charged(data.charged),
-            output(data.output)
-        {}
+            charged(data.charged)
+        {
+            if (data.output)
+            {
+                output = data.output->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            code(std::move(data.code)),
-            result(std::move(data.result)),
-            executeTime(std::move(data.executeTime)),
-            charged(std::move(data.charged)),
-            output(std::move(data.output))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "code") == 0) {
+            if (std::strcmp(name_, "code") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->code = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "result") == 0) {
+            else if (std::strcmp(name_, "result") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->result.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "executeTime") == 0) {
+            else if (std::strcmp(name_, "executeTime") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->executeTime = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "charged") == 0) {
+            else if (std::strcmp(name_, "charged") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->charged = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "output") == 0) {
+            else if (std::strcmp(name_, "output") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -119,72 +121,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DebugInvokeResult() :
-        m_pData(nullptr)
-    {}
+    DebugInvokeResult() = default;
+    DebugInvokeResult(const DebugInvokeResult& debugInvokeResult) = default;
+    DebugInvokeResult(DebugInvokeResult&& debugInvokeResult) = default;
+    ~DebugInvokeResult() = default;
 
-    DebugInvokeResult(const DebugInvokeResult& debugInvokeResult) :
-        Gs2Object(debugInvokeResult),
-        m_pData(debugInvokeResult.m_pData != nullptr ? new Data(*debugInvokeResult.m_pData) : nullptr)
-    {}
+    DebugInvokeResult& operator=(const DebugInvokeResult& debugInvokeResult) = default;
+    DebugInvokeResult& operator=(DebugInvokeResult&& debugInvokeResult) = default;
 
-    DebugInvokeResult(DebugInvokeResult&& debugInvokeResult) :
-        Gs2Object(std::move(debugInvokeResult)),
-        m_pData(debugInvokeResult.m_pData)
+    DebugInvokeResult deepCopy() const
     {
-        debugInvokeResult.m_pData = nullptr;
-    }
-
-    ~DebugInvokeResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DebugInvokeResult& operator=(const DebugInvokeResult& debugInvokeResult)
-    {
-        Gs2Object::operator=(debugInvokeResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*debugInvokeResult.m_pData);
-
-        return *this;
-    }
-
-    DebugInvokeResult& operator=(DebugInvokeResult&& debugInvokeResult)
-    {
-        Gs2Object::operator=(std::move(debugInvokeResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = debugInvokeResult.m_pData;
-        debugInvokeResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DebugInvokeResult);
     }
 
     const DebugInvokeResult* operator->() const
@@ -231,9 +181,9 @@ public:
      *
      * @param result 戻り値
      */
-    void setResult(const Char* result)
+    void setResult(StringHolder result)
     {
-        ensureData().result.emplace(result);
+        ensureData().result.emplace(std::move(result));
     }
 
     /**
@@ -291,9 +241,9 @@ public:
      *
      * @param output 標準出力の内容のリスト
      */
-    void setOutput(const List<StringHolder>& output)
+    void setOutput(List<StringHolder> output)
     {
-        ensureData().output.emplace(output);
+        ensureData().output.emplace(std::move(output));
     }
 
 

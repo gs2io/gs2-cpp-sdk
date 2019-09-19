@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace experience
 {
@@ -43,28 +45,28 @@ private:
         /** 作成したランクアップ閾値マスター */
         optional<ThresholdMaster> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    CreateThresholdMasterResult() :
-        m_pData(nullptr)
-    {}
+    CreateThresholdMasterResult() = default;
+    CreateThresholdMasterResult(const CreateThresholdMasterResult& createThresholdMasterResult) = default;
+    CreateThresholdMasterResult(CreateThresholdMasterResult&& createThresholdMasterResult) = default;
+    ~CreateThresholdMasterResult() = default;
 
-    CreateThresholdMasterResult(const CreateThresholdMasterResult& createThresholdMasterResult) :
-        Gs2Object(createThresholdMasterResult),
-        m_pData(createThresholdMasterResult.m_pData != nullptr ? new Data(*createThresholdMasterResult.m_pData) : nullptr)
-    {}
+    CreateThresholdMasterResult& operator=(const CreateThresholdMasterResult& createThresholdMasterResult) = default;
+    CreateThresholdMasterResult& operator=(CreateThresholdMasterResult&& createThresholdMasterResult) = default;
 
-    CreateThresholdMasterResult(CreateThresholdMasterResult&& createThresholdMasterResult) :
-        Gs2Object(std::move(createThresholdMasterResult)),
-        m_pData(createThresholdMasterResult.m_pData)
+    CreateThresholdMasterResult deepCopy() const
     {
-        createThresholdMasterResult.m_pData = nullptr;
-    }
-
-    ~CreateThresholdMasterResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateThresholdMasterResult& operator=(const CreateThresholdMasterResult& createThresholdMasterResult)
-    {
-        Gs2Object::operator=(createThresholdMasterResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createThresholdMasterResult.m_pData);
-
-        return *this;
-    }
-
-    CreateThresholdMasterResult& operator=(CreateThresholdMasterResult&& createThresholdMasterResult)
-    {
-        Gs2Object::operator=(std::move(createThresholdMasterResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createThresholdMasterResult.m_pData;
-        createThresholdMasterResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateThresholdMasterResult);
     }
 
     const CreateThresholdMasterResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 作成したランクアップ閾値マスター
      */
-    void setItem(const ThresholdMaster& item)
+    void setItem(ThresholdMaster item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

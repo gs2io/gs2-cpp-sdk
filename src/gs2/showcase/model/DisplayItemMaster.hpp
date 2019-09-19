@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace showcase {
@@ -52,8 +54,7 @@ private:
         /** 販売期間とするイベントマスター のGRN */
         optional<StringHolder> salesPeriodEventId;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -62,50 +63,48 @@ private:
             salesItemName(data.salesItemName),
             salesItemGroupName(data.salesItemGroupName),
             salesPeriodEventId(data.salesPeriodEventId)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            displayItemId(std::move(data.displayItemId)),
-            type(std::move(data.type)),
-            salesItemName(std::move(data.salesItemName)),
-            salesItemGroupName(std::move(data.salesItemGroupName)),
-            salesPeriodEventId(std::move(data.salesPeriodEventId))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "displayItemId") == 0) {
+            if (std::strcmp(name_, "displayItemId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->displayItemId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "type") == 0) {
+            else if (std::strcmp(name_, "type") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->type.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "salesItemName") == 0) {
+            else if (std::strcmp(name_, "salesItemName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->salesItemName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "salesItemGroupName") == 0) {
+            else if (std::strcmp(name_, "salesItemGroupName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->salesItemGroupName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "salesPeriodEventId") == 0) {
+            else if (std::strcmp(name_, "salesPeriodEventId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->salesPeriodEventId.emplace(jsonValue.GetString());
@@ -114,72 +113,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DisplayItemMaster() :
-        m_pData(nullptr)
-    {}
+    DisplayItemMaster() = default;
+    DisplayItemMaster(const DisplayItemMaster& displayItemMaster) = default;
+    DisplayItemMaster(DisplayItemMaster&& displayItemMaster) = default;
+    ~DisplayItemMaster() = default;
 
-    DisplayItemMaster(const DisplayItemMaster& displayItemMaster) :
-        Gs2Object(displayItemMaster),
-        m_pData(displayItemMaster.m_pData != nullptr ? new Data(*displayItemMaster.m_pData) : nullptr)
-    {}
+    DisplayItemMaster& operator=(const DisplayItemMaster& displayItemMaster) = default;
+    DisplayItemMaster& operator=(DisplayItemMaster&& displayItemMaster) = default;
 
-    DisplayItemMaster(DisplayItemMaster&& displayItemMaster) :
-        Gs2Object(std::move(displayItemMaster)),
-        m_pData(displayItemMaster.m_pData)
+    DisplayItemMaster deepCopy() const
     {
-        displayItemMaster.m_pData = nullptr;
-    }
-
-    ~DisplayItemMaster()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DisplayItemMaster& operator=(const DisplayItemMaster& displayItemMaster)
-    {
-        Gs2Object::operator=(displayItemMaster);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*displayItemMaster.m_pData);
-
-        return *this;
-    }
-
-    DisplayItemMaster& operator=(DisplayItemMaster&& displayItemMaster)
-    {
-        Gs2Object::operator=(std::move(displayItemMaster));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = displayItemMaster.m_pData;
-        displayItemMaster.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DisplayItemMaster);
     }
 
     const DisplayItemMaster* operator->() const
@@ -206,9 +153,9 @@ public:
      *
      * @param displayItemId 陳列商品ID
      */
-    void setDisplayItemId(const Char* displayItemId)
+    void setDisplayItemId(StringHolder displayItemId)
     {
-        ensureData().displayItemId.emplace(displayItemId);
+        ensureData().displayItemId.emplace(std::move(displayItemId));
     }
 
     /**
@@ -216,9 +163,9 @@ public:
      *
      * @param displayItemId 陳列商品ID
      */
-    DisplayItemMaster& withDisplayItemId(const Char* displayItemId)
+    DisplayItemMaster& withDisplayItemId(StringHolder displayItemId)
     {
-        setDisplayItemId(displayItemId);
+        setDisplayItemId(std::move(displayItemId));
         return *this;
     }
 
@@ -237,9 +184,9 @@ public:
      *
      * @param type 種類
      */
-    void setType(const Char* type)
+    void setType(StringHolder type)
     {
-        ensureData().type.emplace(type);
+        ensureData().type.emplace(std::move(type));
     }
 
     /**
@@ -247,9 +194,9 @@ public:
      *
      * @param type 種類
      */
-    DisplayItemMaster& withType(const Char* type)
+    DisplayItemMaster& withType(StringHolder type)
     {
-        setType(type);
+        setType(std::move(type));
         return *this;
     }
 
@@ -268,9 +215,9 @@ public:
      *
      * @param salesItemName 陳列する商品の名前
      */
-    void setSalesItemName(const Char* salesItemName)
+    void setSalesItemName(StringHolder salesItemName)
     {
-        ensureData().salesItemName.emplace(salesItemName);
+        ensureData().salesItemName.emplace(std::move(salesItemName));
     }
 
     /**
@@ -278,9 +225,9 @@ public:
      *
      * @param salesItemName 陳列する商品の名前
      */
-    DisplayItemMaster& withSalesItemName(const Char* salesItemName)
+    DisplayItemMaster& withSalesItemName(StringHolder salesItemName)
     {
-        setSalesItemName(salesItemName);
+        setSalesItemName(std::move(salesItemName));
         return *this;
     }
 
@@ -299,9 +246,9 @@ public:
      *
      * @param salesItemGroupName 陳列する商品グループの名前
      */
-    void setSalesItemGroupName(const Char* salesItemGroupName)
+    void setSalesItemGroupName(StringHolder salesItemGroupName)
     {
-        ensureData().salesItemGroupName.emplace(salesItemGroupName);
+        ensureData().salesItemGroupName.emplace(std::move(salesItemGroupName));
     }
 
     /**
@@ -309,9 +256,9 @@ public:
      *
      * @param salesItemGroupName 陳列する商品グループの名前
      */
-    DisplayItemMaster& withSalesItemGroupName(const Char* salesItemGroupName)
+    DisplayItemMaster& withSalesItemGroupName(StringHolder salesItemGroupName)
     {
-        setSalesItemGroupName(salesItemGroupName);
+        setSalesItemGroupName(std::move(salesItemGroupName));
         return *this;
     }
 
@@ -330,9 +277,9 @@ public:
      *
      * @param salesPeriodEventId 販売期間とするイベントマスター のGRN
      */
-    void setSalesPeriodEventId(const Char* salesPeriodEventId)
+    void setSalesPeriodEventId(StringHolder salesPeriodEventId)
     {
-        ensureData().salesPeriodEventId.emplace(salesPeriodEventId);
+        ensureData().salesPeriodEventId.emplace(std::move(salesPeriodEventId));
     }
 
     /**
@@ -340,9 +287,9 @@ public:
      *
      * @param salesPeriodEventId 販売期間とするイベントマスター のGRN
      */
-    DisplayItemMaster& withSalesPeriodEventId(const Char* salesPeriodEventId)
+    DisplayItemMaster& withSalesPeriodEventId(StringHolder salesPeriodEventId)
     {
-        setSalesPeriodEventId(salesPeriodEventId);
+        setSalesPeriodEventId(std::move(salesPeriodEventId));
         return *this;
     }
 
@@ -357,7 +304,7 @@ inline bool operator!=(const DisplayItemMaster& lhs, const DisplayItemMaster& lh
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

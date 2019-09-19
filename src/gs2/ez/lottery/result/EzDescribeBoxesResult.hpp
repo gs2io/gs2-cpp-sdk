@@ -27,22 +27,61 @@ namespace gs2 { namespace ez { namespace lottery {
 class EzDescribeBoxesResult : public gs2::Gs2Object
 {
 private:
-    /** ボックスのリスト */
-    List<EzBox> m_Items;
-    /** リストの続きを取得するためのページトークン */
-    optional<StringHolder> m_NextPageToken;
-
-public:
-    EzDescribeBoxesResult(const gs2::lottery::DescribeBoxesResult& result) :
-        m_NextPageToken(result.getNextPageToken())
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** ボックスのリスト */
+        List<EzBox> items;
+        /** リストの続きを取得するためのページトークン */
+        optional<StringHolder> nextPageToken;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            nextPageToken(data.nextPageToken)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::lottery::DescribeBoxesResult& describeBoxesResult) :
+            nextPageToken(describeBoxesResult.getNextPageToken())
+        {
             {
-                m_Items += EzBox(list[i]);
+                auto& list = *describeBoxesResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzBox(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzDescribeBoxesResult() = default;
+    EzDescribeBoxesResult(const EzDescribeBoxesResult& result) = default;
+    EzDescribeBoxesResult(EzDescribeBoxesResult&& result) = default;
+    ~EzDescribeBoxesResult() = default;
+
+    EzDescribeBoxesResult(gs2::lottery::DescribeBoxesResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzDescribeBoxesResult& operator=(const EzDescribeBoxesResult& result) = default;
+    EzDescribeBoxesResult& operator=(EzDescribeBoxesResult&& result) = default;
+
+    EzDescribeBoxesResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDescribeBoxesResult);
     }
 
     static bool isConvertible(const gs2::lottery::DescribeBoxesResult& result)
@@ -57,22 +96,12 @@ public:
 
     const List<EzBox>& getItems() const
     {
-        return m_Items;
+        return ensureData().items;
     }
 
-    List<EzBox>& getItems()
+    const optional<StringHolder>& getNextPageToken() const
     {
-        return m_Items;
-    }
-
-    const optional<gs2::StringHolder>& getNextPageToken() const
-    {
-        return m_NextPageToken;
-    }
-
-    optional<gs2::StringHolder>& getNextPageToken()
-    {
-        return m_NextPageToken;
+        return ensureData().nextPageToken;
     }
 };
 

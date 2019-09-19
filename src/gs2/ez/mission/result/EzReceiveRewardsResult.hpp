@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace mission {
 class EzReceiveRewardsResult : public gs2::Gs2Object
 {
 private:
-    /** ミッションの達成報酬を受領するスタンプシート */
-    StringHolder m_StampSheet;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ミッションの達成報酬を受領するスタンプシート */
+        StringHolder stampSheet;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            stampSheet(data.stampSheet)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::mission::CompleteResult& completeResult) :
+            stampSheet(*completeResult.getStampSheet())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzReceiveRewardsResult(const gs2::mission::CompleteResult& result) :
-        m_StampSheet(*result.getStampSheet())
+    EzReceiveRewardsResult() = default;
+    EzReceiveRewardsResult(const EzReceiveRewardsResult& result) = default;
+    EzReceiveRewardsResult(EzReceiveRewardsResult&& result) = default;
+    ~EzReceiveRewardsResult() = default;
+
+    EzReceiveRewardsResult(gs2::mission::CompleteResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzReceiveRewardsResult& operator=(const EzReceiveRewardsResult& result) = default;
+    EzReceiveRewardsResult& operator=(EzReceiveRewardsResult&& result) = default;
+
+    EzReceiveRewardsResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzReceiveRewardsResult);
     }
 
     static bool isConvertible(const gs2::mission::CompleteResult& result)
@@ -46,14 +84,9 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getStampSheet() const
+    const StringHolder& getStampSheet() const
     {
-        return m_StampSheet;
-    }
-
-    gs2::StringHolder& getStampSheet()
-    {
-        return m_StampSheet;
+        return ensureData().stampSheet;
     }
 };
 

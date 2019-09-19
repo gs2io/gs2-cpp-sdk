@@ -27,19 +27,57 @@ namespace gs2 { namespace ez { namespace experience {
 class EzListExperienceModelsResult : public gs2::Gs2Object
 {
 private:
-    /** 経験値・ランクアップ閾値モデルのリスト */
-    List<EzExperienceModel> m_Items;
-
-public:
-    EzListExperienceModelsResult(const gs2::experience::DescribeExperienceModelsResult& result)
+    class Data : public gs2::Gs2Object
     {
+    public:
+        /** 経験値・ランクアップ閾値モデルのリスト */
+        List<EzExperienceModel> items;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
         {
-            auto& list = *result.getItems();
-            for (int i = 0; i < list.getCount(); ++i)
+            items = data.items.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::experience::DescribeExperienceModelsResult& describeExperienceModelsResult)
+        {
             {
-                m_Items += EzExperienceModel(list[i]);
+                auto& list = *describeExperienceModelsResult.getItems();
+                for (int i = 0; i < list.getCount(); ++i)
+                {
+                    items += EzExperienceModel(list[i]);
+                }
             }
         }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    EzListExperienceModelsResult() = default;
+    EzListExperienceModelsResult(const EzListExperienceModelsResult& result) = default;
+    EzListExperienceModelsResult(EzListExperienceModelsResult&& result) = default;
+    ~EzListExperienceModelsResult() = default;
+
+    EzListExperienceModelsResult(gs2::experience::DescribeExperienceModelsResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzListExperienceModelsResult& operator=(const EzListExperienceModelsResult& result) = default;
+    EzListExperienceModelsResult& operator=(EzListExperienceModelsResult&& result) = default;
+
+    EzListExperienceModelsResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListExperienceModelsResult);
     }
 
     static bool isConvertible(const gs2::experience::DescribeExperienceModelsResult& result)
@@ -54,12 +92,7 @@ public:
 
     const List<EzExperienceModel>& getItems() const
     {
-        return m_Items;
-    }
-
-    List<EzExperienceModel>& getItems()
-    {
-        return m_Items;
+        return ensureData().items;
     }
 };
 

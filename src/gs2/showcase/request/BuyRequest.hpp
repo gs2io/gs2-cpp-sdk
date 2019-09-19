@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2ShowcaseConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace showcase
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** アクセストークン */
@@ -54,106 +56,54 @@ private:
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             showcaseName(data.showcaseName),
             displayItemId(data.displayItemId),
-            config(data.config),
             duplicationAvoider(data.duplicationAvoider)
-        {}
+        {
+            if (data.config)
+            {
+                config = data.config->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            accessToken(std::move(data.accessToken)),
-            namespaceName(std::move(data.namespaceName)),
-            showcaseName(std::move(data.showcaseName)),
-            displayItemId(std::move(data.displayItemId)),
-            config(std::move(data.config)),
-            duplicationAvoider(std::move(data.duplicationAvoider))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    BuyRequest() :
-        m_pData(nullptr)
-    {}
+    BuyRequest() = default;
+    BuyRequest(const BuyRequest& buyRequest) = default;
+    BuyRequest(BuyRequest&& buyRequest) = default;
+    ~BuyRequest() GS2_OVERRIDE = default;
 
-    BuyRequest(const BuyRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Showcase(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    BuyRequest& operator=(const BuyRequest& buyRequest) = default;
+    BuyRequest& operator=(BuyRequest&& buyRequest) = default;
 
-    BuyRequest(BuyRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Showcase(std::move(obj)),
-        m_pData(obj.m_pData)
+    BuyRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~BuyRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    BuyRequest& operator=(const BuyRequest& buyRequest)
-    {
-        Gs2BasicRequest::operator=(buyRequest);
-        Gs2Showcase::operator=(buyRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*buyRequest.m_pData);
-
-        return *this;
-    }
-
-    BuyRequest& operator=(BuyRequest&& buyRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(buyRequest));
-        Gs2Showcase::operator=(std::move(buyRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = buyRequest.m_pData;
-        buyRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(BuyRequest);
     }
 
     const BuyRequest* operator->() const
@@ -171,7 +121,8 @@ public:
      *
      * @return アクセストークン
      */
-    const gs2::optional<StringHolder>& getAccessToken() const {
+    const gs2::optional<StringHolder>& getAccessToken() const
+    {
         return ensureData().accessToken;
     }
 
@@ -180,8 +131,9 @@ public:
      *
      * @param accessToken アクセストークン
      */
-    void setAccessToken(const Char* accessToken) {
-        ensureData().accessToken.emplace(accessToken);
+    void setAccessToken(StringHolder accessToken)
+    {
+        ensureData().accessToken.emplace(std::move(accessToken));
     }
 
     /**
@@ -190,8 +142,9 @@ public:
      * @param accessToken アクセストークン
      * @return this
      */
-    BuyRequest& withAccessToken(const Char* accessToken) {
-        setAccessToken(accessToken);
+    BuyRequest& withAccessToken(StringHolder accessToken)
+    {
+        setAccessToken(std::move(accessToken));
         return *this;
     }
 
@@ -210,9 +163,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -220,9 +173,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    BuyRequest& withNamespaceName(const Char* namespaceName)
+    BuyRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -241,9 +194,9 @@ public:
      *
      * @param showcaseName 商品名
      */
-    void setShowcaseName(const Char* showcaseName)
+    void setShowcaseName(StringHolder showcaseName)
     {
-        ensureData().showcaseName.emplace(showcaseName);
+        ensureData().showcaseName.emplace(std::move(showcaseName));
     }
 
     /**
@@ -251,9 +204,9 @@ public:
      *
      * @param showcaseName 商品名
      */
-    BuyRequest& withShowcaseName(const Char* showcaseName)
+    BuyRequest& withShowcaseName(StringHolder showcaseName)
     {
-        ensureData().showcaseName.emplace(showcaseName);
+        ensureData().showcaseName.emplace(std::move(showcaseName));
         return *this;
     }
 
@@ -272,9 +225,9 @@ public:
      *
      * @param displayItemId 陳列商品ID
      */
-    void setDisplayItemId(const Char* displayItemId)
+    void setDisplayItemId(StringHolder displayItemId)
     {
-        ensureData().displayItemId.emplace(displayItemId);
+        ensureData().displayItemId.emplace(std::move(displayItemId));
     }
 
     /**
@@ -282,9 +235,9 @@ public:
      *
      * @param displayItemId 陳列商品ID
      */
-    BuyRequest& withDisplayItemId(const Char* displayItemId)
+    BuyRequest& withDisplayItemId(StringHolder displayItemId)
     {
-        ensureData().displayItemId.emplace(displayItemId);
+        ensureData().displayItemId.emplace(std::move(displayItemId));
         return *this;
     }
 
@@ -303,9 +256,9 @@ public:
      *
      * @param config 設定値
      */
-    void setConfig(const List<Config>& config)
+    void setConfig(List<Config> config)
     {
-        ensureData().config.emplace(config);
+        ensureData().config.emplace(std::move(config));
     }
 
     /**
@@ -313,9 +266,9 @@ public:
      *
      * @param config 設定値
      */
-    BuyRequest& withConfig(const List<Config>& config)
+    BuyRequest& withConfig(List<Config> config)
     {
-        ensureData().config.emplace(config);
+        ensureData().config.emplace(std::move(config));
         return *this;
     }
 
@@ -334,9 +287,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    void setDuplicationAvoider(const Char* duplicationAvoider)
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
     }
 
     /**
@@ -344,9 +297,9 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    BuyRequest& withDuplicationAvoider(const Char* duplicationAvoider)
+    BuyRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
-        ensureData().duplicationAvoider.emplace(duplicationAvoider);
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -357,33 +310,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    BuyRequest& withGs2ClientId(const Char* gs2ClientId)
+    BuyRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    BuyRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    BuyRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -392,9 +321,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    BuyRequest& withRequestId(const Char* gs2RequestId)
+    BuyRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

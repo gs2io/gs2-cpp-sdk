@@ -27,37 +27,77 @@ namespace gs2 { namespace ez { namespace inventory {
 class EzItemSet : public gs2::Gs2Object
 {
 private:
-    /** 有効期限ごとのアイテム所持数量 */
-    gs2::optional<StringHolder> m_ItemSetId;
-    /** インベントリの名前 */
-    gs2::optional<StringHolder> m_InventoryName;
-    /** アイテムマスターの名前 */
-    gs2::optional<StringHolder> m_ItemName;
-    /** 所持数量 */
-    gs2::optional<Int64> m_Count;
-    /** 有効期限 */
-    gs2::optional<Int64> m_ExpiresAt;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 有効期限ごとのアイテム所持数量 */
+        gs2::optional<StringHolder> itemSetId;
+        /** インベントリの名前 */
+        gs2::optional<StringHolder> inventoryName;
+        /** アイテムマスターの名前 */
+        gs2::optional<StringHolder> itemName;
+        /** 所持数量 */
+        gs2::optional<Int64> count;
+        /** 有効期限 */
+        gs2::optional<Int64> expiresAt;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            itemSetId(data.itemSetId),
+            inventoryName(data.inventoryName),
+            itemName(data.itemName),
+            count(data.count),
+            expiresAt(data.expiresAt)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::inventory::ItemSet& itemSet) :
+            itemSetId(itemSet.getItemSetId()),
+            inventoryName(itemSet.getInventoryName()),
+            itemName(itemSet.getItemName()),
+            count(itemSet.getCount() ? *itemSet.getCount() : 0),
+            expiresAt(itemSet.getExpiresAt() ? *itemSet.getExpiresAt() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzItemSet() = default;
+    EzItemSet(const EzItemSet& ezItemSet) = default;
+    EzItemSet(EzItemSet&& ezItemSet) = default;
+    ~EzItemSet() = default;
 
     EzItemSet(gs2::inventory::ItemSet itemSet) :
-        m_ItemSetId(itemSet.getItemSetId()),
-        m_InventoryName(itemSet.getInventoryName()),
-        m_ItemName(itemSet.getItemName()),
-        m_Count(itemSet.getCount() ? *itemSet.getCount() : 0),
-        m_ExpiresAt(itemSet.getExpiresAt() ? *itemSet.getExpiresAt() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(itemSet)
+    {}
+
+    EzItemSet& operator=(const EzItemSet& ezItemSet) = default;
+    EzItemSet& operator=(EzItemSet&& ezItemSet) = default;
+
+    EzItemSet deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzItemSet);
     }
 
     gs2::inventory::ItemSet ToModel() const
     {
         gs2::inventory::ItemSet itemSet;
-        itemSet.setItemSetId(*m_ItemSetId);
-        itemSet.setInventoryName(*m_InventoryName);
-        itemSet.setItemName(*m_ItemName);
-        itemSet.setCount(*m_Count);
-        itemSet.setExpiresAt(*m_ExpiresAt);
+        itemSet.setItemSetId(getItemSetId());
+        itemSet.setInventoryName(getInventoryName());
+        itemSet.setItemName(getItemName());
+        itemSet.setCount(getCount());
+        itemSet.setExpiresAt(getExpiresAt());
         return itemSet;
     }
 
@@ -65,90 +105,75 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getItemSetId() const
+    const StringHolder& getItemSetId() const
     {
-        return *m_ItemSetId;
+        return *ensureData().itemSetId;
     }
 
-    gs2::StringHolder& getItemSetId()
+    const StringHolder& getInventoryName() const
     {
-        return *m_ItemSetId;
+        return *ensureData().inventoryName;
     }
 
-    const gs2::StringHolder& getInventoryName() const
+    const StringHolder& getItemName() const
     {
-        return *m_InventoryName;
-    }
-
-    gs2::StringHolder& getInventoryName()
-    {
-        return *m_InventoryName;
-    }
-
-    const gs2::StringHolder& getItemName() const
-    {
-        return *m_ItemName;
-    }
-
-    gs2::StringHolder& getItemName()
-    {
-        return *m_ItemName;
+        return *ensureData().itemName;
     }
 
     Int64 getCount() const
     {
-        return *m_Count;
+        return *ensureData().count;
     }
 
     Int64 getExpiresAt() const
     {
-        return *m_ExpiresAt;
+        return *ensureData().expiresAt;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setItemSetId(Char* itemSetId)
+    void setItemSetId(StringHolder itemSetId)
     {
-        m_ItemSetId.emplace(itemSetId);
+        ensureData().itemSetId = std::move(itemSetId);
     }
 
-    void setInventoryName(Char* inventoryName)
+    void setInventoryName(StringHolder inventoryName)
     {
-        m_InventoryName.emplace(inventoryName);
+        ensureData().inventoryName = std::move(inventoryName);
     }
 
-    void setItemName(Char* itemName)
+    void setItemName(StringHolder itemName)
     {
-        m_ItemName.emplace(itemName);
+        ensureData().itemName = std::move(itemName);
     }
 
     void setCount(Int64 count)
     {
-        m_Count = count;
+        ensureData().count = count;
     }
 
     void setExpiresAt(Int64 expiresAt)
     {
-        m_ExpiresAt = expiresAt;
+        ensureData().expiresAt = expiresAt;
     }
 
-    EzItemSet& withItemSetId(Char* itemSetId)
+    EzItemSet& withItemSetId(StringHolder itemSetId)
     {
-        setItemSetId(itemSetId);
+        setItemSetId(std::move(itemSetId));
         return *this;
     }
 
-    EzItemSet& withInventoryName(Char* inventoryName)
+    EzItemSet& withInventoryName(StringHolder inventoryName)
     {
-        setInventoryName(inventoryName);
+        setInventoryName(std::move(inventoryName));
         return *this;
     }
 
-    EzItemSet& withItemName(Char* itemName)
+    EzItemSet& withItemName(StringHolder itemName)
     {
-        setItemName(itemName);
+        setItemName(std::move(itemName));
         return *this;
     }
 

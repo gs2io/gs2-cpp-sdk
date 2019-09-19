@@ -27,13 +27,51 @@ namespace gs2 { namespace ez { namespace matchmaking {
 class EzCancelMatchmakingResult : public gs2::Gs2Object
 {
 private:
-    /** ギャザリング */
-    EzGathering m_Item;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** ギャザリング */
+        EzGathering item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data)
+        {
+            item = data.item.deepCopy();
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::matchmaking::CancelMatchmakingResult& cancelMatchmakingResult) :
+            item(*cancelMatchmakingResult.getItem())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzCancelMatchmakingResult(const gs2::matchmaking::CancelMatchmakingResult& result) :
-        m_Item(*result.getItem())
+    EzCancelMatchmakingResult() = default;
+    EzCancelMatchmakingResult(const EzCancelMatchmakingResult& result) = default;
+    EzCancelMatchmakingResult(EzCancelMatchmakingResult&& result) = default;
+    ~EzCancelMatchmakingResult() = default;
+
+    EzCancelMatchmakingResult(gs2::matchmaking::CancelMatchmakingResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzCancelMatchmakingResult& operator=(const EzCancelMatchmakingResult& result) = default;
+    EzCancelMatchmakingResult& operator=(EzCancelMatchmakingResult&& result) = default;
+
+    EzCancelMatchmakingResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCancelMatchmakingResult);
     }
 
     static bool isConvertible(const gs2::matchmaking::CancelMatchmakingResult& result)
@@ -48,12 +86,7 @@ public:
 
     const EzGathering& getItem() const
     {
-        return m_Item;
-    }
-
-    EzGathering& getItem()
-    {
-        return m_Item;
+        return ensureData().item;
     }
 };
 

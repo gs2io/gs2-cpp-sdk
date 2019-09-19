@@ -27,19 +27,59 @@ namespace gs2 { namespace ez { namespace auth {
 class EzLoginResult : public gs2::Gs2Object
 {
 private:
-    /** アクセストークン */
-    StringHolder m_Token;
-    /** ユーザーID */
-    StringHolder m_UserId;
-    /** 有効期限 */
-    Int64 m_Expire;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** アクセストークン */
+        StringHolder token;
+        /** ユーザーID */
+        StringHolder userId;
+        /** 有効期限 */
+        Int64 expire;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            token(data.token),
+            userId(data.userId),
+            expire(data.expire)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::auth::LoginBySignatureResult& loginBySignatureResult) :
+            token(*loginBySignatureResult.getToken()),
+            userId(*loginBySignatureResult.getUserId()),
+            expire(*loginBySignatureResult.getExpire())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzLoginResult(const gs2::auth::LoginBySignatureResult& result) :
-        m_Token(*result.getToken()),
-        m_UserId(*result.getUserId()),
-        m_Expire(*result.getExpire())
+    EzLoginResult() = default;
+    EzLoginResult(const EzLoginResult& result) = default;
+    EzLoginResult(EzLoginResult&& result) = default;
+    ~EzLoginResult() = default;
+
+    EzLoginResult(gs2::auth::LoginBySignatureResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzLoginResult& operator=(const EzLoginResult& result) = default;
+    EzLoginResult& operator=(EzLoginResult&& result) = default;
+
+    EzLoginResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzLoginResult);
     }
 
     static bool isConvertible(const gs2::auth::LoginBySignatureResult& result)
@@ -54,29 +94,19 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getToken() const
+    const StringHolder& getToken() const
     {
-        return m_Token;
+        return ensureData().token;
     }
 
-    gs2::StringHolder& getToken()
+    const StringHolder& getUserId() const
     {
-        return m_Token;
-    }
-
-    const gs2::StringHolder& getUserId() const
-    {
-        return m_UserId;
-    }
-
-    gs2::StringHolder& getUserId()
-    {
-        return m_UserId;
+        return ensureData().userId;
     }
 
     Int64 getExpire() const
     {
-        return m_Expire;
+        return ensureData().expire;
     }
 };
 

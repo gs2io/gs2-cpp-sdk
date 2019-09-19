@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace key
 {
@@ -43,28 +45,28 @@ private:
         /** 作成した暗号鍵 */
         optional<Key> item;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            item(std::move(data.item))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "item") == 0) {
+            if (std::strcmp(name_, "item") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -75,72 +77,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    CreateKeyResult() :
-        m_pData(nullptr)
-    {}
+    CreateKeyResult() = default;
+    CreateKeyResult(const CreateKeyResult& createKeyResult) = default;
+    CreateKeyResult(CreateKeyResult&& createKeyResult) = default;
+    ~CreateKeyResult() = default;
 
-    CreateKeyResult(const CreateKeyResult& createKeyResult) :
-        Gs2Object(createKeyResult),
-        m_pData(createKeyResult.m_pData != nullptr ? new Data(*createKeyResult.m_pData) : nullptr)
-    {}
+    CreateKeyResult& operator=(const CreateKeyResult& createKeyResult) = default;
+    CreateKeyResult& operator=(CreateKeyResult&& createKeyResult) = default;
 
-    CreateKeyResult(CreateKeyResult&& createKeyResult) :
-        Gs2Object(std::move(createKeyResult)),
-        m_pData(createKeyResult.m_pData)
+    CreateKeyResult deepCopy() const
     {
-        createKeyResult.m_pData = nullptr;
-    }
-
-    ~CreateKeyResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CreateKeyResult& operator=(const CreateKeyResult& createKeyResult)
-    {
-        Gs2Object::operator=(createKeyResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*createKeyResult.m_pData);
-
-        return *this;
-    }
-
-    CreateKeyResult& operator=(CreateKeyResult&& createKeyResult)
-    {
-        Gs2Object::operator=(std::move(createKeyResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = createKeyResult.m_pData;
-        createKeyResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CreateKeyResult);
     }
 
     const CreateKeyResult* operator->() const
@@ -167,9 +117,9 @@ public:
      *
      * @param item 作成した暗号鍵
      */
-    void setItem(const Key& item)
+    void setItem(Key item)
     {
-        ensureData().item.emplace(item);
+        ensureData().item.emplace(std::move(item));
     }
 
 

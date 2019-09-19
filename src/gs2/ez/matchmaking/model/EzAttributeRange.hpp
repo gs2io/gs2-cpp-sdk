@@ -27,29 +27,67 @@ namespace gs2 { namespace ez { namespace matchmaking {
 class EzAttributeRange : public gs2::Gs2Object
 {
 private:
-    /** 属性名 */
-    gs2::optional<StringHolder> m_Name;
-    /** ギャザリング参加可能な属性値の最小値 */
-    gs2::optional<Int32> m_Min;
-    /** ギャザリング参加可能な属性値の最大値 */
-    gs2::optional<Int32> m_Max;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 属性名 */
+        gs2::optional<StringHolder> name;
+        /** ギャザリング参加可能な属性値の最小値 */
+        gs2::optional<Int32> min;
+        /** ギャザリング参加可能な属性値の最大値 */
+        gs2::optional<Int32> max;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            min(data.min),
+            max(data.max)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::matchmaking::AttributeRange& attributeRange) :
+            name(attributeRange.getName()),
+            min(attributeRange.getMin() ? *attributeRange.getMin() : 0),
+            max(attributeRange.getMax() ? *attributeRange.getMax() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzAttributeRange() = default;
+    EzAttributeRange(const EzAttributeRange& ezAttributeRange) = default;
+    EzAttributeRange(EzAttributeRange&& ezAttributeRange) = default;
+    ~EzAttributeRange() = default;
 
     EzAttributeRange(gs2::matchmaking::AttributeRange attributeRange) :
-        m_Name(attributeRange.getName()),
-        m_Min(attributeRange.getMin() ? *attributeRange.getMin() : 0),
-        m_Max(attributeRange.getMax() ? *attributeRange.getMax() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(attributeRange)
+    {}
+
+    EzAttributeRange& operator=(const EzAttributeRange& ezAttributeRange) = default;
+    EzAttributeRange& operator=(EzAttributeRange&& ezAttributeRange) = default;
+
+    EzAttributeRange deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzAttributeRange);
     }
 
     gs2::matchmaking::AttributeRange ToModel() const
     {
         gs2::matchmaking::AttributeRange attributeRange;
-        attributeRange.setName(*m_Name);
-        attributeRange.setMin(*m_Min);
-        attributeRange.setMax(*m_Max);
+        attributeRange.setName(getName());
+        attributeRange.setMin(getMin());
+        attributeRange.setMax(getMax());
         return attributeRange;
     }
 
@@ -57,48 +95,43 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
-    }
-
-    gs2::StringHolder& getName()
-    {
-        return *m_Name;
+        return *ensureData().name;
     }
 
     Int32 getMin() const
     {
-        return *m_Min;
+        return *ensureData().min;
     }
 
     Int32 getMax() const
     {
-        return *m_Max;
+        return *ensureData().max;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
     void setMin(Int32 min)
     {
-        m_Min = min;
+        ensureData().min = min;
     }
 
     void setMax(Int32 max)
     {
-        m_Max = max;
+        ensureData().max = max;
     }
 
-    EzAttributeRange& withName(Char* name)
+    EzAttributeRange& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 

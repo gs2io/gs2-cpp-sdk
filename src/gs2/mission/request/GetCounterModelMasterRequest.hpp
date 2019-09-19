@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2MissionConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace mission
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** ネームスペース名 */
@@ -46,98 +48,47 @@ private:
         /** カウンター名 */
         optional<StringHolder> counterName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             counterName(data.counterName)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            counterName(std::move(data.counterName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    GetCounterModelMasterRequest() :
-        m_pData(nullptr)
-    {}
+    GetCounterModelMasterRequest() = default;
+    GetCounterModelMasterRequest(const GetCounterModelMasterRequest& getCounterModelMasterRequest) = default;
+    GetCounterModelMasterRequest(GetCounterModelMasterRequest&& getCounterModelMasterRequest) = default;
+    ~GetCounterModelMasterRequest() GS2_OVERRIDE = default;
 
-    GetCounterModelMasterRequest(const GetCounterModelMasterRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Mission(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    GetCounterModelMasterRequest& operator=(const GetCounterModelMasterRequest& getCounterModelMasterRequest) = default;
+    GetCounterModelMasterRequest& operator=(GetCounterModelMasterRequest&& getCounterModelMasterRequest) = default;
 
-    GetCounterModelMasterRequest(GetCounterModelMasterRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Mission(std::move(obj)),
-        m_pData(obj.m_pData)
+    GetCounterModelMasterRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~GetCounterModelMasterRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    GetCounterModelMasterRequest& operator=(const GetCounterModelMasterRequest& getCounterModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(getCounterModelMasterRequest);
-        Gs2Mission::operator=(getCounterModelMasterRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*getCounterModelMasterRequest.m_pData);
-
-        return *this;
-    }
-
-    GetCounterModelMasterRequest& operator=(GetCounterModelMasterRequest&& getCounterModelMasterRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(getCounterModelMasterRequest));
-        Gs2Mission::operator=(std::move(getCounterModelMasterRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = getCounterModelMasterRequest.m_pData;
-        getCounterModelMasterRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetCounterModelMasterRequest);
     }
 
     const GetCounterModelMasterRequest* operator->() const
@@ -165,9 +116,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -175,9 +126,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    GetCounterModelMasterRequest& withNamespaceName(const Char* namespaceName)
+    GetCounterModelMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -196,9 +147,9 @@ public:
      *
      * @param counterName カウンター名
      */
-    void setCounterName(const Char* counterName)
+    void setCounterName(StringHolder counterName)
     {
-        ensureData().counterName.emplace(counterName);
+        ensureData().counterName.emplace(std::move(counterName));
     }
 
     /**
@@ -206,9 +157,9 @@ public:
      *
      * @param counterName カウンター名
      */
-    GetCounterModelMasterRequest& withCounterName(const Char* counterName)
+    GetCounterModelMasterRequest& withCounterName(StringHolder counterName)
     {
-        ensureData().counterName.emplace(counterName);
+        ensureData().counterName.emplace(std::move(counterName));
         return *this;
     }
 
@@ -219,33 +170,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    GetCounterModelMasterRequest& withGs2ClientId(const Char* gs2ClientId)
+    GetCounterModelMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    GetCounterModelMasterRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    GetCounterModelMasterRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -254,9 +181,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    GetCounterModelMasterRequest& withRequestId(const Char* gs2RequestId)
+    GetCounterModelMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

@@ -27,16 +27,55 @@ namespace gs2 { namespace ez { namespace distributor {
 class EzRunStampTaskResult : public gs2::Gs2Object
 {
 private:
-    /** タスクの実行結果を反映したコンテキストスタック */
-    StringHolder m_ContextStack;
-    /** レスポンス内容 */
-    StringHolder m_Result;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** タスクの実行結果を反映したコンテキストスタック */
+        StringHolder contextStack;
+        /** レスポンス内容 */
+        StringHolder result;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            contextStack(data.contextStack),
+            result(data.result)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::distributor::RunStampTaskResult& runStampTaskResult) :
+            contextStack(*runStampTaskResult.getContextStack()),
+            result(*runStampTaskResult.getResult())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzRunStampTaskResult(const gs2::distributor::RunStampTaskResult& result) :
-        m_ContextStack(*result.getContextStack()),
-        m_Result(*result.getResult())
+    EzRunStampTaskResult() = default;
+    EzRunStampTaskResult(const EzRunStampTaskResult& result) = default;
+    EzRunStampTaskResult(EzRunStampTaskResult&& result) = default;
+    ~EzRunStampTaskResult() = default;
+
+    EzRunStampTaskResult(gs2::distributor::RunStampTaskResult result) :
+        GS2_CORE_SHARED_DATA_INITIALIZATION(result)
+    {}
+
+    EzRunStampTaskResult& operator=(const EzRunStampTaskResult& result) = default;
+    EzRunStampTaskResult& operator=(EzRunStampTaskResult&& result) = default;
+
+    EzRunStampTaskResult deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRunStampTaskResult);
     }
 
     static bool isConvertible(const gs2::distributor::RunStampTaskResult& result)
@@ -50,24 +89,14 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getContextStack() const
+    const StringHolder& getContextStack() const
     {
-        return m_ContextStack;
+        return ensureData().contextStack;
     }
 
-    gs2::StringHolder& getContextStack()
+    const StringHolder& getResult() const
     {
-        return m_ContextStack;
-    }
-
-    const gs2::StringHolder& getResult() const
-    {
-        return m_Result;
-    }
-
-    gs2::StringHolder& getResult()
-    {
-        return m_Result;
+        return ensureData().result;
     }
 };
 

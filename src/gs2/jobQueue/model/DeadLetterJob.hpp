@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "JobResultBody.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace jobQueue {
@@ -59,8 +61,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -69,62 +70,61 @@ private:
             userId(data.userId),
             scriptId(data.scriptId),
             args(data.args),
-            result(data.result),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.result)
+            {
+                result = data.result->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            deadLetterJobId(std::move(data.deadLetterJobId)),
-            name(std::move(data.name)),
-            userId(std::move(data.userId)),
-            scriptId(std::move(data.scriptId)),
-            args(std::move(data.args)),
-            result(std::move(data.result)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "deadLetterJobId") == 0) {
+            if (std::strcmp(name_, "deadLetterJobId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->deadLetterJobId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "scriptId") == 0) {
+            else if (std::strcmp(name_, "scriptId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->scriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "args") == 0) {
+            else if (std::strcmp(name_, "args") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->args.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "result") == 0) {
+            else if (std::strcmp(name_, "result") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -136,13 +136,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -151,72 +153,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DeadLetterJob() :
-        m_pData(nullptr)
-    {}
+    DeadLetterJob() = default;
+    DeadLetterJob(const DeadLetterJob& deadLetterJob) = default;
+    DeadLetterJob(DeadLetterJob&& deadLetterJob) = default;
+    ~DeadLetterJob() = default;
 
-    DeadLetterJob(const DeadLetterJob& deadLetterJob) :
-        Gs2Object(deadLetterJob),
-        m_pData(deadLetterJob.m_pData != nullptr ? new Data(*deadLetterJob.m_pData) : nullptr)
-    {}
+    DeadLetterJob& operator=(const DeadLetterJob& deadLetterJob) = default;
+    DeadLetterJob& operator=(DeadLetterJob&& deadLetterJob) = default;
 
-    DeadLetterJob(DeadLetterJob&& deadLetterJob) :
-        Gs2Object(std::move(deadLetterJob)),
-        m_pData(deadLetterJob.m_pData)
+    DeadLetterJob deepCopy() const
     {
-        deadLetterJob.m_pData = nullptr;
-    }
-
-    ~DeadLetterJob()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DeadLetterJob& operator=(const DeadLetterJob& deadLetterJob)
-    {
-        Gs2Object::operator=(deadLetterJob);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*deadLetterJob.m_pData);
-
-        return *this;
-    }
-
-    DeadLetterJob& operator=(DeadLetterJob&& deadLetterJob)
-    {
-        Gs2Object::operator=(std::move(deadLetterJob));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = deadLetterJob.m_pData;
-        deadLetterJob.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeadLetterJob);
     }
 
     const DeadLetterJob* operator->() const
@@ -243,9 +193,9 @@ public:
      *
      * @param deadLetterJobId デッドレタージョブ
      */
-    void setDeadLetterJobId(const Char* deadLetterJobId)
+    void setDeadLetterJobId(StringHolder deadLetterJobId)
     {
-        ensureData().deadLetterJobId.emplace(deadLetterJobId);
+        ensureData().deadLetterJobId.emplace(std::move(deadLetterJobId));
     }
 
     /**
@@ -253,9 +203,9 @@ public:
      *
      * @param deadLetterJobId デッドレタージョブ
      */
-    DeadLetterJob& withDeadLetterJobId(const Char* deadLetterJobId)
+    DeadLetterJob& withDeadLetterJobId(StringHolder deadLetterJobId)
     {
-        setDeadLetterJobId(deadLetterJobId);
+        setDeadLetterJobId(std::move(deadLetterJobId));
         return *this;
     }
 
@@ -274,9 +224,9 @@ public:
      *
      * @param name ジョブの名前
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -284,9 +234,9 @@ public:
      *
      * @param name ジョブの名前
      */
-    DeadLetterJob& withName(const Char* name)
+    DeadLetterJob& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -305,9 +255,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
@@ -315,9 +265,9 @@ public:
      *
      * @param userId ユーザーID
      */
-    DeadLetterJob& withUserId(const Char* userId)
+    DeadLetterJob& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 
@@ -336,9 +286,9 @@ public:
      *
      * @param scriptId ジョブの実行に使用するスクリプト のGRN
      */
-    void setScriptId(const Char* scriptId)
+    void setScriptId(StringHolder scriptId)
     {
-        ensureData().scriptId.emplace(scriptId);
+        ensureData().scriptId.emplace(std::move(scriptId));
     }
 
     /**
@@ -346,9 +296,9 @@ public:
      *
      * @param scriptId ジョブの実行に使用するスクリプト のGRN
      */
-    DeadLetterJob& withScriptId(const Char* scriptId)
+    DeadLetterJob& withScriptId(StringHolder scriptId)
     {
-        setScriptId(scriptId);
+        setScriptId(std::move(scriptId));
         return *this;
     }
 
@@ -367,9 +317,9 @@ public:
      *
      * @param args 引数
      */
-    void setArgs(const Char* args)
+    void setArgs(StringHolder args)
     {
-        ensureData().args.emplace(args);
+        ensureData().args.emplace(std::move(args));
     }
 
     /**
@@ -377,9 +327,9 @@ public:
      *
      * @param args 引数
      */
-    DeadLetterJob& withArgs(const Char* args)
+    DeadLetterJob& withArgs(StringHolder args)
     {
-        setArgs(args);
+        setArgs(std::move(args));
         return *this;
     }
 
@@ -398,9 +348,9 @@ public:
      *
      * @param result ジョブ実行結果
      */
-    void setResult(const List<JobResultBody>& result)
+    void setResult(List<JobResultBody> result)
     {
-        ensureData().result.emplace(result);
+        ensureData().result.emplace(std::move(result));
     }
 
     /**
@@ -408,9 +358,9 @@ public:
      *
      * @param result ジョブ実行結果
      */
-    DeadLetterJob& withResult(const List<JobResultBody>& result)
+    DeadLetterJob& withResult(List<JobResultBody> result)
     {
-        setResult(result);
+        setResult(std::move(result));
         return *this;
     }
 
@@ -487,7 +437,7 @@ inline bool operator!=(const DeadLetterJob& lhs, const DeadLetterJob& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

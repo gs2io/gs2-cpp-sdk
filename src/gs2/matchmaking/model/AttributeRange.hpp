@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace matchmaking {
@@ -48,44 +50,41 @@ private:
         /** ギャザリング参加可能な属性値の最大値 */
         optional<Int32> max;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             name(data.name),
             min(data.min),
             max(data.max)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            name(std::move(data.name)),
-            min(std::move(data.min)),
-            max(std::move(data.max))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "name") == 0) {
+            if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "min") == 0) {
+            else if (std::strcmp(name_, "min") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->min = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "max") == 0) {
+            else if (std::strcmp(name_, "max") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->max = jsonValue.GetInt();
@@ -94,72 +93,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    AttributeRange() :
-        m_pData(nullptr)
-    {}
+    AttributeRange() = default;
+    AttributeRange(const AttributeRange& attributeRange) = default;
+    AttributeRange(AttributeRange&& attributeRange) = default;
+    ~AttributeRange() = default;
 
-    AttributeRange(const AttributeRange& attributeRange) :
-        Gs2Object(attributeRange),
-        m_pData(attributeRange.m_pData != nullptr ? new Data(*attributeRange.m_pData) : nullptr)
-    {}
+    AttributeRange& operator=(const AttributeRange& attributeRange) = default;
+    AttributeRange& operator=(AttributeRange&& attributeRange) = default;
 
-    AttributeRange(AttributeRange&& attributeRange) :
-        Gs2Object(std::move(attributeRange)),
-        m_pData(attributeRange.m_pData)
+    AttributeRange deepCopy() const
     {
-        attributeRange.m_pData = nullptr;
-    }
-
-    ~AttributeRange()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    AttributeRange& operator=(const AttributeRange& attributeRange)
-    {
-        Gs2Object::operator=(attributeRange);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*attributeRange.m_pData);
-
-        return *this;
-    }
-
-    AttributeRange& operator=(AttributeRange&& attributeRange)
-    {
-        Gs2Object::operator=(std::move(attributeRange));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = attributeRange.m_pData;
-        attributeRange.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(AttributeRange);
     }
 
     const AttributeRange* operator->() const
@@ -186,9 +133,9 @@ public:
      *
      * @param name 属性名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -196,9 +143,9 @@ public:
      *
      * @param name 属性名
      */
-    AttributeRange& withName(const Char* name)
+    AttributeRange& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -275,7 +222,7 @@ inline bool operator!=(const AttributeRange& lhs, const AttributeRange& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "CounterScopeModel.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace mission {
@@ -53,54 +55,53 @@ private:
         /** カウントアップ可能な期間を指定するイベントマスター のGRN */
         optional<StringHolder> challengePeriodEventId;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             counterId(data.counterId),
             name(data.name),
             metadata(data.metadata),
-            scopes(data.scopes),
             challengePeriodEventId(data.challengePeriodEventId)
-        {}
+        {
+            if (data.scopes)
+            {
+                scopes = data.scopes->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            counterId(std::move(data.counterId)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            scopes(std::move(data.scopes)),
-            challengePeriodEventId(std::move(data.challengePeriodEventId))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "counterId") == 0) {
+            if (std::strcmp(name_, "counterId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->counterId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "scopes") == 0) {
+            else if (std::strcmp(name_, "scopes") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -112,7 +113,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "challengePeriodEventId") == 0) {
+            else if (std::strcmp(name_, "challengePeriodEventId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->challengePeriodEventId.emplace(jsonValue.GetString());
@@ -121,72 +123,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    CounterModel() :
-        m_pData(nullptr)
-    {}
+    CounterModel() = default;
+    CounterModel(const CounterModel& counterModel) = default;
+    CounterModel(CounterModel&& counterModel) = default;
+    ~CounterModel() = default;
 
-    CounterModel(const CounterModel& counterModel) :
-        Gs2Object(counterModel),
-        m_pData(counterModel.m_pData != nullptr ? new Data(*counterModel.m_pData) : nullptr)
-    {}
+    CounterModel& operator=(const CounterModel& counterModel) = default;
+    CounterModel& operator=(CounterModel&& counterModel) = default;
 
-    CounterModel(CounterModel&& counterModel) :
-        Gs2Object(std::move(counterModel)),
-        m_pData(counterModel.m_pData)
+    CounterModel deepCopy() const
     {
-        counterModel.m_pData = nullptr;
-    }
-
-    ~CounterModel()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    CounterModel& operator=(const CounterModel& counterModel)
-    {
-        Gs2Object::operator=(counterModel);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*counterModel.m_pData);
-
-        return *this;
-    }
-
-    CounterModel& operator=(CounterModel&& counterModel)
-    {
-        Gs2Object::operator=(std::move(counterModel));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = counterModel.m_pData;
-        counterModel.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CounterModel);
     }
 
     const CounterModel* operator->() const
@@ -213,9 +163,9 @@ public:
      *
      * @param counterId カウンターの種類
      */
-    void setCounterId(const Char* counterId)
+    void setCounterId(StringHolder counterId)
     {
-        ensureData().counterId.emplace(counterId);
+        ensureData().counterId.emplace(std::move(counterId));
     }
 
     /**
@@ -223,9 +173,9 @@ public:
      *
      * @param counterId カウンターの種類
      */
-    CounterModel& withCounterId(const Char* counterId)
+    CounterModel& withCounterId(StringHolder counterId)
     {
-        setCounterId(counterId);
+        setCounterId(std::move(counterId));
         return *this;
     }
 
@@ -244,9 +194,9 @@ public:
      *
      * @param name カウンター名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -254,9 +204,9 @@ public:
      *
      * @param name カウンター名
      */
-    CounterModel& withName(const Char* name)
+    CounterModel& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -275,9 +225,9 @@ public:
      *
      * @param metadata メタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -285,9 +235,9 @@ public:
      *
      * @param metadata メタデータ
      */
-    CounterModel& withMetadata(const Char* metadata)
+    CounterModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -306,9 +256,9 @@ public:
      *
      * @param scopes カウンターのリセットタイミング
      */
-    void setScopes(const List<CounterScopeModel>& scopes)
+    void setScopes(List<CounterScopeModel> scopes)
     {
-        ensureData().scopes.emplace(scopes);
+        ensureData().scopes.emplace(std::move(scopes));
     }
 
     /**
@@ -316,9 +266,9 @@ public:
      *
      * @param scopes カウンターのリセットタイミング
      */
-    CounterModel& withScopes(const List<CounterScopeModel>& scopes)
+    CounterModel& withScopes(List<CounterScopeModel> scopes)
     {
-        setScopes(scopes);
+        setScopes(std::move(scopes));
         return *this;
     }
 
@@ -337,9 +287,9 @@ public:
      *
      * @param challengePeriodEventId カウントアップ可能な期間を指定するイベントマスター のGRN
      */
-    void setChallengePeriodEventId(const Char* challengePeriodEventId)
+    void setChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        ensureData().challengePeriodEventId.emplace(challengePeriodEventId);
+        ensureData().challengePeriodEventId.emplace(std::move(challengePeriodEventId));
     }
 
     /**
@@ -347,9 +297,9 @@ public:
      *
      * @param challengePeriodEventId カウントアップ可能な期間を指定するイベントマスター のGRN
      */
-    CounterModel& withChallengePeriodEventId(const Char* challengePeriodEventId)
+    CounterModel& withChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        setChallengePeriodEventId(challengePeriodEventId);
+        setChallengePeriodEventId(std::move(challengePeriodEventId));
         return *this;
     }
 
@@ -364,7 +314,7 @@ inline bool operator!=(const CounterModel& lhs, const CounterModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

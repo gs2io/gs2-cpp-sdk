@@ -20,9 +20,11 @@
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../Gs2InboxConst.hpp"
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace inbox
 {
@@ -38,7 +40,7 @@ public:
     constexpr static const Char* const FUNCTION = "";
 
 private:
-    class Data : public Gs2Object
+    class Data : public Gs2BasicRequest::Data
     {
     public:
         /** プレゼントボックス名 */
@@ -60,112 +62,66 @@ private:
         /** メッセージを受信したときのプッシュ通知 */
         optional<NotificationSetting> receiveNotification;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data),
+            Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             description(data.description),
             isAutomaticDeletingEnabled(data.isAutomaticDeletingEnabled),
-            receiveMessageScript(data.receiveMessageScript),
-            readMessageScript(data.readMessageScript),
-            deleteMessageScript(data.deleteMessageScript),
             queueNamespaceId(data.queueNamespaceId),
-            keyId(data.keyId),
-            receiveNotification(data.receiveNotification)
-        {}
+            keyId(data.keyId)
+        {
+            if (data.receiveMessageScript)
+            {
+                receiveMessageScript = data.receiveMessageScript->deepCopy();
+            }
+            if (data.readMessageScript)
+            {
+                readMessageScript = data.readMessageScript->deepCopy();
+            }
+            if (data.deleteMessageScript)
+            {
+                deleteMessageScript = data.deleteMessageScript->deepCopy();
+            }
+            if (data.receiveNotification)
+            {
+                receiveNotification = data.receiveNotification->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            Gs2Object(std::move(data)),
-            namespaceName(std::move(data.namespaceName)),
-            description(std::move(data.description)),
-            isAutomaticDeletingEnabled(std::move(data.isAutomaticDeletingEnabled)),
-            receiveMessageScript(std::move(data.receiveMessageScript)),
-            readMessageScript(std::move(data.readMessageScript)),
-            deleteMessageScript(std::move(data.deleteMessageScript)),
-            queueNamespaceId(std::move(data.queueNamespaceId)),
-            keyId(std::move(data.keyId)),
-            receiveNotification(std::move(data.receiveNotification))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
     };
 
-    Data* m_pData;
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
     }
 
 public:
-    UpdateNamespaceRequest() :
-        m_pData(nullptr)
-    {}
+    UpdateNamespaceRequest() = default;
+    UpdateNamespaceRequest(const UpdateNamespaceRequest& updateNamespaceRequest) = default;
+    UpdateNamespaceRequest(UpdateNamespaceRequest&& updateNamespaceRequest) = default;
+    ~UpdateNamespaceRequest() GS2_OVERRIDE = default;
 
-    UpdateNamespaceRequest(const UpdateNamespaceRequest& obj) :
-        Gs2BasicRequest(obj),
-        Gs2Inbox(obj),
-        m_pData(obj.m_pData != nullptr ? new Data(*obj.m_pData) : nullptr)
-    {}
+    UpdateNamespaceRequest& operator=(const UpdateNamespaceRequest& updateNamespaceRequest) = default;
+    UpdateNamespaceRequest& operator=(UpdateNamespaceRequest&& updateNamespaceRequest) = default;
 
-    UpdateNamespaceRequest(UpdateNamespaceRequest&& obj) :
-        Gs2BasicRequest(std::move(obj)),
-        Gs2Inbox(std::move(obj)),
-        m_pData(obj.m_pData)
+    UpdateNamespaceRequest deepCopy() const
     {
-        obj.m_pData = nullptr;
-    }
-
-    ~UpdateNamespaceRequest()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    UpdateNamespaceRequest& operator=(const UpdateNamespaceRequest& updateNamespaceRequest)
-    {
-        Gs2BasicRequest::operator=(updateNamespaceRequest);
-        Gs2Inbox::operator=(updateNamespaceRequest);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*updateNamespaceRequest.m_pData);
-
-        return *this;
-    }
-
-    UpdateNamespaceRequest& operator=(UpdateNamespaceRequest&& updateNamespaceRequest)
-    {
-        Gs2BasicRequest::operator=(std::move(updateNamespaceRequest));
-        Gs2Inbox::operator=(std::move(updateNamespaceRequest));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = updateNamespaceRequest.m_pData;
-        updateNamespaceRequest.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateNamespaceRequest);
     }
 
     const UpdateNamespaceRequest* operator->() const
@@ -193,9 +149,9 @@ public:
      *
      * @param namespaceName プレゼントボックス名
      */
-    void setNamespaceName(const Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
     }
 
     /**
@@ -203,9 +159,9 @@ public:
      *
      * @param namespaceName プレゼントボックス名
      */
-    UpdateNamespaceRequest& withNamespaceName(const Char* namespaceName)
+    UpdateNamespaceRequest& withNamespaceName(StringHolder namespaceName)
     {
-        ensureData().namespaceName.emplace(namespaceName);
+        ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
@@ -224,9 +180,9 @@ public:
      *
      * @param description 説明文
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -234,9 +190,9 @@ public:
      *
      * @param description 説明文
      */
-    UpdateNamespaceRequest& withDescription(const Char* description)
+    UpdateNamespaceRequest& withDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
         return *this;
     }
 
@@ -286,9 +242,9 @@ public:
      *
      * @param receiveMessageScript メッセージ受信したときに実行するスクリプト
      */
-    void setReceiveMessageScript(const ScriptSetting& receiveMessageScript)
+    void setReceiveMessageScript(ScriptSetting receiveMessageScript)
     {
-        ensureData().receiveMessageScript.emplace(receiveMessageScript);
+        ensureData().receiveMessageScript.emplace(std::move(receiveMessageScript));
     }
 
     /**
@@ -296,9 +252,9 @@ public:
      *
      * @param receiveMessageScript メッセージ受信したときに実行するスクリプト
      */
-    UpdateNamespaceRequest& withReceiveMessageScript(const ScriptSetting& receiveMessageScript)
+    UpdateNamespaceRequest& withReceiveMessageScript(ScriptSetting receiveMessageScript)
     {
-        ensureData().receiveMessageScript.emplace(receiveMessageScript);
+        ensureData().receiveMessageScript.emplace(std::move(receiveMessageScript));
         return *this;
     }
 
@@ -317,9 +273,9 @@ public:
      *
      * @param readMessageScript メッセージ開封したときに実行するスクリプト
      */
-    void setReadMessageScript(const ScriptSetting& readMessageScript)
+    void setReadMessageScript(ScriptSetting readMessageScript)
     {
-        ensureData().readMessageScript.emplace(readMessageScript);
+        ensureData().readMessageScript.emplace(std::move(readMessageScript));
     }
 
     /**
@@ -327,9 +283,9 @@ public:
      *
      * @param readMessageScript メッセージ開封したときに実行するスクリプト
      */
-    UpdateNamespaceRequest& withReadMessageScript(const ScriptSetting& readMessageScript)
+    UpdateNamespaceRequest& withReadMessageScript(ScriptSetting readMessageScript)
     {
-        ensureData().readMessageScript.emplace(readMessageScript);
+        ensureData().readMessageScript.emplace(std::move(readMessageScript));
         return *this;
     }
 
@@ -348,9 +304,9 @@ public:
      *
      * @param deleteMessageScript メッセージ削除したときに実行するスクリプト
      */
-    void setDeleteMessageScript(const ScriptSetting& deleteMessageScript)
+    void setDeleteMessageScript(ScriptSetting deleteMessageScript)
     {
-        ensureData().deleteMessageScript.emplace(deleteMessageScript);
+        ensureData().deleteMessageScript.emplace(std::move(deleteMessageScript));
     }
 
     /**
@@ -358,9 +314,9 @@ public:
      *
      * @param deleteMessageScript メッセージ削除したときに実行するスクリプト
      */
-    UpdateNamespaceRequest& withDeleteMessageScript(const ScriptSetting& deleteMessageScript)
+    UpdateNamespaceRequest& withDeleteMessageScript(ScriptSetting deleteMessageScript)
     {
-        ensureData().deleteMessageScript.emplace(deleteMessageScript);
+        ensureData().deleteMessageScript.emplace(std::move(deleteMessageScript));
         return *this;
     }
 
@@ -379,9 +335,9 @@ public:
      *
      * @param queueNamespaceId 報酬付与処理をジョブとして追加するキューネームスペース のGRN
      */
-    void setQueueNamespaceId(const Char* queueNamespaceId)
+    void setQueueNamespaceId(StringHolder queueNamespaceId)
     {
-        ensureData().queueNamespaceId.emplace(queueNamespaceId);
+        ensureData().queueNamespaceId.emplace(std::move(queueNamespaceId));
     }
 
     /**
@@ -389,9 +345,9 @@ public:
      *
      * @param queueNamespaceId 報酬付与処理をジョブとして追加するキューネームスペース のGRN
      */
-    UpdateNamespaceRequest& withQueueNamespaceId(const Char* queueNamespaceId)
+    UpdateNamespaceRequest& withQueueNamespaceId(StringHolder queueNamespaceId)
     {
-        ensureData().queueNamespaceId.emplace(queueNamespaceId);
+        ensureData().queueNamespaceId.emplace(std::move(queueNamespaceId));
         return *this;
     }
 
@@ -410,9 +366,9 @@ public:
      *
      * @param keyId 報酬付与処理のスタンプシートで使用する暗号鍵GRN
      */
-    void setKeyId(const Char* keyId)
+    void setKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
     }
 
     /**
@@ -420,9 +376,9 @@ public:
      *
      * @param keyId 報酬付与処理のスタンプシートで使用する暗号鍵GRN
      */
-    UpdateNamespaceRequest& withKeyId(const Char* keyId)
+    UpdateNamespaceRequest& withKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
         return *this;
     }
 
@@ -441,9 +397,9 @@ public:
      *
      * @param receiveNotification メッセージを受信したときのプッシュ通知
      */
-    void setReceiveNotification(const NotificationSetting& receiveNotification)
+    void setReceiveNotification(NotificationSetting receiveNotification)
     {
-        ensureData().receiveNotification.emplace(receiveNotification);
+        ensureData().receiveNotification.emplace(std::move(receiveNotification));
     }
 
     /**
@@ -451,9 +407,9 @@ public:
      *
      * @param receiveNotification メッセージを受信したときのプッシュ通知
      */
-    UpdateNamespaceRequest& withReceiveNotification(const NotificationSetting& receiveNotification)
+    UpdateNamespaceRequest& withReceiveNotification(NotificationSetting receiveNotification)
     {
-        ensureData().receiveNotification.emplace(receiveNotification);
+        ensureData().receiveNotification.emplace(std::move(receiveNotification));
         return *this;
     }
 
@@ -464,33 +420,9 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    UpdateNamespaceRequest& withGs2ClientId(const Char* gs2ClientId)
+    UpdateNamespaceRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
-        setGs2ClientId(gs2ClientId);
-        return *this;
-    }
-
-    /**
-     * タイムスタンプを設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2Timestamp タイムスタンプ
-     */
-    UpdateNamespaceRequest& withGs2Timestamp(Int64 gs2Timestamp)
-    {
-        setGs2Timestamp(gs2Timestamp);
-        return *this;
-    }
-
-    /**
-     * GS2認証署名を設定。
-     * 通常は自動的に計算されるため、この値を設定する必要はありません。
-     *
-     * @param gs2RequestSign GS2認証署名
-     */
-    UpdateNamespaceRequest& withGs2RequestSign(const Char* gs2RequestSign)
-    {
-        setGs2RequestSign(gs2RequestSign);
+        setGs2ClientId(std::move(gs2ClientId));
         return *this;
     }
 
@@ -499,9 +431,9 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    UpdateNamespaceRequest& withRequestId(const Char* gs2RequestId)
+    UpdateNamespaceRequest& withRequestId(StringHolder gs2RequestId)
     {
-        setRequestId(gs2RequestId);
+        setRequestId(std::move(gs2RequestId));
         return *this;
     }
 };

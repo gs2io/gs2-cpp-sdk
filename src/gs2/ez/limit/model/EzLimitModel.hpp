@@ -27,45 +27,87 @@ namespace gs2 { namespace ez { namespace limit {
 class EzLimitModel : public gs2::Gs2Object
 {
 private:
-    /** 回数制限の種類 */
-    gs2::optional<StringHolder> m_LimitModelId;
-    /** 回数制限の種類名 */
-    gs2::optional<StringHolder> m_Name;
-    /** 回数制限の種類のメタデータ */
-    gs2::optional<StringHolder> m_Metadata;
-    /** リセットタイミング */
-    gs2::optional<StringHolder> m_ResetType;
-    /** リセットをする日にち */
-    gs2::optional<Int32> m_ResetDayOfMonth;
-    /** リセットする曜日 */
-    gs2::optional<StringHolder> m_ResetDayOfWeek;
-    /** リセット時刻 */
-    gs2::optional<Int32> m_ResetHour;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 回数制限の種類 */
+        gs2::optional<StringHolder> limitModelId;
+        /** 回数制限の種類名 */
+        gs2::optional<StringHolder> name;
+        /** 回数制限の種類のメタデータ */
+        gs2::optional<StringHolder> metadata;
+        /** リセットタイミング */
+        gs2::optional<StringHolder> resetType;
+        /** リセットをする日にち */
+        gs2::optional<Int32> resetDayOfMonth;
+        /** リセットする曜日 */
+        gs2::optional<StringHolder> resetDayOfWeek;
+        /** リセット時刻 */
+        gs2::optional<Int32> resetHour;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            limitModelId(data.limitModelId),
+            name(data.name),
+            metadata(data.metadata),
+            resetType(data.resetType),
+            resetDayOfMonth(data.resetDayOfMonth),
+            resetDayOfWeek(data.resetDayOfWeek),
+            resetHour(data.resetHour)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::limit::LimitModel& limitModel) :
+            limitModelId(limitModel.getLimitModelId()),
+            name(limitModel.getName()),
+            metadata(limitModel.getMetadata()),
+            resetType(limitModel.getResetType()),
+            resetDayOfMonth(limitModel.getResetDayOfMonth() ? *limitModel.getResetDayOfMonth() : 0),
+            resetDayOfWeek(limitModel.getResetDayOfWeek()),
+            resetHour(limitModel.getResetHour() ? *limitModel.getResetHour() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzLimitModel() = default;
+    EzLimitModel(const EzLimitModel& ezLimitModel) = default;
+    EzLimitModel(EzLimitModel&& ezLimitModel) = default;
+    ~EzLimitModel() = default;
 
     EzLimitModel(gs2::limit::LimitModel limitModel) :
-        m_LimitModelId(limitModel.getLimitModelId()),
-        m_Name(limitModel.getName()),
-        m_Metadata(limitModel.getMetadata()),
-        m_ResetType(limitModel.getResetType()),
-        m_ResetDayOfMonth(limitModel.getResetDayOfMonth() ? *limitModel.getResetDayOfMonth() : 0),
-        m_ResetDayOfWeek(limitModel.getResetDayOfWeek()),
-        m_ResetHour(limitModel.getResetHour() ? *limitModel.getResetHour() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(limitModel)
+    {}
+
+    EzLimitModel& operator=(const EzLimitModel& ezLimitModel) = default;
+    EzLimitModel& operator=(EzLimitModel&& ezLimitModel) = default;
+
+    EzLimitModel deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzLimitModel);
     }
 
     gs2::limit::LimitModel ToModel() const
     {
         gs2::limit::LimitModel limitModel;
-        limitModel.setLimitModelId(*m_LimitModelId);
-        limitModel.setName(*m_Name);
-        limitModel.setMetadata(*m_Metadata);
-        limitModel.setResetType(*m_ResetType);
-        limitModel.setResetDayOfMonth(*m_ResetDayOfMonth);
-        limitModel.setResetDayOfWeek(*m_ResetDayOfWeek);
-        limitModel.setResetHour(*m_ResetHour);
+        limitModel.setLimitModelId(getLimitModelId());
+        limitModel.setName(getName());
+        limitModel.setMetadata(getMetadata());
+        limitModel.setResetType(getResetType());
+        limitModel.setResetDayOfMonth(getResetDayOfMonth());
+        limitModel.setResetDayOfWeek(getResetDayOfWeek());
+        limitModel.setResetHour(getResetHour());
         return limitModel;
     }
 
@@ -73,126 +115,101 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getLimitModelId() const
+    const StringHolder& getLimitModelId() const
     {
-        return *m_LimitModelId;
+        return *ensureData().limitModelId;
     }
 
-    gs2::StringHolder& getLimitModelId()
+    const StringHolder& getName() const
     {
-        return *m_LimitModelId;
+        return *ensureData().name;
     }
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getMetadata() const
     {
-        return *m_Name;
+        return *ensureData().metadata;
     }
 
-    gs2::StringHolder& getName()
+    const StringHolder& getResetType() const
     {
-        return *m_Name;
-    }
-
-    const gs2::StringHolder& getMetadata() const
-    {
-        return *m_Metadata;
-    }
-
-    gs2::StringHolder& getMetadata()
-    {
-        return *m_Metadata;
-    }
-
-    const gs2::StringHolder& getResetType() const
-    {
-        return *m_ResetType;
-    }
-
-    gs2::StringHolder& getResetType()
-    {
-        return *m_ResetType;
+        return *ensureData().resetType;
     }
 
     Int32 getResetDayOfMonth() const
     {
-        return *m_ResetDayOfMonth;
+        return *ensureData().resetDayOfMonth;
     }
 
-    const gs2::StringHolder& getResetDayOfWeek() const
+    const StringHolder& getResetDayOfWeek() const
     {
-        return *m_ResetDayOfWeek;
-    }
-
-    gs2::StringHolder& getResetDayOfWeek()
-    {
-        return *m_ResetDayOfWeek;
+        return *ensureData().resetDayOfWeek;
     }
 
     Int32 getResetHour() const
     {
-        return *m_ResetHour;
+        return *ensureData().resetHour;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setLimitModelId(Char* limitModelId)
+    void setLimitModelId(StringHolder limitModelId)
     {
-        m_LimitModelId.emplace(limitModelId);
+        ensureData().limitModelId = std::move(limitModelId);
     }
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
-    void setMetadata(Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        m_Metadata.emplace(metadata);
+        ensureData().metadata = std::move(metadata);
     }
 
-    void setResetType(Char* resetType)
+    void setResetType(StringHolder resetType)
     {
-        m_ResetType.emplace(resetType);
+        ensureData().resetType = std::move(resetType);
     }
 
     void setResetDayOfMonth(Int32 resetDayOfMonth)
     {
-        m_ResetDayOfMonth = resetDayOfMonth;
+        ensureData().resetDayOfMonth = resetDayOfMonth;
     }
 
-    void setResetDayOfWeek(Char* resetDayOfWeek)
+    void setResetDayOfWeek(StringHolder resetDayOfWeek)
     {
-        m_ResetDayOfWeek.emplace(resetDayOfWeek);
+        ensureData().resetDayOfWeek = std::move(resetDayOfWeek);
     }
 
     void setResetHour(Int32 resetHour)
     {
-        m_ResetHour = resetHour;
+        ensureData().resetHour = resetHour;
     }
 
-    EzLimitModel& withLimitModelId(Char* limitModelId)
+    EzLimitModel& withLimitModelId(StringHolder limitModelId)
     {
-        setLimitModelId(limitModelId);
+        setLimitModelId(std::move(limitModelId));
         return *this;
     }
 
-    EzLimitModel& withName(Char* name)
+    EzLimitModel& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
-    EzLimitModel& withMetadata(Char* metadata)
+    EzLimitModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
-    EzLimitModel& withResetType(Char* resetType)
+    EzLimitModel& withResetType(StringHolder resetType)
     {
-        setResetType(resetType);
+        setResetType(std::move(resetType));
         return *this;
     }
 
@@ -202,9 +219,9 @@ public:
         return *this;
     }
 
-    EzLimitModel& withResetDayOfWeek(Char* resetDayOfWeek)
+    EzLimitModel& withResetDayOfWeek(StringHolder resetDayOfWeek)
     {
-        setResetDayOfWeek(resetDayOfWeek);
+        setResetDayOfWeek(std::move(resetDayOfWeek));
         return *this;
     }
 

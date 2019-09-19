@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace gateway
 {
@@ -45,30 +47,29 @@ private:
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            items(data.items),
             nextPageToken(data.nextPageToken)
-        {}
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items)),
-            nextPageToken(std::move(data.nextPageToken))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -80,7 +81,8 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "nextPageToken") == 0) {
+            else if (std::strcmp(name_, "nextPageToken") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->nextPageToken.emplace(jsonValue.GetString());
@@ -89,72 +91,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DescribeNamespacesResult() :
-        m_pData(nullptr)
-    {}
+    DescribeNamespacesResult() = default;
+    DescribeNamespacesResult(const DescribeNamespacesResult& describeNamespacesResult) = default;
+    DescribeNamespacesResult(DescribeNamespacesResult&& describeNamespacesResult) = default;
+    ~DescribeNamespacesResult() = default;
 
-    DescribeNamespacesResult(const DescribeNamespacesResult& describeNamespacesResult) :
-        Gs2Object(describeNamespacesResult),
-        m_pData(describeNamespacesResult.m_pData != nullptr ? new Data(*describeNamespacesResult.m_pData) : nullptr)
-    {}
+    DescribeNamespacesResult& operator=(const DescribeNamespacesResult& describeNamespacesResult) = default;
+    DescribeNamespacesResult& operator=(DescribeNamespacesResult&& describeNamespacesResult) = default;
 
-    DescribeNamespacesResult(DescribeNamespacesResult&& describeNamespacesResult) :
-        Gs2Object(std::move(describeNamespacesResult)),
-        m_pData(describeNamespacesResult.m_pData)
+    DescribeNamespacesResult deepCopy() const
     {
-        describeNamespacesResult.m_pData = nullptr;
-    }
-
-    ~DescribeNamespacesResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DescribeNamespacesResult& operator=(const DescribeNamespacesResult& describeNamespacesResult)
-    {
-        Gs2Object::operator=(describeNamespacesResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*describeNamespacesResult.m_pData);
-
-        return *this;
-    }
-
-    DescribeNamespacesResult& operator=(DescribeNamespacesResult&& describeNamespacesResult)
-    {
-        Gs2Object::operator=(std::move(describeNamespacesResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = describeNamespacesResult.m_pData;
-        describeNamespacesResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeNamespacesResult);
     }
 
     const DescribeNamespacesResult* operator->() const
@@ -181,9 +131,9 @@ public:
      *
      * @param items ネームスペースのリスト
      */
-    void setItems(const List<Namespace>& items)
+    void setItems(List<Namespace> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
     /**
@@ -201,9 +151,9 @@ public:
      *
      * @param nextPageToken リストの続きを取得するためのページトークン
      */
-    void setNextPageToken(const Char* nextPageToken)
+    void setNextPageToken(StringHolder nextPageToken)
     {
-        ensureData().nextPageToken.emplace(nextPageToken);
+        ensureData().nextPageToken.emplace(std::move(nextPageToken));
     }
 
 

@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace jobQueue
 {
@@ -43,28 +45,28 @@ private:
         /** 追加した{model_name}の一覧 */
         optional<List<Job>> items;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            items(data.items)
-        {}
+            detail::json::IModel(data)
+        {
+            if (data.items)
+            {
+                items = data.items->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            items(std::move(data.items))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "items") == 0) {
+            if (std::strcmp(name_, "items") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -79,72 +81,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    PushByUserIdResult() :
-        m_pData(nullptr)
-    {}
+    PushByUserIdResult() = default;
+    PushByUserIdResult(const PushByUserIdResult& pushByUserIdResult) = default;
+    PushByUserIdResult(PushByUserIdResult&& pushByUserIdResult) = default;
+    ~PushByUserIdResult() = default;
 
-    PushByUserIdResult(const PushByUserIdResult& pushByUserIdResult) :
-        Gs2Object(pushByUserIdResult),
-        m_pData(pushByUserIdResult.m_pData != nullptr ? new Data(*pushByUserIdResult.m_pData) : nullptr)
-    {}
+    PushByUserIdResult& operator=(const PushByUserIdResult& pushByUserIdResult) = default;
+    PushByUserIdResult& operator=(PushByUserIdResult&& pushByUserIdResult) = default;
 
-    PushByUserIdResult(PushByUserIdResult&& pushByUserIdResult) :
-        Gs2Object(std::move(pushByUserIdResult)),
-        m_pData(pushByUserIdResult.m_pData)
+    PushByUserIdResult deepCopy() const
     {
-        pushByUserIdResult.m_pData = nullptr;
-    }
-
-    ~PushByUserIdResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    PushByUserIdResult& operator=(const PushByUserIdResult& pushByUserIdResult)
-    {
-        Gs2Object::operator=(pushByUserIdResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*pushByUserIdResult.m_pData);
-
-        return *this;
-    }
-
-    PushByUserIdResult& operator=(PushByUserIdResult&& pushByUserIdResult)
-    {
-        Gs2Object::operator=(std::move(pushByUserIdResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = pushByUserIdResult.m_pData;
-        pushByUserIdResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(PushByUserIdResult);
     }
 
     const PushByUserIdResult* operator->() const
@@ -171,9 +121,9 @@ public:
      *
      * @param items 追加した{model_name}の一覧
      */
-    void setItems(const List<Job>& items)
+    void setItems(List<Job> items)
     {
-        ensureData().items.emplace(items);
+        ensureData().items.emplace(std::move(items));
     }
 
 

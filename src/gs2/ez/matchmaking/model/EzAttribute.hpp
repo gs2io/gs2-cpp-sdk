@@ -27,25 +27,62 @@ namespace gs2 { namespace ez { namespace matchmaking {
 class EzAttribute : public gs2::Gs2Object
 {
 private:
-    /** 属性名 */
-    gs2::optional<StringHolder> m_Name;
-    /** 属性値 */
-    gs2::optional<Int32> m_Value;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** 属性名 */
+        gs2::optional<StringHolder> name;
+        /** 属性値 */
+        gs2::optional<Int32> value;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            name(data.name),
+            value(data.value)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::matchmaking::Attribute& attribute) :
+            name(attribute.getName()),
+            value(attribute.getValue() ? *attribute.getValue() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzAttribute() = default;
+    EzAttribute(const EzAttribute& ezAttribute) = default;
+    EzAttribute(EzAttribute&& ezAttribute) = default;
+    ~EzAttribute() = default;
 
     EzAttribute(gs2::matchmaking::Attribute attribute) :
-        m_Name(attribute.getName()),
-        m_Value(attribute.getValue() ? *attribute.getValue() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(attribute)
+    {}
+
+    EzAttribute& operator=(const EzAttribute& ezAttribute) = default;
+    EzAttribute& operator=(EzAttribute&& ezAttribute) = default;
+
+    EzAttribute deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzAttribute);
     }
 
     gs2::matchmaking::Attribute ToModel() const
     {
         gs2::matchmaking::Attribute attribute;
-        attribute.setName(*m_Name);
-        attribute.setValue(*m_Value);
+        attribute.setName(getName());
+        attribute.setValue(getValue());
         return attribute;
     }
 
@@ -53,38 +90,33 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getName() const
+    const StringHolder& getName() const
     {
-        return *m_Name;
-    }
-
-    gs2::StringHolder& getName()
-    {
-        return *m_Name;
+        return *ensureData().name;
     }
 
     Int32 getValue() const
     {
-        return *m_Value;
+        return *ensureData().value;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setName(Char* name)
+    void setName(StringHolder name)
     {
-        m_Name.emplace(name);
+        ensureData().name = std::move(name);
     }
 
     void setValue(Int32 value)
     {
-        m_Value = value;
+        ensureData().value = value;
     }
 
-    EzAttribute& withName(Char* name)
+    EzAttribute& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 

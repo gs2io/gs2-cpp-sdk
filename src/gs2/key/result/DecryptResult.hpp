@@ -23,8 +23,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "../model/model.hpp"
+#include <memory>
 
 namespace gs2 { namespace key
 {
@@ -43,28 +45,25 @@ private:
         /** 復号済みデータ */
         optional<StringHolder> data;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             data(data.data)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            data(std::move(data.data))
-        {}
+        Data(Data&& data) = default;
 
         virtual ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "data") == 0) {
+            if (std::strcmp(name_, "data") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->data.emplace(jsonValue.GetString());
@@ -73,72 +72,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DecryptResult() :
-        m_pData(nullptr)
-    {}
+    DecryptResult() = default;
+    DecryptResult(const DecryptResult& decryptResult) = default;
+    DecryptResult(DecryptResult&& decryptResult) = default;
+    ~DecryptResult() = default;
 
-    DecryptResult(const DecryptResult& decryptResult) :
-        Gs2Object(decryptResult),
-        m_pData(decryptResult.m_pData != nullptr ? new Data(*decryptResult.m_pData) : nullptr)
-    {}
+    DecryptResult& operator=(const DecryptResult& decryptResult) = default;
+    DecryptResult& operator=(DecryptResult&& decryptResult) = default;
 
-    DecryptResult(DecryptResult&& decryptResult) :
-        Gs2Object(std::move(decryptResult)),
-        m_pData(decryptResult.m_pData)
+    DecryptResult deepCopy() const
     {
-        decryptResult.m_pData = nullptr;
-    }
-
-    ~DecryptResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    DecryptResult& operator=(const DecryptResult& decryptResult)
-    {
-        Gs2Object::operator=(decryptResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*decryptResult.m_pData);
-
-        return *this;
-    }
-
-    DecryptResult& operator=(DecryptResult&& decryptResult)
-    {
-        Gs2Object::operator=(std::move(decryptResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = decryptResult.m_pData;
-        decryptResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DecryptResult);
     }
 
     const DecryptResult* operator->() const
@@ -165,9 +112,9 @@ public:
      *
      * @param data 復号済みデータ
      */
-    void setData(const Char* data)
+    void setData(StringHolder data)
     {
-        ensureData().data.emplace(data);
+        ensureData().data.emplace(std::move(data));
     }
 
 

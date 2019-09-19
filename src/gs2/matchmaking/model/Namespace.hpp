@@ -22,10 +22,12 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "NotificationSetting.hpp"
 #include "NotificationSetting.hpp"
 #include "NotificationSetting.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace matchmaking {
@@ -75,8 +77,7 @@ private:
         /** 最終更新日時 */
         optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -90,101 +91,104 @@ private:
             completeMatchmakingTriggerType(data.completeMatchmakingTriggerType),
             completeMatchmakingTriggerRealtimeNamespaceId(data.completeMatchmakingTriggerRealtimeNamespaceId),
             completeMatchmakingTriggerScriptId(data.completeMatchmakingTriggerScriptId),
-            joinNotification(data.joinNotification),
-            leaveNotification(data.leaveNotification),
-            completeNotification(data.completeNotification),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
-        {}
+        {
+            if (data.joinNotification)
+            {
+                joinNotification = data.joinNotification->deepCopy();
+            }
+            if (data.leaveNotification)
+            {
+                leaveNotification = data.leaveNotification->deepCopy();
+            }
+            if (data.completeNotification)
+            {
+                completeNotification = data.completeNotification->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            namespaceId(std::move(data.namespaceId)),
-            ownerId(std::move(data.ownerId)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            createGatheringTriggerType(std::move(data.createGatheringTriggerType)),
-            createGatheringTriggerRealtimeNamespaceId(std::move(data.createGatheringTriggerRealtimeNamespaceId)),
-            createGatheringTriggerScriptId(std::move(data.createGatheringTriggerScriptId)),
-            completeMatchmakingTriggerType(std::move(data.completeMatchmakingTriggerType)),
-            completeMatchmakingTriggerRealtimeNamespaceId(std::move(data.completeMatchmakingTriggerRealtimeNamespaceId)),
-            completeMatchmakingTriggerScriptId(std::move(data.completeMatchmakingTriggerScriptId)),
-            joinNotification(std::move(data.joinNotification)),
-            leaveNotification(std::move(data.leaveNotification)),
-            completeNotification(std::move(data.completeNotification)),
-            createdAt(std::move(data.createdAt)),
-            updatedAt(std::move(data.updatedAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "namespaceId") == 0) {
+            if (std::strcmp(name_, "namespaceId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->namespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createGatheringTriggerType") == 0) {
+            else if (std::strcmp(name_, "createGatheringTriggerType") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->createGatheringTriggerType.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createGatheringTriggerRealtimeNamespaceId") == 0) {
+            else if (std::strcmp(name_, "createGatheringTriggerRealtimeNamespaceId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->createGatheringTriggerRealtimeNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "createGatheringTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "createGatheringTriggerScriptId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->createGatheringTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "completeMatchmakingTriggerType") == 0) {
+            else if (std::strcmp(name_, "completeMatchmakingTriggerType") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->completeMatchmakingTriggerType.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "completeMatchmakingTriggerRealtimeNamespaceId") == 0) {
+            else if (std::strcmp(name_, "completeMatchmakingTriggerRealtimeNamespaceId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->completeMatchmakingTriggerRealtimeNamespaceId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "completeMatchmakingTriggerScriptId") == 0) {
+            else if (std::strcmp(name_, "completeMatchmakingTriggerScriptId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->completeMatchmakingTriggerScriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "joinNotification") == 0) {
+            else if (std::strcmp(name_, "joinNotification") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -192,7 +196,8 @@ private:
                     detail::json::JsonParser::parse(&this->joinNotification->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "leaveNotification") == 0) {
+            else if (std::strcmp(name_, "leaveNotification") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -200,7 +205,8 @@ private:
                     detail::json::JsonParser::parse(&this->leaveNotification->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "completeNotification") == 0) {
+            else if (std::strcmp(name_, "completeNotification") == 0)
+            {
                 if (jsonValue.IsObject())
                 {
                     const auto& jsonObject = detail::json::getObject(jsonValue);
@@ -208,13 +214,15 @@ private:
                     detail::json::JsonParser::parse(&this->completeNotification->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "createdAt") == 0) {
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "updatedAt") == 0) {
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->updatedAt = jsonValue.GetInt64();
@@ -223,72 +231,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Namespace() :
-        m_pData(nullptr)
-    {}
+    Namespace() = default;
+    Namespace(const Namespace& namespace_) = default;
+    Namespace(Namespace&& namespace_) = default;
+    ~Namespace() = default;
 
-    Namespace(const Namespace& namespace_) :
-        Gs2Object(namespace_),
-        m_pData(namespace_.m_pData != nullptr ? new Data(*namespace_.m_pData) : nullptr)
-    {}
+    Namespace& operator=(const Namespace& namespace_) = default;
+    Namespace& operator=(Namespace&& namespace_) = default;
 
-    Namespace(Namespace&& namespace_) :
-        Gs2Object(std::move(namespace_)),
-        m_pData(namespace_.m_pData)
+    Namespace deepCopy() const
     {
-        namespace_.m_pData = nullptr;
-    }
-
-    ~Namespace()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Namespace& operator=(const Namespace& namespace_)
-    {
-        Gs2Object::operator=(namespace_);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*namespace_.m_pData);
-
-        return *this;
-    }
-
-    Namespace& operator=(Namespace&& namespace_)
-    {
-        Gs2Object::operator=(std::move(namespace_));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = namespace_.m_pData;
-        namespace_.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Namespace);
     }
 
     const Namespace* operator->() const
@@ -315,9 +271,9 @@ public:
      *
      * @param namespaceId ネームスペース
      */
-    void setNamespaceId(const Char* namespaceId)
+    void setNamespaceId(StringHolder namespaceId)
     {
-        ensureData().namespaceId.emplace(namespaceId);
+        ensureData().namespaceId.emplace(std::move(namespaceId));
     }
 
     /**
@@ -325,9 +281,9 @@ public:
      *
      * @param namespaceId ネームスペース
      */
-    Namespace& withNamespaceId(const Char* namespaceId)
+    Namespace& withNamespaceId(StringHolder namespaceId)
     {
-        setNamespaceId(namespaceId);
+        setNamespaceId(std::move(namespaceId));
         return *this;
     }
 
@@ -346,9 +302,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
@@ -356,9 +312,9 @@ public:
      *
      * @param ownerId オーナーID
      */
-    Namespace& withOwnerId(const Char* ownerId)
+    Namespace& withOwnerId(StringHolder ownerId)
     {
-        setOwnerId(ownerId);
+        setOwnerId(std::move(ownerId));
         return *this;
     }
 
@@ -377,9 +333,9 @@ public:
      *
      * @param name ネームスペース名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -387,9 +343,9 @@ public:
      *
      * @param name ネームスペース名
      */
-    Namespace& withName(const Char* name)
+    Namespace& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -408,9 +364,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
@@ -418,9 +374,9 @@ public:
      *
      * @param description ネームスペースの説明
      */
-    Namespace& withDescription(const Char* description)
+    Namespace& withDescription(StringHolder description)
     {
-        setDescription(description);
+        setDescription(std::move(description));
         return *this;
     }
 
@@ -439,9 +395,9 @@ public:
      *
      * @param createGatheringTriggerType ギャザリング新規作成時のアクション
      */
-    void setCreateGatheringTriggerType(const Char* createGatheringTriggerType)
+    void setCreateGatheringTriggerType(StringHolder createGatheringTriggerType)
     {
-        ensureData().createGatheringTriggerType.emplace(createGatheringTriggerType);
+        ensureData().createGatheringTriggerType.emplace(std::move(createGatheringTriggerType));
     }
 
     /**
@@ -449,9 +405,9 @@ public:
      *
      * @param createGatheringTriggerType ギャザリング新規作成時のアクション
      */
-    Namespace& withCreateGatheringTriggerType(const Char* createGatheringTriggerType)
+    Namespace& withCreateGatheringTriggerType(StringHolder createGatheringTriggerType)
     {
-        setCreateGatheringTriggerType(createGatheringTriggerType);
+        setCreateGatheringTriggerType(std::move(createGatheringTriggerType));
         return *this;
     }
 
@@ -470,9 +426,9 @@ public:
      *
      * @param createGatheringTriggerRealtimeNamespaceId ギャザリング新規作成時 にルームを作成するネームスペース のGRN
      */
-    void setCreateGatheringTriggerRealtimeNamespaceId(const Char* createGatheringTriggerRealtimeNamespaceId)
+    void setCreateGatheringTriggerRealtimeNamespaceId(StringHolder createGatheringTriggerRealtimeNamespaceId)
     {
-        ensureData().createGatheringTriggerRealtimeNamespaceId.emplace(createGatheringTriggerRealtimeNamespaceId);
+        ensureData().createGatheringTriggerRealtimeNamespaceId.emplace(std::move(createGatheringTriggerRealtimeNamespaceId));
     }
 
     /**
@@ -480,9 +436,9 @@ public:
      *
      * @param createGatheringTriggerRealtimeNamespaceId ギャザリング新規作成時 にルームを作成するネームスペース のGRN
      */
-    Namespace& withCreateGatheringTriggerRealtimeNamespaceId(const Char* createGatheringTriggerRealtimeNamespaceId)
+    Namespace& withCreateGatheringTriggerRealtimeNamespaceId(StringHolder createGatheringTriggerRealtimeNamespaceId)
     {
-        setCreateGatheringTriggerRealtimeNamespaceId(createGatheringTriggerRealtimeNamespaceId);
+        setCreateGatheringTriggerRealtimeNamespaceId(std::move(createGatheringTriggerRealtimeNamespaceId));
         return *this;
     }
 
@@ -501,9 +457,9 @@ public:
      *
      * @param createGatheringTriggerScriptId ギャザリング新規作成時 に実行されるスクリプト のGRN
      */
-    void setCreateGatheringTriggerScriptId(const Char* createGatheringTriggerScriptId)
+    void setCreateGatheringTriggerScriptId(StringHolder createGatheringTriggerScriptId)
     {
-        ensureData().createGatheringTriggerScriptId.emplace(createGatheringTriggerScriptId);
+        ensureData().createGatheringTriggerScriptId.emplace(std::move(createGatheringTriggerScriptId));
     }
 
     /**
@@ -511,9 +467,9 @@ public:
      *
      * @param createGatheringTriggerScriptId ギャザリング新規作成時 に実行されるスクリプト のGRN
      */
-    Namespace& withCreateGatheringTriggerScriptId(const Char* createGatheringTriggerScriptId)
+    Namespace& withCreateGatheringTriggerScriptId(StringHolder createGatheringTriggerScriptId)
     {
-        setCreateGatheringTriggerScriptId(createGatheringTriggerScriptId);
+        setCreateGatheringTriggerScriptId(std::move(createGatheringTriggerScriptId));
         return *this;
     }
 
@@ -532,9 +488,9 @@ public:
      *
      * @param completeMatchmakingTriggerType マッチメイキング完了時のアクション
      */
-    void setCompleteMatchmakingTriggerType(const Char* completeMatchmakingTriggerType)
+    void setCompleteMatchmakingTriggerType(StringHolder completeMatchmakingTriggerType)
     {
-        ensureData().completeMatchmakingTriggerType.emplace(completeMatchmakingTriggerType);
+        ensureData().completeMatchmakingTriggerType.emplace(std::move(completeMatchmakingTriggerType));
     }
 
     /**
@@ -542,9 +498,9 @@ public:
      *
      * @param completeMatchmakingTriggerType マッチメイキング完了時のアクション
      */
-    Namespace& withCompleteMatchmakingTriggerType(const Char* completeMatchmakingTriggerType)
+    Namespace& withCompleteMatchmakingTriggerType(StringHolder completeMatchmakingTriggerType)
     {
-        setCompleteMatchmakingTriggerType(completeMatchmakingTriggerType);
+        setCompleteMatchmakingTriggerType(std::move(completeMatchmakingTriggerType));
         return *this;
     }
 
@@ -563,9 +519,9 @@ public:
      *
      * @param completeMatchmakingTriggerRealtimeNamespaceId マッチメイキング完了時 にルームを作成するネームスペース のGRN
      */
-    void setCompleteMatchmakingTriggerRealtimeNamespaceId(const Char* completeMatchmakingTriggerRealtimeNamespaceId)
+    void setCompleteMatchmakingTriggerRealtimeNamespaceId(StringHolder completeMatchmakingTriggerRealtimeNamespaceId)
     {
-        ensureData().completeMatchmakingTriggerRealtimeNamespaceId.emplace(completeMatchmakingTriggerRealtimeNamespaceId);
+        ensureData().completeMatchmakingTriggerRealtimeNamespaceId.emplace(std::move(completeMatchmakingTriggerRealtimeNamespaceId));
     }
 
     /**
@@ -573,9 +529,9 @@ public:
      *
      * @param completeMatchmakingTriggerRealtimeNamespaceId マッチメイキング完了時 にルームを作成するネームスペース のGRN
      */
-    Namespace& withCompleteMatchmakingTriggerRealtimeNamespaceId(const Char* completeMatchmakingTriggerRealtimeNamespaceId)
+    Namespace& withCompleteMatchmakingTriggerRealtimeNamespaceId(StringHolder completeMatchmakingTriggerRealtimeNamespaceId)
     {
-        setCompleteMatchmakingTriggerRealtimeNamespaceId(completeMatchmakingTriggerRealtimeNamespaceId);
+        setCompleteMatchmakingTriggerRealtimeNamespaceId(std::move(completeMatchmakingTriggerRealtimeNamespaceId));
         return *this;
     }
 
@@ -594,9 +550,9 @@ public:
      *
      * @param completeMatchmakingTriggerScriptId マッチメイキング完了時 に実行されるスクリプト のGRN
      */
-    void setCompleteMatchmakingTriggerScriptId(const Char* completeMatchmakingTriggerScriptId)
+    void setCompleteMatchmakingTriggerScriptId(StringHolder completeMatchmakingTriggerScriptId)
     {
-        ensureData().completeMatchmakingTriggerScriptId.emplace(completeMatchmakingTriggerScriptId);
+        ensureData().completeMatchmakingTriggerScriptId.emplace(std::move(completeMatchmakingTriggerScriptId));
     }
 
     /**
@@ -604,9 +560,9 @@ public:
      *
      * @param completeMatchmakingTriggerScriptId マッチメイキング完了時 に実行されるスクリプト のGRN
      */
-    Namespace& withCompleteMatchmakingTriggerScriptId(const Char* completeMatchmakingTriggerScriptId)
+    Namespace& withCompleteMatchmakingTriggerScriptId(StringHolder completeMatchmakingTriggerScriptId)
     {
-        setCompleteMatchmakingTriggerScriptId(completeMatchmakingTriggerScriptId);
+        setCompleteMatchmakingTriggerScriptId(std::move(completeMatchmakingTriggerScriptId));
         return *this;
     }
 
@@ -625,9 +581,9 @@ public:
      *
      * @param joinNotification ギャザリングに新規プレイヤーが参加したときのプッシュ通知
      */
-    void setJoinNotification(const NotificationSetting& joinNotification)
+    void setJoinNotification(NotificationSetting joinNotification)
     {
-        ensureData().joinNotification.emplace(joinNotification);
+        ensureData().joinNotification.emplace(std::move(joinNotification));
     }
 
     /**
@@ -635,9 +591,9 @@ public:
      *
      * @param joinNotification ギャザリングに新規プレイヤーが参加したときのプッシュ通知
      */
-    Namespace& withJoinNotification(const NotificationSetting& joinNotification)
+    Namespace& withJoinNotification(NotificationSetting joinNotification)
     {
-        setJoinNotification(joinNotification);
+        setJoinNotification(std::move(joinNotification));
         return *this;
     }
 
@@ -656,9 +612,9 @@ public:
      *
      * @param leaveNotification ギャザリングからプレイヤーが離脱したときのプッシュ通知
      */
-    void setLeaveNotification(const NotificationSetting& leaveNotification)
+    void setLeaveNotification(NotificationSetting leaveNotification)
     {
-        ensureData().leaveNotification.emplace(leaveNotification);
+        ensureData().leaveNotification.emplace(std::move(leaveNotification));
     }
 
     /**
@@ -666,9 +622,9 @@ public:
      *
      * @param leaveNotification ギャザリングからプレイヤーが離脱したときのプッシュ通知
      */
-    Namespace& withLeaveNotification(const NotificationSetting& leaveNotification)
+    Namespace& withLeaveNotification(NotificationSetting leaveNotification)
     {
-        setLeaveNotification(leaveNotification);
+        setLeaveNotification(std::move(leaveNotification));
         return *this;
     }
 
@@ -687,9 +643,9 @@ public:
      *
      * @param completeNotification マッチメイキングが完了したときのプッシュ通知
      */
-    void setCompleteNotification(const NotificationSetting& completeNotification)
+    void setCompleteNotification(NotificationSetting completeNotification)
     {
-        ensureData().completeNotification.emplace(completeNotification);
+        ensureData().completeNotification.emplace(std::move(completeNotification));
     }
 
     /**
@@ -697,9 +653,9 @@ public:
      *
      * @param completeNotification マッチメイキングが完了したときのプッシュ通知
      */
-    Namespace& withCompleteNotification(const NotificationSetting& completeNotification)
+    Namespace& withCompleteNotification(NotificationSetting completeNotification)
     {
-        setCompleteNotification(completeNotification);
+        setCompleteNotification(std::move(completeNotification));
         return *this;
     }
 
@@ -776,7 +732,7 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

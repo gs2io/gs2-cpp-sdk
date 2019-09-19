@@ -27,33 +27,72 @@ namespace gs2 { namespace ez { namespace mission {
 class EzCounterScopeModel : public gs2::Gs2Object
 {
 private:
-    /** リセットタイミング */
-    gs2::optional<StringHolder> m_ResetType;
-    /** リセットをする日にち */
-    gs2::optional<Int32> m_ResetDayOfMonth;
-    /** リセットする曜日 */
-    gs2::optional<StringHolder> m_ResetDayOfWeek;
-    /** リセット時刻 */
-    gs2::optional<Int32> m_ResetHour;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** リセットタイミング */
+        gs2::optional<StringHolder> resetType;
+        /** リセットをする日にち */
+        gs2::optional<Int32> resetDayOfMonth;
+        /** リセットする曜日 */
+        gs2::optional<StringHolder> resetDayOfWeek;
+        /** リセット時刻 */
+        gs2::optional<Int32> resetHour;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            resetType(data.resetType),
+            resetDayOfMonth(data.resetDayOfMonth),
+            resetDayOfWeek(data.resetDayOfWeek),
+            resetHour(data.resetHour)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::mission::CounterScopeModel& counterScopeModel) :
+            resetType(counterScopeModel.getResetType()),
+            resetDayOfMonth(counterScopeModel.getResetDayOfMonth() ? *counterScopeModel.getResetDayOfMonth() : 0),
+            resetDayOfWeek(counterScopeModel.getResetDayOfWeek()),
+            resetHour(counterScopeModel.getResetHour() ? *counterScopeModel.getResetHour() : 0)
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzCounterScopeModel() = default;
+    EzCounterScopeModel(const EzCounterScopeModel& ezCounterScopeModel) = default;
+    EzCounterScopeModel(EzCounterScopeModel&& ezCounterScopeModel) = default;
+    ~EzCounterScopeModel() = default;
 
     EzCounterScopeModel(gs2::mission::CounterScopeModel counterScopeModel) :
-        m_ResetType(counterScopeModel.getResetType()),
-        m_ResetDayOfMonth(counterScopeModel.getResetDayOfMonth() ? *counterScopeModel.getResetDayOfMonth() : 0),
-        m_ResetDayOfWeek(counterScopeModel.getResetDayOfWeek()),
-        m_ResetHour(counterScopeModel.getResetHour() ? *counterScopeModel.getResetHour() : 0)
+        GS2_CORE_SHARED_DATA_INITIALIZATION(counterScopeModel)
+    {}
+
+    EzCounterScopeModel& operator=(const EzCounterScopeModel& ezCounterScopeModel) = default;
+    EzCounterScopeModel& operator=(EzCounterScopeModel&& ezCounterScopeModel) = default;
+
+    EzCounterScopeModel deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCounterScopeModel);
     }
 
     gs2::mission::CounterScopeModel ToModel() const
     {
         gs2::mission::CounterScopeModel counterScopeModel;
-        counterScopeModel.setResetType(*m_ResetType);
-        counterScopeModel.setResetDayOfMonth(*m_ResetDayOfMonth);
-        counterScopeModel.setResetDayOfWeek(*m_ResetDayOfWeek);
-        counterScopeModel.setResetHour(*m_ResetHour);
+        counterScopeModel.setResetType(getResetType());
+        counterScopeModel.setResetDayOfMonth(getResetDayOfMonth());
+        counterScopeModel.setResetDayOfWeek(getResetDayOfWeek());
+        counterScopeModel.setResetHour(getResetHour());
         return counterScopeModel;
     }
 
@@ -61,63 +100,53 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getResetType() const
+    const StringHolder& getResetType() const
     {
-        return *m_ResetType;
-    }
-
-    gs2::StringHolder& getResetType()
-    {
-        return *m_ResetType;
+        return *ensureData().resetType;
     }
 
     Int32 getResetDayOfMonth() const
     {
-        return *m_ResetDayOfMonth;
+        return *ensureData().resetDayOfMonth;
     }
 
-    const gs2::StringHolder& getResetDayOfWeek() const
+    const StringHolder& getResetDayOfWeek() const
     {
-        return *m_ResetDayOfWeek;
-    }
-
-    gs2::StringHolder& getResetDayOfWeek()
-    {
-        return *m_ResetDayOfWeek;
+        return *ensureData().resetDayOfWeek;
     }
 
     Int32 getResetHour() const
     {
-        return *m_ResetHour;
+        return *ensureData().resetHour;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setResetType(Char* resetType)
+    void setResetType(StringHolder resetType)
     {
-        m_ResetType.emplace(resetType);
+        ensureData().resetType = std::move(resetType);
     }
 
     void setResetDayOfMonth(Int32 resetDayOfMonth)
     {
-        m_ResetDayOfMonth = resetDayOfMonth;
+        ensureData().resetDayOfMonth = resetDayOfMonth;
     }
 
-    void setResetDayOfWeek(Char* resetDayOfWeek)
+    void setResetDayOfWeek(StringHolder resetDayOfWeek)
     {
-        m_ResetDayOfWeek.emplace(resetDayOfWeek);
+        ensureData().resetDayOfWeek = std::move(resetDayOfWeek);
     }
 
     void setResetHour(Int32 resetHour)
     {
-        m_ResetHour = resetHour;
+        ensureData().resetHour = resetHour;
     }
 
-    EzCounterScopeModel& withResetType(Char* resetType)
+    EzCounterScopeModel& withResetType(StringHolder resetType)
     {
-        setResetType(resetType);
+        setResetType(std::move(resetType));
         return *this;
     }
 
@@ -127,9 +156,9 @@ public:
         return *this;
     }
 
-    EzCounterScopeModel& withResetDayOfWeek(Char* resetDayOfWeek)
+    EzCounterScopeModel& withResetDayOfWeek(StringHolder resetDayOfWeek)
     {
-        setResetDayOfWeek(resetDayOfWeek);
+        setResetDayOfWeek(std::move(resetDayOfWeek));
         return *this;
     }
 

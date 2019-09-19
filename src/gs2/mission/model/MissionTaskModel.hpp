@@ -22,8 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "AcquireAction.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace mission {
@@ -61,8 +63,7 @@ private:
         /** このタスクに挑戦するために達成しておく必要のあるタスクの名前 */
         optional<StringHolder> premiseMissionTaskName;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -72,69 +73,68 @@ private:
             counterName(data.counterName),
             resetType(data.resetType),
             targetValue(data.targetValue),
-            completeAcquireActions(data.completeAcquireActions),
             challengePeriodEventId(data.challengePeriodEventId),
             premiseMissionTaskName(data.premiseMissionTaskName)
-        {}
+        {
+            if (data.completeAcquireActions)
+            {
+                completeAcquireActions = data.completeAcquireActions->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            missionTaskId(std::move(data.missionTaskId)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            counterName(std::move(data.counterName)),
-            resetType(std::move(data.resetType)),
-            targetValue(std::move(data.targetValue)),
-            completeAcquireActions(std::move(data.completeAcquireActions)),
-            challengePeriodEventId(std::move(data.challengePeriodEventId)),
-            premiseMissionTaskName(std::move(data.premiseMissionTaskName))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "missionTaskId") == 0) {
+            if (std::strcmp(name_, "missionTaskId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->missionTaskId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "counterName") == 0) {
+            else if (std::strcmp(name_, "counterName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->counterName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "resetType") == 0) {
+            else if (std::strcmp(name_, "resetType") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->resetType.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "targetValue") == 0) {
+            else if (std::strcmp(name_, "targetValue") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->targetValue = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "completeAcquireActions") == 0) {
+            else if (std::strcmp(name_, "completeAcquireActions") == 0)
+            {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
@@ -146,13 +146,15 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "challengePeriodEventId") == 0) {
+            else if (std::strcmp(name_, "challengePeriodEventId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->challengePeriodEventId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "premiseMissionTaskName") == 0) {
+            else if (std::strcmp(name_, "premiseMissionTaskName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->premiseMissionTaskName.emplace(jsonValue.GetString());
@@ -161,72 +163,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    MissionTaskModel() :
-        m_pData(nullptr)
-    {}
+    MissionTaskModel() = default;
+    MissionTaskModel(const MissionTaskModel& missionTaskModel) = default;
+    MissionTaskModel(MissionTaskModel&& missionTaskModel) = default;
+    ~MissionTaskModel() = default;
 
-    MissionTaskModel(const MissionTaskModel& missionTaskModel) :
-        Gs2Object(missionTaskModel),
-        m_pData(missionTaskModel.m_pData != nullptr ? new Data(*missionTaskModel.m_pData) : nullptr)
-    {}
+    MissionTaskModel& operator=(const MissionTaskModel& missionTaskModel) = default;
+    MissionTaskModel& operator=(MissionTaskModel&& missionTaskModel) = default;
 
-    MissionTaskModel(MissionTaskModel&& missionTaskModel) :
-        Gs2Object(std::move(missionTaskModel)),
-        m_pData(missionTaskModel.m_pData)
+    MissionTaskModel deepCopy() const
     {
-        missionTaskModel.m_pData = nullptr;
-    }
-
-    ~MissionTaskModel()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    MissionTaskModel& operator=(const MissionTaskModel& missionTaskModel)
-    {
-        Gs2Object::operator=(missionTaskModel);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*missionTaskModel.m_pData);
-
-        return *this;
-    }
-
-    MissionTaskModel& operator=(MissionTaskModel&& missionTaskModel)
-    {
-        Gs2Object::operator=(std::move(missionTaskModel));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = missionTaskModel.m_pData;
-        missionTaskModel.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(MissionTaskModel);
     }
 
     const MissionTaskModel* operator->() const
@@ -253,9 +203,9 @@ public:
      *
      * @param missionTaskId ミッションタスク
      */
-    void setMissionTaskId(const Char* missionTaskId)
+    void setMissionTaskId(StringHolder missionTaskId)
     {
-        ensureData().missionTaskId.emplace(missionTaskId);
+        ensureData().missionTaskId.emplace(std::move(missionTaskId));
     }
 
     /**
@@ -263,9 +213,9 @@ public:
      *
      * @param missionTaskId ミッションタスク
      */
-    MissionTaskModel& withMissionTaskId(const Char* missionTaskId)
+    MissionTaskModel& withMissionTaskId(StringHolder missionTaskId)
     {
-        setMissionTaskId(missionTaskId);
+        setMissionTaskId(std::move(missionTaskId));
         return *this;
     }
 
@@ -284,9 +234,9 @@ public:
      *
      * @param name タスク名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -294,9 +244,9 @@ public:
      *
      * @param name タスク名
      */
-    MissionTaskModel& withName(const Char* name)
+    MissionTaskModel& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -315,9 +265,9 @@ public:
      *
      * @param metadata メタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -325,9 +275,9 @@ public:
      *
      * @param metadata メタデータ
      */
-    MissionTaskModel& withMetadata(const Char* metadata)
+    MissionTaskModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -346,9 +296,9 @@ public:
      *
      * @param counterName カウンター名
      */
-    void setCounterName(const Char* counterName)
+    void setCounterName(StringHolder counterName)
     {
-        ensureData().counterName.emplace(counterName);
+        ensureData().counterName.emplace(std::move(counterName));
     }
 
     /**
@@ -356,9 +306,9 @@ public:
      *
      * @param counterName カウンター名
      */
-    MissionTaskModel& withCounterName(const Char* counterName)
+    MissionTaskModel& withCounterName(StringHolder counterName)
     {
-        setCounterName(counterName);
+        setCounterName(std::move(counterName));
         return *this;
     }
 
@@ -377,9 +327,9 @@ public:
      *
      * @param resetType リセットタイミング
      */
-    void setResetType(const Char* resetType)
+    void setResetType(StringHolder resetType)
     {
-        ensureData().resetType.emplace(resetType);
+        ensureData().resetType.emplace(std::move(resetType));
     }
 
     /**
@@ -387,9 +337,9 @@ public:
      *
      * @param resetType リセットタイミング
      */
-    MissionTaskModel& withResetType(const Char* resetType)
+    MissionTaskModel& withResetType(StringHolder resetType)
     {
-        setResetType(resetType);
+        setResetType(std::move(resetType));
         return *this;
     }
 
@@ -439,9 +389,9 @@ public:
      *
      * @param completeAcquireActions ミッション達成時の報酬
      */
-    void setCompleteAcquireActions(const List<AcquireAction>& completeAcquireActions)
+    void setCompleteAcquireActions(List<AcquireAction> completeAcquireActions)
     {
-        ensureData().completeAcquireActions.emplace(completeAcquireActions);
+        ensureData().completeAcquireActions.emplace(std::move(completeAcquireActions));
     }
 
     /**
@@ -449,9 +399,9 @@ public:
      *
      * @param completeAcquireActions ミッション達成時の報酬
      */
-    MissionTaskModel& withCompleteAcquireActions(const List<AcquireAction>& completeAcquireActions)
+    MissionTaskModel& withCompleteAcquireActions(List<AcquireAction> completeAcquireActions)
     {
-        setCompleteAcquireActions(completeAcquireActions);
+        setCompleteAcquireActions(std::move(completeAcquireActions));
         return *this;
     }
 
@@ -470,9 +420,9 @@ public:
      *
      * @param challengePeriodEventId 達成報酬の受け取り可能な期間を指定するイベントマスター のGRN
      */
-    void setChallengePeriodEventId(const Char* challengePeriodEventId)
+    void setChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        ensureData().challengePeriodEventId.emplace(challengePeriodEventId);
+        ensureData().challengePeriodEventId.emplace(std::move(challengePeriodEventId));
     }
 
     /**
@@ -480,9 +430,9 @@ public:
      *
      * @param challengePeriodEventId 達成報酬の受け取り可能な期間を指定するイベントマスター のGRN
      */
-    MissionTaskModel& withChallengePeriodEventId(const Char* challengePeriodEventId)
+    MissionTaskModel& withChallengePeriodEventId(StringHolder challengePeriodEventId)
     {
-        setChallengePeriodEventId(challengePeriodEventId);
+        setChallengePeriodEventId(std::move(challengePeriodEventId));
         return *this;
     }
 
@@ -501,9 +451,9 @@ public:
      *
      * @param premiseMissionTaskName このタスクに挑戦するために達成しておく必要のあるタスクの名前
      */
-    void setPremiseMissionTaskName(const Char* premiseMissionTaskName)
+    void setPremiseMissionTaskName(StringHolder premiseMissionTaskName)
     {
-        ensureData().premiseMissionTaskName.emplace(premiseMissionTaskName);
+        ensureData().premiseMissionTaskName.emplace(std::move(premiseMissionTaskName));
     }
 
     /**
@@ -511,9 +461,9 @@ public:
      *
      * @param premiseMissionTaskName このタスクに挑戦するために達成しておく必要のあるタスクの名前
      */
-    MissionTaskModel& withPremiseMissionTaskName(const Char* premiseMissionTaskName)
+    MissionTaskModel& withPremiseMissionTaskName(StringHolder premiseMissionTaskName)
     {
-        setPremiseMissionTaskName(premiseMissionTaskName);
+        setPremiseMissionTaskName(std::move(premiseMissionTaskName));
         return *this;
     }
 
@@ -528,7 +478,7 @@ inline bool operator!=(const MissionTaskModel& lhs, const MissionTaskModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }

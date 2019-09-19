@@ -27,29 +27,67 @@ namespace gs2 { namespace ez { namespace gateway {
 class EzWebSocketSession : public gs2::Gs2Object
 {
 private:
-    /** コネクションID */
-    gs2::optional<StringHolder> m_ConnectionId;
-    /** ネームスペース名 */
-    gs2::optional<StringHolder> m_NamespaceName;
-    /** ユーザーID */
-    gs2::optional<StringHolder> m_UserId;
+    class Data : public gs2::Gs2Object
+    {
+    public:
+        /** コネクションID */
+        gs2::optional<StringHolder> connectionId;
+        /** ネームスペース名 */
+        gs2::optional<StringHolder> namespaceName;
+        /** ユーザーID */
+        gs2::optional<StringHolder> userId;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2Object(data),
+            connectionId(data.connectionId),
+            namespaceName(data.namespaceName),
+            userId(data.userId)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        Data(const gs2::gateway::WebSocketSession& webSocketSession) :
+            connectionId(webSocketSession.getConnectionId()),
+            namespaceName(webSocketSession.getNamespaceName()),
+            userId(webSocketSession.getUserId())
+        {
+        }
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
     EzWebSocketSession() = default;
+    EzWebSocketSession(const EzWebSocketSession& ezWebSocketSession) = default;
+    EzWebSocketSession(EzWebSocketSession&& ezWebSocketSession) = default;
+    ~EzWebSocketSession() = default;
 
     EzWebSocketSession(gs2::gateway::WebSocketSession webSocketSession) :
-        m_ConnectionId(webSocketSession.getConnectionId()),
-        m_NamespaceName(webSocketSession.getNamespaceName()),
-        m_UserId(webSocketSession.getUserId())
+        GS2_CORE_SHARED_DATA_INITIALIZATION(webSocketSession)
+    {}
+
+    EzWebSocketSession& operator=(const EzWebSocketSession& ezWebSocketSession) = default;
+    EzWebSocketSession& operator=(EzWebSocketSession&& ezWebSocketSession) = default;
+
+    EzWebSocketSession deepCopy() const
     {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzWebSocketSession);
     }
 
     gs2::gateway::WebSocketSession ToModel() const
     {
         gs2::gateway::WebSocketSession webSocketSession;
-        webSocketSession.setConnectionId(*m_ConnectionId);
-        webSocketSession.setNamespaceName(*m_NamespaceName);
-        webSocketSession.setUserId(*m_UserId);
+        webSocketSession.setConnectionId(getConnectionId());
+        webSocketSession.setNamespaceName(getNamespaceName());
+        webSocketSession.setUserId(getUserId());
         return webSocketSession;
     }
 
@@ -57,70 +95,55 @@ public:
     //   Getters
     // ========================================
 
-    const gs2::StringHolder& getConnectionId() const
+    const StringHolder& getConnectionId() const
     {
-        return *m_ConnectionId;
+        return *ensureData().connectionId;
     }
 
-    gs2::StringHolder& getConnectionId()
+    const StringHolder& getNamespaceName() const
     {
-        return *m_ConnectionId;
+        return *ensureData().namespaceName;
     }
 
-    const gs2::StringHolder& getNamespaceName() const
+    const StringHolder& getUserId() const
     {
-        return *m_NamespaceName;
-    }
-
-    gs2::StringHolder& getNamespaceName()
-    {
-        return *m_NamespaceName;
-    }
-
-    const gs2::StringHolder& getUserId() const
-    {
-        return *m_UserId;
-    }
-
-    gs2::StringHolder& getUserId()
-    {
-        return *m_UserId;
+        return *ensureData().userId;
     }
 
     // ========================================
     //   Setters
     // ========================================
 
-    void setConnectionId(Char* connectionId)
+    void setConnectionId(StringHolder connectionId)
     {
-        m_ConnectionId.emplace(connectionId);
+        ensureData().connectionId = std::move(connectionId);
     }
 
-    void setNamespaceName(Char* namespaceName)
+    void setNamespaceName(StringHolder namespaceName)
     {
-        m_NamespaceName.emplace(namespaceName);
+        ensureData().namespaceName = std::move(namespaceName);
     }
 
-    void setUserId(Char* userId)
+    void setUserId(StringHolder userId)
     {
-        m_UserId.emplace(userId);
+        ensureData().userId = std::move(userId);
     }
 
-    EzWebSocketSession& withConnectionId(Char* connectionId)
+    EzWebSocketSession& withConnectionId(StringHolder connectionId)
     {
-        setConnectionId(connectionId);
+        setConnectionId(std::move(connectionId));
         return *this;
     }
 
-    EzWebSocketSession& withNamespaceName(Char* namespaceName)
+    EzWebSocketSession& withNamespaceName(StringHolder namespaceName)
     {
-        setNamespaceName(namespaceName);
+        setNamespaceName(std::move(namespaceName));
         return *this;
     }
 
-    EzWebSocketSession& withUserId(Char* userId)
+    EzWebSocketSession& withUserId(StringHolder userId)
     {
-        setUserId(userId);
+        setUserId(std::move(userId));
         return *this;
     }
 };

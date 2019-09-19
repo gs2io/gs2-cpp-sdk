@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace inventory {
@@ -54,8 +56,7 @@ private:
         /** 表示順番 */
         optional<Int32> sortValue;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -65,57 +66,55 @@ private:
             stackingLimit(data.stackingLimit),
             allowMultipleStacks(data.allowMultipleStacks),
             sortValue(data.sortValue)
-        {}
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            itemModelId(std::move(data.itemModelId)),
-            name(std::move(data.name)),
-            metadata(std::move(data.metadata)),
-            stackingLimit(std::move(data.stackingLimit)),
-            allowMultipleStacks(std::move(data.allowMultipleStacks)),
-            sortValue(std::move(data.sortValue))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "itemModelId") == 0) {
+            if (std::strcmp(name_, "itemModelId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->itemModelId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "metadata") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "stackingLimit") == 0) {
+            else if (std::strcmp(name_, "stackingLimit") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->stackingLimit = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name_, "allowMultipleStacks") == 0) {
+            else if (std::strcmp(name_, "allowMultipleStacks") == 0)
+            {
                 if (jsonValue.IsBool())
                 {
                     this->allowMultipleStacks = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name_, "sortValue") == 0) {
+            else if (std::strcmp(name_, "sortValue") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->sortValue = jsonValue.GetInt();
@@ -124,72 +123,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    ItemModel() :
-        m_pData(nullptr)
-    {}
+    ItemModel() = default;
+    ItemModel(const ItemModel& itemModel) = default;
+    ItemModel(ItemModel&& itemModel) = default;
+    ~ItemModel() = default;
 
-    ItemModel(const ItemModel& itemModel) :
-        Gs2Object(itemModel),
-        m_pData(itemModel.m_pData != nullptr ? new Data(*itemModel.m_pData) : nullptr)
-    {}
+    ItemModel& operator=(const ItemModel& itemModel) = default;
+    ItemModel& operator=(ItemModel&& itemModel) = default;
 
-    ItemModel(ItemModel&& itemModel) :
-        Gs2Object(std::move(itemModel)),
-        m_pData(itemModel.m_pData)
+    ItemModel deepCopy() const
     {
-        itemModel.m_pData = nullptr;
-    }
-
-    ~ItemModel()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    ItemModel& operator=(const ItemModel& itemModel)
-    {
-        Gs2Object::operator=(itemModel);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*itemModel.m_pData);
-
-        return *this;
-    }
-
-    ItemModel& operator=(ItemModel&& itemModel)
-    {
-        Gs2Object::operator=(std::move(itemModel));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = itemModel.m_pData;
-        itemModel.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ItemModel);
     }
 
     const ItemModel* operator->() const
@@ -216,9 +163,9 @@ public:
      *
      * @param itemModelId アイテムモデルマスター
      */
-    void setItemModelId(const Char* itemModelId)
+    void setItemModelId(StringHolder itemModelId)
     {
-        ensureData().itemModelId.emplace(itemModelId);
+        ensureData().itemModelId.emplace(std::move(itemModelId));
     }
 
     /**
@@ -226,9 +173,9 @@ public:
      *
      * @param itemModelId アイテムモデルマスター
      */
-    ItemModel& withItemModelId(const Char* itemModelId)
+    ItemModel& withItemModelId(StringHolder itemModelId)
     {
-        setItemModelId(itemModelId);
+        setItemModelId(std::move(itemModelId));
         return *this;
     }
 
@@ -247,9 +194,9 @@ public:
      *
      * @param name アイテムモデルの種類名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
@@ -257,9 +204,9 @@ public:
      *
      * @param name アイテムモデルの種類名
      */
-    ItemModel& withName(const Char* name)
+    ItemModel& withName(StringHolder name)
     {
-        setName(name);
+        setName(std::move(name));
         return *this;
     }
 
@@ -278,9 +225,9 @@ public:
      *
      * @param metadata アイテムモデルの種類のメタデータ
      */
-    void setMetadata(const Char* metadata)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().metadata.emplace(metadata);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
@@ -288,9 +235,9 @@ public:
      *
      * @param metadata アイテムモデルの種類のメタデータ
      */
-    ItemModel& withMetadata(const Char* metadata)
+    ItemModel& withMetadata(StringHolder metadata)
     {
-        setMetadata(metadata);
+        setMetadata(std::move(metadata));
         return *this;
     }
 
@@ -398,7 +345,7 @@ inline bool operator!=(const ItemModel& lhs, const ItemModel& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
-        if (lhs.m_pData == nullptr || lhr.m_pData == nullptr)
+        if (!lhs.m_pData || !lhr.m_pData)
         {
             return true;
         }
