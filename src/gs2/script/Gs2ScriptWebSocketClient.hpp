@@ -879,7 +879,7 @@ private:
         ~DebugInvokeTask() GS2_OVERRIDE = default;
     };
 
-private:
+protected:
     static void write(detail::json::JsonWriter& jsonWriter, const Namespace& obj)
     {
         jsonWriter.writeObjectStart();

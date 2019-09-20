@@ -22,8 +22,8 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
-#include "../Gs2DistributorConst.hpp"
-#include "../model/model.hpp"
+#include <gs2/distributor/Gs2DistributorConst.hpp>
+#include <gs2/distributor/model/model.hpp>
 #include <memory>
 
 namespace gs2 { namespace distributor

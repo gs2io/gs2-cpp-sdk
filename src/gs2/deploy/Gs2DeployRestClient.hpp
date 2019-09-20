@@ -902,7 +902,7 @@ private:
         ~GetOutputTask() GS2_OVERRIDE = default;
     };
 
-private:
+protected:
     static void write(detail::json::JsonWriter& jsonWriter, const Stack& obj)
     {
         jsonWriter.writeObjectStart();

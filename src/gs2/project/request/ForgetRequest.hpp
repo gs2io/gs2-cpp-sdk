@@ -22,8 +22,8 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
-#include "../Gs2ProjectConst.hpp"
-#include "../model/model.hpp"
+#include <gs2/project/Gs2ProjectConst.hpp>
+#include <gs2/project/model/model.hpp>
 #include <memory>
 
 namespace gs2 { namespace project

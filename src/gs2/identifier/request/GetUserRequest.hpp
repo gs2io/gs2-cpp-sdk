@@ -22,8 +22,8 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
-#include "../Gs2IdentifierConst.hpp"
-#include "../model/model.hpp"
+#include <gs2/identifier/Gs2IdentifierConst.hpp>
+#include <gs2/identifier/model/model.hpp>
 #include <memory>
 
 namespace gs2 { namespace identifier

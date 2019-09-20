@@ -1111,7 +1111,7 @@ private:
         ~LoginTask() GS2_OVERRIDE = default;
     };
 
-private:
+protected:
     static void write(detail::json::JsonWriter& jsonWriter, const User& obj)
     {
         jsonWriter.writeObjectStart();

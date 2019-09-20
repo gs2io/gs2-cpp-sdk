@@ -22,8 +22,8 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
-#include "../Gs2InventoryConst.hpp"
-#include "../model/model.hpp"
+#include <gs2/inventory/Gs2InventoryConst.hpp>
+#include <gs2/inventory/model/model.hpp>
 #include <memory>
 
 namespace gs2 { namespace inventory

@@ -22,8 +22,8 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
-#include "../Gs2LotteryConst.hpp"
-#include "../model/model.hpp"
+#include <gs2/lottery/Gs2LotteryConst.hpp>
+#include <gs2/lottery/model/model.hpp>
 #include <memory>
 
 namespace gs2 { namespace lottery

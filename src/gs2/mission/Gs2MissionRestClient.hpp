@@ -3153,7 +3153,7 @@ private:
         ~DeleteMissionTaskModelMasterTask() GS2_OVERRIDE = default;
     };
 
-private:
+protected:
     static void write(detail::json::JsonWriter& jsonWriter, const CounterModel& obj)
     {
         jsonWriter.writeObjectStart();

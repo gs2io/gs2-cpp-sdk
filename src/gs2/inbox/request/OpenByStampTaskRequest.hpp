@@ -22,8 +22,8 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
-#include "../Gs2InboxConst.hpp"
-#include "../model/model.hpp"
+#include <gs2/inbox/Gs2InboxConst.hpp>
+#include <gs2/inbox/model/model.hpp>
 #include <memory>
 
 namespace gs2 { namespace inbox

@@ -22,8 +22,8 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
-#include "../Gs2ShowcaseConst.hpp"
-#include "../model/model.hpp"
+#include <gs2/showcase/Gs2ShowcaseConst.hpp>
+#include <gs2/showcase/model/model.hpp>
 #include <memory>
 
 namespace gs2 { namespace showcase

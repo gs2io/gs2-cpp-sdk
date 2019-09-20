@@ -22,8 +22,8 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
-#include "../Gs2GatewayConst.hpp"
-#include "../model/model.hpp"
+#include <gs2/gateway/Gs2GatewayConst.hpp>
+#include <gs2/gateway/model/model.hpp>
 #include <memory>
 
 namespace gs2 { namespace gateway
