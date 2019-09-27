@@ -36,9 +36,12 @@ private:
     Gs2WebSocketSession m_Gs2Session;
 
 public:
-    typedef std::function<void(gs2::AsyncResult<void>)> InitializeCallbackType;
+    typedef gs2::AsyncResult<void> AsyncInitializeResult;
+    typedef gs2::AsyncResult<GameSession> AsyncLoginResult;
+
+    typedef std::function<void(AsyncInitializeResult)> InitializeCallbackType;
     typedef std::function<void()> FinalizeCallbackType;
-    typedef std::function<void(gs2::AsyncResult<GameSession>)> LoginCallbackType;
+    typedef std::function<void(AsyncLoginResult)> LoginCallbackType;
 
 private:
     Profile(IReopener* pReopener, StringHolder&& clientId, StringHolder&& clientSecret);
