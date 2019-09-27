@@ -21,6 +21,8 @@
 
 #include <gs2/stamina/model/StaminaModel.hpp>
 #include "EzMaxStaminaTable.hpp"
+#include "EzRecoverIntervalTable.hpp"
+#include "EzRecoverValueTable.hpp"
 
 
 namespace gs2 { namespace ez { namespace stamina {
@@ -35,7 +37,7 @@ private:
         gs2::optional<StringHolder> name;
         /** スタミナの種類のメタデータ */
         gs2::optional<StringHolder> metadata;
-        /** スタミナを回復する速度(秒) */
+        /** スタミナを回復する速度(分) */
         gs2::optional<Int32> recoverIntervalMinutes;
         /** 時間経過後に回復する量 */
         gs2::optional<Int32> recoverValue;
@@ -47,6 +49,10 @@ private:
         gs2::optional<Int32> maxCapacity;
         /** GS2-Experience と連携する際に使用するスタミナ最大値テーブル */
         gs2::optional<EzMaxStaminaTable> maxStaminaTable;
+        /** GS2-Experience と連携する際に使用する回復間隔テーブル */
+        gs2::optional<EzRecoverIntervalTable> recoverIntervalTable;
+        /** GS2-Experience と連携する際に使用する回復量テーブル */
+        gs2::optional<EzRecoverValueTable> recoverValueTable;
 
         Data() = default;
 
@@ -64,6 +70,14 @@ private:
             {
                 maxStaminaTable = data.maxStaminaTable->deepCopy();
             }
+            if (data.recoverIntervalTable)
+            {
+                recoverIntervalTable = data.recoverIntervalTable->deepCopy();
+            }
+            if (data.recoverValueTable)
+            {
+                recoverValueTable = data.recoverValueTable->deepCopy();
+            }
         }
 
         Data(Data&& data) = default;
@@ -76,7 +90,9 @@ private:
             initialCapacity(staminaModel.getInitialCapacity() ? *staminaModel.getInitialCapacity() : 0),
             isOverflow(staminaModel.getIsOverflow() ? *staminaModel.getIsOverflow() : false),
             maxCapacity(staminaModel.getMaxCapacity() ? *staminaModel.getMaxCapacity() : 0),
-            maxStaminaTable(*staminaModel.getMaxStaminaTable())
+            maxStaminaTable(*staminaModel.getMaxStaminaTable()),
+            recoverIntervalTable(*staminaModel.getRecoverIntervalTable()),
+            recoverValueTable(*staminaModel.getRecoverValueTable())
         {
         }
 
@@ -117,6 +133,8 @@ public:
         staminaModel.setIsOverflow(getIsOverflow());
         staminaModel.setMaxCapacity(getMaxCapacity());
         staminaModel.setMaxStaminaTable(getMaxStaminaTable().ToModel());
+        staminaModel.setRecoverIntervalTable(getRecoverIntervalTable().ToModel());
+        staminaModel.setRecoverValueTable(getRecoverValueTable().ToModel());
         return staminaModel;
     }
 
@@ -164,6 +182,16 @@ public:
         return *ensureData().maxStaminaTable;
     }
 
+    const EzRecoverIntervalTable& getRecoverIntervalTable() const
+    {
+        return *ensureData().recoverIntervalTable;
+    }
+
+    const EzRecoverValueTable& getRecoverValueTable() const
+    {
+        return *ensureData().recoverValueTable;
+    }
+
     // ========================================
     //   Setters
     // ========================================
@@ -206,6 +234,16 @@ public:
     void setMaxStaminaTable(EzMaxStaminaTable maxStaminaTable)
     {
         ensureData().maxStaminaTable = std::move(maxStaminaTable);
+    }
+
+    void setRecoverIntervalTable(EzRecoverIntervalTable recoverIntervalTable)
+    {
+        ensureData().recoverIntervalTable = std::move(recoverIntervalTable);
+    }
+
+    void setRecoverValueTable(EzRecoverValueTable recoverValueTable)
+    {
+        ensureData().recoverValueTable = std::move(recoverValueTable);
     }
 
     EzStaminaModel& withName(StringHolder name)
@@ -253,6 +291,18 @@ public:
     EzStaminaModel& withMaxStaminaTable(EzMaxStaminaTable maxStaminaTable)
     {
         setMaxStaminaTable(std::move(maxStaminaTable));
+        return *this;
+    }
+
+    EzStaminaModel& withRecoverIntervalTable(EzRecoverIntervalTable recoverIntervalTable)
+    {
+        setRecoverIntervalTable(std::move(recoverIntervalTable));
+        return *this;
+    }
+
+    EzStaminaModel& withRecoverValueTable(EzRecoverValueTable recoverValueTable)
+    {
+        setRecoverValueTable(std::move(recoverValueTable));
         return *this;
     }
 };

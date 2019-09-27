@@ -30,7 +30,7 @@ namespace gs2 { namespace distributor
 {
 
 /**
- * 現在有効な現在有効な配信設定を取得します のリクエストモデル
+ * 現在有効な配信設定を取得します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

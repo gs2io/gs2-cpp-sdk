@@ -26,6 +26,7 @@
 #include "result/EzGetInventoryResult.hpp"
 #include "result/EzListItemsResult.hpp"
 #include "result/EzGetItemResult.hpp"
+#include "result/EzGetItemWithSignatureResult.hpp"
 #include "result/EzConsumeResult.hpp"
 
 
@@ -174,6 +175,28 @@ public:
         StringHolder namespaceName,
         StringHolder inventoryName,
         StringHolder itemName
+    );
+
+    /// <summary>
+    ///  インベントリ名とアイテム名を指定して署名付きアイテムを取得<br />
+    ///    <br />
+    ///    このAPIによって、APIを呼び出した瞬間に該当アイテムを所有していることを証明することができる<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">カテゴリー名</param>
+    /// <param name="inventoryName">インベントリの種類名</param>
+    /// <param name="itemName">アイテムモデルの種類名</param>
+    /// <param name="keyId">署名の発行に使用する暗号鍵 のGRN</param>
+    void getItemWithSignature(
+        std::function<void(AsyncEzGetItemWithSignatureResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder inventoryName,
+        StringHolder itemName,
+        StringHolder keyId
     );
 
     /// <summary>

@@ -53,6 +53,10 @@ private:
         optional<Int32> value;
         /** スタミナの最大値 */
         optional<Int32> maxValue;
+        /** スタミナの回復間隔(分) */
+        optional<Int32> recoverIntervalMinutes;
+        /** スタミナの回復量 */
+        optional<Int32> recoverValue;
         /** スタミナの最大値を超えて格納されているスタミナ値 */
         optional<Int32> overflowValue;
         /** 次回スタミナが回復する時間 */
@@ -73,6 +77,8 @@ private:
             userId(data.userId),
             value(data.value),
             maxValue(data.maxValue),
+            recoverIntervalMinutes(data.recoverIntervalMinutes),
+            recoverValue(data.recoverValue),
             overflowValue(data.overflowValue),
             nextRecoverAt(data.nextRecoverAt),
             lastRecoveredAt(data.lastRecoveredAt),
@@ -123,6 +129,20 @@ private:
                 if (jsonValue.IsInt())
                 {
                     this->maxValue = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "recoverIntervalMinutes") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->recoverIntervalMinutes = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "recoverValue") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->recoverValue = jsonValue.GetInt();
                 }
             }
             else if (std::strcmp(name_, "overflowValue") == 0)
@@ -344,6 +364,68 @@ public:
     }
 
     /**
+     * スタミナの回復間隔(分)を取得
+     *
+     * @return スタミナの回復間隔(分)
+     */
+    const optional<Int32>& getRecoverIntervalMinutes() const
+    {
+        return ensureData().recoverIntervalMinutes;
+    }
+
+    /**
+     * スタミナの回復間隔(分)を設定
+     *
+     * @param recoverIntervalMinutes スタミナの回復間隔(分)
+     */
+    void setRecoverIntervalMinutes(Int32 recoverIntervalMinutes)
+    {
+        ensureData().recoverIntervalMinutes.emplace(recoverIntervalMinutes);
+    }
+
+    /**
+     * スタミナの回復間隔(分)を設定
+     *
+     * @param recoverIntervalMinutes スタミナの回復間隔(分)
+     */
+    Stamina& withRecoverIntervalMinutes(Int32 recoverIntervalMinutes)
+    {
+        setRecoverIntervalMinutes(recoverIntervalMinutes);
+        return *this;
+    }
+
+    /**
+     * スタミナの回復量を取得
+     *
+     * @return スタミナの回復量
+     */
+    const optional<Int32>& getRecoverValue() const
+    {
+        return ensureData().recoverValue;
+    }
+
+    /**
+     * スタミナの回復量を設定
+     *
+     * @param recoverValue スタミナの回復量
+     */
+    void setRecoverValue(Int32 recoverValue)
+    {
+        ensureData().recoverValue.emplace(recoverValue);
+    }
+
+    /**
+     * スタミナの回復量を設定
+     *
+     * @param recoverValue スタミナの回復量
+     */
+    Stamina& withRecoverValue(Int32 recoverValue)
+    {
+        setRecoverValue(recoverValue);
+        return *this;
+    }
+
+    /**
      * スタミナの最大値を超えて格納されているスタミナ値を取得
      *
      * @return スタミナの最大値を超えて格納されているスタミナ値
@@ -530,6 +612,14 @@ inline bool operator!=(const Stamina& lhs, const Stamina& lhr)
             return true;
         }
         if (lhs.m_pData->maxValue != lhr.m_pData->maxValue)
+        {
+            return true;
+        }
+        if (lhs.m_pData->recoverIntervalMinutes != lhr.m_pData->recoverIntervalMinutes)
+        {
+            return true;
+        }
+        if (lhs.m_pData->recoverValue != lhr.m_pData->recoverValue)
         {
             return true;
         }

@@ -61,8 +61,12 @@ private:
         optional<Bool> isOverflow;
         /** 溢れた状況での最大値 */
         optional<Int32> maxCapacity;
-        /** GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRN */
+        /** GS2-Experience のランクによって最大スタミナ値を決定する */
         optional<StringHolder> maxStaminaTableId;
+        /** GS2-Experience のランクによってスタミナの回復間隔を決定する */
+        optional<StringHolder> recoverIntervalTableId;
+        /** GS2-Experience のランクによってスタミナの回復量を決定する */
+        optional<StringHolder> recoverValueTableId;
 
         Data() = default;
 
@@ -77,7 +81,9 @@ private:
             initialCapacity(data.initialCapacity),
             isOverflow(data.isOverflow),
             maxCapacity(data.maxCapacity),
-            maxStaminaTableId(data.maxStaminaTableId)
+            maxStaminaTableId(data.maxStaminaTableId),
+            recoverIntervalTableId(data.recoverIntervalTableId),
+            recoverValueTableId(data.recoverValueTableId)
         {
         }
 
@@ -405,9 +411,9 @@ public:
     }
 
     /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRNを取得
+     * GS2-Experience のランクによって最大スタミナ値を決定するを取得
      *
-     * @return GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRN
+     * @return GS2-Experience のランクによって最大スタミナ値を決定する
      */
     const optional<StringHolder>& getMaxStaminaTableId() const
     {
@@ -415,9 +421,9 @@ public:
     }
 
     /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRNを設定
+     * GS2-Experience のランクによって最大スタミナ値を決定するを設定
      *
-     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRN
+     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定する
      */
     void setMaxStaminaTableId(StringHolder maxStaminaTableId)
     {
@@ -425,13 +431,75 @@ public:
     }
 
     /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRNを設定
+     * GS2-Experience のランクによって最大スタミナ値を決定するを設定
      *
-     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定するスタミナの最大値テーブルマスター のGRN
+     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定する
      */
     CreateStaminaModelMasterRequest& withMaxStaminaTableId(StringHolder maxStaminaTableId)
     {
         ensureData().maxStaminaTableId.emplace(std::move(maxStaminaTableId));
+        return *this;
+    }
+
+    /**
+     * GS2-Experience のランクによってスタミナの回復間隔を決定するを取得
+     *
+     * @return GS2-Experience のランクによってスタミナの回復間隔を決定する
+     */
+    const optional<StringHolder>& getRecoverIntervalTableId() const
+    {
+        return ensureData().recoverIntervalTableId;
+    }
+
+    /**
+     * GS2-Experience のランクによってスタミナの回復間隔を決定するを設定
+     *
+     * @param recoverIntervalTableId GS2-Experience のランクによってスタミナの回復間隔を決定する
+     */
+    void setRecoverIntervalTableId(StringHolder recoverIntervalTableId)
+    {
+        ensureData().recoverIntervalTableId.emplace(std::move(recoverIntervalTableId));
+    }
+
+    /**
+     * GS2-Experience のランクによってスタミナの回復間隔を決定するを設定
+     *
+     * @param recoverIntervalTableId GS2-Experience のランクによってスタミナの回復間隔を決定する
+     */
+    CreateStaminaModelMasterRequest& withRecoverIntervalTableId(StringHolder recoverIntervalTableId)
+    {
+        ensureData().recoverIntervalTableId.emplace(std::move(recoverIntervalTableId));
+        return *this;
+    }
+
+    /**
+     * GS2-Experience のランクによってスタミナの回復量を決定するを取得
+     *
+     * @return GS2-Experience のランクによってスタミナの回復量を決定する
+     */
+    const optional<StringHolder>& getRecoverValueTableId() const
+    {
+        return ensureData().recoverValueTableId;
+    }
+
+    /**
+     * GS2-Experience のランクによってスタミナの回復量を決定するを設定
+     *
+     * @param recoverValueTableId GS2-Experience のランクによってスタミナの回復量を決定する
+     */
+    void setRecoverValueTableId(StringHolder recoverValueTableId)
+    {
+        ensureData().recoverValueTableId.emplace(std::move(recoverValueTableId));
+    }
+
+    /**
+     * GS2-Experience のランクによってスタミナの回復量を決定するを設定
+     *
+     * @param recoverValueTableId GS2-Experience のランクによってスタミナの回復量を決定する
+     */
+    CreateStaminaModelMasterRequest& withRecoverValueTableId(StringHolder recoverValueTableId)
+    {
+        ensureData().recoverValueTableId.emplace(std::move(recoverValueTableId));
         return *this;
     }
 

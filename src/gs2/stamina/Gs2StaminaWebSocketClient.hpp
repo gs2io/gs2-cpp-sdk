@@ -39,6 +39,16 @@
 #include "request/GetMaxStaminaTableMasterRequest.hpp"
 #include "request/UpdateMaxStaminaTableMasterRequest.hpp"
 #include "request/DeleteMaxStaminaTableMasterRequest.hpp"
+#include "request/DescribeRecoverIntervalTableMastersRequest.hpp"
+#include "request/CreateRecoverIntervalTableMasterRequest.hpp"
+#include "request/GetRecoverIntervalTableMasterRequest.hpp"
+#include "request/UpdateRecoverIntervalTableMasterRequest.hpp"
+#include "request/DeleteRecoverIntervalTableMasterRequest.hpp"
+#include "request/DescribeRecoverValueTableMastersRequest.hpp"
+#include "request/CreateRecoverValueTableMasterRequest.hpp"
+#include "request/GetRecoverValueTableMasterRequest.hpp"
+#include "request/UpdateRecoverValueTableMasterRequest.hpp"
+#include "request/DeleteRecoverValueTableMasterRequest.hpp"
 #include "request/ExportMasterRequest.hpp"
 #include "request/GetCurrentStaminaMasterRequest.hpp"
 #include "request/UpdateCurrentStaminaMasterRequest.hpp"
@@ -55,11 +65,17 @@
 #include "request/RecoverStaminaByUserIdRequest.hpp"
 #include "request/RaiseMaxValueByUserIdRequest.hpp"
 #include "request/SetMaxValueByUserIdRequest.hpp"
+#include "request/SetRecoverIntervalByUserIdRequest.hpp"
+#include "request/SetRecoverValueByUserIdRequest.hpp"
 #include "request/SetMaxValueByStatusRequest.hpp"
+#include "request/SetRecoverIntervalByStatusRequest.hpp"
+#include "request/SetRecoverValueByStatusRequest.hpp"
 #include "request/DeleteStaminaByUserIdRequest.hpp"
 #include "request/RecoverStaminaByStampSheetRequest.hpp"
 #include "request/RaiseMaxValueByStampSheetRequest.hpp"
 #include "request/SetMaxValueByStampSheetRequest.hpp"
+#include "request/SetRecoverIntervalByStampSheetRequest.hpp"
+#include "request/SetRecoverValueByStampSheetRequest.hpp"
 #include "request/ConsumeStaminaByStampTaskRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
@@ -77,6 +93,16 @@
 #include "result/GetMaxStaminaTableMasterResult.hpp"
 #include "result/UpdateMaxStaminaTableMasterResult.hpp"
 #include "result/DeleteMaxStaminaTableMasterResult.hpp"
+#include "result/DescribeRecoverIntervalTableMastersResult.hpp"
+#include "result/CreateRecoverIntervalTableMasterResult.hpp"
+#include "result/GetRecoverIntervalTableMasterResult.hpp"
+#include "result/UpdateRecoverIntervalTableMasterResult.hpp"
+#include "result/DeleteRecoverIntervalTableMasterResult.hpp"
+#include "result/DescribeRecoverValueTableMastersResult.hpp"
+#include "result/CreateRecoverValueTableMasterResult.hpp"
+#include "result/GetRecoverValueTableMasterResult.hpp"
+#include "result/UpdateRecoverValueTableMasterResult.hpp"
+#include "result/DeleteRecoverValueTableMasterResult.hpp"
 #include "result/ExportMasterResult.hpp"
 #include "result/GetCurrentStaminaMasterResult.hpp"
 #include "result/UpdateCurrentStaminaMasterResult.hpp"
@@ -93,11 +119,17 @@
 #include "result/RecoverStaminaByUserIdResult.hpp"
 #include "result/RaiseMaxValueByUserIdResult.hpp"
 #include "result/SetMaxValueByUserIdResult.hpp"
+#include "result/SetRecoverIntervalByUserIdResult.hpp"
+#include "result/SetRecoverValueByUserIdResult.hpp"
 #include "result/SetMaxValueByStatusResult.hpp"
+#include "result/SetRecoverIntervalByStatusResult.hpp"
+#include "result/SetRecoverValueByStatusResult.hpp"
 #include "result/DeleteStaminaByUserIdResult.hpp"
 #include "result/RecoverStaminaByStampSheetResult.hpp"
 #include "result/RaiseMaxValueByStampSheetResult.hpp"
 #include "result/SetMaxValueByStampSheetResult.hpp"
+#include "result/SetRecoverIntervalByStampSheetResult.hpp"
+#include "result/SetRecoverValueByStampSheetResult.hpp"
 #include "result/ConsumeStaminaByStampTaskResult.hpp"
 #include <cstring>
 
@@ -592,6 +624,16 @@ private:
                 jsonWriter.writePropertyName("maxStaminaTableId");
                 jsonWriter.writeCharArray(*m_Request.getMaxStaminaTableId());
             }
+            if (m_Request.getRecoverIntervalTableId())
+            {
+                jsonWriter.writePropertyName("recoverIntervalTableId");
+                jsonWriter.writeCharArray(*m_Request.getRecoverIntervalTableId());
+            }
+            if (m_Request.getRecoverValueTableId())
+            {
+                jsonWriter.writePropertyName("recoverValueTableId");
+                jsonWriter.writeCharArray(*m_Request.getRecoverValueTableId());
+            }
             if (m_Request.getRequestId())
             {
                 jsonWriter.writePropertyName("xGs2RequestId");
@@ -743,6 +785,16 @@ private:
             {
                 jsonWriter.writePropertyName("maxStaminaTableId");
                 jsonWriter.writeCharArray(*m_Request.getMaxStaminaTableId());
+            }
+            if (m_Request.getRecoverIntervalTableId())
+            {
+                jsonWriter.writePropertyName("recoverIntervalTableId");
+                jsonWriter.writeCharArray(*m_Request.getRecoverIntervalTableId());
+            }
+            if (m_Request.getRecoverValueTableId())
+            {
+                jsonWriter.writePropertyName("recoverValueTableId");
+                jsonWriter.writeCharArray(*m_Request.getRecoverValueTableId());
             }
             if (m_Request.getRequestId())
             {
@@ -1154,6 +1206,680 @@ private:
         {}
 
         ~DeleteMaxStaminaTableMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeRecoverIntervalTableMastersTask : public detail::Gs2WebSocketSessionTask<DescribeRecoverIntervalTableMastersResult>
+    {
+    private:
+        DescribeRecoverIntervalTableMastersRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "recoverIntervalTableMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeRecoverIntervalTableMasters";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getPageToken())
+            {
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        DescribeRecoverIntervalTableMastersTask(
+            DescribeRecoverIntervalTableMastersRequest request,
+            Gs2WebSocketSessionTask<DescribeRecoverIntervalTableMastersResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeRecoverIntervalTableMastersResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeRecoverIntervalTableMastersTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateRecoverIntervalTableMasterTask : public detail::Gs2WebSocketSessionTask<CreateRecoverIntervalTableMasterResult>
+    {
+    private:
+        CreateRecoverIntervalTableMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "recoverIntervalTableMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "createRecoverIntervalTableMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getName())
+            {
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getMetadata())
+            {
+                jsonWriter.writePropertyName("metadata");
+                jsonWriter.writeCharArray(*m_Request.getMetadata());
+            }
+            if (m_Request.getExperienceModelId())
+            {
+                jsonWriter.writePropertyName("experienceModelId");
+                jsonWriter.writeCharArray(*m_Request.getExperienceModelId());
+            }
+            if (m_Request.getValues())
+            {
+                jsonWriter.writePropertyName("values");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getValues();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    jsonWriter.writeInt32(list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        CreateRecoverIntervalTableMasterTask(
+            CreateRecoverIntervalTableMasterRequest request,
+            Gs2WebSocketSessionTask<CreateRecoverIntervalTableMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<CreateRecoverIntervalTableMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateRecoverIntervalTableMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRecoverIntervalTableMasterTask : public detail::Gs2WebSocketSessionTask<GetRecoverIntervalTableMasterResult>
+    {
+    private:
+        GetRecoverIntervalTableMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "recoverIntervalTableMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getRecoverIntervalTableMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRecoverIntervalTableName())
+            {
+                jsonWriter.writePropertyName("recoverIntervalTableName");
+                jsonWriter.writeCharArray(*m_Request.getRecoverIntervalTableName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        GetRecoverIntervalTableMasterTask(
+            GetRecoverIntervalTableMasterRequest request,
+            Gs2WebSocketSessionTask<GetRecoverIntervalTableMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetRecoverIntervalTableMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRecoverIntervalTableMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateRecoverIntervalTableMasterTask : public detail::Gs2WebSocketSessionTask<UpdateRecoverIntervalTableMasterResult>
+    {
+    private:
+        UpdateRecoverIntervalTableMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "recoverIntervalTableMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateRecoverIntervalTableMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRecoverIntervalTableName())
+            {
+                jsonWriter.writePropertyName("recoverIntervalTableName");
+                jsonWriter.writeCharArray(*m_Request.getRecoverIntervalTableName());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getMetadata())
+            {
+                jsonWriter.writePropertyName("metadata");
+                jsonWriter.writeCharArray(*m_Request.getMetadata());
+            }
+            if (m_Request.getExperienceModelId())
+            {
+                jsonWriter.writePropertyName("experienceModelId");
+                jsonWriter.writeCharArray(*m_Request.getExperienceModelId());
+            }
+            if (m_Request.getValues())
+            {
+                jsonWriter.writePropertyName("values");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getValues();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    jsonWriter.writeInt32(list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        UpdateRecoverIntervalTableMasterTask(
+            UpdateRecoverIntervalTableMasterRequest request,
+            Gs2WebSocketSessionTask<UpdateRecoverIntervalTableMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateRecoverIntervalTableMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateRecoverIntervalTableMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteRecoverIntervalTableMasterTask : public detail::Gs2WebSocketSessionTask<DeleteRecoverIntervalTableMasterResult>
+    {
+    private:
+        DeleteRecoverIntervalTableMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "recoverIntervalTableMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteRecoverIntervalTableMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRecoverIntervalTableName())
+            {
+                jsonWriter.writePropertyName("recoverIntervalTableName");
+                jsonWriter.writeCharArray(*m_Request.getRecoverIntervalTableName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        DeleteRecoverIntervalTableMasterTask(
+            DeleteRecoverIntervalTableMasterRequest request,
+            Gs2WebSocketSessionTask<DeleteRecoverIntervalTableMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DeleteRecoverIntervalTableMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteRecoverIntervalTableMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeRecoverValueTableMastersTask : public detail::Gs2WebSocketSessionTask<DescribeRecoverValueTableMastersResult>
+    {
+    private:
+        DescribeRecoverValueTableMastersRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "recoverValueTableMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeRecoverValueTableMasters";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getPageToken())
+            {
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        DescribeRecoverValueTableMastersTask(
+            DescribeRecoverValueTableMastersRequest request,
+            Gs2WebSocketSessionTask<DescribeRecoverValueTableMastersResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeRecoverValueTableMastersResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeRecoverValueTableMastersTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateRecoverValueTableMasterTask : public detail::Gs2WebSocketSessionTask<CreateRecoverValueTableMasterResult>
+    {
+    private:
+        CreateRecoverValueTableMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "recoverValueTableMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "createRecoverValueTableMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getName())
+            {
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getMetadata())
+            {
+                jsonWriter.writePropertyName("metadata");
+                jsonWriter.writeCharArray(*m_Request.getMetadata());
+            }
+            if (m_Request.getExperienceModelId())
+            {
+                jsonWriter.writePropertyName("experienceModelId");
+                jsonWriter.writeCharArray(*m_Request.getExperienceModelId());
+            }
+            if (m_Request.getValues())
+            {
+                jsonWriter.writePropertyName("values");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getValues();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    jsonWriter.writeInt32(list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        CreateRecoverValueTableMasterTask(
+            CreateRecoverValueTableMasterRequest request,
+            Gs2WebSocketSessionTask<CreateRecoverValueTableMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<CreateRecoverValueTableMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateRecoverValueTableMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRecoverValueTableMasterTask : public detail::Gs2WebSocketSessionTask<GetRecoverValueTableMasterResult>
+    {
+    private:
+        GetRecoverValueTableMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "recoverValueTableMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getRecoverValueTableMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRecoverValueTableName())
+            {
+                jsonWriter.writePropertyName("recoverValueTableName");
+                jsonWriter.writeCharArray(*m_Request.getRecoverValueTableName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        GetRecoverValueTableMasterTask(
+            GetRecoverValueTableMasterRequest request,
+            Gs2WebSocketSessionTask<GetRecoverValueTableMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetRecoverValueTableMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRecoverValueTableMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateRecoverValueTableMasterTask : public detail::Gs2WebSocketSessionTask<UpdateRecoverValueTableMasterResult>
+    {
+    private:
+        UpdateRecoverValueTableMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "recoverValueTableMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateRecoverValueTableMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRecoverValueTableName())
+            {
+                jsonWriter.writePropertyName("recoverValueTableName");
+                jsonWriter.writeCharArray(*m_Request.getRecoverValueTableName());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getMetadata())
+            {
+                jsonWriter.writePropertyName("metadata");
+                jsonWriter.writeCharArray(*m_Request.getMetadata());
+            }
+            if (m_Request.getExperienceModelId())
+            {
+                jsonWriter.writePropertyName("experienceModelId");
+                jsonWriter.writeCharArray(*m_Request.getExperienceModelId());
+            }
+            if (m_Request.getValues())
+            {
+                jsonWriter.writePropertyName("values");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getValues();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    jsonWriter.writeInt32(list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        UpdateRecoverValueTableMasterTask(
+            UpdateRecoverValueTableMasterRequest request,
+            Gs2WebSocketSessionTask<UpdateRecoverValueTableMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateRecoverValueTableMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateRecoverValueTableMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteRecoverValueTableMasterTask : public detail::Gs2WebSocketSessionTask<DeleteRecoverValueTableMasterResult>
+    {
+    private:
+        DeleteRecoverValueTableMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "recoverValueTableMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteRecoverValueTableMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRecoverValueTableName())
+            {
+                jsonWriter.writePropertyName("recoverValueTableName");
+                jsonWriter.writeCharArray(*m_Request.getRecoverValueTableName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        DeleteRecoverValueTableMasterTask(
+            DeleteRecoverValueTableMasterRequest request,
+            Gs2WebSocketSessionTask<DeleteRecoverValueTableMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DeleteRecoverValueTableMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteRecoverValueTableMasterTask() GS2_OVERRIDE = default;
     };
 
     class ExportMasterTask : public detail::Gs2WebSocketSessionTask<ExportMasterResult>
@@ -1803,6 +2529,16 @@ private:
                 jsonWriter.writePropertyName("maxValue");
                 jsonWriter.writeInt32(*m_Request.getMaxValue());
             }
+            if (m_Request.getRecoverIntervalMinutes())
+            {
+                jsonWriter.writePropertyName("recoverIntervalMinutes");
+                jsonWriter.writeInt32(*m_Request.getRecoverIntervalMinutes());
+            }
+            if (m_Request.getRecoverValue())
+            {
+                jsonWriter.writePropertyName("recoverValue");
+                jsonWriter.writeInt32(*m_Request.getRecoverValue());
+            }
             if (m_Request.getRequestId())
             {
                 jsonWriter.writePropertyName("xGs2RequestId");
@@ -2182,6 +2918,148 @@ private:
         ~SetMaxValueByUserIdTask() GS2_OVERRIDE = default;
     };
 
+    class SetRecoverIntervalByUserIdTask : public detail::Gs2WebSocketSessionTask<SetRecoverIntervalByUserIdResult>
+    {
+    private:
+        SetRecoverIntervalByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "setRecoverIntervalByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getStaminaName())
+            {
+                jsonWriter.writePropertyName("staminaName");
+                jsonWriter.writeCharArray(*m_Request.getStaminaName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRecoverIntervalMinutes())
+            {
+                jsonWriter.writePropertyName("recoverIntervalMinutes");
+                jsonWriter.writeInt32(*m_Request.getRecoverIntervalMinutes());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        SetRecoverIntervalByUserIdTask(
+            SetRecoverIntervalByUserIdRequest request,
+            Gs2WebSocketSessionTask<SetRecoverIntervalByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<SetRecoverIntervalByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~SetRecoverIntervalByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class SetRecoverValueByUserIdTask : public detail::Gs2WebSocketSessionTask<SetRecoverValueByUserIdResult>
+    {
+    private:
+        SetRecoverValueByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "setRecoverValueByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getStaminaName())
+            {
+                jsonWriter.writePropertyName("staminaName");
+                jsonWriter.writeCharArray(*m_Request.getStaminaName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRecoverValue())
+            {
+                jsonWriter.writePropertyName("recoverValue");
+                jsonWriter.writeInt32(*m_Request.getRecoverValue());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        SetRecoverValueByUserIdTask(
+            SetRecoverValueByUserIdRequest request,
+            Gs2WebSocketSessionTask<SetRecoverValueByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<SetRecoverValueByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~SetRecoverValueByUserIdTask() GS2_OVERRIDE = default;
+    };
+
     class SetMaxValueByStatusTask : public detail::Gs2WebSocketSessionTask<SetMaxValueByStatusResult>
     {
     private:
@@ -2261,6 +3139,168 @@ private:
         {}
 
         ~SetMaxValueByStatusTask() GS2_OVERRIDE = default;
+    };
+
+    class SetRecoverIntervalByStatusTask : public detail::Gs2WebSocketSessionTask<SetRecoverIntervalByStatusResult>
+    {
+    private:
+        SetRecoverIntervalByStatusRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "setRecoverIntervalByStatus";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getStaminaName())
+            {
+                jsonWriter.writePropertyName("staminaName");
+                jsonWriter.writeCharArray(*m_Request.getStaminaName());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getSignedStatusBody())
+            {
+                jsonWriter.writePropertyName("signedStatusBody");
+                jsonWriter.writeCharArray(*m_Request.getSignedStatusBody());
+            }
+            if (m_Request.getSignedStatusSignature())
+            {
+                jsonWriter.writePropertyName("signedStatusSignature");
+                jsonWriter.writeCharArray(*m_Request.getSignedStatusSignature());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        SetRecoverIntervalByStatusTask(
+            SetRecoverIntervalByStatusRequest request,
+            Gs2WebSocketSessionTask<SetRecoverIntervalByStatusResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<SetRecoverIntervalByStatusResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~SetRecoverIntervalByStatusTask() GS2_OVERRIDE = default;
+    };
+
+    class SetRecoverValueByStatusTask : public detail::Gs2WebSocketSessionTask<SetRecoverValueByStatusResult>
+    {
+    private:
+        SetRecoverValueByStatusRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "setRecoverValueByStatus";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getStaminaName())
+            {
+                jsonWriter.writePropertyName("staminaName");
+                jsonWriter.writeCharArray(*m_Request.getStaminaName());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getSignedStatusBody())
+            {
+                jsonWriter.writePropertyName("signedStatusBody");
+                jsonWriter.writeCharArray(*m_Request.getSignedStatusBody());
+            }
+            if (m_Request.getSignedStatusSignature())
+            {
+                jsonWriter.writePropertyName("signedStatusSignature");
+                jsonWriter.writeCharArray(*m_Request.getSignedStatusSignature());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        SetRecoverValueByStatusTask(
+            SetRecoverValueByStatusRequest request,
+            Gs2WebSocketSessionTask<SetRecoverValueByStatusResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<SetRecoverValueByStatusResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~SetRecoverValueByStatusTask() GS2_OVERRIDE = default;
     };
 
     class DeleteStaminaByUserIdTask : public detail::Gs2WebSocketSessionTask<void>
@@ -2512,6 +3552,128 @@ private:
         ~SetMaxValueByStampSheetTask() GS2_OVERRIDE = default;
     };
 
+    class SetRecoverIntervalByStampSheetTask : public detail::Gs2WebSocketSessionTask<SetRecoverIntervalByStampSheetResult>
+    {
+    private:
+        SetRecoverIntervalByStampSheetRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "setRecoverIntervalByStampSheet";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        SetRecoverIntervalByStampSheetTask(
+            SetRecoverIntervalByStampSheetRequest request,
+            Gs2WebSocketSessionTask<SetRecoverIntervalByStampSheetResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<SetRecoverIntervalByStampSheetResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~SetRecoverIntervalByStampSheetTask() GS2_OVERRIDE = default;
+    };
+
+    class SetRecoverValueByStampSheetTask : public detail::Gs2WebSocketSessionTask<SetRecoverValueByStampSheetResult>
+    {
+    private:
+        SetRecoverValueByStampSheetRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "stamina";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "setRecoverValueByStampSheet";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        SetRecoverValueByStampSheetTask(
+            SetRecoverValueByStampSheetRequest request,
+            Gs2WebSocketSessionTask<SetRecoverValueByStampSheetResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<SetRecoverValueByStampSheetResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~SetRecoverValueByStampSheetTask() GS2_OVERRIDE = default;
+    };
+
     class ConsumeStaminaByStampTaskTask : public detail::Gs2WebSocketSessionTask<ConsumeStaminaByStampTaskResult>
     {
     private:
@@ -2673,6 +3835,16 @@ protected:
             jsonWriter.writePropertyName("maxStaminaTableId");
             jsonWriter.writeCharArray(*obj.getMaxStaminaTableId());
         }
+        if (obj.getRecoverIntervalTableId())
+        {
+            jsonWriter.writePropertyName("recoverIntervalTableId");
+            jsonWriter.writeCharArray(*obj.getRecoverIntervalTableId());
+        }
+        if (obj.getRecoverValueTableId())
+        {
+            jsonWriter.writePropertyName("recoverValueTableId");
+            jsonWriter.writeCharArray(*obj.getRecoverValueTableId());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -2693,6 +3865,90 @@ protected:
         {
             jsonWriter.writePropertyName("maxStaminaTableId");
             jsonWriter.writeCharArray(*obj.getMaxStaminaTableId());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getDescription())
+        {
+            jsonWriter.writePropertyName("description");
+            jsonWriter.writeCharArray(*obj.getDescription());
+        }
+        if (obj.getExperienceModelId())
+        {
+            jsonWriter.writePropertyName("experienceModelId");
+            jsonWriter.writeCharArray(*obj.getExperienceModelId());
+        }
+        if (obj.getValues())
+        {
+            jsonWriter.writePropertyName("values");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getValues();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt32(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const RecoverIntervalTableMaster& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRecoverIntervalTableId())
+        {
+            jsonWriter.writePropertyName("recoverIntervalTableId");
+            jsonWriter.writeCharArray(*obj.getRecoverIntervalTableId());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getDescription())
+        {
+            jsonWriter.writePropertyName("description");
+            jsonWriter.writeCharArray(*obj.getDescription());
+        }
+        if (obj.getExperienceModelId())
+        {
+            jsonWriter.writePropertyName("experienceModelId");
+            jsonWriter.writeCharArray(*obj.getExperienceModelId());
+        }
+        if (obj.getValues())
+        {
+            jsonWriter.writePropertyName("values");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getValues();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt32(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const RecoverValueTableMaster& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRecoverValueTableId())
+        {
+            jsonWriter.writePropertyName("recoverValueTableId");
+            jsonWriter.writeCharArray(*obj.getRecoverValueTableId());
         }
         if (obj.getName())
         {
@@ -2792,6 +4048,16 @@ protected:
             jsonWriter.writePropertyName("maxStaminaTable");
             write(jsonWriter, *obj.getMaxStaminaTable());
         }
+        if (obj.getRecoverIntervalTable())
+        {
+            jsonWriter.writePropertyName("recoverIntervalTable");
+            write(jsonWriter, *obj.getRecoverIntervalTable());
+        }
+        if (obj.getRecoverValueTable())
+        {
+            jsonWriter.writePropertyName("recoverValueTable");
+            write(jsonWriter, *obj.getRecoverValueTable());
+        }
         jsonWriter.writeObjectEnd();
     }
 
@@ -2802,6 +4068,80 @@ protected:
         {
             jsonWriter.writePropertyName("maxStaminaTableId");
             jsonWriter.writeCharArray(*obj.getMaxStaminaTableId());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getExperienceModelId())
+        {
+            jsonWriter.writePropertyName("experienceModelId");
+            jsonWriter.writeCharArray(*obj.getExperienceModelId());
+        }
+        if (obj.getValues())
+        {
+            jsonWriter.writePropertyName("values");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getValues();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt32(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const RecoverIntervalTable& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRecoverIntervalTableId())
+        {
+            jsonWriter.writePropertyName("recoverIntervalTableId");
+            jsonWriter.writeCharArray(*obj.getRecoverIntervalTableId());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getExperienceModelId())
+        {
+            jsonWriter.writePropertyName("experienceModelId");
+            jsonWriter.writeCharArray(*obj.getExperienceModelId());
+        }
+        if (obj.getValues())
+        {
+            jsonWriter.writePropertyName("values");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getValues();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt32(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const RecoverValueTable& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRecoverValueTableId())
+        {
+            jsonWriter.writePropertyName("recoverValueTableId");
+            jsonWriter.writeCharArray(*obj.getRecoverValueTableId());
         }
         if (obj.getName())
         {
@@ -2859,6 +4199,16 @@ protected:
         {
             jsonWriter.writePropertyName("maxValue");
             jsonWriter.writeInt32(*obj.getMaxValue());
+        }
+        if (obj.getRecoverIntervalMinutes())
+        {
+            jsonWriter.writePropertyName("recoverIntervalMinutes");
+            jsonWriter.writeInt32(*obj.getRecoverIntervalMinutes());
+        }
+        if (obj.getRecoverValue())
+        {
+            jsonWriter.writePropertyName("recoverValue");
+            jsonWriter.writeInt32(*obj.getRecoverValue());
         }
         if (obj.getOverflowValue())
         {
@@ -3165,6 +4515,126 @@ public:
     }
 
 	/**
+	 * スタミナ回復間隔テーブルマスターの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeRecoverIntervalTableMasters(DescribeRecoverIntervalTableMastersRequest request, std::function<void(AsyncDescribeRecoverIntervalTableMastersResult)> callback)
+    {
+        DescribeRecoverIntervalTableMastersTask& task = *new DescribeRecoverIntervalTableMastersTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタミナ回復間隔テーブルマスターを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createRecoverIntervalTableMaster(CreateRecoverIntervalTableMasterRequest request, std::function<void(AsyncCreateRecoverIntervalTableMasterResult)> callback)
+    {
+        CreateRecoverIntervalTableMasterTask& task = *new CreateRecoverIntervalTableMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタミナ回復間隔テーブルマスターを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRecoverIntervalTableMaster(GetRecoverIntervalTableMasterRequest request, std::function<void(AsyncGetRecoverIntervalTableMasterResult)> callback)
+    {
+        GetRecoverIntervalTableMasterTask& task = *new GetRecoverIntervalTableMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタミナ回復間隔テーブルマスターを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateRecoverIntervalTableMaster(UpdateRecoverIntervalTableMasterRequest request, std::function<void(AsyncUpdateRecoverIntervalTableMasterResult)> callback)
+    {
+        UpdateRecoverIntervalTableMasterTask& task = *new UpdateRecoverIntervalTableMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタミナ回復間隔テーブルマスターを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteRecoverIntervalTableMaster(DeleteRecoverIntervalTableMasterRequest request, std::function<void(AsyncDeleteRecoverIntervalTableMasterResult)> callback)
+    {
+        DeleteRecoverIntervalTableMasterTask& task = *new DeleteRecoverIntervalTableMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタミナ回復量テーブルマスターの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeRecoverValueTableMasters(DescribeRecoverValueTableMastersRequest request, std::function<void(AsyncDescribeRecoverValueTableMastersResult)> callback)
+    {
+        DescribeRecoverValueTableMastersTask& task = *new DescribeRecoverValueTableMastersTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタミナ回復量テーブルマスターを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createRecoverValueTableMaster(CreateRecoverValueTableMasterRequest request, std::function<void(AsyncCreateRecoverValueTableMasterResult)> callback)
+    {
+        CreateRecoverValueTableMasterTask& task = *new CreateRecoverValueTableMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタミナ回復量テーブルマスターを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRecoverValueTableMaster(GetRecoverValueTableMasterRequest request, std::function<void(AsyncGetRecoverValueTableMasterResult)> callback)
+    {
+        GetRecoverValueTableMasterTask& task = *new GetRecoverValueTableMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタミナ回復量テーブルマスターを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateRecoverValueTableMaster(UpdateRecoverValueTableMasterRequest request, std::function<void(AsyncUpdateRecoverValueTableMasterResult)> callback)
+    {
+        UpdateRecoverValueTableMasterTask& task = *new UpdateRecoverValueTableMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタミナ回復量テーブルマスターを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteRecoverValueTableMaster(DeleteRecoverValueTableMasterRequest request, std::function<void(AsyncDeleteRecoverValueTableMasterResult)> callback)
+    {
+        DeleteRecoverValueTableMasterTask& task = *new DeleteRecoverValueTableMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
 	 * 現在有効なスタミナマスターのマスターデータをエクスポートします<br>
 	 *
      * @param callback コールバック関数
@@ -3357,6 +4827,30 @@ public:
     }
 
 	/**
+	 * ユーザIDを指定してスタミナの回復間隔(分)を更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void setRecoverIntervalByUserId(SetRecoverIntervalByUserIdRequest request, std::function<void(AsyncSetRecoverIntervalByUserIdResult)> callback)
+    {
+        SetRecoverIntervalByUserIdTask& task = *new SetRecoverIntervalByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ユーザIDを指定してスタミナの回復間隔(分)を更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void setRecoverValueByUserId(SetRecoverValueByUserIdRequest request, std::function<void(AsyncSetRecoverValueByUserIdResult)> callback)
+    {
+        SetRecoverValueByUserIdTask& task = *new SetRecoverValueByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
 	 * スタミナの最大値をGS2-Experienceのステータスを使用して更新<br>
 	 *
      * @param callback コールバック関数
@@ -3365,6 +4859,30 @@ public:
     void setMaxValueByStatus(SetMaxValueByStatusRequest request, std::function<void(AsyncSetMaxValueByStatusResult)> callback)
     {
         SetMaxValueByStatusTask& task = *new SetMaxValueByStatusTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタミナの最大値をGS2-Experienceのステータスを使用して更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void setRecoverIntervalByStatus(SetRecoverIntervalByStatusRequest request, std::function<void(AsyncSetRecoverIntervalByStatusResult)> callback)
+    {
+        SetRecoverIntervalByStatusTask& task = *new SetRecoverIntervalByStatusTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタミナの最大値をGS2-Experienceのステータスを使用して更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void setRecoverValueByStatus(SetRecoverValueByStatusRequest request, std::function<void(AsyncSetRecoverValueByStatusResult)> callback)
+    {
+        SetRecoverValueByStatusTask& task = *new SetRecoverValueByStatusTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
@@ -3413,6 +4931,30 @@ public:
     void setMaxValueByStampSheet(SetMaxValueByStampSheetRequest request, std::function<void(AsyncSetMaxValueByStampSheetResult)> callback)
     {
         SetMaxValueByStampSheetTask& task = *new SetMaxValueByStampSheetTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタンプシートでスタミナの最大値を更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void setRecoverIntervalByStampSheet(SetRecoverIntervalByStampSheetRequest request, std::function<void(AsyncSetRecoverIntervalByStampSheetResult)> callback)
+    {
+        SetRecoverIntervalByStampSheetTask& task = *new SetRecoverIntervalByStampSheetTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタンプシートでスタミナの最大値を更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void setRecoverValueByStampSheet(SetRecoverValueByStampSheetRequest request, std::function<void(AsyncSetRecoverValueByStampSheetResult)> callback)
+    {
+        SetRecoverValueByStampSheetTask& task = *new SetRecoverValueByStampSheetTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

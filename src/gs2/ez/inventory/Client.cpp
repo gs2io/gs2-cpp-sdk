@@ -343,6 +343,48 @@ void Client::getItem(
     );
 }
 
+void Client::getItemWithSignature(
+    std::function<void(AsyncEzGetItemWithSignatureResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder inventoryName,
+    StringHolder itemName,
+    StringHolder keyId
+)
+{
+    gs2::inventory::GetItemWithSignatureRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setInventoryName(inventoryName);
+    request.setItemName(itemName);
+    request.setKeyId(keyId);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_Client.getItemWithSignature(
+        request,
+        [callback](gs2::inventory::AsyncGetItemWithSignatureResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetItemWithSignatureResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetItemWithSignatureResult::isConvertible(*r.getResult()))
+            {
+                EzGetItemWithSignatureResult ezResult(*r.getResult());
+                AsyncEzGetItemWithSignatureResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetItemWithSignatureResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
 void Client::consume(
     std::function<void(AsyncEzConsumeResult)> callback,
     GameSession& session,

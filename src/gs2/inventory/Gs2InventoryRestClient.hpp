@@ -60,6 +60,8 @@
 #include "request/DescribeItemSetsByUserIdRequest.hpp"
 #include "request/GetItemSetRequest.hpp"
 #include "request/GetItemSetByUserIdRequest.hpp"
+#include "request/GetItemWithSignatureRequest.hpp"
+#include "request/GetItemWithSignatureByUserIdRequest.hpp"
 #include "request/AcquireItemSetByUserIdRequest.hpp"
 #include "request/ConsumeItemSetRequest.hpp"
 #include "request/ConsumeItemSetByUserIdRequest.hpp"
@@ -103,6 +105,8 @@
 #include "result/DescribeItemSetsByUserIdResult.hpp"
 #include "result/GetItemSetResult.hpp"
 #include "result/GetItemSetByUserIdResult.hpp"
+#include "result/GetItemWithSignatureResult.hpp"
+#include "result/GetItemWithSignatureByUserIdResult.hpp"
 #include "result/AcquireItemSetByUserIdResult.hpp"
 #include "result/ConsumeItemSetResult.hpp"
 #include "result/ConsumeItemSetByUserIdResult.hpp"
@@ -2407,6 +2411,160 @@ private:
         ~GetItemSetByUserIdTask() GS2_OVERRIDE = default;
     };
 
+    class GetItemWithSignatureTask : public detail::Gs2RestSessionTask<GetItemWithSignatureResult>
+    {
+    private:
+        GetItemWithSignatureRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/inventory/{inventoryName}/item/{itemName}/signature";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getInventoryName();
+                url.replace("{inventoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemName();
+                url.replace("{itemName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getExpiresAt())
+            {
+                url += joint;
+                url += "expiresAt=";
+                url += detail::StringVariable(*m_Request.getExpiresAt()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getKeyId())
+            {
+                url += joint;
+                url += "keyId=";
+                url += detail::StringVariable(*m_Request.getKeyId(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetItemWithSignatureTask(
+            GetItemWithSignatureRequest request,
+            Gs2RestSessionTask<GetItemWithSignatureResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetItemWithSignatureResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetItemWithSignatureTask() GS2_OVERRIDE = default;
+    };
+
+    class GetItemWithSignatureByUserIdTask : public detail::Gs2RestSessionTask<GetItemWithSignatureByUserIdResult>
+    {
+    private:
+        GetItemWithSignatureByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/inventory/{inventoryName}/item/{itemName}/signature";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getInventoryName();
+                url.replace("{inventoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemName();
+                url.replace("{itemName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getExpiresAt())
+            {
+                url += joint;
+                url += "expiresAt=";
+                url += detail::StringVariable(*m_Request.getExpiresAt()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getKeyId())
+            {
+                url += joint;
+                url += "keyId=";
+                url += detail::StringVariable(*m_Request.getKeyId(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetItemWithSignatureByUserIdTask(
+            GetItemWithSignatureByUserIdRequest request,
+            Gs2RestSessionTask<GetItemWithSignatureByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetItemWithSignatureByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetItemWithSignatureByUserIdTask() GS2_OVERRIDE = default;
+    };
+
     class AcquireItemSetByUserIdTask : public detail::Gs2RestSessionTask<AcquireItemSetByUserIdResult>
     {
     private:
@@ -3721,6 +3879,30 @@ public:
     void getItemSetByUserId(GetItemSetByUserIdRequest request, std::function<void(AsyncGetItemSetByUserIdResult)> callback)
     {
         GetItemSetByUserIdTask& task = *new GetItemSetByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 有効期限ごとのアイテム所持数量を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getItemWithSignature(GetItemWithSignatureRequest request, std::function<void(AsyncGetItemWithSignatureResult)> callback)
+    {
+        GetItemWithSignatureTask& task = *new GetItemWithSignatureTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 有効期限ごとのアイテム所持数量を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getItemWithSignatureByUserId(GetItemWithSignatureByUserIdRequest request, std::function<void(AsyncGetItemWithSignatureByUserIdResult)> callback)
+    {
+        GetItemWithSignatureByUserIdTask& task = *new GetItemWithSignatureByUserIdTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 

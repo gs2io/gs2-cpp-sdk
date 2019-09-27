@@ -36,6 +36,10 @@ private:
         gs2::optional<Int32> value;
         /** スタミナの最大値 */
         gs2::optional<Int32> maxValue;
+        /** スタミナの回復間隔(分) */
+        gs2::optional<Int32> recoverIntervalMinutes;
+        /** スタミナの回復量 */
+        gs2::optional<Int32> recoverValue;
         /** 次回スタミナが回復する時間 */
         gs2::optional<Int64> nextRecoverAt;
 
@@ -46,6 +50,8 @@ private:
             staminaName(data.staminaName),
             value(data.value),
             maxValue(data.maxValue),
+            recoverIntervalMinutes(data.recoverIntervalMinutes),
+            recoverValue(data.recoverValue),
             nextRecoverAt(data.nextRecoverAt)
         {
         }
@@ -56,6 +62,8 @@ private:
             staminaName(stamina.getStaminaName()),
             value(stamina.getValue() ? *stamina.getValue() : 0),
             maxValue(stamina.getMaxValue() ? *stamina.getMaxValue() : 0),
+            recoverIntervalMinutes(stamina.getRecoverIntervalMinutes() ? *stamina.getRecoverIntervalMinutes() : 0),
+            recoverValue(stamina.getRecoverValue() ? *stamina.getRecoverValue() : 0),
             nextRecoverAt(stamina.getNextRecoverAt() ? *stamina.getNextRecoverAt() : 0)
         {
         }
@@ -92,6 +100,8 @@ public:
         stamina.setStaminaName(getStaminaName());
         stamina.setValue(getValue());
         stamina.setMaxValue(getMaxValue());
+        stamina.setRecoverIntervalMinutes(getRecoverIntervalMinutes());
+        stamina.setRecoverValue(getRecoverValue());
         stamina.setNextRecoverAt(getNextRecoverAt());
         return stamina;
     }
@@ -113,6 +123,16 @@ public:
     Int32 getMaxValue() const
     {
         return *ensureData().maxValue;
+    }
+
+    Int32 getRecoverIntervalMinutes() const
+    {
+        return *ensureData().recoverIntervalMinutes;
+    }
+
+    Int32 getRecoverValue() const
+    {
+        return *ensureData().recoverValue;
     }
 
     Int64 getNextRecoverAt() const
@@ -139,6 +159,16 @@ public:
         ensureData().maxValue = maxValue;
     }
 
+    void setRecoverIntervalMinutes(Int32 recoverIntervalMinutes)
+    {
+        ensureData().recoverIntervalMinutes = recoverIntervalMinutes;
+    }
+
+    void setRecoverValue(Int32 recoverValue)
+    {
+        ensureData().recoverValue = recoverValue;
+    }
+
     void setNextRecoverAt(Int64 nextRecoverAt)
     {
         ensureData().nextRecoverAt = nextRecoverAt;
@@ -159,6 +189,18 @@ public:
     EzStamina& withMaxValue(Int32 maxValue)
     {
         setMaxValue(maxValue);
+        return *this;
+    }
+
+    EzStamina& withRecoverIntervalMinutes(Int32 recoverIntervalMinutes)
+    {
+        setRecoverIntervalMinutes(recoverIntervalMinutes);
+        return *this;
+    }
+
+    EzStamina& withRecoverValue(Int32 recoverValue)
+    {
+        setRecoverValue(recoverValue);
         return *this;
     }
 

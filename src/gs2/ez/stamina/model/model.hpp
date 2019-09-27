@@ -20,6 +20,8 @@
 #include <gs2/core/common.hpp>
 #include "EzStaminaModel.hpp"
 #include "EzMaxStaminaTable.hpp"
+#include "EzRecoverIntervalTable.hpp"
+#include "EzRecoverValueTable.hpp"
 #include "EzStamina.hpp"
 
 #endif //GS2_EZ_STAMINA_MODEL_MODEL_HPP_

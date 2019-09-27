@@ -53,6 +53,10 @@ private:
         optional<Int32> value;
         /** スタミナの最大値 */
         optional<Int32> maxValue;
+        /** スタミナの回復間隔(分) */
+        optional<Int32> recoverIntervalMinutes;
+        /** スタミナの回復量 */
+        optional<Int32> recoverValue;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -65,6 +69,8 @@ private:
             userId(data.userId),
             value(data.value),
             maxValue(data.maxValue),
+            recoverIntervalMinutes(data.recoverIntervalMinutes),
+            recoverValue(data.recoverValue),
             duplicationAvoider(data.duplicationAvoider)
         {
         }
@@ -265,6 +271,68 @@ public:
     UpdateStaminaByUserIdRequest& withMaxValue(Int32 maxValue)
     {
         ensureData().maxValue.emplace(maxValue);
+        return *this;
+    }
+
+    /**
+     * スタミナの回復間隔(分)を取得
+     *
+     * @return スタミナの回復間隔(分)
+     */
+    const optional<Int32>& getRecoverIntervalMinutes() const
+    {
+        return ensureData().recoverIntervalMinutes;
+    }
+
+    /**
+     * スタミナの回復間隔(分)を設定
+     *
+     * @param recoverIntervalMinutes スタミナの回復間隔(分)
+     */
+    void setRecoverIntervalMinutes(Int32 recoverIntervalMinutes)
+    {
+        ensureData().recoverIntervalMinutes.emplace(recoverIntervalMinutes);
+    }
+
+    /**
+     * スタミナの回復間隔(分)を設定
+     *
+     * @param recoverIntervalMinutes スタミナの回復間隔(分)
+     */
+    UpdateStaminaByUserIdRequest& withRecoverIntervalMinutes(Int32 recoverIntervalMinutes)
+    {
+        ensureData().recoverIntervalMinutes.emplace(recoverIntervalMinutes);
+        return *this;
+    }
+
+    /**
+     * スタミナの回復量を取得
+     *
+     * @return スタミナの回復量
+     */
+    const optional<Int32>& getRecoverValue() const
+    {
+        return ensureData().recoverValue;
+    }
+
+    /**
+     * スタミナの回復量を設定
+     *
+     * @param recoverValue スタミナの回復量
+     */
+    void setRecoverValue(Int32 recoverValue)
+    {
+        ensureData().recoverValue.emplace(recoverValue);
+    }
+
+    /**
+     * スタミナの回復量を設定
+     *
+     * @param recoverValue スタミナの回復量
+     */
+    UpdateStaminaByUserIdRequest& withRecoverValue(Int32 recoverValue)
+    {
+        ensureData().recoverValue.emplace(recoverValue);
         return *this;
     }
 

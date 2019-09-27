@@ -25,6 +25,8 @@
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "MaxStaminaTable.hpp"
+#include "RecoverIntervalTable.hpp"
+#include "RecoverValueTable.hpp"
 #include <memory>
 #include <cstring>
 
@@ -50,7 +52,7 @@ private:
         optional<StringHolder> name;
         /** スタミナの種類のメタデータ */
         optional<StringHolder> metadata;
-        /** スタミナを回復する速度(秒) */
+        /** スタミナを回復する速度(分) */
         optional<Int32> recoverIntervalMinutes;
         /** 時間経過後に回復する量 */
         optional<Int32> recoverValue;
@@ -62,6 +64,10 @@ private:
         optional<Int32> maxCapacity;
         /** GS2-Experience と連携する際に使用するスタミナ最大値テーブル */
         optional<MaxStaminaTable> maxStaminaTable;
+        /** GS2-Experience と連携する際に使用する回復間隔テーブル */
+        optional<RecoverIntervalTable> recoverIntervalTable;
+        /** GS2-Experience と連携する際に使用する回復量テーブル */
+        optional<RecoverValueTable> recoverValueTable;
 
         Data() = default;
 
@@ -79,6 +85,14 @@ private:
             if (data.maxStaminaTable)
             {
                 maxStaminaTable = data.maxStaminaTable->deepCopy();
+            }
+            if (data.recoverIntervalTable)
+            {
+                recoverIntervalTable = data.recoverIntervalTable->deepCopy();
+            }
+            if (data.recoverValueTable)
+            {
+                recoverValueTable = data.recoverValueTable->deepCopy();
             }
         }
 
@@ -154,6 +168,24 @@ private:
                     const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->maxStaminaTable.emplace();
                     detail::json::JsonParser::parse(&this->maxStaminaTable->getModel(), jsonObject);
+                }
+            }
+            else if (std::strcmp(name_, "recoverIntervalTable") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->recoverIntervalTable.emplace();
+                    detail::json::JsonParser::parse(&this->recoverIntervalTable->getModel(), jsonObject);
+                }
+            }
+            else if (std::strcmp(name_, "recoverValueTable") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->recoverValueTable.emplace();
+                    detail::json::JsonParser::parse(&this->recoverValueTable->getModel(), jsonObject);
                 }
             }
         }
@@ -278,9 +310,9 @@ public:
     }
 
     /**
-     * スタミナを回復する速度(秒)を取得
+     * スタミナを回復する速度(分)を取得
      *
-     * @return スタミナを回復する速度(秒)
+     * @return スタミナを回復する速度(分)
      */
     const optional<Int32>& getRecoverIntervalMinutes() const
     {
@@ -288,9 +320,9 @@ public:
     }
 
     /**
-     * スタミナを回復する速度(秒)を設定
+     * スタミナを回復する速度(分)を設定
      *
-     * @param recoverIntervalMinutes スタミナを回復する速度(秒)
+     * @param recoverIntervalMinutes スタミナを回復する速度(分)
      */
     void setRecoverIntervalMinutes(Int32 recoverIntervalMinutes)
     {
@@ -298,9 +330,9 @@ public:
     }
 
     /**
-     * スタミナを回復する速度(秒)を設定
+     * スタミナを回復する速度(分)を設定
      *
-     * @param recoverIntervalMinutes スタミナを回復する速度(秒)
+     * @param recoverIntervalMinutes スタミナを回復する速度(分)
      */
     StaminaModel& withRecoverIntervalMinutes(Int32 recoverIntervalMinutes)
     {
@@ -463,6 +495,68 @@ public:
         return *this;
     }
 
+    /**
+     * GS2-Experience と連携する際に使用する回復間隔テーブルを取得
+     *
+     * @return GS2-Experience と連携する際に使用する回復間隔テーブル
+     */
+    const optional<RecoverIntervalTable>& getRecoverIntervalTable() const
+    {
+        return ensureData().recoverIntervalTable;
+    }
+
+    /**
+     * GS2-Experience と連携する際に使用する回復間隔テーブルを設定
+     *
+     * @param recoverIntervalTable GS2-Experience と連携する際に使用する回復間隔テーブル
+     */
+    void setRecoverIntervalTable(RecoverIntervalTable recoverIntervalTable)
+    {
+        ensureData().recoverIntervalTable.emplace(std::move(recoverIntervalTable));
+    }
+
+    /**
+     * GS2-Experience と連携する際に使用する回復間隔テーブルを設定
+     *
+     * @param recoverIntervalTable GS2-Experience と連携する際に使用する回復間隔テーブル
+     */
+    StaminaModel& withRecoverIntervalTable(RecoverIntervalTable recoverIntervalTable)
+    {
+        setRecoverIntervalTable(std::move(recoverIntervalTable));
+        return *this;
+    }
+
+    /**
+     * GS2-Experience と連携する際に使用する回復量テーブルを取得
+     *
+     * @return GS2-Experience と連携する際に使用する回復量テーブル
+     */
+    const optional<RecoverValueTable>& getRecoverValueTable() const
+    {
+        return ensureData().recoverValueTable;
+    }
+
+    /**
+     * GS2-Experience と連携する際に使用する回復量テーブルを設定
+     *
+     * @param recoverValueTable GS2-Experience と連携する際に使用する回復量テーブル
+     */
+    void setRecoverValueTable(RecoverValueTable recoverValueTable)
+    {
+        ensureData().recoverValueTable.emplace(std::move(recoverValueTable));
+    }
+
+    /**
+     * GS2-Experience と連携する際に使用する回復量テーブルを設定
+     *
+     * @param recoverValueTable GS2-Experience と連携する際に使用する回復量テーブル
+     */
+    StaminaModel& withRecoverValueTable(RecoverValueTable recoverValueTable)
+    {
+        setRecoverValueTable(std::move(recoverValueTable));
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
@@ -511,6 +605,14 @@ inline bool operator!=(const StaminaModel& lhs, const StaminaModel& lhr)
             return true;
         }
         if (lhs.m_pData->maxStaminaTable != lhr.m_pData->maxStaminaTable)
+        {
+            return true;
+        }
+        if (lhs.m_pData->recoverIntervalTable != lhr.m_pData->recoverIntervalTable)
+        {
+            return true;
+        }
+        if (lhs.m_pData->recoverValueTable != lhr.m_pData->recoverValueTable)
         {
             return true;
         }

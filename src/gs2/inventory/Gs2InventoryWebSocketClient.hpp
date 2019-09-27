@@ -60,6 +60,8 @@
 #include "request/DescribeItemSetsByUserIdRequest.hpp"
 #include "request/GetItemSetRequest.hpp"
 #include "request/GetItemSetByUserIdRequest.hpp"
+#include "request/GetItemWithSignatureRequest.hpp"
+#include "request/GetItemWithSignatureByUserIdRequest.hpp"
 #include "request/AcquireItemSetByUserIdRequest.hpp"
 #include "request/ConsumeItemSetRequest.hpp"
 #include "request/ConsumeItemSetByUserIdRequest.hpp"
@@ -103,6 +105,8 @@
 #include "result/DescribeItemSetsByUserIdResult.hpp"
 #include "result/GetItemSetResult.hpp"
 #include "result/GetItemSetByUserIdResult.hpp"
+#include "result/GetItemWithSignatureResult.hpp"
+#include "result/GetItemWithSignatureByUserIdResult.hpp"
 #include "result/AcquireItemSetByUserIdResult.hpp"
 #include "result/ConsumeItemSetResult.hpp"
 #include "result/ConsumeItemSetByUserIdResult.hpp"
@@ -2505,6 +2509,168 @@ private:
         ~GetItemSetByUserIdTask() GS2_OVERRIDE = default;
     };
 
+    class GetItemWithSignatureTask : public detail::Gs2WebSocketSessionTask<GetItemWithSignatureResult>
+    {
+    private:
+        GetItemWithSignatureRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getItemWithSignature";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getInventoryName())
+            {
+                jsonWriter.writePropertyName("inventoryName");
+                jsonWriter.writeCharArray(*m_Request.getInventoryName());
+            }
+            if (m_Request.getItemName())
+            {
+                jsonWriter.writePropertyName("itemName");
+                jsonWriter.writeCharArray(*m_Request.getItemName());
+            }
+            if (m_Request.getExpiresAt())
+            {
+                jsonWriter.writePropertyName("expiresAt");
+                jsonWriter.writeInt64(*m_Request.getExpiresAt());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetItemWithSignatureTask(
+            GetItemWithSignatureRequest request,
+            Gs2WebSocketSessionTask<GetItemWithSignatureResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetItemWithSignatureResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetItemWithSignatureTask() GS2_OVERRIDE = default;
+    };
+
+    class GetItemWithSignatureByUserIdTask : public detail::Gs2WebSocketSessionTask<GetItemWithSignatureByUserIdResult>
+    {
+    private:
+        GetItemWithSignatureByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getItemWithSignatureByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getInventoryName())
+            {
+                jsonWriter.writePropertyName("inventoryName");
+                jsonWriter.writeCharArray(*m_Request.getInventoryName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getItemName())
+            {
+                jsonWriter.writePropertyName("itemName");
+                jsonWriter.writeCharArray(*m_Request.getItemName());
+            }
+            if (m_Request.getExpiresAt())
+            {
+                jsonWriter.writePropertyName("expiresAt");
+                jsonWriter.writeInt64(*m_Request.getExpiresAt());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetItemWithSignatureByUserIdTask(
+            GetItemWithSignatureByUserIdRequest request,
+            Gs2WebSocketSessionTask<GetItemWithSignatureByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetItemWithSignatureByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetItemWithSignatureByUserIdTask() GS2_OVERRIDE = default;
+    };
+
     class AcquireItemSetByUserIdTask : public detail::Gs2WebSocketSessionTask<AcquireItemSetByUserIdResult>
     {
     private:
@@ -3832,6 +3998,30 @@ public:
     void getItemSetByUserId(GetItemSetByUserIdRequest request, std::function<void(AsyncGetItemSetByUserIdResult)> callback)
     {
         GetItemSetByUserIdTask& task = *new GetItemSetByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 有効期限ごとのアイテム所持数量を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getItemWithSignature(GetItemWithSignatureRequest request, std::function<void(AsyncGetItemWithSignatureResult)> callback)
+    {
+        GetItemWithSignatureTask& task = *new GetItemWithSignatureTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 有効期限ごとのアイテム所持数量を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getItemWithSignatureByUserId(GetItemWithSignatureByUserIdRequest request, std::function<void(AsyncGetItemWithSignatureByUserIdResult)> callback)
+    {
+        GetItemWithSignatureByUserIdTask& task = *new GetItemWithSignatureByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

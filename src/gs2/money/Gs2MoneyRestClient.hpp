@@ -1074,10 +1074,6 @@ private:
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
             url += "/stamp/deposit";
-            {
-                auto& value = m_Request.getStampSheet();
-                url.replace("{stampSheet}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-            }
             detail::json::JsonWriter jsonWriter;
 
             jsonWriter.writeObjectStart();
@@ -1085,6 +1081,11 @@ private:
             {
                 jsonWriter.writePropertyName("contextStack");
                 jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
             }
             if (m_Request.getKeyId())
             {
