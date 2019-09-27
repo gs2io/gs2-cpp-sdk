@@ -36,6 +36,7 @@
 #include "mission/Client.hpp"
 #include "money/Client.hpp"
 #include "quest/Client.hpp"
+#include "ranking/Client.hpp"
 #include "realtime/Client.hpp"
 #include "schedule/Client.hpp"
 #include "showcase/Client.hpp"
@@ -64,6 +65,7 @@ public:
     mission::Client mission;
     money::Client money;
     quest::Client quest;
+    ranking::Client ranking;
     realtime::Client realtime;
     schedule::Client schedule;
     showcase::Client showcase;
@@ -89,6 +91,7 @@ public:
         mission(profile),
         money(profile),
         quest(profile),
+        ranking(profile),
         realtime(profile),
         schedule(profile),
         showcase(profile),
