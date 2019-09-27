@@ -20,8 +20,11 @@
 #include "../core/Gs2Object.hpp"
 #include "account/Client.hpp"
 #include "auth/Client.hpp"
+#include "chat/Client.hpp"
 #include "distributor/Client.hpp"
+#include "exchange/Client.hpp"
 #include "experience/Client.hpp"
+#include "friend/Client.hpp"
 #include "gateway/Client.hpp"
 #include "inbox/Client.hpp"
 #include "inventory/Client.hpp"
@@ -33,7 +36,7 @@
 #include "mission/Client.hpp"
 #include "money/Client.hpp"
 #include "quest/Client.hpp"
-//#include "realtime/Client.hpp"
+#include "realtime/Client.hpp"
 #include "schedule/Client.hpp"
 #include "showcase/Client.hpp"
 #include "stamina/Client.hpp"
@@ -45,8 +48,11 @@ class Client : public gs2::Gs2Object
 public:
     account::Client account;
     auth::Client auth;
+    chat::Client chat;
     distributor::Client distributor;
+    exchange::Client exchange;
     experience::Client experience;
+    friend_::Client friend_;
     gateway::Client gateway;
     inbox::Client inbox;
     inventory::Client inventory;
@@ -58,7 +64,7 @@ public:
     mission::Client mission;
     money::Client money;
     quest::Client quest;
-    //realtime::Client realtime;
+    realtime::Client realtime;
     schedule::Client schedule;
     showcase::Client showcase;
     stamina::Client stamina;
@@ -67,8 +73,11 @@ public:
     Client(Profile& profile) :
         account(profile),
         auth(profile),
+        chat(profile),
         distributor(profile),
+        exchange(profile),
         experience(profile),
+        friend_(profile),
         gateway(profile),
         inbox(profile),
         inventory(profile),
@@ -80,7 +89,7 @@ public:
         mission(profile),
         money(profile),
         quest(profile),
-        //realtime(profile),
+        realtime(profile),
         schedule(profile),
         showcase(profile),
         stamina(profile)
