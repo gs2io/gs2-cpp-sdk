@@ -982,7 +982,7 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void verify(VerifyRequest request, std::function<void(AsyncVerifyResult)> callback)
+    void verify_(VerifyRequest request, std::function<void(AsyncVerifyResult)> callback)
     {
         VerifyTask& task = *new VerifyTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
