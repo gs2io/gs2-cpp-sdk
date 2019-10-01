@@ -36,8 +36,18 @@ class Gs2RestResponse;
 
 class HttpTask : public Gs2Object
 {
+public:
+    enum class Verb
+    {
+        Get,
+        Post,
+        Delete,
+        Put,
+    };
+
 private:
     ::cocos2d::network::HttpRequest &m_HttpRequest;
+    std::vector<std::string> m_Headers;
 
     static void callbackHandler(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse);
     virtual void callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse) = 0;
@@ -46,17 +56,13 @@ public:
     HttpTask();
     virtual ~HttpTask();
 
+    void setUrl(const char url[]);
+    void setVerb(Verb verb);
+    void addHeaderEntry(const char key[], const char value[]);
+    void setBody(const char body[]);
+
     // 最大1回までしか呼べません
     void send();
-
-    // ユーザデータは設定しても send 時に上書きされます
-    ::cocos2d::network::HttpRequest &getHttpRequest()
-    {
-        return m_HttpRequest;
-    }
-
-    // ユーティリティ
-    static void addHeaderEntry(std::vector<std::string>& headers, const Char key[], const Char value[]);
 };
 
 

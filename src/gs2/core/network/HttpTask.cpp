@@ -38,6 +38,46 @@ HttpTask::~HttpTask()
     m_HttpRequest.release();
 }
 
+void HttpTask::setUrl(const char url[])
+{
+    std::string urlString = url;
+    m_HttpRequest.setUrl(urlString);
+}
+
+void HttpTask::setVerb(Verb verb)
+{
+    auto httpRequestType = ::cocos2d::network::HttpRequest::Type::UNKNOWN;
+    switch (verb)
+    {
+        case Verb::Get:
+            httpRequestType = ::cocos2d::network::HttpRequest::Type::GET;
+            break;
+        case Verb::Post:
+            httpRequestType = ::cocos2d::network::HttpRequest::Type::POST;
+            break;
+        case Verb::Delete:
+            httpRequestType = ::cocos2d::network::HttpRequest::Type::DELETE;
+            break;
+        case Verb::Put:
+            httpRequestType = ::cocos2d::network::HttpRequest::Type::PUT;
+            break;
+    }
+    m_HttpRequest.setRequestType(httpRequestType);
+}
+
+void HttpTask::addHeaderEntry(const char key[], const char value[])
+{
+    std::string header = key;
+    header.append(": ");
+    header.append(value);
+    m_Headers.push_back(header);
+}
+
+void HttpTask::setBody(const char body[])
+{
+    m_HttpRequest.setRequestData(body, std::strlen(body));
+}
+
 void HttpTask::callbackHandler(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse)
 {
     HttpTask* pHttpTask = reinterpret_cast<HttpTask*>(pResponse->getHttpRequest()->getUserData());
@@ -46,19 +86,11 @@ void HttpTask::callbackHandler(::cocos2d::network::HttpClient *pClient, ::cocos2
 
 void HttpTask::send()
 {
+    m_HttpRequest.setHeaders(m_Headers);
     m_HttpRequest.setUserData(this);
     m_HttpRequest.setResponseCallback(callbackHandler);
 
     ::cocos2d::network::HttpClient::getInstance()->send(&m_HttpRequest);
-}
-
-void HttpTask::addHeaderEntry(std::vector<std::string>& headers, const Char key[], const Char value[])
-{
-    std::string entry(key);
-    entry.append(": ");
-    entry.append(value);
-
-    headers.push_back(entry);
 }
 
 
