@@ -15,10 +15,11 @@
  */
 
 #include "Gs2RestSession.hpp"
+#include "Gs2RestSessionTask.hpp"
+#include "Gs2RestResponse.hpp"
 #include "../json/JsonWriter.hpp"
 #include "../json/JsonParser.hpp"
 #include "../util/StringVariable.hpp"
-#include "Gs2RestSessionTask.hpp"
 #include "LoginResultModel.hpp"
 
 GS2_START_OF_NAMESPACE

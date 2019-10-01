@@ -28,6 +28,9 @@ class Gs2RestSession;
 
 namespace detail {
 
+class StringVariable;
+class Gs2RestResponse;
+
 class Gs2RestSessionTaskBase : public Gs2SessionTask
 {
 private:

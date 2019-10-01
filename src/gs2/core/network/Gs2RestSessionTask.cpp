@@ -16,6 +16,8 @@
 
 #include "Gs2RestSessionTask.hpp"
 #include "Gs2RestSession.hpp"
+#include "Gs2RestResponse.hpp"
+#include "../util/StringVariable.hpp"
 
 GS2_START_OF_NAMESPACE
 

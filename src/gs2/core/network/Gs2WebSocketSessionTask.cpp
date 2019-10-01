@@ -15,6 +15,7 @@
  */
 
 #include "Gs2WebSocketSessionTask.hpp"
+#include "Gs2WebSocketSession.hpp"
 #include "../json/JsonWriter.hpp"
 
 GS2_START_OF_NAMESPACE
