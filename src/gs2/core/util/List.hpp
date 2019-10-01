@@ -37,7 +37,7 @@ inline void deepCopy(std::vector<T, detail::StandardAllocator<T>>& to, const std
     }
 }
 
-// ���ۂɂ̓f�B�[�v�R�s�[�̕K�v���Ȃ��^����
+// 実際にはディープコピーの必要がない型たち
 template<> inline void deepCopy<Int8>(std::vector<Int8, detail::StandardAllocator<Int8>>& to, const std::vector<Int8, detail::StandardAllocator<Int8>>& from) { to = from; }
 template<> inline void deepCopy<Int16>(std::vector<Int16, detail::StandardAllocator<Int16>>& to, const std::vector<Int16, detail::StandardAllocator<Int16>>& from) { to = from; }
 template<> inline void deepCopy<Int32>(std::vector<Int32, detail::StandardAllocator<Int32>>& to, const std::vector<Int32, detail::StandardAllocator<Int32>>& from) { to = from; }

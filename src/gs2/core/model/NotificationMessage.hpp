@@ -28,7 +28,7 @@
 GS2_START_OF_NAMESPACE
 
 /**
- * ’Ê’mƒƒbƒZ[ƒW
+ * é€šçŸ¥ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
  *
  * @author Game Server Services, Inc.
  *
@@ -39,11 +39,11 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ƒƒbƒZ[ƒW‚Ì”­sÒ */
+        /** ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ç™ºè¡Œè€… */
         optional<StringHolder> issuer;
-        /** ƒƒbƒZ[ƒW‚Ì‘è–¼ */
+        /** ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®é¡Œå */
         optional<StringHolder> subject;
-        /** ƒƒbƒZ[ƒW‚ÌƒyƒCƒ[ƒh */
+        /** ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰ */
         optional<StringHolder> payload;
 
         Data()
@@ -172,9 +172,9 @@ public:
 
 
     /**
-     * ƒƒbƒZ[ƒW‚Ì”­sÒ‚ğæ“¾
+     * ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ç™ºè¡Œè€…ã‚’å–å¾—
      *
-     * @return ƒƒbƒZ[ƒW‚Ì”­sÒ
+     * @return ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ç™ºè¡Œè€…
      */
     const optional<StringHolder>& getIssuer() const
     {
@@ -182,9 +182,9 @@ public:
     }
 
     /**
-     * ƒƒbƒZ[ƒW‚Ì”­sÒ‚ğİ’è
+     * ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ç™ºè¡Œè€…ã‚’è¨­å®š
      *
-     * @param issuer ƒƒbƒZ[ƒW‚Ì”­sÒ
+     * @param issuer ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ç™ºè¡Œè€…
      */
     void setIssuer(const Char* issuer)
     {
@@ -192,9 +192,9 @@ public:
     }
 
     /**
-     * ƒƒbƒZ[ƒW‚Ì‘è–¼‚ğæ“¾
+     * ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®é¡Œåã‚’å–å¾—
      *
-     * @return ƒƒbƒZ[ƒW‚Ì‘è–¼
+     * @return ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®é¡Œå
      */
     const optional<StringHolder>& getSubject() const
     {
@@ -202,9 +202,9 @@ public:
     }
 
     /**
-     * ƒƒbƒZ[ƒW‚Ì‘è–¼‚ğİ’è
+     * ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®é¡Œåã‚’è¨­å®š
      *
-     * @param subject ƒƒbƒZ[ƒW‚Ì‘è–¼
+     * @param subject ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®é¡Œå
      */
     void setSubject(const Char* subject)
     {
@@ -212,9 +212,9 @@ public:
     }
 
     /**
-     * ƒƒbƒZ[ƒW‚ÌƒyƒCƒ[ƒh‚ğæ“¾
+     * ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰ã‚’å–å¾—
      *
-     * @return ƒƒbƒZ[ƒW‚ÌƒyƒCƒ[ƒh
+     * @return ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰
      */
     const optional<StringHolder>& getPayload() const
     {
@@ -222,9 +222,9 @@ public:
     }
 
     /**
-     * ƒƒbƒZ[ƒW‚ÌƒyƒCƒ[ƒh‚ğİ’è
+     * ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰ã‚’è¨­å®š
      *
-     * @param payload ƒƒbƒZ[ƒW‚ÌƒyƒCƒ[ƒh
+     * @param payload ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ãƒšã‚¤ãƒ­ãƒ¼ãƒ‰
      */
     void setPayload(const Char* payload)
     {

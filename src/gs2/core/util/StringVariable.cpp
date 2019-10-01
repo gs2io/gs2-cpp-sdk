@@ -33,7 +33,7 @@ inline char toHex(char ch)
 
 void encodeUrl(StringVariable& dst, const char src[], std::size_t srcSize)
 {
-    dst.reserve(srcSize * 12 / 10);     // Base64 •ÏŠ·Ï‚Ì•¶š—ñ‚ğ•ÏŠ·‚·‚é‚Ì‚ªå—vƒ†[ƒXƒP[ƒX‚È‚Ì‚ÅA‚´‚Á‚­‚è1.2”{’ö“xŠm•Û
+    dst.reserve(srcSize * 12 / 10);     // Base64 å¤‰æ›æ¸ˆã®æ–‡å­—åˆ—ã‚’å¤‰æ›ã™ã‚‹ã®ãŒä¸»è¦ãƒ¦ãƒ¼ã‚¹ã‚±ãƒ¼ã‚¹ãªã®ã§ã€ã–ã£ãã‚Š1.2å€ç¨‹åº¦ç¢ºä¿
 
     char encoded[4];
     encoded[0] = '%';
