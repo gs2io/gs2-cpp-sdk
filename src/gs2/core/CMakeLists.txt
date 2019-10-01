@@ -116,8 +116,7 @@ add_library(${PROJECT_NAME} STATIC
         ${EXTERNAL_SOURCE_FILES}
         )
 
-use_cocos2dx_compile_define(${PROJECT_NAME})
-use_cocos2dx_compile_options(${PROJECT_NAME})
+gs2_inherit_cocos2dx_settings(${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC ../..

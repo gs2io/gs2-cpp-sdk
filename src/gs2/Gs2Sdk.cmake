@@ -12,14 +12,16 @@
 # express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-cmake_minimum_required(VERSION 3.2)
+include(CheckFunctionExists)
 
-include(Gs2Sdk.cmake)
-
-add_subdirectory(core)
-add_subdirectory(ez)
-
-set(GS2_ALL_LIBRARIES
-        ${GS2_ALL_LIBRARIES}
-        PARENT_SCOPE
-        )
+function(gs2_inherit_cocos2dx_settings target_name)
+    # 以下の関数が存在しないバージョンでは CocosCompileOptions.cmake でグローバルに設定が反映されているので、個別設定は不要
+    check_function_exists(use_cocos2dx_compile_define function_exists)
+    if(${function_exists})
+        use_cocos2dx_compile_define(${target_name})
+    endif()
+    check_function_exists(use_cocos2dx_compile_options function_exists)
+    if(${function_exists})
+        use_cocos2dx_compile_options(${target_name})
+    endif()
+endfunction()
