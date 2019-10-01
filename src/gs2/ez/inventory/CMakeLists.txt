@@ -49,8 +49,7 @@ add_library(${PROJECT_NAME} STATIC
         ${${PROJECT_NAME}_SOURCE_FILES}
         )
 
-use_cocos2dx_compile_define(${PROJECT_NAME})
-use_cocos2dx_compile_options(${PROJECT_NAME})
+gs2_inherit_cocos2dx_settings(${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME} gs2-cpp-sdk-ez)
 
 set(GS2_ALL_LIBRARIES
