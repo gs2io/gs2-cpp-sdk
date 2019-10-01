@@ -15,38 +15,25 @@
 cmake_minimum_required(VERSION 3.2)
 project(gs2-cpp-sdk-core)
 
-set(CMAKE_CXX_STANDARD 11)
-
-include_directories(../../)
-include_directories(${cocos2d-x_SOURCE_DIR}/cocos)
-
-# external/cryptopp/crc-simd.cpp のビルド対応
-add_definitions(-DGS2_CRYPTOPP_DISABLE_SSE4 -DGS2_CRYPTOPP_MANUALLY_INSTANTIATE_TEMPLATES)
-
-if(GS2_LINUX)
-    add_definitions(-DLINUX)
-endif(GS2_LINUX)
-
-
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         AbstractGs2Client.hpp
         AsyncResult.hpp
         common.hpp
+        control/Gs2BasicRequest.hpp
+        exception/Gs2ClientException.hpp
+        external/optional/optional.hpp
         Gs2Constant.hpp
         Gs2Core.hpp
         Gs2Object.hpp
         IAllocator.hpp
-        macros.hpp
-        types.hpp
-        control/Gs2BasicRequest.hpp
-        control/Gs2UserRequest.hpp
-        exception/Gs2ClientException.hpp
         json/Allocator.hpp
         json/IModel.hpp
         json/JsonParser.hpp
         json/JsonWriter.hpp
+        macros.hpp
         model/BasicGs2Credential.hpp
         model/IGs2Credential.hpp
+        model/NotificationMessage.hpp
         model/Region.hpp
         model/RequestError.hpp
         model/StampSheet.hpp
@@ -64,14 +51,14 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         network/HttpTask.hpp
         network/LoginResultModel.hpp
         network/RootCaCertificates.hpp
-        network/WebSocketSessionTask.hpp
+        network/WebSocket.hpp
+        types.hpp
         util/Base64.hpp
         util/DefaultAllocator.hpp
         util/IntrusiveList.hpp
         util/List.hpp
         util/StandardAllocator.hpp
         util/StringHolder.hpp
-        util/StringUtil.hpp
         util/StringVariable.hpp
         )
 
@@ -79,7 +66,6 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         AbstractGs2Client.cpp
         Gs2Constant.cpp
         Gs2Object.cpp
-        control/Gs2BasicRequest.cpp
         json/Allocator.cpp
         json/JsonParser.cpp
         json/JsonWriter.cpp
@@ -101,20 +87,21 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         util/Base64.cpp
         util/DefaultAllocator.cpp
         util/StringHolder.cpp
-        util/StringUtil.cpp
         util/StringVariable.cpp
         )
 
 file(GLOB ${PROJECT_NAME}_ETC_FILES
         )
 
-include(external/CopyExternalFiles.cmake)
-define_external_file_rule(
-        ${CMAKE_CURRENT_LIST_DIR}/../../external/
-        ${CMAKE_CURRENT_LIST_DIR}/external/
-        EXTERNAL_FILES
-        EXTERNAL_SOURCE_FILES
-)
+if(GS2_LIBRARY_BUILD)
+        include(external/CopyExternalFiles.cmake)
+        define_external_file_rule(
+                ${CMAKE_CURRENT_LIST_DIR}/../../external/
+                ${CMAKE_CURRENT_LIST_DIR}/external/
+                EXTERNAL_FILES
+                EXTERNAL_SOURCE_FILES
+                )
+endif()
 
 set(${PROJECT_NAME}_FILES
         ${${PROJECT_NAME}_HEADER_FILES}
@@ -129,15 +116,37 @@ add_library(${PROJECT_NAME} STATIC
         ${EXTERNAL_SOURCE_FILES}
         )
 
+use_cocos2dx_compile_define(${PROJECT_NAME})
+use_cocos2dx_compile_options(${PROJECT_NAME})
+
+target_include_directories(${PROJECT_NAME}
+        PUBLIC ../..
+        )
+target_link_libraries(${PROJECT_NAME}
+        cocos2d
+        )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/../../
+        )
+
+set(GS2_ALL_LIBRARIES
+        ${GS2_ALL_LIBRARIES}
+        ${PROJECT_NAME}
+        PARENT_SCOPE
+        )
+
 # ライブラリのビルド前に、外部ライブラリの必要なファイルだけをコピーする
 
-add_custom_target(copy_external_files
-        DEPENDS ${EXTERNAL_FILES}
-        )
+if(GS2_LIBRARY_BUILD)
+        add_custom_target(copy_external_files
+                DEPENDS ${EXTERNAL_FILES}
+                )
 
-add_dependencies(${PROJECT_NAME}
-        copy_external_files
-        )
+        add_dependencies(${PROJECT_NAME}
+                copy_external_files
+                )
+endif()
 
 set(gs2-cpp-sdk_FILES
         ${gs2-cpp-sdk_FILES}
