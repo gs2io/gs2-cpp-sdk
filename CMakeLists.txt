@@ -37,6 +37,12 @@ if(NOT COCOS2DX_ROOT_PATH)
 
         include(CocosBuildSet)
         add_subdirectory(${COCOS2DX_ROOT_PATH}/cocos ${ENGINE_BINARY_PATH}/cocos/core)
+
+        # Cocos2d-x 自体のビルドは不要なので、簡略化のために空のファイル一つに置き換える
+        set_target_properties(cocos2d
+                PROPERTIES
+                SOURCES ${CMAKE_CURRENT_LIST_DIR}/src/dummy.cpp
+                )
 endif()
 
 set(GS2_LIBRARY_BUILD True)
