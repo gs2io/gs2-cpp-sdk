@@ -48,3 +48,8 @@ endif()
 set(GS2_LIBRARY_BUILD True)
 
 add_subdirectory(src/gs2)
+
+set(GS2_ALL_LIBRARIES
+        ${GS2_ALL_LIBRARIES}
+        PARENT_SCOPE
+        )
