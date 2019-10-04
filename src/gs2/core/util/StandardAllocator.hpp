@@ -74,7 +74,14 @@ public:
 
     void construct(pointer p, const_reference val)
     {
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma warning(push)
+#pragma warning(disable:4291)
+#endif
         new(p) T(val);
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma warning(pop)
+#endif
     }
 
     /*
