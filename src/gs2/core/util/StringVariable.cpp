@@ -39,7 +39,7 @@ void encodeUrl(StringVariable& dst, const char src[], std::size_t srcSize)
     encoded[0] = '%';
     encoded[3] = '\0';
 
-    for (int i = 0; i < srcSize; i++)
+    for (std::size_t i = 0; i < srcSize; i++)
     {
         char ch = src[i];
 
