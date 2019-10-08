@@ -64,13 +64,24 @@ public:
     AsyncResult(AsyncResult&& asyncResult) = default;
     ~AsyncResult() = default;
 
-    AsyncResult(T result, optional<Gs2ClientException> error)
+    AsyncResult(const T& result, optional<Gs2ClientException> error)
+    {
+        ensureData().result.emplace(result);
+        ensureData().error = std::move(error);
+    }
+
+    AsyncResult(T&& result, optional<Gs2ClientException> error)
     {
         ensureData().result.emplace(std::move(result));
         ensureData().error = std::move(error);
     }
 
-    AsyncResult(T result) 
+    AsyncResult(const T& result)
+    {
+        ensureData().result.emplace(result);
+    }
+
+    AsyncResult(T&& result)
     {
         ensureData().result.emplace(std::move(result));
     }
