@@ -77,29 +77,8 @@ public:
 
     ~List() = default;
 
-    List& operator=(const List& list)
-    {
-        Gs2Object::operator=(list);
-
-        if (list.m_pList != m_pList)
-        {
-            m_pList = list.m_pList;
-        }
-
-        return *this;
-    }
-
-    List& operator=(List&& list)
-    {
-        Gs2Object::operator=(std::move(list));
-
-        if (list.m_pList != m_pList)
-        {
-            m_pList = std::move(list.m_pList);
-        }
-
-        return *this;
-    }
+    List& operator=(const List& list) = default;
+    List& operator=(List&& list) = default;
 
     List deepCopy() const
     {
