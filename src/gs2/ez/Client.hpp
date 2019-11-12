@@ -41,6 +41,7 @@
 #include "schedule/Client.hpp"
 #include "showcase/Client.hpp"
 #include "stamina/Client.hpp"
+#include "version/Client.hpp"
 
 namespace gs2 { namespace ez {
 
@@ -70,6 +71,7 @@ public:
     schedule::Client schedule;
     showcase::Client showcase;
     stamina::Client stamina;
+    version::Client version;
 
 public:
     Client(Profile& profile) :
@@ -95,7 +97,8 @@ public:
         realtime(profile),
         schedule(profile),
         showcase(profile),
-        stamina(profile)
+        stamina(profile),
+        version(profile)
     {}
 };
 

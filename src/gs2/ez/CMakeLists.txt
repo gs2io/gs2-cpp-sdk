@@ -68,6 +68,7 @@ add_subdirectory(realtime)
 add_subdirectory(schedule)
 add_subdirectory(showcase)
 add_subdirectory(stamina)
+add_subdirectory(version)
 
 set(GS2_ALL_LIBRARIES
         ${GS2_ALL_LIBRARIES}
