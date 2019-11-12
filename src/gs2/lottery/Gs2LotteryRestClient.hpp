@@ -213,6 +213,11 @@ private:
                 jsonWriter.writePropertyName("choicePrizeTableScriptId");
                 jsonWriter.writeCharArray(*m_Request.getChoicePrizeTableScriptId());
             }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -382,6 +387,11 @@ private:
             {
                 jsonWriter.writePropertyName("choicePrizeTableScriptId");
                 jsonWriter.writeCharArray(*m_Request.getChoicePrizeTableScriptId());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -2211,6 +2221,11 @@ protected:
             jsonWriter.writePropertyName("choicePrizeTableScriptId");
             jsonWriter.writeCharArray(*obj.getChoicePrizeTableScriptId());
         }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -2542,6 +2557,17 @@ protected:
         {
             jsonWriter.writePropertyName("tagName");
             jsonWriter.writeCharArray(*obj.getTagName());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -3083,7 +3109,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な抽選設定を取得します<br>
+	 * 現在有効な抽選設定を取得します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -3095,7 +3121,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な抽選設定を更新します<br>
+	 * 現在有効な抽選設定を更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -3107,7 +3133,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な抽選設定を更新します<br>
+	 * 現在有効な抽選設定を更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ

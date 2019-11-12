@@ -30,5 +30,6 @@
 #include "ResponseCache.hpp"
 #include "GitHubCheckoutSetting.hpp"
 #include "ScriptSetting.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_INVENTORY_MODEL_MODEL_HPP_

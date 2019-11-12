@@ -180,6 +180,11 @@ private:
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
             }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
             if (m_Request.getRequestId())
             {
                 jsonWriter.writePropertyName("xGs2RequestId");
@@ -337,6 +342,11 @@ private:
             {
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             if (m_Request.getRequestId())
             {
@@ -1666,6 +1676,11 @@ protected:
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
         }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -1860,6 +1875,17 @@ protected:
         {
             jsonWriter.writePropertyName("tagName");
             jsonWriter.writeCharArray(*obj.getTagName());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -2158,7 +2184,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な回数制限設定を取得します<br>
+	 * 現在有効な回数制限設定を取得します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2170,7 +2196,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な回数制限設定を更新します<br>
+	 * 現在有効な回数制限設定を更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2182,7 +2208,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な回数制限設定を更新します<br>
+	 * 現在有効な回数制限設定を更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ

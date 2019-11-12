@@ -49,6 +49,8 @@ private:
         optional<StringHolder> ownerId;
         /** 実行中のスタック名 */
         optional<StringHolder> name;
+        /** 実行に対して割り振られる一意な ID */
+        optional<StringHolder> workId;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -61,6 +63,7 @@ private:
             stackId(data.stackId),
             ownerId(data.ownerId),
             name(data.name),
+            workId(data.workId),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
@@ -94,6 +97,13 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "workId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->workId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -232,6 +242,37 @@ public:
     }
 
     /**
+     * 実行に対して割り振られる一意な IDを取得
+     *
+     * @return 実行に対して割り振られる一意な ID
+     */
+    const optional<StringHolder>& getWorkId() const
+    {
+        return ensureData().workId;
+    }
+
+    /**
+     * 実行に対して割り振られる一意な IDを設定
+     *
+     * @param workId 実行に対して割り振られる一意な ID
+     */
+    void setWorkId(StringHolder workId)
+    {
+        ensureData().workId.emplace(std::move(workId));
+    }
+
+    /**
+     * 実行に対して割り振られる一意な IDを設定
+     *
+     * @param workId 実行に対して割り振られる一意な ID
+     */
+    WorkingStack& withWorkId(StringHolder workId)
+    {
+        setWorkId(std::move(workId));
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -317,6 +358,10 @@ inline bool operator!=(const WorkingStack& lhs, const WorkingStack& lhr)
             return true;
         }
         if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->workId != lhr.m_pData->workId)
         {
             return true;
         }

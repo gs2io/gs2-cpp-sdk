@@ -30,13 +30,15 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzConfig.hpp
         model/EzGitHubCheckoutSetting.hpp
         model/EzScriptSetting.hpp
+        model/EzLogSetting.hpp
         model/EzProgress.hpp
         model/EzCompletedQuestList.hpp
         model/EzQuestGroupModel.hpp
         model/EzQuestModel.hpp
         result/EzStartResult.hpp
         result/EzEndResult.hpp
-        result/EzDeleteResult.hpp
+        result/EzGetProgressResult.hpp
+        result/EzDeleteProgressResult.hpp
         result/EzDescribeCompletedQuestListsResult.hpp
         result/EzGetCompletedQuestListResult.hpp
         result/EzListQuestGroupsResult.hpp

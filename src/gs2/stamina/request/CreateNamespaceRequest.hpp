@@ -51,6 +51,8 @@ private:
         optional<StringHolder> overflowTriggerScriptId;
         /** スタミナオーバーフロー上限に当たって回復できなかったスタミナを追加する ネームスペース のGRN */
         optional<StringHolder> overflowTriggerNamespaceId;
+        /** ログの出力設定 */
+        optional<LogSetting> logSetting;
 
         Data() = default;
 
@@ -61,6 +63,10 @@ private:
             overflowTriggerScriptId(data.overflowTriggerScriptId),
             overflowTriggerNamespaceId(data.overflowTriggerNamespaceId)
         {
+            if (data.logSetting)
+            {
+                logSetting = data.logSetting->deepCopy();
+            }
         }
 
         Data(Data&& data) = default;
@@ -228,6 +234,37 @@ public:
     CreateNamespaceRequest& withOverflowTriggerNamespaceId(StringHolder overflowTriggerNamespaceId)
     {
         ensureData().overflowTriggerNamespaceId.emplace(std::move(overflowTriggerNamespaceId));
+        return *this;
+    }
+
+    /**
+     * ログの出力設定を取得
+     *
+     * @return ログの出力設定
+     */
+    const optional<LogSetting>& getLogSetting() const
+    {
+        return ensureData().logSetting;
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    void setLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    CreateNamespaceRequest& withLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
         return *this;
     }
 

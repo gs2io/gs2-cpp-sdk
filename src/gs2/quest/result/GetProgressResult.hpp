@@ -44,6 +44,10 @@ private:
     public:
         /** クエスト挑戦 */
         optional<Progress> item;
+        /** クエストグループ */
+        optional<QuestGroupModel> questGroup;
+        /** クエストモデル */
+        optional<QuestModel> quest;
 
         Data() = default;
 
@@ -53,6 +57,14 @@ private:
             if (data.item)
             {
                 item = data.item->deepCopy();
+            }
+            if (data.questGroup)
+            {
+                questGroup = data.questGroup->deepCopy();
+            }
+            if (data.quest)
+            {
+                quest = data.quest->deepCopy();
             }
         }
 
@@ -72,6 +84,24 @@ private:
                     const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->item.emplace();
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
+                }
+            }
+            else if (std::strcmp(name_, "questGroup") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->questGroup.emplace();
+                    detail::json::JsonParser::parse(&this->questGroup->getModel(), jsonObject);
+                }
+            }
+            else if (std::strcmp(name_, "quest") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->quest.emplace();
+                    detail::json::JsonParser::parse(&this->quest->getModel(), jsonObject);
                 }
             }
         }
@@ -120,6 +150,46 @@ public:
     void setItem(Progress item)
     {
         ensureData().item.emplace(std::move(item));
+    }
+
+    /**
+     * クエストグループを取得
+     *
+     * @return クエストグループ
+     */
+    const optional<QuestGroupModel>& getQuestGroup() const
+    {
+        return ensureData().questGroup;
+    }
+
+    /**
+     * クエストグループを設定
+     *
+     * @param questGroup クエストグループ
+     */
+    void setQuestGroup(QuestGroupModel questGroup)
+    {
+        ensureData().questGroup.emplace(std::move(questGroup));
+    }
+
+    /**
+     * クエストモデルを取得
+     *
+     * @return クエストモデル
+     */
+    const optional<QuestModel>& getQuest() const
+    {
+        return ensureData().quest;
+    }
+
+    /**
+     * クエストモデルを設定
+     *
+     * @param quest クエストモデル
+     */
+    void setQuest(QuestModel quest)
+    {
+        ensureData().quest.emplace(std::move(quest));
     }
 
 

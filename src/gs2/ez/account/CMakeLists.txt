@@ -23,6 +23,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzTakeOver.hpp
         model/EzResponseCache.hpp
         model/EzScriptSetting.hpp
+        model/EzLogSetting.hpp
         result/EzCreateResult.hpp
         result/EzAuthenticationResult.hpp
         result/EzAddTakeOverSettingResult.hpp

@@ -173,6 +173,11 @@ private:
                 jsonWriter.writePropertyName("keyId");
                 jsonWriter.writeCharArray(*m_Request.getKeyId());
             }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -332,6 +337,11 @@ private:
             {
                 jsonWriter.writePropertyName("keyId");
                 jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -1248,6 +1258,11 @@ protected:
             jsonWriter.writePropertyName("keyId");
             jsonWriter.writeCharArray(*obj.getKeyId());
         }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -1462,6 +1477,17 @@ protected:
         {
             jsonWriter.writePropertyName("tagName");
             jsonWriter.writeCharArray(*obj.getTagName());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -1704,7 +1730,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な交換レート設定を取得します<br>
+	 * 現在有効な交換レート設定を取得します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -1716,7 +1742,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な交換レート設定を更新します<br>
+	 * 現在有効な交換レート設定を更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -1728,7 +1754,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な交換レート設定を更新します<br>
+	 * 現在有効な交換レート設定を更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ

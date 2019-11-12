@@ -24,6 +24,7 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "LogSetting.hpp"
 #include <memory>
 #include <cstring>
 
@@ -51,6 +52,10 @@ private:
         optional<StringHolder> name;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
+        /** 所持品の配布処理の権限判定に使用する ユーザ のGRN */
+        optional<StringHolder> assumeUserId;
+        /** ログの出力設定 */
+        optional<LogSetting> logSetting;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -64,9 +69,14 @@ private:
             ownerId(data.ownerId),
             name(data.name),
             description(data.description),
+            assumeUserId(data.assumeUserId),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
+            if (data.logSetting)
+            {
+                logSetting = data.logSetting->deepCopy();
+            }
         }
 
         Data(Data&& data) = default;
@@ -104,6 +114,22 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "assumeUserId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->assumeUserId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "logSetting") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->logSetting.emplace();
+                    detail::json::JsonParser::parse(&this->logSetting->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -273,6 +299,68 @@ public:
     }
 
     /**
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを取得
+     *
+     * @return 所持品の配布処理の権限判定に使用する ユーザ のGRN
+     */
+    const optional<StringHolder>& getAssumeUserId() const
+    {
+        return ensureData().assumeUserId;
+    }
+
+    /**
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
+     *
+     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
+     */
+    void setAssumeUserId(StringHolder assumeUserId)
+    {
+        ensureData().assumeUserId.emplace(std::move(assumeUserId));
+    }
+
+    /**
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
+     *
+     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
+     */
+    Namespace& withAssumeUserId(StringHolder assumeUserId)
+    {
+        setAssumeUserId(std::move(assumeUserId));
+        return *this;
+    }
+
+    /**
+     * ログの出力設定を取得
+     *
+     * @return ログの出力設定
+     */
+    const optional<LogSetting>& getLogSetting() const
+    {
+        return ensureData().logSetting;
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    void setLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    Namespace& withLogSetting(LogSetting logSetting)
+    {
+        setLogSetting(std::move(logSetting));
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -362,6 +450,14 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
             return true;
         }
         if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->assumeUserId != lhr.m_pData->assumeUserId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->logSetting != lhr.m_pData->logSetting)
         {
             return true;
         }

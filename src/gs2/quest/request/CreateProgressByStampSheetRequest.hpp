@@ -47,8 +47,6 @@ private:
         optional<StringHolder> stampSheet;
         /** スタンプシートの署名検証に使用する 暗号鍵 のGRN */
         optional<StringHolder> keyId;
-        /** スタンプシートの変数に適用する設定値 */
-        optional<List<Config>> config;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -60,10 +58,6 @@ private:
             keyId(data.keyId),
             duplicationAvoider(data.duplicationAvoider)
         {
-            if (data.config)
-            {
-                config = data.config->deepCopy();
-            }
         }
 
         Data(Data&& data) = default;
@@ -169,37 +163,6 @@ public:
     CreateProgressByStampSheetRequest& withKeyId(StringHolder keyId)
     {
         ensureData().keyId.emplace(std::move(keyId));
-        return *this;
-    }
-
-    /**
-     * スタンプシートの変数に適用する設定値を取得
-     *
-     * @return スタンプシートの変数に適用する設定値
-     */
-    const optional<List<Config>>& getConfig() const
-    {
-        return ensureData().config;
-    }
-
-    /**
-     * スタンプシートの変数に適用する設定値を設定
-     *
-     * @param config スタンプシートの変数に適用する設定値
-     */
-    void setConfig(List<Config> config)
-    {
-        ensureData().config.emplace(std::move(config));
-    }
-
-    /**
-     * スタンプシートの変数に適用する設定値を設定
-     *
-     * @param config スタンプシートの変数に適用する設定値
-     */
-    CreateProgressByStampSheetRequest& withConfig(List<Config> config)
-    {
-        ensureData().config.emplace(std::move(config));
         return *this;
     }
 

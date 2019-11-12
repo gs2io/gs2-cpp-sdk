@@ -54,6 +54,7 @@
 #include "request/DeleteProgressRequest.hpp"
 #include "request/DeleteProgressByUserIdRequest.hpp"
 #include "request/CreateProgressByStampSheetRequest.hpp"
+#include "request/DeleteProgressByStampTaskRequest.hpp"
 #include "request/DescribeCompletedQuestListsRequest.hpp"
 #include "request/DescribeCompletedQuestListsByUserIdRequest.hpp"
 #include "request/GetCompletedQuestListRequest.hpp"
@@ -94,6 +95,7 @@
 #include "result/DeleteProgressResult.hpp"
 #include "result/DeleteProgressByUserIdResult.hpp"
 #include "result/CreateProgressByStampSheetResult.hpp"
+#include "result/DeleteProgressByStampTaskResult.hpp"
 #include "result/DescribeCompletedQuestListsResult.hpp"
 #include "result/DescribeCompletedQuestListsByUserIdResult.hpp"
 #include "result/GetCompletedQuestListResult.hpp"
@@ -229,6 +231,11 @@ private:
             {
                 jsonWriter.writePropertyName("keyId");
                 jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -404,6 +411,11 @@ private:
             {
                 jsonWriter.writePropertyName("keyId");
                 jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -2171,17 +2183,6 @@ private:
                 jsonWriter.writePropertyName("keyId");
                 jsonWriter.writeCharArray(*m_Request.getKeyId());
             }
-            if (m_Request.getConfig())
-            {
-                jsonWriter.writePropertyName("config");
-                jsonWriter.writeArrayStart();
-                auto& list = *m_Request.getConfig();
-                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-                {
-                    write(jsonWriter, list[i]);
-                }
-                jsonWriter.writeArrayEnd();
-            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -2210,6 +2211,67 @@ private:
         {}
 
         ~CreateProgressByStampSheetTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteProgressByStampTaskTask : public detail::Gs2RestSessionTask<DeleteProgressByStampTaskResult>
+    {
+    private:
+        DeleteProgressByStampTaskRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "quest";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stamp/progress/delete";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampTask())
+            {
+                jsonWriter.writePropertyName("stampTask");
+                jsonWriter.writeCharArray(*m_Request.getStampTask());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        DeleteProgressByStampTaskTask(
+            DeleteProgressByStampTaskRequest request,
+            Gs2RestSessionTask<DeleteProgressByStampTaskResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DeleteProgressByStampTaskResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteProgressByStampTaskTask() GS2_OVERRIDE = default;
     };
 
     class DescribeCompletedQuestListsTask : public detail::Gs2RestSessionTask<DescribeCompletedQuestListsResult>
@@ -2784,6 +2846,11 @@ protected:
             jsonWriter.writePropertyName("keyId");
             jsonWriter.writeCharArray(*obj.getKeyId());
         }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -3134,6 +3201,17 @@ protected:
         {
             jsonWriter.writePropertyName("doneTriggerQueueNamespaceId");
             jsonWriter.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -3557,7 +3635,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効なクエストマスターを取得します<br>
+	 * 現在有効なクエストマスターを取得します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -3569,7 +3647,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効なクエストマスターを更新します<br>
+	 * 現在有効なクエストマスターを更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -3581,7 +3659,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効なクエストマスターを更新します<br>
+	 * 現在有効なクエストマスターを更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -3765,6 +3843,18 @@ public:
     void createProgressByStampSheet(CreateProgressByStampSheetRequest request, std::function<void(AsyncCreateProgressByStampSheetResult)> callback)
     {
         CreateProgressByStampSheetTask& task = *new CreateProgressByStampSheetTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * スタンプタスクで クエスト挑戦 を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteProgressByStampTask(DeleteProgressByStampTaskRequest request, std::function<void(AsyncDeleteProgressByStampTaskResult)> callback)
+    {
+        DeleteProgressByStampTaskTask& task = *new DeleteProgressByStampTaskTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 

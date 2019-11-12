@@ -30,7 +30,7 @@ namespace gs2 { namespace lottery
 {
 
 /**
- * 現在有効な現在有効な抽選設定を取得します のリクエストモデル
+ * 現在有効な抽選設定を取得します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

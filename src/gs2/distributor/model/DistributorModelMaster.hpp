@@ -51,8 +51,6 @@ private:
         optional<StringHolder> description;
         /** 配信設定のメタデータ */
         optional<StringHolder> metadata;
-        /** 所持品の配布処理の権限判定に使用する ユーザ のGRN */
-        optional<StringHolder> assumeUserId;
         /** 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN */
         optional<StringHolder> inboxNamespaceId;
         /** ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト */
@@ -70,7 +68,6 @@ private:
             name(data.name),
             description(data.description),
             metadata(data.metadata),
-            assumeUserId(data.assumeUserId),
             inboxNamespaceId(data.inboxNamespaceId),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
@@ -116,13 +113,6 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "assumeUserId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->assumeUserId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "inboxNamespaceId") == 0)
@@ -315,37 +305,6 @@ public:
     }
 
     /**
-     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを取得
-     *
-     * @return 所持品の配布処理の権限判定に使用する ユーザ のGRN
-     */
-    const optional<StringHolder>& getAssumeUserId() const
-    {
-        return ensureData().assumeUserId;
-    }
-
-    /**
-     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
-     *
-     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
-     */
-    void setAssumeUserId(StringHolder assumeUserId)
-    {
-        ensureData().assumeUserId.emplace(std::move(assumeUserId));
-    }
-
-    /**
-     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
-     *
-     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
-     */
-    DistributorModelMaster& withAssumeUserId(StringHolder assumeUserId)
-    {
-        setAssumeUserId(std::move(assumeUserId));
-        return *this;
-    }
-
-    /**
      * 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRNを取得
      *
      * @return 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN
@@ -497,10 +456,6 @@ inline bool operator!=(const DistributorModelMaster& lhs, const DistributorModel
             return true;
         }
         if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->assumeUserId != lhr.m_pData->assumeUserId)
         {
             return true;
         }

@@ -23,5 +23,6 @@
 #include "WebSocketSession.hpp"
 #include "FirebaseToken.hpp"
 #include "ResponseCache.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_GATEWAY_MODEL_MODEL_HPP_

@@ -18,32 +18,33 @@ project(gs2-cpp-sdk-ez-mission)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzGitHubCheckoutSetting.hpp
+        model/EzCounter.hpp
+        model/EzMissionGroupModelMaster.hpp
+        model/EzCurrentMissionMaster.hpp
+        model/EzLogSetting.hpp
+        model/EzConfig.hpp
+        model/EzMissionTaskModelMaster.hpp
+        model/EzComplete.hpp
         model/EzMissionTaskModel.hpp
         model/EzNamespace.hpp
-        model/EzCounterModelMaster.hpp
-        model/EzNotificationSetting.hpp
-        model/EzAcquireAction.hpp
-        model/EzMissionGroupModel.hpp
-        model/EzScopedValue.hpp
-        model/EzConfig.hpp
-        model/EzMissionGroupModelMaster.hpp
         model/EzCounterModel.hpp
-        model/EzCounterScopeModel.hpp
-        model/EzComplete.hpp
-        model/EzCounter.hpp
-        model/EzMissionTaskModelMaster.hpp
-        model/EzCurrentMissionMaster.hpp
+        model/EzScopedValue.hpp
+        model/EzAcquireAction.hpp
         model/EzResponseCache.hpp
-        result/EzListMissionTaskModelsResult.hpp
-        result/EzGetMissionTaskModelResult.hpp
-        result/EzListMissionGroupModelsResult.hpp
-        result/EzGetMissionGroupModelResult.hpp
-        result/EzListCounterModelsResult.hpp
-        result/EzGetCounterModelResult.hpp
+        model/EzCounterModelMaster.hpp
+        model/EzGitHubCheckoutSetting.hpp
+        model/EzMissionGroupModel.hpp
+        model/EzNotificationSetting.hpp
+        model/EzCounterScopeModel.hpp
         result/EzListCompletesResult.hpp
         result/EzGetCompleteResult.hpp
         result/EzReceiveRewardsResult.hpp
+        result/EzListMissionTaskModelsResult.hpp
+        result/EzGetMissionTaskModelResult.hpp
+        result/EzListCounterModelsResult.hpp
+        result/EzGetCounterModelResult.hpp
+        result/EzListMissionGroupModelsResult.hpp
+        result/EzGetMissionGroupModelResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES

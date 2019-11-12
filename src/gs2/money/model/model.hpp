@@ -25,5 +25,6 @@
 #include "Receipt.hpp"
 #include "ResponseCache.hpp"
 #include "ScriptSetting.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_MONEY_MODEL_MODEL_HPP_

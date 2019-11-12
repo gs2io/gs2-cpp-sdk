@@ -998,16 +998,21 @@ protected:
             }
             jsonWriter.writeArrayEnd();
         }
-        if (obj.getOutputKeys())
+        if (obj.getOutputFields())
         {
-            jsonWriter.writePropertyName("outputKeys");
+            jsonWriter.writePropertyName("outputFields");
             jsonWriter.writeArrayStart();
-            auto& list = *obj.getOutputKeys();
+            auto& list = *obj.getOutputFields();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
-                jsonWriter.writeCharArray(list[i]);
+                write(jsonWriter, list[i]);
             }
             jsonWriter.writeArrayEnd();
+        }
+        if (obj.getWorkId())
+        {
+            jsonWriter.writePropertyName("workId");
+            jsonWriter.writeCharArray(*obj.getWorkId());
         }
         if (obj.getCreatedAt())
         {
@@ -1034,6 +1039,11 @@ protected:
         {
             jsonWriter.writePropertyName("name");
             jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getWorkId())
+        {
+            jsonWriter.writePropertyName("workId");
+            jsonWriter.writeCharArray(*obj.getWorkId());
         }
         if (obj.getCreatedAt())
         {
@@ -1118,6 +1128,11 @@ protected:
                 write(jsonWriter, list[i]);
             }
             jsonWriter.writeArrayEnd();
+        }
+        if (obj.getWorkId())
+        {
+            jsonWriter.writePropertyName("workId");
+            jsonWriter.writeCharArray(*obj.getWorkId());
         }
         if (obj.getCreatedAt())
         {

@@ -32,7 +32,7 @@ namespace gs2 { namespace mission
 {
 
 /**
- * 現在有効な現在有効なミッションを更新します のレスポンスモデル
+ * 現在有効なミッションを更新します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -42,7 +42,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 更新した現在有効な現在有効なミッション */
+        /** 更新した現在有効なミッション */
         optional<CurrentMissionMaster> item;
 
         Data() = default;
@@ -103,9 +103,9 @@ public:
         return this;
     }
     /**
-     * 更新した現在有効な現在有効なミッションを取得
+     * 更新した現在有効なミッションを取得
      *
-     * @return 更新した現在有効な現在有効なミッション
+     * @return 更新した現在有効なミッション
      */
     const optional<CurrentMissionMaster>& getItem() const
     {
@@ -113,9 +113,9 @@ public:
     }
 
     /**
-     * 更新した現在有効な現在有効なミッションを設定
+     * 更新した現在有効なミッションを設定
      *
-     * @param item 更新した現在有効な現在有効なミッション
+     * @param item 更新した現在有効なミッション
      */
     void setItem(CurrentMissionMaster item)
     {

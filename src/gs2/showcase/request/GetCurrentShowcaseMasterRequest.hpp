@@ -30,7 +30,7 @@ namespace gs2 { namespace showcase
 {
 
 /**
- * 現在有効な現在有効な陳列棚マスターを取得します のリクエストモデル
+ * 現在有効な陳列棚マスターを取得します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

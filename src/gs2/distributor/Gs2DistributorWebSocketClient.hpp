@@ -170,6 +170,16 @@ private:
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
             }
+            if (m_Request.getAssumeUserId())
+            {
+                jsonWriter.writePropertyName("assumeUserId");
+                jsonWriter.writeCharArray(*m_Request.getAssumeUserId());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
             if (m_Request.getRequestId())
             {
                 jsonWriter.writePropertyName("xGs2RequestId");
@@ -327,6 +337,16 @@ private:
             {
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getAssumeUserId())
+            {
+                jsonWriter.writePropertyName("assumeUserId");
+                jsonWriter.writeCharArray(*m_Request.getAssumeUserId());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             if (m_Request.getRequestId())
             {
@@ -506,11 +526,6 @@ private:
                 jsonWriter.writePropertyName("metadata");
                 jsonWriter.writeCharArray(*m_Request.getMetadata());
             }
-            if (m_Request.getAssumeUserId())
-            {
-                jsonWriter.writePropertyName("assumeUserId");
-                jsonWriter.writeCharArray(*m_Request.getAssumeUserId());
-            }
             if (m_Request.getInboxNamespaceId())
             {
                 jsonWriter.writePropertyName("inboxNamespaceId");
@@ -648,11 +663,6 @@ private:
             {
                 jsonWriter.writePropertyName("metadata");
                 jsonWriter.writeCharArray(*m_Request.getMetadata());
-            }
-            if (m_Request.getAssumeUserId())
-            {
-                jsonWriter.writePropertyName("assumeUserId");
-                jsonWriter.writeCharArray(*m_Request.getAssumeUserId());
             }
             if (m_Request.getInboxNamespaceId())
             {
@@ -1169,11 +1179,6 @@ private:
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
-            if (m_Request.getDistributorName())
-            {
-                jsonWriter.writePropertyName("distributorName");
-                jsonWriter.writeCharArray(*m_Request.getDistributorName());
-            }
             if (m_Request.getStampTask())
             {
                 jsonWriter.writePropertyName("stampTask");
@@ -1240,11 +1245,6 @@ private:
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
-            if (m_Request.getDistributorName())
-            {
-                jsonWriter.writePropertyName("distributorName");
-                jsonWriter.writeCharArray(*m_Request.getDistributorName());
-            }
             if (m_Request.getStampSheet())
             {
                 jsonWriter.writePropertyName("stampSheet");
@@ -1303,6 +1303,16 @@ protected:
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
         }
+        if (obj.getAssumeUserId())
+        {
+            jsonWriter.writePropertyName("assumeUserId");
+            jsonWriter.writeCharArray(*obj.getAssumeUserId());
+        }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -1338,11 +1348,6 @@ protected:
         {
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
-        }
-        if (obj.getAssumeUserId())
-        {
-            jsonWriter.writePropertyName("assumeUserId");
-            jsonWriter.writeCharArray(*obj.getAssumeUserId());
         }
         if (obj.getInboxNamespaceId())
         {
@@ -1390,11 +1395,6 @@ protected:
         {
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
-        }
-        if (obj.getAssumeUserId())
-        {
-            jsonWriter.writePropertyName("assumeUserId");
-            jsonWriter.writeCharArray(*obj.getAssumeUserId());
         }
         if (obj.getInboxNamespaceId())
         {
@@ -1515,6 +1515,17 @@ protected:
         {
             jsonWriter.writePropertyName("request");
             jsonWriter.writeCharArray(*obj.getRequest());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }

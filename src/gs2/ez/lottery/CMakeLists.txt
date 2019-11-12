@@ -28,6 +28,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzCurrentLotteryMaster.hpp
         model/EzResponseCache.hpp
         model/EzGitHubCheckoutSetting.hpp
+        model/EzLogSetting.hpp
         model/EzPrize.hpp
         model/EzAcquireAction.hpp
         model/EzDrawnPrize.hpp

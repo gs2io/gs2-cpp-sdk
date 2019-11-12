@@ -25,6 +25,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzResponseCache.hpp
         model/EzGitHubCheckoutSetting.hpp
         model/EzDistributeResource.hpp
+        model/EzLogSetting.hpp
         result/EzListDistributorModelsResult.hpp
         result/EzGetDistributorModelResult.hpp
         result/EzRunStampTaskResult.hpp

@@ -36,10 +36,24 @@ private:
         gs2::optional<StringHolder> metadata;
         /** イベント期間の種類 */
         gs2::optional<StringHolder> scheduleType;
+        /** 繰り返しの種類 */
+        gs2::optional<StringHolder> repeatType;
         /** イベントの開始日時 */
         gs2::optional<Int64> absoluteBegin;
         /** イベントの終了日時 */
         gs2::optional<Int64> absoluteEnd;
+        /** イベントの繰り返し開始日 */
+        gs2::optional<Int32> repeatBeginDayOfMonth;
+        /** イベントの繰り返し終了日 */
+        gs2::optional<Int32> repeatEndDayOfMonth;
+        /** イベントの繰り返し開始曜日 */
+        gs2::optional<StringHolder> repeatBeginDayOfWeek;
+        /** イベントの繰り返し終了曜日 */
+        gs2::optional<StringHolder> repeatEndDayOfWeek;
+        /** イベントの繰り返し開始時間 */
+        gs2::optional<Int32> repeatBeginHour;
+        /** イベントの繰り返し終了時間 */
+        gs2::optional<Int32> repeatEndHour;
         /** イベントの開始トリガー */
         gs2::optional<StringHolder> relativeTriggerName;
         /** イベントの開催期間(秒) */
@@ -52,8 +66,15 @@ private:
             name(data.name),
             metadata(data.metadata),
             scheduleType(data.scheduleType),
+            repeatType(data.repeatType),
             absoluteBegin(data.absoluteBegin),
             absoluteEnd(data.absoluteEnd),
+            repeatBeginDayOfMonth(data.repeatBeginDayOfMonth),
+            repeatEndDayOfMonth(data.repeatEndDayOfMonth),
+            repeatBeginDayOfWeek(data.repeatBeginDayOfWeek),
+            repeatEndDayOfWeek(data.repeatEndDayOfWeek),
+            repeatBeginHour(data.repeatBeginHour),
+            repeatEndHour(data.repeatEndHour),
             relativeTriggerName(data.relativeTriggerName),
             relativeDuration(data.relativeDuration)
         {
@@ -65,8 +86,15 @@ private:
             name(event.getName()),
             metadata(event.getMetadata()),
             scheduleType(event.getScheduleType()),
+            repeatType(event.getRepeatType()),
             absoluteBegin(event.getAbsoluteBegin() ? *event.getAbsoluteBegin() : 0),
             absoluteEnd(event.getAbsoluteEnd() ? *event.getAbsoluteEnd() : 0),
+            repeatBeginDayOfMonth(event.getRepeatBeginDayOfMonth() ? *event.getRepeatBeginDayOfMonth() : 0),
+            repeatEndDayOfMonth(event.getRepeatEndDayOfMonth() ? *event.getRepeatEndDayOfMonth() : 0),
+            repeatBeginDayOfWeek(event.getRepeatBeginDayOfWeek()),
+            repeatEndDayOfWeek(event.getRepeatEndDayOfWeek()),
+            repeatBeginHour(event.getRepeatBeginHour() ? *event.getRepeatBeginHour() : 0),
+            repeatEndHour(event.getRepeatEndHour() ? *event.getRepeatEndHour() : 0),
             relativeTriggerName(event.getRelativeTriggerName()),
             relativeDuration(event.getRelativeDuration() ? *event.getRelativeDuration() : 0)
         {
@@ -104,8 +132,15 @@ public:
         event.setName(getName());
         event.setMetadata(getMetadata());
         event.setScheduleType(getScheduleType());
+        event.setRepeatType(getRepeatType());
         event.setAbsoluteBegin(getAbsoluteBegin());
         event.setAbsoluteEnd(getAbsoluteEnd());
+        event.setRepeatBeginDayOfMonth(getRepeatBeginDayOfMonth());
+        event.setRepeatEndDayOfMonth(getRepeatEndDayOfMonth());
+        event.setRepeatBeginDayOfWeek(getRepeatBeginDayOfWeek());
+        event.setRepeatEndDayOfWeek(getRepeatEndDayOfWeek());
+        event.setRepeatBeginHour(getRepeatBeginHour());
+        event.setRepeatEndHour(getRepeatEndHour());
         event.setRelativeTriggerName(getRelativeTriggerName());
         event.setRelativeDuration(getRelativeDuration());
         return event;
@@ -130,6 +165,11 @@ public:
         return *ensureData().scheduleType;
     }
 
+    const StringHolder& getRepeatType() const
+    {
+        return *ensureData().repeatType;
+    }
+
     Int64 getAbsoluteBegin() const
     {
         return *ensureData().absoluteBegin;
@@ -138,6 +178,36 @@ public:
     Int64 getAbsoluteEnd() const
     {
         return *ensureData().absoluteEnd;
+    }
+
+    Int32 getRepeatBeginDayOfMonth() const
+    {
+        return *ensureData().repeatBeginDayOfMonth;
+    }
+
+    Int32 getRepeatEndDayOfMonth() const
+    {
+        return *ensureData().repeatEndDayOfMonth;
+    }
+
+    const StringHolder& getRepeatBeginDayOfWeek() const
+    {
+        return *ensureData().repeatBeginDayOfWeek;
+    }
+
+    const StringHolder& getRepeatEndDayOfWeek() const
+    {
+        return *ensureData().repeatEndDayOfWeek;
+    }
+
+    Int32 getRepeatBeginHour() const
+    {
+        return *ensureData().repeatBeginHour;
+    }
+
+    Int32 getRepeatEndHour() const
+    {
+        return *ensureData().repeatEndHour;
     }
 
     const StringHolder& getRelativeTriggerName() const
@@ -169,6 +239,11 @@ public:
         ensureData().scheduleType = std::move(scheduleType);
     }
 
+    void setRepeatType(StringHolder repeatType)
+    {
+        ensureData().repeatType = std::move(repeatType);
+    }
+
     void setAbsoluteBegin(Int64 absoluteBegin)
     {
         ensureData().absoluteBegin = absoluteBegin;
@@ -177,6 +252,36 @@ public:
     void setAbsoluteEnd(Int64 absoluteEnd)
     {
         ensureData().absoluteEnd = absoluteEnd;
+    }
+
+    void setRepeatBeginDayOfMonth(Int32 repeatBeginDayOfMonth)
+    {
+        ensureData().repeatBeginDayOfMonth = repeatBeginDayOfMonth;
+    }
+
+    void setRepeatEndDayOfMonth(Int32 repeatEndDayOfMonth)
+    {
+        ensureData().repeatEndDayOfMonth = repeatEndDayOfMonth;
+    }
+
+    void setRepeatBeginDayOfWeek(StringHolder repeatBeginDayOfWeek)
+    {
+        ensureData().repeatBeginDayOfWeek = std::move(repeatBeginDayOfWeek);
+    }
+
+    void setRepeatEndDayOfWeek(StringHolder repeatEndDayOfWeek)
+    {
+        ensureData().repeatEndDayOfWeek = std::move(repeatEndDayOfWeek);
+    }
+
+    void setRepeatBeginHour(Int32 repeatBeginHour)
+    {
+        ensureData().repeatBeginHour = repeatBeginHour;
+    }
+
+    void setRepeatEndHour(Int32 repeatEndHour)
+    {
+        ensureData().repeatEndHour = repeatEndHour;
     }
 
     void setRelativeTriggerName(StringHolder relativeTriggerName)
@@ -207,6 +312,12 @@ public:
         return *this;
     }
 
+    EzEvent& withRepeatType(StringHolder repeatType)
+    {
+        setRepeatType(std::move(repeatType));
+        return *this;
+    }
+
     EzEvent& withAbsoluteBegin(Int64 absoluteBegin)
     {
         setAbsoluteBegin(absoluteBegin);
@@ -216,6 +327,42 @@ public:
     EzEvent& withAbsoluteEnd(Int64 absoluteEnd)
     {
         setAbsoluteEnd(absoluteEnd);
+        return *this;
+    }
+
+    EzEvent& withRepeatBeginDayOfMonth(Int32 repeatBeginDayOfMonth)
+    {
+        setRepeatBeginDayOfMonth(repeatBeginDayOfMonth);
+        return *this;
+    }
+
+    EzEvent& withRepeatEndDayOfMonth(Int32 repeatEndDayOfMonth)
+    {
+        setRepeatEndDayOfMonth(repeatEndDayOfMonth);
+        return *this;
+    }
+
+    EzEvent& withRepeatBeginDayOfWeek(StringHolder repeatBeginDayOfWeek)
+    {
+        setRepeatBeginDayOfWeek(std::move(repeatBeginDayOfWeek));
+        return *this;
+    }
+
+    EzEvent& withRepeatEndDayOfWeek(StringHolder repeatEndDayOfWeek)
+    {
+        setRepeatEndDayOfWeek(std::move(repeatEndDayOfWeek));
+        return *this;
+    }
+
+    EzEvent& withRepeatBeginHour(Int32 repeatBeginHour)
+    {
+        setRepeatBeginHour(repeatBeginHour);
+        return *this;
+    }
+
+    EzEvent& withRepeatEndHour(Int32 repeatEndHour)
+    {
+        setRepeatEndHour(repeatEndHour);
         return *this;
     }
 

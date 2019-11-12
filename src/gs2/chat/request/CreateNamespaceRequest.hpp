@@ -61,6 +61,8 @@ private:
         optional<ScriptSetting> unsubscribeRoomScript;
         /** 購読しているルームに新しい投稿がきたときのプッシュ通知 */
         optional<NotificationSetting> postNotification;
+        /** ログの出力設定 */
+        optional<LogSetting> logSetting;
 
         Data() = default;
 
@@ -93,6 +95,10 @@ private:
             if (data.postNotification)
             {
                 postNotification = data.postNotification->deepCopy();
+            }
+            if (data.logSetting)
+            {
+                logSetting = data.logSetting->deepCopy();
             }
         }
 
@@ -416,6 +422,37 @@ public:
     CreateNamespaceRequest& withPostNotification(NotificationSetting postNotification)
     {
         ensureData().postNotification.emplace(std::move(postNotification));
+        return *this;
+    }
+
+    /**
+     * ログの出力設定を取得
+     *
+     * @return ログの出力設定
+     */
+    const optional<LogSetting>& getLogSetting() const
+    {
+        return ensureData().logSetting;
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    void setLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    CreateNamespaceRequest& withLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
         return *this;
     }
 

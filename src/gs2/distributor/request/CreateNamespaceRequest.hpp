@@ -47,14 +47,23 @@ private:
         optional<StringHolder> name;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
+        /** 所持品の配布処理の権限判定に使用する ユーザ のGRN */
+        optional<StringHolder> assumeUserId;
+        /** ログの出力設定 */
+        optional<LogSetting> logSetting;
 
         Data() = default;
 
         Data(const Data& data) :
             Gs2BasicRequest::Data(data),
             name(data.name),
-            description(data.description)
+            description(data.description),
+            assumeUserId(data.assumeUserId)
         {
+            if (data.logSetting)
+            {
+                logSetting = data.logSetting->deepCopy();
+            }
         }
 
         Data(Data&& data) = default;
@@ -160,6 +169,68 @@ public:
     CreateNamespaceRequest& withDescription(StringHolder description)
     {
         ensureData().description.emplace(std::move(description));
+        return *this;
+    }
+
+    /**
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを取得
+     *
+     * @return 所持品の配布処理の権限判定に使用する ユーザ のGRN
+     */
+    const optional<StringHolder>& getAssumeUserId() const
+    {
+        return ensureData().assumeUserId;
+    }
+
+    /**
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
+     *
+     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
+     */
+    void setAssumeUserId(StringHolder assumeUserId)
+    {
+        ensureData().assumeUserId.emplace(std::move(assumeUserId));
+    }
+
+    /**
+     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
+     *
+     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
+     */
+    CreateNamespaceRequest& withAssumeUserId(StringHolder assumeUserId)
+    {
+        ensureData().assumeUserId.emplace(std::move(assumeUserId));
+        return *this;
+    }
+
+    /**
+     * ログの出力設定を取得
+     *
+     * @return ログの出力設定
+     */
+    const optional<LogSetting>& getLogSetting() const
+    {
+        return ensureData().logSetting;
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    void setLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    CreateNamespaceRequest& withLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
         return *this;
     }
 

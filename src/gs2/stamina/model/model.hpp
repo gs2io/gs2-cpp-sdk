@@ -32,5 +32,6 @@
 #include "Stamina.hpp"
 #include "ResponseCache.hpp"
 #include "GitHubCheckoutSetting.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_STAMINA_MODEL_MODEL_HPP_

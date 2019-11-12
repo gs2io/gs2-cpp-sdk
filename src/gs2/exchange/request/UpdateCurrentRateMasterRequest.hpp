@@ -30,7 +30,7 @@ namespace gs2 { namespace exchange
 {
 
 /**
- * 現在有効な現在有効な交換レート設定を更新します のリクエストモデル
+ * 現在有効な交換レート設定を更新します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

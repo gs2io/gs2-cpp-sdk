@@ -70,14 +70,12 @@ public:
     ///
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="distributorName">ディストリビューターの種類名</param>
     /// <param name="stampTask">実行するスタンプタスク</param>
     /// <param name="keyId">スタンプシートの暗号化に使用した暗号鍵GRN</param>
     /// <param name="contextStack">スタンプシートの実行状況を記録するスタックメモリ</param>
     void runStampTask(
         std::function<void(AsyncEzRunStampTaskResult)> callback,
         StringHolder namespaceName,
-        StringHolder distributorName,
         StringHolder stampTask,
         StringHolder keyId,
         gs2::optional<StringHolder> contextStack=gs2::nullopt
@@ -89,14 +87,12 @@ public:
     ///
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="distributorName">ディストリビューターの種類名</param>
     /// <param name="stampSheet">実行するスタンプタスク</param>
     /// <param name="keyId">スタンプシートの暗号化に使用した暗号鍵GRN</param>
     /// <param name="contextStack">スタンプシートの実行状況を記録するスタックメモリ</param>
     void runStampSheet(
         std::function<void(AsyncEzRunStampSheetResult)> callback,
         StringHolder namespaceName,
-        StringHolder distributorName,
         StringHolder stampSheet,
         StringHolder keyId,
         gs2::optional<StringHolder> contextStack=gs2::nullopt

@@ -51,8 +51,6 @@ private:
         optional<StringHolder> description;
         /** 配信設定のメタデータ */
         optional<StringHolder> metadata;
-        /** 所持品の配布処理の権限判定に使用する ユーザ のGRN */
-        optional<StringHolder> assumeUserId;
         /** 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN */
         optional<StringHolder> inboxNamespaceId;
         /** ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト */
@@ -66,7 +64,6 @@ private:
             distributorName(data.distributorName),
             description(data.description),
             metadata(data.metadata),
-            assumeUserId(data.assumeUserId),
             inboxNamespaceId(data.inboxNamespaceId)
         {
             if (data.whiteListTargetIds)
@@ -240,37 +237,6 @@ public:
     UpdateDistributorModelMasterRequest& withMetadata(StringHolder metadata)
     {
         ensureData().metadata.emplace(std::move(metadata));
-        return *this;
-    }
-
-    /**
-     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを取得
-     *
-     * @return 所持品の配布処理の権限判定に使用する ユーザ のGRN
-     */
-    const optional<StringHolder>& getAssumeUserId() const
-    {
-        return ensureData().assumeUserId;
-    }
-
-    /**
-     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
-     *
-     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
-     */
-    void setAssumeUserId(StringHolder assumeUserId)
-    {
-        ensureData().assumeUserId.emplace(std::move(assumeUserId));
-    }
-
-    /**
-     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
-     *
-     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
-     */
-    UpdateDistributorModelMasterRequest& withAssumeUserId(StringHolder assumeUserId)
-    {
-        ensureData().assumeUserId.emplace(std::move(assumeUserId));
         return *this;
     }
 

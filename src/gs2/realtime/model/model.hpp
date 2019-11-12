@@ -22,5 +22,6 @@
 #include "Namespace.hpp"
 #include "Room.hpp"
 #include "NotificationSetting.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_REALTIME_MODEL_MODEL_HPP_

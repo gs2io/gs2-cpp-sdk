@@ -25,6 +25,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzResponseCache.hpp
         model/EzConfig.hpp
         model/EzGitHubCheckoutSetting.hpp
+        model/EzLogSetting.hpp
         model/EzAcquireAction.hpp
         model/EzConsumeAction.hpp
         result/EzListRateModelsResult.hpp

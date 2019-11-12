@@ -27,6 +27,7 @@
 #include "ScriptSetting.hpp"
 #include "ScriptSetting.hpp"
 #include "ScriptSetting.hpp"
+#include "LogSetting.hpp"
 #include <memory>
 #include <cstring>
 
@@ -60,6 +61,8 @@ private:
         optional<ScriptSetting> overflowScript;
         /** アイテム消費するときに実行するスクリプト */
         optional<ScriptSetting> consumeScript;
+        /** ログの出力設定 */
+        optional<LogSetting> logSetting;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -87,6 +90,10 @@ private:
             if (data.consumeScript)
             {
                 consumeScript = data.consumeScript->deepCopy();
+            }
+            if (data.logSetting)
+            {
+                logSetting = data.logSetting->deepCopy();
             }
         }
 
@@ -152,6 +159,15 @@ private:
                     const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->consumeScript.emplace();
                     detail::json::JsonParser::parse(&this->consumeScript->getModel(), jsonObject);
+                }
+            }
+            else if (std::strcmp(name_, "logSetting") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->logSetting.emplace();
+                    detail::json::JsonParser::parse(&this->logSetting->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -414,6 +430,37 @@ public:
     }
 
     /**
+     * ログの出力設定を取得
+     *
+     * @return ログの出力設定
+     */
+    const optional<LogSetting>& getLogSetting() const
+    {
+        return ensureData().logSetting;
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    void setLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    Namespace& withLogSetting(LogSetting logSetting)
+    {
+        setLogSetting(std::move(logSetting));
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -515,6 +562,10 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
             return true;
         }
         if (lhs.m_pData->consumeScript != lhr.m_pData->consumeScript)
+        {
+            return true;
+        }
+        if (lhs.m_pData->logSetting != lhr.m_pData->logSetting)
         {
             return true;
         }

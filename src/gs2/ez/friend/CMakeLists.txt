@@ -31,6 +31,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzPublicProfile.hpp
         model/EzScriptSetting.hpp
         model/EzNotificationSetting.hpp
+        model/EzLogSetting.hpp
         result/EzGetProfileResult.hpp
         result/EzUpdateProfileResult.hpp
         result/EzGetPublicProfileResult.hpp

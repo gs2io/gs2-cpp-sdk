@@ -33,7 +33,8 @@ void Client::start(
     StringHolder namespaceName,
     StringHolder questGroupName,
     StringHolder questName,
-    gs2::optional<Bool> force
+    gs2::optional<Bool> force,
+    gs2::optional<List<EzConfig>> config
 )
 {
     gs2::quest::StartRequest request;
@@ -43,6 +44,15 @@ void Client::start(
     if (force)
     {
         request.setForce(std::move(*force));
+    }
+    if (config)
+    {
+        gs2::List<gs2::quest::Config> list;
+        for (int i = 0; i < config->getCount(); ++i)
+        {
+            list += (*config)[i].ToModel();
+        }
+        request.setConfig(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.start(
@@ -78,7 +88,8 @@ void Client::end(
     StringHolder namespaceName,
     StringHolder transactionId,
     gs2::optional<List<EzReward>> rewards,
-    gs2::optional<Bool> isComplete
+    gs2::optional<Bool> isComplete,
+    gs2::optional<List<EzConfig>> config
 )
 {
     gs2::quest::EndRequest request;
@@ -96,6 +107,15 @@ void Client::end(
     if (isComplete)
     {
         request.setIsComplete(std::move(*isComplete));
+    }
+    if (config)
+    {
+        gs2::List<gs2::quest::Config> list;
+        for (int i = 0; i < config->getCount(); ++i)
+        {
+            list += (*config)[i].ToModel();
+        }
+        request.setConfig(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.end(
@@ -125,8 +145,44 @@ void Client::end(
     );
 }
 
-void Client::delete_(
-    std::function<void(AsyncEzDeleteResult)> callback,
+void Client::getProgress(
+    std::function<void(AsyncEzGetProgressResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName
+)
+{
+    gs2::quest::GetProgressRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_Client.getProgress(
+        request,
+        [callback](gs2::quest::AsyncGetProgressResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetProgressResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetProgressResult::isConvertible(*r.getResult()))
+            {
+                EzGetProgressResult ezResult(*r.getResult());
+                AsyncEzGetProgressResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetProgressResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::deleteProgress(
+    std::function<void(AsyncEzDeleteProgressResult)> callback,
     GameSession& session,
     StringHolder namespaceName
 )
@@ -141,20 +197,20 @@ void Client::delete_(
             if (r.getError())
             {
                 auto gs2ClientException = *r.getError();
-                AsyncEzDeleteResult asyncResult(std::move(gs2ClientException));
+                AsyncEzDeleteProgressResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzDeleteResult::isConvertible(*r.getResult()))
+            else if (r.getResult() && EzDeleteProgressResult::isConvertible(*r.getResult()))
             {
-                EzDeleteResult ezResult(*r.getResult());
-                AsyncEzDeleteResult asyncResult(std::move(ezResult));
+                EzDeleteProgressResult ezResult(*r.getResult());
+                AsyncEzDeleteProgressResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
                 Gs2ClientException gs2ClientException;
                 gs2ClientException.setType(Gs2ClientException::UnknownException);
-                AsyncEzDeleteResult asyncResult(std::move(gs2ClientException));
+                AsyncEzDeleteProgressResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
         }

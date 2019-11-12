@@ -25,6 +25,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzCurrentEventMaster.hpp
         model/EzResponseCache.hpp
         model/EzGitHubCheckoutSetting.hpp
+        model/EzLogSetting.hpp
         result/EzListTriggersResult.hpp
         result/EzGetTriggerResult.hpp
         result/EzListEventsResult.hpp

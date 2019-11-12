@@ -27,36 +27,38 @@ Client::Client(gs2::ez::Profile& profile) :
 {
 }
 
-void Client::list(
-    std::function<void(AsyncEzListResult)> callback,
+void Client::getShowcase(
+    std::function<void(AsyncEzGetShowcaseResult)> callback,
     GameSession& session,
-    StringHolder namespaceName
+    StringHolder namespaceName,
+    StringHolder showcaseName
 )
 {
-    gs2::showcase::DescribeShowcasesRequest request;
+    gs2::showcase::GetShowcaseRequest request;
     request.setNamespaceName(namespaceName);
+    request.setShowcaseName(showcaseName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeShowcases(
+    m_Client.getShowcase(
         request,
-        [callback](gs2::showcase::AsyncDescribeShowcasesResult r)
+        [callback](gs2::showcase::AsyncGetShowcaseResult r)
         {
             if (r.getError())
             {
                 auto gs2ClientException = *r.getError();
-                AsyncEzListResult asyncResult(std::move(gs2ClientException));
+                AsyncEzGetShowcaseResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListResult::isConvertible(*r.getResult()))
+            else if (r.getResult() && EzGetShowcaseResult::isConvertible(*r.getResult()))
             {
-                EzListResult ezResult(*r.getResult());
-                AsyncEzListResult asyncResult(std::move(ezResult));
+                EzGetShowcaseResult ezResult(*r.getResult());
+                AsyncEzGetShowcaseResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
                 Gs2ClientException gs2ClientException;
                 gs2ClientException.setType(Gs2ClientException::UnknownException);
-                AsyncEzListResult asyncResult(std::move(gs2ClientException));
+                AsyncEzGetShowcaseResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
         }
@@ -67,14 +69,23 @@ void Client::buy(
     std::function<void(AsyncEzBuyResult)> callback,
     GameSession& session,
     StringHolder namespaceName,
-    gs2::optional<StringHolder> displayItemId
+    StringHolder showcaseName,
+    StringHolder displayItemId,
+    gs2::optional<List<EzConfig>> config
 )
 {
     gs2::showcase::BuyRequest request;
     request.setNamespaceName(namespaceName);
-    if (displayItemId)
+    request.setShowcaseName(showcaseName);
+    request.setDisplayItemId(displayItemId);
+    if (config)
     {
-        request.setDisplayItemId(std::move(*displayItemId));
+        gs2::List<gs2::showcase::Config> list;
+        for (int i = 0; i < config->getCount(); ++i)
+        {
+            list += (*config)[i].ToModel();
+        }
+        request.setConfig(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.buy(

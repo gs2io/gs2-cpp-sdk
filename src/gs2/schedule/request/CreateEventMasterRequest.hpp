@@ -57,6 +57,20 @@ private:
         optional<Int64> absoluteBegin;
         /** イベントの終了日時 */
         optional<Int64> absoluteEnd;
+        /** 繰り返しの種類 */
+        optional<StringHolder> repeatType;
+        /** イベントの繰り返し開始日 */
+        optional<Int32> repeatBeginDayOfMonth;
+        /** イベントの繰り返し終了日 */
+        optional<Int32> repeatEndDayOfMonth;
+        /** イベントの繰り返し開始曜日 */
+        optional<StringHolder> repeatBeginDayOfWeek;
+        /** イベントの繰り返し終了曜日 */
+        optional<StringHolder> repeatEndDayOfWeek;
+        /** イベントの繰り返し開始時間 */
+        optional<Int32> repeatBeginHour;
+        /** イベントの繰り返し終了時間 */
+        optional<Int32> repeatEndHour;
         /** イベントの開始トリガー名 */
         optional<StringHolder> relativeTriggerName;
         /** イベントの開催期間(秒) */
@@ -73,6 +87,13 @@ private:
             scheduleType(data.scheduleType),
             absoluteBegin(data.absoluteBegin),
             absoluteEnd(data.absoluteEnd),
+            repeatType(data.repeatType),
+            repeatBeginDayOfMonth(data.repeatBeginDayOfMonth),
+            repeatEndDayOfMonth(data.repeatEndDayOfMonth),
+            repeatBeginDayOfWeek(data.repeatBeginDayOfWeek),
+            repeatEndDayOfWeek(data.repeatEndDayOfWeek),
+            repeatBeginHour(data.repeatBeginHour),
+            repeatEndHour(data.repeatEndHour),
             relativeTriggerName(data.relativeTriggerName),
             relativeDuration(data.relativeDuration)
         {
@@ -336,6 +357,223 @@ public:
     CreateEventMasterRequest& withAbsoluteEnd(Int64 absoluteEnd)
     {
         ensureData().absoluteEnd.emplace(absoluteEnd);
+        return *this;
+    }
+
+    /**
+     * 繰り返しの種類を取得
+     *
+     * @return 繰り返しの種類
+     */
+    const optional<StringHolder>& getRepeatType() const
+    {
+        return ensureData().repeatType;
+    }
+
+    /**
+     * 繰り返しの種類を設定
+     *
+     * @param repeatType 繰り返しの種類
+     */
+    void setRepeatType(StringHolder repeatType)
+    {
+        ensureData().repeatType.emplace(std::move(repeatType));
+    }
+
+    /**
+     * 繰り返しの種類を設定
+     *
+     * @param repeatType 繰り返しの種類
+     */
+    CreateEventMasterRequest& withRepeatType(StringHolder repeatType)
+    {
+        ensureData().repeatType.emplace(std::move(repeatType));
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し開始日を取得
+     *
+     * @return イベントの繰り返し開始日
+     */
+    const optional<Int32>& getRepeatBeginDayOfMonth() const
+    {
+        return ensureData().repeatBeginDayOfMonth;
+    }
+
+    /**
+     * イベントの繰り返し開始日を設定
+     *
+     * @param repeatBeginDayOfMonth イベントの繰り返し開始日
+     */
+    void setRepeatBeginDayOfMonth(Int32 repeatBeginDayOfMonth)
+    {
+        ensureData().repeatBeginDayOfMonth.emplace(repeatBeginDayOfMonth);
+    }
+
+    /**
+     * イベントの繰り返し開始日を設定
+     *
+     * @param repeatBeginDayOfMonth イベントの繰り返し開始日
+     */
+    CreateEventMasterRequest& withRepeatBeginDayOfMonth(Int32 repeatBeginDayOfMonth)
+    {
+        ensureData().repeatBeginDayOfMonth.emplace(repeatBeginDayOfMonth);
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し終了日を取得
+     *
+     * @return イベントの繰り返し終了日
+     */
+    const optional<Int32>& getRepeatEndDayOfMonth() const
+    {
+        return ensureData().repeatEndDayOfMonth;
+    }
+
+    /**
+     * イベントの繰り返し終了日を設定
+     *
+     * @param repeatEndDayOfMonth イベントの繰り返し終了日
+     */
+    void setRepeatEndDayOfMonth(Int32 repeatEndDayOfMonth)
+    {
+        ensureData().repeatEndDayOfMonth.emplace(repeatEndDayOfMonth);
+    }
+
+    /**
+     * イベントの繰り返し終了日を設定
+     *
+     * @param repeatEndDayOfMonth イベントの繰り返し終了日
+     */
+    CreateEventMasterRequest& withRepeatEndDayOfMonth(Int32 repeatEndDayOfMonth)
+    {
+        ensureData().repeatEndDayOfMonth.emplace(repeatEndDayOfMonth);
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し開始曜日を取得
+     *
+     * @return イベントの繰り返し開始曜日
+     */
+    const optional<StringHolder>& getRepeatBeginDayOfWeek() const
+    {
+        return ensureData().repeatBeginDayOfWeek;
+    }
+
+    /**
+     * イベントの繰り返し開始曜日を設定
+     *
+     * @param repeatBeginDayOfWeek イベントの繰り返し開始曜日
+     */
+    void setRepeatBeginDayOfWeek(StringHolder repeatBeginDayOfWeek)
+    {
+        ensureData().repeatBeginDayOfWeek.emplace(std::move(repeatBeginDayOfWeek));
+    }
+
+    /**
+     * イベントの繰り返し開始曜日を設定
+     *
+     * @param repeatBeginDayOfWeek イベントの繰り返し開始曜日
+     */
+    CreateEventMasterRequest& withRepeatBeginDayOfWeek(StringHolder repeatBeginDayOfWeek)
+    {
+        ensureData().repeatBeginDayOfWeek.emplace(std::move(repeatBeginDayOfWeek));
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し終了曜日を取得
+     *
+     * @return イベントの繰り返し終了曜日
+     */
+    const optional<StringHolder>& getRepeatEndDayOfWeek() const
+    {
+        return ensureData().repeatEndDayOfWeek;
+    }
+
+    /**
+     * イベントの繰り返し終了曜日を設定
+     *
+     * @param repeatEndDayOfWeek イベントの繰り返し終了曜日
+     */
+    void setRepeatEndDayOfWeek(StringHolder repeatEndDayOfWeek)
+    {
+        ensureData().repeatEndDayOfWeek.emplace(std::move(repeatEndDayOfWeek));
+    }
+
+    /**
+     * イベントの繰り返し終了曜日を設定
+     *
+     * @param repeatEndDayOfWeek イベントの繰り返し終了曜日
+     */
+    CreateEventMasterRequest& withRepeatEndDayOfWeek(StringHolder repeatEndDayOfWeek)
+    {
+        ensureData().repeatEndDayOfWeek.emplace(std::move(repeatEndDayOfWeek));
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し開始時間を取得
+     *
+     * @return イベントの繰り返し開始時間
+     */
+    const optional<Int32>& getRepeatBeginHour() const
+    {
+        return ensureData().repeatBeginHour;
+    }
+
+    /**
+     * イベントの繰り返し開始時間を設定
+     *
+     * @param repeatBeginHour イベントの繰り返し開始時間
+     */
+    void setRepeatBeginHour(Int32 repeatBeginHour)
+    {
+        ensureData().repeatBeginHour.emplace(repeatBeginHour);
+    }
+
+    /**
+     * イベントの繰り返し開始時間を設定
+     *
+     * @param repeatBeginHour イベントの繰り返し開始時間
+     */
+    CreateEventMasterRequest& withRepeatBeginHour(Int32 repeatBeginHour)
+    {
+        ensureData().repeatBeginHour.emplace(repeatBeginHour);
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し終了時間を取得
+     *
+     * @return イベントの繰り返し終了時間
+     */
+    const optional<Int32>& getRepeatEndHour() const
+    {
+        return ensureData().repeatEndHour;
+    }
+
+    /**
+     * イベントの繰り返し終了時間を設定
+     *
+     * @param repeatEndHour イベントの繰り返し終了時間
+     */
+    void setRepeatEndHour(Int32 repeatEndHour)
+    {
+        ensureData().repeatEndHour.emplace(repeatEndHour);
+    }
+
+    /**
+     * イベントの繰り返し終了時間を設定
+     *
+     * @param repeatEndHour イベントの繰り返し終了時間
+     */
+    CreateEventMasterRequest& withRepeatEndHour(Int32 repeatEndHour)
+    {
+        ensureData().repeatEndHour.emplace(repeatEndHour);
         return *this;
     }
 

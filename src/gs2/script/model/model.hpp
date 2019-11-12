@@ -22,5 +22,6 @@
 #include "Namespace.hpp"
 #include "Script.hpp"
 #include "GitHubCheckoutSetting.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_SCRIPT_MODEL_MODEL_HPP_

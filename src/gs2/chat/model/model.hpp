@@ -27,5 +27,6 @@
 #include "NotificationType.hpp"
 #include "ScriptSetting.hpp"
 #include "NotificationSetting.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_CHAT_MODEL_MODEL_HPP_

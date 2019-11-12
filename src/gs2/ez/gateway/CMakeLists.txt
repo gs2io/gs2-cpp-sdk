@@ -22,6 +22,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzWebSocketSession.hpp
         model/EzFirebaseToken.hpp
         model/EzResponseCache.hpp
+        model/EzLogSetting.hpp
         result/EzSetUserIdResult.hpp
         )
 

@@ -165,6 +165,16 @@ private:
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
             }
+            if (m_Request.getAssumeUserId())
+            {
+                jsonWriter.writePropertyName("assumeUserId");
+                jsonWriter.writeCharArray(*m_Request.getAssumeUserId());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -314,6 +324,16 @@ private:
             {
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getAssumeUserId())
+            {
+                jsonWriter.writePropertyName("assumeUserId");
+                jsonWriter.writeCharArray(*m_Request.getAssumeUserId());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -493,11 +513,6 @@ private:
                 jsonWriter.writePropertyName("metadata");
                 jsonWriter.writeCharArray(*m_Request.getMetadata());
             }
-            if (m_Request.getAssumeUserId())
-            {
-                jsonWriter.writePropertyName("assumeUserId");
-                jsonWriter.writeCharArray(*m_Request.getAssumeUserId());
-            }
             if (m_Request.getInboxNamespaceId())
             {
                 jsonWriter.writePropertyName("inboxNamespaceId");
@@ -629,11 +644,6 @@ private:
             {
                 jsonWriter.writePropertyName("metadata");
                 jsonWriter.writeCharArray(*m_Request.getMetadata());
-            }
-            if (m_Request.getAssumeUserId())
-            {
-                jsonWriter.writePropertyName("assumeUserId");
-                jsonWriter.writeCharArray(*m_Request.getAssumeUserId());
             }
             if (m_Request.getInboxNamespaceId())
             {
@@ -1048,7 +1058,7 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/distributor/{distributorName}/distribute";
+            url += "/{namespaceName}/distribute";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -1116,14 +1126,10 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/distributor/{distributorName}/distribute/stamp/task/run";
+            url += "/{namespaceName}/distribute/stamp/task/run";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-            }
-            {
-                auto& value = m_Request.getDistributorName();
-                url.replace("{distributorName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
             detail::json::JsonWriter jsonWriter;
 
@@ -1185,14 +1191,10 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/distributor/{distributorName}/distribute/stamp/sheet/run";
+            url += "/{namespaceName}/distribute/stamp/sheet/run";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-            }
-            {
-                auto& value = m_Request.getDistributorName();
-                url.replace("{distributorName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
             detail::json::JsonWriter jsonWriter;
 
@@ -1266,6 +1268,16 @@ protected:
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
         }
+        if (obj.getAssumeUserId())
+        {
+            jsonWriter.writePropertyName("assumeUserId");
+            jsonWriter.writeCharArray(*obj.getAssumeUserId());
+        }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -1301,11 +1313,6 @@ protected:
         {
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
-        }
-        if (obj.getAssumeUserId())
-        {
-            jsonWriter.writePropertyName("assumeUserId");
-            jsonWriter.writeCharArray(*obj.getAssumeUserId());
         }
         if (obj.getInboxNamespaceId())
         {
@@ -1353,11 +1360,6 @@ protected:
         {
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
-        }
-        if (obj.getAssumeUserId())
-        {
-            jsonWriter.writePropertyName("assumeUserId");
-            jsonWriter.writeCharArray(*obj.getAssumeUserId());
         }
         if (obj.getInboxNamespaceId())
         {
@@ -1478,6 +1480,17 @@ protected:
         {
             jsonWriter.writePropertyName("request");
             jsonWriter.writeCharArray(*obj.getRequest());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }

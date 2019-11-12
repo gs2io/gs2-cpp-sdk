@@ -29,6 +29,7 @@
 #include "CurrentLotteryMaster.hpp"
 #include "ResponseCache.hpp"
 #include "GitHubCheckoutSetting.hpp"
+#include "LogSetting.hpp"
 #include "Prize.hpp"
 #include "AcquireAction.hpp"
 #include "DrawnPrize.hpp"

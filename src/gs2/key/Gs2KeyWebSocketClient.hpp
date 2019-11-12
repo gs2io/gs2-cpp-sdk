@@ -166,6 +166,11 @@ private:
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
             }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
             if (m_Request.getRequestId())
             {
                 jsonWriter.writePropertyName("xGs2RequestId");
@@ -323,6 +328,11 @@ private:
             {
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             if (m_Request.getRequestId())
             {
@@ -1150,6 +1160,11 @@ protected:
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
         }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -1236,6 +1251,17 @@ protected:
         {
             jsonWriter.writePropertyName("updatedAt");
             jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }

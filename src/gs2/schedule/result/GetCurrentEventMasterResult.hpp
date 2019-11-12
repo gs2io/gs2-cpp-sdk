@@ -32,7 +32,7 @@ namespace gs2 { namespace schedule
 {
 
 /**
- * 現在有効な現在有効なイベントスケジュールマスターを取得します のレスポンスモデル
+ * 現在有効なイベントスケジュールマスターを取得します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -42,7 +42,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 現在有効な現在有効なイベントスケジュールマスター */
+        /** 現在有効なイベントスケジュールマスター */
         optional<CurrentEventMaster> item;
 
         Data() = default;
@@ -103,9 +103,9 @@ public:
         return this;
     }
     /**
-     * 現在有効な現在有効なイベントスケジュールマスターを取得
+     * 現在有効なイベントスケジュールマスターを取得
      *
-     * @return 現在有効な現在有効なイベントスケジュールマスター
+     * @return 現在有効なイベントスケジュールマスター
      */
     const optional<CurrentEventMaster>& getItem() const
     {
@@ -113,9 +113,9 @@ public:
     }
 
     /**
-     * 現在有効な現在有効なイベントスケジュールマスターを設定
+     * 現在有効なイベントスケジュールマスターを設定
      *
-     * @param item 現在有効な現在有効なイベントスケジュールマスター
+     * @param item 現在有効なイベントスケジュールマスター
      */
     void setItem(CurrentEventMaster item)
     {

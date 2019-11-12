@@ -20,7 +20,8 @@
 #include <gs2/quest/Gs2QuestWebSocketClient.hpp>
 #include "result/EzStartResult.hpp"
 #include "result/EzEndResult.hpp"
-#include "result/EzDeleteResult.hpp"
+#include "result/EzGetProgressResult.hpp"
+#include "result/EzDeleteProgressResult.hpp"
 #include "result/EzDescribeCompletedQuestListsResult.hpp"
 #include "result/EzGetCompletedQuestListResult.hpp"
 #include "result/EzListQuestGroupsResult.hpp"
@@ -66,13 +67,15 @@ public:
     /// <param name="questGroupName">クエストグループ名</param>
     /// <param name="questName">クエストモデル名</param>
     /// <param name="force">すでに開始しているクエストがある場合にそれを破棄して開始するか</param>
+    /// <param name="config">スタンプシートの変数に適用する設定値</param>
     void start(
         std::function<void(AsyncEzStartResult)> callback,
         GameSession& session,
         StringHolder namespaceName,
         StringHolder questGroupName,
         StringHolder questName,
-        gs2::optional<Bool> force=gs2::nullopt
+        gs2::optional<Bool> force=gs2::nullopt,
+        gs2::optional<List<EzConfig>> config=gs2::nullopt
     );
 
     /// <summary>
@@ -91,13 +94,29 @@ public:
     /// <param name="rewards">実際にクエストで得た報酬</param>
     /// <param name="transactionId">トランザクションID</param>
     /// <param name="isComplete">クエストをクリアしたか</param>
+    /// <param name="config">スタンプシートの変数に適用する設定値</param>
     void end(
         std::function<void(AsyncEzEndResult)> callback,
         GameSession& session,
         StringHolder namespaceName,
         StringHolder transactionId,
         gs2::optional<List<EzReward>> rewards=gs2::nullopt,
-        gs2::optional<Bool> isComplete=gs2::nullopt
+        gs2::optional<Bool> isComplete=gs2::nullopt,
+        gs2::optional<List<EzConfig>> config=gs2::nullopt
+    );
+
+    /// <summary>
+    ///  クエストの進行情報を取得。<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">カテゴリ名</param>
+    void getProgress(
+        std::function<void(AsyncEzGetProgressResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName
     );
 
     /// <summary>
@@ -110,8 +129,8 @@ public:
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">カテゴリ名</param>
-    void delete_(
-        std::function<void(AsyncEzDeleteResult)> callback,
+    void deleteProgress(
+        std::function<void(AsyncEzDeleteProgressResult)> callback,
         GameSession& session,
         StringHolder namespaceName
     );

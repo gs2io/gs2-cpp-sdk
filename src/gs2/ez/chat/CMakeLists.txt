@@ -26,6 +26,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzNotificationType.hpp
         model/EzScriptSetting.hpp
         model/EzNotificationSetting.hpp
+        model/EzLogSetting.hpp
         result/EzCreateRoomResult.hpp
         result/EzGetRoomResult.hpp
         result/EzDeleteRoomResult.hpp

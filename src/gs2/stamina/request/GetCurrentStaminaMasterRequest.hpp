@@ -30,7 +30,7 @@ namespace gs2 { namespace stamina
 {
 
 /**
- * 現在有効な現在有効なスタミナマスターを取得します のリクエストモデル
+ * 現在有効なスタミナマスターを取得します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

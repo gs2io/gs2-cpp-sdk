@@ -29,6 +29,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzResponseCache.hpp
         model/EzGitHubCheckoutSetting.hpp
         model/EzScriptSetting.hpp
+        model/EzLogSetting.hpp
         result/EzListInventoryModelsResult.hpp
         result/EzGetInventoryModelResult.hpp
         result/EzListItemModelsResult.hpp

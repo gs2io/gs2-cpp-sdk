@@ -32,7 +32,7 @@ namespace gs2 { namespace showcase
 {
 
 /**
- * 現在有効な現在有効な陳列棚マスターを更新します のレスポンスモデル
+ * 現在有効な陳列棚マスターを更新します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -42,7 +42,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 更新した現在有効な現在有効な陳列棚マスター */
+        /** 更新した現在有効な陳列棚マスター */
         optional<CurrentShowcaseMaster> item;
 
         Data() = default;
@@ -103,9 +103,9 @@ public:
         return this;
     }
     /**
-     * 更新した現在有効な現在有効な陳列棚マスターを取得
+     * 更新した現在有効な陳列棚マスターを取得
      *
-     * @return 更新した現在有効な現在有効な陳列棚マスター
+     * @return 更新した現在有効な陳列棚マスター
      */
     const optional<CurrentShowcaseMaster>& getItem() const
     {
@@ -113,9 +113,9 @@ public:
     }
 
     /**
-     * 更新した現在有効な現在有効な陳列棚マスターを設定
+     * 更新した現在有効な陳列棚マスターを設定
      *
-     * @param item 更新した現在有効な現在有効な陳列棚マスター
+     * @param item 更新した現在有効な陳列棚マスター
      */
     void setItem(CurrentShowcaseMaster item)
     {

@@ -24,6 +24,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzReceipt.hpp
         model/EzResponseCache.hpp
         model/EzScriptSetting.hpp
+        model/EzLogSetting.hpp
         result/EzGetResult.hpp
         result/EzWithdrawResult.hpp
         )

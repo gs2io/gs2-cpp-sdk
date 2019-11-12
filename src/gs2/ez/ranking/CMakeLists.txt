@@ -26,8 +26,10 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzRanking.hpp
         model/EzResponseCache.hpp
         model/EzCurrentRankingMaster.hpp
+        model/EzCalculatedAt.hpp
         model/EzSubscribeUser.hpp
         model/EzGitHubCheckoutSetting.hpp
+        model/EzLogSetting.hpp
         result/EzListCategoriesResult.hpp
         result/EzGetCategoryResult.hpp
         result/EzListSubscribesResult.hpp

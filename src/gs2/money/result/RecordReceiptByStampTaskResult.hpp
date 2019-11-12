@@ -44,11 +44,14 @@ private:
     public:
         /** レシート */
         optional<Receipt> item;
+        /** スタンプタスクの実行結果を記録したコンテキスト */
+        optional<StringHolder> newContextStack;
 
         Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data)
+            detail::json::IModel(data),
+            newContextStack(data.newContextStack)
         {
             if (data.item)
             {
@@ -72,6 +75,13 @@ private:
                     const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->item.emplace();
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
+                }
+            }
+            else if (std::strcmp(name_, "newContextStack") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->newContextStack.emplace(jsonValue.GetString());
                 }
             }
         }
@@ -120,6 +130,26 @@ public:
     void setItem(Receipt item)
     {
         ensureData().item.emplace(std::move(item));
+    }
+
+    /**
+     * スタンプタスクの実行結果を記録したコンテキストを取得
+     *
+     * @return スタンプタスクの実行結果を記録したコンテキスト
+     */
+    const optional<StringHolder>& getNewContextStack() const
+    {
+        return ensureData().newContextStack;
+    }
+
+    /**
+     * スタンプタスクの実行結果を記録したコンテキストを設定
+     *
+     * @param newContextStack スタンプタスクの実行結果を記録したコンテキスト
+     */
+    void setNewContextStack(StringHolder newContextStack)
+    {
+        ensureData().newContextStack.emplace(std::move(newContextStack));
     }
 
 

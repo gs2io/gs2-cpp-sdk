@@ -44,6 +44,8 @@ private:
     class Data : public detail::json::IModel
     {
     public:
+        /** 陳列棚 */
+        optional<StringHolder> showcaseId;
         /** 商品名 */
         optional<StringHolder> name;
         /** 商品のメタデータ */
@@ -57,6 +59,7 @@ private:
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            showcaseId(data.showcaseId),
             name(data.name),
             metadata(data.metadata),
             salesPeriodEventId(data.salesPeriodEventId)
@@ -76,7 +79,14 @@ private:
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "name") == 0)
+            if (std::strcmp(name_, "showcaseId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->showcaseId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "name") == 0)
             {
                 if (jsonValue.IsString())
                 {
@@ -138,6 +148,37 @@ public:
     {
         return this;
     }
+    /**
+     * 陳列棚を取得
+     *
+     * @return 陳列棚
+     */
+    const optional<StringHolder>& getShowcaseId() const
+    {
+        return ensureData().showcaseId;
+    }
+
+    /**
+     * 陳列棚を設定
+     *
+     * @param showcaseId 陳列棚
+     */
+    void setShowcaseId(StringHolder showcaseId)
+    {
+        ensureData().showcaseId.emplace(std::move(showcaseId));
+    }
+
+    /**
+     * 陳列棚を設定
+     *
+     * @param showcaseId 陳列棚
+     */
+    Showcase& withShowcaseId(StringHolder showcaseId)
+    {
+        setShowcaseId(std::move(showcaseId));
+        return *this;
+    }
+
     /**
      * 商品名を取得
      *
@@ -274,6 +315,10 @@ inline bool operator!=(const Showcase& lhs, const Showcase& lhr)
     if (lhs.m_pData != lhr.m_pData)
     {
         if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->showcaseId != lhr.m_pData->showcaseId)
         {
             return true;
         }

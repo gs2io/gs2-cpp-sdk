@@ -26,5 +26,6 @@
 #include "ResponseCache.hpp"
 #include "GitHubCheckoutSetting.hpp"
 #include "DistributeResource.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_DISTRIBUTOR_MODEL_MODEL_HPP_

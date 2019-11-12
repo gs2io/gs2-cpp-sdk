@@ -25,6 +25,7 @@
 #include "DeadLetterJob.hpp"
 #include "ResponseCache.hpp"
 #include "NotificationSetting.hpp"
+#include "LogSetting.hpp"
 #include "JobEntry.hpp"
 #include "JobResultBody.hpp"
 

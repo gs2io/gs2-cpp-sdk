@@ -57,6 +57,8 @@ private:
         optional<StringHolder> queueNamespaceId;
         /** 報酬付与処理のスタンプシートで使用する暗号鍵GRN */
         optional<StringHolder> keyId;
+        /** ログの出力設定 */
+        optional<LogSetting> logSetting;
 
         Data() = default;
 
@@ -78,6 +80,10 @@ private:
             if (data.failedQuestScript)
             {
                 failedQuestScript = data.failedQuestScript->deepCopy();
+            }
+            if (data.logSetting)
+            {
+                logSetting = data.logSetting->deepCopy();
             }
         }
 
@@ -339,6 +345,37 @@ public:
     CreateNamespaceRequest& withKeyId(StringHolder keyId)
     {
         ensureData().keyId.emplace(std::move(keyId));
+        return *this;
+    }
+
+    /**
+     * ログの出力設定を取得
+     *
+     * @return ログの出力設定
+     */
+    const optional<LogSetting>& getLogSetting() const
+    {
+        return ensureData().logSetting;
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    void setLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    CreateNamespaceRequest& withLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
         return *this;
     }
 

@@ -48,7 +48,7 @@ private:
     public:
         /** クエストモデルマスター */
         optional<StringHolder> questModelId;
-        /** クエストグループモデル名 */
+        /** クエストモデル名 */
         optional<StringHolder> questGroupName;
         /** クエスト名 */
         optional<StringHolder> name;
@@ -282,9 +282,9 @@ public:
     }
 
     /**
-     * クエストグループモデル名を取得
+     * クエストモデル名を取得
      *
-     * @return クエストグループモデル名
+     * @return クエストモデル名
      */
     const optional<StringHolder>& getQuestGroupName() const
     {
@@ -292,9 +292,9 @@ public:
     }
 
     /**
-     * クエストグループモデル名を設定
+     * クエストモデル名を設定
      *
-     * @param questGroupName クエストグループモデル名
+     * @param questGroupName クエストモデル名
      */
     void setQuestGroupName(StringHolder questGroupName)
     {
@@ -302,9 +302,9 @@ public:
     }
 
     /**
-     * クエストグループモデル名を設定
+     * クエストモデル名を設定
      *
-     * @param questGroupName クエストグループモデル名
+     * @param questGroupName クエストモデル名
      */
     QuestModelMaster& withQuestGroupName(StringHolder questGroupName)
     {

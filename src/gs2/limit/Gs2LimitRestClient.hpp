@@ -175,6 +175,11 @@ private:
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
             }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -324,6 +329,11 @@ private:
             {
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -898,10 +908,6 @@ private:
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
             url += "/stamp/counter/delete";
-            {
-                auto& value = m_Request.getStampSheet();
-                url.replace("{stampSheet}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-            }
             detail::json::JsonWriter jsonWriter;
 
             jsonWriter.writeObjectStart();
@@ -909,6 +915,11 @@ private:
             {
                 jsonWriter.writePropertyName("contextStack");
                 jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
             }
             if (m_Request.getKeyId())
             {
@@ -1611,6 +1622,11 @@ protected:
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
         }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -1805,6 +1821,17 @@ protected:
         {
             jsonWriter.writePropertyName("tagName");
             jsonWriter.writeCharArray(*obj.getTagName());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -2104,7 +2131,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な回数制限設定を取得します<br>
+	 * 現在有効な回数制限設定を取得します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2116,7 +2143,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な回数制限設定を更新します<br>
+	 * 現在有効な回数制限設定を更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2128,7 +2155,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な回数制限設定を更新します<br>
+	 * 現在有効な回数制限設定を更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ

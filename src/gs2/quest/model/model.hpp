@@ -31,6 +31,7 @@
 #include "Config.hpp"
 #include "GitHubCheckoutSetting.hpp"
 #include "ScriptSetting.hpp"
+#include "LogSetting.hpp"
 #include "Progress.hpp"
 #include "CompletedQuestList.hpp"
 #include "QuestGroupModel.hpp"

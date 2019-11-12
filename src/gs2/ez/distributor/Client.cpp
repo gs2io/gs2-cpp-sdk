@@ -100,7 +100,6 @@ void Client::getDistributorModel(
 void Client::runStampTask(
     std::function<void(AsyncEzRunStampTaskResult)> callback,
     StringHolder namespaceName,
-    StringHolder distributorName,
     StringHolder stampTask,
     StringHolder keyId,
     gs2::optional<StringHolder> contextStack
@@ -108,7 +107,6 @@ void Client::runStampTask(
 {
     gs2::distributor::RunStampTaskRequest request;
     request.setNamespaceName(namespaceName);
-    request.setDistributorName(distributorName);
     request.setStampTask(stampTask);
     request.setKeyId(keyId);
     if (contextStack)
@@ -145,7 +143,6 @@ void Client::runStampTask(
 void Client::runStampSheet(
     std::function<void(AsyncEzRunStampSheetResult)> callback,
     StringHolder namespaceName,
-    StringHolder distributorName,
     StringHolder stampSheet,
     StringHolder keyId,
     gs2::optional<StringHolder> contextStack
@@ -153,7 +150,6 @@ void Client::runStampSheet(
 {
     gs2::distributor::RunStampSheetRequest request;
     request.setNamespaceName(namespaceName);
-    request.setDistributorName(distributorName);
     request.setStampSheet(stampSheet);
     request.setKeyId(keyId);
     if (contextStack)

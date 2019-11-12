@@ -24,6 +24,8 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "CalculatedAt.hpp"
+#include "LogSetting.hpp"
 #include <memory>
 #include <cstring>
 
@@ -51,6 +53,10 @@ private:
         optional<StringHolder> name;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
+        /** 最終集計日時リスト */
+        optional<List<CalculatedAt>> lastCalculatedAts;
+        /** ログの出力設定 */
+        optional<LogSetting> logSetting;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -67,6 +73,14 @@ private:
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
+            if (data.lastCalculatedAts)
+            {
+                lastCalculatedAts = data.lastCalculatedAts->deepCopy();
+            }
+            if (data.logSetting)
+            {
+                logSetting = data.logSetting->deepCopy();
+            }
         }
 
         Data(Data&& data) = default;
@@ -104,6 +118,28 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "lastCalculatedAts") == 0)
+            {
+                if (jsonValue.IsArray())
+                {
+                    const auto& array = jsonValue.GetArray();
+                    this->lastCalculatedAts.emplace();
+                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
+                        CalculatedAt item;
+                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        detail::addToList(*this->lastCalculatedAts, std::move(item));
+                    }
+                }
+            }
+            else if (std::strcmp(name_, "logSetting") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->logSetting.emplace();
+                    detail::json::JsonParser::parse(&this->logSetting->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -273,6 +309,68 @@ public:
     }
 
     /**
+     * 最終集計日時リストを取得
+     *
+     * @return 最終集計日時リスト
+     */
+    const optional<List<CalculatedAt>>& getLastCalculatedAts() const
+    {
+        return ensureData().lastCalculatedAts;
+    }
+
+    /**
+     * 最終集計日時リストを設定
+     *
+     * @param lastCalculatedAts 最終集計日時リスト
+     */
+    void setLastCalculatedAts(List<CalculatedAt> lastCalculatedAts)
+    {
+        ensureData().lastCalculatedAts.emplace(std::move(lastCalculatedAts));
+    }
+
+    /**
+     * 最終集計日時リストを設定
+     *
+     * @param lastCalculatedAts 最終集計日時リスト
+     */
+    Namespace& withLastCalculatedAts(List<CalculatedAt> lastCalculatedAts)
+    {
+        setLastCalculatedAts(std::move(lastCalculatedAts));
+        return *this;
+    }
+
+    /**
+     * ログの出力設定を取得
+     *
+     * @return ログの出力設定
+     */
+    const optional<LogSetting>& getLogSetting() const
+    {
+        return ensureData().logSetting;
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    void setLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    Namespace& withLogSetting(LogSetting logSetting)
+    {
+        setLogSetting(std::move(logSetting));
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -362,6 +460,14 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
             return true;
         }
         if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->lastCalculatedAts != lhr.m_pData->lastCalculatedAts)
+        {
+            return true;
+        }
+        if (lhs.m_pData->logSetting != lhr.m_pData->logSetting)
         {
             return true;
         }

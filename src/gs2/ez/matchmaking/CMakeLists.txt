@@ -22,6 +22,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzGathering.hpp
         model/EzResponseCache.hpp
         model/EzNotificationSetting.hpp
+        model/EzLogSetting.hpp
         model/EzAttributeRange.hpp
         model/EzCapacityOfRole.hpp
         model/EzAttribute.hpp

@@ -34,8 +34,6 @@ private:
         gs2::optional<StringHolder> name;
         /** ディストリビューターの種類のメタデータ */
         gs2::optional<StringHolder> metadata;
-        /** 所持品の配布処理の権限判定に使用する ユーザ のGRN */
-        gs2::optional<StringHolder> assumeUserId;
         /** 所持品がキャパシティをオーバーしたときに転送するプレゼントボックスのネームスペース のGRN */
         gs2::optional<StringHolder> inboxNamespaceId;
         /** ディストリビューターを通して処理出来る対象のリソースGRNのホワイトリスト */
@@ -47,7 +45,6 @@ private:
             Gs2Object(data),
             name(data.name),
             metadata(data.metadata),
-            assumeUserId(data.assumeUserId),
             inboxNamespaceId(data.inboxNamespaceId)
         {
             if (data.whiteListTargetIds)
@@ -61,7 +58,6 @@ private:
         Data(const gs2::distributor::DistributorModel& distributorModel) :
             name(distributorModel.getName()),
             metadata(distributorModel.getMetadata()),
-            assumeUserId(distributorModel.getAssumeUserId()),
             inboxNamespaceId(distributorModel.getInboxNamespaceId()),
             whiteListTargetIds(distributorModel.getWhiteListTargetIds())
         {
@@ -98,7 +94,6 @@ public:
         gs2::distributor::DistributorModel distributorModel;
         distributorModel.setName(getName());
         distributorModel.setMetadata(getMetadata());
-        distributorModel.setAssumeUserId(getAssumeUserId());
         distributorModel.setInboxNamespaceId(getInboxNamespaceId());
         distributorModel.setWhiteListTargetIds(getWhiteListTargetIds());
         return distributorModel;
@@ -116,11 +111,6 @@ public:
     const StringHolder& getMetadata() const
     {
         return *ensureData().metadata;
-    }
-
-    const StringHolder& getAssumeUserId() const
-    {
-        return *ensureData().assumeUserId;
     }
 
     const StringHolder& getInboxNamespaceId() const
@@ -147,11 +137,6 @@ public:
         ensureData().metadata = std::move(metadata);
     }
 
-    void setAssumeUserId(StringHolder assumeUserId)
-    {
-        ensureData().assumeUserId = std::move(assumeUserId);
-    }
-
     void setInboxNamespaceId(StringHolder inboxNamespaceId)
     {
         ensureData().inboxNamespaceId = std::move(inboxNamespaceId);
@@ -171,12 +156,6 @@ public:
     EzDistributorModel& withMetadata(StringHolder metadata)
     {
         setMetadata(std::move(metadata));
-        return *this;
-    }
-
-    EzDistributorModel& withAssumeUserId(StringHolder assumeUserId)
-    {
-        setAssumeUserId(std::move(assumeUserId));
         return *this;
     }
 

@@ -212,6 +212,11 @@ private:
                 jsonWriter.writePropertyName("withdrawScript");
                 write(jsonWriter, *m_Request.getWithdrawScript());
             }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -396,6 +401,11 @@ private:
             {
                 jsonWriter.writePropertyName("withdrawScript");
                 write(jsonWriter, *m_Request.getWithdrawScript());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -1498,10 +1508,6 @@ private:
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
             url += "/stamp/receipt/record";
-            {
-                auto& value = m_Request.getStampTask();
-                url.replace("{stampTask}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-            }
             detail::json::JsonWriter jsonWriter;
 
             jsonWriter.writeObjectStart();
@@ -1509,6 +1515,11 @@ private:
             {
                 jsonWriter.writePropertyName("contextStack");
                 jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampTask())
+            {
+                jsonWriter.writePropertyName("stampTask");
+                jsonWriter.writeCharArray(*m_Request.getStampTask());
             }
             if (m_Request.getKeyId())
             {
@@ -1618,6 +1629,11 @@ protected:
         {
             jsonWriter.writePropertyName("balance");
             jsonWriter.writeDouble(*obj.getBalance());
+        }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
         }
         if (obj.getCreatedAt())
         {
@@ -1823,6 +1839,17 @@ protected:
         {
             jsonWriter.writePropertyName("doneTriggerQueueNamespaceId");
             jsonWriter.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }

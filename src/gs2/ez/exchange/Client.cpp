@@ -101,12 +101,24 @@ void Client::exchange(
     std::function<void(AsyncEzExchangeResult)> callback,
     GameSession& session,
     StringHolder namespaceName,
-    StringHolder rateName
+    StringHolder rateName,
+    Int32 count,
+    gs2::optional<List<EzConfig>> config
 )
 {
     gs2::exchange::ExchangeRequest request;
     request.setNamespaceName(namespaceName);
     request.setRateName(rateName);
+    request.setCount(count);
+    if (config)
+    {
+        gs2::List<gs2::exchange::Config> list;
+        for (int i = 0; i < config->getCount(); ++i)
+        {
+            list += (*config)[i].ToModel();
+        }
+        request.setConfig(list);
+    }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_Client.exchange(
         request,

@@ -230,6 +230,11 @@ private:
                 jsonWriter.writePropertyName("consumeScript");
                 write(jsonWriter, *m_Request.getConsumeScript());
             }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -394,6 +399,11 @@ private:
             {
                 jsonWriter.writePropertyName("consumeScript");
                 write(jsonWriter, *m_Request.getConsumeScript());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -3031,6 +3041,11 @@ protected:
             jsonWriter.writePropertyName("consumeScript");
             write(jsonWriter, *obj.getConsumeScript());
         }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -3425,6 +3440,17 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
 
 
 public:
@@ -3691,7 +3717,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な所持品マスターを取得します<br>
+	 * 現在有効な所持品マスターを取得します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -3703,7 +3729,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な所持品マスターを更新します<br>
+	 * 現在有効な所持品マスターを更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -3715,7 +3741,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な所持品マスターを更新します<br>
+	 * 現在有効な所持品マスターを更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ

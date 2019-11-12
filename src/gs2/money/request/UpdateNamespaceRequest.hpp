@@ -61,6 +61,8 @@ private:
         optional<ScriptSetting> depositScript;
         /** ウォレット残高消費したときに実行するスクリプト */
         optional<ScriptSetting> withdrawScript;
+        /** ログの出力設定 */
+        optional<LogSetting> logSetting;
 
         Data() = default;
 
@@ -84,6 +86,10 @@ private:
             if (data.withdrawScript)
             {
                 withdrawScript = data.withdrawScript->deepCopy();
+            }
+            if (data.logSetting)
+            {
+                logSetting = data.logSetting->deepCopy();
             }
         }
 
@@ -407,6 +413,37 @@ public:
     UpdateNamespaceRequest& withWithdrawScript(ScriptSetting withdrawScript)
     {
         ensureData().withdrawScript.emplace(std::move(withdrawScript));
+        return *this;
+    }
+
+    /**
+     * ログの出力設定を取得
+     *
+     * @return ログの出力設定
+     */
+    const optional<LogSetting>& getLogSetting() const
+    {
+        return ensureData().logSetting;
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    void setLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    UpdateNamespaceRequest& withLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
         return *this;
     }
 

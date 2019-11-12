@@ -30,7 +30,7 @@ namespace gs2 { namespace experience
 {
 
 /**
- * 現在有効な現在有効な経験値設定を取得します のリクエストモデル
+ * 現在有効な経験値設定を取得します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

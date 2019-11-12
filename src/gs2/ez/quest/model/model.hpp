@@ -22,6 +22,7 @@
 #include "EzConsumeAction.hpp"
 #include "EzAcquireAction.hpp"
 #include "EzReward.hpp"
+#include "EzConfig.hpp"
 #include "EzProgress.hpp"
 #include "EzCompletedQuestList.hpp"
 #include "EzQuestGroupModel.hpp"

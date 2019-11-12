@@ -23,6 +23,7 @@
 #include "Gathering.hpp"
 #include "ResponseCache.hpp"
 #include "NotificationSetting.hpp"
+#include "LogSetting.hpp"
 #include "AttributeRange.hpp"
 #include "CapacityOfRole.hpp"
 #include "Attribute.hpp"

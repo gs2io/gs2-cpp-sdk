@@ -22,5 +22,6 @@
 #include "Namespace.hpp"
 #include "Mutex.hpp"
 #include "ResponseCache.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_LOCK_MODEL_MODEL_HPP_

@@ -32,7 +32,7 @@ namespace gs2 { namespace experience
 {
 
 /**
- * 現在有効な現在有効な経験値設定を取得します のレスポンスモデル
+ * 現在有効な経験値設定を取得します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -42,7 +42,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 現在有効な現在有効な経験値設定 */
+        /** 現在有効な経験値設定 */
         optional<CurrentExperienceMaster> item;
 
         Data() = default;
@@ -103,9 +103,9 @@ public:
         return this;
     }
     /**
-     * 現在有効な現在有効な経験値設定を取得
+     * 現在有効な経験値設定を取得
      *
-     * @return 現在有効な現在有効な経験値設定
+     * @return 現在有効な経験値設定
      */
     const optional<CurrentExperienceMaster>& getItem() const
     {
@@ -113,9 +113,9 @@ public:
     }
 
     /**
-     * 現在有効な現在有効な経験値設定を設定
+     * 現在有効な経験値設定を設定
      *
-     * @param item 現在有効な現在有効な経験値設定
+     * @param item 現在有効な経験値設定
      */
     void setItem(CurrentExperienceMaster item)
     {

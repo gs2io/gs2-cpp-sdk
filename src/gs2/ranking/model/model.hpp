@@ -27,7 +27,9 @@
 #include "Ranking.hpp"
 #include "ResponseCache.hpp"
 #include "CurrentRankingMaster.hpp"
+#include "CalculatedAt.hpp"
 #include "SubscribeUser.hpp"
 #include "GitHubCheckoutSetting.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_RANKING_MODEL_MODEL_HPP_

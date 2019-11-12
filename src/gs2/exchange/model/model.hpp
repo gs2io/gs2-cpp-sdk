@@ -26,6 +26,7 @@
 #include "ResponseCache.hpp"
 #include "Config.hpp"
 #include "GitHubCheckoutSetting.hpp"
+#include "LogSetting.hpp"
 #include "AcquireAction.hpp"
 #include "ConsumeAction.hpp"
 

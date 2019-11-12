@@ -24,6 +24,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzDeadLetterJob.hpp
         model/EzResponseCache.hpp
         model/EzNotificationSetting.hpp
+        model/EzLogSetting.hpp
         model/EzJobEntry.hpp
         model/EzJobResultBody.hpp
         result/EzRunResult.hpp

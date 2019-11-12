@@ -30,7 +30,7 @@ namespace gs2 { namespace schedule
 {
 
 /**
- * 現在有効な現在有効なイベントスケジュールマスターを更新します のリクエストモデル
+ * 現在有効なイベントスケジュールマスターを更新します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

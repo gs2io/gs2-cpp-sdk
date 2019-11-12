@@ -22,6 +22,7 @@
 #include "EzSalesItemGroup.hpp"
 #include "EzShowcase.hpp"
 #include "EzDisplayItem.hpp"
+#include "EzConfig.hpp"
 #include "EzConsumeAction.hpp"
 #include "EzAcquireAction.hpp"
 

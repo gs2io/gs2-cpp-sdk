@@ -181,6 +181,11 @@ private:
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
             }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -330,6 +335,11 @@ private:
             {
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -524,6 +534,41 @@ private:
                 jsonWriter.writePropertyName("absoluteEnd");
                 jsonWriter.writeInt64(*m_Request.getAbsoluteEnd());
             }
+            if (m_Request.getRepeatType())
+            {
+                jsonWriter.writePropertyName("repeatType");
+                jsonWriter.writeCharArray(*m_Request.getRepeatType());
+            }
+            if (m_Request.getRepeatBeginDayOfMonth())
+            {
+                jsonWriter.writePropertyName("repeatBeginDayOfMonth");
+                jsonWriter.writeInt32(*m_Request.getRepeatBeginDayOfMonth());
+            }
+            if (m_Request.getRepeatEndDayOfMonth())
+            {
+                jsonWriter.writePropertyName("repeatEndDayOfMonth");
+                jsonWriter.writeInt32(*m_Request.getRepeatEndDayOfMonth());
+            }
+            if (m_Request.getRepeatBeginDayOfWeek())
+            {
+                jsonWriter.writePropertyName("repeatBeginDayOfWeek");
+                jsonWriter.writeCharArray(*m_Request.getRepeatBeginDayOfWeek());
+            }
+            if (m_Request.getRepeatEndDayOfWeek())
+            {
+                jsonWriter.writePropertyName("repeatEndDayOfWeek");
+                jsonWriter.writeCharArray(*m_Request.getRepeatEndDayOfWeek());
+            }
+            if (m_Request.getRepeatBeginHour())
+            {
+                jsonWriter.writePropertyName("repeatBeginHour");
+                jsonWriter.writeInt32(*m_Request.getRepeatBeginHour());
+            }
+            if (m_Request.getRepeatEndHour())
+            {
+                jsonWriter.writePropertyName("repeatEndHour");
+                jsonWriter.writeInt32(*m_Request.getRepeatEndHour());
+            }
             if (m_Request.getRelativeTriggerName())
             {
                 jsonWriter.writePropertyName("relativeTriggerName");
@@ -664,6 +709,41 @@ private:
             {
                 jsonWriter.writePropertyName("absoluteEnd");
                 jsonWriter.writeInt64(*m_Request.getAbsoluteEnd());
+            }
+            if (m_Request.getRepeatType())
+            {
+                jsonWriter.writePropertyName("repeatType");
+                jsonWriter.writeCharArray(*m_Request.getRepeatType());
+            }
+            if (m_Request.getRepeatBeginDayOfMonth())
+            {
+                jsonWriter.writePropertyName("repeatBeginDayOfMonth");
+                jsonWriter.writeInt32(*m_Request.getRepeatBeginDayOfMonth());
+            }
+            if (m_Request.getRepeatEndDayOfMonth())
+            {
+                jsonWriter.writePropertyName("repeatEndDayOfMonth");
+                jsonWriter.writeInt32(*m_Request.getRepeatEndDayOfMonth());
+            }
+            if (m_Request.getRepeatBeginDayOfWeek())
+            {
+                jsonWriter.writePropertyName("repeatBeginDayOfWeek");
+                jsonWriter.writeCharArray(*m_Request.getRepeatBeginDayOfWeek());
+            }
+            if (m_Request.getRepeatEndDayOfWeek())
+            {
+                jsonWriter.writePropertyName("repeatEndDayOfWeek");
+                jsonWriter.writeCharArray(*m_Request.getRepeatEndDayOfWeek());
+            }
+            if (m_Request.getRepeatBeginHour())
+            {
+                jsonWriter.writePropertyName("repeatBeginHour");
+                jsonWriter.writeInt32(*m_Request.getRepeatBeginHour());
+            }
+            if (m_Request.getRepeatEndHour())
+            {
+                jsonWriter.writePropertyName("repeatEndHour");
+                jsonWriter.writeInt32(*m_Request.getRepeatEndHour());
             }
             if (m_Request.getRelativeTriggerName())
             {
@@ -1767,6 +1847,11 @@ protected:
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
         }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -1808,6 +1893,11 @@ protected:
             jsonWriter.writePropertyName("scheduleType");
             jsonWriter.writeCharArray(*obj.getScheduleType());
         }
+        if (obj.getRepeatType())
+        {
+            jsonWriter.writePropertyName("repeatType");
+            jsonWriter.writeCharArray(*obj.getRepeatType());
+        }
         if (obj.getAbsoluteBegin())
         {
             jsonWriter.writePropertyName("absoluteBegin");
@@ -1817,6 +1907,36 @@ protected:
         {
             jsonWriter.writePropertyName("absoluteEnd");
             jsonWriter.writeInt64(*obj.getAbsoluteEnd());
+        }
+        if (obj.getRepeatBeginDayOfMonth())
+        {
+            jsonWriter.writePropertyName("repeatBeginDayOfMonth");
+            jsonWriter.writeInt32(*obj.getRepeatBeginDayOfMonth());
+        }
+        if (obj.getRepeatEndDayOfMonth())
+        {
+            jsonWriter.writePropertyName("repeatEndDayOfMonth");
+            jsonWriter.writeInt32(*obj.getRepeatEndDayOfMonth());
+        }
+        if (obj.getRepeatBeginDayOfWeek())
+        {
+            jsonWriter.writePropertyName("repeatBeginDayOfWeek");
+            jsonWriter.writeCharArray(*obj.getRepeatBeginDayOfWeek());
+        }
+        if (obj.getRepeatEndDayOfWeek())
+        {
+            jsonWriter.writePropertyName("repeatEndDayOfWeek");
+            jsonWriter.writeCharArray(*obj.getRepeatEndDayOfWeek());
+        }
+        if (obj.getRepeatBeginHour())
+        {
+            jsonWriter.writePropertyName("repeatBeginHour");
+            jsonWriter.writeInt32(*obj.getRepeatBeginHour());
+        }
+        if (obj.getRepeatEndHour())
+        {
+            jsonWriter.writePropertyName("repeatEndHour");
+            jsonWriter.writeInt32(*obj.getRepeatEndHour());
         }
         if (obj.getRelativeTriggerName())
         {
@@ -1895,6 +2015,11 @@ protected:
             jsonWriter.writePropertyName("scheduleType");
             jsonWriter.writeCharArray(*obj.getScheduleType());
         }
+        if (obj.getRepeatType())
+        {
+            jsonWriter.writePropertyName("repeatType");
+            jsonWriter.writeCharArray(*obj.getRepeatType());
+        }
         if (obj.getAbsoluteBegin())
         {
             jsonWriter.writePropertyName("absoluteBegin");
@@ -1904,6 +2029,36 @@ protected:
         {
             jsonWriter.writePropertyName("absoluteEnd");
             jsonWriter.writeInt64(*obj.getAbsoluteEnd());
+        }
+        if (obj.getRepeatBeginDayOfMonth())
+        {
+            jsonWriter.writePropertyName("repeatBeginDayOfMonth");
+            jsonWriter.writeInt32(*obj.getRepeatBeginDayOfMonth());
+        }
+        if (obj.getRepeatEndDayOfMonth())
+        {
+            jsonWriter.writePropertyName("repeatEndDayOfMonth");
+            jsonWriter.writeInt32(*obj.getRepeatEndDayOfMonth());
+        }
+        if (obj.getRepeatBeginDayOfWeek())
+        {
+            jsonWriter.writePropertyName("repeatBeginDayOfWeek");
+            jsonWriter.writeCharArray(*obj.getRepeatBeginDayOfWeek());
+        }
+        if (obj.getRepeatEndDayOfWeek())
+        {
+            jsonWriter.writePropertyName("repeatEndDayOfWeek");
+            jsonWriter.writeCharArray(*obj.getRepeatEndDayOfWeek());
+        }
+        if (obj.getRepeatBeginHour())
+        {
+            jsonWriter.writePropertyName("repeatBeginHour");
+            jsonWriter.writeInt32(*obj.getRepeatBeginHour());
+        }
+        if (obj.getRepeatEndHour())
+        {
+            jsonWriter.writePropertyName("repeatEndHour");
+            jsonWriter.writeInt32(*obj.getRepeatEndHour());
         }
         if (obj.getRelativeTriggerName())
         {
@@ -2002,6 +2157,17 @@ protected:
         {
             jsonWriter.writePropertyName("tagName");
             jsonWriter.writeCharArray(*obj.getTagName());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -2320,7 +2486,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効なイベントスケジュールマスターを取得します<br>
+	 * 現在有効なイベントスケジュールマスターを取得します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2332,7 +2498,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効なイベントスケジュールマスターを更新します<br>
+	 * 現在有効なイベントスケジュールマスターを更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2344,7 +2510,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効なイベントスケジュールマスターを更新します<br>
+	 * 現在有効なイベントスケジュールマスターを更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ

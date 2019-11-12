@@ -51,10 +51,24 @@ private:
         optional<StringHolder> metadata;
         /** イベント期間の種類 */
         optional<StringHolder> scheduleType;
+        /** 繰り返しの種類 */
+        optional<StringHolder> repeatType;
         /** イベントの開始日時 */
         optional<Int64> absoluteBegin;
         /** イベントの終了日時 */
         optional<Int64> absoluteEnd;
+        /** イベントの繰り返し開始日 */
+        optional<Int32> repeatBeginDayOfMonth;
+        /** イベントの繰り返し終了日 */
+        optional<Int32> repeatEndDayOfMonth;
+        /** イベントの繰り返し開始曜日 */
+        optional<StringHolder> repeatBeginDayOfWeek;
+        /** イベントの繰り返し終了曜日 */
+        optional<StringHolder> repeatEndDayOfWeek;
+        /** イベントの繰り返し開始時間 */
+        optional<Int32> repeatBeginHour;
+        /** イベントの繰り返し終了時間 */
+        optional<Int32> repeatEndHour;
         /** イベントの開始トリガー */
         optional<StringHolder> relativeTriggerName;
         /** イベントの開催期間(秒) */
@@ -68,8 +82,15 @@ private:
             name(data.name),
             metadata(data.metadata),
             scheduleType(data.scheduleType),
+            repeatType(data.repeatType),
             absoluteBegin(data.absoluteBegin),
             absoluteEnd(data.absoluteEnd),
+            repeatBeginDayOfMonth(data.repeatBeginDayOfMonth),
+            repeatEndDayOfMonth(data.repeatEndDayOfMonth),
+            repeatBeginDayOfWeek(data.repeatBeginDayOfWeek),
+            repeatEndDayOfWeek(data.repeatEndDayOfWeek),
+            repeatBeginHour(data.repeatBeginHour),
+            repeatEndHour(data.repeatEndHour),
             relativeTriggerName(data.relativeTriggerName),
             relativeDuration(data.relativeDuration)
         {
@@ -112,6 +133,13 @@ private:
                     this->scheduleType.emplace(jsonValue.GetString());
                 }
             }
+            else if (std::strcmp(name_, "repeatType") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->repeatType.emplace(jsonValue.GetString());
+                }
+            }
             else if (std::strcmp(name_, "absoluteBegin") == 0)
             {
                 if (jsonValue.IsInt64())
@@ -124,6 +152,48 @@ private:
                 if (jsonValue.IsInt64())
                 {
                     this->absoluteEnd = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name_, "repeatBeginDayOfMonth") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->repeatBeginDayOfMonth = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "repeatEndDayOfMonth") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->repeatEndDayOfMonth = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "repeatBeginDayOfWeek") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->repeatBeginDayOfWeek.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "repeatEndDayOfWeek") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->repeatEndDayOfWeek.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "repeatBeginHour") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->repeatBeginHour = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "repeatEndHour") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->repeatEndHour = jsonValue.GetInt();
                 }
             }
             else if (std::strcmp(name_, "relativeTriggerName") == 0)
@@ -293,6 +363,37 @@ public:
     }
 
     /**
+     * 繰り返しの種類を取得
+     *
+     * @return 繰り返しの種類
+     */
+    const optional<StringHolder>& getRepeatType() const
+    {
+        return ensureData().repeatType;
+    }
+
+    /**
+     * 繰り返しの種類を設定
+     *
+     * @param repeatType 繰り返しの種類
+     */
+    void setRepeatType(StringHolder repeatType)
+    {
+        ensureData().repeatType.emplace(std::move(repeatType));
+    }
+
+    /**
+     * 繰り返しの種類を設定
+     *
+     * @param repeatType 繰り返しの種類
+     */
+    Event& withRepeatType(StringHolder repeatType)
+    {
+        setRepeatType(std::move(repeatType));
+        return *this;
+    }
+
+    /**
      * イベントの開始日時を取得
      *
      * @return イベントの開始日時
@@ -351,6 +452,192 @@ public:
     Event& withAbsoluteEnd(Int64 absoluteEnd)
     {
         setAbsoluteEnd(absoluteEnd);
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し開始日を取得
+     *
+     * @return イベントの繰り返し開始日
+     */
+    const optional<Int32>& getRepeatBeginDayOfMonth() const
+    {
+        return ensureData().repeatBeginDayOfMonth;
+    }
+
+    /**
+     * イベントの繰り返し開始日を設定
+     *
+     * @param repeatBeginDayOfMonth イベントの繰り返し開始日
+     */
+    void setRepeatBeginDayOfMonth(Int32 repeatBeginDayOfMonth)
+    {
+        ensureData().repeatBeginDayOfMonth.emplace(repeatBeginDayOfMonth);
+    }
+
+    /**
+     * イベントの繰り返し開始日を設定
+     *
+     * @param repeatBeginDayOfMonth イベントの繰り返し開始日
+     */
+    Event& withRepeatBeginDayOfMonth(Int32 repeatBeginDayOfMonth)
+    {
+        setRepeatBeginDayOfMonth(repeatBeginDayOfMonth);
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し終了日を取得
+     *
+     * @return イベントの繰り返し終了日
+     */
+    const optional<Int32>& getRepeatEndDayOfMonth() const
+    {
+        return ensureData().repeatEndDayOfMonth;
+    }
+
+    /**
+     * イベントの繰り返し終了日を設定
+     *
+     * @param repeatEndDayOfMonth イベントの繰り返し終了日
+     */
+    void setRepeatEndDayOfMonth(Int32 repeatEndDayOfMonth)
+    {
+        ensureData().repeatEndDayOfMonth.emplace(repeatEndDayOfMonth);
+    }
+
+    /**
+     * イベントの繰り返し終了日を設定
+     *
+     * @param repeatEndDayOfMonth イベントの繰り返し終了日
+     */
+    Event& withRepeatEndDayOfMonth(Int32 repeatEndDayOfMonth)
+    {
+        setRepeatEndDayOfMonth(repeatEndDayOfMonth);
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し開始曜日を取得
+     *
+     * @return イベントの繰り返し開始曜日
+     */
+    const optional<StringHolder>& getRepeatBeginDayOfWeek() const
+    {
+        return ensureData().repeatBeginDayOfWeek;
+    }
+
+    /**
+     * イベントの繰り返し開始曜日を設定
+     *
+     * @param repeatBeginDayOfWeek イベントの繰り返し開始曜日
+     */
+    void setRepeatBeginDayOfWeek(StringHolder repeatBeginDayOfWeek)
+    {
+        ensureData().repeatBeginDayOfWeek.emplace(std::move(repeatBeginDayOfWeek));
+    }
+
+    /**
+     * イベントの繰り返し開始曜日を設定
+     *
+     * @param repeatBeginDayOfWeek イベントの繰り返し開始曜日
+     */
+    Event& withRepeatBeginDayOfWeek(StringHolder repeatBeginDayOfWeek)
+    {
+        setRepeatBeginDayOfWeek(std::move(repeatBeginDayOfWeek));
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し終了曜日を取得
+     *
+     * @return イベントの繰り返し終了曜日
+     */
+    const optional<StringHolder>& getRepeatEndDayOfWeek() const
+    {
+        return ensureData().repeatEndDayOfWeek;
+    }
+
+    /**
+     * イベントの繰り返し終了曜日を設定
+     *
+     * @param repeatEndDayOfWeek イベントの繰り返し終了曜日
+     */
+    void setRepeatEndDayOfWeek(StringHolder repeatEndDayOfWeek)
+    {
+        ensureData().repeatEndDayOfWeek.emplace(std::move(repeatEndDayOfWeek));
+    }
+
+    /**
+     * イベントの繰り返し終了曜日を設定
+     *
+     * @param repeatEndDayOfWeek イベントの繰り返し終了曜日
+     */
+    Event& withRepeatEndDayOfWeek(StringHolder repeatEndDayOfWeek)
+    {
+        setRepeatEndDayOfWeek(std::move(repeatEndDayOfWeek));
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し開始時間を取得
+     *
+     * @return イベントの繰り返し開始時間
+     */
+    const optional<Int32>& getRepeatBeginHour() const
+    {
+        return ensureData().repeatBeginHour;
+    }
+
+    /**
+     * イベントの繰り返し開始時間を設定
+     *
+     * @param repeatBeginHour イベントの繰り返し開始時間
+     */
+    void setRepeatBeginHour(Int32 repeatBeginHour)
+    {
+        ensureData().repeatBeginHour.emplace(repeatBeginHour);
+    }
+
+    /**
+     * イベントの繰り返し開始時間を設定
+     *
+     * @param repeatBeginHour イベントの繰り返し開始時間
+     */
+    Event& withRepeatBeginHour(Int32 repeatBeginHour)
+    {
+        setRepeatBeginHour(repeatBeginHour);
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し終了時間を取得
+     *
+     * @return イベントの繰り返し終了時間
+     */
+    const optional<Int32>& getRepeatEndHour() const
+    {
+        return ensureData().repeatEndHour;
+    }
+
+    /**
+     * イベントの繰り返し終了時間を設定
+     *
+     * @param repeatEndHour イベントの繰り返し終了時間
+     */
+    void setRepeatEndHour(Int32 repeatEndHour)
+    {
+        ensureData().repeatEndHour.emplace(repeatEndHour);
+    }
+
+    /**
+     * イベントの繰り返し終了時間を設定
+     *
+     * @param repeatEndHour イベントの繰り返し終了時間
+     */
+    Event& withRepeatEndHour(Int32 repeatEndHour)
+    {
+        setRepeatEndHour(repeatEndHour);
         return *this;
     }
 
@@ -447,11 +734,39 @@ inline bool operator!=(const Event& lhs, const Event& lhr)
         {
             return true;
         }
+        if (lhs.m_pData->repeatType != lhr.m_pData->repeatType)
+        {
+            return true;
+        }
         if (lhs.m_pData->absoluteBegin != lhr.m_pData->absoluteBegin)
         {
             return true;
         }
         if (lhs.m_pData->absoluteEnd != lhr.m_pData->absoluteEnd)
+        {
+            return true;
+        }
+        if (lhs.m_pData->repeatBeginDayOfMonth != lhr.m_pData->repeatBeginDayOfMonth)
+        {
+            return true;
+        }
+        if (lhs.m_pData->repeatEndDayOfMonth != lhr.m_pData->repeatEndDayOfMonth)
+        {
+            return true;
+        }
+        if (lhs.m_pData->repeatBeginDayOfWeek != lhr.m_pData->repeatBeginDayOfWeek)
+        {
+            return true;
+        }
+        if (lhs.m_pData->repeatEndDayOfWeek != lhr.m_pData->repeatEndDayOfWeek)
+        {
+            return true;
+        }
+        if (lhs.m_pData->repeatBeginHour != lhr.m_pData->repeatBeginHour)
+        {
+            return true;
+        }
+        if (lhs.m_pData->repeatEndHour != lhr.m_pData->repeatEndHour)
         {
             return true;
         }

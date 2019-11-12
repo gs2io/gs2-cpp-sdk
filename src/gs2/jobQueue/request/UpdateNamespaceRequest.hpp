@@ -49,6 +49,8 @@ private:
         optional<StringHolder> description;
         /** ジョブキューにジョブが登録されたときののプッシュ通知 */
         optional<NotificationSetting> pushNotification;
+        /** ログの出力設定 */
+        optional<LogSetting> logSetting;
 
         Data() = default;
 
@@ -60,6 +62,10 @@ private:
             if (data.pushNotification)
             {
                 pushNotification = data.pushNotification->deepCopy();
+            }
+            if (data.logSetting)
+            {
+                logSetting = data.logSetting->deepCopy();
             }
         }
 
@@ -197,6 +203,37 @@ public:
     UpdateNamespaceRequest& withPushNotification(NotificationSetting pushNotification)
     {
         ensureData().pushNotification.emplace(std::move(pushNotification));
+        return *this;
+    }
+
+    /**
+     * ログの出力設定を取得
+     *
+     * @return ログの出力設定
+     */
+    const optional<LogSetting>& getLogSetting() const
+    {
+        return ensureData().logSetting;
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    void setLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    UpdateNamespaceRequest& withLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
         return *this;
     }
 

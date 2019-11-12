@@ -21,6 +21,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzNamespace.hpp
         model/EzMutex.hpp
         model/EzResponseCache.hpp
+        model/EzLogSetting.hpp
         result/EzLockResult.hpp
         result/EzUnlockResult.hpp
         )

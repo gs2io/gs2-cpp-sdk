@@ -32,5 +32,6 @@
 #include "PublicProfile.hpp"
 #include "ScriptSetting.hpp"
 #include "NotificationSetting.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_FRIEND_MODEL_MODEL_HPP_

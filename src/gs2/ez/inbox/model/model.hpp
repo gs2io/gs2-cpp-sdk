@@ -19,6 +19,7 @@
 
 #include <gs2/core/common.hpp>
 #include "EzMessage.hpp"
+#include "EzConfig.hpp"
 #include "EzAcquireAction.hpp"
 
 #endif //GS2_EZ_INBOX_MODEL_MODEL_HPP_

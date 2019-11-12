@@ -24,6 +24,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzConfig.hpp
         model/EzScriptSetting.hpp
         model/EzNotificationSetting.hpp
+        model/EzLogSetting.hpp
         model/EzAcquireAction.hpp
         result/EzListResult.hpp
         result/EzReadResult.hpp

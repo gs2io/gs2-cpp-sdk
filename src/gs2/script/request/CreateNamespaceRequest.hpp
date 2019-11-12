@@ -47,6 +47,8 @@ private:
         optional<StringHolder> name;
         /** 説明文 */
         optional<StringHolder> description;
+        /** ログの出力設定 */
+        optional<LogSetting> logSetting;
 
         Data() = default;
 
@@ -55,6 +57,10 @@ private:
             name(data.name),
             description(data.description)
         {
+            if (data.logSetting)
+            {
+                logSetting = data.logSetting->deepCopy();
+            }
         }
 
         Data(Data&& data) = default;
@@ -160,6 +166,37 @@ public:
     CreateNamespaceRequest& withDescription(StringHolder description)
     {
         ensureData().description.emplace(std::move(description));
+        return *this;
+    }
+
+    /**
+     * ログの出力設定を取得
+     *
+     * @return ログの出力設定
+     */
+    const optional<LogSetting>& getLogSetting() const
+    {
+        return ensureData().logSetting;
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    void setLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    CreateNamespaceRequest& withLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
         return *this;
     }
 

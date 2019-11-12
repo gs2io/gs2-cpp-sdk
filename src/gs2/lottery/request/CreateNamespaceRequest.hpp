@@ -55,6 +55,8 @@ private:
         optional<StringHolder> lotteryTriggerScriptId;
         /** 排出テーブル選択時 に実行されるスクリプト のGRN */
         optional<StringHolder> choicePrizeTableScriptId;
+        /** ログの出力設定 */
+        optional<LogSetting> logSetting;
 
         Data() = default;
 
@@ -67,6 +69,10 @@ private:
             lotteryTriggerScriptId(data.lotteryTriggerScriptId),
             choicePrizeTableScriptId(data.choicePrizeTableScriptId)
         {
+            if (data.logSetting)
+            {
+                logSetting = data.logSetting->deepCopy();
+            }
         }
 
         Data(Data&& data) = default;
@@ -296,6 +302,37 @@ public:
     CreateNamespaceRequest& withChoicePrizeTableScriptId(StringHolder choicePrizeTableScriptId)
     {
         ensureData().choicePrizeTableScriptId.emplace(std::move(choicePrizeTableScriptId));
+        return *this;
+    }
+
+    /**
+     * ログの出力設定を取得
+     *
+     * @return ログの出力設定
+     */
+    const optional<LogSetting>& getLogSetting() const
+    {
+        return ensureData().logSetting;
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    void setLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    CreateNamespaceRequest& withLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
         return *this;
     }
 

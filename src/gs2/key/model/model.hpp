@@ -22,5 +22,6 @@
 #include "Namespace.hpp"
 #include "Key.hpp"
 #include "GitHubApiKey.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_KEY_MODEL_MODEL_HPP_

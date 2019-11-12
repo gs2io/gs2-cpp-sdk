@@ -25,6 +25,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzCurrentShowcaseMaster.hpp
         model/EzResponseCache.hpp
         model/EzGitHubCheckoutSetting.hpp
+        model/EzLogSetting.hpp
         model/EzSalesItem.hpp
         model/EzSalesItemGroup.hpp
         model/EzShowcase.hpp
@@ -33,7 +34,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzConsumeAction.hpp
         model/EzAcquireAction.hpp
         model/EzDisplayItemMaster.hpp
-        result/EzListResult.hpp
+        result/EzGetShowcaseResult.hpp
         result/EzBuyResult.hpp
         )
 

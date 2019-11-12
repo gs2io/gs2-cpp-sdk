@@ -18,7 +18,7 @@
 #define GS2_EZ_SHOWCASE_GS2SHOWCASERESTCLIENT_HPP_
 
 #include <gs2/showcase/Gs2ShowcaseWebSocketClient.hpp>
-#include "result/EzListResult.hpp"
+#include "result/EzGetShowcaseResult.hpp"
 #include "result/EzBuyResult.hpp"
 
 
@@ -46,10 +46,12 @@ public:
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
-    void list(
-        std::function<void(AsyncEzListResult)> callback,
+    /// <param name="showcaseName">商品名</param>
+    void getShowcase(
+        std::function<void(AsyncEzGetShowcaseResult)> callback,
         GameSession& session,
-        StringHolder namespaceName
+        StringHolder namespaceName,
+        StringHolder showcaseName
     );
 
     /// <summary>
@@ -60,12 +62,16 @@ public:
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="showcaseName">商品名</param>
     /// <param name="displayItemId">陳列商品ID</param>
+    /// <param name="config">設定値</param>
     void buy(
         std::function<void(AsyncEzBuyResult)> callback,
         GameSession& session,
         StringHolder namespaceName,
-        gs2::optional<StringHolder> displayItemId=gs2::nullopt
+        StringHolder showcaseName,
+        StringHolder displayItemId,
+        gs2::optional<List<EzConfig>> config=gs2::nullopt
     );
 };
 

@@ -57,6 +57,8 @@ private:
         optional<ScriptSetting> createTakeOverScript;
         /** 引き継ぎ実行したときに実行するスクリプト */
         optional<ScriptSetting> doTakeOverScript;
+        /** ログの出力設定 */
+        optional<LogSetting> logSetting;
 
         Data() = default;
 
@@ -81,6 +83,10 @@ private:
             if (data.doTakeOverScript)
             {
                 doTakeOverScript = data.doTakeOverScript->deepCopy();
+            }
+            if (data.logSetting)
+            {
+                logSetting = data.logSetting->deepCopy();
             }
         }
 
@@ -342,6 +348,37 @@ public:
     CreateNamespaceRequest& withDoTakeOverScript(ScriptSetting doTakeOverScript)
     {
         ensureData().doTakeOverScript.emplace(std::move(doTakeOverScript));
+        return *this;
+    }
+
+    /**
+     * ログの出力設定を取得
+     *
+     * @return ログの出力設定
+     */
+    const optional<LogSetting>& getLogSetting() const
+    {
+        return ensureData().logSetting;
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    void setLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    CreateNamespaceRequest& withLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
         return *this;
     }
 

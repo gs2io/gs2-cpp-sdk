@@ -72,11 +72,15 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="rateName">交換レートの種類名</param>
+    /// <param name="count">交換するロット数</param>
+    /// <param name="config">設定値</param>
     void exchange(
         std::function<void(AsyncEzExchangeResult)> callback,
         GameSession& session,
         StringHolder namespaceName,
-        StringHolder rateName
+        StringHolder rateName,
+        Int32 count,
+        gs2::optional<List<EzConfig>> config=gs2::nullopt
     );
 };
 

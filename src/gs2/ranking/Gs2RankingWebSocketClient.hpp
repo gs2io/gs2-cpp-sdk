@@ -190,6 +190,11 @@ private:
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
             }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
             if (m_Request.getRequestId())
             {
                 jsonWriter.writePropertyName("xGs2RequestId");
@@ -347,6 +352,11 @@ private:
             {
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             if (m_Request.getRequestId())
             {
@@ -2051,6 +2061,22 @@ protected:
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
         }
+        if (obj.getLastCalculatedAts())
+        {
+            jsonWriter.writePropertyName("lastCalculatedAts");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getLastCalculatedAts();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(jsonWriter, list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -2347,6 +2373,22 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const CalculatedAt& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getCategoryName())
+        {
+            jsonWriter.writePropertyName("categoryName");
+            jsonWriter.writeCharArray(*obj.getCategoryName());
+        }
+        if (obj.getCalculatedAt())
+        {
+            jsonWriter.writePropertyName("calculatedAt");
+            jsonWriter.writeInt64(*obj.getCalculatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const SubscribeUser& obj)
     {
         jsonWriter.writeObjectStart();
@@ -2405,6 +2447,17 @@ protected:
         {
             jsonWriter.writePropertyName("tagName");
             jsonWriter.writeCharArray(*obj.getTagName());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }

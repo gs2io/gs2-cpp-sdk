@@ -31,6 +31,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzStamina.hpp
         model/EzResponseCache.hpp
         model/EzGitHubCheckoutSetting.hpp
+        model/EzLogSetting.hpp
         result/EzListStaminaModelsResult.hpp
         result/EzGetStaminaModelResult.hpp
         result/EzGetStaminaResult.hpp

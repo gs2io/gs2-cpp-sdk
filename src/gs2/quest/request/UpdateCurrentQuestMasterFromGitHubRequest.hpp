@@ -30,7 +30,7 @@ namespace gs2 { namespace quest
 {
 
 /**
- * 現在有効な現在有効なクエストマスターを更新します のリクエストモデル
+ * 現在有効なクエストマスターを更新します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

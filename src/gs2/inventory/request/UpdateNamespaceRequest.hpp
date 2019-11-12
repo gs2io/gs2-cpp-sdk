@@ -53,6 +53,8 @@ private:
         optional<ScriptSetting> overflowScript;
         /** アイテム消費するときに実行するスクリプト */
         optional<ScriptSetting> consumeScript;
+        /** ログの出力設定 */
+        optional<LogSetting> logSetting;
 
         Data() = default;
 
@@ -72,6 +74,10 @@ private:
             if (data.consumeScript)
             {
                 consumeScript = data.consumeScript->deepCopy();
+            }
+            if (data.logSetting)
+            {
+                logSetting = data.logSetting->deepCopy();
             }
         }
 
@@ -271,6 +277,37 @@ public:
     UpdateNamespaceRequest& withConsumeScript(ScriptSetting consumeScript)
     {
         ensureData().consumeScript.emplace(std::move(consumeScript));
+        return *this;
+    }
+
+    /**
+     * ログの出力設定を取得
+     *
+     * @return ログの出力設定
+     */
+    const optional<LogSetting>& getLogSetting() const
+    {
+        return ensureData().logSetting;
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    void setLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
+    }
+
+    /**
+     * ログの出力設定を設定
+     *
+     * @param logSetting ログの出力設定
+     */
+    UpdateNamespaceRequest& withLogSetting(LogSetting logSetting)
+    {
+        ensureData().logSetting.emplace(std::move(logSetting));
         return *this;
     }
 

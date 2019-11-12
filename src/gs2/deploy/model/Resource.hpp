@@ -24,6 +24,7 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "OutputField.hpp"
 #include <memory>
 #include <cstring>
 
@@ -59,8 +60,10 @@ private:
         optional<StringHolder> rollbackRequest;
         /** ロールバック時に依存しているリソースの名前 */
         optional<List<StringHolder>> rollbackAfter;
-        /** このリソースに関連するアウトプットに記録したキー名 */
-        optional<List<StringHolder>> outputKeys;
+        /** リソースを作成したときに Output に記録するフィールド */
+        optional<List<OutputField>> outputFields;
+        /** このリソースが作成された時の実行 ID */
+        optional<StringHolder> workId;
         /** 作成日時 */
         optional<Int64> createdAt;
 
@@ -75,15 +78,16 @@ private:
             response(data.response),
             rollbackContext(data.rollbackContext),
             rollbackRequest(data.rollbackRequest),
+            workId(data.workId),
             createdAt(data.createdAt)
         {
             if (data.rollbackAfter)
             {
                 rollbackAfter = data.rollbackAfter->deepCopy();
             }
-            if (data.outputKeys)
+            if (data.outputFields)
             {
-                outputKeys = data.outputKeys->deepCopy();
+                outputFields = data.outputFields->deepCopy();
             }
         }
 
@@ -161,20 +165,24 @@ private:
                     }
                 }
             }
-            else if (std::strcmp(name_, "outputKeys") == 0)
+            else if (std::strcmp(name_, "outputFields") == 0)
             {
                 if (jsonValue.IsArray())
                 {
                     const auto& array = jsonValue.GetArray();
-                    this->outputKeys.emplace();
+                    this->outputFields.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        if (json->IsString())
-                        {
-                            auto valueStr = json->GetString();
-                            StringHolder stringHolder(valueStr);
-                            detail::addToList(*this->outputKeys, std::move(stringHolder));
-                        }
+                        OutputField item;
+                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        detail::addToList(*this->outputFields, std::move(item));
                     }
+                }
+            }
+            else if (std::strcmp(name_, "workId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->workId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -461,33 +469,64 @@ public:
     }
 
     /**
-     * このリソースに関連するアウトプットに記録したキー名を取得
+     * リソースを作成したときに Output に記録するフィールドを取得
      *
-     * @return このリソースに関連するアウトプットに記録したキー名
+     * @return リソースを作成したときに Output に記録するフィールド
      */
-    const optional<List<StringHolder>>& getOutputKeys() const
+    const optional<List<OutputField>>& getOutputFields() const
     {
-        return ensureData().outputKeys;
+        return ensureData().outputFields;
     }
 
     /**
-     * このリソースに関連するアウトプットに記録したキー名を設定
+     * リソースを作成したときに Output に記録するフィールドを設定
      *
-     * @param outputKeys このリソースに関連するアウトプットに記録したキー名
+     * @param outputFields リソースを作成したときに Output に記録するフィールド
      */
-    void setOutputKeys(List<StringHolder> outputKeys)
+    void setOutputFields(List<OutputField> outputFields)
     {
-        ensureData().outputKeys.emplace(std::move(outputKeys));
+        ensureData().outputFields.emplace(std::move(outputFields));
     }
 
     /**
-     * このリソースに関連するアウトプットに記録したキー名を設定
+     * リソースを作成したときに Output に記録するフィールドを設定
      *
-     * @param outputKeys このリソースに関連するアウトプットに記録したキー名
+     * @param outputFields リソースを作成したときに Output に記録するフィールド
      */
-    Resource& withOutputKeys(List<StringHolder> outputKeys)
+    Resource& withOutputFields(List<OutputField> outputFields)
     {
-        setOutputKeys(std::move(outputKeys));
+        setOutputFields(std::move(outputFields));
+        return *this;
+    }
+
+    /**
+     * このリソースが作成された時の実行 IDを取得
+     *
+     * @return このリソースが作成された時の実行 ID
+     */
+    const optional<StringHolder>& getWorkId() const
+    {
+        return ensureData().workId;
+    }
+
+    /**
+     * このリソースが作成された時の実行 IDを設定
+     *
+     * @param workId このリソースが作成された時の実行 ID
+     */
+    void setWorkId(StringHolder workId)
+    {
+        ensureData().workId.emplace(std::move(workId));
+    }
+
+    /**
+     * このリソースが作成された時の実行 IDを設定
+     *
+     * @param workId このリソースが作成された時の実行 ID
+     */
+    Resource& withWorkId(StringHolder workId)
+    {
+        setWorkId(std::move(workId));
         return *this;
     }
 
@@ -569,7 +608,11 @@ inline bool operator!=(const Resource& lhs, const Resource& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->outputKeys != lhr.m_pData->outputKeys)
+        if (lhs.m_pData->outputFields != lhr.m_pData->outputFields)
+        {
+            return true;
+        }
+        if (lhs.m_pData->workId != lhr.m_pData->workId)
         {
             return true;
         }

@@ -24,6 +24,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzCurrentLimitMaster.hpp
         model/EzResponseCache.hpp
         model/EzGitHubCheckoutSetting.hpp
+        model/EzLogSetting.hpp
         model/EzLimitModel.hpp
         result/EzListCountersResult.hpp
         result/EzGetCounterResult.hpp

@@ -201,6 +201,11 @@ private:
                 jsonWriter.writePropertyName("receiveNotification");
                 write(jsonWriter, *m_Request.getReceiveNotification());
             }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
             if (m_Request.getRequestId())
             {
                 jsonWriter.writePropertyName("xGs2RequestId");
@@ -393,6 +398,11 @@ private:
             {
                 jsonWriter.writePropertyName("receiveNotification");
                 write(jsonWriter, *m_Request.getReceiveNotification());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             if (m_Request.getRequestId())
             {
@@ -1353,6 +1363,11 @@ protected:
             jsonWriter.writePropertyName("receiveNotification");
             write(jsonWriter, *obj.getReceiveNotification());
         }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -1503,6 +1518,17 @@ protected:
         {
             jsonWriter.writePropertyName("sound");
             jsonWriter.writeCharArray(*obj.getSound());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }

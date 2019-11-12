@@ -32,7 +32,7 @@ namespace gs2 { namespace quest
 {
 
 /**
- * 現在有効な現在有効なクエストマスターを取得します のレスポンスモデル
+ * 現在有効なクエストマスターを取得します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -42,7 +42,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 現在有効な現在有効なクエストマスター */
+        /** 現在有効なクエストマスター */
         optional<CurrentQuestMaster> item;
 
         Data() = default;
@@ -103,9 +103,9 @@ public:
         return this;
     }
     /**
-     * 現在有効な現在有効なクエストマスターを取得
+     * 現在有効なクエストマスターを取得
      *
-     * @return 現在有効な現在有効なクエストマスター
+     * @return 現在有効なクエストマスター
      */
     const optional<CurrentQuestMaster>& getItem() const
     {
@@ -113,9 +113,9 @@ public:
     }
 
     /**
-     * 現在有効な現在有効なクエストマスターを設定
+     * 現在有効なクエストマスターを設定
      *
-     * @param item 現在有効な現在有効なクエストマスター
+     * @param item 現在有効なクエストマスター
      */
     void setItem(CurrentQuestMaster item)
     {

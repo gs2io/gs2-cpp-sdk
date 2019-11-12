@@ -24,5 +24,6 @@
 #include "EzDrawnPrize.hpp"
 #include "EzBoxItem.hpp"
 #include "EzBoxItems.hpp"
+#include "EzConfig.hpp"
 
 #endif //GS2_EZ_LOTTERY_MODEL_MODEL_HPP_

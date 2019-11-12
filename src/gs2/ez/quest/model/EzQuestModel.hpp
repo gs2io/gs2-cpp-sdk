@@ -33,6 +33,8 @@ private:
     class Data : public gs2::Gs2Object
     {
     public:
+        /** クエストモデル */
+        gs2::optional<StringHolder> questModelId;
         /** クエストモデル名 */
         gs2::optional<StringHolder> name;
         /** クエストモデルのメタデータ */
@@ -52,6 +54,7 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
+            questModelId(data.questModelId),
             name(data.name),
             metadata(data.metadata),
             challengePeriodEventId(data.challengePeriodEventId)
@@ -77,6 +80,7 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::quest::QuestModel& questModel) :
+            questModelId(questModel.getQuestModelId()),
             name(questModel.getName()),
             metadata(questModel.getMetadata()),
             challengePeriodEventId(questModel.getChallengePeriodEventId()),
@@ -137,6 +141,7 @@ public:
     gs2::quest::QuestModel ToModel() const
     {
         gs2::quest::QuestModel questModel;
+        questModel.setQuestModelId(getQuestModelId());
         questModel.setName(getName());
         questModel.setMetadata(getMetadata());
         {
@@ -174,6 +179,11 @@ public:
     // ========================================
     //   Getters
     // ========================================
+
+    const StringHolder& getQuestModelId() const
+    {
+        return *ensureData().questModelId;
+    }
 
     const StringHolder& getName() const
     {
@@ -214,6 +224,11 @@ public:
     //   Setters
     // ========================================
 
+    void setQuestModelId(StringHolder questModelId)
+    {
+        ensureData().questModelId = std::move(questModelId);
+    }
+
     void setName(StringHolder name)
     {
         ensureData().name = std::move(name);
@@ -247,6 +262,12 @@ public:
     void setPremiseQuestNames(List<StringHolder> premiseQuestNames)
     {
         ensureData().premiseQuestNames = std::move(premiseQuestNames);
+    }
+
+    EzQuestModel& withQuestModelId(StringHolder questModelId)
+    {
+        setQuestModelId(std::move(questModelId));
+        return *this;
     }
 
     EzQuestModel& withName(StringHolder name)

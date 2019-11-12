@@ -45,8 +45,6 @@ private:
     public:
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
-        /** ディストリビューターの種類名 */
-        optional<StringHolder> distributorName;
         /** 実行するスタンプタスク */
         optional<StringHolder> stampSheet;
         /** スタンプシートの暗号化に使用した暗号鍵GRN */
@@ -59,7 +57,6 @@ private:
         Data(const Data& data) :
             Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
-            distributorName(data.distributorName),
             stampSheet(data.stampSheet),
             keyId(data.keyId),
             duplicationAvoider(data.duplicationAvoider)
@@ -138,37 +135,6 @@ public:
     RunStampSheetRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
-        return *this;
-    }
-
-    /**
-     * ディストリビューターの種類名を取得
-     *
-     * @return ディストリビューターの種類名
-     */
-    const optional<StringHolder>& getDistributorName() const
-    {
-        return ensureData().distributorName;
-    }
-
-    /**
-     * ディストリビューターの種類名を設定
-     *
-     * @param distributorName ディストリビューターの種類名
-     */
-    void setDistributorName(StringHolder distributorName)
-    {
-        ensureData().distributorName.emplace(std::move(distributorName));
-    }
-
-    /**
-     * ディストリビューターの種類名を設定
-     *
-     * @param distributorName ディストリビューターの種類名
-     */
-    RunStampSheetRequest& withDistributorName(StringHolder distributorName)
-    {
-        ensureData().distributorName.emplace(std::move(distributorName));
         return *this;
     }
 

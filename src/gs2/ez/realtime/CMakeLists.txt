@@ -21,6 +21,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzNamespace.hpp
         model/EzRoom.hpp
         model/EzNotificationSetting.hpp
+        model/EzLogSetting.hpp
         result/EzGetRoomResult.hpp
         )
 

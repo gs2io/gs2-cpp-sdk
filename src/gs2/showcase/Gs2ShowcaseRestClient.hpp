@@ -197,6 +197,11 @@ private:
                 jsonWriter.writePropertyName("keyId");
                 jsonWriter.writeCharArray(*m_Request.getKeyId());
             }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -356,6 +361,11 @@ private:
             {
                 jsonWriter.writePropertyName("keyId");
                 jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -1872,7 +1882,7 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/user/me/showcase/{showcaseName}";
+            url += "/{namespaceName}/user/me/showcase/{showcaseName}/{displayItemId}";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -1950,7 +1960,7 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/user/{userId}/showcase/{showcaseName}";
+            url += "/{namespaceName}/user/{userId}/showcase/{showcaseName}/{displayItemId}";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -2049,6 +2059,11 @@ protected:
         {
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
+        }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
         }
         if (obj.getCreatedAt())
         {
@@ -2308,6 +2323,17 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const SalesItem& obj)
     {
         jsonWriter.writeObjectStart();
@@ -2376,6 +2402,11 @@ protected:
     static void write(detail::json::JsonWriter& jsonWriter, const Showcase& obj)
     {
         jsonWriter.writeObjectStart();
+        if (obj.getShowcaseId())
+        {
+            jsonWriter.writePropertyName("showcaseId");
+            jsonWriter.writeCharArray(*obj.getShowcaseId());
+        }
         if (obj.getName())
         {
             jsonWriter.writePropertyName("name");
@@ -2793,7 +2824,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な陳列棚マスターを取得します<br>
+	 * 現在有効な陳列棚マスターを取得します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2805,7 +2836,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な陳列棚マスターを更新します<br>
+	 * 現在有効な陳列棚マスターを更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -2817,7 +2848,7 @@ public:
     }
 
 	/**
-	 * 現在有効な現在有効な陳列棚マスターを更新します<br>
+	 * 現在有効な陳列棚マスターを更新します<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
