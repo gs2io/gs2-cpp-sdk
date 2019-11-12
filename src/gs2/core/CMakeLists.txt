@@ -36,6 +36,8 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/NotificationMessage.hpp
         model/Region.hpp
         model/RequestError.hpp
+        model/SignedStampSheet.hpp
+        model/SignedStampTask.hpp
         model/StampSheet.hpp
         model/StampTask.hpp
         network/Gs2Response.hpp

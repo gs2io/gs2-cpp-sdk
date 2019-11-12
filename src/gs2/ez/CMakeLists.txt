@@ -18,18 +18,24 @@ project(gs2-cpp-sdk-ez)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Authenticator.hpp
         Client.hpp
+        EzStampSheet.hpp
+        EzStampTask.hpp
         GameSession.hpp
         Gs2AccountAuthenticator.hpp
         Gs2BasicReopener.hpp
         Gs2Ez.hpp
         Profile.hpp
         Reopener.hpp
+        StampSheetStateMachine.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
+        EzStampSheet.cpp
+        EzStampTask.cpp
         Gs2AccountAuthenticator.cpp
         Gs2BasicReopener.cpp
         Profile.cpp
+        StampSheetStateMachine.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC
