@@ -19,14 +19,14 @@
 namespace gs2 { namespace ez {
 
 StampSheetStateMachine::StampSheetStateMachine(
-    StringHolder stampSheetString,
+    StringHolder signedStampSheetString,
     Client& client,
     StringHolder distributorNamespaceName,
     StringHolder stampSheetEncryptKeyId,
     EzStampSheetCallback ezStampSheetCallback,
     EzStampTaskCallback ezStampTaskCallback
 ) :
-    m_EzStampSheet(std::move(stampSheetString)),
+    m_EzStampSheet(std::move(signedStampSheetString)),
     m_Client(client),
     m_DistributorNamespaceName(std::move(distributorNamespaceName)),
     m_StampSheetEncryptKeyId(std::move(stampSheetEncryptKeyId)),

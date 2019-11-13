@@ -21,11 +21,11 @@
 
 namespace gs2 { namespace ez {
 
-EzStampSheet::EzStampSheet(StringHolder stampSheetString) :
-    m_StampSheetString(std::move(stampSheetString))
+EzStampSheet::EzStampSheet(StringHolder signedStampSheetString) :
+    m_SignedStampSheetString(std::move(signedStampSheetString))
 {
     SignedStampSheet signedStampSheet;
-    detail::json::JsonParser::parse(&signedStampSheet.getModel(), m_StampSheetString);
+    detail::json::JsonParser::parse(&signedStampSheet.getModel(), m_SignedStampSheetString);
 
     const auto& body = signedStampSheet.getBody();
     if (body)
@@ -55,7 +55,7 @@ void EzStampSheet::execute(
     client.distributor.runStampSheet(
         std::move(callback),
         std::move(distributorNamespaceName),
-        m_StampSheetString,
+        m_SignedStampSheetString,
         std::move(stampSheetEncryptKeyId),
         std::move(stackContext)
     );

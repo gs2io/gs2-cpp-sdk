@@ -34,11 +34,11 @@ public:
     typedef std::function<void(distributor::AsyncEzRunStampSheetResult)> EzRunStampSheetCallback;
 
 private:
-    StringHolder m_StampSheetString;
+    StringHolder m_SignedStampSheetString;
     List<EzStampTask> m_StampTasks;
 
 public:
-    EzStampSheet(StringHolder stampSheetString);
+    EzStampSheet(StringHolder signedStampSheetString);
 
     void execute(
         EzRunStampSheetCallback callback,
