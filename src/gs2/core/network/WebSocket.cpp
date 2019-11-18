@@ -14,213 +14,86 @@
  * permissions and limitations under the License.
  */
 
-#include "WebSocket.hpp"
-#include "Gs2WebSocketResponse.hpp"
 #include "../exception/Gs2ClientException.hpp"
-#include "../json/IModel.hpp"
-#include "../json/JsonParser.hpp"
-#include "../model/IGs2Credential.hpp"
-#include "RootCaCertificates.hpp"
-#include <platform/CCFileUtils.h>
-#include <cstdlib>
-#include <limits>
-//#include <base/CCDirector.h>
-//#include <base/CCScheduler.h>
+#include "Gs2WebSocketResponse.hpp"
+#include "WebSocket.hpp"
+#include "WebSocketBlueprintLibrary.h"
+#include "WebSocketBase.h"
+#include "WebSocketDelegateAdaptor.h"
 
 GS2_START_OF_NAMESPACE
 
+namespace {
+
+// Gs2WebSocket::Gs2WebSocket() ÇÃèâä˙âªéqÇ≈ìnÇ∑ÇΩÇﬂÇÃÇ‡ÇÃÅB
+// é∏îsÇ∑ÇÈÇÃÇÕÇÌÇ©Ç¡ÇƒÇ¢ÇÈÇÃÇ≈ílÇéQè∆Ç∑ÇÈÇ±Ç∆ÇÕÇ»Ç¢ÅB
+bool isConnectFailed;
+
+}
+
 namespace detail {
 
-void WebSocket::Delegate::onOpen(cocos2d::network::WebSocket* pWebSocket)
+Gs2WebSocket::Gs2WebSocket() :
+    m_pWebSocketBase(UWebSocketBlueprintLibrary::Connect("", isConnectFailed)),
+    m_pWebSocketDelegateAdaptor(NewObject<UWebSocketDelegateAdaptor>())
 {
-    GS2_NOT_USED(pWebSocket);
+    m_pWebSocketBase->AddToRoot();
+    m_pWebSocketDelegateAdaptor->AddToRoot();
 
-    {
-        std::lock_guard<std::mutex> lock(m_WebSocket.m_Mutex);
+    m_pWebSocketDelegateAdaptor->OnConnectCompleteStatic.AddRaw(this, &Gs2WebSocket::onConnectComplete);
+    m_pWebSocketDelegateAdaptor->OnConnectErrorStatic.AddRaw(this, &Gs2WebSocket::onConnectError);
+    m_pWebSocketDelegateAdaptor->OnReceiveDataStatic.AddRaw(this, &Gs2WebSocket::onReceiveData);
+    m_pWebSocketDelegateAdaptor->OnClosedStatic.AddRaw(this, &Gs2WebSocket::onClosed);
 
-        if (m_WebSocket.m_State == State::Cancelling)
-        {
-            m_WebSocket.m_WebSocket->closeAsync();
-        }
-
-        m_WebSocket.m_State = State::Available;
-    }
-
-    m_WebSocket.onOpen();
+    m_pWebSocketDelegateAdaptor->AddTo(*m_pWebSocketBase);
 }
 
-void WebSocket::Delegate::onMessage(cocos2d::network::WebSocket* pWebSocket, const cocos2d::network::WebSocket::Data& data)
+Gs2WebSocket::~Gs2WebSocket()
 {
-    GS2_NOT_USED(pWebSocket);
-    m_WebSocket.onMessage(data);
+    m_pWebSocketDelegateAdaptor->RemoveFrom(*m_pWebSocketBase);
+    m_pWebSocketDelegateAdaptor->RemoveFromRoot();
+    m_pWebSocketBase->RemoveFromRoot();
 }
 
-void WebSocket::Delegate::onClose(cocos2d::network::WebSocket* pWebSocket)
+bool Gs2WebSocket::open()
 {
-    GS2_NOT_USED(pWebSocket);
-
-    {
-        std::lock_guard<std::mutex> lock(m_WebSocket.m_Mutex);
-        m_WebSocket.m_State = State::Idle;
-    }
-
-    m_WebSocket.onClose();
+    return m_pWebSocketBase->Connect("wss://gateway-ws.ap-northeast-1.gen2.gs2io.com", TMap<FString, FString>());
 }
 
-void WebSocket::Delegate::onError(cocos2d::network::WebSocket* pWebSocket, const cocos2d::network::WebSocket::ErrorCode& errorCode)
+void Gs2WebSocket::close()
 {
-    GS2_NOT_USED(pWebSocket);
-    m_WebSocket.onError(errorCode);
+    m_pWebSocketBase->Close();
 }
 
-WebSocket::WebSocket() :
-    m_State(State::Idle),
-    m_Delegate(*this)
+void Gs2WebSocket::send(const gs2::Char message[])
 {
-    // ping „ÇíÂÆöÊúüÁöÑ„Å´ÈÄÅ‰ø°„Åô„Çã
-//    cocos2d::Director::getInstance()->getScheduler()->schedule(
-//        [this](float time) {
-//            detail2::PingRequest pingRequest;
-//            this->send(pingRequest);
-//            // CCLOG("PingRequest sent.");
-//        },
-//        this, static_cast<float>(KeepAliveIntervalInSeconds), true, KeepAliveFunctionIdentifier
-//    );
+    m_pWebSocketBase->SendText(message);
 }
 
-WebSocket::~WebSocket()
+void Gs2WebSocket::onConnectComplete()
 {
-//    cocos2d::Director::getInstance()->getScheduler()->unschedule(KeepAliveFunctionIdentifier, this);
-    // TODO: close „Çí„Åç„Å°„Çì„Å®ÂæÖ„Å§
+    onOpen();
 }
 
-bool WebSocket::open()
+void Gs2WebSocket::onConnectError(const FString& error)
 {
-    std::lock_guard<std::mutex> lock(m_Mutex);
-
-    if (m_State != State::Idle)
-    {
-        return false;
-    }
-
-    m_WebSocket.emplace();
-
-    auto path = std::move(cocos2d::FileUtils::getInstance()->getWritablePath() + "root-ca");
-
-    if (cocos2d::FileUtils::getInstance()->isFileExist(path))
-    {
-        bool isSuccessful = m_WebSocket->init(m_Delegate, "wss://gateway-ws.ap-northeast-1.gen2.gs2io.com", nullptr, path);
-
-        if (isSuccessful)
-        {
-            m_State = State::Opening;
-        }
-
-        return isSuccessful;
-    }
-    else
-    {
-        cocos2d::Data data;
-        data.copy(reinterpret_cast<const unsigned char*>(RootCaCertificates), SizeOfRootCaCertificates - 1);
-        cocos2d::FileUtils::getInstance()->writeDataToFile(
-            std::move(data),
-            path,
-            [this](bool isSuccessful) {
-                this->writeRootCaCertificatesCallback(isSuccessful);
-            }
-        );
-
-        m_State = State::WritingFile;
-
-        return true;
-    }
-}
-
-void WebSocket::writeRootCaCertificatesCallback(bool isSuccessful)
-{
-    std::lock_guard<std::mutex> lock(m_Mutex);
-
-    if (m_State == State::Cancelling)
-    {
-        isSuccessful = false;
-    }
-
-    if (isSuccessful)
-    {
-        auto path = std::move(cocos2d::FileUtils::getInstance()->getWritablePath() + "root-ca");
-        isSuccessful = m_WebSocket->init(m_Delegate, "wss://gateway-ws.ap-northeast-1.gen2.gs2io.com", nullptr, path);
-    }
-
-    if (isSuccessful)
-    {
-        m_State = State::Opening;
-    }
-    else
-    {
-        onError(cocos2d::network::WebSocket::ErrorCode::CONNECTION_FAILURE);    // TODO?
-        onClose();
-    }
-}
-
-void WebSocket::close()
-{
-    std::lock_guard<std::mutex> lock(m_Mutex);
-
-    switch (m_State)
-    {
-    case State::Idle:
-        break;
-
-    case State::WritingFile:
-    case State::Opening:
-        m_State = State::Cancelling;
-        break;
-
-    case State::Cancelling:
-        break;
-
-    case State::Available:
-        m_WebSocket->closeAsync();
-        break;
-    }
-}
-
-void WebSocket::send(const gs2::Char message[])
-{
-    m_WebSocket->send(message);
-}
-
-void Gs2WebSocket::onMessage(const cocos2d::network::WebSocket::Data& data)
-{
-    if (data.isBinary)
-    {
-        // „Éê„Ç§„Éä„É™„É°„ÉÉ„Çª„Éº„Ç∏„ÅØÈùûÂØæÂøú
-    }
-    else
-    {
-        Gs2WebSocketResponse gs2WebSocketResponse(data.bytes);
-        onMessage(gs2WebSocketResponse);
-    }
-}
-
-void Gs2WebSocket::onError(const cocos2d::network::WebSocket::ErrorCode& errorCode)
-{
-    // TODO
-    GS2_NOT_USED(errorCode);
-
-    Gs2ClientException::Type type;
-    switch (errorCode)  // TODO
-    {
-    case cocos2d::network::WebSocket::ErrorCode::CONNECTION_FAILURE:
-    case cocos2d::network::WebSocket::ErrorCode::TIME_OUT:
-    case cocos2d::network::WebSocket::ErrorCode::UNKNOWN:
-        type = Gs2ClientException::SessionNotOpenException;
-        break;
-    }
-
+    GS2_NOT_USED(error);
     Gs2ClientException gs2ClientException;
-    gs2ClientException.setType(type);
+    gs2ClientException.setType(Gs2ClientException::Type::SessionNotOpenException);
     onError(gs2ClientException);
+    onClose();
+}
+
+void Gs2WebSocket::onReceiveData(const FString& data)
+{
+    std::string response = TCHAR_TO_UTF8(*data);
+    Gs2WebSocketResponse gs2WebSocketResponse(response.c_str());
+    onMessage(gs2WebSocketResponse);
+}
+
+void Gs2WebSocket::onClosed()
+{
+    onClose();
 }
 
 }
