@@ -33,9 +33,12 @@ if(NOT COCOS2DX_ROOT_PATH)
         set(COCOS2DX_ROOT_PATH ${cocos2d-x_SOURCE_DIR})
         set(CMAKE_MODULE_PATH ${COCOS2DX_ROOT_PATH}/cmake/Modules/)
 
-        set(CMAKE_CXX_FLAGS "/source-charset:utf-8")
-
         include(CocosBuildSet)
+
+        if(WINDOWS)
+                add_compile_options(/source-charset:utf-8 /EHs)
+        endif()
+
         add_subdirectory(${COCOS2DX_ROOT_PATH}/cocos ${ENGINE_BINARY_PATH}/cocos/core)
 
         # Cocos2d-x 自体のビルドは不要なので、簡略化のために空のファイル一つに置き換える
