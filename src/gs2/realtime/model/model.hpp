@@ -17,7 +17,11 @@
 #ifndef GS2_REALTIME_MODEL_MODEL_HPP_
 #define GS2_REALTIME_MODEL_MODEL_HPP_
 
-#include "GatheringPool.hpp"
-#include "Gathering.hpp"
+#include <gs2/core/common.hpp>
+#include "notification.hpp"
+#include "Namespace.hpp"
+#include "Room.hpp"
+#include "NotificationSetting.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_REALTIME_MODEL_MODEL_HPP_

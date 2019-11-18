@@ -19,13 +19,9 @@
 
 #include "IGs2Credential.hpp"
 #include "../util/StringHolder.hpp"
+#include <mutex>
 
 GS2_START_OF_NAMESPACE
-
-namespace detail {
-class HttpRequestBase;
-}
-class Gs2BasicRequest;
 
 class BasicGs2Credential : public IGs2Credential
 {
@@ -35,33 +31,38 @@ private:
     /** クライアントシークレット */
     StringHolder m_ClientSecret;
 
-    void authorize(detail::HttpRequestBase& request, const Gs2BasicRequest& basicRequest) const GS2_OVERRIDE;
-
 public:
-    BasicGs2Credential() = default;
-    virtual ~BasicGs2Credential() = default;
-
     /**
      * コンストラクタ。
      *
      * @param clientId クライアントID
      * @param clientSecret クライアントシークレット
      */
-    BasicGs2Credential(const Char clientId[], const Char clientSecret[]);
+    BasicGs2Credential(StringHolder clientId, StringHolder clientSecret);
+
+    BasicGs2Credential(const BasicGs2Credential& basicGs2Credential) = default;
+    BasicGs2Credential(BasicGs2Credential&& basicGs2Credential) = default;
+    ~BasicGs2Credential() GS2_OVERRIDE = default;
 
     /**
      * クライアントIDを取得。
      *
      * @return クライアントID
      */
-    const StringHolder& getClientId() const;
+    const StringHolder& getClientId() const
+    {
+        return m_ClientId;
+    }
 
     /**
      * クライアントシークレットを取得。
      *
      * @return クライアントシークレット
      */
-    const StringHolder& getClientSecret() const;
+    const StringHolder& getClientSecret() const
+    {
+        return m_ClientSecret;
+    }
 };
 
 GS2_END_OF_NAMESPACE

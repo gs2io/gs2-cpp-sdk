@@ -18,9 +18,9 @@
 #define GS2_SHOWCASE_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
-#include "Gs2ShowcaseClient.hpp"
+#include "Gs2ShowcaseRestClient.hpp"
+#include "Gs2ShowcaseWebSocketClient.hpp"
 #include "Gs2ShowcaseConst.hpp"
 
 #endif //GS2_SHOWCASE_HPP_

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace key {
@@ -35,139 +37,106 @@ namespace gs2 { namespace key {
  */
 class Key : public Gs2Object
 {
+    friend bool operator!=(const Key& lhs, const Key& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 暗号鍵GRN */
+        /** 暗号鍵 */
         optional<StringHolder> keyId;
-        /** オーナーID */
-        optional<StringHolder> ownerId;
         /** 暗号鍵名 */
         optional<StringHolder> name;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
+        /** 説明文 */
+        optional<StringHolder> description;
+        /** 暗号鍵 */
+        optional<StringHolder> secret;
+        /** 作成日時 */
+        optional<Int64> createdAt;
+        /** 最終更新日時 */
+        optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             keyId(data.keyId),
-            ownerId(data.ownerId),
             name(data.name),
-            createAt(data.createAt)
-        {}
+            description(data.description),
+            secret(data.secret),
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            keyId(std::move(data.keyId)),
-            ownerId(std::move(data.ownerId)),
-            name(std::move(data.name)),
-            createAt(std::move(data.createAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "keyId") == 0) {
+            if (std::strcmp(name_, "keyId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->keyId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "ownerId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->ownerId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "description") == 0)
+            {
+                if (jsonValue.IsString())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->description.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "secret") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->secret.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->createdAt = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Key() :
-        m_pData(nullptr)
-    {}
+    Key() = default;
+    Key(const Key& key) = default;
+    Key(Key&& key) = default;
+    ~Key() = default;
 
-    Key(const Key& key) :
-        Gs2Object(key),
-        m_pData(key.m_pData != nullptr ? new Data(*key.m_pData) : nullptr)
-    {}
+    Key& operator=(const Key& key) = default;
+    Key& operator=(Key&& key) = default;
 
-    Key(Key&& key) :
-        Gs2Object(std::move(key)),
-        m_pData(key.m_pData)
+    Key deepCopy() const
     {
-        key.m_pData = nullptr;
-    }
-
-    ~Key()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Key& operator=(const Key& key)
-    {
-        Gs2Object::operator=(key);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*key.m_pData);
-
-        return *this;
-    }
-
-    Key& operator=(Key&& key)
-    {
-        Gs2Object::operator=(std::move(key));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = key.m_pData;
-        key.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Key);
     }
 
     const Key* operator->() const
@@ -179,12 +148,10 @@ public:
     {
         return this;
     }
-
-
     /**
-     * 暗号鍵GRNを取得
+     * 暗号鍵を取得
      *
-     * @return 暗号鍵GRN
+     * @return 暗号鍵
      */
     const optional<StringHolder>& getKeyId() const
     {
@@ -192,33 +159,24 @@ public:
     }
 
     /**
-     * 暗号鍵GRNを設定
+     * 暗号鍵を設定
      *
-     * @param keyId 暗号鍵GRN
+     * @param keyId 暗号鍵
      */
-    void setKeyId(const Char* keyId)
+    void setKeyId(StringHolder keyId)
     {
-        ensureData().keyId.emplace(keyId);
+        ensureData().keyId.emplace(std::move(keyId));
     }
 
     /**
-     * オーナーIDを取得
+     * 暗号鍵を設定
      *
-     * @return オーナーID
+     * @param keyId 暗号鍵
      */
-    const optional<StringHolder>& getOwnerId() const
+    Key& withKeyId(StringHolder keyId)
     {
-        return ensureData().ownerId;
-    }
-
-    /**
-     * オーナーIDを設定
-     *
-     * @param ownerId オーナーID
-     */
-    void setOwnerId(const Char* ownerId)
-    {
-        ensureData().ownerId.emplace(ownerId);
+        setKeyId(std::move(keyId));
+        return *this;
     }
 
     /**
@@ -236,29 +194,144 @@ public:
      *
      * @param name 暗号鍵名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * 暗号鍵名を設定
      *
-     * @return 作成日時(エポック秒)
+     * @param name 暗号鍵名
      */
-    const optional<Int32>& getCreateAt() const
+    Key& withName(StringHolder name)
     {
-        return ensureData().createAt;
+        setName(std::move(name));
+        return *this;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * 説明文を取得
      *
-     * @param createAt 作成日時(エポック秒)
+     * @return 説明文
      */
-    void setCreateAt(Int32 createAt)
+    const optional<StringHolder>& getDescription() const
     {
-        ensureData().createAt.emplace(createAt);
+        return ensureData().description;
+    }
+
+    /**
+     * 説明文を設定
+     *
+     * @param description 説明文
+     */
+    void setDescription(StringHolder description)
+    {
+        ensureData().description.emplace(std::move(description));
+    }
+
+    /**
+     * 説明文を設定
+     *
+     * @param description 説明文
+     */
+    Key& withDescription(StringHolder description)
+    {
+        setDescription(std::move(description));
+        return *this;
+    }
+
+    /**
+     * 暗号鍵を取得
+     *
+     * @return 暗号鍵
+     */
+    const optional<StringHolder>& getSecret() const
+    {
+        return ensureData().secret;
+    }
+
+    /**
+     * 暗号鍵を設定
+     *
+     * @param secret 暗号鍵
+     */
+    void setSecret(StringHolder secret)
+    {
+        ensureData().secret.emplace(std::move(secret));
+    }
+
+    /**
+     * 暗号鍵を設定
+     *
+     * @param secret 暗号鍵
+     */
+    Key& withSecret(StringHolder secret)
+    {
+        setSecret(std::move(secret));
+        return *this;
+    }
+
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getCreatedAt() const
+    {
+        return ensureData().createdAt;
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    void setCreatedAt(Int64 createdAt)
+    {
+        ensureData().createdAt.emplace(createdAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    Key& withCreatedAt(Int64 createdAt)
+    {
+        setCreatedAt(createdAt);
+        return *this;
+    }
+
+    /**
+     * 最終更新日時を取得
+     *
+     * @return 最終更新日時
+     */
+    const optional<Int64>& getUpdatedAt() const
+    {
+        return ensureData().updatedAt;
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    void setUpdatedAt(Int64 updatedAt)
+    {
+        ensureData().updatedAt.emplace(updatedAt);
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    Key& withUpdatedAt(Int64 updatedAt)
+    {
+        setUpdatedAt(updatedAt);
+        return *this;
     }
 
 
@@ -267,6 +340,47 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const Key& lhs, const Key& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->keyId != lhr.m_pData->keyId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->secret != lhr.m_pData->secret)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const Key& lhs, const Key& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

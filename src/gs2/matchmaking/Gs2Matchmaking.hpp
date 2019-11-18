@@ -18,9 +18,9 @@
 #define GS2_MATCHMAKING_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
-#include "Gs2MatchmakingClient.hpp"
+#include "Gs2MatchmakingRestClient.hpp"
+#include "Gs2MatchmakingWebSocketClient.hpp"
 #include "Gs2MatchmakingConst.hpp"
 
 #endif //GS2_MATCHMAKING_HPP_

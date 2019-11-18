@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace limit {
@@ -35,159 +37,116 @@ namespace gs2 { namespace limit {
  */
 class Counter : public Gs2Object
 {
+    friend bool operator!=(const Counter& lhs, const Counter& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザID */
+        /** カウンター */
+        optional<StringHolder> counterId;
+        /** 回数制限の種類の名前 */
+        optional<StringHolder> limitName;
+        /** カウンターの名前 */
+        optional<StringHolder> name;
+        /** ユーザーID */
         optional<StringHolder> userId;
-        /** カウンター名 */
-        optional<StringHolder> counterName;
-        /** 現在のカウント値 */
+        /** カウント値 */
         optional<Int32> count;
-        /** カウントのリミット値 */
-        optional<Int32> limit;
-        /** 次回リセット日時(エポック秒) */
-        optional<Int32> nextResetAt;
-        /** 最後にカウンターを進めた時間(エポック秒) */
-        optional<Int32> countAt;
+        /** 作成日時 */
+        optional<Int64> createdAt;
+        /** 最終更新日時 */
+        optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            counterId(data.counterId),
+            limitName(data.limitName),
+            name(data.name),
             userId(data.userId),
-            counterName(data.counterName),
             count(data.count),
-            limit(data.limit),
-            nextResetAt(data.nextResetAt),
-            countAt(data.countAt)
-        {}
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            userId(std::move(data.userId)),
-            counterName(std::move(data.counterName)),
-            count(std::move(data.count)),
-            limit(std::move(data.limit)),
-            nextResetAt(std::move(data.nextResetAt)),
-            countAt(std::move(data.countAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "userId") == 0) {
+            if (std::strcmp(name_, "counterId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->counterId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "limitName") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->limitName.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "name") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->name.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "counterName") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->counterName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "count") == 0) {
+            else if (std::strcmp(name_, "count") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->count = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "limit") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
+                if (jsonValue.IsInt64())
                 {
-                    this->limit = jsonValue.GetInt();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "nextResetAt") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
+                if (jsonValue.IsInt64())
                 {
-                    this->nextResetAt = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name, "countAt") == 0) {
-                if (jsonValue.IsInt())
-                {
-                    this->countAt = jsonValue.GetInt();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Counter() :
-        m_pData(nullptr)
-    {}
+    Counter() = default;
+    Counter(const Counter& counter) = default;
+    Counter(Counter&& counter) = default;
+    ~Counter() = default;
 
-    Counter(const Counter& counter) :
-        Gs2Object(counter),
-        m_pData(counter.m_pData != nullptr ? new Data(*counter.m_pData) : nullptr)
-    {}
+    Counter& operator=(const Counter& counter) = default;
+    Counter& operator=(Counter&& counter) = default;
 
-    Counter(Counter&& counter) :
-        Gs2Object(std::move(counter)),
-        m_pData(counter.m_pData)
+    Counter deepCopy() const
     {
-        counter.m_pData = nullptr;
-    }
-
-    ~Counter()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Counter& operator=(const Counter& counter)
-    {
-        Gs2Object::operator=(counter);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*counter.m_pData);
-
-        return *this;
-    }
-
-    Counter& operator=(Counter&& counter)
-    {
-        Gs2Object::operator=(std::move(counter));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = counter.m_pData;
-        counter.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Counter);
     }
 
     const Counter* operator->() const
@@ -199,12 +158,103 @@ public:
     {
         return this;
     }
-
+    /**
+     * カウンターを取得
+     *
+     * @return カウンター
+     */
+    const optional<StringHolder>& getCounterId() const
+    {
+        return ensureData().counterId;
+    }
 
     /**
-     * ユーザIDを取得
+     * カウンターを設定
      *
-     * @return ユーザID
+     * @param counterId カウンター
+     */
+    void setCounterId(StringHolder counterId)
+    {
+        ensureData().counterId.emplace(std::move(counterId));
+    }
+
+    /**
+     * カウンターを設定
+     *
+     * @param counterId カウンター
+     */
+    Counter& withCounterId(StringHolder counterId)
+    {
+        setCounterId(std::move(counterId));
+        return *this;
+    }
+
+    /**
+     * 回数制限の種類の名前を取得
+     *
+     * @return 回数制限の種類の名前
+     */
+    const optional<StringHolder>& getLimitName() const
+    {
+        return ensureData().limitName;
+    }
+
+    /**
+     * 回数制限の種類の名前を設定
+     *
+     * @param limitName 回数制限の種類の名前
+     */
+    void setLimitName(StringHolder limitName)
+    {
+        ensureData().limitName.emplace(std::move(limitName));
+    }
+
+    /**
+     * 回数制限の種類の名前を設定
+     *
+     * @param limitName 回数制限の種類の名前
+     */
+    Counter& withLimitName(StringHolder limitName)
+    {
+        setLimitName(std::move(limitName));
+        return *this;
+    }
+
+    /**
+     * カウンターの名前を取得
+     *
+     * @return カウンターの名前
+     */
+    const optional<StringHolder>& getName() const
+    {
+        return ensureData().name;
+    }
+
+    /**
+     * カウンターの名前を設定
+     *
+     * @param name カウンターの名前
+     */
+    void setName(StringHolder name)
+    {
+        ensureData().name.emplace(std::move(name));
+    }
+
+    /**
+     * カウンターの名前を設定
+     *
+     * @param name カウンターの名前
+     */
+    Counter& withName(StringHolder name)
+    {
+        setName(std::move(name));
+        return *this;
+    }
+
+    /**
+     * ユーザーIDを取得
+     *
+     * @return ユーザーID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -212,39 +262,30 @@ public:
     }
 
     /**
-     * ユーザIDを設定
+     * ユーザーIDを設定
      *
-     * @param userId ユーザID
+     * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
-     * カウンター名を取得
+     * ユーザーIDを設定
      *
-     * @return カウンター名
+     * @param userId ユーザーID
      */
-    const optional<StringHolder>& getCounterName() const
+    Counter& withUserId(StringHolder userId)
     {
-        return ensureData().counterName;
+        setUserId(std::move(userId));
+        return *this;
     }
 
     /**
-     * カウンター名を設定
+     * カウント値を取得
      *
-     * @param counterName カウンター名
-     */
-    void setCounterName(const Char* counterName)
-    {
-        ensureData().counterName.emplace(counterName);
-    }
-
-    /**
-     * 現在のカウント値を取得
-     *
-     * @return 現在のカウント値
+     * @return カウント値
      */
     const optional<Int32>& getCount() const
     {
@@ -252,9 +293,9 @@ public:
     }
 
     /**
-     * 現在のカウント値を設定
+     * カウント値を設定
      *
-     * @param count 現在のカウント値
+     * @param count カウント値
      */
     void setCount(Int32 count)
     {
@@ -262,63 +303,76 @@ public:
     }
 
     /**
-     * カウントのリミット値を取得
+     * カウント値を設定
      *
-     * @return カウントのリミット値
+     * @param count カウント値
      */
-    const optional<Int32>& getLimit() const
+    Counter& withCount(Int32 count)
     {
-        return ensureData().limit;
+        setCount(count);
+        return *this;
     }
 
     /**
-     * カウントのリミット値を設定
+     * 作成日時を取得
      *
-     * @param limit カウントのリミット値
+     * @return 作成日時
      */
-    void setLimit(Int32 limit)
+    const optional<Int64>& getCreatedAt() const
     {
-        ensureData().limit.emplace(limit);
+        return ensureData().createdAt;
     }
 
     /**
-     * 次回リセット日時(エポック秒)を取得
+     * 作成日時を設定
      *
-     * @return 次回リセット日時(エポック秒)
+     * @param createdAt 作成日時
      */
-    const optional<Int32>& getNextResetAt() const
+    void setCreatedAt(Int64 createdAt)
     {
-        return ensureData().nextResetAt;
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
-     * 次回リセット日時(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param nextResetAt 次回リセット日時(エポック秒)
+     * @param createdAt 作成日時
      */
-    void setNextResetAt(Int32 nextResetAt)
+    Counter& withCreatedAt(Int64 createdAt)
     {
-        ensureData().nextResetAt.emplace(nextResetAt);
+        setCreatedAt(createdAt);
+        return *this;
     }
 
     /**
-     * 最後にカウンターを進めた時間(エポック秒)を取得
+     * 最終更新日時を取得
      *
-     * @return 最後にカウンターを進めた時間(エポック秒)
+     * @return 最終更新日時
      */
-    const optional<Int32>& getCountAt() const
+    const optional<Int64>& getUpdatedAt() const
     {
-        return ensureData().countAt;
+        return ensureData().updatedAt;
     }
 
     /**
-     * 最後にカウンターを進めた時間(エポック秒)を設定
+     * 最終更新日時を設定
      *
-     * @param countAt 最後にカウンターを進めた時間(エポック秒)
+     * @param updatedAt 最終更新日時
      */
-    void setCountAt(Int32 countAt)
+    void setUpdatedAt(Int64 updatedAt)
     {
-        ensureData().countAt.emplace(countAt);
+        ensureData().updatedAt.emplace(updatedAt);
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    Counter& withUpdatedAt(Int64 updatedAt)
+    {
+        setUpdatedAt(updatedAt);
+        return *this;
     }
 
 
@@ -327,6 +381,51 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const Counter& lhs, const Counter& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->counterId != lhr.m_pData->counterId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->limitName != lhr.m_pData->limitName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->count != lhr.m_pData->count)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const Counter& lhs, const Counter& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace schedule {
@@ -35,139 +37,196 @@ namespace gs2 { namespace schedule {
  */
 class Event : public Gs2Object
 {
+    friend bool operator!=(const Event& lhs, const Event& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** イベント名 */
+        /** イベントマスター */
+        optional<StringHolder> eventId;
+        /** イベントの種類名 */
         optional<StringHolder> name;
-        /** メタデータ */
-        optional<StringHolder> meta;
-        /** 開始日時 */
-        optional<Int32> begin;
-        /** 終了日時 */
-        optional<Int32> end;
+        /** イベントの種類のメタデータ */
+        optional<StringHolder> metadata;
+        /** イベント期間の種類 */
+        optional<StringHolder> scheduleType;
+        /** 繰り返しの種類 */
+        optional<StringHolder> repeatType;
+        /** イベントの開始日時 */
+        optional<Int64> absoluteBegin;
+        /** イベントの終了日時 */
+        optional<Int64> absoluteEnd;
+        /** イベントの繰り返し開始日 */
+        optional<Int32> repeatBeginDayOfMonth;
+        /** イベントの繰り返し終了日 */
+        optional<Int32> repeatEndDayOfMonth;
+        /** イベントの繰り返し開始曜日 */
+        optional<StringHolder> repeatBeginDayOfWeek;
+        /** イベントの繰り返し終了曜日 */
+        optional<StringHolder> repeatEndDayOfWeek;
+        /** イベントの繰り返し開始時間 */
+        optional<Int32> repeatBeginHour;
+        /** イベントの繰り返し終了時間 */
+        optional<Int32> repeatEndHour;
+        /** イベントの開始トリガー */
+        optional<StringHolder> relativeTriggerName;
+        /** イベントの開催期間(秒) */
+        optional<Int32> relativeDuration;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            eventId(data.eventId),
             name(data.name),
-            meta(data.meta),
-            begin(data.begin),
-            end(data.end)
-        {}
+            metadata(data.metadata),
+            scheduleType(data.scheduleType),
+            repeatType(data.repeatType),
+            absoluteBegin(data.absoluteBegin),
+            absoluteEnd(data.absoluteEnd),
+            repeatBeginDayOfMonth(data.repeatBeginDayOfMonth),
+            repeatEndDayOfMonth(data.repeatEndDayOfMonth),
+            repeatBeginDayOfWeek(data.repeatBeginDayOfWeek),
+            repeatEndDayOfWeek(data.repeatEndDayOfWeek),
+            repeatBeginHour(data.repeatBeginHour),
+            repeatEndHour(data.repeatEndHour),
+            relativeTriggerName(data.relativeTriggerName),
+            relativeDuration(data.relativeDuration)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            name(std::move(data.name)),
-            meta(std::move(data.meta)),
-            begin(std::move(data.begin)),
-            end(std::move(data.end))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "name") == 0) {
+            if (std::strcmp(name_, "eventId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->eventId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "meta") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
-                    this->meta.emplace(jsonValue.GetString());
+                    this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "begin") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "scheduleType") == 0)
+            {
+                if (jsonValue.IsString())
                 {
-                    this->begin = jsonValue.GetInt();
+                    this->scheduleType.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "end") == 0) {
+            else if (std::strcmp(name_, "repeatType") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->repeatType.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "absoluteBegin") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->absoluteBegin = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name_, "absoluteEnd") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->absoluteEnd = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name_, "repeatBeginDayOfMonth") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
-                    this->end = jsonValue.GetInt();
+                    this->repeatBeginDayOfMonth = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "repeatEndDayOfMonth") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->repeatEndDayOfMonth = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "repeatBeginDayOfWeek") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->repeatBeginDayOfWeek.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "repeatEndDayOfWeek") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->repeatEndDayOfWeek.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "repeatBeginHour") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->repeatBeginHour = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "repeatEndHour") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->repeatEndHour = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "relativeTriggerName") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->relativeTriggerName.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "relativeDuration") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->relativeDuration = jsonValue.GetInt();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Event() :
-        m_pData(nullptr)
-    {}
+    Event() = default;
+    Event(const Event& event) = default;
+    Event(Event&& event) = default;
+    ~Event() = default;
 
-    Event(const Event& event) :
-        Gs2Object(event),
-        m_pData(event.m_pData != nullptr ? new Data(*event.m_pData) : nullptr)
-    {}
+    Event& operator=(const Event& event) = default;
+    Event& operator=(Event&& event) = default;
 
-    Event(Event&& event) :
-        Gs2Object(std::move(event)),
-        m_pData(event.m_pData)
+    Event deepCopy() const
     {
-        event.m_pData = nullptr;
-    }
-
-    ~Event()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Event& operator=(const Event& event)
-    {
-        Gs2Object::operator=(event);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*event.m_pData);
-
-        return *this;
-    }
-
-    Event& operator=(Event&& event)
-    {
-        Gs2Object::operator=(std::move(event));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = event.m_pData;
-        event.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Event);
     }
 
     const Event* operator->() const
@@ -179,12 +238,41 @@ public:
     {
         return this;
     }
-
+    /**
+     * イベントマスターを取得
+     *
+     * @return イベントマスター
+     */
+    const optional<StringHolder>& getEventId() const
+    {
+        return ensureData().eventId;
+    }
 
     /**
-     * イベント名を取得
+     * イベントマスターを設定
      *
-     * @return イベント名
+     * @param eventId イベントマスター
+     */
+    void setEventId(StringHolder eventId)
+    {
+        ensureData().eventId.emplace(std::move(eventId));
+    }
+
+    /**
+     * イベントマスターを設定
+     *
+     * @param eventId イベントマスター
+     */
+    Event& withEventId(StringHolder eventId)
+    {
+        setEventId(std::move(eventId));
+        return *this;
+    }
+
+    /**
+     * イベントの種類名を取得
+     *
+     * @return イベントの種類名
      */
     const optional<StringHolder>& getName() const
     {
@@ -192,73 +280,427 @@ public:
     }
 
     /**
-     * イベント名を設定
+     * イベントの種類名を設定
      *
-     * @param name イベント名
+     * @param name イベントの種類名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
-     * メタデータを取得
+     * イベントの種類名を設定
      *
-     * @return メタデータ
+     * @param name イベントの種類名
      */
-    const optional<StringHolder>& getMeta() const
+    Event& withName(StringHolder name)
     {
-        return ensureData().meta;
+        setName(std::move(name));
+        return *this;
     }
 
     /**
-     * メタデータを設定
+     * イベントの種類のメタデータを取得
      *
-     * @param meta メタデータ
+     * @return イベントの種類のメタデータ
      */
-    void setMeta(const Char* meta)
+    const optional<StringHolder>& getMetadata() const
     {
-        ensureData().meta.emplace(meta);
+        return ensureData().metadata;
     }
 
     /**
-     * 開始日時を取得
+     * イベントの種類のメタデータを設定
      *
-     * @return 開始日時
+     * @param metadata イベントの種類のメタデータ
      */
-    const optional<Int32>& getBegin() const
+    void setMetadata(StringHolder metadata)
     {
-        return ensureData().begin;
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
-     * 開始日時を設定
+     * イベントの種類のメタデータを設定
      *
-     * @param begin 開始日時
+     * @param metadata イベントの種類のメタデータ
      */
-    void setBegin(Int32 begin)
+    Event& withMetadata(StringHolder metadata)
     {
-        ensureData().begin.emplace(begin);
+        setMetadata(std::move(metadata));
+        return *this;
     }
 
     /**
-     * 終了日時を取得
+     * イベント期間の種類を取得
      *
-     * @return 終了日時
+     * @return イベント期間の種類
      */
-    const optional<Int32>& getEnd() const
+    const optional<StringHolder>& getScheduleType() const
     {
-        return ensureData().end;
+        return ensureData().scheduleType;
     }
 
     /**
-     * 終了日時を設定
+     * イベント期間の種類を設定
      *
-     * @param end 終了日時
+     * @param scheduleType イベント期間の種類
      */
-    void setEnd(Int32 end)
+    void setScheduleType(StringHolder scheduleType)
     {
-        ensureData().end.emplace(end);
+        ensureData().scheduleType.emplace(std::move(scheduleType));
+    }
+
+    /**
+     * イベント期間の種類を設定
+     *
+     * @param scheduleType イベント期間の種類
+     */
+    Event& withScheduleType(StringHolder scheduleType)
+    {
+        setScheduleType(std::move(scheduleType));
+        return *this;
+    }
+
+    /**
+     * 繰り返しの種類を取得
+     *
+     * @return 繰り返しの種類
+     */
+    const optional<StringHolder>& getRepeatType() const
+    {
+        return ensureData().repeatType;
+    }
+
+    /**
+     * 繰り返しの種類を設定
+     *
+     * @param repeatType 繰り返しの種類
+     */
+    void setRepeatType(StringHolder repeatType)
+    {
+        ensureData().repeatType.emplace(std::move(repeatType));
+    }
+
+    /**
+     * 繰り返しの種類を設定
+     *
+     * @param repeatType 繰り返しの種類
+     */
+    Event& withRepeatType(StringHolder repeatType)
+    {
+        setRepeatType(std::move(repeatType));
+        return *this;
+    }
+
+    /**
+     * イベントの開始日時を取得
+     *
+     * @return イベントの開始日時
+     */
+    const optional<Int64>& getAbsoluteBegin() const
+    {
+        return ensureData().absoluteBegin;
+    }
+
+    /**
+     * イベントの開始日時を設定
+     *
+     * @param absoluteBegin イベントの開始日時
+     */
+    void setAbsoluteBegin(Int64 absoluteBegin)
+    {
+        ensureData().absoluteBegin.emplace(absoluteBegin);
+    }
+
+    /**
+     * イベントの開始日時を設定
+     *
+     * @param absoluteBegin イベントの開始日時
+     */
+    Event& withAbsoluteBegin(Int64 absoluteBegin)
+    {
+        setAbsoluteBegin(absoluteBegin);
+        return *this;
+    }
+
+    /**
+     * イベントの終了日時を取得
+     *
+     * @return イベントの終了日時
+     */
+    const optional<Int64>& getAbsoluteEnd() const
+    {
+        return ensureData().absoluteEnd;
+    }
+
+    /**
+     * イベントの終了日時を設定
+     *
+     * @param absoluteEnd イベントの終了日時
+     */
+    void setAbsoluteEnd(Int64 absoluteEnd)
+    {
+        ensureData().absoluteEnd.emplace(absoluteEnd);
+    }
+
+    /**
+     * イベントの終了日時を設定
+     *
+     * @param absoluteEnd イベントの終了日時
+     */
+    Event& withAbsoluteEnd(Int64 absoluteEnd)
+    {
+        setAbsoluteEnd(absoluteEnd);
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し開始日を取得
+     *
+     * @return イベントの繰り返し開始日
+     */
+    const optional<Int32>& getRepeatBeginDayOfMonth() const
+    {
+        return ensureData().repeatBeginDayOfMonth;
+    }
+
+    /**
+     * イベントの繰り返し開始日を設定
+     *
+     * @param repeatBeginDayOfMonth イベントの繰り返し開始日
+     */
+    void setRepeatBeginDayOfMonth(Int32 repeatBeginDayOfMonth)
+    {
+        ensureData().repeatBeginDayOfMonth.emplace(repeatBeginDayOfMonth);
+    }
+
+    /**
+     * イベントの繰り返し開始日を設定
+     *
+     * @param repeatBeginDayOfMonth イベントの繰り返し開始日
+     */
+    Event& withRepeatBeginDayOfMonth(Int32 repeatBeginDayOfMonth)
+    {
+        setRepeatBeginDayOfMonth(repeatBeginDayOfMonth);
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し終了日を取得
+     *
+     * @return イベントの繰り返し終了日
+     */
+    const optional<Int32>& getRepeatEndDayOfMonth() const
+    {
+        return ensureData().repeatEndDayOfMonth;
+    }
+
+    /**
+     * イベントの繰り返し終了日を設定
+     *
+     * @param repeatEndDayOfMonth イベントの繰り返し終了日
+     */
+    void setRepeatEndDayOfMonth(Int32 repeatEndDayOfMonth)
+    {
+        ensureData().repeatEndDayOfMonth.emplace(repeatEndDayOfMonth);
+    }
+
+    /**
+     * イベントの繰り返し終了日を設定
+     *
+     * @param repeatEndDayOfMonth イベントの繰り返し終了日
+     */
+    Event& withRepeatEndDayOfMonth(Int32 repeatEndDayOfMonth)
+    {
+        setRepeatEndDayOfMonth(repeatEndDayOfMonth);
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し開始曜日を取得
+     *
+     * @return イベントの繰り返し開始曜日
+     */
+    const optional<StringHolder>& getRepeatBeginDayOfWeek() const
+    {
+        return ensureData().repeatBeginDayOfWeek;
+    }
+
+    /**
+     * イベントの繰り返し開始曜日を設定
+     *
+     * @param repeatBeginDayOfWeek イベントの繰り返し開始曜日
+     */
+    void setRepeatBeginDayOfWeek(StringHolder repeatBeginDayOfWeek)
+    {
+        ensureData().repeatBeginDayOfWeek.emplace(std::move(repeatBeginDayOfWeek));
+    }
+
+    /**
+     * イベントの繰り返し開始曜日を設定
+     *
+     * @param repeatBeginDayOfWeek イベントの繰り返し開始曜日
+     */
+    Event& withRepeatBeginDayOfWeek(StringHolder repeatBeginDayOfWeek)
+    {
+        setRepeatBeginDayOfWeek(std::move(repeatBeginDayOfWeek));
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し終了曜日を取得
+     *
+     * @return イベントの繰り返し終了曜日
+     */
+    const optional<StringHolder>& getRepeatEndDayOfWeek() const
+    {
+        return ensureData().repeatEndDayOfWeek;
+    }
+
+    /**
+     * イベントの繰り返し終了曜日を設定
+     *
+     * @param repeatEndDayOfWeek イベントの繰り返し終了曜日
+     */
+    void setRepeatEndDayOfWeek(StringHolder repeatEndDayOfWeek)
+    {
+        ensureData().repeatEndDayOfWeek.emplace(std::move(repeatEndDayOfWeek));
+    }
+
+    /**
+     * イベントの繰り返し終了曜日を設定
+     *
+     * @param repeatEndDayOfWeek イベントの繰り返し終了曜日
+     */
+    Event& withRepeatEndDayOfWeek(StringHolder repeatEndDayOfWeek)
+    {
+        setRepeatEndDayOfWeek(std::move(repeatEndDayOfWeek));
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し開始時間を取得
+     *
+     * @return イベントの繰り返し開始時間
+     */
+    const optional<Int32>& getRepeatBeginHour() const
+    {
+        return ensureData().repeatBeginHour;
+    }
+
+    /**
+     * イベントの繰り返し開始時間を設定
+     *
+     * @param repeatBeginHour イベントの繰り返し開始時間
+     */
+    void setRepeatBeginHour(Int32 repeatBeginHour)
+    {
+        ensureData().repeatBeginHour.emplace(repeatBeginHour);
+    }
+
+    /**
+     * イベントの繰り返し開始時間を設定
+     *
+     * @param repeatBeginHour イベントの繰り返し開始時間
+     */
+    Event& withRepeatBeginHour(Int32 repeatBeginHour)
+    {
+        setRepeatBeginHour(repeatBeginHour);
+        return *this;
+    }
+
+    /**
+     * イベントの繰り返し終了時間を取得
+     *
+     * @return イベントの繰り返し終了時間
+     */
+    const optional<Int32>& getRepeatEndHour() const
+    {
+        return ensureData().repeatEndHour;
+    }
+
+    /**
+     * イベントの繰り返し終了時間を設定
+     *
+     * @param repeatEndHour イベントの繰り返し終了時間
+     */
+    void setRepeatEndHour(Int32 repeatEndHour)
+    {
+        ensureData().repeatEndHour.emplace(repeatEndHour);
+    }
+
+    /**
+     * イベントの繰り返し終了時間を設定
+     *
+     * @param repeatEndHour イベントの繰り返し終了時間
+     */
+    Event& withRepeatEndHour(Int32 repeatEndHour)
+    {
+        setRepeatEndHour(repeatEndHour);
+        return *this;
+    }
+
+    /**
+     * イベントの開始トリガーを取得
+     *
+     * @return イベントの開始トリガー
+     */
+    const optional<StringHolder>& getRelativeTriggerName() const
+    {
+        return ensureData().relativeTriggerName;
+    }
+
+    /**
+     * イベントの開始トリガーを設定
+     *
+     * @param relativeTriggerName イベントの開始トリガー
+     */
+    void setRelativeTriggerName(StringHolder relativeTriggerName)
+    {
+        ensureData().relativeTriggerName.emplace(std::move(relativeTriggerName));
+    }
+
+    /**
+     * イベントの開始トリガーを設定
+     *
+     * @param relativeTriggerName イベントの開始トリガー
+     */
+    Event& withRelativeTriggerName(StringHolder relativeTriggerName)
+    {
+        setRelativeTriggerName(std::move(relativeTriggerName));
+        return *this;
+    }
+
+    /**
+     * イベントの開催期間(秒)を取得
+     *
+     * @return イベントの開催期間(秒)
+     */
+    const optional<Int32>& getRelativeDuration() const
+    {
+        return ensureData().relativeDuration;
+    }
+
+    /**
+     * イベントの開催期間(秒)を設定
+     *
+     * @param relativeDuration イベントの開催期間(秒)
+     */
+    void setRelativeDuration(Int32 relativeDuration)
+    {
+        ensureData().relativeDuration.emplace(relativeDuration);
+    }
+
+    /**
+     * イベントの開催期間(秒)を設定
+     *
+     * @param relativeDuration イベントの開催期間(秒)
+     */
+    Event& withRelativeDuration(Int32 relativeDuration)
+    {
+        setRelativeDuration(relativeDuration);
+        return *this;
     }
 
 
@@ -267,6 +709,83 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const Event& lhs, const Event& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->eventId != lhr.m_pData->eventId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->scheduleType != lhr.m_pData->scheduleType)
+        {
+            return true;
+        }
+        if (lhs.m_pData->repeatType != lhr.m_pData->repeatType)
+        {
+            return true;
+        }
+        if (lhs.m_pData->absoluteBegin != lhr.m_pData->absoluteBegin)
+        {
+            return true;
+        }
+        if (lhs.m_pData->absoluteEnd != lhr.m_pData->absoluteEnd)
+        {
+            return true;
+        }
+        if (lhs.m_pData->repeatBeginDayOfMonth != lhr.m_pData->repeatBeginDayOfMonth)
+        {
+            return true;
+        }
+        if (lhs.m_pData->repeatEndDayOfMonth != lhr.m_pData->repeatEndDayOfMonth)
+        {
+            return true;
+        }
+        if (lhs.m_pData->repeatBeginDayOfWeek != lhr.m_pData->repeatBeginDayOfWeek)
+        {
+            return true;
+        }
+        if (lhs.m_pData->repeatEndDayOfWeek != lhr.m_pData->repeatEndDayOfWeek)
+        {
+            return true;
+        }
+        if (lhs.m_pData->repeatBeginHour != lhr.m_pData->repeatBeginHour)
+        {
+            return true;
+        }
+        if (lhs.m_pData->repeatEndHour != lhr.m_pData->repeatEndHour)
+        {
+            return true;
+        }
+        if (lhs.m_pData->relativeTriggerName != lhr.m_pData->relativeTriggerName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->relativeDuration != lhr.m_pData->relativeDuration)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const Event& lhs, const Event& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,7 +22,10 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "AcquireAction.hpp"
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace inbox {
@@ -35,169 +38,135 @@ namespace gs2 { namespace inbox {
  */
 class Message : public Gs2Object
 {
+    friend bool operator!=(const Message& lhs, const Message& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** メッセージID */
+        /** メッセージ */
         optional<StringHolder> messageId;
-        /** 受信ボックスGRN */
-        optional<StringHolder> inboxId;
-        /** 発言者ユーザID */
+        /** メッセージID */
+        optional<StringHolder> name;
+        /** ユーザーID */
         optional<StringHolder> userId;
-        /** メッセージ本文 */
-        optional<StringHolder> message;
-        /** 開封時に通知を出すか */
-        optional<Bool> cooperation;
+        /** メッセージの内容に相当するメタデータ */
+        optional<StringHolder> metadata;
         /** 既読状態 */
-        optional<Bool> read;
-        /** 受信日時(エポック秒) */
-        optional<Int32> date;
+        optional<Bool> isRead;
+        /** 開封時に実行する入手アクション */
+        optional<List<AcquireAction>> readAcquireActions;
+        /** 作成日時 */
+        optional<Int64> receivedAt;
+        /** 最終更新日時 */
+        optional<Int64> readAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             messageId(data.messageId),
-            inboxId(data.inboxId),
+            name(data.name),
             userId(data.userId),
-            message(data.message),
-            cooperation(data.cooperation),
-            read(data.read),
-            date(data.date)
-        {}
+            metadata(data.metadata),
+            isRead(data.isRead),
+            receivedAt(data.receivedAt),
+            readAt(data.readAt)
+        {
+            if (data.readAcquireActions)
+            {
+                readAcquireActions = data.readAcquireActions->deepCopy();
+            }
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            messageId(std::move(data.messageId)),
-            inboxId(std::move(data.inboxId)),
-            userId(std::move(data.userId)),
-            message(std::move(data.message)),
-            cooperation(std::move(data.cooperation)),
-            read(std::move(data.read)),
-            date(std::move(data.date))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "messageId") == 0) {
+            if (std::strcmp(name_, "messageId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->messageId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "inboxId") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
-                    this->inboxId.emplace(jsonValue.GetString());
+                    this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "message") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
-                    this->message.emplace(jsonValue.GetString());
+                    this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "cooperation") == 0) {
+            else if (std::strcmp(name_, "isRead") == 0)
+            {
                 if (jsonValue.IsBool())
                 {
-                    this->cooperation = jsonValue.GetBool();
+                    this->isRead = jsonValue.GetBool();
                 }
             }
-            else if (std::strcmp(name, "read") == 0) {
-                if (jsonValue.IsBool())
+            else if (std::strcmp(name_, "readAcquireActions") == 0)
+            {
+                if (jsonValue.IsArray())
                 {
-                    this->read = jsonValue.GetBool();
+                    const auto& array = jsonValue.GetArray();
+                    this->readAcquireActions.emplace();
+                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
+                        AcquireAction item;
+                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        detail::addToList(*this->readAcquireActions, std::move(item));
+                    }
                 }
             }
-            else if (std::strcmp(name, "date") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "receivedAt") == 0)
+            {
+                if (jsonValue.IsInt64())
                 {
-                    this->date = jsonValue.GetInt();
+                    this->receivedAt = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name_, "readAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->readAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Message() :
-        m_pData(nullptr)
-    {}
+    Message() = default;
+    Message(const Message& message) = default;
+    Message(Message&& message) = default;
+    ~Message() = default;
 
-    Message(const Message& message) :
-        Gs2Object(message),
-        m_pData(message.m_pData != nullptr ? new Data(*message.m_pData) : nullptr)
-    {}
+    Message& operator=(const Message& message) = default;
+    Message& operator=(Message&& message) = default;
 
-    Message(Message&& message) :
-        Gs2Object(std::move(message)),
-        m_pData(message.m_pData)
+    Message deepCopy() const
     {
-        message.m_pData = nullptr;
-    }
-
-    ~Message()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Message& operator=(const Message& message)
-    {
-        Gs2Object::operator=(message);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*message.m_pData);
-
-        return *this;
-    }
-
-    Message& operator=(Message&& message)
-    {
-        Gs2Object::operator=(std::move(message));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = message.m_pData;
-        message.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Message);
     }
 
     const Message* operator->() const
@@ -209,12 +178,10 @@ public:
     {
         return this;
     }
-
-
     /**
-     * メッセージIDを取得
+     * メッセージを取得
      *
-     * @return メッセージID
+     * @return メッセージ
      */
     const optional<StringHolder>& getMessageId() const
     {
@@ -222,39 +189,61 @@ public:
     }
 
     /**
+     * メッセージを設定
+     *
+     * @param messageId メッセージ
+     */
+    void setMessageId(StringHolder messageId)
+    {
+        ensureData().messageId.emplace(std::move(messageId));
+    }
+
+    /**
+     * メッセージを設定
+     *
+     * @param messageId メッセージ
+     */
+    Message& withMessageId(StringHolder messageId)
+    {
+        setMessageId(std::move(messageId));
+        return *this;
+    }
+
+    /**
+     * メッセージIDを取得
+     *
+     * @return メッセージID
+     */
+    const optional<StringHolder>& getName() const
+    {
+        return ensureData().name;
+    }
+
+    /**
      * メッセージIDを設定
      *
-     * @param messageId メッセージID
+     * @param name メッセージID
      */
-    void setMessageId(const Char* messageId)
+    void setName(StringHolder name)
     {
-        ensureData().messageId.emplace(messageId);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
-     * 受信ボックスGRNを取得
+     * メッセージIDを設定
      *
-     * @return 受信ボックスGRN
+     * @param name メッセージID
      */
-    const optional<StringHolder>& getInboxId() const
+    Message& withName(StringHolder name)
     {
-        return ensureData().inboxId;
+        setName(std::move(name));
+        return *this;
     }
 
     /**
-     * 受信ボックスGRNを設定
+     * ユーザーIDを取得
      *
-     * @param inboxId 受信ボックスGRN
-     */
-    void setInboxId(const Char* inboxId)
-    {
-        ensureData().inboxId.emplace(inboxId);
-    }
-
-    /**
-     * 発言者ユーザIDを取得
-     *
-     * @return 発言者ユーザID
+     * @return ユーザーID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -262,53 +251,55 @@ public:
     }
 
     /**
-     * 発言者ユーザIDを設定
+     * ユーザーIDを設定
      *
-     * @param userId 発言者ユーザID
+     * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
-     * メッセージ本文を取得
+     * ユーザーIDを設定
      *
-     * @return メッセージ本文
+     * @param userId ユーザーID
      */
-    const optional<StringHolder>& getMessage() const
+    Message& withUserId(StringHolder userId)
     {
-        return ensureData().message;
+        setUserId(std::move(userId));
+        return *this;
     }
 
     /**
-     * メッセージ本文を設定
+     * メッセージの内容に相当するメタデータを取得
      *
-     * @param message メッセージ本文
+     * @return メッセージの内容に相当するメタデータ
      */
-    void setMessage(const Char* message)
+    const optional<StringHolder>& getMetadata() const
     {
-        ensureData().message.emplace(message);
+        return ensureData().metadata;
     }
 
     /**
-     * 開封時に通知を出すかを取得
+     * メッセージの内容に相当するメタデータを設定
      *
-     * @return 開封時に通知を出すか
+     * @param metadata メッセージの内容に相当するメタデータ
      */
-    const optional<Bool>& getCooperation() const
+    void setMetadata(StringHolder metadata)
     {
-        return ensureData().cooperation;
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
-     * 開封時に通知を出すかを設定
+     * メッセージの内容に相当するメタデータを設定
      *
-     * @param cooperation 開封時に通知を出すか
+     * @param metadata メッセージの内容に相当するメタデータ
      */
-    void setCooperation(Bool cooperation)
+    Message& withMetadata(StringHolder metadata)
     {
-        ensureData().cooperation.emplace(cooperation);
+        setMetadata(std::move(metadata));
+        return *this;
     }
 
     /**
@@ -316,39 +307,123 @@ public:
      *
      * @return 既読状態
      */
-    const optional<Bool>& getRead() const
+    const optional<Bool>& getIsRead() const
     {
-        return ensureData().read;
+        return ensureData().isRead;
     }
 
     /**
      * 既読状態を設定
      *
-     * @param read 既読状態
+     * @param isRead 既読状態
      */
-    void setRead(Bool read)
+    void setIsRead(Bool isRead)
     {
-        ensureData().read.emplace(read);
+        ensureData().isRead.emplace(isRead);
     }
 
     /**
-     * 受信日時(エポック秒)を取得
+     * 既読状態を設定
      *
-     * @return 受信日時(エポック秒)
+     * @param isRead 既読状態
      */
-    const optional<Int32>& getDate() const
+    Message& withIsRead(Bool isRead)
     {
-        return ensureData().date;
+        setIsRead(isRead);
+        return *this;
     }
 
     /**
-     * 受信日時(エポック秒)を設定
+     * 開封時に実行する入手アクションを取得
      *
-     * @param date 受信日時(エポック秒)
+     * @return 開封時に実行する入手アクション
      */
-    void setDate(Int32 date)
+    const optional<List<AcquireAction>>& getReadAcquireActions() const
     {
-        ensureData().date.emplace(date);
+        return ensureData().readAcquireActions;
+    }
+
+    /**
+     * 開封時に実行する入手アクションを設定
+     *
+     * @param readAcquireActions 開封時に実行する入手アクション
+     */
+    void setReadAcquireActions(List<AcquireAction> readAcquireActions)
+    {
+        ensureData().readAcquireActions.emplace(std::move(readAcquireActions));
+    }
+
+    /**
+     * 開封時に実行する入手アクションを設定
+     *
+     * @param readAcquireActions 開封時に実行する入手アクション
+     */
+    Message& withReadAcquireActions(List<AcquireAction> readAcquireActions)
+    {
+        setReadAcquireActions(std::move(readAcquireActions));
+        return *this;
+    }
+
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getReceivedAt() const
+    {
+        return ensureData().receivedAt;
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param receivedAt 作成日時
+     */
+    void setReceivedAt(Int64 receivedAt)
+    {
+        ensureData().receivedAt.emplace(receivedAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param receivedAt 作成日時
+     */
+    Message& withReceivedAt(Int64 receivedAt)
+    {
+        setReceivedAt(receivedAt);
+        return *this;
+    }
+
+    /**
+     * 最終更新日時を取得
+     *
+     * @return 最終更新日時
+     */
+    const optional<Int64>& getReadAt() const
+    {
+        return ensureData().readAt;
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param readAt 最終更新日時
+     */
+    void setReadAt(Int64 readAt)
+    {
+        ensureData().readAt.emplace(readAt);
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param readAt 最終更新日時
+     */
+    Message& withReadAt(Int64 readAt)
+    {
+        setReadAt(readAt);
+        return *this;
     }
 
 
@@ -357,6 +432,55 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const Message& lhs, const Message& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->messageId != lhr.m_pData->messageId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->isRead != lhr.m_pData->isRead)
+        {
+            return true;
+        }
+        if (lhs.m_pData->readAcquireActions != lhr.m_pData->readAcquireActions)
+        {
+            return true;
+        }
+        if (lhs.m_pData->receivedAt != lhr.m_pData->receivedAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->readAt != lhr.m_pData->readAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const Message& lhs, const Message& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

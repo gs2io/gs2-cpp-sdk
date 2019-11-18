@@ -22,6 +22,5 @@
 #include "Gs2Object.hpp"
 #include "IAllocator.hpp"
 #include "model/BasicGs2Credential.hpp"
-#include "model/OnetimeTokenGs2Credential.hpp"
 
 #endif //GS2_CORE_HPP_

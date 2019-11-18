@@ -17,10 +17,16 @@
 #ifndef GS2_JOBQUEUE_MODEL_MODEL_HPP_
 #define GS2_JOBQUEUE_MODEL_MODEL_HPP_
 
-#include "Queue.hpp"
+#include <gs2/core/common.hpp>
+#include "notification.hpp"
+#include "Namespace.hpp"
 #include "Job.hpp"
-#include "DeadJob.hpp"
 #include "JobResult.hpp"
-#include "PushJob.hpp"
+#include "DeadLetterJob.hpp"
+#include "ResponseCache.hpp"
+#include "NotificationSetting.hpp"
+#include "LogSetting.hpp"
+#include "JobEntry.hpp"
+#include "JobResultBody.hpp"
 
 #endif //GS2_JOBQUEUE_MODEL_MODEL_HPP_

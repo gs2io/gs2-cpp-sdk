@@ -18,9 +18,9 @@
 #define GS2_REALTIME_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
-#include "Gs2RealtimeClient.hpp"
+#include "Gs2RealtimeRestClient.hpp"
+#include "Gs2RealtimeWebSocketClient.hpp"
 #include "Gs2RealtimeConst.hpp"
 
 #endif //GS2_REALTIME_HPP_

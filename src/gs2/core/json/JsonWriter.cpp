@@ -20,90 +20,76 @@
 GS2_START_OF_NAMESPACE
 namespace detail { namespace json {
 
-JsonWriter JsonWriter::instance;
-
-JsonWriter::JsonWriter()
+JsonWriter::JsonWriter() :
+    m_StringBuffer(&Allocator::getInstance()),
+    m_Writer(m_StringBuffer, &Allocator::getInstance())
 {
-    this->stringBuffer = new RapidJsonStringBuffer(&Allocator::getInstance());
-    this->writer = new RapidJsonWriter(*stringBuffer, &Allocator::getInstance());
-}
-
-JsonWriter& JsonWriter::getInstance() {
-    return instance;
-}
-
-JsonWriter::~JsonWriter()
-{
-    if(writer != nullptr) {
-        delete this->writer;
-        this->writer = nullptr;
-    }
 }
 
 void JsonWriter::reset()
 {
-    stringBuffer->Clear();
-    writer->Reset(*stringBuffer);
+    m_StringBuffer.Clear();
+    m_Writer.Reset(m_StringBuffer);
 }
 
 void JsonWriter::writeObjectStart()
 {
-    writer->StartObject();
+    m_Writer.StartObject();
 }
 
 void JsonWriter::writeArrayStart()
 {
-    writer->StartArray();
+    m_Writer.StartArray();
 }
 
-void JsonWriter::writePropertyName(const Char* name)
+void JsonWriter::writePropertyName(const Char name[])
 {
-    writer->Key(name);
+    m_Writer.Key(name);
 }
 
-void JsonWriter::write(const Char* value)
+void JsonWriter::writeCharArray(const Char value[])
 {
-    writer->String(value);
+    m_Writer.String(value);
 }
 
-void JsonWriter::write(bool value)
+void JsonWriter::writeBool(Bool value)
 {
-    writer->Bool(value);
+    m_Writer.Bool(value);
 }
 
-void JsonWriter::write(Int32 value)
+void JsonWriter::writeInt32(Int32 value)
 {
-    writer->Int(value);
+    m_Writer.Int(value);
 }
 
-void JsonWriter::write(Int64 value)
+void JsonWriter::writeInt64(Int64 value)
 {
-    writer->Int64(value);
+    m_Writer.Int64(value);
 }
 
-void JsonWriter::write(Float value)
+void JsonWriter::writeFloat(Float value)
 {
-    writer->Double(value);
+    m_Writer.Double(value);
 }
 
-void JsonWriter::write(Double value)
+void JsonWriter::writeDouble(Double value)
 {
-    writer->Double(value);
+    m_Writer.Double(value);
 }
 
 void JsonWriter::writeArrayEnd()
 {
-    writer->EndArray();
+    m_Writer.EndArray();
 }
 
 void JsonWriter::writeObjectEnd()
 {
-    writer->EndObject();
+    m_Writer.EndObject();
 }
 
 const Char* JsonWriter::toString()
 {
-    return stringBuffer->GetString();
+    return m_StringBuffer.GetString();
 }
 
 } }

@@ -15,38 +15,60 @@
  */
 
 #include "StringHolder.hpp"
+#include "StandardAllocator.hpp"
 #include <cstring>
 
 GS2_START_OF_NAMESPACE
 
-StringHolder::StringHolder(const Char string[])
-        : m_Size(std::strlen(string) + 1),
-          m_Buffer(reinterpret_cast<Char*>(Gs2Object::getAllocator().malloc(m_Size)))
-{
-    std::strcpy(m_Buffer, string);
-}
+namespace {
 
-StringHolder::StringHolder(const StringHolder& stringHolder)
-        : m_Size(stringHolder.m_Size),
-          m_Buffer(reinterpret_cast<Char*>(Gs2Object::getAllocator().malloc(m_Size)))
-{
-    std::strcpy(m_Buffer, stringHolder.m_Buffer);
-}
-
-StringHolder::StringHolder(StringHolder&& stringHolder) noexcept
-        : m_Size(stringHolder.m_Size),
-          m_Buffer(stringHolder.m_Buffer)
-{
-    stringHolder.m_Size = 0;
-    stringHolder.m_Buffer = nullptr;
-}
-
-StringHolder::~StringHolder()
-{
-    if (m_Buffer != nullptr)
+    inline void strcpy(char buffer[], const char string[])
     {
-        Gs2Object::getAllocator().free(m_Buffer);
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma warning(push)
+#pragma warning(disable:4996)
+#endif
+        std::strcpy(buffer, string);
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma warning(pop)
+#endif
     }
+
+    inline Char* alloc(Int32 size)
+    {
+        return reinterpret_cast<Char*>(Gs2Object::getAllocator().malloc(size));
+    }
+
+    void free(void* p)
+    {
+        Gs2Object::getAllocator().free(p);
+    }
+}
+
+StringHolder::StringHolder() :
+    m_Size(1)
+{
+}
+
+StringHolder::StringHolder(const Char string[]) :
+    m_Size(std::strlen(string) + 1)
+{
+    auto* buffer = alloc(m_Size);
+    strcpy(buffer, string);
+    m_Buffer.reset(buffer, free, detail::StandardAllocator<Char>());
+}
+
+StringHolder::StringHolder(const StringHolder& stringHolder) :
+    m_Size(stringHolder.m_Size),
+    m_Buffer(stringHolder.m_Buffer)
+{
+}
+
+StringHolder::StringHolder(StringHolder&& stringHolder) noexcept :
+    m_Size(stringHolder.m_Size),
+    m_Buffer(std::move(stringHolder.m_Buffer))
+{
+    stringHolder.m_Size = 1;
 }
 
 StringHolder& StringHolder::operator=(const StringHolder& stringHolder)
@@ -56,8 +78,7 @@ StringHolder& StringHolder::operator=(const StringHolder& stringHolder)
     if (&stringHolder != this)
     {
         m_Size = stringHolder.m_Size;
-        m_Buffer = reinterpret_cast<Char *>(Gs2Object::getAllocator().realloc(m_Buffer, m_Size));
-        std::strcpy(m_Buffer, stringHolder.m_Buffer);
+        m_Buffer = stringHolder.m_Buffer;
     }
 
     return *this;
@@ -69,16 +90,10 @@ StringHolder& StringHolder::operator=(StringHolder&& stringHolder) noexcept
 
     if (&stringHolder != this)
     {
-        if (m_Buffer != nullptr)
-        {
-            Gs2Object::getAllocator().free(m_Buffer);
-        }
-
         m_Size = stringHolder.m_Size;
-        m_Buffer = stringHolder.m_Buffer;
+        m_Buffer = std::move(stringHolder.m_Buffer);
 
-        stringHolder.m_Size = 0;
-        stringHolder.m_Buffer = nullptr;
+        stringHolder.m_Size = 1;
     }
 
     return *this;
@@ -86,36 +101,40 @@ StringHolder& StringHolder::operator=(StringHolder&& stringHolder) noexcept
 
 StringHolder& StringHolder::operator=(const Char string[])
 {
-    if (string != m_Buffer)
+    if (string != m_Buffer.get())
     {
         m_Size = std::strlen(string) + 1;
-        m_Buffer = reinterpret_cast<Char*>(Gs2Object::getAllocator().realloc(m_Buffer, m_Size));
-        std::strcpy(m_Buffer, string);
+        auto* buffer = alloc(m_Size);
+        strcpy(buffer, string);
+        m_Buffer.reset(buffer, free, detail::StandardAllocator<Char>());
     }
 
     return *this;
 }
 
-StringHolder::operator const Char*() const {
-    return m_Buffer;
+StringHolder::operator const Char*() const
+{
+    return getCString();
 }
 
-Int32 StringHolder::getSize() const {
+Int32 StringHolder::getSize() const
+{
     return m_Size;
 }
 
-const Char* StringHolder::getCString() const {
-    return m_Buffer;
+const Char* StringHolder::getCString() const
+{
+    return m_Buffer ? m_Buffer.get() : "";
 }
 
 bool operator==(const StringHolder& lhs, const StringHolder& lhr)
 {
-    return lhs.m_Size == lhr.m_Size && (std::strcmp(lhs.m_Buffer, lhr.m_Buffer) == 0);
+    return lhs.m_Buffer == lhr.m_Buffer || (lhs.m_Size == lhr.m_Size && std::strcmp(lhs.m_Buffer.get(), lhr.m_Buffer.get()) == 0);
 }
 
 bool operator==(const StringHolder& lhs, const Char lhr[])
 {
-    return std::strcmp(lhs.m_Buffer, lhr) == 0;
+    return std::strcmp(lhs.m_Buffer.get(), lhr) == 0;
 }
 
 bool operator==(const Char lhs[], const StringHolder& lhr)

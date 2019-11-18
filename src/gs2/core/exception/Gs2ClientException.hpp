@@ -21,7 +21,9 @@
 #include "../json/IModel.hpp"
 #include "../json/JsonParser.hpp"
 #include "../util/List.hpp"
+#include "../util/StandardAllocator.hpp"
 #include "../model/RequestError.hpp"
+#include <memory>
 
 GS2_START_OF_NAMESPACE
 
@@ -31,11 +33,12 @@ public:
     enum Type {
         UnknownException,
 
-        UnreachableException,
+        SessionNotOpenException,
+        NoInternetConnectionException,
 
         BadRequestException,
         UnauthorizedException,
-        QuotaExceedException,
+        QuotaLimitExceededException,
         NotFoundException,
         ConflictException,
         InternalServerErrorException,
@@ -51,13 +54,12 @@ private:
         optional<Type> type;
         List<RequestError> errors;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             type(data.type),
-            errors(data.errors)
+            errors(data.errors.deepCopy())
         {}
 
         Data(Data&& data) :
@@ -68,7 +70,6 @@ private:
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
@@ -79,86 +80,27 @@ private:
                 const auto& array = jsonValue.GetArray();
                 for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                     RequestError item;
-                    detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(json->GetObject()));
-                    errors += std::move(item);
+                    detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                    detail::addToList(errors, std::move(item));
                 }
             }
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Gs2ClientException() :
-        m_pData(nullptr)
-    {}
+    Gs2ClientException() = default;
+    Gs2ClientException(const Gs2ClientException& gs2ClientException) = default;
+    Gs2ClientException(Gs2ClientException&& gs2ClientException) = default;
+    ~Gs2ClientException() = default;
 
-    Gs2ClientException(const Gs2ClientException& gs2ClientException) :
-        Gs2Object(gs2ClientException),
-        m_pData(gs2ClientException.m_pData != nullptr ? new Data(*gs2ClientException.m_pData) : nullptr)
+    Gs2ClientException& operator=(const Gs2ClientException& gs2ClientException) = default;
+    Gs2ClientException& operator=(Gs2ClientException&& gs2ClientException) = default;
+
+    Gs2ClientException deepCopy() const
     {
-    }
-
-    Gs2ClientException(Gs2ClientException&& gs2ClientException) :
-        Gs2Object(std::move(gs2ClientException)),
-        m_pData(gs2ClientException.m_pData)
-    {
-        gs2ClientException.m_pData = nullptr;
-    }
-
-    ~Gs2ClientException()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Gs2ClientException& operator=(const Gs2ClientException& gs2ClientException)
-    {
-        Gs2Object::operator=(gs2ClientException);
-
-        if (&gs2ClientException != this)
-        {
-            if (m_pData != nullptr)
-            {
-                delete m_pData;
-            }
-            m_pData = new Data(*gs2ClientException.m_pData);
-        }
-
-        return *this;
-    }
-
-    Gs2ClientException& operator=(Gs2ClientException&& gs2ClientException)
-    {
-        Gs2Object::operator=(std::move(gs2ClientException));
-
-        if (&gs2ClientException != this)
-        {
-            if (m_pData != nullptr)
-            {
-                delete m_pData;
-            }
-            m_pData = gs2ClientException.m_pData;
-            gs2ClientException.m_pData = nullptr;
-        }
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Gs2ClientException);
     }
 
     const Gs2ClientException* operator->() const

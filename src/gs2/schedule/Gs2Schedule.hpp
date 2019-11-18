@@ -18,9 +18,9 @@
 #define GS2_SCHEDULE_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
-#include "Gs2ScheduleClient.hpp"
+#include "Gs2ScheduleRestClient.hpp"
+#include "Gs2ScheduleWebSocketClient.hpp"
 #include "Gs2ScheduleConst.hpp"
 
 #endif //GS2_SCHEDULE_HPP_

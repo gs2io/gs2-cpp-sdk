@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace identifier {
@@ -35,159 +37,116 @@ namespace gs2 { namespace identifier {
  */
 class SecurityPolicy : public Gs2Object
 {
+    friend bool operator!=(const SecurityPolicy& lhs, const SecurityPolicy& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** セキュリティポリシーID */
+        /** セキュリティポリシー */
         optional<StringHolder> securityPolicyId;
         /** オーナーID */
         optional<StringHolder> ownerId;
         /** セキュリティポリシー名 */
         optional<StringHolder> name;
+        /** セキュリティポリシーの説明 */
+        optional<StringHolder> description;
         /** ポリシードキュメント */
         optional<StringHolder> policy;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
-        /** 最終更新日時(エポック秒) */
-        optional<Int32> updateAt;
+        /** 作成日時 */
+        optional<Int64> createdAt;
+        /** 最終更新日時 */
+        optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             securityPolicyId(data.securityPolicyId),
             ownerId(data.ownerId),
             name(data.name),
+            description(data.description),
             policy(data.policy),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
-        {}
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            securityPolicyId(std::move(data.securityPolicyId)),
-            ownerId(std::move(data.ownerId)),
-            name(std::move(data.name)),
-            policy(std::move(data.policy)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "securityPolicyId") == 0) {
+            if (std::strcmp(name_, "securityPolicyId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->securityPolicyId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "policy") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->description.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "policy") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->policy.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
+                if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
+                if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    SecurityPolicy() :
-        m_pData(nullptr)
-    {}
+    SecurityPolicy() = default;
+    SecurityPolicy(const SecurityPolicy& securityPolicy) = default;
+    SecurityPolicy(SecurityPolicy&& securityPolicy) = default;
+    ~SecurityPolicy() = default;
 
-    SecurityPolicy(const SecurityPolicy& securityPolicy) :
-        Gs2Object(securityPolicy),
-        m_pData(securityPolicy.m_pData != nullptr ? new Data(*securityPolicy.m_pData) : nullptr)
-    {}
+    SecurityPolicy& operator=(const SecurityPolicy& securityPolicy) = default;
+    SecurityPolicy& operator=(SecurityPolicy&& securityPolicy) = default;
 
-    SecurityPolicy(SecurityPolicy&& securityPolicy) :
-        Gs2Object(std::move(securityPolicy)),
-        m_pData(securityPolicy.m_pData)
+    SecurityPolicy deepCopy() const
     {
-        securityPolicy.m_pData = nullptr;
-    }
-
-    ~SecurityPolicy()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    SecurityPolicy& operator=(const SecurityPolicy& securityPolicy)
-    {
-        Gs2Object::operator=(securityPolicy);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*securityPolicy.m_pData);
-
-        return *this;
-    }
-
-    SecurityPolicy& operator=(SecurityPolicy&& securityPolicy)
-    {
-        Gs2Object::operator=(std::move(securityPolicy));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = securityPolicy.m_pData;
-        securityPolicy.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(SecurityPolicy);
     }
 
     const SecurityPolicy* operator->() const
@@ -199,12 +158,10 @@ public:
     {
         return this;
     }
-
-
     /**
-     * セキュリティポリシーIDを取得
+     * セキュリティポリシーを取得
      *
-     * @return セキュリティポリシーID
+     * @return セキュリティポリシー
      */
     const optional<StringHolder>& getSecurityPolicyId() const
     {
@@ -212,13 +169,24 @@ public:
     }
 
     /**
-     * セキュリティポリシーIDを設定
+     * セキュリティポリシーを設定
      *
-     * @param securityPolicyId セキュリティポリシーID
+     * @param securityPolicyId セキュリティポリシー
      */
-    void setSecurityPolicyId(const Char* securityPolicyId)
+    void setSecurityPolicyId(StringHolder securityPolicyId)
     {
-        ensureData().securityPolicyId.emplace(securityPolicyId);
+        ensureData().securityPolicyId.emplace(std::move(securityPolicyId));
+    }
+
+    /**
+     * セキュリティポリシーを設定
+     *
+     * @param securityPolicyId セキュリティポリシー
+     */
+    SecurityPolicy& withSecurityPolicyId(StringHolder securityPolicyId)
+    {
+        setSecurityPolicyId(std::move(securityPolicyId));
+        return *this;
     }
 
     /**
@@ -236,9 +204,20 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
+    }
+
+    /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    SecurityPolicy& withOwnerId(StringHolder ownerId)
+    {
+        setOwnerId(std::move(ownerId));
+        return *this;
     }
 
     /**
@@ -256,9 +235,51 @@ public:
      *
      * @param name セキュリティポリシー名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
+    }
+
+    /**
+     * セキュリティポリシー名を設定
+     *
+     * @param name セキュリティポリシー名
+     */
+    SecurityPolicy& withName(StringHolder name)
+    {
+        setName(std::move(name));
+        return *this;
+    }
+
+    /**
+     * セキュリティポリシーの説明を取得
+     *
+     * @return セキュリティポリシーの説明
+     */
+    const optional<StringHolder>& getDescription() const
+    {
+        return ensureData().description;
+    }
+
+    /**
+     * セキュリティポリシーの説明を設定
+     *
+     * @param description セキュリティポリシーの説明
+     */
+    void setDescription(StringHolder description)
+    {
+        ensureData().description.emplace(std::move(description));
+    }
+
+    /**
+     * セキュリティポリシーの説明を設定
+     *
+     * @param description セキュリティポリシーの説明
+     */
+    SecurityPolicy& withDescription(StringHolder description)
+    {
+        setDescription(std::move(description));
+        return *this;
     }
 
     /**
@@ -276,49 +297,82 @@ public:
      *
      * @param policy ポリシードキュメント
      */
-    void setPolicy(const Char* policy)
+    void setPolicy(StringHolder policy)
     {
-        ensureData().policy.emplace(policy);
+        ensureData().policy.emplace(std::move(policy));
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * ポリシードキュメントを設定
      *
-     * @return 作成日時(エポック秒)
+     * @param policy ポリシードキュメント
      */
-    const optional<Int32>& getCreateAt() const
+    SecurityPolicy& withPolicy(StringHolder policy)
     {
-        return ensureData().createAt;
+        setPolicy(std::move(policy));
+        return *this;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * 作成日時を取得
      *
-     * @param createAt 作成日時(エポック秒)
+     * @return 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    const optional<Int64>& getCreatedAt() const
     {
-        ensureData().createAt.emplace(createAt);
+        return ensureData().createdAt;
     }
 
     /**
-     * 最終更新日時(エポック秒)を取得
+     * 作成日時を設定
      *
-     * @return 最終更新日時(エポック秒)
+     * @param createdAt 作成日時
      */
-    const optional<Int32>& getUpdateAt() const
+    void setCreatedAt(Int64 createdAt)
     {
-        return ensureData().updateAt;
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
-     * 最終更新日時(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param updateAt 最終更新日時(エポック秒)
+     * @param createdAt 作成日時
      */
-    void setUpdateAt(Int32 updateAt)
+    SecurityPolicy& withCreatedAt(Int64 createdAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        setCreatedAt(createdAt);
+        return *this;
+    }
+
+    /**
+     * 最終更新日時を取得
+     *
+     * @return 最終更新日時
+     */
+    const optional<Int64>& getUpdatedAt() const
+    {
+        return ensureData().updatedAt;
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    void setUpdatedAt(Int64 updatedAt)
+    {
+        ensureData().updatedAt.emplace(updatedAt);
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    SecurityPolicy& withUpdatedAt(Int64 updatedAt)
+    {
+        setUpdatedAt(updatedAt);
+        return *this;
     }
 
 
@@ -327,6 +381,51 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const SecurityPolicy& lhs, const SecurityPolicy& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->securityPolicyId != lhr.m_pData->securityPolicyId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->policy != lhr.m_pData->policy)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const SecurityPolicy& lhs, const SecurityPolicy& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

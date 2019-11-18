@@ -17,9 +17,19 @@
 #ifndef GS2_RANKING_MODEL_MODEL_HPP_
 #define GS2_RANKING_MODEL_MODEL_HPP_
 
-#include "RankingTable.hpp"
-#include "GameMode.hpp"
+#include <gs2/core/common.hpp>
+#include "notification.hpp"
+#include "Namespace.hpp"
+#include "CategoryModel.hpp"
+#include "CategoryModelMaster.hpp"
+#include "Subscribe.hpp"
 #include "Score.hpp"
-#include "RankingScore.hpp"
+#include "Ranking.hpp"
+#include "ResponseCache.hpp"
+#include "CurrentRankingMaster.hpp"
+#include "CalculatedAt.hpp"
+#include "SubscribeUser.hpp"
+#include "GitHubCheckoutSetting.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_RANKING_MODEL_MODEL_HPP_

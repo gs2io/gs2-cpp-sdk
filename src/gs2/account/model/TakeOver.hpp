@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,152 +22,121 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace account {
 
 /**
- * 引き継ぎ情報
+ * 引き継ぎ設定
  *
  * @author Game Server Services, Inc.
  *
  */
 class TakeOver : public Gs2Object
 {
+    friend bool operator!=(const TakeOver& lhs, const TakeOver& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザID */
+        /** 引き継ぎ設定 */
+        optional<StringHolder> takeOverId;
+        /** ユーザーID */
         optional<StringHolder> userId;
-        /** アカウント種別 */
+        /** スロット番号 */
         optional<Int32> type;
-        /** ユーザ識別子 */
+        /** 引き継ぎ用ユーザーID */
         optional<StringHolder> userIdentifier;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
+        /** パスワード */
+        optional<StringHolder> password;
+        /** 作成日時 */
+        optional<Int64> createdAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            takeOverId(data.takeOverId),
             userId(data.userId),
             type(data.type),
             userIdentifier(data.userIdentifier),
-            createAt(data.createAt)
-        {}
+            password(data.password),
+            createdAt(data.createdAt)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            userId(std::move(data.userId)),
-            type(std::move(data.type)),
-            userIdentifier(std::move(data.userIdentifier)),
-            createAt(std::move(data.createAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "userId") == 0) {
+            if (std::strcmp(name_, "takeOverId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->takeOverId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "type") == 0) {
+            else if (std::strcmp(name_, "type") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->type = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "userIdentifier") == 0) {
+            else if (std::strcmp(name_, "userIdentifier") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userIdentifier.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "password") == 0)
+            {
+                if (jsonValue.IsString())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->password.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    TakeOver() :
-        m_pData(nullptr)
-    {}
+    TakeOver() = default;
+    TakeOver(const TakeOver& takeOver) = default;
+    TakeOver(TakeOver&& takeOver) = default;
+    ~TakeOver() = default;
 
-    TakeOver(const TakeOver& takeOver) :
-        Gs2Object(takeOver),
-        m_pData(takeOver.m_pData != nullptr ? new Data(*takeOver.m_pData) : nullptr)
-    {}
+    TakeOver& operator=(const TakeOver& takeOver) = default;
+    TakeOver& operator=(TakeOver&& takeOver) = default;
 
-    TakeOver(TakeOver&& takeOver) :
-        Gs2Object(std::move(takeOver)),
-        m_pData(takeOver.m_pData)
+    TakeOver deepCopy() const
     {
-        takeOver.m_pData = nullptr;
-    }
-
-    ~TakeOver()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    TakeOver& operator=(const TakeOver& takeOver)
-    {
-        Gs2Object::operator=(takeOver);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*takeOver.m_pData);
-
-        return *this;
-    }
-
-    TakeOver& operator=(TakeOver&& takeOver)
-    {
-        Gs2Object::operator=(std::move(takeOver));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = takeOver.m_pData;
-        takeOver.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(TakeOver);
     }
 
     const TakeOver* operator->() const
@@ -179,12 +148,41 @@ public:
     {
         return this;
     }
-
+    /**
+     * 引き継ぎ設定を取得
+     *
+     * @return 引き継ぎ設定
+     */
+    const optional<StringHolder>& getTakeOverId() const
+    {
+        return ensureData().takeOverId;
+    }
 
     /**
-     * ユーザIDを取得
+     * 引き継ぎ設定を設定
      *
-     * @return ユーザID
+     * @param takeOverId 引き継ぎ設定
+     */
+    void setTakeOverId(StringHolder takeOverId)
+    {
+        ensureData().takeOverId.emplace(std::move(takeOverId));
+    }
+
+    /**
+     * 引き継ぎ設定を設定
+     *
+     * @param takeOverId 引き継ぎ設定
+     */
+    TakeOver& withTakeOverId(StringHolder takeOverId)
+    {
+        setTakeOverId(std::move(takeOverId));
+        return *this;
+    }
+
+    /**
+     * ユーザーIDを取得
+     *
+     * @return ユーザーID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -192,19 +190,30 @@ public:
     }
 
     /**
-     * ユーザIDを設定
+     * ユーザーIDを設定
      *
-     * @param userId ユーザID
+     * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
-     * アカウント種別を取得
+     * ユーザーIDを設定
      *
-     * @return アカウント種別
+     * @param userId ユーザーID
+     */
+    TakeOver& withUserId(StringHolder userId)
+    {
+        setUserId(std::move(userId));
+        return *this;
+    }
+
+    /**
+     * スロット番号を取得
+     *
+     * @return スロット番号
      */
     const optional<Int32>& getType() const
     {
@@ -212,9 +221,9 @@ public:
     }
 
     /**
-     * アカウント種別を設定
+     * スロット番号を設定
      *
-     * @param type アカウント種別
+     * @param type スロット番号
      */
     void setType(Int32 type)
     {
@@ -222,9 +231,20 @@ public:
     }
 
     /**
-     * ユーザ識別子を取得
+     * スロット番号を設定
      *
-     * @return ユーザ識別子
+     * @param type スロット番号
+     */
+    TakeOver& withType(Int32 type)
+    {
+        setType(type);
+        return *this;
+    }
+
+    /**
+     * 引き継ぎ用ユーザーIDを取得
+     *
+     * @return 引き継ぎ用ユーザーID
      */
     const optional<StringHolder>& getUserIdentifier() const
     {
@@ -232,33 +252,86 @@ public:
     }
 
     /**
-     * ユーザ識別子を設定
+     * 引き継ぎ用ユーザーIDを設定
      *
-     * @param userIdentifier ユーザ識別子
+     * @param userIdentifier 引き継ぎ用ユーザーID
      */
-    void setUserIdentifier(const Char* userIdentifier)
+    void setUserIdentifier(StringHolder userIdentifier)
     {
-        ensureData().userIdentifier.emplace(userIdentifier);
+        ensureData().userIdentifier.emplace(std::move(userIdentifier));
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * 引き継ぎ用ユーザーIDを設定
      *
-     * @return 作成日時(エポック秒)
+     * @param userIdentifier 引き継ぎ用ユーザーID
      */
-    const optional<Int32>& getCreateAt() const
+    TakeOver& withUserIdentifier(StringHolder userIdentifier)
     {
-        return ensureData().createAt;
+        setUserIdentifier(std::move(userIdentifier));
+        return *this;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * パスワードを取得
      *
-     * @param createAt 作成日時(エポック秒)
+     * @return パスワード
      */
-    void setCreateAt(Int32 createAt)
+    const optional<StringHolder>& getPassword() const
     {
-        ensureData().createAt.emplace(createAt);
+        return ensureData().password;
+    }
+
+    /**
+     * パスワードを設定
+     *
+     * @param password パスワード
+     */
+    void setPassword(StringHolder password)
+    {
+        ensureData().password.emplace(std::move(password));
+    }
+
+    /**
+     * パスワードを設定
+     *
+     * @param password パスワード
+     */
+    TakeOver& withPassword(StringHolder password)
+    {
+        setPassword(std::move(password));
+        return *this;
+    }
+
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getCreatedAt() const
+    {
+        return ensureData().createdAt;
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    void setCreatedAt(Int64 createdAt)
+    {
+        ensureData().createdAt.emplace(createdAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    TakeOver& withCreatedAt(Int64 createdAt)
+    {
+        setCreatedAt(createdAt);
+        return *this;
     }
 
 
@@ -267,6 +340,47 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const TakeOver& lhs, const TakeOver& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->takeOverId != lhr.m_pData->takeOverId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->type != lhr.m_pData->type)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userIdentifier != lhr.m_pData->userIdentifier)
+        {
+            return true;
+        }
+        if (lhs.m_pData->password != lhr.m_pData->password)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const TakeOver& lhs, const TakeOver& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

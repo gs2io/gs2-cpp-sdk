@@ -18,9 +18,9 @@
 #define GS2_IDENTIFIER_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
-#include "Gs2IdentifierClient.hpp"
+#include "Gs2IdentifierRestClient.hpp"
+#include "Gs2IdentifierWebSocketClient.hpp"
 #include "Gs2IdentifierConst.hpp"
 
 #endif //GS2_IDENTIFIER_HPP_

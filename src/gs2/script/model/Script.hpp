@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace script {
@@ -35,11 +37,13 @@ namespace gs2 { namespace script {
  */
 class Script : public Gs2Object
 {
+    friend bool operator!=(const Script& lhs, const Script& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** スクリプトGRN */
+        /** スクリプト */
         optional<StringHolder> scriptId;
         /** オーナーID */
         optional<StringHolder> ownerId;
@@ -47,15 +51,14 @@ private:
         optional<StringHolder> name;
         /** 説明文 */
         optional<StringHolder> description;
-        /** スクリプトデータ */
+        /** Luaスクリプト */
         optional<StringHolder> script;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
-        /** 最終更新日時(エポック秒) */
-        optional<Int32> updateAt;
+        /** 作成日時 */
+        optional<Int64> createdAt;
+        /** 最終更新日時 */
+        optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -64,140 +67,86 @@ private:
             name(data.name),
             description(data.description),
             script(data.script),
-            createAt(data.createAt),
-            updateAt(data.updateAt)
-        {}
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            scriptId(std::move(data.scriptId)),
-            ownerId(std::move(data.ownerId)),
-            name(std::move(data.name)),
-            description(std::move(data.description)),
-            script(std::move(data.script)),
-            createAt(std::move(data.createAt)),
-            updateAt(std::move(data.updateAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "scriptId") == 0) {
+            if (std::strcmp(name_, "scriptId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->scriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "description") == 0) {
+            else if (std::strcmp(name_, "description") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "script") == 0) {
+            else if (std::strcmp(name_, "script") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->script.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
+                if (jsonValue.IsInt64())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
+                if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt();
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Script() :
-        m_pData(nullptr)
-    {}
+    Script() = default;
+    Script(const Script& script) = default;
+    Script(Script&& script) = default;
+    ~Script() = default;
 
-    Script(const Script& script) :
-        Gs2Object(script),
-        m_pData(script.m_pData != nullptr ? new Data(*script.m_pData) : nullptr)
-    {}
+    Script& operator=(const Script& script) = default;
+    Script& operator=(Script&& script) = default;
 
-    Script(Script&& script) :
-        Gs2Object(std::move(script)),
-        m_pData(script.m_pData)
+    Script deepCopy() const
     {
-        script.m_pData = nullptr;
-    }
-
-    ~Script()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Script& operator=(const Script& script)
-    {
-        Gs2Object::operator=(script);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*script.m_pData);
-
-        return *this;
-    }
-
-    Script& operator=(Script&& script)
-    {
-        Gs2Object::operator=(std::move(script));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = script.m_pData;
-        script.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Script);
     }
 
     const Script* operator->() const
@@ -209,12 +158,10 @@ public:
     {
         return this;
     }
-
-
     /**
-     * スクリプトGRNを取得
+     * スクリプトを取得
      *
-     * @return スクリプトGRN
+     * @return スクリプト
      */
     const optional<StringHolder>& getScriptId() const
     {
@@ -222,13 +169,24 @@ public:
     }
 
     /**
-     * スクリプトGRNを設定
+     * スクリプトを設定
      *
-     * @param scriptId スクリプトGRN
+     * @param scriptId スクリプト
      */
-    void setScriptId(const Char* scriptId)
+    void setScriptId(StringHolder scriptId)
     {
-        ensureData().scriptId.emplace(scriptId);
+        ensureData().scriptId.emplace(std::move(scriptId));
+    }
+
+    /**
+     * スクリプトを設定
+     *
+     * @param scriptId スクリプト
+     */
+    Script& withScriptId(StringHolder scriptId)
+    {
+        setScriptId(std::move(scriptId));
+        return *this;
     }
 
     /**
@@ -246,9 +204,20 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
+    }
+
+    /**
+     * オーナーIDを設定
+     *
+     * @param ownerId オーナーID
+     */
+    Script& withOwnerId(StringHolder ownerId)
+    {
+        setOwnerId(std::move(ownerId));
+        return *this;
     }
 
     /**
@@ -266,9 +235,20 @@ public:
      *
      * @param name スクリプト名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
+    }
+
+    /**
+     * スクリプト名を設定
+     *
+     * @param name スクリプト名
+     */
+    Script& withName(StringHolder name)
+    {
+        setName(std::move(name));
+        return *this;
     }
 
     /**
@@ -286,15 +266,26 @@ public:
      *
      * @param description 説明文
      */
-    void setDescription(const Char* description)
+    void setDescription(StringHolder description)
     {
-        ensureData().description.emplace(description);
+        ensureData().description.emplace(std::move(description));
     }
 
     /**
-     * スクリプトデータを取得
+     * 説明文を設定
      *
-     * @return スクリプトデータ
+     * @param description 説明文
+     */
+    Script& withDescription(StringHolder description)
+    {
+        setDescription(std::move(description));
+        return *this;
+    }
+
+    /**
+     * Luaスクリプトを取得
+     *
+     * @return Luaスクリプト
      */
     const optional<StringHolder>& getScript() const
     {
@@ -302,53 +293,86 @@ public:
     }
 
     /**
-     * スクリプトデータを設定
+     * Luaスクリプトを設定
      *
-     * @param script スクリプトデータ
+     * @param script Luaスクリプト
      */
-    void setScript(const Char* script)
+    void setScript(StringHolder script)
     {
-        ensureData().script.emplace(script);
+        ensureData().script.emplace(std::move(script));
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * Luaスクリプトを設定
      *
-     * @return 作成日時(エポック秒)
+     * @param script Luaスクリプト
      */
-    const optional<Int32>& getCreateAt() const
+    Script& withScript(StringHolder script)
     {
-        return ensureData().createAt;
+        setScript(std::move(script));
+        return *this;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * 作成日時を取得
      *
-     * @param createAt 作成日時(エポック秒)
+     * @return 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    const optional<Int64>& getCreatedAt() const
     {
-        ensureData().createAt.emplace(createAt);
+        return ensureData().createdAt;
     }
 
     /**
-     * 最終更新日時(エポック秒)を取得
+     * 作成日時を設定
      *
-     * @return 最終更新日時(エポック秒)
+     * @param createdAt 作成日時
      */
-    const optional<Int32>& getUpdateAt() const
+    void setCreatedAt(Int64 createdAt)
     {
-        return ensureData().updateAt;
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
-     * 最終更新日時(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param updateAt 最終更新日時(エポック秒)
+     * @param createdAt 作成日時
      */
-    void setUpdateAt(Int32 updateAt)
+    Script& withCreatedAt(Int64 createdAt)
     {
-        ensureData().updateAt.emplace(updateAt);
+        setCreatedAt(createdAt);
+        return *this;
+    }
+
+    /**
+     * 最終更新日時を取得
+     *
+     * @return 最終更新日時
+     */
+    const optional<Int64>& getUpdatedAt() const
+    {
+        return ensureData().updatedAt;
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    void setUpdatedAt(Int64 updatedAt)
+    {
+        ensureData().updatedAt.emplace(updatedAt);
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    Script& withUpdatedAt(Int64 updatedAt)
+    {
+        setUpdatedAt(updatedAt);
+        return *this;
     }
 
 
@@ -357,6 +381,51 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const Script& lhs, const Script& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->scriptId != lhr.m_pData->scriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->script != lhr.m_pData->script)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const Script& lhs, const Script& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

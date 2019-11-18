@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,142 +22,111 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace account {
 
 /**
- * アカウント情報
+ * ゲームプレイヤーアカウント
  *
  * @author Game Server Services, Inc.
  *
  */
 class Account : public Gs2Object
 {
+    friend bool operator!=(const Account& lhs, const Account& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザID */
+        /** ゲームプレイヤーアカウント */
+        optional<StringHolder> accountId;
+        /** アカウントID */
         optional<StringHolder> userId;
         /** パスワード */
         optional<StringHolder> password;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
+        /** 現在時刻に対する補正値（現在時刻を起点とした秒数） */
+        optional<Int32> timeOffset;
+        /** 作成日時 */
+        optional<Int64> createdAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            accountId(data.accountId),
             userId(data.userId),
             password(data.password),
-            createAt(data.createAt)
-        {}
+            timeOffset(data.timeOffset),
+            createdAt(data.createdAt)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            userId(std::move(data.userId)),
-            password(std::move(data.password)),
-            createAt(std::move(data.createAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "userId") == 0) {
+            if (std::strcmp(name_, "accountId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->accountId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "password") == 0) {
+            else if (std::strcmp(name_, "password") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->password.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name_, "timeOffset") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->timeOffset = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Account() :
-        m_pData(nullptr)
-    {}
+    Account() = default;
+    Account(const Account& account) = default;
+    Account(Account&& account) = default;
+    ~Account() = default;
 
-    Account(const Account& account) :
-        Gs2Object(account),
-        m_pData(account.m_pData != nullptr ? new Data(*account.m_pData) : nullptr)
-    {}
+    Account& operator=(const Account& account) = default;
+    Account& operator=(Account&& account) = default;
 
-    Account(Account&& account) :
-        Gs2Object(std::move(account)),
-        m_pData(account.m_pData)
+    Account deepCopy() const
     {
-        account.m_pData = nullptr;
-    }
-
-    ~Account()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Account& operator=(const Account& account)
-    {
-        Gs2Object::operator=(account);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*account.m_pData);
-
-        return *this;
-    }
-
-    Account& operator=(Account&& account)
-    {
-        Gs2Object::operator=(std::move(account));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = account.m_pData;
-        account.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Account);
     }
 
     const Account* operator->() const
@@ -169,12 +138,41 @@ public:
     {
         return this;
     }
-
+    /**
+     * ゲームプレイヤーアカウントを取得
+     *
+     * @return ゲームプレイヤーアカウント
+     */
+    const optional<StringHolder>& getAccountId() const
+    {
+        return ensureData().accountId;
+    }
 
     /**
-     * ユーザIDを取得
+     * ゲームプレイヤーアカウントを設定
      *
-     * @return ユーザID
+     * @param accountId ゲームプレイヤーアカウント
+     */
+    void setAccountId(StringHolder accountId)
+    {
+        ensureData().accountId.emplace(std::move(accountId));
+    }
+
+    /**
+     * ゲームプレイヤーアカウントを設定
+     *
+     * @param accountId ゲームプレイヤーアカウント
+     */
+    Account& withAccountId(StringHolder accountId)
+    {
+        setAccountId(std::move(accountId));
+        return *this;
+    }
+
+    /**
+     * アカウントIDを取得
+     *
+     * @return アカウントID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -182,13 +180,24 @@ public:
     }
 
     /**
-     * ユーザIDを設定
+     * アカウントIDを設定
      *
-     * @param userId ユーザID
+     * @param userId アカウントID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
+    }
+
+    /**
+     * アカウントIDを設定
+     *
+     * @param userId アカウントID
+     */
+    Account& withUserId(StringHolder userId)
+    {
+        setUserId(std::move(userId));
+        return *this;
     }
 
     /**
@@ -206,29 +215,82 @@ public:
      *
      * @param password パスワード
      */
-    void setPassword(const Char* password)
+    void setPassword(StringHolder password)
     {
-        ensureData().password.emplace(password);
+        ensureData().password.emplace(std::move(password));
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * パスワードを設定
      *
-     * @return 作成日時(エポック秒)
+     * @param password パスワード
      */
-    const optional<Int32>& getCreateAt() const
+    Account& withPassword(StringHolder password)
     {
-        return ensureData().createAt;
+        setPassword(std::move(password));
+        return *this;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * 現在時刻に対する補正値（現在時刻を起点とした秒数）を取得
      *
-     * @param createAt 作成日時(エポック秒)
+     * @return 現在時刻に対する補正値（現在時刻を起点とした秒数）
      */
-    void setCreateAt(Int32 createAt)
+    const optional<Int32>& getTimeOffset() const
     {
-        ensureData().createAt.emplace(createAt);
+        return ensureData().timeOffset;
+    }
+
+    /**
+     * 現在時刻に対する補正値（現在時刻を起点とした秒数）を設定
+     *
+     * @param timeOffset 現在時刻に対する補正値（現在時刻を起点とした秒数）
+     */
+    void setTimeOffset(Int32 timeOffset)
+    {
+        ensureData().timeOffset.emplace(timeOffset);
+    }
+
+    /**
+     * 現在時刻に対する補正値（現在時刻を起点とした秒数）を設定
+     *
+     * @param timeOffset 現在時刻に対する補正値（現在時刻を起点とした秒数）
+     */
+    Account& withTimeOffset(Int32 timeOffset)
+    {
+        setTimeOffset(timeOffset);
+        return *this;
+    }
+
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getCreatedAt() const
+    {
+        return ensureData().createdAt;
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    void setCreatedAt(Int64 createdAt)
+    {
+        ensureData().createdAt.emplace(createdAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    Account& withCreatedAt(Int64 createdAt)
+    {
+        setCreatedAt(createdAt);
+        return *this;
     }
 
 
@@ -237,6 +299,43 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const Account& lhs, const Account& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->accountId != lhr.m_pData->accountId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->password != lhr.m_pData->password)
+        {
+            return true;
+        }
+        if (lhs.m_pData->timeOffset != lhr.m_pData->timeOffset)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const Account& lhs, const Account& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

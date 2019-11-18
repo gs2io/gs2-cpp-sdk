@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,162 +22,111 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace identifier {
 
 /**
- * ユーザ
+ * クレデンシャル
  *
  * @author Game Server Services, Inc.
  *
  */
 class Identifier : public Gs2Object
 {
+    friend bool operator!=(const Identifier& lhs, const Identifier& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザGRN */
-        optional<StringHolder> identifierId;
         /** オーナーID */
         optional<StringHolder> ownerId;
-        /** ユーザID */
-        optional<StringHolder> userId;
         /** クライアントID */
         optional<StringHolder> clientId;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
+        /** ユーザー名 */
+        optional<StringHolder> userName;
+        /** クライアントシークレット */
+        optional<StringHolder> clientSecret;
+        /** 作成日時 */
+        optional<Int64> createdAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            identifierId(data.identifierId),
             ownerId(data.ownerId),
-            userId(data.userId),
             clientId(data.clientId),
-            createAt(data.createAt)
-        {}
+            userName(data.userName),
+            clientSecret(data.clientSecret),
+            createdAt(data.createdAt)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            identifierId(std::move(data.identifierId)),
-            ownerId(std::move(data.ownerId)),
-            userId(std::move(data.userId)),
-            clientId(std::move(data.clientId)),
-            createAt(std::move(data.createAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "identifierId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->identifierId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "ownerId") == 0) {
+            if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "userId") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "clientId") == 0) {
+            else if (std::strcmp(name_, "clientId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->clientId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "userName") == 0)
+            {
+                if (jsonValue.IsString())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->userName.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "clientSecret") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->clientSecret.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Identifier() :
-        m_pData(nullptr)
-    {}
+    Identifier() = default;
+    Identifier(const Identifier& identifier) = default;
+    Identifier(Identifier&& identifier) = default;
+    ~Identifier() = default;
 
-    Identifier(const Identifier& identifier) :
-        Gs2Object(identifier),
-        m_pData(identifier.m_pData != nullptr ? new Data(*identifier.m_pData) : nullptr)
-    {}
+    Identifier& operator=(const Identifier& identifier) = default;
+    Identifier& operator=(Identifier&& identifier) = default;
 
-    Identifier(Identifier&& identifier) :
-        Gs2Object(std::move(identifier)),
-        m_pData(identifier.m_pData)
+    Identifier deepCopy() const
     {
-        identifier.m_pData = nullptr;
-    }
-
-    ~Identifier()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Identifier& operator=(const Identifier& identifier)
-    {
-        Gs2Object::operator=(identifier);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*identifier.m_pData);
-
-        return *this;
-    }
-
-    Identifier& operator=(Identifier&& identifier)
-    {
-        Gs2Object::operator=(std::move(identifier));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = identifier.m_pData;
-        identifier.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Identifier);
     }
 
     const Identifier* operator->() const
@@ -189,28 +138,6 @@ public:
     {
         return this;
     }
-
-
-    /**
-     * ユーザGRNを取得
-     *
-     * @return ユーザGRN
-     */
-    const optional<StringHolder>& getIdentifierId() const
-    {
-        return ensureData().identifierId;
-    }
-
-    /**
-     * ユーザGRNを設定
-     *
-     * @param identifierId ユーザGRN
-     */
-    void setIdentifierId(const Char* identifierId)
-    {
-        ensureData().identifierId.emplace(identifierId);
-    }
-
     /**
      * オーナーIDを取得
      *
@@ -226,29 +153,20 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
-     * ユーザIDを取得
+     * オーナーIDを設定
      *
-     * @return ユーザID
+     * @param ownerId オーナーID
      */
-    const optional<StringHolder>& getUserId() const
+    Identifier& withOwnerId(StringHolder ownerId)
     {
-        return ensureData().userId;
-    }
-
-    /**
-     * ユーザIDを設定
-     *
-     * @param userId ユーザID
-     */
-    void setUserId(const Char* userId)
-    {
-        ensureData().userId.emplace(userId);
+        setOwnerId(std::move(ownerId));
+        return *this;
     }
 
     /**
@@ -266,29 +184,113 @@ public:
      *
      * @param clientId クライアントID
      */
-    void setClientId(const Char* clientId)
+    void setClientId(StringHolder clientId)
     {
-        ensureData().clientId.emplace(clientId);
+        ensureData().clientId.emplace(std::move(clientId));
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * クライアントIDを設定
      *
-     * @return 作成日時(エポック秒)
+     * @param clientId クライアントID
      */
-    const optional<Int32>& getCreateAt() const
+    Identifier& withClientId(StringHolder clientId)
     {
-        return ensureData().createAt;
+        setClientId(std::move(clientId));
+        return *this;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * ユーザー名を取得
      *
-     * @param createAt 作成日時(エポック秒)
+     * @return ユーザー名
      */
-    void setCreateAt(Int32 createAt)
+    const optional<StringHolder>& getUserName() const
     {
-        ensureData().createAt.emplace(createAt);
+        return ensureData().userName;
+    }
+
+    /**
+     * ユーザー名を設定
+     *
+     * @param userName ユーザー名
+     */
+    void setUserName(StringHolder userName)
+    {
+        ensureData().userName.emplace(std::move(userName));
+    }
+
+    /**
+     * ユーザー名を設定
+     *
+     * @param userName ユーザー名
+     */
+    Identifier& withUserName(StringHolder userName)
+    {
+        setUserName(std::move(userName));
+        return *this;
+    }
+
+    /**
+     * クライアントシークレットを取得
+     *
+     * @return クライアントシークレット
+     */
+    const optional<StringHolder>& getClientSecret() const
+    {
+        return ensureData().clientSecret;
+    }
+
+    /**
+     * クライアントシークレットを設定
+     *
+     * @param clientSecret クライアントシークレット
+     */
+    void setClientSecret(StringHolder clientSecret)
+    {
+        ensureData().clientSecret.emplace(std::move(clientSecret));
+    }
+
+    /**
+     * クライアントシークレットを設定
+     *
+     * @param clientSecret クライアントシークレット
+     */
+    Identifier& withClientSecret(StringHolder clientSecret)
+    {
+        setClientSecret(std::move(clientSecret));
+        return *this;
+    }
+
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getCreatedAt() const
+    {
+        return ensureData().createdAt;
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    void setCreatedAt(Int64 createdAt)
+    {
+        ensureData().createdAt.emplace(createdAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    Identifier& withCreatedAt(Int64 createdAt)
+    {
+        setCreatedAt(createdAt);
+        return *this;
     }
 
 
@@ -297,6 +299,43 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const Identifier& lhs, const Identifier& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->clientId != lhr.m_pData->clientId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userName != lhr.m_pData->userName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->clientSecret != lhr.m_pData->clientSecret)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const Identifier& lhs, const Identifier& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

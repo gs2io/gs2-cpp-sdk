@@ -15,12 +15,6 @@
  */
 
 #include "BasicGs2Credential.hpp"
-#include "../network/HttpRequest.hpp"
-#include "../control/Gs2BasicRequest.hpp"
-#include "../util/StringVariable.hpp"
-#include "../util/SignUtil.hpp"
-#include "../util/Base64.hpp"
-#include <chrono>
 
 GS2_START_OF_NAMESPACE
 
@@ -30,60 +24,11 @@ GS2_START_OF_NAMESPACE
  * @param clientId クライアントID
  * @param clientSecret クライアントシークレット
  */
-BasicGs2Credential::BasicGs2Credential(const Char clientId[], const Char clientSecret[])
-: m_ClientId(clientId),
-  m_ClientSecret(clientSecret)
+BasicGs2Credential::BasicGs2Credential(StringHolder clientId, StringHolder clientSecret) :
+    IGs2Credential(),
+    m_ClientId(clientId), 
+    m_ClientSecret(clientSecret)
 {
-//    if(clientId == null || clientSecret == null) {
-//        throw new IllegalArgumentException("invalid credential");
-//    }
-}
-
-/**
- * クライアントIDを取得。
- *
- * @return クライアントID
- */
-const StringHolder& BasicGs2Credential::getClientId() const
-{
-    return m_ClientId;
-}
-
-/**
- * クライアントシークレットを取得。
- *
- * @return クライアントシークレット
- */
-const StringHolder& BasicGs2Credential::getClientSecret() const
-{
-    return m_ClientSecret;
-}
-
-void BasicGs2Credential::authorize(detail::HttpRequestBase& httpRequest, const Gs2BasicRequest& basicRequest) const
-{
-    auto timestamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    char timestampString[21];
-    std::sprintf(timestampString, "%ld", timestamp);
-
-    auto decodedClientSecret = Gs2Object::getAllocator().malloc(detail::getBase64DecodedLengthMax(m_ClientSecret.getSize() - 1));
-    auto decodedSize = detail::decodeBase64(decodedClientSecret, m_ClientSecret);
-
-    detail::StringVariable body(basicRequest.getModuleName());
-    body.append(":");
-    body.append(basicRequest.getFunctionName());
-    body.append(":");
-    body.append(timestampString);
-
-    detail::SignUtil::HmacSha256 hmac;
-    detail::SignUtil::sign(hmac, decodedClientSecret, decodedSize, body.c_str(), body.size());
-    Gs2Object::getAllocator().free(decodedClientSecret);
-
-    char base64EncodedSignature[detail::getBase64EncodedLength(sizeof(hmac.data)) + 1];
-    detail::encodeBase64(base64EncodedSignature, hmac.data, sizeof(hmac.data));
-
-    httpRequest.addHeader("X-GS2-CLIENT-ID", getClientId());
-    httpRequest.addHeader("X-GS2-REQUEST-TIMESTAMP", timestampString);
-    httpRequest.addHeader("X-GS2-REQUEST-SIGN", base64EncodedSignature);
 }
 
 GS2_END_OF_NAMESPACE

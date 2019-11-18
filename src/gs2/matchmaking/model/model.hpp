@@ -17,10 +17,16 @@
 #ifndef GS2_MATCHMAKING_MODEL_MODEL_HPP_
 #define GS2_MATCHMAKING_MODEL_MODEL_HPP_
 
-#include "Matchmaking.hpp"
-#include "AnybodyGathering.hpp"
-#include "CustomAutoGathering.hpp"
-#include "PasscodeGathering.hpp"
-#include "RoomGathering.hpp"
+#include <gs2/core/common.hpp>
+#include "notification.hpp"
+#include "Namespace.hpp"
+#include "Gathering.hpp"
+#include "ResponseCache.hpp"
+#include "NotificationSetting.hpp"
+#include "LogSetting.hpp"
+#include "AttributeRange.hpp"
+#include "CapacityOfRole.hpp"
+#include "Attribute.hpp"
+#include "Player.hpp"
 
 #endif //GS2_MATCHMAKING_MODEL_MODEL_HPP_

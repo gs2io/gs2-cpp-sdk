@@ -33,10 +33,18 @@ typedef std::basic_string<Char, std::char_traits<Char>, StandardAllocator<Char>>
 class StringVariable : public BasicString, public Gs2Object
 {
 public:
-    explicit StringVariable(const Char string[])
-            : BasicString(string)
+	struct UrlSafeEncode {};
+
+public:
+    explicit StringVariable(const Char string[]) :
+        BasicString(string)
     {
     }
+
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma warning(push)
+#pragma warning(disable:4996)
+#endif
 
     explicit StringVariable(Int32 number)
     {
@@ -48,7 +56,7 @@ public:
     explicit StringVariable(Int64 number)
     {
         char buffer[32];
-        std::sprintf(buffer, "%ld", number);
+        std::sprintf(buffer, "%lld", number);
         assign(buffer);
     }
 
@@ -66,12 +74,18 @@ public:
         assign(buffer);
     }
 
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma warning(pop)
+#endif
+
     explicit StringVariable(Bool number)
             : BasicString(number ? "true" : "false")
     {
     }
 
     explicit StringVariable(const List<StringHolder>& list);
+
+    StringVariable(const Char string[], UrlSafeEncode);
 
     StringVariable& replace(const Char pattern[], const Char replacement[]);
     StringVariable& replace(const StringVariable& pattern, const Char replacement[]);

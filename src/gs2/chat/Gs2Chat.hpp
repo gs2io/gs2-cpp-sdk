@@ -18,9 +18,9 @@
 #define GS2_CHAT_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
-#include "Gs2ChatClient.hpp"
+#include "Gs2ChatRestClient.hpp"
+#include "Gs2ChatWebSocketClient.hpp"
 #include "Gs2ChatConst.hpp"
 
 #endif //GS2_CHAT_HPP_

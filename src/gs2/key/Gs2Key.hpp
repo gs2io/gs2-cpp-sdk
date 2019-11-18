@@ -18,9 +18,9 @@
 #define GS2_KEY_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
-#include "Gs2KeyClient.hpp"
+#include "Gs2KeyRestClient.hpp"
+#include "Gs2KeyWebSocketClient.hpp"
 #include "Gs2KeyConst.hpp"
 
 #endif //GS2_KEY_HPP_

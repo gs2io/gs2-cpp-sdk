@@ -17,7 +17,21 @@
 #ifndef GS2_STAMINA_MODEL_MODEL_HPP_
 #define GS2_STAMINA_MODEL_MODEL_HPP_
 
-#include "StaminaPool.hpp"
+#include <gs2/core/common.hpp>
+#include "notification.hpp"
+#include "Namespace.hpp"
+#include "StaminaModelMaster.hpp"
+#include "MaxStaminaTableMaster.hpp"
+#include "RecoverIntervalTableMaster.hpp"
+#include "RecoverValueTableMaster.hpp"
+#include "CurrentStaminaMaster.hpp"
+#include "StaminaModel.hpp"
+#include "MaxStaminaTable.hpp"
+#include "RecoverIntervalTable.hpp"
+#include "RecoverValueTable.hpp"
 #include "Stamina.hpp"
+#include "ResponseCache.hpp"
+#include "GitHubCheckoutSetting.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_STAMINA_MODEL_MODEL_HPP_

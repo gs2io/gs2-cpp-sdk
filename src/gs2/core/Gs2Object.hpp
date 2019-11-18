@@ -61,6 +61,38 @@ public:
 //    void operator delete[](void *, Args...) noexcept;
 };
 
+#define GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData) \
+    std::shared_ptr<Data> m_pData; \
+ \
+    Data& ensureData() \
+    { \
+        if (!m_pData) \
+        { \
+            m_pData = std::allocate_shared<Data>(detail::StandardAllocator<char>()); \
+        } \
+        return *m_pData; \
+    } \
+ \
+    const Data& ensureData() const \
+    { \
+        if (!m_pData) \
+        { \
+            const_cast<std::shared_ptr<Data>&>(m_pData) = std::allocate_shared<Data>(detail::StandardAllocator<char>()); \
+        } \
+        return *m_pData; \
+    }
+
+#define GS2_CORE_SHARED_DATA_INITIALIZATION(...) \
+    m_pData(std::allocate_shared<Data>(detail::StandardAllocator<char>(), __VA_ARGS__))
+
+#define GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Clazz) \
+    Clazz copy; \
+    if (m_pData) \
+    { \
+        copy.m_pData = std::allocate_shared<Data>(detail::StandardAllocator<char>(), *m_pData); \
+    } \
+    return copy
+
 GS2_END_OF_NAMESPACE
 
 #endif //GS2_CORE_GS2OBJECT_HPP_

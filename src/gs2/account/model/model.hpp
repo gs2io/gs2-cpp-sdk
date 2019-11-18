@@ -17,8 +17,13 @@
 #ifndef GS2_ACCOUNT_MODEL_MODEL_HPP_
 #define GS2_ACCOUNT_MODEL_MODEL_HPP_
 
-#include "Game.hpp"
+#include <gs2/core/common.hpp>
+#include "notification.hpp"
+#include "Namespace.hpp"
 #include "Account.hpp"
 #include "TakeOver.hpp"
+#include "ResponseCache.hpp"
+#include "ScriptSetting.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_ACCOUNT_MODEL_MODEL_HPP_

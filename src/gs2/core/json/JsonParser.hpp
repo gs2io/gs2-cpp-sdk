@@ -21,6 +21,11 @@
 #include "Allocator.hpp"
 #include "IModel.hpp"
 
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma push_macro("GetObject")
+#undef GetObject
+#endif
+
 #include "../external/rapidjson/include/rapidjson/document.h"
 
 GS2_START_OF_NAMESPACE
@@ -43,5 +48,9 @@ public:
 
 } }
 GS2_END_OF_NAMESPACE
+
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma pop_macro("GetObject")
+#endif
 
 #endif //GS2_CORE_JSON_JSONPARSER_HPP_

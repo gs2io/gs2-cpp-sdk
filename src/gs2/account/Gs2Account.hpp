@@ -18,9 +18,9 @@
 #define GS2_ACCOUNT_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
-#include "Gs2AccountClient.hpp"
+#include "Gs2AccountRestClient.hpp"
+#include "Gs2AccountWebSocketClient.hpp"
 #include "Gs2AccountConst.hpp"
 
 #endif //GS2_ACCOUNT_HPP_

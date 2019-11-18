@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,132 +22,101 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
-GS2_START_OF_NAMESPACE
+namespace gs2 {
 
 /**
- * スタンプシートタスク
+ * スタンプタスク
  *
  * @author Game Server Services, Inc.
  *
  */
 class StampTask : public Gs2Object
 {
+    friend bool operator!=(const StampTask& lhs, const StampTask& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
+        /** タスクID */
+        optional<StringHolder> taskId;
         /** アクション名 */
         optional<StringHolder> action;
-        /** スタンプシートタスクデータ */
-        optional<StringHolder> task;
+        /** 引数 */
+        optional<StringHolder> args;
+        /** タイムスタンプ */
+        optional<Int64> timestamp;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            taskId(data.taskId),
             action(data.action),
-            task(data.task)
-        {}
+            args(data.args),
+            timestamp(data.timestamp)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            action(std::move(data.action)),
-            task(std::move(data.task))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "action") == 0) {
+            if (std::strcmp(name_, "taskId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->taskId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "action") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->action.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "task") == 0) {
+            else if (std::strcmp(name_, "args") == 0)
+            {
                 if (jsonValue.IsString())
                 {
-                    this->task.emplace(jsonValue.GetString());
+                    this->args.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "timestamp") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->timestamp = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    StampTask() :
-        m_pData(nullptr)
-    {}
+    StampTask() = default;
+    StampTask(const StampTask& stampTask) = default;
+    StampTask(StampTask&& stampTask) = default;
+    ~StampTask() = default;
 
-    StampTask(const StampTask& stampTask) :
-        Gs2Object(stampTask),
-        m_pData(stampTask.m_pData != nullptr ? new Data(*stampTask.m_pData) : nullptr)
-    {}
+    StampTask& operator=(const StampTask& stampTask) = default;
+    StampTask& operator=(StampTask&& stampTask) = default;
 
-    StampTask(StampTask&& stampTask) :
-        Gs2Object(std::move(stampTask)),
-        m_pData(stampTask.m_pData)
+    StampTask deepCopy() const
     {
-        stampTask.m_pData = nullptr;
-    }
-
-    ~StampTask()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    StampTask& operator=(const StampTask& stampTask)
-    {
-        Gs2Object::operator=(stampTask);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*stampTask.m_pData);
-
-        return *this;
-    }
-
-    StampTask& operator=(StampTask&& stampTask)
-    {
-        Gs2Object::operator=(std::move(stampTask));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = stampTask.m_pData;
-        stampTask.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(StampTask);
     }
 
     const StampTask* operator->() const
@@ -159,7 +128,36 @@ public:
     {
         return this;
     }
+    /**
+     * タスクIDを取得
+     *
+     * @return タスクID
+     */
+    const optional<StringHolder>& getTaskId() const
+    {
+        return ensureData().taskId;
+    }
 
+    /**
+     * タスクIDを設定
+     *
+     * @param taskId タスクID
+     */
+    void setTaskId(StringHolder taskId)
+    {
+        ensureData().taskId.emplace(std::move(taskId));
+    }
+
+    /**
+     * タスクIDを設定
+     *
+     * @param taskId タスクID
+     */
+    StampTask& withTaskId(StringHolder taskId)
+    {
+        setTaskId(std::move(taskId));
+        return *this;
+    }
 
     /**
      * アクション名を取得
@@ -176,29 +174,82 @@ public:
      *
      * @param action アクション名
      */
-    void setAction(const Char* action)
+    void setAction(StringHolder action)
     {
-        ensureData().action.emplace(action);
+        ensureData().action.emplace(std::move(action));
     }
 
     /**
-     * スタンプシートタスクデータを取得
+     * アクション名を設定
      *
-     * @return スタンプシートタスクデータ
+     * @param action アクション名
      */
-    const optional<StringHolder>& getTask() const
+    StampTask& withAction(StringHolder action)
     {
-        return ensureData().task;
+        setAction(std::move(action));
+        return *this;
     }
 
     /**
-     * スタンプシートタスクデータを設定
+     * 引数を取得
      *
-     * @param task スタンプシートタスクデータ
+     * @return 引数
      */
-    void setTask(const Char* task)
+    const optional<StringHolder>& getArgs() const
     {
-        ensureData().task.emplace(task);
+        return ensureData().args;
+    }
+
+    /**
+     * 引数を設定
+     *
+     * @param args 引数
+     */
+    void setArgs(StringHolder args)
+    {
+        ensureData().args.emplace(std::move(args));
+    }
+
+    /**
+     * 引数を設定
+     *
+     * @param args 引数
+     */
+    StampTask& withArgs(StringHolder args)
+    {
+        setArgs(std::move(args));
+        return *this;
+    }
+
+    /**
+     * タイムスタンプを取得
+     *
+     * @return タイムスタンプ
+     */
+    const optional<Int64>& getTimestamp() const
+    {
+        return ensureData().timestamp;
+    }
+
+    /**
+     * タイムスタンプを設定
+     *
+     * @param timestamp タイムスタンプ
+     */
+    void setTimestamp(Int64 timestamp)
+    {
+        ensureData().timestamp.emplace(timestamp);
+    }
+
+    /**
+     * タイムスタンプを設定
+     *
+     * @param timestamp タイムスタンプ
+     */
+    StampTask& withTimestamp(Int64 timestamp)
+    {
+        setTimestamp(timestamp);
+        return *this;
     }
 
 
@@ -208,6 +259,39 @@ public:
     }
 };
 
-GS2_END_OF_NAMESPACE
+inline bool operator!=(const StampTask& lhs, const StampTask& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->taskId != lhr.m_pData->taskId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->action != lhr.m_pData->action)
+        {
+            return true;
+        }
+        if (lhs.m_pData->args != lhr.m_pData->args)
+        {
+            return true;
+        }
+        if (lhs.m_pData->timestamp != lhr.m_pData->timestamp)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const StampTask& lhs, const StampTask& lhr)
+{
+    return !(lhs != lhr);
+}
+
+}
 
 #endif //GS2_CORE_MODEL_STAMPTASK_HPP_

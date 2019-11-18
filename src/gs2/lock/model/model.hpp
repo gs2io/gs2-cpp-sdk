@@ -17,7 +17,11 @@
 #ifndef GS2_LOCK_MODEL_MODEL_HPP_
 #define GS2_LOCK_MODEL_MODEL_HPP_
 
-#include "LockPool.hpp"
-#include "Lock.hpp"
+#include <gs2/core/common.hpp>
+#include "notification.hpp"
+#include "Namespace.hpp"
+#include "Mutex.hpp"
+#include "ResponseCache.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_LOCK_MODEL_MODEL_HPP_

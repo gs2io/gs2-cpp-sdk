@@ -17,6 +17,11 @@
 #ifndef GS2_KEY_MODEL_MODEL_HPP_
 #define GS2_KEY_MODEL_MODEL_HPP_
 
+#include <gs2/core/common.hpp>
+#include "notification.hpp"
+#include "Namespace.hpp"
 #include "Key.hpp"
+#include "GitHubApiKey.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_KEY_MODEL_MODEL_HPP_

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,172 +22,121 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace jobQueue {
 
 /**
- * ジョブ結果
+ * ジョブ実行結果
  *
  * @author Game Server Services, Inc.
  *
  */
 class JobResult : public Gs2Object
 {
+    friend bool operator!=(const JobResult& lhs, const JobResult& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ジョブID */
+        /** ジョブ実行結果 */
+        optional<StringHolder> jobResultId;
+        /** ジョブ */
         optional<StringHolder> jobId;
-        /** キューGRN */
-        optional<StringHolder> queueId;
-        /** ステータスコード */
+        /** None */
+        optional<Int32> tryNumber;
+        /** None */
         optional<Int32> statusCode;
-        /** 実行結果 */
+        /** レスポンスの内容 */
         optional<StringHolder> result;
-        /** キューの中で最後のジョブだったか */
-        optional<Bool> endOfJob;
         /** 作成日時 */
-        optional<Int32> createAt;
+        optional<Int64> tryAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            jobResultId(data.jobResultId),
             jobId(data.jobId),
-            queueId(data.queueId),
+            tryNumber(data.tryNumber),
             statusCode(data.statusCode),
             result(data.result),
-            endOfJob(data.endOfJob),
-            createAt(data.createAt)
-        {}
+            tryAt(data.tryAt)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            jobId(std::move(data.jobId)),
-            queueId(std::move(data.queueId)),
-            statusCode(std::move(data.statusCode)),
-            result(std::move(data.result)),
-            endOfJob(std::move(data.endOfJob)),
-            createAt(std::move(data.createAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "jobId") == 0) {
+            if (std::strcmp(name_, "jobResultId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->jobResultId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "jobId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->jobId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "queueId") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "tryNumber") == 0)
+            {
+                if (jsonValue.IsInt())
                 {
-                    this->queueId.emplace(jsonValue.GetString());
+                    this->tryNumber = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "statusCode") == 0) {
+            else if (std::strcmp(name_, "statusCode") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
                     this->statusCode = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "result") == 0) {
+            else if (std::strcmp(name_, "result") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->result.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "endOfJob") == 0) {
-                if (jsonValue.IsBool())
+            else if (std::strcmp(name_, "tryAt") == 0)
+            {
+                if (jsonValue.IsInt64())
                 {
-                    this->endOfJob = jsonValue.GetBool();
-                }
-            }
-            else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
-                {
-                    this->createAt = jsonValue.GetInt();
+                    this->tryAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    JobResult() :
-        m_pData(nullptr)
-    {}
+    JobResult() = default;
+    JobResult(const JobResult& jobResult) = default;
+    JobResult(JobResult&& jobResult) = default;
+    ~JobResult() = default;
 
-    JobResult(const JobResult& jobResult) :
-        Gs2Object(jobResult),
-        m_pData(jobResult.m_pData != nullptr ? new Data(*jobResult.m_pData) : nullptr)
-    {}
+    JobResult& operator=(const JobResult& jobResult) = default;
+    JobResult& operator=(JobResult&& jobResult) = default;
 
-    JobResult(JobResult&& jobResult) :
-        Gs2Object(std::move(jobResult)),
-        m_pData(jobResult.m_pData)
+    JobResult deepCopy() const
     {
-        jobResult.m_pData = nullptr;
-    }
-
-    ~JobResult()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    JobResult& operator=(const JobResult& jobResult)
-    {
-        Gs2Object::operator=(jobResult);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*jobResult.m_pData);
-
-        return *this;
-    }
-
-    JobResult& operator=(JobResult&& jobResult)
-    {
-        Gs2Object::operator=(std::move(jobResult));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = jobResult.m_pData;
-        jobResult.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(JobResult);
     }
 
     const JobResult* operator->() const
@@ -199,12 +148,41 @@ public:
     {
         return this;
     }
-
+    /**
+     * ジョブ実行結果を取得
+     *
+     * @return ジョブ実行結果
+     */
+    const optional<StringHolder>& getJobResultId() const
+    {
+        return ensureData().jobResultId;
+    }
 
     /**
-     * ジョブIDを取得
+     * ジョブ実行結果を設定
      *
-     * @return ジョブID
+     * @param jobResultId ジョブ実行結果
+     */
+    void setJobResultId(StringHolder jobResultId)
+    {
+        ensureData().jobResultId.emplace(std::move(jobResultId));
+    }
+
+    /**
+     * ジョブ実行結果を設定
+     *
+     * @param jobResultId ジョブ実行結果
+     */
+    JobResult& withJobResultId(StringHolder jobResultId)
+    {
+        setJobResultId(std::move(jobResultId));
+        return *this;
+    }
+
+    /**
+     * ジョブを取得
+     *
+     * @return ジョブ
      */
     const optional<StringHolder>& getJobId() const
     {
@@ -212,39 +190,61 @@ public:
     }
 
     /**
-     * ジョブIDを設定
+     * ジョブを設定
      *
-     * @param jobId ジョブID
+     * @param jobId ジョブ
      */
-    void setJobId(const Char* jobId)
+    void setJobId(StringHolder jobId)
     {
-        ensureData().jobId.emplace(jobId);
+        ensureData().jobId.emplace(std::move(jobId));
     }
 
     /**
-     * キューGRNを取得
+     * ジョブを設定
      *
-     * @return キューGRN
+     * @param jobId ジョブ
      */
-    const optional<StringHolder>& getQueueId() const
+    JobResult& withJobId(StringHolder jobId)
     {
-        return ensureData().queueId;
+        setJobId(std::move(jobId));
+        return *this;
     }
 
     /**
-     * キューGRNを設定
+     * Noneを取得
      *
-     * @param queueId キューGRN
+     * @return None
      */
-    void setQueueId(const Char* queueId)
+    const optional<Int32>& getTryNumber() const
     {
-        ensureData().queueId.emplace(queueId);
+        return ensureData().tryNumber;
     }
 
     /**
-     * ステータスコードを取得
+     * Noneを設定
      *
-     * @return ステータスコード
+     * @param tryNumber None
+     */
+    void setTryNumber(Int32 tryNumber)
+    {
+        ensureData().tryNumber.emplace(tryNumber);
+    }
+
+    /**
+     * Noneを設定
+     *
+     * @param tryNumber None
+     */
+    JobResult& withTryNumber(Int32 tryNumber)
+    {
+        setTryNumber(tryNumber);
+        return *this;
+    }
+
+    /**
+     * Noneを取得
+     *
+     * @return None
      */
     const optional<Int32>& getStatusCode() const
     {
@@ -252,9 +252,9 @@ public:
     }
 
     /**
-     * ステータスコードを設定
+     * Noneを設定
      *
-     * @param statusCode ステータスコード
+     * @param statusCode None
      */
     void setStatusCode(Int32 statusCode)
     {
@@ -262,9 +262,20 @@ public:
     }
 
     /**
-     * 実行結果を取得
+     * Noneを設定
      *
-     * @return 実行結果
+     * @param statusCode None
+     */
+    JobResult& withStatusCode(Int32 statusCode)
+    {
+        setStatusCode(statusCode);
+        return *this;
+    }
+
+    /**
+     * レスポンスの内容を取得
+     *
+     * @return レスポンスの内容
      */
     const optional<StringHolder>& getResult() const
     {
@@ -272,33 +283,24 @@ public:
     }
 
     /**
-     * 実行結果を設定
+     * レスポンスの内容を設定
      *
-     * @param result 実行結果
+     * @param result レスポンスの内容
      */
-    void setResult(const Char* result)
+    void setResult(StringHolder result)
     {
-        ensureData().result.emplace(result);
+        ensureData().result.emplace(std::move(result));
     }
 
     /**
-     * キューの中で最後のジョブだったかを取得
+     * レスポンスの内容を設定
      *
-     * @return キューの中で最後のジョブだったか
+     * @param result レスポンスの内容
      */
-    const optional<Bool>& getEndOfJob() const
+    JobResult& withResult(StringHolder result)
     {
-        return ensureData().endOfJob;
-    }
-
-    /**
-     * キューの中で最後のジョブだったかを設定
-     *
-     * @param endOfJob キューの中で最後のジョブだったか
-     */
-    void setEndOfJob(Bool endOfJob)
-    {
-        ensureData().endOfJob.emplace(endOfJob);
+        setResult(std::move(result));
+        return *this;
     }
 
     /**
@@ -306,19 +308,30 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int32>& getCreateAt() const
+    const optional<Int64>& getTryAt() const
     {
-        return ensureData().createAt;
+        return ensureData().tryAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param tryAt 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    void setTryAt(Int64 tryAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().tryAt.emplace(tryAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param tryAt 作成日時
+     */
+    JobResult& withTryAt(Int64 tryAt)
+    {
+        setTryAt(tryAt);
+        return *this;
     }
 
 
@@ -327,6 +340,47 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const JobResult& lhs, const JobResult& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->jobResultId != lhr.m_pData->jobResultId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->jobId != lhr.m_pData->jobId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->tryNumber != lhr.m_pData->tryNumber)
+        {
+            return true;
+        }
+        if (lhs.m_pData->statusCode != lhr.m_pData->statusCode)
+        {
+            return true;
+        }
+        if (lhs.m_pData->result != lhr.m_pData->result)
+        {
+            return true;
+        }
+        if (lhs.m_pData->tryAt != lhr.m_pData->tryAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const JobResult& lhs, const JobResult& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

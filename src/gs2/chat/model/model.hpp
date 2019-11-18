@@ -17,10 +17,16 @@
 #ifndef GS2_CHAT_MODEL_MODEL_HPP_
 #define GS2_CHAT_MODEL_MODEL_HPP_
 
-#include "Lobby.hpp"
+#include <gs2/core/common.hpp>
+#include "notification.hpp"
+#include "Namespace.hpp"
 #include "Room.hpp"
 #include "Message.hpp"
-#include "MessageLog.hpp"
 #include "Subscribe.hpp"
+#include "ResponseCache.hpp"
+#include "NotificationType.hpp"
+#include "ScriptSetting.hpp"
+#include "NotificationSetting.hpp"
+#include "LogSetting.hpp"
 
 #endif //GS2_CHAT_MODEL_MODEL_HPP_

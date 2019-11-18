@@ -18,9 +18,9 @@
 #define GS2_INBOX_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
-#include "Gs2InboxClient.hpp"
+#include "Gs2InboxRestClient.hpp"
+#include "Gs2InboxWebSocketClient.hpp"
 #include "Gs2InboxConst.hpp"
 
 #endif //GS2_INBOX_HPP_

@@ -20,6 +20,9 @@
 #include "../Gs2Object.hpp"
 #include "../json/IModel.hpp"
 #include "../util/StringHolder.hpp"
+#include "../util/StandardAllocator.hpp"
+#include "../external/optional/optional.hpp"
+#include <memory>
 
 GS2_START_OF_NAMESPACE
 
@@ -32,8 +35,7 @@ private:
         gs2::optional<StringHolder> component;
         gs2::optional<StringHolder> message;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
@@ -49,19 +51,20 @@ private:
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
         virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (strcmp(name, "component") == 0) {
+            if (strcmp(name, "component") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->component.emplace(jsonValue.GetString());
                 }
             }
-            else if (strcmp(name, "message") == 0) {
+            else if (strcmp(name, "message") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->message.emplace(jsonValue.GetString());
@@ -70,79 +73,20 @@ private:
         }
     };
 
-    Data* m_pData;
-
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    RequestError() :
-        m_pData(nullptr)
-    {}
+    RequestError() = default;
+    RequestError(const RequestError& requestError) = default;
+    RequestError(RequestError&& requestError) = default;
+    ~RequestError() = default;
 
-    RequestError(const RequestError& requestError) :
-        Gs2Object(requestError),
-        m_pData(requestError.m_pData != nullptr ? new Data(*requestError.m_pData) : nullptr)
+    RequestError& operator=(const RequestError& requestError) = default;
+    RequestError& operator=(RequestError&& requestError) = default;
+
+    RequestError deepCopy() const
     {
-    }
-
-    RequestError(RequestError&& requestError) :
-        Gs2Object(std::move(requestError)),
-        m_pData(requestError.m_pData)
-    {
-        requestError.m_pData = nullptr;
-    }
-
-    ~RequestError()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    RequestError& operator=(const RequestError& requestError)
-    {
-        Gs2Object::operator=(requestError);
-
-        if (&requestError != this)
-        {
-            if (m_pData != nullptr)
-            {
-                delete m_pData;
-            }
-            m_pData = new Data(*requestError.m_pData);
-        }
-
-        return *this;
-    }
-
-    RequestError& operator=(RequestError&& requestError)
-    {
-        Gs2Object::operator=(std::move(requestError));
-
-        if (&requestError != this)
-        {
-            if (m_pData != nullptr)
-            {
-                delete m_pData;
-            }
-            m_pData = requestError.m_pData;
-            requestError.m_pData = nullptr;
-        }
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(RequestError);
     }
 
     const RequestError* operator->() const

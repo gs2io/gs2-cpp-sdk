@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,132 +22,131 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace money {
 
 /**
- * ウォレットの詳細
+ * ウォレット
  *
  * @author Game Server Services, Inc.
  *
  */
 class Wallet : public Gs2Object
 {
+    friend bool operator!=(const Wallet& lhs, const Wallet& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 単価 */
-        optional<Double> price;
-        /** 所持数 */
-        optional<Int32> count;
+        /** ウォレット */
+        optional<StringHolder> walletId;
+        /** ユーザーID */
+        optional<StringHolder> userId;
+        /** スロット番号 */
+        optional<Int32> slot;
+        /** 有償課金通貨所持量 */
+        optional<Int32> paid;
+        /** 無償課金通貨所持量 */
+        optional<Int32> free;
+        /** 作成日時 */
+        optional<Int64> createdAt;
+        /** 最終更新日時 */
+        optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            price(data.price),
-            count(data.count)
-        {}
+            walletId(data.walletId),
+            userId(data.userId),
+            slot(data.slot),
+            paid(data.paid),
+            free(data.free),
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            price(std::move(data.price)),
-            count(std::move(data.count))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "price") == 0) {
-                if (jsonValue.IsDouble())
+            if (std::strcmp(name_, "walletId") == 0)
+            {
+                if (jsonValue.IsString())
                 {
-                    this->price = jsonValue.GetDouble();
+                    this->walletId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "count") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->userId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "slot") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
-                    this->count = jsonValue.GetInt();
+                    this->slot = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "paid") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->paid = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "free") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->free = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->createdAt = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Wallet() :
-        m_pData(nullptr)
-    {}
+    Wallet() = default;
+    Wallet(const Wallet& wallet) = default;
+    Wallet(Wallet&& wallet) = default;
+    ~Wallet() = default;
 
-    Wallet(const Wallet& wallet) :
-        Gs2Object(wallet),
-        m_pData(wallet.m_pData != nullptr ? new Data(*wallet.m_pData) : nullptr)
-    {}
+    Wallet& operator=(const Wallet& wallet) = default;
+    Wallet& operator=(Wallet&& wallet) = default;
 
-    Wallet(Wallet&& wallet) :
-        Gs2Object(std::move(wallet)),
-        m_pData(wallet.m_pData)
+    Wallet deepCopy() const
     {
-        wallet.m_pData = nullptr;
-    }
-
-    ~Wallet()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Wallet& operator=(const Wallet& wallet)
-    {
-        Gs2Object::operator=(wallet);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*wallet.m_pData);
-
-        return *this;
-    }
-
-    Wallet& operator=(Wallet&& wallet)
-    {
-        Gs2Object::operator=(std::move(wallet));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = wallet.m_pData;
-        wallet.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Wallet);
     }
 
     const Wallet* operator->() const
@@ -159,46 +158,221 @@ public:
     {
         return this;
     }
-
-
     /**
-     * 単価を取得
+     * ウォレットを取得
      *
-     * @return 単価
+     * @return ウォレット
      */
-    const optional<Double>& getPrice() const
+    const optional<StringHolder>& getWalletId() const
     {
-        return ensureData().price;
+        return ensureData().walletId;
     }
 
     /**
-     * 単価を設定
+     * ウォレットを設定
      *
-     * @param price 単価
+     * @param walletId ウォレット
      */
-    void setPrice(Double price)
+    void setWalletId(StringHolder walletId)
     {
-        ensureData().price.emplace(price);
+        ensureData().walletId.emplace(std::move(walletId));
     }
 
     /**
-     * 所持数を取得
+     * ウォレットを設定
      *
-     * @return 所持数
+     * @param walletId ウォレット
      */
-    const optional<Int32>& getCount() const
+    Wallet& withWalletId(StringHolder walletId)
     {
-        return ensureData().count;
+        setWalletId(std::move(walletId));
+        return *this;
     }
 
     /**
-     * 所持数を設定
+     * ユーザーIDを取得
      *
-     * @param count 所持数
+     * @return ユーザーID
      */
-    void setCount(Int32 count)
+    const optional<StringHolder>& getUserId() const
     {
-        ensureData().count.emplace(count);
+        return ensureData().userId;
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    void setUserId(StringHolder userId)
+    {
+        ensureData().userId.emplace(std::move(userId));
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    Wallet& withUserId(StringHolder userId)
+    {
+        setUserId(std::move(userId));
+        return *this;
+    }
+
+    /**
+     * スロット番号を取得
+     *
+     * @return スロット番号
+     */
+    const optional<Int32>& getSlot() const
+    {
+        return ensureData().slot;
+    }
+
+    /**
+     * スロット番号を設定
+     *
+     * @param slot スロット番号
+     */
+    void setSlot(Int32 slot)
+    {
+        ensureData().slot.emplace(slot);
+    }
+
+    /**
+     * スロット番号を設定
+     *
+     * @param slot スロット番号
+     */
+    Wallet& withSlot(Int32 slot)
+    {
+        setSlot(slot);
+        return *this;
+    }
+
+    /**
+     * 有償課金通貨所持量を取得
+     *
+     * @return 有償課金通貨所持量
+     */
+    const optional<Int32>& getPaid() const
+    {
+        return ensureData().paid;
+    }
+
+    /**
+     * 有償課金通貨所持量を設定
+     *
+     * @param paid 有償課金通貨所持量
+     */
+    void setPaid(Int32 paid)
+    {
+        ensureData().paid.emplace(paid);
+    }
+
+    /**
+     * 有償課金通貨所持量を設定
+     *
+     * @param paid 有償課金通貨所持量
+     */
+    Wallet& withPaid(Int32 paid)
+    {
+        setPaid(paid);
+        return *this;
+    }
+
+    /**
+     * 無償課金通貨所持量を取得
+     *
+     * @return 無償課金通貨所持量
+     */
+    const optional<Int32>& getFree() const
+    {
+        return ensureData().free;
+    }
+
+    /**
+     * 無償課金通貨所持量を設定
+     *
+     * @param free 無償課金通貨所持量
+     */
+    void setFree(Int32 free)
+    {
+        ensureData().free.emplace(free);
+    }
+
+    /**
+     * 無償課金通貨所持量を設定
+     *
+     * @param free 無償課金通貨所持量
+     */
+    Wallet& withFree(Int32 free)
+    {
+        setFree(free);
+        return *this;
+    }
+
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getCreatedAt() const
+    {
+        return ensureData().createdAt;
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    void setCreatedAt(Int64 createdAt)
+    {
+        ensureData().createdAt.emplace(createdAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    Wallet& withCreatedAt(Int64 createdAt)
+    {
+        setCreatedAt(createdAt);
+        return *this;
+    }
+
+    /**
+     * 最終更新日時を取得
+     *
+     * @return 最終更新日時
+     */
+    const optional<Int64>& getUpdatedAt() const
+    {
+        return ensureData().updatedAt;
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    void setUpdatedAt(Int64 updatedAt)
+    {
+        ensureData().updatedAt.emplace(updatedAt);
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    Wallet& withUpdatedAt(Int64 updatedAt)
+    {
+        setUpdatedAt(updatedAt);
+        return *this;
     }
 
 
@@ -207,6 +381,51 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const Wallet& lhs, const Wallet& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->walletId != lhr.m_pData->walletId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->slot != lhr.m_pData->slot)
+        {
+            return true;
+        }
+        if (lhs.m_pData->paid != lhr.m_pData->paid)
+        {
+            return true;
+        }
+        if (lhs.m_pData->free != lhr.m_pData->free)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const Wallet& lhs, const Wallet& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

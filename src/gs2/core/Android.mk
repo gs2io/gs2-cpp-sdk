@@ -33,7 +33,6 @@ LOCAL_SRC_FILES :=
         model/Region.cpp \
         util/Base64.cpp \
         util/DefaultAllocator.cpp \
-        util/SignUtil.cpp \
         util/StringHolder.cpp \
         util/StringVariable.cpp \
         util/UrlEncoder.cpp \

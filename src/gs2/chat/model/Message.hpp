@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace chat {
@@ -35,149 +37,116 @@ namespace gs2 { namespace chat {
  */
 class Message : public Gs2Object
 {
+    friend bool operator!=(const Message& lhs, const Message& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** メッセージID */
+        /** メッセージ */
         optional<StringHolder> messageId;
-        /** 発言者ユーザID */
+        /** ルーム名 */
+        optional<StringHolder> roomName;
+        /** メッセージ名 */
+        optional<StringHolder> name;
+        /** 発言したユーザID */
         optional<StringHolder> userId;
-        /** メッセージテキスト */
-        optional<StringHolder> message;
-        /** メッセージメタデータ */
-        optional<StringHolder> meta;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
+        /** メッセージの種類を分類したい時の種類番号 */
+        optional<Int32> category;
+        /** メタデータ */
+        optional<StringHolder> metadata;
+        /** 作成日時 */
+        optional<Int64> createdAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             messageId(data.messageId),
+            roomName(data.roomName),
+            name(data.name),
             userId(data.userId),
-            message(data.message),
-            meta(data.meta),
-            createAt(data.createAt)
-        {}
+            category(data.category),
+            metadata(data.metadata),
+            createdAt(data.createdAt)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            messageId(std::move(data.messageId)),
-            userId(std::move(data.userId)),
-            message(std::move(data.message)),
-            meta(std::move(data.meta)),
-            createAt(std::move(data.createAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "messageId") == 0) {
+            if (std::strcmp(name_, "messageId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->messageId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "userId") == 0) {
+            else if (std::strcmp(name_, "roomName") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->roomName.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "name") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->name.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "message") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->message.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "meta") == 0) {
-                if (jsonValue.IsString())
-                {
-                    this->meta.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name, "createAt") == 0) {
+            else if (std::strcmp(name_, "category") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->category = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->metadata.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Message() :
-        m_pData(nullptr)
-    {}
+    Message() = default;
+    Message(const Message& message) = default;
+    Message(Message&& message) = default;
+    ~Message() = default;
 
-    Message(const Message& message) :
-        Gs2Object(message),
-        m_pData(message.m_pData != nullptr ? new Data(*message.m_pData) : nullptr)
-    {}
+    Message& operator=(const Message& message) = default;
+    Message& operator=(Message&& message) = default;
 
-    Message(Message&& message) :
-        Gs2Object(std::move(message)),
-        m_pData(message.m_pData)
+    Message deepCopy() const
     {
-        message.m_pData = nullptr;
-    }
-
-    ~Message()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Message& operator=(const Message& message)
-    {
-        Gs2Object::operator=(message);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*message.m_pData);
-
-        return *this;
-    }
-
-    Message& operator=(Message&& message)
-    {
-        Gs2Object::operator=(std::move(message));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = message.m_pData;
-        message.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Message);
     }
 
     const Message* operator->() const
@@ -189,12 +158,10 @@ public:
     {
         return this;
     }
-
-
     /**
-     * メッセージIDを取得
+     * メッセージを取得
      *
-     * @return メッセージID
+     * @return メッセージ
      */
     const optional<StringHolder>& getMessageId() const
     {
@@ -202,19 +169,92 @@ public:
     }
 
     /**
-     * メッセージIDを設定
+     * メッセージを設定
      *
-     * @param messageId メッセージID
+     * @param messageId メッセージ
      */
-    void setMessageId(const Char* messageId)
+    void setMessageId(StringHolder messageId)
     {
-        ensureData().messageId.emplace(messageId);
+        ensureData().messageId.emplace(std::move(messageId));
     }
 
     /**
-     * 発言者ユーザIDを取得
+     * メッセージを設定
      *
-     * @return 発言者ユーザID
+     * @param messageId メッセージ
+     */
+    Message& withMessageId(StringHolder messageId)
+    {
+        setMessageId(std::move(messageId));
+        return *this;
+    }
+
+    /**
+     * ルーム名を取得
+     *
+     * @return ルーム名
+     */
+    const optional<StringHolder>& getRoomName() const
+    {
+        return ensureData().roomName;
+    }
+
+    /**
+     * ルーム名を設定
+     *
+     * @param roomName ルーム名
+     */
+    void setRoomName(StringHolder roomName)
+    {
+        ensureData().roomName.emplace(std::move(roomName));
+    }
+
+    /**
+     * ルーム名を設定
+     *
+     * @param roomName ルーム名
+     */
+    Message& withRoomName(StringHolder roomName)
+    {
+        setRoomName(std::move(roomName));
+        return *this;
+    }
+
+    /**
+     * メッセージ名を取得
+     *
+     * @return メッセージ名
+     */
+    const optional<StringHolder>& getName() const
+    {
+        return ensureData().name;
+    }
+
+    /**
+     * メッセージ名を設定
+     *
+     * @param name メッセージ名
+     */
+    void setName(StringHolder name)
+    {
+        ensureData().name.emplace(std::move(name));
+    }
+
+    /**
+     * メッセージ名を設定
+     *
+     * @param name メッセージ名
+     */
+    Message& withName(StringHolder name)
+    {
+        setName(std::move(name));
+        return *this;
+    }
+
+    /**
+     * 発言したユーザIDを取得
+     *
+     * @return 発言したユーザID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -222,73 +262,117 @@ public:
     }
 
     /**
-     * 発言者ユーザIDを設定
+     * 発言したユーザIDを設定
      *
-     * @param userId 発言者ユーザID
+     * @param userId 発言したユーザID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
-     * メッセージテキストを取得
+     * 発言したユーザIDを設定
      *
-     * @return メッセージテキスト
+     * @param userId 発言したユーザID
      */
-    const optional<StringHolder>& getMessage() const
+    Message& withUserId(StringHolder userId)
     {
-        return ensureData().message;
+        setUserId(std::move(userId));
+        return *this;
     }
 
     /**
-     * メッセージテキストを設定
+     * メッセージの種類を分類したい時の種類番号を取得
      *
-     * @param message メッセージテキスト
+     * @return メッセージの種類を分類したい時の種類番号
      */
-    void setMessage(const Char* message)
+    const optional<Int32>& getCategory() const
     {
-        ensureData().message.emplace(message);
+        return ensureData().category;
     }
 
     /**
-     * メッセージメタデータを取得
+     * メッセージの種類を分類したい時の種類番号を設定
      *
-     * @return メッセージメタデータ
+     * @param category メッセージの種類を分類したい時の種類番号
      */
-    const optional<StringHolder>& getMeta() const
+    void setCategory(Int32 category)
     {
-        return ensureData().meta;
+        ensureData().category.emplace(category);
     }
 
     /**
-     * メッセージメタデータを設定
+     * メッセージの種類を分類したい時の種類番号を設定
      *
-     * @param meta メッセージメタデータ
+     * @param category メッセージの種類を分類したい時の種類番号
      */
-    void setMeta(const Char* meta)
+    Message& withCategory(Int32 category)
     {
-        ensureData().meta.emplace(meta);
+        setCategory(category);
+        return *this;
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * メタデータを取得
      *
-     * @return 作成日時(エポック秒)
+     * @return メタデータ
      */
-    const optional<Int32>& getCreateAt() const
+    const optional<StringHolder>& getMetadata() const
     {
-        return ensureData().createAt;
+        return ensureData().metadata;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * メタデータを設定
      *
-     * @param createAt 作成日時(エポック秒)
+     * @param metadata メタデータ
      */
-    void setCreateAt(Int32 createAt)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().metadata.emplace(std::move(metadata));
+    }
+
+    /**
+     * メタデータを設定
+     *
+     * @param metadata メタデータ
+     */
+    Message& withMetadata(StringHolder metadata)
+    {
+        setMetadata(std::move(metadata));
+        return *this;
+    }
+
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getCreatedAt() const
+    {
+        return ensureData().createdAt;
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    void setCreatedAt(Int64 createdAt)
+    {
+        ensureData().createdAt.emplace(createdAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    Message& withCreatedAt(Int64 createdAt)
+    {
+        setCreatedAt(createdAt);
+        return *this;
     }
 
 
@@ -297,6 +381,51 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const Message& lhs, const Message& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->messageId != lhr.m_pData->messageId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->roomName != lhr.m_pData->roomName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->category != lhr.m_pData->category)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const Message& lhs, const Message& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

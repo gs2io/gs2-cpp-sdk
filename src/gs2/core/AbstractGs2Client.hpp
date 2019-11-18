@@ -18,86 +18,26 @@
 #define GS2_CORE_ABSTRACTGS2CLIENT_HPP_
 
 #include "Gs2Object.hpp"
-#include "model/Region.hpp"
-
-namespace cocos2d { namespace network {
-class HttpClient;
-class HttpRequest;
-class HttpResponse;
-}}
+#include <string>
 
 GS2_START_OF_NAMESPACE
 
-class IGs2Credential;
-class Gs2BasicRequest;
-
-namespace detail {
-class HttpRequestBase;
-}
+class Gs2Session;
 
 class AbstractGs2ClientBase : public Gs2Object
 {
 private:
     /** 認証情報 */
-    IGs2Credential& m_Credential;
-    /** アクセス先リージョン */
-    Region m_Region;
+    Gs2Session& m_Gs2Session;
 
 public:
-    explicit AbstractGs2ClientBase(IGs2Credential& credential);
-
-    AbstractGs2ClientBase(IGs2Credential& credential, const Region& region);
-
-    AbstractGs2ClientBase(IGs2Credential& credential, const Char region[]);
-
-    /**
-     * アクセス先リージョンを取得
-     *
-     * @return アクセス先リージョン
-     */
-    const Region& getRegion() const
-    {
-        return m_Region;
-    }
-
-    /**
-     * アクセス先リージョンを設定
-     *
-     * @param region アクセス先リージョン
-     */
-    void setRegion(Region region)
-    {
-        m_Region = region;
-    }
-
-    virtual const Char* getEndPoint() const = 0;
+    explicit AbstractGs2ClientBase(Gs2Session& gs2Session);
 
 protected:
-    /**
-     * HTTPリクエストにURLを設定
-     *
-     * @param httpRequest HTTPリクエスト
-     * @param url URLパターン
-     */
-    void setUrl(detail::HttpRequestBase& httpRequestBase, const Char url[]) const;
-
-    /**
-     * HTTPリクエストにヘッダを設定
-     *
-     * @param httpRequest HTTPリクエスト
-     * @param basicRequest リクエストモデル
-     */
-    void setHeaders(detail::HttpRequestBase& httpRequestBase, const Gs2BasicRequest& basicRequest) const;
-
-    /**
-     * HTTPリクエストを実行する
-     *
-     * @param httpRequest HTTPリクエスト
-     */
-    void send(detail::HttpRequestBase& httpRequest);
-
-private:
-    static void callbackHandler(cocos2d::network::HttpClient* client, cocos2d::network::HttpResponse* response);
+    Gs2Session& getGs2Session()
+    {
+        return m_Gs2Session;
+    }
 };
 
 GS2_END_OF_NAMESPACE

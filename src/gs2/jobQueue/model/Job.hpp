@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace jobQueue {
@@ -35,179 +37,146 @@ namespace gs2 { namespace jobQueue {
  */
 class Job : public Gs2Object
 {
+    friend bool operator!=(const Job& lhs, const Job& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ジョブID */
+        /** ジョブ */
         optional<StringHolder> jobId;
-        /** キューGRN */
-        optional<StringHolder> queueId;
-        /** オーナーID */
+        /** ジョブの名前 */
+        optional<StringHolder> name;
+        /** ユーザーID */
         optional<StringHolder> userId;
-        /** スクリプト名 */
-        optional<StringHolder> scriptName;
+        /** ジョブの実行に使用するスクリプト のGRN */
+        optional<StringHolder> scriptId;
         /** 引数 */
         optional<StringHolder> args;
         /** 現在のリトライ回数 */
-        optional<Int32> currentRetry;
-        /** 最大リトライ回数 */
-        optional<Int32> maxRetry;
+        optional<Int32> currentRetryCount;
+        /** 最大試行回数 */
+        optional<Int32> maxTryCount;
+        /** ソート用インデックス(現在時刻(ミリ秒).登録時のインデックス) */
+        optional<Double> index;
         /** 作成日時 */
-        optional<Int32> createAt;
+        optional<Int64> createdAt;
+        /** 最終更新日時 */
+        optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             jobId(data.jobId),
-            queueId(data.queueId),
+            name(data.name),
             userId(data.userId),
-            scriptName(data.scriptName),
+            scriptId(data.scriptId),
             args(data.args),
-            currentRetry(data.currentRetry),
-            maxRetry(data.maxRetry),
-            createAt(data.createAt)
-        {}
+            currentRetryCount(data.currentRetryCount),
+            maxTryCount(data.maxTryCount),
+            index(data.index),
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            jobId(std::move(data.jobId)),
-            queueId(std::move(data.queueId)),
-            userId(std::move(data.userId)),
-            scriptName(std::move(data.scriptName)),
-            args(std::move(data.args)),
-            currentRetry(std::move(data.currentRetry)),
-            maxRetry(std::move(data.maxRetry)),
-            createAt(std::move(data.createAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "jobId") == 0) {
+            if (std::strcmp(name_, "jobId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->jobId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "queueId") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
-                    this->queueId.emplace(jsonValue.GetString());
+                    this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "scriptName") == 0) {
+            else if (std::strcmp(name_, "scriptId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
-                    this->scriptName.emplace(jsonValue.GetString());
+                    this->scriptId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "args") == 0) {
+            else if (std::strcmp(name_, "args") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->args.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "currentRetry") == 0) {
+            else if (std::strcmp(name_, "currentRetryCount") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
-                    this->currentRetry = jsonValue.GetInt();
+                    this->currentRetryCount = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "maxRetry") == 0) {
+            else if (std::strcmp(name_, "maxTryCount") == 0)
+            {
                 if (jsonValue.IsInt())
                 {
-                    this->maxRetry = jsonValue.GetInt();
+                    this->maxTryCount = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "index") == 0)
+            {
+                if (jsonValue.IsDouble())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->index = jsonValue.GetDouble();
+                }
+            }
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->createdAt = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Job() :
-        m_pData(nullptr)
-    {}
+    Job() = default;
+    Job(const Job& job) = default;
+    Job(Job&& job) = default;
+    ~Job() = default;
 
-    Job(const Job& job) :
-        Gs2Object(job),
-        m_pData(job.m_pData != nullptr ? new Data(*job.m_pData) : nullptr)
-    {}
+    Job& operator=(const Job& job) = default;
+    Job& operator=(Job&& job) = default;
 
-    Job(Job&& job) :
-        Gs2Object(std::move(job)),
-        m_pData(job.m_pData)
+    Job deepCopy() const
     {
-        job.m_pData = nullptr;
-    }
-
-    ~Job()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Job& operator=(const Job& job)
-    {
-        Gs2Object::operator=(job);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*job.m_pData);
-
-        return *this;
-    }
-
-    Job& operator=(Job&& job)
-    {
-        Gs2Object::operator=(std::move(job));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = job.m_pData;
-        job.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Job);
     }
 
     const Job* operator->() const
@@ -219,12 +188,10 @@ public:
     {
         return this;
     }
-
-
     /**
-     * ジョブIDを取得
+     * ジョブを取得
      *
-     * @return ジョブID
+     * @return ジョブ
      */
     const optional<StringHolder>& getJobId() const
     {
@@ -232,39 +199,61 @@ public:
     }
 
     /**
-     * ジョブIDを設定
+     * ジョブを設定
      *
-     * @param jobId ジョブID
+     * @param jobId ジョブ
      */
-    void setJobId(const Char* jobId)
+    void setJobId(StringHolder jobId)
     {
-        ensureData().jobId.emplace(jobId);
+        ensureData().jobId.emplace(std::move(jobId));
     }
 
     /**
-     * キューGRNを取得
+     * ジョブを設定
      *
-     * @return キューGRN
+     * @param jobId ジョブ
      */
-    const optional<StringHolder>& getQueueId() const
+    Job& withJobId(StringHolder jobId)
     {
-        return ensureData().queueId;
+        setJobId(std::move(jobId));
+        return *this;
     }
 
     /**
-     * キューGRNを設定
+     * ジョブの名前を取得
      *
-     * @param queueId キューGRN
+     * @return ジョブの名前
      */
-    void setQueueId(const Char* queueId)
+    const optional<StringHolder>& getName() const
     {
-        ensureData().queueId.emplace(queueId);
+        return ensureData().name;
     }
 
     /**
-     * オーナーIDを取得
+     * ジョブの名前を設定
      *
-     * @return オーナーID
+     * @param name ジョブの名前
+     */
+    void setName(StringHolder name)
+    {
+        ensureData().name.emplace(std::move(name));
+    }
+
+    /**
+     * ジョブの名前を設定
+     *
+     * @param name ジョブの名前
+     */
+    Job& withName(StringHolder name)
+    {
+        setName(std::move(name));
+        return *this;
+    }
+
+    /**
+     * ユーザーIDを取得
+     *
+     * @return ユーザーID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -272,33 +261,55 @@ public:
     }
 
     /**
-     * オーナーIDを設定
+     * ユーザーIDを設定
      *
-     * @param userId オーナーID
+     * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
-     * スクリプト名を取得
+     * ユーザーIDを設定
      *
-     * @return スクリプト名
+     * @param userId ユーザーID
      */
-    const optional<StringHolder>& getScriptName() const
+    Job& withUserId(StringHolder userId)
     {
-        return ensureData().scriptName;
+        setUserId(std::move(userId));
+        return *this;
     }
 
     /**
-     * スクリプト名を設定
+     * ジョブの実行に使用するスクリプト のGRNを取得
      *
-     * @param scriptName スクリプト名
+     * @return ジョブの実行に使用するスクリプト のGRN
      */
-    void setScriptName(const Char* scriptName)
+    const optional<StringHolder>& getScriptId() const
     {
-        ensureData().scriptName.emplace(scriptName);
+        return ensureData().scriptId;
+    }
+
+    /**
+     * ジョブの実行に使用するスクリプト のGRNを設定
+     *
+     * @param scriptId ジョブの実行に使用するスクリプト のGRN
+     */
+    void setScriptId(StringHolder scriptId)
+    {
+        ensureData().scriptId.emplace(std::move(scriptId));
+    }
+
+    /**
+     * ジョブの実行に使用するスクリプト のGRNを設定
+     *
+     * @param scriptId ジョブの実行に使用するスクリプト のGRN
+     */
+    Job& withScriptId(StringHolder scriptId)
+    {
+        setScriptId(std::move(scriptId));
+        return *this;
     }
 
     /**
@@ -316,9 +327,20 @@ public:
      *
      * @param args 引数
      */
-    void setArgs(const Char* args)
+    void setArgs(StringHolder args)
     {
-        ensureData().args.emplace(args);
+        ensureData().args.emplace(std::move(args));
+    }
+
+    /**
+     * 引数を設定
+     *
+     * @param args 引数
+     */
+    Job& withArgs(StringHolder args)
+    {
+        setArgs(std::move(args));
+        return *this;
     }
 
     /**
@@ -326,39 +348,92 @@ public:
      *
      * @return 現在のリトライ回数
      */
-    const optional<Int32>& getCurrentRetry() const
+    const optional<Int32>& getCurrentRetryCount() const
     {
-        return ensureData().currentRetry;
+        return ensureData().currentRetryCount;
     }
 
     /**
      * 現在のリトライ回数を設定
      *
-     * @param currentRetry 現在のリトライ回数
+     * @param currentRetryCount 現在のリトライ回数
      */
-    void setCurrentRetry(Int32 currentRetry)
+    void setCurrentRetryCount(Int32 currentRetryCount)
     {
-        ensureData().currentRetry.emplace(currentRetry);
+        ensureData().currentRetryCount.emplace(currentRetryCount);
     }
 
     /**
-     * 最大リトライ回数を取得
+     * 現在のリトライ回数を設定
      *
-     * @return 最大リトライ回数
+     * @param currentRetryCount 現在のリトライ回数
      */
-    const optional<Int32>& getMaxRetry() const
+    Job& withCurrentRetryCount(Int32 currentRetryCount)
     {
-        return ensureData().maxRetry;
+        setCurrentRetryCount(currentRetryCount);
+        return *this;
     }
 
     /**
-     * 最大リトライ回数を設定
+     * 最大試行回数を取得
      *
-     * @param maxRetry 最大リトライ回数
+     * @return 最大試行回数
      */
-    void setMaxRetry(Int32 maxRetry)
+    const optional<Int32>& getMaxTryCount() const
     {
-        ensureData().maxRetry.emplace(maxRetry);
+        return ensureData().maxTryCount;
+    }
+
+    /**
+     * 最大試行回数を設定
+     *
+     * @param maxTryCount 最大試行回数
+     */
+    void setMaxTryCount(Int32 maxTryCount)
+    {
+        ensureData().maxTryCount.emplace(maxTryCount);
+    }
+
+    /**
+     * 最大試行回数を設定
+     *
+     * @param maxTryCount 最大試行回数
+     */
+    Job& withMaxTryCount(Int32 maxTryCount)
+    {
+        setMaxTryCount(maxTryCount);
+        return *this;
+    }
+
+    /**
+     * ソート用インデックス(現在時刻(ミリ秒).登録時のインデックス)を取得
+     *
+     * @return ソート用インデックス(現在時刻(ミリ秒).登録時のインデックス)
+     */
+    const optional<Double>& getIndex() const
+    {
+        return ensureData().index;
+    }
+
+    /**
+     * ソート用インデックス(現在時刻(ミリ秒).登録時のインデックス)を設定
+     *
+     * @param index ソート用インデックス(現在時刻(ミリ秒).登録時のインデックス)
+     */
+    void setIndex(Double index)
+    {
+        ensureData().index.emplace(index);
+    }
+
+    /**
+     * ソート用インデックス(現在時刻(ミリ秒).登録時のインデックス)を設定
+     *
+     * @param index ソート用インデックス(現在時刻(ミリ秒).登録時のインデックス)
+     */
+    Job& withIndex(Double index)
+    {
+        setIndex(index);
+        return *this;
     }
 
     /**
@@ -366,19 +441,61 @@ public:
      *
      * @return 作成日時
      */
-    const optional<Int32>& getCreateAt() const
+    const optional<Int64>& getCreatedAt() const
     {
-        return ensureData().createAt;
+        return ensureData().createdAt;
     }
 
     /**
      * 作成日時を設定
      *
-     * @param createAt 作成日時
+     * @param createdAt 作成日時
      */
-    void setCreateAt(Int32 createAt)
+    void setCreatedAt(Int64 createdAt)
     {
-        ensureData().createAt.emplace(createAt);
+        ensureData().createdAt.emplace(createdAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    Job& withCreatedAt(Int64 createdAt)
+    {
+        setCreatedAt(createdAt);
+        return *this;
+    }
+
+    /**
+     * 最終更新日時を取得
+     *
+     * @return 最終更新日時
+     */
+    const optional<Int64>& getUpdatedAt() const
+    {
+        return ensureData().updatedAt;
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    void setUpdatedAt(Int64 updatedAt)
+    {
+        ensureData().updatedAt.emplace(updatedAt);
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    Job& withUpdatedAt(Int64 updatedAt)
+    {
+        setUpdatedAt(updatedAt);
+        return *this;
     }
 
 
@@ -387,6 +504,63 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const Job& lhs, const Job& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->jobId != lhr.m_pData->jobId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->scriptId != lhr.m_pData->scriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->args != lhr.m_pData->args)
+        {
+            return true;
+        }
+        if (lhs.m_pData->currentRetryCount != lhr.m_pData->currentRetryCount)
+        {
+            return true;
+        }
+        if (lhs.m_pData->maxTryCount != lhr.m_pData->maxTryCount)
+        {
+            return true;
+        }
+        if (lhs.m_pData->index != lhr.m_pData->index)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const Job& lhs, const Job& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

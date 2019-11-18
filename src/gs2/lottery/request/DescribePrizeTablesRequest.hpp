@@ -1,0 +1,159 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#ifndef GS2_LOTTERY_CONTROL_DESCRIBEPRIZETABLESREQUEST_HPP_
+#define GS2_LOTTERY_CONTROL_DESCRIBEPRIZETABLESREQUEST_HPP_
+
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <gs2/lottery/Gs2LotteryConst.hpp>
+#include <gs2/lottery/model/model.hpp>
+#include <memory>
+
+namespace gs2 { namespace lottery
+{
+
+/**
+ * 排出確率テーブルの一覧を取得 のリクエストモデル
+ *
+ * @author Game Server Services, Inc.
+ */
+class DescribePrizeTablesRequest : public Gs2BasicRequest, public Gs2Lottery
+{
+public:
+    constexpr static const Char* const FUNCTION = "";
+
+private:
+    class Data : public Gs2BasicRequest::Data
+    {
+    public:
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2BasicRequest::Data(data),
+            namespaceName(data.namespaceName)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
+    }
+
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
+    }
+
+public:
+    DescribePrizeTablesRequest() = default;
+    DescribePrizeTablesRequest(const DescribePrizeTablesRequest& describePrizeTablesRequest) = default;
+    DescribePrizeTablesRequest(DescribePrizeTablesRequest&& describePrizeTablesRequest) = default;
+    ~DescribePrizeTablesRequest() GS2_OVERRIDE = default;
+
+    DescribePrizeTablesRequest& operator=(const DescribePrizeTablesRequest& describePrizeTablesRequest) = default;
+    DescribePrizeTablesRequest& operator=(DescribePrizeTablesRequest&& describePrizeTablesRequest) = default;
+
+    DescribePrizeTablesRequest deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribePrizeTablesRequest);
+    }
+
+    const DescribePrizeTablesRequest* operator->() const
+    {
+        return this;
+    }
+
+    DescribePrizeTablesRequest* operator->()
+    {
+        return this;
+    }
+
+    /**
+     * ネームスペース名を取得
+     *
+     * @return ネームスペース名
+     */
+    const optional<StringHolder>& getNamespaceName() const
+    {
+        return ensureData().namespaceName;
+    }
+
+    /**
+     * ネームスペース名を設定
+     *
+     * @param namespaceName ネームスペース名
+     */
+    void setNamespaceName(StringHolder namespaceName)
+    {
+        ensureData().namespaceName.emplace(std::move(namespaceName));
+    }
+
+    /**
+     * ネームスペース名を設定
+     *
+     * @param namespaceName ネームスペース名
+     */
+    DescribePrizeTablesRequest& withNamespaceName(StringHolder namespaceName)
+    {
+        ensureData().namespaceName.emplace(std::move(namespaceName));
+        return *this;
+    }
+
+
+    /**
+     * GS2認証クライアントIDを設定。
+     * 通常は自動的に計算されるため、この値を設定する必要はありません。
+     *
+     * @param gs2ClientId GS2認証クライアントID
+     */
+    DescribePrizeTablesRequest& withGs2ClientId(StringHolder gs2ClientId)
+    {
+        setGs2ClientId(std::move(gs2ClientId));
+        return *this;
+    }
+
+    /**
+     * GS2リクエストIDを設定。
+     *
+     * @param gs2RequestId GS2リクエストID
+     */
+    DescribePrizeTablesRequest& withRequestId(StringHolder gs2RequestId)
+    {
+        setRequestId(std::move(gs2RequestId));
+        return *this;
+    }
+};
+
+} }
+
+#endif //GS2_LOTTERY_CONTROL_DESCRIBEPRIZETABLESREQUEST_HPP_

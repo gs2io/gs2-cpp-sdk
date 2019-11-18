@@ -18,9 +18,9 @@
 #define GS2_LIMIT_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
-#include "Gs2LimitClient.hpp"
+#include "Gs2LimitRestClient.hpp"
+#include "Gs2LimitWebSocketClient.hpp"
 #include "Gs2LimitConst.hpp"
 
 #endif //GS2_LIMIT_HPP_

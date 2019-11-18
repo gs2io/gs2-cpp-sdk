@@ -18,9 +18,9 @@
 #define GS2_JOBQUEUE_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
-#include "Gs2JobQueueClient.hpp"
+#include "Gs2JobQueueRestClient.hpp"
+#include "Gs2JobQueueWebSocketClient.hpp"
 #include "Gs2JobQueueConst.hpp"
 
 #endif //GS2_JOBQUEUE_HPP_

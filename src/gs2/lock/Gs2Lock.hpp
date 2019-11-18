@@ -18,9 +18,9 @@
 #define GS2_LOCK_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
-#include "Gs2LockClient.hpp"
+#include "Gs2LockRestClient.hpp"
+#include "Gs2LockWebSocketClient.hpp"
 #include "Gs2LockConst.hpp"
 
 #endif //GS2_LOCK_HPP_

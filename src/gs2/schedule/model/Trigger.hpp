@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace schedule {
@@ -35,129 +37,96 @@ namespace gs2 { namespace schedule {
  */
 class Trigger : public Gs2Object
 {
+    friend bool operator!=(const Trigger& lhs, const Trigger& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザID */
+        /** トリガー */
+        optional<StringHolder> triggerId;
+        /** トリガーの名前 */
+        optional<StringHolder> name;
+        /** ユーザーID */
         optional<StringHolder> userId;
-        /** トリガーID */
-        optional<StringHolder> triggerName;
-        /** トリガーを引いた時間(エポック秒) */
-        optional<Int32> triggerAt;
+        /** 作成日時 */
+        optional<Int64> createdAt;
+        /** トリガーの有効期限 */
+        optional<Int64> expiresAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
+            triggerId(data.triggerId),
+            name(data.name),
             userId(data.userId),
-            triggerName(data.triggerName),
-            triggerAt(data.triggerAt)
-        {}
+            createdAt(data.createdAt),
+            expiresAt(data.expiresAt)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            userId(std::move(data.userId)),
-            triggerName(std::move(data.triggerName)),
-            triggerAt(std::move(data.triggerAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "userId") == 0) {
+            if (std::strcmp(name_, "triggerId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->triggerId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "name") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->name.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "triggerName") == 0) {
-                if (jsonValue.IsString())
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
+                if (jsonValue.IsInt64())
                 {
-                    this->triggerName.emplace(jsonValue.GetString());
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "triggerAt") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "expiresAt") == 0)
+            {
+                if (jsonValue.IsInt64())
                 {
-                    this->triggerAt = jsonValue.GetInt();
+                    this->expiresAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Trigger() :
-        m_pData(nullptr)
-    {}
+    Trigger() = default;
+    Trigger(const Trigger& trigger) = default;
+    Trigger(Trigger&& trigger) = default;
+    ~Trigger() = default;
 
-    Trigger(const Trigger& trigger) :
-        Gs2Object(trigger),
-        m_pData(trigger.m_pData != nullptr ? new Data(*trigger.m_pData) : nullptr)
-    {}
+    Trigger& operator=(const Trigger& trigger) = default;
+    Trigger& operator=(Trigger&& trigger) = default;
 
-    Trigger(Trigger&& trigger) :
-        Gs2Object(std::move(trigger)),
-        m_pData(trigger.m_pData)
+    Trigger deepCopy() const
     {
-        trigger.m_pData = nullptr;
-    }
-
-    ~Trigger()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Trigger& operator=(const Trigger& trigger)
-    {
-        Gs2Object::operator=(trigger);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*trigger.m_pData);
-
-        return *this;
-    }
-
-    Trigger& operator=(Trigger&& trigger)
-    {
-        Gs2Object::operator=(std::move(trigger));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = trigger.m_pData;
-        trigger.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Trigger);
     }
 
     const Trigger* operator->() const
@@ -169,12 +138,72 @@ public:
     {
         return this;
     }
-
+    /**
+     * トリガーを取得
+     *
+     * @return トリガー
+     */
+    const optional<StringHolder>& getTriggerId() const
+    {
+        return ensureData().triggerId;
+    }
 
     /**
-     * ユーザIDを取得
+     * トリガーを設定
      *
-     * @return ユーザID
+     * @param triggerId トリガー
+     */
+    void setTriggerId(StringHolder triggerId)
+    {
+        ensureData().triggerId.emplace(std::move(triggerId));
+    }
+
+    /**
+     * トリガーを設定
+     *
+     * @param triggerId トリガー
+     */
+    Trigger& withTriggerId(StringHolder triggerId)
+    {
+        setTriggerId(std::move(triggerId));
+        return *this;
+    }
+
+    /**
+     * トリガーの名前を取得
+     *
+     * @return トリガーの名前
+     */
+    const optional<StringHolder>& getName() const
+    {
+        return ensureData().name;
+    }
+
+    /**
+     * トリガーの名前を設定
+     *
+     * @param name トリガーの名前
+     */
+    void setName(StringHolder name)
+    {
+        ensureData().name.emplace(std::move(name));
+    }
+
+    /**
+     * トリガーの名前を設定
+     *
+     * @param name トリガーの名前
+     */
+    Trigger& withName(StringHolder name)
+    {
+        setName(std::move(name));
+        return *this;
+    }
+
+    /**
+     * ユーザーIDを取得
+     *
+     * @return ユーザーID
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -182,53 +211,86 @@ public:
     }
 
     /**
-     * ユーザIDを設定
+     * ユーザーIDを設定
      *
-     * @param userId ユーザID
+     * @param userId ユーザーID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
-     * トリガーIDを取得
+     * ユーザーIDを設定
      *
-     * @return トリガーID
+     * @param userId ユーザーID
      */
-    const optional<StringHolder>& getTriggerName() const
+    Trigger& withUserId(StringHolder userId)
     {
-        return ensureData().triggerName;
+        setUserId(std::move(userId));
+        return *this;
     }
 
     /**
-     * トリガーIDを設定
+     * 作成日時を取得
      *
-     * @param triggerName トリガーID
+     * @return 作成日時
      */
-    void setTriggerName(const Char* triggerName)
+    const optional<Int64>& getCreatedAt() const
     {
-        ensureData().triggerName.emplace(triggerName);
+        return ensureData().createdAt;
     }
 
     /**
-     * トリガーを引いた時間(エポック秒)を取得
+     * 作成日時を設定
      *
-     * @return トリガーを引いた時間(エポック秒)
+     * @param createdAt 作成日時
      */
-    const optional<Int32>& getTriggerAt() const
+    void setCreatedAt(Int64 createdAt)
     {
-        return ensureData().triggerAt;
+        ensureData().createdAt.emplace(createdAt);
     }
 
     /**
-     * トリガーを引いた時間(エポック秒)を設定
+     * 作成日時を設定
      *
-     * @param triggerAt トリガーを引いた時間(エポック秒)
+     * @param createdAt 作成日時
      */
-    void setTriggerAt(Int32 triggerAt)
+    Trigger& withCreatedAt(Int64 createdAt)
     {
-        ensureData().triggerAt.emplace(triggerAt);
+        setCreatedAt(createdAt);
+        return *this;
+    }
+
+    /**
+     * トリガーの有効期限を取得
+     *
+     * @return トリガーの有効期限
+     */
+    const optional<Int64>& getExpiresAt() const
+    {
+        return ensureData().expiresAt;
+    }
+
+    /**
+     * トリガーの有効期限を設定
+     *
+     * @param expiresAt トリガーの有効期限
+     */
+    void setExpiresAt(Int64 expiresAt)
+    {
+        ensureData().expiresAt.emplace(expiresAt);
+    }
+
+    /**
+     * トリガーの有効期限を設定
+     *
+     * @param expiresAt トリガーの有効期限
+     */
+    Trigger& withExpiresAt(Int64 expiresAt)
+    {
+        setExpiresAt(expiresAt);
+        return *this;
     }
 
 
@@ -237,6 +299,43 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const Trigger& lhs, const Trigger& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->triggerId != lhr.m_pData->triggerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->expiresAt != lhr.m_pData->expiresAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const Trigger& lhs, const Trigger& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

@@ -22,16 +22,11 @@
 GS2_START_OF_NAMESPACE
 
 namespace detail {
-class HttpRequestBase;
+class Gs2StandardHttpTaskBase;
 }
-class Gs2BasicRequest;
 
-class IGs2Credential {
-    friend class AbstractGs2ClientBase;
-
-private:
-    virtual void authorize(detail::HttpRequestBase& request, const Gs2BasicRequest& basicRequest) const = 0;
-
+class IGs2Credential : public Gs2Object
+{
 public:
     IGs2Credential() = default;
     virtual ~IGs2Credential() = default;

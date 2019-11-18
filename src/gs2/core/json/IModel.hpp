@@ -19,6 +19,12 @@
 
 #include "../Gs2Object.hpp"
 #include "Allocator.hpp"
+
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma push_macro("GetObject")
+#undef GetObject
+#endif
+
 #include "../external/rapidjson/include/rapidjson/document.h"
 
 GS2_START_OF_NAMESPACE
@@ -26,13 +32,36 @@ namespace detail { namespace json {
 
 typedef GS2_RAPIDJSON_NAMESPACE::GenericValue<GS2_RAPIDJSON_NAMESPACE::UTF8<>, Allocator> JsonConstValue;
 
+inline JsonConstValue::ConstObject getObject(const JsonConstValue& jsonValue)
+{
+    return jsonValue.GetObject();
+}
+
 class IModel : public Gs2Object
 {
 public:
-    virtual void set(const Char name[], const JsonConstValue& jsonValue) = 0;
+    IModel() = default;
+    virtual ~IModel() = default;
+
+    virtual void set(const JsonConstValue& jsonValue)
+    {
+        if(jsonValue.IsArray()) {
+            set("", jsonValue);
+        } else if(jsonValue.IsObject()) {
+            for (auto it = jsonValue.MemberBegin(); it != jsonValue.MemberEnd(); ++it) {
+                set(it->name.GetString(), it->value);
+            }
+        }
+    }
+
+    virtual void set(const Char name[], const JsonConstValue& jsonValue) {}
 };
 
 } }
 GS2_END_OF_NAMESPACE
+
+#if GS2_TARGET == GS2_TARGET_WINDOWS
+#pragma pop_macro("GetObject")
+#endif
 
 #endif //GS2_CORE_JSON_IMODEL_HPP_

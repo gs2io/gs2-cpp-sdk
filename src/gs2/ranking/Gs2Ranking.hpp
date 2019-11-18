@@ -18,9 +18,9 @@
 #define GS2_RANKING_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
-#include "Gs2RankingClient.hpp"
+#include "Gs2RankingRestClient.hpp"
+#include "Gs2RankingWebSocketClient.hpp"
 #include "Gs2RankingConst.hpp"
 
 #endif //GS2_RANKING_HPP_

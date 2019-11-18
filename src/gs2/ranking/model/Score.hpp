@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace ranking {
@@ -35,159 +37,126 @@ namespace gs2 { namespace ranking {
  */
 class Score : public Gs2Object
 {
+    friend bool operator!=(const Score& lhs, const Score& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ランキングテーブルGRN */
-        optional<StringHolder> rankingTableId;
-        /** ゲームモード名 */
-        optional<StringHolder> gameMode;
+        /** スコア */
+        optional<StringHolder> scoreId;
+        /** カテゴリ名 */
+        optional<StringHolder> categoryName;
         /** ユーザID */
         optional<StringHolder> userId;
-        /** スコア値 */
+        /** スコアのユニークID */
+        optional<StringHolder> uniqueId;
+        /** スコアを獲得したユーザID */
+        optional<StringHolder> scorerUserId;
+        /** スコア */
         optional<Int64> score;
         /** メタデータ */
-        optional<StringHolder> meta;
-        /** 登録日時(エポック秒) */
-        optional<Int32> updateAt;
+        optional<StringHolder> metadata;
+        /** 作成日時 */
+        optional<Int64> createdAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            rankingTableId(data.rankingTableId),
-            gameMode(data.gameMode),
+            scoreId(data.scoreId),
+            categoryName(data.categoryName),
             userId(data.userId),
+            uniqueId(data.uniqueId),
+            scorerUserId(data.scorerUserId),
             score(data.score),
-            meta(data.meta),
-            updateAt(data.updateAt)
-        {}
+            metadata(data.metadata),
+            createdAt(data.createdAt)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            rankingTableId(std::move(data.rankingTableId)),
-            gameMode(std::move(data.gameMode)),
-            userId(std::move(data.userId)),
-            score(std::move(data.score)),
-            meta(std::move(data.meta)),
-            updateAt(std::move(data.updateAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "rankingTableId") == 0) {
+            if (std::strcmp(name_, "scoreId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
-                    this->rankingTableId.emplace(jsonValue.GetString());
+                    this->scoreId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "gameMode") == 0) {
+            else if (std::strcmp(name_, "categoryName") == 0)
+            {
                 if (jsonValue.IsString())
                 {
-                    this->gameMode.emplace(jsonValue.GetString());
+                    this->categoryName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "userId") == 0) {
+            else if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "score") == 0) {
+            else if (std::strcmp(name_, "uniqueId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->uniqueId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "scorerUserId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->scorerUserId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "score") == 0)
+            {
                 if (jsonValue.IsInt64())
                 {
                     this->score = jsonValue.GetInt64();
                 }
             }
-            else if (std::strcmp(name, "meta") == 0) {
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
                 if (jsonValue.IsString())
                 {
-                    this->meta.emplace(jsonValue.GetString());
+                    this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "updateAt") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
+                if (jsonValue.IsInt64())
                 {
-                    this->updateAt = jsonValue.GetInt();
+                    this->createdAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Score() :
-        m_pData(nullptr)
-    {}
+    Score() = default;
+    Score(const Score& score) = default;
+    Score(Score&& score) = default;
+    ~Score() = default;
 
-    Score(const Score& score) :
-        Gs2Object(score),
-        m_pData(score.m_pData != nullptr ? new Data(*score.m_pData) : nullptr)
-    {}
+    Score& operator=(const Score& score) = default;
+    Score& operator=(Score&& score) = default;
 
-    Score(Score&& score) :
-        Gs2Object(std::move(score)),
-        m_pData(score.m_pData)
+    Score deepCopy() const
     {
-        score.m_pData = nullptr;
-    }
-
-    ~Score()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    Score& operator=(const Score& score)
-    {
-        Gs2Object::operator=(score);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*score.m_pData);
-
-        return *this;
-    }
-
-    Score& operator=(Score&& score)
-    {
-        Gs2Object::operator=(std::move(score));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = score.m_pData;
-        score.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Score);
     }
 
     const Score* operator->() const
@@ -199,46 +168,66 @@ public:
     {
         return this;
     }
-
-
     /**
-     * ランキングテーブルGRNを取得
+     * スコアを取得
      *
-     * @return ランキングテーブルGRN
+     * @return スコア
      */
-    const optional<StringHolder>& getRankingTableId() const
+    const optional<StringHolder>& getScoreId() const
     {
-        return ensureData().rankingTableId;
+        return ensureData().scoreId;
     }
 
     /**
-     * ランキングテーブルGRNを設定
+     * スコアを設定
      *
-     * @param rankingTableId ランキングテーブルGRN
+     * @param scoreId スコア
      */
-    void setRankingTableId(const Char* rankingTableId)
+    void setScoreId(StringHolder scoreId)
     {
-        ensureData().rankingTableId.emplace(rankingTableId);
+        ensureData().scoreId.emplace(std::move(scoreId));
     }
 
     /**
-     * ゲームモード名を取得
+     * スコアを設定
      *
-     * @return ゲームモード名
+     * @param scoreId スコア
      */
-    const optional<StringHolder>& getGameMode() const
+    Score& withScoreId(StringHolder scoreId)
     {
-        return ensureData().gameMode;
+        setScoreId(std::move(scoreId));
+        return *this;
     }
 
     /**
-     * ゲームモード名を設定
+     * カテゴリ名を取得
      *
-     * @param gameMode ゲームモード名
+     * @return カテゴリ名
      */
-    void setGameMode(const Char* gameMode)
+    const optional<StringHolder>& getCategoryName() const
     {
-        ensureData().gameMode.emplace(gameMode);
+        return ensureData().categoryName;
+    }
+
+    /**
+     * カテゴリ名を設定
+     *
+     * @param categoryName カテゴリ名
+     */
+    void setCategoryName(StringHolder categoryName)
+    {
+        ensureData().categoryName.emplace(std::move(categoryName));
+    }
+
+    /**
+     * カテゴリ名を設定
+     *
+     * @param categoryName カテゴリ名
+     */
+    Score& withCategoryName(StringHolder categoryName)
+    {
+        setCategoryName(std::move(categoryName));
+        return *this;
     }
 
     /**
@@ -256,15 +245,88 @@ public:
      *
      * @param userId ユーザID
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
-     * スコア値を取得
+     * ユーザIDを設定
      *
-     * @return スコア値
+     * @param userId ユーザID
+     */
+    Score& withUserId(StringHolder userId)
+    {
+        setUserId(std::move(userId));
+        return *this;
+    }
+
+    /**
+     * スコアのユニークIDを取得
+     *
+     * @return スコアのユニークID
+     */
+    const optional<StringHolder>& getUniqueId() const
+    {
+        return ensureData().uniqueId;
+    }
+
+    /**
+     * スコアのユニークIDを設定
+     *
+     * @param uniqueId スコアのユニークID
+     */
+    void setUniqueId(StringHolder uniqueId)
+    {
+        ensureData().uniqueId.emplace(std::move(uniqueId));
+    }
+
+    /**
+     * スコアのユニークIDを設定
+     *
+     * @param uniqueId スコアのユニークID
+     */
+    Score& withUniqueId(StringHolder uniqueId)
+    {
+        setUniqueId(std::move(uniqueId));
+        return *this;
+    }
+
+    /**
+     * スコアを獲得したユーザIDを取得
+     *
+     * @return スコアを獲得したユーザID
+     */
+    const optional<StringHolder>& getScorerUserId() const
+    {
+        return ensureData().scorerUserId;
+    }
+
+    /**
+     * スコアを獲得したユーザIDを設定
+     *
+     * @param scorerUserId スコアを獲得したユーザID
+     */
+    void setScorerUserId(StringHolder scorerUserId)
+    {
+        ensureData().scorerUserId.emplace(std::move(scorerUserId));
+    }
+
+    /**
+     * スコアを獲得したユーザIDを設定
+     *
+     * @param scorerUserId スコアを獲得したユーザID
+     */
+    Score& withScorerUserId(StringHolder scorerUserId)
+    {
+        setScorerUserId(std::move(scorerUserId));
+        return *this;
+    }
+
+    /**
+     * スコアを取得
+     *
+     * @return スコア
      */
     const optional<Int64>& getScore() const
     {
@@ -272,9 +334,9 @@ public:
     }
 
     /**
-     * スコア値を設定
+     * スコアを設定
      *
-     * @param score スコア値
+     * @param score スコア
      */
     void setScore(Int64 score)
     {
@@ -282,43 +344,76 @@ public:
     }
 
     /**
+     * スコアを設定
+     *
+     * @param score スコア
+     */
+    Score& withScore(Int64 score)
+    {
+        setScore(score);
+        return *this;
+    }
+
+    /**
      * メタデータを取得
      *
      * @return メタデータ
      */
-    const optional<StringHolder>& getMeta() const
+    const optional<StringHolder>& getMetadata() const
     {
-        return ensureData().meta;
+        return ensureData().metadata;
     }
 
     /**
      * メタデータを設定
      *
-     * @param meta メタデータ
+     * @param metadata メタデータ
      */
-    void setMeta(const Char* meta)
+    void setMetadata(StringHolder metadata)
     {
-        ensureData().meta.emplace(meta);
+        ensureData().metadata.emplace(std::move(metadata));
     }
 
     /**
-     * 登録日時(エポック秒)を取得
+     * メタデータを設定
      *
-     * @return 登録日時(エポック秒)
+     * @param metadata メタデータ
      */
-    const optional<Int32>& getUpdateAt() const
+    Score& withMetadata(StringHolder metadata)
     {
-        return ensureData().updateAt;
+        setMetadata(std::move(metadata));
+        return *this;
     }
 
     /**
-     * 登録日時(エポック秒)を設定
+     * 作成日時を取得
      *
-     * @param updateAt 登録日時(エポック秒)
+     * @return 作成日時
      */
-    void setUpdateAt(Int32 updateAt)
+    const optional<Int64>& getCreatedAt() const
     {
-        ensureData().updateAt.emplace(updateAt);
+        return ensureData().createdAt;
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    void setCreatedAt(Int64 createdAt)
+    {
+        ensureData().createdAt.emplace(createdAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    Score& withCreatedAt(Int64 createdAt)
+    {
+        setCreatedAt(createdAt);
+        return *this;
     }
 
 
@@ -327,6 +422,55 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const Score& lhs, const Score& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->scoreId != lhr.m_pData->scoreId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->categoryName != lhr.m_pData->categoryName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->uniqueId != lhr.m_pData->uniqueId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->scorerUserId != lhr.m_pData->scorerUserId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->score != lhr.m_pData->score)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const Score& lhs, const Score& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

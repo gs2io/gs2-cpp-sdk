@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 Game Server Services, Inc. or its affiliates. All Rights
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,7 +22,9 @@
 #include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 #include <cstring>
 
 namespace gs2 { namespace identifier {
@@ -35,139 +37,106 @@ namespace gs2 { namespace identifier {
  */
 class User : public Gs2Object
 {
+    friend bool operator!=(const User& lhs, const User& lhr);
+
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ユーザGRN */
+        /** ユーザ */
         optional<StringHolder> userId;
         /** オーナーID */
         optional<StringHolder> ownerId;
-        /** ユーザ名 */
+        /** ユーザー名 */
         optional<StringHolder> name;
-        /** 作成日時(エポック秒) */
-        optional<Int32> createAt;
+        /** ユーザの説明 */
+        optional<StringHolder> description;
+        /** 作成日時 */
+        optional<Int64> createdAt;
+        /** 最終更新日時 */
+        optional<Int64> updatedAt;
 
-        Data()
-        {}
+        Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             userId(data.userId),
             ownerId(data.ownerId),
             name(data.name),
-            createAt(data.createAt)
-        {}
+            description(data.description),
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
+        {
+        }
 
-        Data(Data&& data) :
-            detail::json::IModel(std::move(data)),
-            userId(std::move(data.userId)),
-            ownerId(std::move(data.ownerId)),
-            name(std::move(data.name)),
-            createAt(std::move(data.createAt))
-        {}
+        Data(Data&& data) = default;
 
         ~Data() = default;
 
-        // TODO:
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name[], const detail::json::JsonConstValue& jsonValue)
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name, "userId") == 0) {
+            if (std::strcmp(name_, "userId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->userId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "ownerId") == 0) {
+            else if (std::strcmp(name_, "ownerId") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->ownerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "name") == 0) {
+            else if (std::strcmp(name_, "name") == 0)
+            {
                 if (jsonValue.IsString())
                 {
                     this->name.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name, "createAt") == 0) {
-                if (jsonValue.IsInt())
+            else if (std::strcmp(name_, "description") == 0)
+            {
+                if (jsonValue.IsString())
                 {
-                    this->createAt = jsonValue.GetInt();
+                    this->description.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->createdAt = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
     };
-    
-    Data* m_pData;
 
-    Data& ensureData() {
-        if (m_pData == nullptr) {
-            m_pData = new Data();
-        }
-        return *m_pData;
-    }
-
-    const Data& ensureData() const {
-        if (m_pData == nullptr) {
-            *const_cast<Data**>(&m_pData) = new Data();
-        }
-        return *m_pData;
-    }
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    User() :
-        m_pData(nullptr)
-    {}
+    User() = default;
+    User(const User& user) = default;
+    User(User&& user) = default;
+    ~User() = default;
 
-    User(const User& user) :
-        Gs2Object(user),
-        m_pData(user.m_pData != nullptr ? new Data(*user.m_pData) : nullptr)
-    {}
+    User& operator=(const User& user) = default;
+    User& operator=(User&& user) = default;
 
-    User(User&& user) :
-        Gs2Object(std::move(user)),
-        m_pData(user.m_pData)
+    User deepCopy() const
     {
-        user.m_pData = nullptr;
-    }
-
-    ~User()
-    {
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-    }
-
-    User& operator=(const User& user)
-    {
-        Gs2Object::operator=(user);
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = new Data(*user.m_pData);
-
-        return *this;
-    }
-
-    User& operator=(User&& user)
-    {
-        Gs2Object::operator=(std::move(user));
-
-        if (m_pData != nullptr)
-        {
-            delete m_pData;
-        }
-        m_pData = user.m_pData;
-        user.m_pData = nullptr;
-
-        return *this;
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(User);
     }
 
     const User* operator->() const
@@ -179,12 +148,10 @@ public:
     {
         return this;
     }
-
-
     /**
-     * ユーザGRNを取得
+     * ユーザを取得
      *
-     * @return ユーザGRN
+     * @return ユーザ
      */
     const optional<StringHolder>& getUserId() const
     {
@@ -192,13 +159,24 @@ public:
     }
 
     /**
-     * ユーザGRNを設定
+     * ユーザを設定
      *
-     * @param userId ユーザGRN
+     * @param userId ユーザ
      */
-    void setUserId(const Char* userId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().userId.emplace(userId);
+        ensureData().userId.emplace(std::move(userId));
+    }
+
+    /**
+     * ユーザを設定
+     *
+     * @param userId ユーザ
+     */
+    User& withUserId(StringHolder userId)
+    {
+        setUserId(std::move(userId));
+        return *this;
     }
 
     /**
@@ -216,15 +194,26 @@ public:
      *
      * @param ownerId オーナーID
      */
-    void setOwnerId(const Char* ownerId)
+    void setOwnerId(StringHolder ownerId)
     {
-        ensureData().ownerId.emplace(ownerId);
+        ensureData().ownerId.emplace(std::move(ownerId));
     }
 
     /**
-     * ユーザ名を取得
+     * オーナーIDを設定
      *
-     * @return ユーザ名
+     * @param ownerId オーナーID
+     */
+    User& withOwnerId(StringHolder ownerId)
+    {
+        setOwnerId(std::move(ownerId));
+        return *this;
+    }
+
+    /**
+     * ユーザー名を取得
+     *
+     * @return ユーザー名
      */
     const optional<StringHolder>& getName() const
     {
@@ -232,33 +221,117 @@ public:
     }
 
     /**
-     * ユーザ名を設定
+     * ユーザー名を設定
      *
-     * @param name ユーザ名
+     * @param name ユーザー名
      */
-    void setName(const Char* name)
+    void setName(StringHolder name)
     {
-        ensureData().name.emplace(name);
+        ensureData().name.emplace(std::move(name));
     }
 
     /**
-     * 作成日時(エポック秒)を取得
+     * ユーザー名を設定
      *
-     * @return 作成日時(エポック秒)
+     * @param name ユーザー名
      */
-    const optional<Int32>& getCreateAt() const
+    User& withName(StringHolder name)
     {
-        return ensureData().createAt;
+        setName(std::move(name));
+        return *this;
     }
 
     /**
-     * 作成日時(エポック秒)を設定
+     * ユーザの説明を取得
      *
-     * @param createAt 作成日時(エポック秒)
+     * @return ユーザの説明
      */
-    void setCreateAt(Int32 createAt)
+    const optional<StringHolder>& getDescription() const
     {
-        ensureData().createAt.emplace(createAt);
+        return ensureData().description;
+    }
+
+    /**
+     * ユーザの説明を設定
+     *
+     * @param description ユーザの説明
+     */
+    void setDescription(StringHolder description)
+    {
+        ensureData().description.emplace(std::move(description));
+    }
+
+    /**
+     * ユーザの説明を設定
+     *
+     * @param description ユーザの説明
+     */
+    User& withDescription(StringHolder description)
+    {
+        setDescription(std::move(description));
+        return *this;
+    }
+
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getCreatedAt() const
+    {
+        return ensureData().createdAt;
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    void setCreatedAt(Int64 createdAt)
+    {
+        ensureData().createdAt.emplace(createdAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    User& withCreatedAt(Int64 createdAt)
+    {
+        setCreatedAt(createdAt);
+        return *this;
+    }
+
+    /**
+     * 最終更新日時を取得
+     *
+     * @return 最終更新日時
+     */
+    const optional<Int64>& getUpdatedAt() const
+    {
+        return ensureData().updatedAt;
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    void setUpdatedAt(Int64 updatedAt)
+    {
+        ensureData().updatedAt.emplace(updatedAt);
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    User& withUpdatedAt(Int64 updatedAt)
+    {
+        setUpdatedAt(updatedAt);
+        return *this;
     }
 
 
@@ -267,6 +340,47 @@ public:
         return ensureData();
     }
 };
+
+inline bool operator!=(const User& lhs, const User& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->userId != lhr.m_pData->userId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline bool operator==(const User& lhs, const User& lhr)
+{
+    return !(lhs != lhr);
+}
 
 } }
 

@@ -17,8 +17,15 @@
 #ifndef GS2_LIMIT_MODEL_MODEL_HPP_
 #define GS2_LIMIT_MODEL_MODEL_HPP_
 
-#include "Limit.hpp"
-#include "CounterMaster.hpp"
+#include <gs2/core/common.hpp>
+#include "notification.hpp"
+#include "Namespace.hpp"
 #include "Counter.hpp"
+#include "LimitModelMaster.hpp"
+#include "CurrentLimitMaster.hpp"
+#include "ResponseCache.hpp"
+#include "GitHubCheckoutSetting.hpp"
+#include "LogSetting.hpp"
+#include "LimitModel.hpp"
 
 #endif //GS2_LIMIT_MODEL_MODEL_HPP_

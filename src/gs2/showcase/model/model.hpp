@@ -17,10 +17,23 @@
 #ifndef GS2_SHOWCASE_MODEL_MODEL_HPP_
 #define GS2_SHOWCASE_MODEL_MODEL_HPP_
 
+#include <gs2/core/common.hpp>
+#include "notification.hpp"
+#include "Namespace.hpp"
+#include "SalesItemMaster.hpp"
+#include "SalesItemGroupMaster.hpp"
+#include "ShowcaseMaster.hpp"
+#include "CurrentShowcaseMaster.hpp"
+#include "ResponseCache.hpp"
+#include "GitHubCheckoutSetting.hpp"
+#include "LogSetting.hpp"
+#include "SalesItem.hpp"
+#include "SalesItemGroup.hpp"
 #include "Showcase.hpp"
-#include "ShowcaseItemMaster.hpp"
-#include "ItemGroupMaster.hpp"
-#include "ItemMaster.hpp"
-#include "Item.hpp"
+#include "DisplayItem.hpp"
+#include "Config.hpp"
+#include "ConsumeAction.hpp"
+#include "AcquireAction.hpp"
+#include "DisplayItemMaster.hpp"
 
 #endif //GS2_SHOWCASE_MODEL_MODEL_HPP_

@@ -18,9 +18,9 @@
 #define GS2_AUTH_HPP_
 
 #include <gs2/core/common.hpp>
-#include "control/controller.hpp"
 #include "model/model.hpp"
-#include "Gs2AuthClient.hpp"
+#include "Gs2AuthRestClient.hpp"
+#include "Gs2AuthWebSocketClient.hpp"
 #include "Gs2AuthConst.hpp"
 
 #endif //GS2_AUTH_HPP_
