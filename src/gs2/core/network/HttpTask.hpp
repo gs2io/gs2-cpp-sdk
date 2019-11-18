@@ -18,10 +18,15 @@
 #define GS2_CORE_NETWORK_HTTPTASK_HPP_
 
 #include "../Gs2Object.hpp"
-#include "../util/StringVariable.hpp"
 #include <string>
 #include <vector>
-#include <Http.h>
+#include <network/HttpRequest.h>
+
+namespace cocos2d { namespace network {
+    class HttpClient;
+    class HttpRequest;
+    class HttpResponse;
+}}
 
 GS2_START_OF_NAMESPACE
 
@@ -41,9 +46,11 @@ public:
     };
 
 private:
-    TSharedRef<IHttpRequest> m_pHttpRequest;
+    ::cocos2d::network::HttpRequest &m_HttpRequest;
+    std::vector<std::string> m_Headers;
 
-    virtual void callback(FHttpRequestPtr pHttpRequest, FHttpResponsePtr pHttpResponse, bool isSuccessful) = 0;
+    static void callbackHandler(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse);
+    virtual void callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse) = 0;
 
 public:
     HttpTask();
@@ -62,7 +69,7 @@ public:
 class Gs2HttpTask : public HttpTask
 {
 private:
-    void callback(FHttpRequestPtr pHttpRequest, FHttpResponsePtr pHttpResponse, bool isSuccessful) GS2_OVERRIDE;
+    void callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse) GS2_OVERRIDE;
     virtual void callback(Gs2RestResponse& gs2RestResponse) = 0;
 
 public:

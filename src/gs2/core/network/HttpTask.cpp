@@ -19,8 +19,9 @@
 #include "../json/JsonParser.hpp"
 #include "../model/IGs2Credential.hpp"
 #include "../network/Gs2RestResponse.hpp"
-#include <HttpModule.h>
-#include <HttpManager.h>
+#include <network/HttpClient.h>
+#include <network/HttpRequest.h>
+#include <network/HttpResponse.h>
 #include <vector>
 
 GS2_START_OF_NAMESPACE
@@ -28,81 +29,85 @@ GS2_START_OF_NAMESPACE
 namespace detail {
 
 HttpTask::HttpTask() :
-    m_pHttpRequest(FHttpModule::Get().CreateRequest()) 
+    m_HttpRequest(*new ::cocos2d::network::HttpRequest())
 {
 }
 
 HttpTask::~HttpTask()
 {
+    m_HttpRequest.release();
 }
 
 void HttpTask::setUrl(const char url[])
 {
-    m_pHttpRequest->SetURL(url);
+    std::string urlString = url;
+    m_HttpRequest.setUrl(urlString);
 }
 
 void HttpTask::setVerb(Verb verb)
 {
-    const char* verbString = "invalid";
+    auto httpRequestType = ::cocos2d::network::HttpRequest::Type::UNKNOWN;
     switch (verb)
     {
-    case Verb::Get:
-        verbString = "GET";
-        break;
-    case Verb::Post:
-        verbString = "POST";
-        break;
-    case Verb::Delete:
-        verbString = "DELETE";
-        break;
-    case Verb::Put:
-        verbString = "PUT";
-        break;
+        case Verb::Get:
+            httpRequestType = ::cocos2d::network::HttpRequest::Type::GET;
+            break;
+        case Verb::Post:
+            httpRequestType = ::cocos2d::network::HttpRequest::Type::POST;
+            break;
+        case Verb::Delete:
+            httpRequestType = ::cocos2d::network::HttpRequest::Type::DELETE;
+            break;
+        case Verb::Put:
+            httpRequestType = ::cocos2d::network::HttpRequest::Type::PUT;
+            break;
     }
-    m_pHttpRequest->SetVerb(verbString);
+    m_HttpRequest.setRequestType(httpRequestType);
 }
 
 void HttpTask::addHeaderEntry(const char key[], const char value[])
 {
-    m_pHttpRequest->SetHeader(key, value);
+    std::string header = key;
+    header.append(": ");
+    header.append(value);
+    m_Headers.push_back(header);
 }
 
 void HttpTask::setBody(const char body[])
 {
-    TArray<uint8> content(reinterpret_cast<const uint8*>(body), std::strlen(body));
-    m_pHttpRequest->SetContent(content);
+    m_HttpRequest.setRequestData(body, std::strlen(body));
+}
+
+void HttpTask::callbackHandler(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse)
+{
+    HttpTask* pHttpTask = reinterpret_cast<HttpTask*>(pResponse->getHttpRequest()->getUserData());
+    pHttpTask->callback(pClient, pResponse);
 }
 
 void HttpTask::send()
 {
-    m_pHttpRequest->OnProcessRequestComplete().BindRaw(this, &HttpTask::callback);
-    m_pHttpRequest->ProcessRequest();
-    FHttpModule::Get().GetHttpManager().AddRequest(m_pHttpRequest);
+    m_HttpRequest.setHeaders(m_Headers);
+    m_HttpRequest.setUserData(this);
+    m_HttpRequest.setResponseCallback(callbackHandler);
+
+    ::cocos2d::network::HttpClient::getInstance()->send(&m_HttpRequest);
 }
 
 
-void Gs2HttpTask::callback(FHttpRequestPtr pHttpRequest, FHttpResponsePtr pHttpResponse, bool isSuccessful)
+void Gs2HttpTask::callback(::cocos2d::network::HttpClient *pClient, ::cocos2d::network::HttpResponse *pResponse)
 {
-    GS2_NOT_USED(pHttpRequest);
-    GS2_NOT_USED(isSuccessful);
-
-    if (pHttpResponse.IsValid())
+    const char* responseBody = "";
     {
-        size_t responseLength = pHttpResponse->GetContentLength();
-        auto responseBody = new char[responseLength + 1];
-        std::memcpy(responseBody, pHttpResponse->GetContent().GetData(), responseLength);
-        responseBody[responseLength] = '\0';
-
-        Gs2RestResponse gs2RestResponse(responseBody, static_cast<Int32>(pHttpResponse->GetResponseCode()));
-        callback(gs2RestResponse);
-
-        delete[] responseBody;
+        auto pResponseData = pResponse->getResponseData();
+        if (pResponseData != nullptr)
+        {
+            pResponseData->push_back('\0');
+            responseBody = pResponseData->data();
+        }
     }
-    else
-    {
-        Gs2RestResponse gs2RestResponse("Client system error.", 0);     // TODO
-        callback(gs2RestResponse);
-    }
+
+    Gs2RestResponse gs2RestResponse(responseBody, static_cast<Int32>(pResponse->getResponseCode()));
+    callback(gs2RestResponse);
 }
 
 }
