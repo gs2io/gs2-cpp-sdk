@@ -17,35 +17,14 @@ project(gs2-cpp-sdk)
 
 include(external/DownloadProject/DownloadProject.cmake)
 
-# 上位の CMakeLists.txt や外部から cocos2d-x_SOURCE_DIR が指定されていなければアーカイブを取得して展開する
-# （これによって cocos2d-x_(SOURCE|BINARAY)_DIR が指定される）
-# NOTE: 外部から指定する場合は絶対パスで指定すること
 if(NOT COCOS2DX_ROOT_PATH)
-        if(NOT cocos2d-x_SOURCE_DIR)
-                download_project(
-                        PROJ cocos2d-x
-                        # URL http://cocos2d-x.org/filedown/cocos2d-x-3.17.zip
-                        URL http://cocos2d-x.org/filedown/start/402
-                        UPDATE_DISCONNECTED 1
-                )
-        endif(NOT cocos2d-x_SOURCE_DIR)
+    include(cmake/Gs2ImportCocos2dx.cmake)
 
-        set(COCOS2DX_ROOT_PATH ${cocos2d-x_SOURCE_DIR})
-        set(CMAKE_MODULE_PATH ${COCOS2DX_ROOT_PATH}/cmake/Modules/)
-
-        include(CocosBuildSet)
-
-        if(WINDOWS)
-                add_compile_options(/source-charset:utf-8 /EHs)
-        endif()
-
-        add_subdirectory(${COCOS2DX_ROOT_PATH}/cocos ${ENGINE_BINARY_PATH}/cocos/core)
-
-        # Cocos2d-x 自体のビルドは不要なので、簡略化のために空のファイル一つに置き換える
-        set_target_properties(cocos2d
-                PROPERTIES
-                SOURCES ${CMAKE_CURRENT_LIST_DIR}/cmake/dummy.cpp
-                )
+    # Cocos2d-x 自体のビルドは不要なので、簡略化のために空のファイル一つに置き換える
+    set_target_properties(cocos2d
+            PROPERTIES
+            SOURCES ${CMAKE_CURRENT_LIST_DIR}/cmake/dummy.cpp
+            )
 endif()
 
 set(GS2_LIBRARY_BUILD True)
