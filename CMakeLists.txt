@@ -44,7 +44,7 @@ if(NOT COCOS2DX_ROOT_PATH)
         # Cocos2d-x 自体のビルドは不要なので、簡略化のために空のファイル一つに置き換える
         set_target_properties(cocos2d
                 PROPERTIES
-                SOURCES ${CMAKE_CURRENT_LIST_DIR}/src/dummy.cpp
+                SOURCES ${CMAKE_CURRENT_LIST_DIR}/cmake/dummy.cpp
                 )
 endif()
 
