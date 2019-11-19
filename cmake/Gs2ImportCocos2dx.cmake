@@ -15,6 +15,9 @@
 if(NOT GS2_ALREADY_INCLUDED_Gs2ImportCocos2dx)
     set(GS2_ALREADY_INCLUDED_Gs2ImportCocos2dx True)
     set(GS2_CURRENT_LIST_DIR_Gs2ImportCocos2dx ${CMAKE_CURRENT_LIST_DIR})
+    set(GS2_PROJECT_NAME_Gs2ImportCocos2dx ${PROJECT_NAME})
+
+    project(Cocos2d-x)
 
     # 上位の CMakeLists.txt や外部から cocos2d-x_SOURCE_DIR が指定されていなければアーカイブを取得して展開する
     # （これによって cocos2d-x_(SOURCE|BINARAY)_DIR が指定される）
@@ -62,4 +65,6 @@ if(NOT GS2_ALREADY_INCLUDED_Gs2ImportCocos2dx)
         endif(GS2_PREBUILT_COCOS2DX_LIBRARY_PATH)
         set(GS2_SUBDIRECTORY_ALREADY_ADDED_cocos2d-x True PARENT_SCOPE)
     endif(NOT GS2_SUBDIRECTORY_ALREADY_ADDED_cocos2d-x)
+
+    project(${GS2_PROJECT_NAME_Gs2ImportCocos2dx})
 endif()
