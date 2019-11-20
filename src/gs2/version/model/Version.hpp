@@ -44,9 +44,9 @@ private:
     {
     public:
         /** メジャーバージョン */
-        optional<Int32> major;
+        optional<Int32> major_;
         /** マイナーバージョン */
-        optional<Int32> minor;
+        optional<Int32> minor_;
         /** マイクロバージョン */
         optional<Int32> micro;
 
@@ -54,8 +54,8 @@ private:
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            major(data.major),
-            minor(data.minor),
+            major_(data.major_),
+            minor_(data.minor_),
             micro(data.micro)
         {
         }
@@ -73,14 +73,14 @@ private:
             {
                 if (jsonValue.IsInt())
                 {
-                    this->major = jsonValue.GetInt();
+                    this->major_ = jsonValue.GetInt();
                 }
             }
             else if (std::strcmp(name_, "minor") == 0)
             {
                 if (jsonValue.IsInt())
                 {
-                    this->minor = jsonValue.GetInt();
+                    this->minor_ = jsonValue.GetInt();
                 }
             }
             else if (std::strcmp(name_, "micro") == 0)
@@ -125,27 +125,27 @@ public:
      */
     const optional<Int32>& getMajor() const
     {
-        return ensureData().major;
+        return ensureData().major_;
     }
 
     /**
      * メジャーバージョンを設定
      *
-     * @param major メジャーバージョン
+     * @param major_ メジャーバージョン
      */
-    void setMajor(Int32 major)
+    void setMajor(Int32 major_)
     {
-        ensureData().major.emplace(major);
+        ensureData().major_.emplace(major_);
     }
 
     /**
      * メジャーバージョンを設定
      *
-     * @param major メジャーバージョン
+     * @param major_ メジャーバージョン
      */
-    Version& withMajor(Int32 major)
+    Version& withMajor(Int32 major_)
     {
-        setMajor(major);
+        setMajor(major_);
         return *this;
     }
 
@@ -156,27 +156,27 @@ public:
      */
     const optional<Int32>& getMinor() const
     {
-        return ensureData().minor;
+        return ensureData().minor_;
     }
 
     /**
      * マイナーバージョンを設定
      *
-     * @param minor マイナーバージョン
+     * @param minor_ マイナーバージョン
      */
-    void setMinor(Int32 minor)
+    void setMinor(Int32 minor_)
     {
-        ensureData().minor.emplace(minor);
+        ensureData().minor_.emplace(minor_);
     }
 
     /**
      * マイナーバージョンを設定
      *
-     * @param minor マイナーバージョン
+     * @param minor_ マイナーバージョン
      */
-    Version& withMinor(Int32 minor)
+    Version& withMinor(Int32 minor_)
     {
-        setMinor(minor);
+        setMinor(minor_);
         return *this;
     }
 
@@ -226,11 +226,11 @@ inline bool operator!=(const Version& lhs, const Version& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->major != lhr.m_pData->major)
+        if (lhs.m_pData->major_ != lhr.m_pData->major_)
         {
             return true;
         }
-        if (lhs.m_pData->minor != lhr.m_pData->minor)
+        if (lhs.m_pData->minor_ != lhr.m_pData->minor_)
         {
             return true;
         }

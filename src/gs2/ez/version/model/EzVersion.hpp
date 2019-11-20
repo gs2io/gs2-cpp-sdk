@@ -31,9 +31,9 @@ private:
     {
     public:
         /** メジャーバージョン */
-        gs2::optional<Int32> major;
+        gs2::optional<Int32> major_;
         /** マイナーバージョン */
-        gs2::optional<Int32> minor;
+        gs2::optional<Int32> minor_;
         /** マイクロバージョン */
         gs2::optional<Int32> micro;
 
@@ -41,8 +41,8 @@ private:
 
         Data(const Data& data) :
             Gs2Object(data),
-            major(data.major),
-            minor(data.minor),
+            major_(data.major_),
+            minor_(data.minor_),
             micro(data.micro)
         {
         }
@@ -50,8 +50,8 @@ private:
         Data(Data&& data) = default;
 
         Data(const gs2::version::Version& version) :
-            major(version.getMajor() ? *version.getMajor() : 0),
-            minor(version.getMinor() ? *version.getMinor() : 0),
+            major_(version.getMajor() ? *version.getMajor() : 0),
+            minor_(version.getMinor() ? *version.getMinor() : 0),
             micro(version.getMicro() ? *version.getMicro() : 0)
         {
         }
@@ -97,12 +97,12 @@ public:
 
     Int32 getMajor() const
     {
-        return *ensureData().major;
+        return *ensureData().major_;
     }
 
     Int32 getMinor() const
     {
-        return *ensureData().minor;
+        return *ensureData().minor_;
     }
 
     Int32 getMicro() const
@@ -114,14 +114,14 @@ public:
     //   Setters
     // ========================================
 
-    void setMajor(Int32 major)
+    void setMajor(Int32 major_)
     {
-        ensureData().major = major;
+        ensureData().major_ = major_;
     }
 
-    void setMinor(Int32 minor)
+    void setMinor(Int32 minor_)
     {
-        ensureData().minor = minor;
+        ensureData().minor_ = minor_;
     }
 
     void setMicro(Int32 micro)
@@ -129,15 +129,15 @@ public:
         ensureData().micro = micro;
     }
 
-    EzVersion& withMajor(Int32 major)
+    EzVersion& withMajor(Int32 major_)
     {
-        setMajor(major);
+        setMajor(major_);
         return *this;
     }
 
-    EzVersion& withMinor(Int32 minor)
+    EzVersion& withMinor(Int32 minor_)
     {
-        setMinor(minor);
+        setMinor(minor_);
         return *this;
     }
 
