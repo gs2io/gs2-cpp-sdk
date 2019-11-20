@@ -123,7 +123,7 @@ private:
                         {
                             auto valueStr = json->GetString();
                             StringHolder stringHolder(valueStr);
-                            detail::addToList(*this->salesItemNames, std::move(stringHolder));
+                            *this->salesItemNames += std::move(stringHolder);
                         }
                     }
                 }

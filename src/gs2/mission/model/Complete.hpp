@@ -119,7 +119,7 @@ private:
                         {
                             auto valueStr = json->GetString();
                             StringHolder stringHolder(valueStr);
-                            detail::addToList(*this->completedMissionTaskNames, std::move(stringHolder));
+                            *this->completedMissionTaskNames += std::move(stringHolder);
                         }
                     }
                 }
@@ -135,7 +135,7 @@ private:
                         {
                             auto valueStr = json->GetString();
                             StringHolder stringHolder(valueStr);
-                            detail::addToList(*this->receivedMissionTaskNames, std::move(stringHolder));
+                            *this->receivedMissionTaskNames += std::move(stringHolder);
                         }
                     }
                 }

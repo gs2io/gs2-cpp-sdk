@@ -170,12 +170,6 @@ inline Int32 getCountOfListElements(const List<T>& list)
 	return list.getCount();
 }
 
-template<typename T>
-inline void addToList(List<T>& list, T&& value)
-{
-	list += std::forward<T>(value);
-}
-
 }
 
 GS2_END_OF_NAMESPACE

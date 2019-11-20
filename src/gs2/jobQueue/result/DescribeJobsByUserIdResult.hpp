@@ -77,7 +77,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         Job item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        detail::addToList(*this->items, std::move(item));
+                        *this->items += std::move(item);
                     }
                 }
             }

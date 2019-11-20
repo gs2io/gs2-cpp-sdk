@@ -113,7 +113,7 @@ private:
                         {
                             auto valueStr = json->GetString();
                             StringHolder stringHolder(valueStr);
-                            detail::addToList(*this->completeQuestNames, std::move(stringHolder));
+                            *this->completeQuestNames += std::move(stringHolder);
                         }
                     }
                 }

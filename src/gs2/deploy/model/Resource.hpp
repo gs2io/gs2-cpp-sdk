@@ -160,7 +160,7 @@ private:
                         {
                             auto valueStr = json->GetString();
                             StringHolder stringHolder(valueStr);
-                            detail::addToList(*this->rollbackAfter, std::move(stringHolder));
+                            *this->rollbackAfter += std::move(stringHolder);
                         }
                     }
                 }
@@ -174,7 +174,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         OutputField item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        detail::addToList(*this->outputFields, std::move(item));
+                        *this->outputFields += std::move(item);
                     }
                 }
             }
