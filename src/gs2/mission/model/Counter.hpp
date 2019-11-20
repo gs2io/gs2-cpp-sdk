@@ -112,7 +112,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         ScopedValue item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        detail::addToList(*this->values, std::move(item));
+                        *this->values += std::move(item);
                     }
                 }
             }

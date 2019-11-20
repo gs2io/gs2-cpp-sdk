@@ -111,7 +111,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         if (json->IsInt())
                         {
-                            detail::addToList(*this->drawnIndexes, json->GetInt());
+                            *this->drawnIndexes += json->GetInt();
                         }
                     }
                 }

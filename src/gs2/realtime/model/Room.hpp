@@ -133,7 +133,7 @@ private:
                         {
                             auto valueStr = json->GetString();
                             StringHolder stringHolder(valueStr);
-                            detail::addToList(*this->notificationUserIds, std::move(stringHolder));
+                            *this->notificationUserIds += std::move(stringHolder);
                         }
                     }
                 }

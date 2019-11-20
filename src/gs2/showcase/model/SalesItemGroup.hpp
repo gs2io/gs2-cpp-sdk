@@ -96,7 +96,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         SalesItem item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        detail::addToList(*this->salesItems, std::move(item));
+                        *this->salesItems += std::move(item);
                     }
                 }
             }

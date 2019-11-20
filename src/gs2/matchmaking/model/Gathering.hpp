@@ -118,7 +118,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         AttributeRange item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        detail::addToList(*this->attributeRanges, std::move(item));
+                        *this->attributeRanges += std::move(item);
                     }
                 }
             }
@@ -131,7 +131,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         CapacityOfRole item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        detail::addToList(*this->capacityOfRoles, std::move(item));
+                        *this->capacityOfRoles += std::move(item);
                     }
                 }
             }
@@ -146,7 +146,7 @@ private:
                         {
                             auto valueStr = json->GetString();
                             StringHolder stringHolder(valueStr);
-                            detail::addToList(*this->allowUserIds, std::move(stringHolder));
+                            *this->allowUserIds += std::move(stringHolder);
                         }
                     }
                 }

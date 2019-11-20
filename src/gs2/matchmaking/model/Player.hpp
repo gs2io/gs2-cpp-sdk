@@ -95,7 +95,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         Attribute item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        detail::addToList(*this->attributes, std::move(item));
+                        *this->attributes += std::move(item);
                     }
                 }
             }
@@ -117,7 +117,7 @@ private:
                         {
                             auto valueStr = json->GetString();
                             StringHolder stringHolder(valueStr);
-                            detail::addToList(*this->denyUserIds, std::move(stringHolder));
+                            *this->denyUserIds += std::move(stringHolder);
                         }
                     }
                 }
