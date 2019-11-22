@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace jobQueue {
 
@@ -53,54 +51,14 @@ private:
         optional<Int64> tryAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            tryNumber(data.tryNumber),
-            statusCode(data.statusCode),
-            result(data.result),
-            tryAt(data.tryAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "tryNumber") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->tryNumber = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "statusCode") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->statusCode = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "result") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->result.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "tryAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->tryAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -114,10 +72,7 @@ public:
     JobResultBody& operator=(const JobResultBody& jobResultBody) = default;
     JobResultBody& operator=(JobResultBody&& jobResultBody) = default;
 
-    JobResultBody deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(JobResultBody);
-    }
+    JobResultBody deepCopy() const;
 
     const JobResultBody* operator->() const
     {
@@ -259,33 +214,7 @@ public:
     }
 };
 
-inline bool operator!=(const JobResultBody& lhs, const JobResultBody& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->tryNumber != lhr.m_pData->tryNumber)
-        {
-            return true;
-        }
-        if (lhs.m_pData->statusCode != lhr.m_pData->statusCode)
-        {
-            return true;
-        }
-        if (lhs.m_pData->result != lhr.m_pData->result)
-        {
-            return true;
-        }
-        if (lhs.m_pData->tryAt != lhr.m_pData->tryAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const JobResultBody& lhs, const JobResultBody& lhr);
 
 inline bool operator==(const JobResultBody& lhs, const JobResultBody& lhr)
 {

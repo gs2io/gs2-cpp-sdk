@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace inventory {
 
@@ -57,70 +55,14 @@ private:
         optional<Int32> sortValue;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            itemModelId(data.itemModelId),
-            name(data.name),
-            metadata(data.metadata),
-            stackingLimit(data.stackingLimit),
-            allowMultipleStacks(data.allowMultipleStacks),
-            sortValue(data.sortValue)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "itemModelId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->itemModelId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "stackingLimit") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->stackingLimit = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "allowMultipleStacks") == 0)
-            {
-                if (jsonValue.IsBool())
-                {
-                    this->allowMultipleStacks = jsonValue.GetBool();
-                }
-            }
-            else if (std::strcmp(name_, "sortValue") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->sortValue = jsonValue.GetInt();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -134,10 +76,7 @@ public:
     ItemModel& operator=(const ItemModel& itemModel) = default;
     ItemModel& operator=(ItemModel&& itemModel) = default;
 
-    ItemModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ItemModel);
-    }
+    ItemModel deepCopy() const;
 
     const ItemModel* operator->() const
     {
@@ -341,41 +280,7 @@ public:
     }
 };
 
-inline bool operator!=(const ItemModel& lhs, const ItemModel& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->itemModelId != lhr.m_pData->itemModelId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->stackingLimit != lhr.m_pData->stackingLimit)
-        {
-            return true;
-        }
-        if (lhs.m_pData->allowMultipleStacks != lhr.m_pData->allowMultipleStacks)
-        {
-            return true;
-        }
-        if (lhs.m_pData->sortValue != lhr.m_pData->sortValue)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const ItemModel& lhs, const ItemModel& lhr);
 
 inline bool operator==(const ItemModel& lhs, const ItemModel& lhr)
 {

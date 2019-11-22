@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace lock {
 
@@ -59,78 +57,14 @@ private:
         optional<Int64> ttlAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            mutexId(data.mutexId),
-            userId(data.userId),
-            propertyId(data.propertyId),
-            transactionId(data.transactionId),
-            referenceCount(data.referenceCount),
-            createdAt(data.createdAt),
-            ttlAt(data.ttlAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "mutexId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->mutexId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "propertyId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->propertyId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "transactionId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->transactionId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "referenceCount") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->referenceCount = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "ttlAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->ttlAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -144,10 +78,7 @@ public:
     Mutex& operator=(const Mutex& mutex) = default;
     Mutex& operator=(Mutex&& mutex) = default;
 
-    Mutex deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Mutex);
-    }
+    Mutex deepCopy() const;
 
     const Mutex* operator->() const
     {
@@ -382,45 +313,7 @@ public:
     }
 };
 
-inline bool operator!=(const Mutex& lhs, const Mutex& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->mutexId != lhr.m_pData->mutexId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->propertyId != lhr.m_pData->propertyId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->transactionId != lhr.m_pData->transactionId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->referenceCount != lhr.m_pData->referenceCount)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-        if (lhs.m_pData->ttlAt != lhr.m_pData->ttlAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Mutex& lhs, const Mutex& lhr);
 
 inline bool operator==(const Mutex& lhs, const Mutex& lhr)
 {

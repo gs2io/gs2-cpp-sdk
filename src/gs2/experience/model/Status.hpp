@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace experience {
 
@@ -63,94 +61,14 @@ private:
         optional<Int64> updatedAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            statusId(data.statusId),
-            experienceName(data.experienceName),
-            userId(data.userId),
-            propertyId(data.propertyId),
-            experienceValue(data.experienceValue),
-            rankValue(data.rankValue),
-            rankCapValue(data.rankCapValue),
-            createdAt(data.createdAt),
-            updatedAt(data.updatedAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "statusId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->statusId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "experienceName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->experienceName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "propertyId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->propertyId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "experienceValue") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->experienceValue = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "rankValue") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->rankValue = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "rankCapValue") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->rankCapValue = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "updatedAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->updatedAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -164,10 +82,7 @@ public:
     Status& operator=(const Status& status) = default;
     Status& operator=(Status&& status) = default;
 
-    Status deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Status);
-    }
+    Status deepCopy() const;
 
     const Status* operator->() const
     {
@@ -464,53 +379,7 @@ public:
     }
 };
 
-inline bool operator!=(const Status& lhs, const Status& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->statusId != lhr.m_pData->statusId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->experienceName != lhr.m_pData->experienceName)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->propertyId != lhr.m_pData->propertyId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->experienceValue != lhr.m_pData->experienceValue)
-        {
-            return true;
-        }
-        if (lhs.m_pData->rankValue != lhr.m_pData->rankValue)
-        {
-            return true;
-        }
-        if (lhs.m_pData->rankCapValue != lhr.m_pData->rankCapValue)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Status& lhs, const Status& lhr);
 
 inline bool operator==(const Status& lhs, const Status& lhr)
 {

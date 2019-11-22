@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace money {
 
@@ -67,110 +65,14 @@ private:
         optional<Int64> createdAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            receiptId(data.receiptId),
-            transactionId(data.transactionId),
-            userId(data.userId),
-            type(data.type),
-            slot(data.slot),
-            price(data.price),
-            paid(data.paid),
-            free(data.free),
-            total(data.total),
-            contentsId(data.contentsId),
-            createdAt(data.createdAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "receiptId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->receiptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "transactionId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->transactionId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "type") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->type.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "slot") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->slot = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "price") == 0)
-            {
-                if (jsonValue.IsFloat())
-                {
-                    this->price = jsonValue.GetFloat();
-                }
-            }
-            else if (std::strcmp(name_, "paid") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->paid = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "free") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->free = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "total") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->total = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "contentsId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->contentsId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -184,10 +86,7 @@ public:
     Receipt& operator=(const Receipt& receipt) = default;
     Receipt& operator=(Receipt&& receipt) = default;
 
-    Receipt deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Receipt);
-    }
+    Receipt deepCopy() const;
 
     const Receipt* operator->() const
     {
@@ -546,61 +445,7 @@ public:
     }
 };
 
-inline bool operator!=(const Receipt& lhs, const Receipt& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->receiptId != lhr.m_pData->receiptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->transactionId != lhr.m_pData->transactionId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->type != lhr.m_pData->type)
-        {
-            return true;
-        }
-        if (lhs.m_pData->slot != lhr.m_pData->slot)
-        {
-            return true;
-        }
-        if (lhs.m_pData->price != lhr.m_pData->price)
-        {
-            return true;
-        }
-        if (lhs.m_pData->paid != lhr.m_pData->paid)
-        {
-            return true;
-        }
-        if (lhs.m_pData->free != lhr.m_pData->free)
-        {
-            return true;
-        }
-        if (lhs.m_pData->total != lhr.m_pData->total)
-        {
-            return true;
-        }
-        if (lhs.m_pData->contentsId != lhr.m_pData->contentsId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Receipt& lhs, const Receipt& lhr);
 
 inline bool operator==(const Receipt& lhs, const Receipt& lhr)
 {

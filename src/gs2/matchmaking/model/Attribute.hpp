@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace matchmaking {
 
@@ -49,38 +47,14 @@ private:
         optional<Int32> value;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            name(data.name),
-            value(data.value)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "value") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->value = jsonValue.GetInt();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -94,10 +68,7 @@ public:
     Attribute& operator=(const Attribute& attribute) = default;
     Attribute& operator=(Attribute&& attribute) = default;
 
-    Attribute deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Attribute);
-    }
+    Attribute deepCopy() const;
 
     const Attribute* operator->() const
     {
@@ -177,25 +148,7 @@ public:
     }
 };
 
-inline bool operator!=(const Attribute& lhs, const Attribute& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->value != lhr.m_pData->value)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Attribute& lhs, const Attribute& lhr);
 
 inline bool operator==(const Attribute& lhs, const Attribute& lhr)
 {

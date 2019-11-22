@@ -19,14 +19,12 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "QuestModel.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace quest {
 
@@ -56,71 +54,14 @@ private:
         optional<StringHolder> challengePeriodEventId;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            questGroupModelId(data.questGroupModelId),
-            name(data.name),
-            metadata(data.metadata),
-            challengePeriodEventId(data.challengePeriodEventId)
-        {
-            if (data.quests)
-            {
-                quests = data.quests->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "questGroupModelId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->questGroupModelId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "quests") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->quests.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        QuestModel item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->quests += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "challengePeriodEventId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->challengePeriodEventId.emplace(jsonValue.GetString());
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -134,10 +75,7 @@ public:
     QuestGroupModel& operator=(const QuestGroupModel& questGroupModel) = default;
     QuestGroupModel& operator=(QuestGroupModel&& questGroupModel) = default;
 
-    QuestGroupModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(QuestGroupModel);
-    }
+    QuestGroupModel deepCopy() const;
 
     const QuestGroupModel* operator->() const
     {
@@ -310,37 +248,7 @@ public:
     }
 };
 
-inline bool operator!=(const QuestGroupModel& lhs, const QuestGroupModel& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->questGroupModelId != lhr.m_pData->questGroupModelId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->quests != lhr.m_pData->quests)
-        {
-            return true;
-        }
-        if (lhs.m_pData->challengePeriodEventId != lhr.m_pData->challengePeriodEventId)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const QuestGroupModel& lhs, const QuestGroupModel& lhr);
 
 inline bool operator==(const QuestGroupModel& lhs, const QuestGroupModel& lhr)
 {

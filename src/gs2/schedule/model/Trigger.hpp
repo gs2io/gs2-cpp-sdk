@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace schedule {
 
@@ -55,62 +53,14 @@ private:
         optional<Int64> expiresAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            triggerId(data.triggerId),
-            name(data.name),
-            userId(data.userId),
-            createdAt(data.createdAt),
-            expiresAt(data.expiresAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "triggerId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->triggerId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "expiresAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->expiresAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -124,10 +74,7 @@ public:
     Trigger& operator=(const Trigger& trigger) = default;
     Trigger& operator=(Trigger&& trigger) = default;
 
-    Trigger deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Trigger);
-    }
+    Trigger deepCopy() const;
 
     const Trigger* operator->() const
     {
@@ -300,37 +247,7 @@ public:
     }
 };
 
-inline bool operator!=(const Trigger& lhs, const Trigger& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->triggerId != lhr.m_pData->triggerId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-        if (lhs.m_pData->expiresAt != lhr.m_pData->expiresAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Trigger& lhs, const Trigger& lhr);
 
 inline bool operator==(const Trigger& lhs, const Trigger& lhr)
 {

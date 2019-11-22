@@ -1,0 +1,121 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#include "Event.hpp"
+#include <gs2/core/json/JsonParser.hpp>
+#include <cstring>
+
+namespace gs2 { namespace deploy {
+
+Event::Data::Data(const Data& data) :
+    detail::json::IModel(data),
+    eventId(data.eventId),
+    name(data.name),
+    resourceName(data.resourceName),
+    type(data.type),
+    message(data.message),
+    eventAt(data.eventAt)
+{
+}
+
+void Event::Data::set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
+{
+    if (std::strcmp(name_, "eventId") == 0)
+    {
+        if (jsonValue.IsString())
+        {
+            this->eventId.emplace(jsonValue.GetString());
+        }
+    }
+    else if (std::strcmp(name_, "name") == 0)
+    {
+        if (jsonValue.IsString())
+        {
+            this->name.emplace(jsonValue.GetString());
+        }
+    }
+    else if (std::strcmp(name_, "resourceName") == 0)
+    {
+        if (jsonValue.IsString())
+        {
+            this->resourceName.emplace(jsonValue.GetString());
+        }
+    }
+    else if (std::strcmp(name_, "type") == 0)
+    {
+        if (jsonValue.IsString())
+        {
+            this->type.emplace(jsonValue.GetString());
+        }
+    }
+    else if (std::strcmp(name_, "message") == 0)
+    {
+        if (jsonValue.IsString())
+        {
+            this->message.emplace(jsonValue.GetString());
+        }
+    }
+    else if (std::strcmp(name_, "eventAt") == 0)
+    {
+        if (jsonValue.IsInt64())
+        {
+            this->eventAt = jsonValue.GetInt64();
+        }
+    }
+}
+
+Event Event::deepCopy() const
+{
+    GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Event);
+}
+
+bool operator!=(const Event& lhs, const Event& lhr)
+{
+    if (lhs.m_pData != lhr.m_pData)
+    {
+        if (!lhs.m_pData || !lhr.m_pData)
+        {
+            return true;
+        }
+        if (lhs.m_pData->eventId != lhr.m_pData->eventId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
+        {
+            return true;
+        }
+        if (lhs.m_pData->resourceName != lhr.m_pData->resourceName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->type != lhr.m_pData->type)
+        {
+            return true;
+        }
+        if (lhs.m_pData->message != lhr.m_pData->message)
+        {
+            return true;
+        }
+        if (lhs.m_pData->eventAt != lhr.m_pData->eventAt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+} }

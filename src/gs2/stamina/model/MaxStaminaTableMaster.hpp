@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace stamina {
 
@@ -57,80 +55,14 @@ private:
         optional<List<Int32>> values;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            maxStaminaTableId(data.maxStaminaTableId),
-            name(data.name),
-            metadata(data.metadata),
-            description(data.description),
-            experienceModelId(data.experienceModelId)
-        {
-            if (data.values)
-            {
-                values = data.values->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "maxStaminaTableId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->maxStaminaTableId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "description") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->description.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "experienceModelId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->experienceModelId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "values") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->values.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        if (json->IsInt())
-                        {
-                            *this->values += json->GetInt();
-                        }
-                    }
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -144,10 +76,7 @@ public:
     MaxStaminaTableMaster& operator=(const MaxStaminaTableMaster& maxStaminaTableMaster) = default;
     MaxStaminaTableMaster& operator=(MaxStaminaTableMaster&& maxStaminaTableMaster) = default;
 
-    MaxStaminaTableMaster deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(MaxStaminaTableMaster);
-    }
+    MaxStaminaTableMaster deepCopy() const;
 
     const MaxStaminaTableMaster* operator->() const
     {
@@ -351,41 +280,7 @@ public:
     }
 };
 
-inline bool operator!=(const MaxStaminaTableMaster& lhs, const MaxStaminaTableMaster& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->maxStaminaTableId != lhr.m_pData->maxStaminaTableId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->description != lhr.m_pData->description)
-        {
-            return true;
-        }
-        if (lhs.m_pData->experienceModelId != lhr.m_pData->experienceModelId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->values != lhr.m_pData->values)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const MaxStaminaTableMaster& lhs, const MaxStaminaTableMaster& lhr);
 
 inline bool operator==(const MaxStaminaTableMaster& lhs, const MaxStaminaTableMaster& lhr)
 {

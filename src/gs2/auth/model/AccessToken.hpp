@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace auth {
 
@@ -53,54 +51,14 @@ private:
         optional<Int64> expire;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            ownerId(data.ownerId),
-            token(data.token),
-            userId(data.userId),
-            expire(data.expire)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "ownerId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->ownerId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "token") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->token.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "expire") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->expire = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -114,10 +72,7 @@ public:
     AccessToken& operator=(const AccessToken& accessToken) = default;
     AccessToken& operator=(AccessToken&& accessToken) = default;
 
-    AccessToken deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(AccessToken);
-    }
+    AccessToken deepCopy() const;
 
     const AccessToken* operator->() const
     {
@@ -259,33 +214,7 @@ public:
     }
 };
 
-inline bool operator!=(const AccessToken& lhs, const AccessToken& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->token != lhr.m_pData->token)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->expire != lhr.m_pData->expire)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const AccessToken& lhs, const AccessToken& lhr);
 
 inline bool operator==(const AccessToken& lhs, const AccessToken& lhr)
 {

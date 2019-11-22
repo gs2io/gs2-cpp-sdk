@@ -20,7 +20,6 @@
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -46,30 +45,14 @@ private:
         optional<StringHolder> protocol;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            protocol(data.protocol)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        virtual ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "protocol") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->protocol.emplace(jsonValue.GetString());
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -83,10 +66,7 @@ public:
     SendNotificationResult& operator=(const SendNotificationResult& sendNotificationResult) = default;
     SendNotificationResult& operator=(SendNotificationResult&& sendNotificationResult) = default;
 
-    SendNotificationResult deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(SendNotificationResult);
-    }
+    SendNotificationResult deepCopy() const;
 
     const SendNotificationResult* operator->() const
     {

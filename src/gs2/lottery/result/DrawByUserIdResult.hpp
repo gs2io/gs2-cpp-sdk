@@ -20,7 +20,6 @@
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -50,60 +49,14 @@ private:
         optional<BoxItems> boxItems;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            stampSheet(data.stampSheet)
-        {
-            if (data.items)
-            {
-                items = data.items->deepCopy();
-            }
-            if (data.boxItems)
-            {
-                boxItems = data.boxItems->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        virtual ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "items") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->items.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        DrawnPrize item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->items += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "stampSheet") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->stampSheet.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "boxItems") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->boxItems.emplace();
-                    detail::json::JsonParser::parse(&this->boxItems->getModel(), jsonObject);
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -117,10 +70,7 @@ public:
     DrawByUserIdResult& operator=(const DrawByUserIdResult& drawByUserIdResult) = default;
     DrawByUserIdResult& operator=(DrawByUserIdResult&& drawByUserIdResult) = default;
 
-    DrawByUserIdResult deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DrawByUserIdResult);
-    }
+    DrawByUserIdResult deepCopy() const;
 
     const DrawByUserIdResult* operator->() const
     {

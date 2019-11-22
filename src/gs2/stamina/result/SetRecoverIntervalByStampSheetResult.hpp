@@ -20,7 +20,6 @@
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -46,35 +45,14 @@ private:
         optional<Stamina> item;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data)
-        {
-            if (data.item)
-            {
-                item = data.item->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        virtual ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "item") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->item.emplace();
-                    detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -88,10 +66,7 @@ public:
     SetRecoverIntervalByStampSheetResult& operator=(const SetRecoverIntervalByStampSheetResult& setRecoverIntervalByStampSheetResult) = default;
     SetRecoverIntervalByStampSheetResult& operator=(SetRecoverIntervalByStampSheetResult&& setRecoverIntervalByStampSheetResult) = default;
 
-    SetRecoverIntervalByStampSheetResult deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(SetRecoverIntervalByStampSheetResult);
-    }
+    SetRecoverIntervalByStampSheetResult deepCopy() const;
 
     const SetRecoverIntervalByStampSheetResult* operator->() const
     {

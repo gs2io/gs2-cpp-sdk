@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace mission {
 
@@ -53,54 +51,14 @@ private:
         optional<Int32> resetHour;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            resetType(data.resetType),
-            resetDayOfMonth(data.resetDayOfMonth),
-            resetDayOfWeek(data.resetDayOfWeek),
-            resetHour(data.resetHour)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "resetType") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->resetType.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "resetDayOfMonth") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->resetDayOfMonth = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "resetDayOfWeek") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->resetDayOfWeek.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "resetHour") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->resetHour = jsonValue.GetInt();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -114,10 +72,7 @@ public:
     CounterScopeModel& operator=(const CounterScopeModel& counterScopeModel) = default;
     CounterScopeModel& operator=(CounterScopeModel&& counterScopeModel) = default;
 
-    CounterScopeModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CounterScopeModel);
-    }
+    CounterScopeModel deepCopy() const;
 
     const CounterScopeModel* operator->() const
     {
@@ -259,33 +214,7 @@ public:
     }
 };
 
-inline bool operator!=(const CounterScopeModel& lhs, const CounterScopeModel& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->resetType != lhr.m_pData->resetType)
-        {
-            return true;
-        }
-        if (lhs.m_pData->resetDayOfMonth != lhr.m_pData->resetDayOfMonth)
-        {
-            return true;
-        }
-        if (lhs.m_pData->resetDayOfWeek != lhr.m_pData->resetDayOfWeek)
-        {
-            return true;
-        }
-        if (lhs.m_pData->resetHour != lhr.m_pData->resetHour)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const CounterScopeModel& lhs, const CounterScopeModel& lhr);
 
 inline bool operator==(const CounterScopeModel& lhs, const CounterScopeModel& lhr)
 {

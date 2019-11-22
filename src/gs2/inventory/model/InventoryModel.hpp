@@ -19,14 +19,12 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "ItemModel.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace inventory {
 
@@ -58,79 +56,14 @@ private:
         optional<List<ItemModel>> itemModels;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            inventoryModelId(data.inventoryModelId),
-            name(data.name),
-            metadata(data.metadata),
-            initialCapacity(data.initialCapacity),
-            maxCapacity(data.maxCapacity)
-        {
-            if (data.itemModels)
-            {
-                itemModels = data.itemModels->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "inventoryModelId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->inventoryModelId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "initialCapacity") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->initialCapacity = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "maxCapacity") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->maxCapacity = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "itemModels") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->itemModels.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        ItemModel item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->itemModels += std::move(item);
-                    }
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -144,10 +77,7 @@ public:
     InventoryModel& operator=(const InventoryModel& inventoryModel) = default;
     InventoryModel& operator=(InventoryModel&& inventoryModel) = default;
 
-    InventoryModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(InventoryModel);
-    }
+    InventoryModel deepCopy() const;
 
     const InventoryModel* operator->() const
     {
@@ -351,41 +281,7 @@ public:
     }
 };
 
-inline bool operator!=(const InventoryModel& lhs, const InventoryModel& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->inventoryModelId != lhr.m_pData->inventoryModelId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->initialCapacity != lhr.m_pData->initialCapacity)
-        {
-            return true;
-        }
-        if (lhs.m_pData->maxCapacity != lhr.m_pData->maxCapacity)
-        {
-            return true;
-        }
-        if (lhs.m_pData->itemModels != lhr.m_pData->itemModels)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const InventoryModel& lhs, const InventoryModel& lhr);
 
 inline bool operator==(const InventoryModel& lhs, const InventoryModel& lhr)
 {

@@ -20,7 +20,6 @@
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -52,63 +51,14 @@ private:
         optional<Int64> scanSize;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            nextPageToken(data.nextPageToken),
-            totalCount(data.totalCount),
-            scanSize(data.scanSize)
-        {
-            if (data.items)
-            {
-                items = data.items->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        virtual ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "items") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->items.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        ExecuteStampTaskLogCount item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->items += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "nextPageToken") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->nextPageToken.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "totalCount") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->totalCount = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "scanSize") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->scanSize = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -122,10 +72,7 @@ public:
     CountExecuteStampTaskLogResult& operator=(const CountExecuteStampTaskLogResult& countExecuteStampTaskLogResult) = default;
     CountExecuteStampTaskLogResult& operator=(CountExecuteStampTaskLogResult&& countExecuteStampTaskLogResult) = default;
 
-    CountExecuteStampTaskLogResult deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CountExecuteStampTaskLogResult);
-    }
+    CountExecuteStampTaskLogResult deepCopy() const;
 
     const CountExecuteStampTaskLogResult* operator->() const
     {

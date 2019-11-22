@@ -19,7 +19,6 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -27,7 +26,6 @@
 #include "ConsumeAction.hpp"
 #include "AcquireAction.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace exchange {
 
@@ -57,80 +55,14 @@ private:
         optional<List<AcquireAction>> acquireActions;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            rateModelId(data.rateModelId),
-            name(data.name),
-            metadata(data.metadata)
-        {
-            if (data.consumeActions)
-            {
-                consumeActions = data.consumeActions->deepCopy();
-            }
-            if (data.acquireActions)
-            {
-                acquireActions = data.acquireActions->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "rateModelId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->rateModelId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "consumeActions") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->consumeActions.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        ConsumeAction item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->consumeActions += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "acquireActions") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->acquireActions.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        AcquireAction item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->acquireActions += std::move(item);
-                    }
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -144,10 +76,7 @@ public:
     RateModel& operator=(const RateModel& rateModel) = default;
     RateModel& operator=(RateModel&& rateModel) = default;
 
-    RateModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(RateModel);
-    }
+    RateModel deepCopy() const;
 
     const RateModel* operator->() const
     {
@@ -320,37 +249,7 @@ public:
     }
 };
 
-inline bool operator!=(const RateModel& lhs, const RateModel& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->rateModelId != lhr.m_pData->rateModelId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->consumeActions != lhr.m_pData->consumeActions)
-        {
-            return true;
-        }
-        if (lhs.m_pData->acquireActions != lhr.m_pData->acquireActions)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const RateModel& lhs, const RateModel& lhr);
 
 inline bool operator==(const RateModel& lhs, const RateModel& lhr)
 {

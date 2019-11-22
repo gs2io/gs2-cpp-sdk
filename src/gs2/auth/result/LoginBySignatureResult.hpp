@@ -20,7 +20,6 @@
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -50,46 +49,14 @@ private:
         optional<Int64> expire;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            token(data.token),
-            userId(data.userId),
-            expire(data.expire)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        virtual ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "token") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->token.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "expire") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->expire = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -103,10 +70,7 @@ public:
     LoginBySignatureResult& operator=(const LoginBySignatureResult& loginBySignatureResult) = default;
     LoginBySignatureResult& operator=(LoginBySignatureResult&& loginBySignatureResult) = default;
 
-    LoginBySignatureResult deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(LoginBySignatureResult);
-    }
+    LoginBySignatureResult deepCopy() const;
 
     const LoginBySignatureResult* operator->() const
     {

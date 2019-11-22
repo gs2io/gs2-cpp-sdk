@@ -20,7 +20,6 @@
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -48,43 +47,14 @@ private:
         optional<StringHolder> newContextStack;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            newContextStack(data.newContextStack)
-        {
-            if (data.item)
-            {
-                item = data.item->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        virtual ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "item") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->item.emplace();
-                    detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "newContextStack") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->newContextStack.emplace(jsonValue.GetString());
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -98,10 +68,7 @@ public:
     CountUpByStampTaskResult& operator=(const CountUpByStampTaskResult& countUpByStampTaskResult) = default;
     CountUpByStampTaskResult& operator=(CountUpByStampTaskResult&& countUpByStampTaskResult) = default;
 
-    CountUpByStampTaskResult deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CountUpByStampTaskResult);
-    }
+    CountUpByStampTaskResult deepCopy() const;
 
     const CountUpByStampTaskResult* operator->() const
     {

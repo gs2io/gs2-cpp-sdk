@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace experience {
 
@@ -59,78 +57,14 @@ private:
         optional<StringHolder> tagName;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            gitHubApiKeyId(data.gitHubApiKeyId),
-            repositoryName(data.repositoryName),
-            sourcePath(data.sourcePath),
-            referenceType(data.referenceType),
-            commitHash(data.commitHash),
-            branchName(data.branchName),
-            tagName(data.tagName)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "gitHubApiKeyId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->gitHubApiKeyId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "repositoryName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->repositoryName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "sourcePath") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->sourcePath.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "referenceType") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->referenceType.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "commitHash") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->commitHash.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "branchName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->branchName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "tagName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->tagName.emplace(jsonValue.GetString());
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -144,10 +78,7 @@ public:
     GitHubCheckoutSetting& operator=(const GitHubCheckoutSetting& gitHubCheckoutSetting) = default;
     GitHubCheckoutSetting& operator=(GitHubCheckoutSetting&& gitHubCheckoutSetting) = default;
 
-    GitHubCheckoutSetting deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GitHubCheckoutSetting);
-    }
+    GitHubCheckoutSetting deepCopy() const;
 
     const GitHubCheckoutSetting* operator->() const
     {
@@ -382,45 +313,7 @@ public:
     }
 };
 
-inline bool operator!=(const GitHubCheckoutSetting& lhs, const GitHubCheckoutSetting& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->gitHubApiKeyId != lhr.m_pData->gitHubApiKeyId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->repositoryName != lhr.m_pData->repositoryName)
-        {
-            return true;
-        }
-        if (lhs.m_pData->sourcePath != lhr.m_pData->sourcePath)
-        {
-            return true;
-        }
-        if (lhs.m_pData->referenceType != lhr.m_pData->referenceType)
-        {
-            return true;
-        }
-        if (lhs.m_pData->commitHash != lhr.m_pData->commitHash)
-        {
-            return true;
-        }
-        if (lhs.m_pData->branchName != lhr.m_pData->branchName)
-        {
-            return true;
-        }
-        if (lhs.m_pData->tagName != lhr.m_pData->tagName)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const GitHubCheckoutSetting& lhs, const GitHubCheckoutSetting& lhr);
 
 inline bool operator==(const GitHubCheckoutSetting& lhs, const GitHubCheckoutSetting& lhr)
 {

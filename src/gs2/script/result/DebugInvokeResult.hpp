@@ -20,7 +20,6 @@
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -54,71 +53,14 @@ private:
         optional<List<StringHolder>> output;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            code(data.code),
-            result(data.result),
-            executeTime(data.executeTime),
-            charged(data.charged)
-        {
-            if (data.output)
-            {
-                output = data.output->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        virtual ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "code") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->code = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "result") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->result.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "executeTime") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->executeTime = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "charged") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->charged = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "output") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->output.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        auto valueStr = json->GetString();
-                        StringHolder stringHolder(valueStr);
-                        *this->output += std::move(stringHolder);
-                    }
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -132,10 +74,7 @@ public:
     DebugInvokeResult& operator=(const DebugInvokeResult& debugInvokeResult) = default;
     DebugInvokeResult& operator=(DebugInvokeResult&& debugInvokeResult) = default;
 
-    DebugInvokeResult deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DebugInvokeResult);
-    }
+    DebugInvokeResult deepCopy() const;
 
     const DebugInvokeResult* operator->() const
     {

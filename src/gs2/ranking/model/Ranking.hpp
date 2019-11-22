@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace ranking {
 
@@ -57,70 +55,14 @@ private:
         optional<Int64> createdAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            rank(data.rank),
-            index(data.index),
-            userId(data.userId),
-            score(data.score),
-            metadata(data.metadata),
-            createdAt(data.createdAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "rank") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->rank = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "index") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->index = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "score") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->score = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -134,10 +76,7 @@ public:
     Ranking& operator=(const Ranking& ranking) = default;
     Ranking& operator=(Ranking&& ranking) = default;
 
-    Ranking deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Ranking);
-    }
+    Ranking deepCopy() const;
 
     const Ranking* operator->() const
     {
@@ -341,41 +280,7 @@ public:
     }
 };
 
-inline bool operator!=(const Ranking& lhs, const Ranking& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->rank != lhr.m_pData->rank)
-        {
-            return true;
-        }
-        if (lhs.m_pData->index != lhr.m_pData->index)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->score != lhr.m_pData->score)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Ranking& lhs, const Ranking& lhr);
 
 inline bool operator==(const Ranking& lhs, const Ranking& lhr)
 {

@@ -19,14 +19,12 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "DrawnPrize.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace lottery {
 
@@ -50,43 +48,14 @@ private:
         optional<Float> rate;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            rate(data.rate)
-        {
-            if (data.prize)
-            {
-                prize = data.prize->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "prize") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->prize.emplace();
-                    detail::json::JsonParser::parse(&this->prize->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "rate") == 0)
-            {
-                if (jsonValue.IsFloat())
-                {
-                    this->rate = jsonValue.GetFloat();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -100,10 +69,7 @@ public:
     Probability& operator=(const Probability& probability) = default;
     Probability& operator=(Probability&& probability) = default;
 
-    Probability deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Probability);
-    }
+    Probability deepCopy() const;
 
     const Probability* operator->() const
     {
@@ -183,25 +149,7 @@ public:
     }
 };
 
-inline bool operator!=(const Probability& lhs, const Probability& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->prize != lhr.m_pData->prize)
-        {
-            return true;
-        }
-        if (lhs.m_pData->rate != lhr.m_pData->rate)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Probability& lhs, const Probability& lhr);
 
 inline bool operator==(const Probability& lhs, const Probability& lhr)
 {

@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace distributor {
 
@@ -55,74 +53,14 @@ private:
         optional<List<StringHolder>> whiteListTargetIds;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            distributorModelId(data.distributorModelId),
-            name(data.name),
-            metadata(data.metadata),
-            inboxNamespaceId(data.inboxNamespaceId)
-        {
-            if (data.whiteListTargetIds)
-            {
-                whiteListTargetIds = data.whiteListTargetIds->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "distributorModelId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->distributorModelId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "inboxNamespaceId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->inboxNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "whiteListTargetIds") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->whiteListTargetIds.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        if (json->IsString())
-                        {
-                            auto valueStr = json->GetString();
-                            StringHolder stringHolder(valueStr);
-                            *this->whiteListTargetIds += std::move(stringHolder);
-                        }
-                    }
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -136,10 +74,7 @@ public:
     DistributorModel& operator=(const DistributorModel& distributorModel) = default;
     DistributorModel& operator=(DistributorModel&& distributorModel) = default;
 
-    DistributorModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DistributorModel);
-    }
+    DistributorModel deepCopy() const;
 
     const DistributorModel* operator->() const
     {
@@ -312,37 +247,7 @@ public:
     }
 };
 
-inline bool operator!=(const DistributorModel& lhs, const DistributorModel& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->distributorModelId != lhr.m_pData->distributorModelId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->inboxNamespaceId != lhr.m_pData->inboxNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->whiteListTargetIds != lhr.m_pData->whiteListTargetIds)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const DistributorModel& lhs, const DistributorModel& lhr);
 
 inline bool operator==(const DistributorModel& lhs, const DistributorModel& lhr)
 {

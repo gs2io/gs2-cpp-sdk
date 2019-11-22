@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace mission {
 
@@ -59,102 +57,14 @@ private:
         optional<Int64> updatedAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            completeId(data.completeId),
-            userId(data.userId),
-            missionGroupName(data.missionGroupName),
-            createdAt(data.createdAt),
-            updatedAt(data.updatedAt)
-        {
-            if (data.completedMissionTaskNames)
-            {
-                completedMissionTaskNames = data.completedMissionTaskNames->deepCopy();
-            }
-            if (data.receivedMissionTaskNames)
-            {
-                receivedMissionTaskNames = data.receivedMissionTaskNames->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "completeId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->completeId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "missionGroupName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->missionGroupName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "completedMissionTaskNames") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->completedMissionTaskNames.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        if (json->IsString())
-                        {
-                            auto valueStr = json->GetString();
-                            StringHolder stringHolder(valueStr);
-                            *this->completedMissionTaskNames += std::move(stringHolder);
-                        }
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "receivedMissionTaskNames") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->receivedMissionTaskNames.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        if (json->IsString())
-                        {
-                            auto valueStr = json->GetString();
-                            StringHolder stringHolder(valueStr);
-                            *this->receivedMissionTaskNames += std::move(stringHolder);
-                        }
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "updatedAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->updatedAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -168,10 +78,7 @@ public:
     Complete& operator=(const Complete& complete) = default;
     Complete& operator=(Complete&& complete) = default;
 
-    Complete deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Complete);
-    }
+    Complete deepCopy() const;
 
     const Complete* operator->() const
     {
@@ -406,45 +313,7 @@ public:
     }
 };
 
-inline bool operator!=(const Complete& lhs, const Complete& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->completeId != lhr.m_pData->completeId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->missionGroupName != lhr.m_pData->missionGroupName)
-        {
-            return true;
-        }
-        if (lhs.m_pData->completedMissionTaskNames != lhr.m_pData->completedMissionTaskNames)
-        {
-            return true;
-        }
-        if (lhs.m_pData->receivedMissionTaskNames != lhr.m_pData->receivedMissionTaskNames)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Complete& lhs, const Complete& lhr);
 
 inline bool operator==(const Complete& lhs, const Complete& lhr)
 {

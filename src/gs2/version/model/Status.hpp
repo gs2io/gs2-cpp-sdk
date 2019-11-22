@@ -19,7 +19,6 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -27,7 +26,6 @@
 #include "VersionModel.hpp"
 #include "Version.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace version {
 
@@ -51,48 +49,14 @@ private:
         optional<Version> currentVersion;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data)
-        {
-            if (data.versionModel)
-            {
-                versionModel = data.versionModel->deepCopy();
-            }
-            if (data.currentVersion)
-            {
-                currentVersion = data.currentVersion->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "versionModel") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->versionModel.emplace();
-                    detail::json::JsonParser::parse(&this->versionModel->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "currentVersion") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->currentVersion.emplace();
-                    detail::json::JsonParser::parse(&this->currentVersion->getModel(), jsonObject);
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -106,10 +70,7 @@ public:
     Status& operator=(const Status& status) = default;
     Status& operator=(Status&& status) = default;
 
-    Status deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Status);
-    }
+    Status deepCopy() const;
 
     const Status* operator->() const
     {
@@ -189,25 +150,7 @@ public:
     }
 };
 
-inline bool operator!=(const Status& lhs, const Status& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->versionModel != lhr.m_pData->versionModel)
-        {
-            return true;
-        }
-        if (lhs.m_pData->currentVersion != lhr.m_pData->currentVersion)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Status& lhs, const Status& lhr);
 
 inline bool operator==(const Status& lhs, const Status& lhr)
 {

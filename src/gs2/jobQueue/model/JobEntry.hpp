@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace jobQueue {
 
@@ -51,46 +49,14 @@ private:
         optional<Int32> maxTryCount;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            scriptId(data.scriptId),
-            args(data.args),
-            maxTryCount(data.maxTryCount)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "scriptId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->scriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "args") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->args.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "maxTryCount") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->maxTryCount = jsonValue.GetInt();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -104,10 +70,7 @@ public:
     JobEntry& operator=(const JobEntry& jobEntry) = default;
     JobEntry& operator=(JobEntry&& jobEntry) = default;
 
-    JobEntry deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(JobEntry);
-    }
+    JobEntry deepCopy() const;
 
     const JobEntry* operator->() const
     {
@@ -218,29 +181,7 @@ public:
     }
 };
 
-inline bool operator!=(const JobEntry& lhs, const JobEntry& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->scriptId != lhr.m_pData->scriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->args != lhr.m_pData->args)
-        {
-            return true;
-        }
-        if (lhs.m_pData->maxTryCount != lhr.m_pData->maxTryCount)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const JobEntry& lhs, const JobEntry& lhr);
 
 inline bool operator==(const JobEntry& lhs, const JobEntry& lhr)
 {

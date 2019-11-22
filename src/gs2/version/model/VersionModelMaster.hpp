@@ -19,7 +19,6 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -28,7 +27,6 @@
 #include "Version.hpp"
 #include "Version.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace version {
 
@@ -72,133 +70,14 @@ private:
         optional<Int64> updatedAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            versionModelId(data.versionModelId),
-            name(data.name),
-            description(data.description),
-            metadata(data.metadata),
-            scope(data.scope),
-            needSignature(data.needSignature),
-            signatureKeyId(data.signatureKeyId),
-            createdAt(data.createdAt),
-            updatedAt(data.updatedAt)
-        {
-            if (data.warningVersion)
-            {
-                warningVersion = data.warningVersion->deepCopy();
-            }
-            if (data.errorVersion)
-            {
-                errorVersion = data.errorVersion->deepCopy();
-            }
-            if (data.currentVersion)
-            {
-                currentVersion = data.currentVersion->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "versionModelId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->versionModelId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "description") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->description.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "warningVersion") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->warningVersion.emplace();
-                    detail::json::JsonParser::parse(&this->warningVersion->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "errorVersion") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->errorVersion.emplace();
-                    detail::json::JsonParser::parse(&this->errorVersion->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "scope") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->scope.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "currentVersion") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->currentVersion.emplace();
-                    detail::json::JsonParser::parse(&this->currentVersion->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "needSignature") == 0)
-            {
-                if (jsonValue.IsBool())
-                {
-                    this->needSignature = jsonValue.GetBool();
-                }
-            }
-            else if (std::strcmp(name_, "signatureKeyId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->signatureKeyId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "updatedAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->updatedAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -212,10 +91,7 @@ public:
     VersionModelMaster& operator=(const VersionModelMaster& versionModelMaster) = default;
     VersionModelMaster& operator=(VersionModelMaster&& versionModelMaster) = default;
 
-    VersionModelMaster deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(VersionModelMaster);
-    }
+    VersionModelMaster deepCopy() const;
 
     const VersionModelMaster* operator->() const
     {
@@ -605,65 +481,7 @@ public:
     }
 };
 
-inline bool operator!=(const VersionModelMaster& lhs, const VersionModelMaster& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->versionModelId != lhr.m_pData->versionModelId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->description != lhr.m_pData->description)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->warningVersion != lhr.m_pData->warningVersion)
-        {
-            return true;
-        }
-        if (lhs.m_pData->errorVersion != lhr.m_pData->errorVersion)
-        {
-            return true;
-        }
-        if (lhs.m_pData->scope != lhr.m_pData->scope)
-        {
-            return true;
-        }
-        if (lhs.m_pData->currentVersion != lhr.m_pData->currentVersion)
-        {
-            return true;
-        }
-        if (lhs.m_pData->needSignature != lhr.m_pData->needSignature)
-        {
-            return true;
-        }
-        if (lhs.m_pData->signatureKeyId != lhr.m_pData->signatureKeyId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const VersionModelMaster& lhs, const VersionModelMaster& lhr);
 
 inline bool operator==(const VersionModelMaster& lhs, const VersionModelMaster& lhr)
 {

@@ -20,7 +20,6 @@
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -48,38 +47,14 @@ private:
         optional<StringHolder> signature;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            body(data.body),
-            signature(data.signature)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        virtual ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "body") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->body.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "signature") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->signature.emplace(jsonValue.GetString());
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -93,10 +68,7 @@ public:
     CalculateSignatureResult& operator=(const CalculateSignatureResult& calculateSignatureResult) = default;
     CalculateSignatureResult& operator=(CalculateSignatureResult&& calculateSignatureResult) = default;
 
-    CalculateSignatureResult deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CalculateSignatureResult);
-    }
+    CalculateSignatureResult deepCopy() const;
 
     const CalculateSignatureResult* operator->() const
     {

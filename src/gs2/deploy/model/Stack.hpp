@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace deploy {
 
@@ -61,86 +59,14 @@ private:
         optional<Int64> updatedAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            stackId(data.stackId),
-            ownerId(data.ownerId),
-            name(data.name),
-            description(data.description),
-            template_(data.template_),
-            status(data.status),
-            createdAt(data.createdAt),
-            updatedAt(data.updatedAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "stackId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->stackId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "ownerId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->ownerId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "description") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->description.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "template") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->template_.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "status") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->status.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "updatedAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->updatedAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -154,10 +80,7 @@ public:
     Stack& operator=(const Stack& stack) = default;
     Stack& operator=(Stack&& stack) = default;
 
-    Stack deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Stack);
-    }
+    Stack deepCopy() const;
 
     const Stack* operator->() const
     {
@@ -423,49 +346,7 @@ public:
     }
 };
 
-inline bool operator!=(const Stack& lhs, const Stack& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->stackId != lhr.m_pData->stackId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->description != lhr.m_pData->description)
-        {
-            return true;
-        }
-        if (lhs.m_pData->template_ != lhr.m_pData->template_)
-        {
-            return true;
-        }
-        if (lhs.m_pData->status != lhr.m_pData->status)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Stack& lhs, const Stack& lhr);
 
 inline bool operator==(const Stack& lhs, const Stack& lhr)
 {

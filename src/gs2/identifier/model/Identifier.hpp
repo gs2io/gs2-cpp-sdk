@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace identifier {
 
@@ -55,62 +53,14 @@ private:
         optional<Int64> createdAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            ownerId(data.ownerId),
-            clientId(data.clientId),
-            userName(data.userName),
-            clientSecret(data.clientSecret),
-            createdAt(data.createdAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "ownerId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->ownerId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "clientId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->clientId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "clientSecret") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->clientSecret.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -124,10 +74,7 @@ public:
     Identifier& operator=(const Identifier& identifier) = default;
     Identifier& operator=(Identifier&& identifier) = default;
 
-    Identifier deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Identifier);
-    }
+    Identifier deepCopy() const;
 
     const Identifier* operator->() const
     {
@@ -300,37 +247,7 @@ public:
     }
 };
 
-inline bool operator!=(const Identifier& lhs, const Identifier& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->clientId != lhr.m_pData->clientId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userName != lhr.m_pData->userName)
-        {
-            return true;
-        }
-        if (lhs.m_pData->clientSecret != lhr.m_pData->clientSecret)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Identifier& lhs, const Identifier& lhr);
 
 inline bool operator==(const Identifier& lhs, const Identifier& lhr)
 {

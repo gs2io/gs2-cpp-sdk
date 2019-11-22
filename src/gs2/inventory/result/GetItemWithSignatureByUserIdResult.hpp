@@ -20,7 +20,6 @@
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -54,81 +53,14 @@ private:
         optional<StringHolder> signature;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            body(data.body),
-            signature(data.signature)
-        {
-            if (data.items)
-            {
-                items = data.items->deepCopy();
-            }
-            if (data.itemModel)
-            {
-                itemModel = data.itemModel->deepCopy();
-            }
-            if (data.inventory)
-            {
-                inventory = data.inventory->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        virtual ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "items") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->items.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        ItemSet item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->items += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "itemModel") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->itemModel.emplace();
-                    detail::json::JsonParser::parse(&this->itemModel->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "inventory") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->inventory.emplace();
-                    detail::json::JsonParser::parse(&this->inventory->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "body") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->body.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "signature") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->signature.emplace(jsonValue.GetString());
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -142,10 +74,7 @@ public:
     GetItemWithSignatureByUserIdResult& operator=(const GetItemWithSignatureByUserIdResult& getItemWithSignatureByUserIdResult) = default;
     GetItemWithSignatureByUserIdResult& operator=(GetItemWithSignatureByUserIdResult&& getItemWithSignatureByUserIdResult) = default;
 
-    GetItemWithSignatureByUserIdResult deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetItemWithSignatureByUserIdResult);
-    }
+    GetItemWithSignatureByUserIdResult deepCopy() const;
 
     const GetItemWithSignatureByUserIdResult* operator->() const
     {

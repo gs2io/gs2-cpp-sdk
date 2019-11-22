@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace ranking {
 
@@ -63,94 +61,14 @@ private:
         optional<Int32> calculateIntervalMinutes;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            categoryModelId(data.categoryModelId),
-            name(data.name),
-            metadata(data.metadata),
-            minimumValue(data.minimumValue),
-            maximumValue(data.maximumValue),
-            orderDirection(data.orderDirection),
-            scope(data.scope),
-            uniqueByUserId(data.uniqueByUserId),
-            calculateIntervalMinutes(data.calculateIntervalMinutes)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "categoryModelId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->categoryModelId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "minimumValue") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->minimumValue = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "maximumValue") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->maximumValue = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "orderDirection") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->orderDirection.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "scope") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->scope.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "uniqueByUserId") == 0)
-            {
-                if (jsonValue.IsBool())
-                {
-                    this->uniqueByUserId = jsonValue.GetBool();
-                }
-            }
-            else if (std::strcmp(name_, "calculateIntervalMinutes") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->calculateIntervalMinutes = jsonValue.GetInt();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -164,10 +82,7 @@ public:
     CategoryModel& operator=(const CategoryModel& categoryModel) = default;
     CategoryModel& operator=(CategoryModel&& categoryModel) = default;
 
-    CategoryModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CategoryModel);
-    }
+    CategoryModel deepCopy() const;
 
     const CategoryModel* operator->() const
     {
@@ -464,53 +379,7 @@ public:
     }
 };
 
-inline bool operator!=(const CategoryModel& lhs, const CategoryModel& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->categoryModelId != lhr.m_pData->categoryModelId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->minimumValue != lhr.m_pData->minimumValue)
-        {
-            return true;
-        }
-        if (lhs.m_pData->maximumValue != lhr.m_pData->maximumValue)
-        {
-            return true;
-        }
-        if (lhs.m_pData->orderDirection != lhr.m_pData->orderDirection)
-        {
-            return true;
-        }
-        if (lhs.m_pData->scope != lhr.m_pData->scope)
-        {
-            return true;
-        }
-        if (lhs.m_pData->uniqueByUserId != lhr.m_pData->uniqueByUserId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->calculateIntervalMinutes != lhr.m_pData->calculateIntervalMinutes)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const CategoryModel& lhs, const CategoryModel& lhr);
 
 inline bool operator==(const CategoryModel& lhs, const CategoryModel& lhr)
 {

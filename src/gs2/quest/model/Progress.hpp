@@ -19,14 +19,12 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "Reward.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace quest {
 
@@ -62,95 +60,14 @@ private:
         optional<Int64> updatedAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            progressId(data.progressId),
-            userId(data.userId),
-            transactionId(data.transactionId),
-            questModelId(data.questModelId),
-            randomSeed(data.randomSeed),
-            createdAt(data.createdAt),
-            updatedAt(data.updatedAt)
-        {
-            if (data.rewards)
-            {
-                rewards = data.rewards->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "progressId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->progressId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "transactionId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->transactionId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "questModelId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->questModelId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "randomSeed") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->randomSeed = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "rewards") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->rewards.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        Reward item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->rewards += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "updatedAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->updatedAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -164,10 +81,7 @@ public:
     Progress& operator=(const Progress& progress) = default;
     Progress& operator=(Progress&& progress) = default;
 
-    Progress deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Progress);
-    }
+    Progress deepCopy() const;
 
     const Progress* operator->() const
     {
@@ -433,49 +347,7 @@ public:
     }
 };
 
-inline bool operator!=(const Progress& lhs, const Progress& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->progressId != lhr.m_pData->progressId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->transactionId != lhr.m_pData->transactionId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->questModelId != lhr.m_pData->questModelId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->randomSeed != lhr.m_pData->randomSeed)
-        {
-            return true;
-        }
-        if (lhs.m_pData->rewards != lhr.m_pData->rewards)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Progress& lhs, const Progress& lhr);
 
 inline bool operator==(const Progress& lhs, const Progress& lhr)
 {

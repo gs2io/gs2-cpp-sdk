@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace money {
 
@@ -59,78 +57,14 @@ private:
         optional<Int64> updatedAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            walletDetailId(data.walletDetailId),
-            userId(data.userId),
-            slot(data.slot),
-            price(data.price),
-            count(data.count),
-            createdAt(data.createdAt),
-            updatedAt(data.updatedAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "walletDetailId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->walletDetailId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "slot") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->slot = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "price") == 0)
-            {
-                if (jsonValue.IsFloat())
-                {
-                    this->price = jsonValue.GetFloat();
-                }
-            }
-            else if (std::strcmp(name_, "count") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->count = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "updatedAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->updatedAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -144,10 +78,7 @@ public:
     WalletDetail& operator=(const WalletDetail& walletDetail) = default;
     WalletDetail& operator=(WalletDetail&& walletDetail) = default;
 
-    WalletDetail deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(WalletDetail);
-    }
+    WalletDetail deepCopy() const;
 
     const WalletDetail* operator->() const
     {
@@ -382,45 +313,7 @@ public:
     }
 };
 
-inline bool operator!=(const WalletDetail& lhs, const WalletDetail& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->walletDetailId != lhr.m_pData->walletDetailId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->slot != lhr.m_pData->slot)
-        {
-            return true;
-        }
-        if (lhs.m_pData->price != lhr.m_pData->price)
-        {
-            return true;
-        }
-        if (lhs.m_pData->count != lhr.m_pData->count)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const WalletDetail& lhs, const WalletDetail& lhr);
 
 inline bool operator==(const WalletDetail& lhs, const WalletDetail& lhr)
 {

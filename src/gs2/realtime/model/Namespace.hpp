@@ -19,7 +19,6 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -27,7 +26,6 @@
 #include "NotificationSetting.hpp"
 #include "LogSetting.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace realtime {
 
@@ -67,112 +65,14 @@ private:
         optional<Int64> updatedAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            namespaceId(data.namespaceId),
-            ownerId(data.ownerId),
-            name(data.name),
-            description(data.description),
-            serverType(data.serverType),
-            serverSpec(data.serverSpec),
-            createdAt(data.createdAt),
-            updatedAt(data.updatedAt)
-        {
-            if (data.createNotification)
-            {
-                createNotification = data.createNotification->deepCopy();
-            }
-            if (data.logSetting)
-            {
-                logSetting = data.logSetting->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "namespaceId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->namespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "ownerId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->ownerId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "description") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->description.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "serverType") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->serverType.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "serverSpec") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->serverSpec.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "createNotification") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->createNotification.emplace();
-                    detail::json::JsonParser::parse(&this->createNotification->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "logSetting") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->logSetting.emplace();
-                    detail::json::JsonParser::parse(&this->logSetting->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "updatedAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->updatedAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -186,10 +86,7 @@ public:
     Namespace& operator=(const Namespace& namespace_) = default;
     Namespace& operator=(Namespace&& namespace_) = default;
 
-    Namespace deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Namespace);
-    }
+    Namespace deepCopy() const;
 
     const Namespace* operator->() const
     {
@@ -517,57 +414,7 @@ public:
     }
 };
 
-inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->namespaceId != lhr.m_pData->namespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->description != lhr.m_pData->description)
-        {
-            return true;
-        }
-        if (lhs.m_pData->serverType != lhr.m_pData->serverType)
-        {
-            return true;
-        }
-        if (lhs.m_pData->serverSpec != lhr.m_pData->serverSpec)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createNotification != lhr.m_pData->createNotification)
-        {
-            return true;
-        }
-        if (lhs.m_pData->logSetting != lhr.m_pData->logSetting)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Namespace& lhs, const Namespace& lhr);
 
 inline bool operator==(const Namespace& lhs, const Namespace& lhr)
 {

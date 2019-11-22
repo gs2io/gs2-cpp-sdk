@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace friend_ {
 
@@ -51,46 +49,14 @@ private:
         optional<StringHolder> friendProfile;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            userId(data.userId),
-            publicProfile(data.publicProfile),
-            friendProfile(data.friendProfile)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "publicProfile") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->publicProfile.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "friendProfile") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->friendProfile.emplace(jsonValue.GetString());
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -104,10 +70,7 @@ public:
     FriendUser& operator=(const FriendUser& friendUser) = default;
     FriendUser& operator=(FriendUser&& friendUser) = default;
 
-    FriendUser deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(FriendUser);
-    }
+    FriendUser deepCopy() const;
 
     const FriendUser* operator->() const
     {
@@ -218,29 +181,7 @@ public:
     }
 };
 
-inline bool operator!=(const FriendUser& lhs, const FriendUser& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->publicProfile != lhr.m_pData->publicProfile)
-        {
-            return true;
-        }
-        if (lhs.m_pData->friendProfile != lhr.m_pData->friendProfile)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const FriendUser& lhs, const FriendUser& lhr);
 
 inline bool operator==(const FriendUser& lhs, const FriendUser& lhr)
 {

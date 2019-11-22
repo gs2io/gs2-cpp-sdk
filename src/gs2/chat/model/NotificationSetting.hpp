@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace chat {
 
@@ -51,46 +49,14 @@ private:
         optional<StringHolder> sound;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            gatewayNamespaceId(data.gatewayNamespaceId),
-            enableTransferMobileNotification(data.enableTransferMobileNotification),
-            sound(data.sound)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "gatewayNamespaceId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->gatewayNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "enableTransferMobileNotification") == 0)
-            {
-                if (jsonValue.IsBool())
-                {
-                    this->enableTransferMobileNotification = jsonValue.GetBool();
-                }
-            }
-            else if (std::strcmp(name_, "sound") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->sound.emplace(jsonValue.GetString());
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -104,10 +70,7 @@ public:
     NotificationSetting& operator=(const NotificationSetting& notificationSetting) = default;
     NotificationSetting& operator=(NotificationSetting&& notificationSetting) = default;
 
-    NotificationSetting deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(NotificationSetting);
-    }
+    NotificationSetting deepCopy() const;
 
     const NotificationSetting* operator->() const
     {
@@ -218,29 +181,7 @@ public:
     }
 };
 
-inline bool operator!=(const NotificationSetting& lhs, const NotificationSetting& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->gatewayNamespaceId != lhr.m_pData->gatewayNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->enableTransferMobileNotification != lhr.m_pData->enableTransferMobileNotification)
-        {
-            return true;
-        }
-        if (lhs.m_pData->sound != lhr.m_pData->sound)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const NotificationSetting& lhs, const NotificationSetting& lhr);
 
 inline bool operator==(const NotificationSetting& lhs, const NotificationSetting& lhr)
 {

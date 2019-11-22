@@ -19,7 +19,6 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -28,7 +27,6 @@
 #include "RecoverIntervalTable.hpp"
 #include "RecoverValueTable.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace stamina {
 
@@ -70,125 +68,14 @@ private:
         optional<RecoverValueTable> recoverValueTable;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            staminaModelId(data.staminaModelId),
-            name(data.name),
-            metadata(data.metadata),
-            recoverIntervalMinutes(data.recoverIntervalMinutes),
-            recoverValue(data.recoverValue),
-            initialCapacity(data.initialCapacity),
-            isOverflow(data.isOverflow),
-            maxCapacity(data.maxCapacity)
-        {
-            if (data.maxStaminaTable)
-            {
-                maxStaminaTable = data.maxStaminaTable->deepCopy();
-            }
-            if (data.recoverIntervalTable)
-            {
-                recoverIntervalTable = data.recoverIntervalTable->deepCopy();
-            }
-            if (data.recoverValueTable)
-            {
-                recoverValueTable = data.recoverValueTable->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "staminaModelId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->staminaModelId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "recoverIntervalMinutes") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->recoverIntervalMinutes = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "recoverValue") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->recoverValue = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "initialCapacity") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->initialCapacity = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "isOverflow") == 0)
-            {
-                if (jsonValue.IsBool())
-                {
-                    this->isOverflow = jsonValue.GetBool();
-                }
-            }
-            else if (std::strcmp(name_, "maxCapacity") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->maxCapacity = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "maxStaminaTable") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->maxStaminaTable.emplace();
-                    detail::json::JsonParser::parse(&this->maxStaminaTable->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "recoverIntervalTable") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->recoverIntervalTable.emplace();
-                    detail::json::JsonParser::parse(&this->recoverIntervalTable->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "recoverValueTable") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->recoverValueTable.emplace();
-                    detail::json::JsonParser::parse(&this->recoverValueTable->getModel(), jsonObject);
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -202,10 +89,7 @@ public:
     StaminaModel& operator=(const StaminaModel& staminaModel) = default;
     StaminaModel& operator=(StaminaModel&& staminaModel) = default;
 
-    StaminaModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(StaminaModel);
-    }
+    StaminaModel deepCopy() const;
 
     const StaminaModel* operator->() const
     {
@@ -564,61 +448,7 @@ public:
     }
 };
 
-inline bool operator!=(const StaminaModel& lhs, const StaminaModel& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->staminaModelId != lhr.m_pData->staminaModelId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->recoverIntervalMinutes != lhr.m_pData->recoverIntervalMinutes)
-        {
-            return true;
-        }
-        if (lhs.m_pData->recoverValue != lhr.m_pData->recoverValue)
-        {
-            return true;
-        }
-        if (lhs.m_pData->initialCapacity != lhr.m_pData->initialCapacity)
-        {
-            return true;
-        }
-        if (lhs.m_pData->isOverflow != lhr.m_pData->isOverflow)
-        {
-            return true;
-        }
-        if (lhs.m_pData->maxCapacity != lhr.m_pData->maxCapacity)
-        {
-            return true;
-        }
-        if (lhs.m_pData->maxStaminaTable != lhr.m_pData->maxStaminaTable)
-        {
-            return true;
-        }
-        if (lhs.m_pData->recoverIntervalTable != lhr.m_pData->recoverIntervalTable)
-        {
-            return true;
-        }
-        if (lhs.m_pData->recoverValueTable != lhr.m_pData->recoverValueTable)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const StaminaModel& lhs, const StaminaModel& lhr);
 
 inline bool operator==(const StaminaModel& lhs, const StaminaModel& lhr)
 {

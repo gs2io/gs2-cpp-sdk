@@ -19,14 +19,12 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "AcquireAction.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace lottery {
 
@@ -56,71 +54,14 @@ private:
         optional<Int32> weight;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            prizeId(data.prizeId),
-            type(data.type),
-            prizeTableName(data.prizeTableName),
-            weight(data.weight)
-        {
-            if (data.acquireActions)
-            {
-                acquireActions = data.acquireActions->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "prizeId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->prizeId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "type") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->type.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "acquireActions") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->acquireActions.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        AcquireAction item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->acquireActions += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "prizeTableName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->prizeTableName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "weight") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->weight = jsonValue.GetInt();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -134,10 +75,7 @@ public:
     Prize& operator=(const Prize& prize) = default;
     Prize& operator=(Prize&& prize) = default;
 
-    Prize deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Prize);
-    }
+    Prize deepCopy() const;
 
     const Prize* operator->() const
     {
@@ -310,37 +248,7 @@ public:
     }
 };
 
-inline bool operator!=(const Prize& lhs, const Prize& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->prizeId != lhr.m_pData->prizeId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->type != lhr.m_pData->type)
-        {
-            return true;
-        }
-        if (lhs.m_pData->acquireActions != lhr.m_pData->acquireActions)
-        {
-            return true;
-        }
-        if (lhs.m_pData->prizeTableName != lhr.m_pData->prizeTableName)
-        {
-            return true;
-        }
-        if (lhs.m_pData->weight != lhr.m_pData->weight)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Prize& lhs, const Prize& lhr);
 
 inline bool operator==(const Prize& lhs, const Prize& lhr)
 {

@@ -19,14 +19,12 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "AcquireAction.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace quest {
 
@@ -52,55 +50,14 @@ private:
         optional<Int32> weight;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            metadata(data.metadata),
-            weight(data.weight)
-        {
-            if (data.completeAcquireActions)
-            {
-                completeAcquireActions = data.completeAcquireActions->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "completeAcquireActions") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->completeAcquireActions.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        AcquireAction item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->completeAcquireActions += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "weight") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->weight = jsonValue.GetInt();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -114,10 +71,7 @@ public:
     Contents& operator=(const Contents& contents) = default;
     Contents& operator=(Contents&& contents) = default;
 
-    Contents deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Contents);
-    }
+    Contents deepCopy() const;
 
     const Contents* operator->() const
     {
@@ -228,29 +182,7 @@ public:
     }
 };
 
-inline bool operator!=(const Contents& lhs, const Contents& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->completeAcquireActions != lhr.m_pData->completeAcquireActions)
-        {
-            return true;
-        }
-        if (lhs.m_pData->weight != lhr.m_pData->weight)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Contents& lhs, const Contents& lhr);
 
 inline bool operator==(const Contents& lhs, const Contents& lhr)
 {

@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace limit {
 
@@ -59,78 +57,14 @@ private:
         optional<Int32> resetHour;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            limitModelId(data.limitModelId),
-            name(data.name),
-            metadata(data.metadata),
-            resetType(data.resetType),
-            resetDayOfMonth(data.resetDayOfMonth),
-            resetDayOfWeek(data.resetDayOfWeek),
-            resetHour(data.resetHour)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "limitModelId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->limitModelId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "resetType") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->resetType.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "resetDayOfMonth") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->resetDayOfMonth = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "resetDayOfWeek") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->resetDayOfWeek.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "resetHour") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->resetHour = jsonValue.GetInt();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -144,10 +78,7 @@ public:
     LimitModel& operator=(const LimitModel& limitModel) = default;
     LimitModel& operator=(LimitModel&& limitModel) = default;
 
-    LimitModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(LimitModel);
-    }
+    LimitModel deepCopy() const;
 
     const LimitModel* operator->() const
     {
@@ -382,45 +313,7 @@ public:
     }
 };
 
-inline bool operator!=(const LimitModel& lhs, const LimitModel& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->limitModelId != lhr.m_pData->limitModelId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->resetType != lhr.m_pData->resetType)
-        {
-            return true;
-        }
-        if (lhs.m_pData->resetDayOfMonth != lhr.m_pData->resetDayOfMonth)
-        {
-            return true;
-        }
-        if (lhs.m_pData->resetDayOfWeek != lhr.m_pData->resetDayOfWeek)
-        {
-            return true;
-        }
-        if (lhs.m_pData->resetHour != lhr.m_pData->resetHour)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const LimitModel& lhs, const LimitModel& lhr);
 
 inline bool operator==(const LimitModel& lhs, const LimitModel& lhr)
 {

@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace chat {
 
@@ -49,38 +47,14 @@ private:
         optional<Bool> enableTransferMobilePushNotification;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            category(data.category),
-            enableTransferMobilePushNotification(data.enableTransferMobilePushNotification)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "category") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->category = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "enableTransferMobilePushNotification") == 0)
-            {
-                if (jsonValue.IsBool())
-                {
-                    this->enableTransferMobilePushNotification = jsonValue.GetBool();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -94,10 +68,7 @@ public:
     NotificationType& operator=(const NotificationType& notificationType) = default;
     NotificationType& operator=(NotificationType&& notificationType) = default;
 
-    NotificationType deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(NotificationType);
-    }
+    NotificationType deepCopy() const;
 
     const NotificationType* operator->() const
     {
@@ -177,25 +148,7 @@ public:
     }
 };
 
-inline bool operator!=(const NotificationType& lhs, const NotificationType& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->category != lhr.m_pData->category)
-        {
-            return true;
-        }
-        if (lhs.m_pData->enableTransferMobilePushNotification != lhr.m_pData->enableTransferMobilePushNotification)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const NotificationType& lhs, const NotificationType& lhr);
 
 inline bool operator==(const NotificationType& lhs, const NotificationType& lhr)
 {

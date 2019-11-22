@@ -19,14 +19,12 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "Version.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace version {
 
@@ -56,67 +54,14 @@ private:
         optional<Version> version;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            region(data.region),
-            ownerId(data.ownerId),
-            namespaceName(data.namespaceName),
-            versionName(data.versionName)
-        {
-            if (data.version)
-            {
-                version = data.version->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "region") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->region.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "ownerId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->ownerId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "namespaceName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->namespaceName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "versionName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->versionName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "version") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->version.emplace();
-                    detail::json::JsonParser::parse(&this->version->getModel(), jsonObject);
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -130,10 +75,7 @@ public:
     SignTargetVersion& operator=(const SignTargetVersion& signTargetVersion) = default;
     SignTargetVersion& operator=(SignTargetVersion&& signTargetVersion) = default;
 
-    SignTargetVersion deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(SignTargetVersion);
-    }
+    SignTargetVersion deepCopy() const;
 
     const SignTargetVersion* operator->() const
     {
@@ -306,37 +248,7 @@ public:
     }
 };
 
-inline bool operator!=(const SignTargetVersion& lhs, const SignTargetVersion& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->region != lhr.m_pData->region)
-        {
-            return true;
-        }
-        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->namespaceName != lhr.m_pData->namespaceName)
-        {
-            return true;
-        }
-        if (lhs.m_pData->versionName != lhr.m_pData->versionName)
-        {
-            return true;
-        }
-        if (lhs.m_pData->version != lhr.m_pData->version)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const SignTargetVersion& lhs, const SignTargetVersion& lhr);
 
 inline bool operator==(const SignTargetVersion& lhs, const SignTargetVersion& lhr)
 {

@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace log {
 
@@ -59,78 +57,14 @@ private:
         optional<StringHolder> result;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            timestamp(data.timestamp),
-            requestId(data.requestId),
-            service(data.service),
-            method(data.method),
-            userId(data.userId),
-            request(data.request),
-            result(data.result)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "timestamp") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->timestamp = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "requestId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->requestId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "service") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->service.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "method") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->method.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "request") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->request.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "result") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->result.emplace(jsonValue.GetString());
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -144,10 +78,7 @@ public:
     AccessLog& operator=(const AccessLog& accessLog) = default;
     AccessLog& operator=(AccessLog&& accessLog) = default;
 
-    AccessLog deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(AccessLog);
-    }
+    AccessLog deepCopy() const;
 
     const AccessLog* operator->() const
     {
@@ -382,45 +313,7 @@ public:
     }
 };
 
-inline bool operator!=(const AccessLog& lhs, const AccessLog& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->timestamp != lhr.m_pData->timestamp)
-        {
-            return true;
-        }
-        if (lhs.m_pData->requestId != lhr.m_pData->requestId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->service != lhr.m_pData->service)
-        {
-            return true;
-        }
-        if (lhs.m_pData->method != lhr.m_pData->method)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->request != lhr.m_pData->request)
-        {
-            return true;
-        }
-        if (lhs.m_pData->result != lhr.m_pData->result)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const AccessLog& lhs, const AccessLog& lhr);
 
 inline bool operator==(const AccessLog& lhs, const AccessLog& lhr)
 {

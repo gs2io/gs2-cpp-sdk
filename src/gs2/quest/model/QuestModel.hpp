@@ -19,7 +19,6 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -28,7 +27,6 @@
 #include "ConsumeAction.hpp"
 #include "AcquireAction.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace quest {
 
@@ -64,125 +62,14 @@ private:
         optional<List<StringHolder>> premiseQuestNames;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            questModelId(data.questModelId),
-            name(data.name),
-            metadata(data.metadata),
-            challengePeriodEventId(data.challengePeriodEventId)
-        {
-            if (data.contents)
-            {
-                contents = data.contents->deepCopy();
-            }
-            if (data.consumeActions)
-            {
-                consumeActions = data.consumeActions->deepCopy();
-            }
-            if (data.failedAcquireActions)
-            {
-                failedAcquireActions = data.failedAcquireActions->deepCopy();
-            }
-            if (data.premiseQuestNames)
-            {
-                premiseQuestNames = data.premiseQuestNames->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "questModelId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->questModelId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "contents") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->contents.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        Contents item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->contents += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "challengePeriodEventId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->challengePeriodEventId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "consumeActions") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->consumeActions.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        ConsumeAction item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->consumeActions += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "failedAcquireActions") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->failedAcquireActions.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        AcquireAction item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->failedAcquireActions += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "premiseQuestNames") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->premiseQuestNames.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        if (json->IsString())
-                        {
-                            auto valueStr = json->GetString();
-                            StringHolder stringHolder(valueStr);
-                            *this->premiseQuestNames += std::move(stringHolder);
-                        }
-                    }
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -196,10 +83,7 @@ public:
     QuestModel& operator=(const QuestModel& questModel) = default;
     QuestModel& operator=(QuestModel&& questModel) = default;
 
-    QuestModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(QuestModel);
-    }
+    QuestModel deepCopy() const;
 
     const QuestModel* operator->() const
     {
@@ -465,49 +349,7 @@ public:
     }
 };
 
-inline bool operator!=(const QuestModel& lhs, const QuestModel& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->questModelId != lhr.m_pData->questModelId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->contents != lhr.m_pData->contents)
-        {
-            return true;
-        }
-        if (lhs.m_pData->challengePeriodEventId != lhr.m_pData->challengePeriodEventId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->consumeActions != lhr.m_pData->consumeActions)
-        {
-            return true;
-        }
-        if (lhs.m_pData->failedAcquireActions != lhr.m_pData->failedAcquireActions)
-        {
-            return true;
-        }
-        if (lhs.m_pData->premiseQuestNames != lhr.m_pData->premiseQuestNames)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const QuestModel& lhs, const QuestModel& lhr);
 
 inline bool operator==(const QuestModel& lhs, const QuestModel& lhr)
 {

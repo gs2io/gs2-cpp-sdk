@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace showcase {
 
@@ -55,62 +53,14 @@ private:
         optional<StringHolder> salesPeriodEventId;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            displayItemId(data.displayItemId),
-            type(data.type),
-            salesItemName(data.salesItemName),
-            salesItemGroupName(data.salesItemGroupName),
-            salesPeriodEventId(data.salesPeriodEventId)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "displayItemId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->displayItemId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "type") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->type.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "salesItemName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->salesItemName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "salesItemGroupName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->salesItemGroupName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "salesPeriodEventId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->salesPeriodEventId.emplace(jsonValue.GetString());
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -124,10 +74,7 @@ public:
     DisplayItemMaster& operator=(const DisplayItemMaster& displayItemMaster) = default;
     DisplayItemMaster& operator=(DisplayItemMaster&& displayItemMaster) = default;
 
-    DisplayItemMaster deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DisplayItemMaster);
-    }
+    DisplayItemMaster deepCopy() const;
 
     const DisplayItemMaster* operator->() const
     {
@@ -300,37 +247,7 @@ public:
     }
 };
 
-inline bool operator!=(const DisplayItemMaster& lhs, const DisplayItemMaster& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->displayItemId != lhr.m_pData->displayItemId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->type != lhr.m_pData->type)
-        {
-            return true;
-        }
-        if (lhs.m_pData->salesItemName != lhr.m_pData->salesItemName)
-        {
-            return true;
-        }
-        if (lhs.m_pData->salesItemGroupName != lhr.m_pData->salesItemGroupName)
-        {
-            return true;
-        }
-        if (lhs.m_pData->salesPeriodEventId != lhr.m_pData->salesPeriodEventId)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const DisplayItemMaster& lhs, const DisplayItemMaster& lhr);
 
 inline bool operator==(const DisplayItemMaster& lhs, const DisplayItemMaster& lhr)
 {

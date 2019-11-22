@@ -20,7 +20,6 @@
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -52,73 +51,14 @@ private:
         optional<Int64> overflowCount;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            overflowCount(data.overflowCount)
-        {
-            if (data.items)
-            {
-                items = data.items->deepCopy();
-            }
-            if (data.itemModel)
-            {
-                itemModel = data.itemModel->deepCopy();
-            }
-            if (data.inventory)
-            {
-                inventory = data.inventory->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        virtual ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "items") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->items.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        ItemSet item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->items += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "itemModel") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->itemModel.emplace();
-                    detail::json::JsonParser::parse(&this->itemModel->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "inventory") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->inventory.emplace();
-                    detail::json::JsonParser::parse(&this->inventory->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "overflowCount") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->overflowCount = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -132,10 +72,7 @@ public:
     AcquireItemSetByUserIdResult& operator=(const AcquireItemSetByUserIdResult& acquireItemSetByUserIdResult) = default;
     AcquireItemSetByUserIdResult& operator=(AcquireItemSetByUserIdResult&& acquireItemSetByUserIdResult) = default;
 
-    AcquireItemSetByUserIdResult deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(AcquireItemSetByUserIdResult);
-    }
+    AcquireItemSetByUserIdResult deepCopy() const;
 
     const AcquireItemSetByUserIdResult* operator->() const
     {

@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace experience {
 
@@ -51,56 +49,14 @@ private:
         optional<List<Int64>> values;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            thresholdId(data.thresholdId),
-            metadata(data.metadata)
-        {
-            if (data.values)
-            {
-                values = data.values->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "thresholdId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->thresholdId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "values") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->values.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        if (json->IsInt64())
-                        {
-                            *this->values += json->GetInt64();
-                        }
-                    }
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -114,10 +70,7 @@ public:
     Threshold& operator=(const Threshold& threshold) = default;
     Threshold& operator=(Threshold&& threshold) = default;
 
-    Threshold deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Threshold);
-    }
+    Threshold deepCopy() const;
 
     const Threshold* operator->() const
     {
@@ -228,29 +181,7 @@ public:
     }
 };
 
-inline bool operator!=(const Threshold& lhs, const Threshold& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->thresholdId != lhr.m_pData->thresholdId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->values != lhr.m_pData->values)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Threshold& lhs, const Threshold& lhr);
 
 inline bool operator==(const Threshold& lhs, const Threshold& lhr)
 {

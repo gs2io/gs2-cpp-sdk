@@ -19,14 +19,12 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "NotificationType.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace chat {
 
@@ -56,71 +54,14 @@ private:
         optional<Int64> createdAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            subscribeId(data.subscribeId),
-            userId(data.userId),
-            roomName(data.roomName),
-            createdAt(data.createdAt)
-        {
-            if (data.notificationTypes)
-            {
-                notificationTypes = data.notificationTypes->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "subscribeId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->subscribeId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "roomName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->roomName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "notificationTypes") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->notificationTypes.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        NotificationType item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->notificationTypes += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -134,10 +75,7 @@ public:
     Subscribe& operator=(const Subscribe& subscribe) = default;
     Subscribe& operator=(Subscribe&& subscribe) = default;
 
-    Subscribe deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Subscribe);
-    }
+    Subscribe deepCopy() const;
 
     const Subscribe* operator->() const
     {
@@ -310,37 +248,7 @@ public:
     }
 };
 
-inline bool operator!=(const Subscribe& lhs, const Subscribe& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->subscribeId != lhr.m_pData->subscribeId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->roomName != lhr.m_pData->roomName)
-        {
-            return true;
-        }
-        if (lhs.m_pData->notificationTypes != lhr.m_pData->notificationTypes)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Subscribe& lhs, const Subscribe& lhr);
 
 inline bool operator==(const Subscribe& lhs, const Subscribe& lhr)
 {

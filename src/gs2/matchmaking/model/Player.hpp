@@ -19,14 +19,12 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "Attribute.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace matchmaking {
 
@@ -54,75 +52,14 @@ private:
         optional<List<StringHolder>> denyUserIds;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            userId(data.userId),
-            roleName(data.roleName)
-        {
-            if (data.attributes)
-            {
-                attributes = data.attributes->deepCopy();
-            }
-            if (data.denyUserIds)
-            {
-                denyUserIds = data.denyUserIds->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "attributes") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->attributes.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        Attribute item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->attributes += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "roleName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->roleName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "denyUserIds") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->denyUserIds.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        if (json->IsString())
-                        {
-                            auto valueStr = json->GetString();
-                            StringHolder stringHolder(valueStr);
-                            *this->denyUserIds += std::move(stringHolder);
-                        }
-                    }
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -136,10 +73,7 @@ public:
     Player& operator=(const Player& player) = default;
     Player& operator=(Player&& player) = default;
 
-    Player deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Player);
-    }
+    Player deepCopy() const;
 
     const Player* operator->() const
     {
@@ -281,33 +215,7 @@ public:
     }
 };
 
-inline bool operator!=(const Player& lhs, const Player& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->attributes != lhr.m_pData->attributes)
-        {
-            return true;
-        }
-        if (lhs.m_pData->roleName != lhr.m_pData->roleName)
-        {
-            return true;
-        }
-        if (lhs.m_pData->denyUserIds != lhr.m_pData->denyUserIds)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Player& lhs, const Player& lhr);
 
 inline bool operator==(const Player& lhs, const Player& lhr)
 {

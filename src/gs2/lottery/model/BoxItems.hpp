@@ -19,14 +19,12 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "BoxItem.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace lottery {
 
@@ -54,63 +52,14 @@ private:
         optional<List<BoxItem>> items;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            boxId(data.boxId),
-            prizeTableName(data.prizeTableName),
-            userId(data.userId)
-        {
-            if (data.items)
-            {
-                items = data.items->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "boxId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->boxId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "prizeTableName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->prizeTableName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "items") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->items.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        BoxItem item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->items += std::move(item);
-                    }
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -124,10 +73,7 @@ public:
     BoxItems& operator=(const BoxItems& boxItems) = default;
     BoxItems& operator=(BoxItems&& boxItems) = default;
 
-    BoxItems deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(BoxItems);
-    }
+    BoxItems deepCopy() const;
 
     const BoxItems* operator->() const
     {
@@ -269,33 +215,7 @@ public:
     }
 };
 
-inline bool operator!=(const BoxItems& lhs, const BoxItems& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->boxId != lhr.m_pData->boxId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->prizeTableName != lhr.m_pData->prizeTableName)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->items != lhr.m_pData->items)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const BoxItems& lhs, const BoxItems& lhr);
 
 inline bool operator==(const BoxItems& lhs, const BoxItems& lhr)
 {

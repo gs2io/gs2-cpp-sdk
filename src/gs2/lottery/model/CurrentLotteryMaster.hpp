@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace lottery {
 
@@ -49,38 +47,14 @@ private:
         optional<StringHolder> settings;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            namespaceName(data.namespaceName),
-            settings(data.settings)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "namespaceName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->namespaceName.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "settings") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->settings.emplace(jsonValue.GetString());
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -94,10 +68,7 @@ public:
     CurrentLotteryMaster& operator=(const CurrentLotteryMaster& currentLotteryMaster) = default;
     CurrentLotteryMaster& operator=(CurrentLotteryMaster&& currentLotteryMaster) = default;
 
-    CurrentLotteryMaster deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(CurrentLotteryMaster);
-    }
+    CurrentLotteryMaster deepCopy() const;
 
     const CurrentLotteryMaster* operator->() const
     {
@@ -177,25 +148,7 @@ public:
     }
 };
 
-inline bool operator!=(const CurrentLotteryMaster& lhs, const CurrentLotteryMaster& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->namespaceName != lhr.m_pData->namespaceName)
-        {
-            return true;
-        }
-        if (lhs.m_pData->settings != lhr.m_pData->settings)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const CurrentLotteryMaster& lhs, const CurrentLotteryMaster& lhr);
 
 inline bool operator==(const CurrentLotteryMaster& lhs, const CurrentLotteryMaster& lhr)
 {

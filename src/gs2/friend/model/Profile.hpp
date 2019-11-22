@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace friend_ {
 
@@ -59,78 +57,14 @@ private:
         optional<Int64> updatedAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            profileId(data.profileId),
-            userId(data.userId),
-            publicProfile(data.publicProfile),
-            followerProfile(data.followerProfile),
-            friendProfile(data.friendProfile),
-            createdAt(data.createdAt),
-            updatedAt(data.updatedAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "profileId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->profileId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "publicProfile") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->publicProfile.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "followerProfile") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->followerProfile.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "friendProfile") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->friendProfile.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "updatedAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->updatedAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -144,10 +78,7 @@ public:
     Profile& operator=(const Profile& profile) = default;
     Profile& operator=(Profile&& profile) = default;
 
-    Profile deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Profile);
-    }
+    Profile deepCopy() const;
 
     const Profile* operator->() const
     {
@@ -382,45 +313,7 @@ public:
     }
 };
 
-inline bool operator!=(const Profile& lhs, const Profile& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->profileId != lhr.m_pData->profileId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->publicProfile != lhr.m_pData->publicProfile)
-        {
-            return true;
-        }
-        if (lhs.m_pData->followerProfile != lhr.m_pData->followerProfile)
-        {
-            return true;
-        }
-        if (lhs.m_pData->friendProfile != lhr.m_pData->friendProfile)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Profile& lhs, const Profile& lhr);
 
 inline bool operator==(const Profile& lhs, const Profile& lhr)
 {

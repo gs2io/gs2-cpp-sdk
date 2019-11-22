@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace account {
 
@@ -55,62 +53,14 @@ private:
         optional<Int64> createdAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            accountId(data.accountId),
-            userId(data.userId),
-            password(data.password),
-            timeOffset(data.timeOffset),
-            createdAt(data.createdAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "accountId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->accountId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "password") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->password.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "timeOffset") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->timeOffset = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -124,10 +74,7 @@ public:
     Account& operator=(const Account& account) = default;
     Account& operator=(Account&& account) = default;
 
-    Account deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Account);
-    }
+    Account deepCopy() const;
 
     const Account* operator->() const
     {
@@ -300,37 +247,7 @@ public:
     }
 };
 
-inline bool operator!=(const Account& lhs, const Account& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->accountId != lhr.m_pData->accountId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->password != lhr.m_pData->password)
-        {
-            return true;
-        }
-        if (lhs.m_pData->timeOffset != lhr.m_pData->timeOffset)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const Account& lhs, const Account& lhr);
 
 inline bool operator==(const Account& lhs, const Account& lhr)
 {

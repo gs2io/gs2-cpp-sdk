@@ -19,13 +19,11 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace exchange {
 
@@ -55,62 +53,14 @@ private:
         optional<StringHolder> result;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            region(data.region),
-            ownerId(data.ownerId),
-            responseCacheId(data.responseCacheId),
-            requestHash(data.requestHash),
-            result(data.result)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "region") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->region.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "ownerId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->ownerId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "responseCacheId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->responseCacheId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "requestHash") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->requestHash.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "result") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->result.emplace(jsonValue.GetString());
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -124,10 +74,7 @@ public:
     ResponseCache& operator=(const ResponseCache& responseCache) = default;
     ResponseCache& operator=(ResponseCache&& responseCache) = default;
 
-    ResponseCache deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ResponseCache);
-    }
+    ResponseCache deepCopy() const;
 
     const ResponseCache* operator->() const
     {
@@ -300,37 +247,7 @@ public:
     }
 };
 
-inline bool operator!=(const ResponseCache& lhs, const ResponseCache& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->region != lhr.m_pData->region)
-        {
-            return true;
-        }
-        if (lhs.m_pData->ownerId != lhr.m_pData->ownerId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->responseCacheId != lhr.m_pData->responseCacheId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->requestHash != lhr.m_pData->requestHash)
-        {
-            return true;
-        }
-        if (lhs.m_pData->result != lhr.m_pData->result)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const ResponseCache& lhs, const ResponseCache& lhr);
 
 inline bool operator==(const ResponseCache& lhs, const ResponseCache& lhr)
 {

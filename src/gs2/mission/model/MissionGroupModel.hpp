@@ -19,14 +19,12 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "MissionTaskModel.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace mission {
 
@@ -56,71 +54,14 @@ private:
         optional<StringHolder> completeNotificationNamespaceId;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            missionGroupId(data.missionGroupId),
-            name(data.name),
-            metadata(data.metadata),
-            completeNotificationNamespaceId(data.completeNotificationNamespaceId)
-        {
-            if (data.tasks)
-            {
-                tasks = data.tasks->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "missionGroupId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->missionGroupId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "tasks") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->tasks.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        MissionTaskModel item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->tasks += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "completeNotificationNamespaceId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->completeNotificationNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -134,10 +75,7 @@ public:
     MissionGroupModel& operator=(const MissionGroupModel& missionGroupModel) = default;
     MissionGroupModel& operator=(MissionGroupModel&& missionGroupModel) = default;
 
-    MissionGroupModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(MissionGroupModel);
-    }
+    MissionGroupModel deepCopy() const;
 
     const MissionGroupModel* operator->() const
     {
@@ -310,37 +248,7 @@ public:
     }
 };
 
-inline bool operator!=(const MissionGroupModel& lhs, const MissionGroupModel& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->missionGroupId != lhr.m_pData->missionGroupId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->tasks != lhr.m_pData->tasks)
-        {
-            return true;
-        }
-        if (lhs.m_pData->completeNotificationNamespaceId != lhr.m_pData->completeNotificationNamespaceId)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const MissionGroupModel& lhs, const MissionGroupModel& lhr);
 
 inline bool operator==(const MissionGroupModel& lhs, const MissionGroupModel& lhr)
 {

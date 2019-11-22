@@ -19,7 +19,6 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
-#include <gs2/core/json/JsonParser.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
@@ -27,7 +26,6 @@
 #include "ConsumeAction.hpp"
 #include "AcquireAction.hpp"
 #include <memory>
-#include <cstring>
 
 namespace gs2 { namespace showcase {
 
@@ -63,104 +61,14 @@ private:
         optional<Int64> updatedAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            detail::json::IModel(data),
-            salesItemId(data.salesItemId),
-            name(data.name),
-            description(data.description),
-            metadata(data.metadata),
-            createdAt(data.createdAt),
-            updatedAt(data.updatedAt)
-        {
-            if (data.consumeActions)
-            {
-                consumeActions = data.consumeActions->deepCopy();
-            }
-            if (data.acquireActions)
-            {
-                acquireActions = data.acquireActions->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        ~Data() = default;
+        ~Data() GS2_OVERRIDE = default;
 
         Data& operator=(const Data&) = delete;
         Data& operator=(Data&&) = delete;
 
-        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
-        {
-            if (std::strcmp(name_, "salesItemId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->salesItemId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "name") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->name.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "description") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->description.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->metadata.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "consumeActions") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->consumeActions.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        ConsumeAction item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->consumeActions += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "acquireActions") == 0)
-            {
-                if (jsonValue.IsArray())
-                {
-                    const auto& array = jsonValue.GetArray();
-                    this->acquireActions.emplace();
-                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        AcquireAction item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->acquireActions += std::move(item);
-                    }
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "updatedAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->updatedAt = jsonValue.GetInt64();
-                }
-            }
-        }
+        void set(const Char name_[], const detail::json::JsonConstValue& jsonValue) GS2_OVERRIDE;
     };
 
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
@@ -174,10 +82,7 @@ public:
     SalesItemMaster& operator=(const SalesItemMaster& salesItemMaster) = default;
     SalesItemMaster& operator=(SalesItemMaster&& salesItemMaster) = default;
 
-    SalesItemMaster deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(SalesItemMaster);
-    }
+    SalesItemMaster deepCopy() const;
 
     const SalesItemMaster* operator->() const
     {
@@ -443,49 +348,7 @@ public:
     }
 };
 
-inline bool operator!=(const SalesItemMaster& lhs, const SalesItemMaster& lhr)
-{
-    if (lhs.m_pData != lhr.m_pData)
-    {
-        if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->salesItemId != lhr.m_pData->salesItemId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->name != lhr.m_pData->name)
-        {
-            return true;
-        }
-        if (lhs.m_pData->description != lhr.m_pData->description)
-        {
-            return true;
-        }
-        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
-        {
-            return true;
-        }
-        if (lhs.m_pData->consumeActions != lhr.m_pData->consumeActions)
-        {
-            return true;
-        }
-        if (lhs.m_pData->acquireActions != lhr.m_pData->acquireActions)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
-        {
-            return true;
-        }
-    }
-    return false;
-}
+bool operator!=(const SalesItemMaster& lhs, const SalesItemMaster& lhr);
 
 inline bool operator==(const SalesItemMaster& lhs, const SalesItemMaster& lhr)
 {
