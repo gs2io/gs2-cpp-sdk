@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_MISSION_MODEL_EZMISSIONGROUPMODEL_HPP_
 #define GS2_EZ_MISSION_MODEL_EZMISSIONGROUPMODEL_HPP_
 
-#include <gs2/mission/model/MissionGroupModel.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzMissionTaskModel.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace mission {
+namespace gs2 {
+
+namespace mission {
+
+class MissionGroupModel;
+
+}
+
+namespace ez { namespace mission {
 
 class EzMissionGroupModel : public gs2::Gs2Object
 {
@@ -41,36 +52,9 @@ private:
         gs2::optional<StringHolder> completeNotificationNamespaceId;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata),
-            completeNotificationNamespaceId(data.completeNotificationNamespaceId)
-        {
-            if (data.tasks)
-            {
-                tasks = data.tasks->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::mission::MissionGroupModel& missionGroupModel) :
-            name(missionGroupModel.getName()),
-            metadata(missionGroupModel.getMetadata()),
-            completeNotificationNamespaceId(missionGroupModel.getCompleteNotificationNamespaceId())
-        {
-            tasks.emplace();
-            if (missionGroupModel.getTasks())
-            {
-                for (int i = 0; i < missionGroupModel.getTasks()->getCount(); ++i)
-                {
-                    *tasks += EzMissionTaskModel((*missionGroupModel.getTasks())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::mission::MissionGroupModel& missionGroupModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -85,35 +69,14 @@ public:
     EzMissionGroupModel(EzMissionGroupModel&& ezMissionGroupModel) = default;
     ~EzMissionGroupModel() = default;
 
-    EzMissionGroupModel(gs2::mission::MissionGroupModel missionGroupModel) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(missionGroupModel)
-    {}
+    EzMissionGroupModel(gs2::mission::MissionGroupModel missionGroupModel);
 
     EzMissionGroupModel& operator=(const EzMissionGroupModel& ezMissionGroupModel) = default;
     EzMissionGroupModel& operator=(EzMissionGroupModel&& ezMissionGroupModel) = default;
 
-    EzMissionGroupModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzMissionGroupModel);
-    }
+    EzMissionGroupModel deepCopy() const;
 
-    gs2::mission::MissionGroupModel ToModel() const
-    {
-        gs2::mission::MissionGroupModel missionGroupModel;
-        missionGroupModel.setName(getName());
-        missionGroupModel.setMetadata(getMetadata());
-        {
-            gs2::List<gs2::mission::MissionTaskModel> list;
-            auto& tasks = getTasks();
-            for (int i = 0; i < tasks.getCount(); ++i)
-            {
-                list += tasks[i].ToModel();
-            }
-            missionGroupModel.setTasks(list);
-        }
-        missionGroupModel.setCompleteNotificationNamespaceId(getCompleteNotificationNamespaceId());
-        return missionGroupModel;
-    }
+    gs2::mission::MissionGroupModel ToModel() const;
 
     // ========================================
     //   Getters

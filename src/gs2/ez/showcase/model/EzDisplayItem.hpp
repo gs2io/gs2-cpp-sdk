@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,12 +17,25 @@
 #ifndef GS2_EZ_SHOWCASE_MODEL_EZDISPLAYITEM_HPP_
 #define GS2_EZ_SHOWCASE_MODEL_EZDISPLAYITEM_HPP_
 
-#include <gs2/showcase/model/DisplayItem.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzSalesItem.hpp"
 #include "EzSalesItemGroup.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace showcase {
+namespace gs2 {
+
+namespace showcase {
+
+class DisplayItem;
+
+}
+
+namespace ez { namespace showcase {
 
 class EzDisplayItem : public gs2::Gs2Object
 {
@@ -42,32 +53,9 @@ private:
         gs2::optional<EzSalesItemGroup> salesItemGroup;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            displayItemId(data.displayItemId),
-            type(data.type)
-        {
-            if (data.salesItem)
-            {
-                salesItem = data.salesItem->deepCopy();
-            }
-            if (data.salesItemGroup)
-            {
-                salesItemGroup = data.salesItemGroup->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::showcase::DisplayItem& displayItem) :
-            displayItemId(displayItem.getDisplayItemId()),
-            type(displayItem.getType()),
-            salesItem(*displayItem.getSalesItem()),
-            salesItemGroup(*displayItem.getSalesItemGroup())
-        {
-        }
-
+        Data(const gs2::showcase::DisplayItem& displayItem);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -82,27 +70,14 @@ public:
     EzDisplayItem(EzDisplayItem&& ezDisplayItem) = default;
     ~EzDisplayItem() = default;
 
-    EzDisplayItem(gs2::showcase::DisplayItem displayItem) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(displayItem)
-    {}
+    EzDisplayItem(gs2::showcase::DisplayItem displayItem);
 
     EzDisplayItem& operator=(const EzDisplayItem& ezDisplayItem) = default;
     EzDisplayItem& operator=(EzDisplayItem&& ezDisplayItem) = default;
 
-    EzDisplayItem deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDisplayItem);
-    }
+    EzDisplayItem deepCopy() const;
 
-    gs2::showcase::DisplayItem ToModel() const
-    {
-        gs2::showcase::DisplayItem displayItem;
-        displayItem.setDisplayItemId(getDisplayItemId());
-        displayItem.setType(getType());
-        displayItem.setSalesItem(getSalesItem().ToModel());
-        displayItem.setSalesItemGroup(getSalesItemGroup().ToModel());
-        return displayItem;
-    }
+    gs2::showcase::DisplayItem ToModel() const;
 
     // ========================================
     //   Getters

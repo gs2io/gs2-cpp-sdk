@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/quest/Gs2QuestWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace quest {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::quest::Gs2QuestWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::start(
@@ -55,7 +61,7 @@ void Client::start(
         request.setConfig(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.start(
+    m_pClient->start(
         request,
         [callback](gs2::quest::AsyncStartResult r)
         {
@@ -118,7 +124,7 @@ void Client::end(
         request.setConfig(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.end(
+    m_pClient->end(
         request,
         [callback](gs2::quest::AsyncEndResult r)
         {
@@ -154,7 +160,7 @@ void Client::getProgress(
     gs2::quest::GetProgressRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getProgress(
+    m_pClient->getProgress(
         request,
         [callback](gs2::quest::AsyncGetProgressResult r)
         {
@@ -190,7 +196,7 @@ void Client::deleteProgress(
     gs2::quest::DeleteProgressRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.deleteProgress(
+    m_pClient->deleteProgress(
         request,
         [callback](gs2::quest::AsyncDeleteProgressResult r)
         {
@@ -236,7 +242,7 @@ void Client::describeCompletedQuestLists(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeCompletedQuestLists(
+    m_pClient->describeCompletedQuestLists(
         request,
         [callback](gs2::quest::AsyncDescribeCompletedQuestListsResult r)
         {
@@ -274,7 +280,7 @@ void Client::getCompletedQuestList(
     request.setNamespaceName(namespaceName);
     request.setQuestGroupName(questGroupName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getCompletedQuestList(
+    m_pClient->getCompletedQuestList(
         request,
         [callback](gs2::quest::AsyncGetCompletedQuestListResult r)
         {
@@ -308,7 +314,7 @@ void Client::listQuestGroups(
 {
     gs2::quest::DescribeQuestGroupModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_Client.describeQuestGroupModels(
+    m_pClient->describeQuestGroupModels(
         request,
         [callback](gs2::quest::AsyncDescribeQuestGroupModelsResult r)
         {
@@ -344,7 +350,7 @@ void Client::getQuestGroup(
     gs2::quest::GetQuestGroupModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setQuestGroupName(questGroupName);
-    m_Client.getQuestGroupModel(
+    m_pClient->getQuestGroupModel(
         request,
         [callback](gs2::quest::AsyncGetQuestGroupModelResult r)
         {
@@ -380,7 +386,7 @@ void Client::listQuests(
     gs2::quest::DescribeQuestModelsRequest request;
     request.setNamespaceName(namespaceName);
     request.setQuestGroupName(questGroupName);
-    m_Client.describeQuestModels(
+    m_pClient->describeQuestModels(
         request,
         [callback](gs2::quest::AsyncDescribeQuestModelsResult r)
         {
@@ -418,7 +424,7 @@ void Client::getQuest(
     request.setNamespaceName(namespaceName);
     request.setQuestGroupName(questGroupName);
     request.setQuestName(questName);
-    m_Client.getQuestModel(
+    m_pClient->getQuestModel(
         request,
         [callback](gs2::quest::AsyncGetQuestModelResult r)
         {

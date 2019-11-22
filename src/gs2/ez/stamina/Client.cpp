@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/stamina/Gs2StaminaWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace stamina {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::stamina::Gs2StaminaWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::listStaminaModels(
@@ -34,7 +40,7 @@ void Client::listStaminaModels(
 {
     gs2::stamina::DescribeStaminaModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_Client.describeStaminaModels(
+    m_pClient->describeStaminaModels(
         request,
         [callback](gs2::stamina::AsyncDescribeStaminaModelsResult r)
         {
@@ -70,7 +76,7 @@ void Client::getStaminaModel(
     gs2::stamina::GetStaminaModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setStaminaName(staminaName);
-    m_Client.getStaminaModel(
+    m_pClient->getStaminaModel(
         request,
         [callback](gs2::stamina::AsyncGetStaminaModelResult r)
         {
@@ -108,7 +114,7 @@ void Client::getStamina(
     request.setNamespaceName(namespaceName);
     request.setStaminaName(staminaName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getStamina(
+    m_pClient->getStamina(
         request,
         [callback](gs2::stamina::AsyncGetStaminaResult r)
         {
@@ -148,7 +154,7 @@ void Client::consume(
     request.setStaminaName(staminaName);
     request.setConsumeValue(consumeValue);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.consumeStamina(
+    m_pClient->consumeStamina(
         request,
         [callback](gs2::stamina::AsyncConsumeStaminaResult r)
         {

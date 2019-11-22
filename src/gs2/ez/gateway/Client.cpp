@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/gateway/Gs2GatewayWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace gateway {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::gateway::Gs2GatewayWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::setUserId(
@@ -38,7 +44,7 @@ void Client::setUserId(
     request.setNamespaceName(namespaceName);
     request.setAllowConcurrentAccess(allowConcurrentAccess);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.setUserId(
+    m_pClient->setUserId(
         request,
         [callback](gs2::gateway::AsyncSetUserIdResult r)
         {

@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,13 +17,26 @@
 #ifndef GS2_EZ_STAMINA_MODEL_EZSTAMINAMODEL_HPP_
 #define GS2_EZ_STAMINA_MODEL_EZSTAMINAMODEL_HPP_
 
-#include <gs2/stamina/model/StaminaModel.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzMaxStaminaTable.hpp"
 #include "EzRecoverIntervalTable.hpp"
 #include "EzRecoverValueTable.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace stamina {
+namespace gs2 {
+
+namespace stamina {
+
+class StaminaModel;
+
+}
+
+namespace ez { namespace stamina {
 
 class EzStaminaModel : public gs2::Gs2Object
 {
@@ -55,47 +66,9 @@ private:
         gs2::optional<EzRecoverValueTable> recoverValueTable;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata),
-            recoverIntervalMinutes(data.recoverIntervalMinutes),
-            recoverValue(data.recoverValue),
-            initialCapacity(data.initialCapacity),
-            isOverflow(data.isOverflow),
-            maxCapacity(data.maxCapacity)
-        {
-            if (data.maxStaminaTable)
-            {
-                maxStaminaTable = data.maxStaminaTable->deepCopy();
-            }
-            if (data.recoverIntervalTable)
-            {
-                recoverIntervalTable = data.recoverIntervalTable->deepCopy();
-            }
-            if (data.recoverValueTable)
-            {
-                recoverValueTable = data.recoverValueTable->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::stamina::StaminaModel& staminaModel) :
-            name(staminaModel.getName()),
-            metadata(staminaModel.getMetadata()),
-            recoverIntervalMinutes(staminaModel.getRecoverIntervalMinutes() ? *staminaModel.getRecoverIntervalMinutes() : 0),
-            recoverValue(staminaModel.getRecoverValue() ? *staminaModel.getRecoverValue() : 0),
-            initialCapacity(staminaModel.getInitialCapacity() ? *staminaModel.getInitialCapacity() : 0),
-            isOverflow(staminaModel.getIsOverflow() ? *staminaModel.getIsOverflow() : false),
-            maxCapacity(staminaModel.getMaxCapacity() ? *staminaModel.getMaxCapacity() : 0),
-            maxStaminaTable(*staminaModel.getMaxStaminaTable()),
-            recoverIntervalTable(*staminaModel.getRecoverIntervalTable()),
-            recoverValueTable(*staminaModel.getRecoverValueTable())
-        {
-        }
-
+        Data(const gs2::stamina::StaminaModel& staminaModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -110,33 +83,14 @@ public:
     EzStaminaModel(EzStaminaModel&& ezStaminaModel) = default;
     ~EzStaminaModel() = default;
 
-    EzStaminaModel(gs2::stamina::StaminaModel staminaModel) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(staminaModel)
-    {}
+    EzStaminaModel(gs2::stamina::StaminaModel staminaModel);
 
     EzStaminaModel& operator=(const EzStaminaModel& ezStaminaModel) = default;
     EzStaminaModel& operator=(EzStaminaModel&& ezStaminaModel) = default;
 
-    EzStaminaModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzStaminaModel);
-    }
+    EzStaminaModel deepCopy() const;
 
-    gs2::stamina::StaminaModel ToModel() const
-    {
-        gs2::stamina::StaminaModel staminaModel;
-        staminaModel.setName(getName());
-        staminaModel.setMetadata(getMetadata());
-        staminaModel.setRecoverIntervalMinutes(getRecoverIntervalMinutes());
-        staminaModel.setRecoverValue(getRecoverValue());
-        staminaModel.setInitialCapacity(getInitialCapacity());
-        staminaModel.setIsOverflow(getIsOverflow());
-        staminaModel.setMaxCapacity(getMaxCapacity());
-        staminaModel.setMaxStaminaTable(getMaxStaminaTable().ToModel());
-        staminaModel.setRecoverIntervalTable(getRecoverIntervalTable().ToModel());
-        staminaModel.setRecoverValueTable(getRecoverValueTable().ToModel());
-        return staminaModel;
-    }
+    gs2::stamina::StaminaModel ToModel() const;
 
     // ========================================
     //   Getters

@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_QUEST_MODEL_EZQUESTGROUPMODEL_HPP_
 #define GS2_EZ_QUEST_MODEL_EZQUESTGROUPMODEL_HPP_
 
-#include <gs2/quest/model/QuestGroupModel.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzQuestModel.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace quest {
+namespace gs2 {
+
+namespace quest {
+
+class QuestGroupModel;
+
+}
+
+namespace ez { namespace quest {
 
 class EzQuestGroupModel : public gs2::Gs2Object
 {
@@ -41,36 +52,9 @@ private:
         gs2::optional<StringHolder> challengePeriodEventId;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata),
-            challengePeriodEventId(data.challengePeriodEventId)
-        {
-            if (data.quests)
-            {
-                quests = data.quests->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::quest::QuestGroupModel& questGroupModel) :
-            name(questGroupModel.getName()),
-            metadata(questGroupModel.getMetadata()),
-            challengePeriodEventId(questGroupModel.getChallengePeriodEventId())
-        {
-            quests.emplace();
-            if (questGroupModel.getQuests())
-            {
-                for (int i = 0; i < questGroupModel.getQuests()->getCount(); ++i)
-                {
-                    *quests += EzQuestModel((*questGroupModel.getQuests())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::quest::QuestGroupModel& questGroupModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -85,35 +69,14 @@ public:
     EzQuestGroupModel(EzQuestGroupModel&& ezQuestGroupModel) = default;
     ~EzQuestGroupModel() = default;
 
-    EzQuestGroupModel(gs2::quest::QuestGroupModel questGroupModel) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(questGroupModel)
-    {}
+    EzQuestGroupModel(gs2::quest::QuestGroupModel questGroupModel);
 
     EzQuestGroupModel& operator=(const EzQuestGroupModel& ezQuestGroupModel) = default;
     EzQuestGroupModel& operator=(EzQuestGroupModel&& ezQuestGroupModel) = default;
 
-    EzQuestGroupModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzQuestGroupModel);
-    }
+    EzQuestGroupModel deepCopy() const;
 
-    gs2::quest::QuestGroupModel ToModel() const
-    {
-        gs2::quest::QuestGroupModel questGroupModel;
-        questGroupModel.setName(getName());
-        questGroupModel.setMetadata(getMetadata());
-        {
-            gs2::List<gs2::quest::QuestModel> list;
-            auto& quests = getQuests();
-            for (int i = 0; i < quests.getCount(); ++i)
-            {
-                list += quests[i].ToModel();
-            }
-            questGroupModel.setQuests(list);
-        }
-        questGroupModel.setChallengePeriodEventId(getChallengePeriodEventId());
-        return questGroupModel;
-    }
+    gs2::quest::QuestGroupModel ToModel() const;
 
     // ========================================
     //   Getters

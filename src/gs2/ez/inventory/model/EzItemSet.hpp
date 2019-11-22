@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_INVENTORY_MODEL_EZITEMSET_HPP_
 #define GS2_EZ_INVENTORY_MODEL_EZITEMSET_HPP_
 
-#include <gs2/inventory/model/ItemSet.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace inventory {
+namespace gs2 {
+
+namespace inventory {
+
+class ItemSet;
+
+}
+
+namespace ez { namespace inventory {
 
 class EzItemSet : public gs2::Gs2Object
 {
@@ -42,28 +53,9 @@ private:
         gs2::optional<Int64> expiresAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            itemSetId(data.itemSetId),
-            inventoryName(data.inventoryName),
-            itemName(data.itemName),
-            count(data.count),
-            expiresAt(data.expiresAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::inventory::ItemSet& itemSet) :
-            itemSetId(itemSet.getItemSetId()),
-            inventoryName(itemSet.getInventoryName()),
-            itemName(itemSet.getItemName()),
-            count(itemSet.getCount() ? *itemSet.getCount() : 0),
-            expiresAt(itemSet.getExpiresAt() ? *itemSet.getExpiresAt() : 0)
-        {
-        }
-
+        Data(const gs2::inventory::ItemSet& itemSet);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -78,28 +70,14 @@ public:
     EzItemSet(EzItemSet&& ezItemSet) = default;
     ~EzItemSet() = default;
 
-    EzItemSet(gs2::inventory::ItemSet itemSet) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(itemSet)
-    {}
+    EzItemSet(gs2::inventory::ItemSet itemSet);
 
     EzItemSet& operator=(const EzItemSet& ezItemSet) = default;
     EzItemSet& operator=(EzItemSet&& ezItemSet) = default;
 
-    EzItemSet deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzItemSet);
-    }
+    EzItemSet deepCopy() const;
 
-    gs2::inventory::ItemSet ToModel() const
-    {
-        gs2::inventory::ItemSet itemSet;
-        itemSet.setItemSetId(getItemSetId());
-        itemSet.setInventoryName(getInventoryName());
-        itemSet.setItemName(getItemName());
-        itemSet.setCount(getCount());
-        itemSet.setExpiresAt(getExpiresAt());
-        return itemSet;
-    }
+    gs2::inventory::ItemSet ToModel() const;
 
     // ========================================
     //   Getters

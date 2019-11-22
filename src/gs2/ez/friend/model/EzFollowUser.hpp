@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_FRIEND_MODEL_EZFOLLOWUSER_HPP_
 #define GS2_EZ_FRIEND_MODEL_EZFOLLOWUSER_HPP_
 
-#include <gs2/friend/model/FollowUser.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace friend_ {
+namespace gs2 {
+
+namespace friend_ {
+
+class FollowUser;
+
+}
+
+namespace ez { namespace friend_ {
 
 class EzFollowUser : public gs2::Gs2Object
 {
@@ -34,20 +45,9 @@ private:
         gs2::optional<StringHolder> userId;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            userId(data.userId)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::friend_::FollowUser& followUser) :
-            userId(followUser.getUserId())
-        {
-        }
-
+        Data(const gs2::friend_::FollowUser& followUser);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -62,24 +62,14 @@ public:
     EzFollowUser(EzFollowUser&& ezFollowUser) = default;
     ~EzFollowUser() = default;
 
-    EzFollowUser(gs2::friend_::FollowUser followUser) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(followUser)
-    {}
+    EzFollowUser(gs2::friend_::FollowUser followUser);
 
     EzFollowUser& operator=(const EzFollowUser& ezFollowUser) = default;
     EzFollowUser& operator=(EzFollowUser&& ezFollowUser) = default;
 
-    EzFollowUser deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzFollowUser);
-    }
+    EzFollowUser deepCopy() const;
 
-    gs2::friend_::FollowUser ToModel() const
-    {
-        gs2::friend_::FollowUser followUser;
-        followUser.setUserId(getUserId());
-        return followUser;
-    }
+    gs2::friend_::FollowUser ToModel() const;
 
     // ========================================
     //   Getters

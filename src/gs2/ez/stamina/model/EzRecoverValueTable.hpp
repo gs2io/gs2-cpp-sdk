@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_STAMINA_MODEL_EZRECOVERVALUETABLE_HPP_
 #define GS2_EZ_STAMINA_MODEL_EZRECOVERVALUETABLE_HPP_
 
-#include <gs2/stamina/model/RecoverValueTable.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace stamina {
+namespace gs2 {
+
+namespace stamina {
+
+class RecoverValueTable;
+
+}
+
+namespace ez { namespace stamina {
 
 class EzRecoverValueTable : public gs2::Gs2Object
 {
@@ -40,29 +51,9 @@ private:
         gs2::optional<List<Int32>> values;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata),
-            experienceModelId(data.experienceModelId)
-        {
-            if (data.values)
-            {
-                values = data.values->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::stamina::RecoverValueTable& recoverValueTable) :
-            name(recoverValueTable.getName()),
-            metadata(recoverValueTable.getMetadata()),
-            experienceModelId(recoverValueTable.getExperienceModelId()),
-            values(recoverValueTable.getValues())
-        {
-        }
-
+        Data(const gs2::stamina::RecoverValueTable& recoverValueTable);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -77,27 +68,14 @@ public:
     EzRecoverValueTable(EzRecoverValueTable&& ezRecoverValueTable) = default;
     ~EzRecoverValueTable() = default;
 
-    EzRecoverValueTable(gs2::stamina::RecoverValueTable recoverValueTable) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(recoverValueTable)
-    {}
+    EzRecoverValueTable(gs2::stamina::RecoverValueTable recoverValueTable);
 
     EzRecoverValueTable& operator=(const EzRecoverValueTable& ezRecoverValueTable) = default;
     EzRecoverValueTable& operator=(EzRecoverValueTable&& ezRecoverValueTable) = default;
 
-    EzRecoverValueTable deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRecoverValueTable);
-    }
+    EzRecoverValueTable deepCopy() const;
 
-    gs2::stamina::RecoverValueTable ToModel() const
-    {
-        gs2::stamina::RecoverValueTable recoverValueTable;
-        recoverValueTable.setName(getName());
-        recoverValueTable.setMetadata(getMetadata());
-        recoverValueTable.setExperienceModelId(getExperienceModelId());
-        recoverValueTable.setValues(getValues());
-        return recoverValueTable;
-    }
+    gs2::stamina::RecoverValueTable ToModel() const;
 
     // ========================================
     //   Getters

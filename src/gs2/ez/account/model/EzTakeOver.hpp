@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_ACCOUNT_MODEL_EZTAKEOVER_HPP_
 #define GS2_EZ_ACCOUNT_MODEL_EZTAKEOVER_HPP_
 
-#include <gs2/account/model/TakeOver.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace account {
+namespace gs2 {
+
+namespace account {
+
+class TakeOver;
+
+}
+
+namespace ez { namespace account {
 
 class EzTakeOver : public gs2::Gs2Object
 {
@@ -40,26 +51,9 @@ private:
         gs2::optional<Int64> createdAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            userId(data.userId),
-            type(data.type),
-            userIdentifier(data.userIdentifier),
-            createdAt(data.createdAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::account::TakeOver& takeOver) :
-            userId(takeOver.getUserId()),
-            type(takeOver.getType() ? *takeOver.getType() : 0),
-            userIdentifier(takeOver.getUserIdentifier()),
-            createdAt(takeOver.getCreatedAt() ? *takeOver.getCreatedAt() : 0)
-        {
-        }
-
+        Data(const gs2::account::TakeOver& takeOver);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -74,27 +68,14 @@ public:
     EzTakeOver(EzTakeOver&& ezTakeOver) = default;
     ~EzTakeOver() = default;
 
-    EzTakeOver(gs2::account::TakeOver takeOver) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(takeOver)
-    {}
+    EzTakeOver(gs2::account::TakeOver takeOver);
 
     EzTakeOver& operator=(const EzTakeOver& ezTakeOver) = default;
     EzTakeOver& operator=(EzTakeOver&& ezTakeOver) = default;
 
-    EzTakeOver deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzTakeOver);
-    }
+    EzTakeOver deepCopy() const;
 
-    gs2::account::TakeOver ToModel() const
-    {
-        gs2::account::TakeOver takeOver;
-        takeOver.setUserId(getUserId());
-        takeOver.setType(getType());
-        takeOver.setUserIdentifier(getUserIdentifier());
-        takeOver.setCreatedAt(getCreatedAt());
-        return takeOver;
-    }
+    gs2::account::TakeOver ToModel() const;
 
     // ========================================
     //   Getters

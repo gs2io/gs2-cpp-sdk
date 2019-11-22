@@ -14,14 +14,22 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_GATEWAY_GS2GATEWAYRESTCLIENT_HPP_
-#define GS2_EZ_GATEWAY_GS2GATEWAYRESTCLIENT_HPP_
+#ifndef GS2_EZ_GATEWAY_GS2GATEWAYWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_GATEWAY_GS2GATEWAYWEBSOCKETCLIENT_HPP_
 
-#include <gs2/gateway/Gs2GatewayWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzSetUserIdResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace gateway {
+
+class Gs2GatewayWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -32,10 +40,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::gateway::Gs2GatewayWebSocketClient m_Client;
+    gs2::gateway::Gs2GatewayWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  サーバからプッシュ通知を受けるためのユーザーIDを設定<br />
@@ -56,4 +65,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_GATEWAY_GS2GATEWAYRESTCLIENT_HPP_
+#endif //GS2_EZ_GATEWAY_GS2GATEWAYWEBSOCKETCLIENT_HPP_

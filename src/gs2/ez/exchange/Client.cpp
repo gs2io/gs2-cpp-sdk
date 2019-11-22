@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/exchange/Gs2ExchangeWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace exchange {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::exchange::Gs2ExchangeWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::listRateModels(
@@ -34,7 +40,7 @@ void Client::listRateModels(
 {
     gs2::exchange::DescribeRateModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_Client.describeRateModels(
+    m_pClient->describeRateModels(
         request,
         [callback](gs2::exchange::AsyncDescribeRateModelsResult r)
         {
@@ -70,7 +76,7 @@ void Client::getRateModel(
     gs2::exchange::GetRateModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setRateName(rateName);
-    m_Client.getRateModel(
+    m_pClient->getRateModel(
         request,
         [callback](gs2::exchange::AsyncGetRateModelResult r)
         {
@@ -120,7 +126,7 @@ void Client::exchange(
         request.setConfig(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.exchange(
+    m_pClient->exchange(
         request,
         [callback](gs2::exchange::AsyncExchangeResult r)
         {

@@ -40,6 +40,19 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzVersionModelMaster.cpp
+        model/EzVersion.cpp
+        model/EzVersionModel.cpp
+        model/EzAcceptVersion.cpp
+        model/EzStatus.cpp
+        model/EzTargetVersion.cpp
+        model/EzSignTargetVersion.cpp
+        model/EzResponseCache.cpp
+        model/EzCurrentVersionMaster.cpp
+        model/EzScriptSetting.cpp
+        model/EzGitHubCheckoutSetting.cpp
+        model/EzLogSetting.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC

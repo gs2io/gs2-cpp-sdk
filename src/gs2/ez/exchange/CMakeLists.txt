@@ -35,6 +35,16 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzRateModel.cpp
+        model/EzRateModelMaster.cpp
+        model/EzCurrentRateMaster.cpp
+        model/EzResponseCache.cpp
+        model/EzConfig.cpp
+        model/EzGitHubCheckoutSetting.cpp
+        model/EzLogSetting.cpp
+        model/EzAcquireAction.cpp
+        model/EzConsumeAction.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC

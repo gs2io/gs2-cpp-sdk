@@ -34,6 +34,14 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzEventMaster.cpp
+        model/EzTrigger.cpp
+        model/EzEvent.cpp
+        model/EzCurrentEventMaster.cpp
+        model/EzResponseCache.cpp
+        model/EzGitHubCheckoutSetting.cpp
+        model/EzLogSetting.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC

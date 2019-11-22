@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_DISTRIBUTOR_MODEL_EZDISTRIBUTERESOURCE_HPP_
 #define GS2_EZ_DISTRIBUTOR_MODEL_EZDISTRIBUTERESOURCE_HPP_
 
-#include <gs2/distributor/model/DistributeResource.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace distributor {
+namespace gs2 {
+
+namespace distributor {
+
+class DistributeResource;
+
+}
+
+namespace ez { namespace distributor {
 
 class EzDistributeResource : public gs2::Gs2Object
 {
@@ -36,22 +47,9 @@ private:
         gs2::optional<StringHolder> request;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            action(data.action),
-            request(data.request)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::distributor::DistributeResource& distributeResource) :
-            action(distributeResource.getAction()),
-            request(distributeResource.getRequest())
-        {
-        }
-
+        Data(const gs2::distributor::DistributeResource& distributeResource);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -66,25 +64,14 @@ public:
     EzDistributeResource(EzDistributeResource&& ezDistributeResource) = default;
     ~EzDistributeResource() = default;
 
-    EzDistributeResource(gs2::distributor::DistributeResource distributeResource) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(distributeResource)
-    {}
+    EzDistributeResource(gs2::distributor::DistributeResource distributeResource);
 
     EzDistributeResource& operator=(const EzDistributeResource& ezDistributeResource) = default;
     EzDistributeResource& operator=(EzDistributeResource&& ezDistributeResource) = default;
 
-    EzDistributeResource deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDistributeResource);
-    }
+    EzDistributeResource deepCopy() const;
 
-    gs2::distributor::DistributeResource ToModel() const
-    {
-        gs2::distributor::DistributeResource distributeResource;
-        distributeResource.setAction(getAction());
-        distributeResource.setRequest(getRequest());
-        return distributeResource;
-    }
+    gs2::distributor::DistributeResource ToModel() const;
 
     // ========================================
     //   Getters

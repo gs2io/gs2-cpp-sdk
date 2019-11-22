@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/limit/Gs2LimitWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace limit {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::limit::Gs2LimitWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::listCounters(
@@ -41,7 +47,7 @@ void Client::listCounters(
         request.setLimitName(std::move(*limitName));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeCounters(
+    m_pClient->describeCounters(
         request,
         [callback](gs2::limit::AsyncDescribeCountersResult r)
         {
@@ -81,7 +87,7 @@ void Client::getCounter(
     request.setLimitName(limitName);
     request.setCounterName(counterName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getCounter(
+    m_pClient->getCounter(
         request,
         [callback](gs2::limit::AsyncGetCounterResult r)
         {
@@ -115,7 +121,7 @@ void Client::listLimitModels(
 {
     gs2::limit::DescribeLimitModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_Client.describeLimitModels(
+    m_pClient->describeLimitModels(
         request,
         [callback](gs2::limit::AsyncDescribeLimitModelsResult r)
         {
@@ -151,7 +157,7 @@ void Client::getLimitModel(
     gs2::limit::GetLimitModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setLimitName(limitName);
-    m_Client.getLimitModel(
+    m_pClient->getLimitModel(
         request,
         [callback](gs2::limit::AsyncGetLimitModelResult r)
         {

@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_REALTIME_MODEL_EZROOM_HPP_
 #define GS2_EZ_REALTIME_MODEL_EZROOM_HPP_
 
-#include <gs2/realtime/model/Room.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace realtime {
+namespace gs2 {
+
+namespace realtime {
+
+class Room;
+
+}
+
+namespace ez { namespace realtime {
 
 class EzRoom : public gs2::Gs2Object
 {
@@ -40,26 +51,9 @@ private:
         gs2::optional<StringHolder> encryptionKey;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            ipAddress(data.ipAddress),
-            port(data.port),
-            encryptionKey(data.encryptionKey)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::realtime::Room& room) :
-            name(room.getName()),
-            ipAddress(room.getIpAddress()),
-            port(room.getPort() ? *room.getPort() : 0),
-            encryptionKey(room.getEncryptionKey())
-        {
-        }
-
+        Data(const gs2::realtime::Room& room);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -74,27 +68,14 @@ public:
     EzRoom(EzRoom&& ezRoom) = default;
     ~EzRoom() = default;
 
-    EzRoom(gs2::realtime::Room room) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(room)
-    {}
+    EzRoom(gs2::realtime::Room room);
 
     EzRoom& operator=(const EzRoom& ezRoom) = default;
     EzRoom& operator=(EzRoom&& ezRoom) = default;
 
-    EzRoom deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRoom);
-    }
+    EzRoom deepCopy() const;
 
-    gs2::realtime::Room ToModel() const
-    {
-        gs2::realtime::Room room;
-        room.setName(getName());
-        room.setIpAddress(getIpAddress());
-        room.setPort(getPort());
-        room.setEncryptionKey(getEncryptionKey());
-        return room;
-    }
+    gs2::realtime::Room ToModel() const;
 
     // ========================================
     //   Getters

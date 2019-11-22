@@ -40,6 +40,20 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzStaminaModelMaster.cpp
+        model/EzMaxStaminaTableMaster.cpp
+        model/EzRecoverIntervalTableMaster.cpp
+        model/EzRecoverValueTableMaster.cpp
+        model/EzCurrentStaminaMaster.cpp
+        model/EzStaminaModel.cpp
+        model/EzMaxStaminaTable.cpp
+        model/EzRecoverIntervalTable.cpp
+        model/EzRecoverValueTable.cpp
+        model/EzStamina.cpp
+        model/EzResponseCache.cpp
+        model/EzGitHubCheckoutSetting.cpp
+        model/EzLogSetting.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC

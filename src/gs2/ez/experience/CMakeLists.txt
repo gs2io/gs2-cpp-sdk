@@ -37,6 +37,17 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzExperienceModelMaster.cpp
+        model/EzExperienceModel.cpp
+        model/EzThresholdMaster.cpp
+        model/EzThreshold.cpp
+        model/EzCurrentExperienceMaster.cpp
+        model/EzStatus.cpp
+        model/EzResponseCache.cpp
+        model/EzGitHubCheckoutSetting.cpp
+        model/EzScriptSetting.cpp
+        model/EzLogSetting.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC

@@ -14,17 +14,25 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_LIMIT_GS2LIMITRESTCLIENT_HPP_
-#define GS2_EZ_LIMIT_GS2LIMITRESTCLIENT_HPP_
+#ifndef GS2_EZ_LIMIT_GS2LIMITWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_LIMIT_GS2LIMITWEBSOCKETCLIENT_HPP_
 
-#include <gs2/limit/Gs2LimitWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzListCountersResult.hpp"
 #include "result/EzGetCounterResult.hpp"
 #include "result/EzListLimitModelsResult.hpp"
 #include "result/EzGetLimitModelResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace limit {
+
+class Gs2LimitWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -35,10 +43,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::limit::Gs2LimitWebSocketClient m_Client;
+    gs2::limit::Gs2LimitWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  ゲームプレイヤーに紐づく回数制限カウンターの一覧を取得<br />
@@ -109,4 +118,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_LIMIT_GS2LIMITRESTCLIENT_HPP_
+#endif //GS2_EZ_LIMIT_GS2LIMITWEBSOCKETCLIENT_HPP_

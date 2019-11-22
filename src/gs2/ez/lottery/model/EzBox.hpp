@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_LOTTERY_MODEL_EZBOX_HPP_
 #define GS2_EZ_LOTTERY_MODEL_EZBOX_HPP_
 
-#include <gs2/lottery/model/Box.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace lottery {
+namespace gs2 {
+
+namespace lottery {
+
+class Box;
+
+}
+
+namespace ez { namespace lottery {
 
 class EzBox : public gs2::Gs2Object
 {
@@ -36,25 +47,9 @@ private:
         gs2::optional<List<Int32>> drawnIndexes;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            prizeTableName(data.prizeTableName)
-        {
-            if (data.drawnIndexes)
-            {
-                drawnIndexes = data.drawnIndexes->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::lottery::Box& box) :
-            prizeTableName(box.getPrizeTableName()),
-            drawnIndexes(box.getDrawnIndexes())
-        {
-        }
-
+        Data(const gs2::lottery::Box& box);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,25 +64,14 @@ public:
     EzBox(EzBox&& ezBox) = default;
     ~EzBox() = default;
 
-    EzBox(gs2::lottery::Box box) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(box)
-    {}
+    EzBox(gs2::lottery::Box box);
 
     EzBox& operator=(const EzBox& ezBox) = default;
     EzBox& operator=(EzBox&& ezBox) = default;
 
-    EzBox deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzBox);
-    }
+    EzBox deepCopy() const;
 
-    gs2::lottery::Box ToModel() const
-    {
-        gs2::lottery::Box box;
-        box.setPrizeTableName(getPrizeTableName());
-        box.setDrawnIndexes(getDrawnIndexes());
-        return box;
-    }
+    gs2::lottery::Box ToModel() const;
 
     // ========================================
     //   Getters

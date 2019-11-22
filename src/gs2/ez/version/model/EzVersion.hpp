@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_VERSION_MODEL_EZVERSION_HPP_
 #define GS2_EZ_VERSION_MODEL_EZVERSION_HPP_
 
-#include <gs2/version/model/Version.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace version {
+namespace gs2 {
+
+namespace version {
+
+class Version;
+
+}
+
+namespace ez { namespace version {
 
 class EzVersion : public gs2::Gs2Object
 {
@@ -38,24 +49,9 @@ private:
         gs2::optional<Int32> micro;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            major_(data.major_),
-            minor_(data.minor_),
-            micro(data.micro)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::version::Version& version) :
-            major_(version.getMajor() ? *version.getMajor() : 0),
-            minor_(version.getMinor() ? *version.getMinor() : 0),
-            micro(version.getMicro() ? *version.getMicro() : 0)
-        {
-        }
-
+        Data(const gs2::version::Version& version);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -70,26 +66,14 @@ public:
     EzVersion(EzVersion&& ezVersion) = default;
     ~EzVersion() = default;
 
-    EzVersion(gs2::version::Version version) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(version)
-    {}
+    EzVersion(gs2::version::Version version);
 
     EzVersion& operator=(const EzVersion& ezVersion) = default;
     EzVersion& operator=(EzVersion&& ezVersion) = default;
 
-    EzVersion deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzVersion);
-    }
+    EzVersion deepCopy() const;
 
-    gs2::version::Version ToModel() const
-    {
-        gs2::version::Version version;
-        version.setMajor(getMajor());
-        version.setMinor(getMinor());
-        version.setMicro(getMicro());
-        return version;
-    }
+    gs2::version::Version ToModel() const;
 
     // ========================================
     //   Getters

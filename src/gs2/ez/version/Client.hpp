@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_VERSION_GS2VERSIONRESTCLIENT_HPP_
-#define GS2_EZ_VERSION_GS2VERSIONRESTCLIENT_HPP_
+#ifndef GS2_EZ_VERSION_GS2VERSIONWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_VERSION_GS2VERSIONWEBSOCKETCLIENT_HPP_
 
-#include <gs2/version/Gs2VersionWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzListVersionModelsResult.hpp"
 #include "result/EzGetVersionModelResult.hpp"
 #include "result/EzListResult.hpp"
@@ -25,7 +25,15 @@
 #include "result/EzCheckVersionResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace version {
+
+class Gs2VersionWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -36,10 +44,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::version::Gs2VersionWebSocketClient m_Client;
+    gs2::version::Gs2VersionWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  バージョン設定を認証<br />
@@ -118,4 +127,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_VERSION_GS2VERSIONRESTCLIENT_HPP_
+#endif //GS2_EZ_VERSION_GS2VERSIONWEBSOCKETCLIENT_HPP_

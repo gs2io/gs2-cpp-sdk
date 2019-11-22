@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_GATEWAY_MODEL_EZWEBSOCKETSESSION_HPP_
 #define GS2_EZ_GATEWAY_MODEL_EZWEBSOCKETSESSION_HPP_
 
-#include <gs2/gateway/model/WebSocketSession.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace gateway {
+namespace gs2 {
+
+namespace gateway {
+
+class WebSocketSession;
+
+}
+
+namespace ez { namespace gateway {
 
 class EzWebSocketSession : public gs2::Gs2Object
 {
@@ -38,24 +49,9 @@ private:
         gs2::optional<StringHolder> userId;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            connectionId(data.connectionId),
-            namespaceName(data.namespaceName),
-            userId(data.userId)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::gateway::WebSocketSession& webSocketSession) :
-            connectionId(webSocketSession.getConnectionId()),
-            namespaceName(webSocketSession.getNamespaceName()),
-            userId(webSocketSession.getUserId())
-        {
-        }
-
+        Data(const gs2::gateway::WebSocketSession& webSocketSession);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -70,26 +66,14 @@ public:
     EzWebSocketSession(EzWebSocketSession&& ezWebSocketSession) = default;
     ~EzWebSocketSession() = default;
 
-    EzWebSocketSession(gs2::gateway::WebSocketSession webSocketSession) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(webSocketSession)
-    {}
+    EzWebSocketSession(gs2::gateway::WebSocketSession webSocketSession);
 
     EzWebSocketSession& operator=(const EzWebSocketSession& ezWebSocketSession) = default;
     EzWebSocketSession& operator=(EzWebSocketSession&& ezWebSocketSession) = default;
 
-    EzWebSocketSession deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzWebSocketSession);
-    }
+    EzWebSocketSession deepCopy() const;
 
-    gs2::gateway::WebSocketSession ToModel() const
-    {
-        gs2::gateway::WebSocketSession webSocketSession;
-        webSocketSession.setConnectionId(getConnectionId());
-        webSocketSession.setNamespaceName(getNamespaceName());
-        webSocketSession.setUserId(getUserId());
-        return webSocketSession;
-    }
+    gs2::gateway::WebSocketSession ToModel() const;
 
     // ========================================
     //   Getters

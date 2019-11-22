@@ -43,6 +43,23 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzLotteryModelMaster.cpp
+        model/EzPrizeTableMaster.cpp
+        model/EzBox.cpp
+        model/EzLotteryModel.cpp
+        model/EzPrizeTable.cpp
+        model/EzProbability.cpp
+        model/EzCurrentLotteryMaster.cpp
+        model/EzResponseCache.cpp
+        model/EzGitHubCheckoutSetting.cpp
+        model/EzLogSetting.cpp
+        model/EzPrize.cpp
+        model/EzAcquireAction.cpp
+        model/EzDrawnPrize.cpp
+        model/EzBoxItem.cpp
+        model/EzBoxItems.cpp
+        model/EzConfig.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC

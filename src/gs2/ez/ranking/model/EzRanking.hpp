@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_RANKING_MODEL_EZRANKING_HPP_
 #define GS2_EZ_RANKING_MODEL_EZRANKING_HPP_
 
-#include <gs2/ranking/model/Ranking.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace ranking {
+namespace gs2 {
+
+namespace ranking {
+
+class Ranking;
+
+}
+
+namespace ez { namespace ranking {
 
 class EzRanking : public gs2::Gs2Object
 {
@@ -44,30 +55,9 @@ private:
         gs2::optional<Int64> createdAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            rank(data.rank),
-            index(data.index),
-            userId(data.userId),
-            score(data.score),
-            metadata(data.metadata),
-            createdAt(data.createdAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::ranking::Ranking& ranking) :
-            rank(ranking.getRank() ? *ranking.getRank() : 0),
-            index(ranking.getIndex() ? *ranking.getIndex() : 0),
-            userId(ranking.getUserId()),
-            score(ranking.getScore() ? *ranking.getScore() : 0),
-            metadata(ranking.getMetadata()),
-            createdAt(ranking.getCreatedAt() ? *ranking.getCreatedAt() : 0)
-        {
-        }
-
+        Data(const gs2::ranking::Ranking& ranking);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -82,29 +72,14 @@ public:
     EzRanking(EzRanking&& ezRanking) = default;
     ~EzRanking() = default;
 
-    EzRanking(gs2::ranking::Ranking ranking) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(ranking)
-    {}
+    EzRanking(gs2::ranking::Ranking ranking);
 
     EzRanking& operator=(const EzRanking& ezRanking) = default;
     EzRanking& operator=(EzRanking&& ezRanking) = default;
 
-    EzRanking deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRanking);
-    }
+    EzRanking deepCopy() const;
 
-    gs2::ranking::Ranking ToModel() const
-    {
-        gs2::ranking::Ranking ranking;
-        ranking.setRank(getRank());
-        ranking.setIndex(getIndex());
-        ranking.setUserId(getUserId());
-        ranking.setScore(getScore());
-        ranking.setMetadata(getMetadata());
-        ranking.setCreatedAt(getCreatedAt());
-        return ranking;
-    }
+    gs2::ranking::Ranking ToModel() const;
 
     // ========================================
     //   Getters

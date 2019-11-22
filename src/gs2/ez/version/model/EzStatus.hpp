@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,12 +17,25 @@
 #ifndef GS2_EZ_VERSION_MODEL_EZSTATUS_HPP_
 #define GS2_EZ_VERSION_MODEL_EZSTATUS_HPP_
 
-#include <gs2/version/model/Status.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzVersionModel.hpp"
 #include "EzVersion.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace version {
+namespace gs2 {
+
+namespace version {
+
+class Status;
+
+}
+
+namespace ez { namespace version {
 
 class EzStatus : public gs2::Gs2Object
 {
@@ -38,28 +49,9 @@ private:
         gs2::optional<EzVersion> currentVersion;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data)
-        {
-            if (data.versionModel)
-            {
-                versionModel = data.versionModel->deepCopy();
-            }
-            if (data.currentVersion)
-            {
-                currentVersion = data.currentVersion->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::version::Status& status) :
-            versionModel(*status.getVersionModel()),
-            currentVersion(*status.getCurrentVersion())
-        {
-        }
-
+        Data(const gs2::version::Status& status);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -74,25 +66,14 @@ public:
     EzStatus(EzStatus&& ezStatus) = default;
     ~EzStatus() = default;
 
-    EzStatus(gs2::version::Status status) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(status)
-    {}
+    EzStatus(gs2::version::Status status);
 
     EzStatus& operator=(const EzStatus& ezStatus) = default;
     EzStatus& operator=(EzStatus&& ezStatus) = default;
 
-    EzStatus deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzStatus);
-    }
+    EzStatus deepCopy() const;
 
-    gs2::version::Status ToModel() const
-    {
-        gs2::version::Status status;
-        status.setVersionModel(getVersionModel().ToModel());
-        status.setCurrentVersion(getCurrentVersion().ToModel());
-        return status;
-    }
+    gs2::version::Status ToModel() const;
 
     // ========================================
     //   Getters

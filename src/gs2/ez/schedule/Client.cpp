@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/schedule/Gs2ScheduleWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace schedule {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::schedule::Gs2ScheduleWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::listTriggers(
@@ -36,7 +42,7 @@ void Client::listTriggers(
     gs2::schedule::DescribeTriggersRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeTriggers(
+    m_pClient->describeTriggers(
         request,
         [callback](gs2::schedule::AsyncDescribeTriggersResult r)
         {
@@ -74,7 +80,7 @@ void Client::getTrigger(
     request.setNamespaceName(namespaceName);
     request.setTriggerName(triggerName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getTrigger(
+    m_pClient->getTrigger(
         request,
         [callback](gs2::schedule::AsyncGetTriggerResult r)
         {
@@ -110,7 +116,7 @@ void Client::listEvents(
     gs2::schedule::DescribeEventsRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeEvents(
+    m_pClient->describeEvents(
         request,
         [callback](gs2::schedule::AsyncDescribeEventsResult r)
         {
@@ -148,7 +154,7 @@ void Client::getEvent(
     request.setNamespaceName(namespaceName);
     request.setEventName(eventName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getEvent(
+    m_pClient->getEvent(
         request,
         [callback](gs2::schedule::AsyncGetEventResult r)
         {

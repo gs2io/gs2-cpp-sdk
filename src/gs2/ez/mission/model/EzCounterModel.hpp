@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_MISSION_MODEL_EZCOUNTERMODEL_HPP_
 #define GS2_EZ_MISSION_MODEL_EZCOUNTERMODEL_HPP_
 
-#include <gs2/mission/model/CounterModel.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzCounterScopeModel.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace mission {
+namespace gs2 {
+
+namespace mission {
+
+class CounterModel;
+
+}
+
+namespace ez { namespace mission {
 
 class EzCounterModel : public gs2::Gs2Object
 {
@@ -41,36 +52,9 @@ private:
         gs2::optional<StringHolder> challengePeriodEventId;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata),
-            challengePeriodEventId(data.challengePeriodEventId)
-        {
-            if (data.scopes)
-            {
-                scopes = data.scopes->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::mission::CounterModel& counterModel) :
-            name(counterModel.getName()),
-            metadata(counterModel.getMetadata()),
-            challengePeriodEventId(counterModel.getChallengePeriodEventId())
-        {
-            scopes.emplace();
-            if (counterModel.getScopes())
-            {
-                for (int i = 0; i < counterModel.getScopes()->getCount(); ++i)
-                {
-                    *scopes += EzCounterScopeModel((*counterModel.getScopes())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::mission::CounterModel& counterModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -85,35 +69,14 @@ public:
     EzCounterModel(EzCounterModel&& ezCounterModel) = default;
     ~EzCounterModel() = default;
 
-    EzCounterModel(gs2::mission::CounterModel counterModel) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(counterModel)
-    {}
+    EzCounterModel(gs2::mission::CounterModel counterModel);
 
     EzCounterModel& operator=(const EzCounterModel& ezCounterModel) = default;
     EzCounterModel& operator=(EzCounterModel&& ezCounterModel) = default;
 
-    EzCounterModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCounterModel);
-    }
+    EzCounterModel deepCopy() const;
 
-    gs2::mission::CounterModel ToModel() const
-    {
-        gs2::mission::CounterModel counterModel;
-        counterModel.setName(getName());
-        counterModel.setMetadata(getMetadata());
-        {
-            gs2::List<gs2::mission::CounterScopeModel> list;
-            auto& scopes = getScopes();
-            for (int i = 0; i < scopes.getCount(); ++i)
-            {
-                list += scopes[i].ToModel();
-            }
-            counterModel.setScopes(list);
-        }
-        counterModel.setChallengePeriodEventId(getChallengePeriodEventId());
-        return counterModel;
-    }
+    gs2::mission::CounterModel ToModel() const;
 
     // ========================================
     //   Getters

@@ -49,6 +49,24 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzComplete.cpp
+        model/EzAcquireAction.cpp
+        model/EzGitHubCheckoutSetting.cpp
+        model/EzCounterModelMaster.cpp
+        model/EzCounterModel.cpp
+        model/EzScopedValue.cpp
+        model/EzNotificationSetting.cpp
+        model/EzMissionGroupModel.cpp
+        model/EzResponseCache.cpp
+        model/EzMissionTaskModel.cpp
+        model/EzMissionGroupModelMaster.cpp
+        model/EzLogSetting.cpp
+        model/EzConfig.cpp
+        model/EzCounterScopeModel.cpp
+        model/EzCounter.cpp
+        model/EzMissionTaskModelMaster.cpp
+        model/EzCurrentMissionMaster.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC

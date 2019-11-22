@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_FRIEND_MODEL_EZFRIENDUSER_HPP_
 #define GS2_EZ_FRIEND_MODEL_EZFRIENDUSER_HPP_
 
-#include <gs2/friend/model/FriendUser.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace friend_ {
+namespace gs2 {
+
+namespace friend_ {
+
+class FriendUser;
+
+}
+
+namespace ez { namespace friend_ {
 
 class EzFriendUser : public gs2::Gs2Object
 {
@@ -38,24 +49,9 @@ private:
         gs2::optional<StringHolder> friendProfile;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            userId(data.userId),
-            publicProfile(data.publicProfile),
-            friendProfile(data.friendProfile)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::friend_::FriendUser& friendUser) :
-            userId(friendUser.getUserId()),
-            publicProfile(friendUser.getPublicProfile()),
-            friendProfile(friendUser.getFriendProfile())
-        {
-        }
-
+        Data(const gs2::friend_::FriendUser& friendUser);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -70,26 +66,14 @@ public:
     EzFriendUser(EzFriendUser&& ezFriendUser) = default;
     ~EzFriendUser() = default;
 
-    EzFriendUser(gs2::friend_::FriendUser friendUser) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(friendUser)
-    {}
+    EzFriendUser(gs2::friend_::FriendUser friendUser);
 
     EzFriendUser& operator=(const EzFriendUser& ezFriendUser) = default;
     EzFriendUser& operator=(EzFriendUser&& ezFriendUser) = default;
 
-    EzFriendUser deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzFriendUser);
-    }
+    EzFriendUser deepCopy() const;
 
-    gs2::friend_::FriendUser ToModel() const
-    {
-        gs2::friend_::FriendUser friendUser;
-        friendUser.setUserId(getUserId());
-        friendUser.setPublicProfile(getPublicProfile());
-        friendUser.setFriendProfile(getFriendProfile());
-        return friendUser;
-    }
+    gs2::friend_::FriendUser ToModel() const;
 
     // ========================================
     //   Getters

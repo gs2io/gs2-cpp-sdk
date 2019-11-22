@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_QUEST_MODEL_EZREWARD_HPP_
 #define GS2_EZ_QUEST_MODEL_EZREWARD_HPP_
 
-#include <gs2/quest/model/Reward.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace quest {
+namespace gs2 {
+
+namespace quest {
+
+class Reward;
+
+}
+
+namespace ez { namespace quest {
 
 class EzReward : public gs2::Gs2Object
 {
@@ -40,26 +51,9 @@ private:
         gs2::optional<Int32> value;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            action(data.action),
-            request(data.request),
-            itemId(data.itemId),
-            value(data.value)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::quest::Reward& reward) :
-            action(reward.getAction()),
-            request(reward.getRequest()),
-            itemId(reward.getItemId()),
-            value(reward.getValue() ? *reward.getValue() : 0)
-        {
-        }
-
+        Data(const gs2::quest::Reward& reward);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -74,27 +68,14 @@ public:
     EzReward(EzReward&& ezReward) = default;
     ~EzReward() = default;
 
-    EzReward(gs2::quest::Reward reward) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(reward)
-    {}
+    EzReward(gs2::quest::Reward reward);
 
     EzReward& operator=(const EzReward& ezReward) = default;
     EzReward& operator=(EzReward&& ezReward) = default;
 
-    EzReward deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzReward);
-    }
+    EzReward deepCopy() const;
 
-    gs2::quest::Reward ToModel() const
-    {
-        gs2::quest::Reward reward;
-        reward.setAction(getAction());
-        reward.setRequest(getRequest());
-        reward.setItemId(getItemId());
-        reward.setValue(getValue());
-        return reward;
-    }
+    gs2::quest::Reward ToModel() const;
 
     // ========================================
     //   Getters

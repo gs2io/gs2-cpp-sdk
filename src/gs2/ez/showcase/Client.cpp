@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/showcase/Gs2ShowcaseWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace showcase {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::showcase::Gs2ShowcaseWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::getShowcase(
@@ -38,7 +44,7 @@ void Client::getShowcase(
     request.setNamespaceName(namespaceName);
     request.setShowcaseName(showcaseName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getShowcase(
+    m_pClient->getShowcase(
         request,
         [callback](gs2::showcase::AsyncGetShowcaseResult r)
         {
@@ -88,7 +94,7 @@ void Client::buy(
         request.setConfig(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.buy(
+    m_pClient->buy(
         request,
         [callback](gs2::showcase::AsyncBuyResult r)
         {

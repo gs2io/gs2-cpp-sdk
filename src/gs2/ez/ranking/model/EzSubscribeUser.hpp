@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_RANKING_MODEL_EZSUBSCRIBEUSER_HPP_
 #define GS2_EZ_RANKING_MODEL_EZSUBSCRIBEUSER_HPP_
 
-#include <gs2/ranking/model/SubscribeUser.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace ranking {
+namespace gs2 {
+
+namespace ranking {
+
+class SubscribeUser;
+
+}
+
+namespace ez { namespace ranking {
 
 class EzSubscribeUser : public gs2::Gs2Object
 {
@@ -36,22 +47,9 @@ private:
         gs2::optional<StringHolder> targetUserId;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            userId(data.userId),
-            targetUserId(data.targetUserId)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::ranking::SubscribeUser& subscribeUser) :
-            userId(subscribeUser.getUserId()),
-            targetUserId(subscribeUser.getTargetUserId())
-        {
-        }
-
+        Data(const gs2::ranking::SubscribeUser& subscribeUser);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -66,25 +64,14 @@ public:
     EzSubscribeUser(EzSubscribeUser&& ezSubscribeUser) = default;
     ~EzSubscribeUser() = default;
 
-    EzSubscribeUser(gs2::ranking::SubscribeUser subscribeUser) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(subscribeUser)
-    {}
+    EzSubscribeUser(gs2::ranking::SubscribeUser subscribeUser);
 
     EzSubscribeUser& operator=(const EzSubscribeUser& ezSubscribeUser) = default;
     EzSubscribeUser& operator=(EzSubscribeUser&& ezSubscribeUser) = default;
 
-    EzSubscribeUser deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzSubscribeUser);
-    }
+    EzSubscribeUser deepCopy() const;
 
-    gs2::ranking::SubscribeUser ToModel() const
-    {
-        gs2::ranking::SubscribeUser subscribeUser;
-        subscribeUser.setUserId(getUserId());
-        subscribeUser.setTargetUserId(getTargetUserId());
-        return subscribeUser;
-    }
+    gs2::ranking::SubscribeUser ToModel() const;
 
     // ========================================
     //   Getters

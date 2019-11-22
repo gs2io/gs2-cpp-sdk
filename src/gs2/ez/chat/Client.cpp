@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/chat/Gs2ChatWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace chat {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::chat::Gs2ChatWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::createRoom(
@@ -51,7 +57,7 @@ void Client::createRoom(
         request.setWhiteListUserIds(std::move(*whiteListUserIds));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.createRoom(
+    m_pClient->createRoom(
         request,
         [callback](gs2::chat::AsyncCreateRoomResult r)
         {
@@ -87,7 +93,7 @@ void Client::getRoom(
     gs2::chat::GetRoomRequest request;
     request.setNamespaceName(namespaceName);
     request.setRoomName(roomName);
-    m_Client.getRoom(
+    m_pClient->getRoom(
         request,
         [callback](gs2::chat::AsyncGetRoomResult r)
         {
@@ -125,7 +131,7 @@ void Client::deleteRoom(
     request.setNamespaceName(namespaceName);
     request.setRoomName(roomName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.deleteRoom(
+    m_pClient->deleteRoom(
         request,
         [callback](gs2::chat::AsyncDeleteRoomResult r)
         {
@@ -172,7 +178,7 @@ void Client::post(
         request.setPassword(std::move(*password));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.post(
+    m_pClient->post(
         request,
         [callback](gs2::chat::AsyncPostResult r)
         {
@@ -218,7 +224,7 @@ void Client::listMessages(
     {
         request.setLimit(std::move(*limit));
     }
-    m_Client.describeMessages(
+    m_pClient->describeMessages(
         request,
         [callback](gs2::chat::AsyncDescribeMessagesResult r)
         {
@@ -264,7 +270,7 @@ void Client::listSubscribeRooms(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeSubscribes(
+    m_pClient->describeSubscribes(
         request,
         [callback](gs2::chat::AsyncDescribeSubscribesResult r)
         {
@@ -312,7 +318,7 @@ void Client::subscribe(
         request.setNotificationTypes(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.subscribe(
+    m_pClient->subscribe(
         request,
         [callback](gs2::chat::AsyncSubscribeResult r)
         {
@@ -360,7 +366,7 @@ void Client::updateSubscribeSetting(
         request.setNotificationTypes(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.updateNotificationType(
+    m_pClient->updateNotificationType(
         request,
         [callback](gs2::chat::AsyncUpdateNotificationTypeResult r)
         {
@@ -398,7 +404,7 @@ void Client::unsubscribe(
     request.setNamespaceName(namespaceName);
     request.setRoomName(roomName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.unsubscribe(
+    m_pClient->unsubscribe(
         request,
         [callback](gs2::chat::AsyncUnsubscribeResult r)
         {

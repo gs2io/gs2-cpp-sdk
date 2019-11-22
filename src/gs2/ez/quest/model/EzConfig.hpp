@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_QUEST_MODEL_EZCONFIG_HPP_
 #define GS2_EZ_QUEST_MODEL_EZCONFIG_HPP_
 
-#include <gs2/quest/model/Config.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace quest {
+namespace gs2 {
+
+namespace quest {
+
+class Config;
+
+}
+
+namespace ez { namespace quest {
 
 class EzConfig : public gs2::Gs2Object
 {
@@ -36,22 +47,9 @@ private:
         gs2::optional<StringHolder> value;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            key(data.key),
-            value(data.value)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::quest::Config& config) :
-            key(config.getKey()),
-            value(config.getValue())
-        {
-        }
-
+        Data(const gs2::quest::Config& config);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -66,25 +64,14 @@ public:
     EzConfig(EzConfig&& ezConfig) = default;
     ~EzConfig() = default;
 
-    EzConfig(gs2::quest::Config config) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(config)
-    {}
+    EzConfig(gs2::quest::Config config);
 
     EzConfig& operator=(const EzConfig& ezConfig) = default;
     EzConfig& operator=(EzConfig&& ezConfig) = default;
 
-    EzConfig deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzConfig);
-    }
+    EzConfig deepCopy() const;
 
-    gs2::quest::Config ToModel() const
-    {
-        gs2::quest::Config config;
-        config.setKey(getKey());
-        config.setValue(getValue());
-        return config;
-    }
+    gs2::quest::Config ToModel() const;
 
     // ========================================
     //   Getters

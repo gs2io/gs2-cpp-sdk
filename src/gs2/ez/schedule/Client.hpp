@@ -14,17 +14,25 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_SCHEDULE_GS2SCHEDULERESTCLIENT_HPP_
-#define GS2_EZ_SCHEDULE_GS2SCHEDULERESTCLIENT_HPP_
+#ifndef GS2_EZ_SCHEDULE_GS2SCHEDULEWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_SCHEDULE_GS2SCHEDULEWEBSOCKETCLIENT_HPP_
 
-#include <gs2/schedule/Gs2ScheduleWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzListTriggersResult.hpp"
 #include "result/EzGetTriggerResult.hpp"
 #include "result/EzListEventsResult.hpp"
 #include "result/EzGetEventResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace schedule {
+
+class Gs2ScheduleWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -35,10 +43,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::schedule::Gs2ScheduleWebSocketClient m_Client;
+    gs2::schedule::Gs2ScheduleWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  引かれているトリガーの一覧を取得<br />
@@ -103,4 +112,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_SCHEDULE_GS2SCHEDULERESTCLIENT_HPP_
+#endif //GS2_EZ_SCHEDULE_GS2SCHEDULEWEBSOCKETCLIENT_HPP_

@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_QUEST_GS2QUESTRESTCLIENT_HPP_
-#define GS2_EZ_QUEST_GS2QUESTRESTCLIENT_HPP_
+#ifndef GS2_EZ_QUEST_GS2QUESTWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_QUEST_GS2QUESTWEBSOCKETCLIENT_HPP_
 
-#include <gs2/quest/Gs2QuestWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzStartResult.hpp"
 #include "result/EzEndResult.hpp"
 #include "result/EzGetProgressResult.hpp"
@@ -30,7 +30,15 @@
 #include "result/EzGetQuestResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace quest {
+
+class Gs2QuestWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -41,10 +49,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::quest::Gs2QuestWebSocketClient m_Client;
+    gs2::quest::Gs2QuestWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  クエストの開始を宣言<br />
@@ -227,4 +236,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_QUEST_GS2QUESTRESTCLIENT_HPP_
+#endif //GS2_EZ_QUEST_GS2QUESTWEBSOCKETCLIENT_HPP_

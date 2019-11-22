@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_INVENTORY_MODEL_EZINVENTORYMODEL_HPP_
 #define GS2_EZ_INVENTORY_MODEL_EZINVENTORYMODEL_HPP_
 
-#include <gs2/inventory/model/InventoryModel.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace inventory {
+namespace gs2 {
+
+namespace inventory {
+
+class InventoryModel;
+
+}
+
+namespace ez { namespace inventory {
 
 class EzInventoryModel : public gs2::Gs2Object
 {
@@ -40,26 +51,9 @@ private:
         gs2::optional<Int32> maxCapacity;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata),
-            initialCapacity(data.initialCapacity),
-            maxCapacity(data.maxCapacity)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::inventory::InventoryModel& inventoryModel) :
-            name(inventoryModel.getName()),
-            metadata(inventoryModel.getMetadata()),
-            initialCapacity(inventoryModel.getInitialCapacity() ? *inventoryModel.getInitialCapacity() : 0),
-            maxCapacity(inventoryModel.getMaxCapacity() ? *inventoryModel.getMaxCapacity() : 0)
-        {
-        }
-
+        Data(const gs2::inventory::InventoryModel& inventoryModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -74,27 +68,14 @@ public:
     EzInventoryModel(EzInventoryModel&& ezInventoryModel) = default;
     ~EzInventoryModel() = default;
 
-    EzInventoryModel(gs2::inventory::InventoryModel inventoryModel) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(inventoryModel)
-    {}
+    EzInventoryModel(gs2::inventory::InventoryModel inventoryModel);
 
     EzInventoryModel& operator=(const EzInventoryModel& ezInventoryModel) = default;
     EzInventoryModel& operator=(EzInventoryModel&& ezInventoryModel) = default;
 
-    EzInventoryModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzInventoryModel);
-    }
+    EzInventoryModel deepCopy() const;
 
-    gs2::inventory::InventoryModel ToModel() const
-    {
-        gs2::inventory::InventoryModel inventoryModel;
-        inventoryModel.setName(getName());
-        inventoryModel.setMetadata(getMetadata());
-        inventoryModel.setInitialCapacity(getInitialCapacity());
-        inventoryModel.setMaxCapacity(getMaxCapacity());
-        return inventoryModel;
-    }
+    gs2::inventory::InventoryModel ToModel() const;
 
     // ========================================
     //   Getters

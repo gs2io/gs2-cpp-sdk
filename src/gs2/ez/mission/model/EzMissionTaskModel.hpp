@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_MISSION_MODEL_EZMISSIONTASKMODEL_HPP_
 #define GS2_EZ_MISSION_MODEL_EZMISSIONTASKMODEL_HPP_
 
-#include <gs2/mission/model/MissionTaskModel.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzAcquireAction.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace mission {
+namespace gs2 {
+
+namespace mission {
+
+class MissionTaskModel;
+
+}
+
+namespace ez { namespace mission {
 
 class EzMissionTaskModel : public gs2::Gs2Object
 {
@@ -49,44 +60,9 @@ private:
         gs2::optional<StringHolder> premiseMissionTaskName;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata),
-            counterName(data.counterName),
-            resetType(data.resetType),
-            targetValue(data.targetValue),
-            challengePeriodEventId(data.challengePeriodEventId),
-            premiseMissionTaskName(data.premiseMissionTaskName)
-        {
-            if (data.completeAcquireActions)
-            {
-                completeAcquireActions = data.completeAcquireActions->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::mission::MissionTaskModel& missionTaskModel) :
-            name(missionTaskModel.getName()),
-            metadata(missionTaskModel.getMetadata()),
-            counterName(missionTaskModel.getCounterName()),
-            resetType(missionTaskModel.getResetType()),
-            targetValue(missionTaskModel.getTargetValue() ? *missionTaskModel.getTargetValue() : 0),
-            challengePeriodEventId(missionTaskModel.getChallengePeriodEventId()),
-            premiseMissionTaskName(missionTaskModel.getPremiseMissionTaskName())
-        {
-            completeAcquireActions.emplace();
-            if (missionTaskModel.getCompleteAcquireActions())
-            {
-                for (int i = 0; i < missionTaskModel.getCompleteAcquireActions()->getCount(); ++i)
-                {
-                    *completeAcquireActions += EzAcquireAction((*missionTaskModel.getCompleteAcquireActions())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::mission::MissionTaskModel& missionTaskModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -101,39 +77,14 @@ public:
     EzMissionTaskModel(EzMissionTaskModel&& ezMissionTaskModel) = default;
     ~EzMissionTaskModel() = default;
 
-    EzMissionTaskModel(gs2::mission::MissionTaskModel missionTaskModel) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(missionTaskModel)
-    {}
+    EzMissionTaskModel(gs2::mission::MissionTaskModel missionTaskModel);
 
     EzMissionTaskModel& operator=(const EzMissionTaskModel& ezMissionTaskModel) = default;
     EzMissionTaskModel& operator=(EzMissionTaskModel&& ezMissionTaskModel) = default;
 
-    EzMissionTaskModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzMissionTaskModel);
-    }
+    EzMissionTaskModel deepCopy() const;
 
-    gs2::mission::MissionTaskModel ToModel() const
-    {
-        gs2::mission::MissionTaskModel missionTaskModel;
-        missionTaskModel.setName(getName());
-        missionTaskModel.setMetadata(getMetadata());
-        missionTaskModel.setCounterName(getCounterName());
-        missionTaskModel.setResetType(getResetType());
-        missionTaskModel.setTargetValue(getTargetValue());
-        {
-            gs2::List<gs2::mission::AcquireAction> list;
-            auto& completeAcquireActions = getCompleteAcquireActions();
-            for (int i = 0; i < completeAcquireActions.getCount(); ++i)
-            {
-                list += completeAcquireActions[i].ToModel();
-            }
-            missionTaskModel.setCompleteAcquireActions(list);
-        }
-        missionTaskModel.setChallengePeriodEventId(getChallengePeriodEventId());
-        missionTaskModel.setPremiseMissionTaskName(getPremiseMissionTaskName());
-        return missionTaskModel;
-    }
+    gs2::mission::MissionTaskModel ToModel() const;
 
     // ========================================
     //   Getters

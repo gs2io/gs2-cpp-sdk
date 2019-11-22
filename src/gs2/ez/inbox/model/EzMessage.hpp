@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_INBOX_MODEL_EZMESSAGE_HPP_
 #define GS2_EZ_INBOX_MODEL_EZMESSAGE_HPP_
 
-#include <gs2/inbox/model/Message.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzAcquireAction.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace inbox {
+namespace gs2 {
+
+namespace inbox {
+
+class Message;
+
+}
+
+namespace ez { namespace inbox {
 
 class EzMessage : public gs2::Gs2Object
 {
@@ -47,42 +58,9 @@ private:
         gs2::optional<Int64> readAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            messageId(data.messageId),
-            name(data.name),
-            metadata(data.metadata),
-            isRead(data.isRead),
-            receivedAt(data.receivedAt),
-            readAt(data.readAt)
-        {
-            if (data.readAcquireActions)
-            {
-                readAcquireActions = data.readAcquireActions->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::inbox::Message& message) :
-            messageId(message.getMessageId()),
-            name(message.getName()),
-            metadata(message.getMetadata()),
-            isRead(message.getIsRead() ? *message.getIsRead() : false),
-            receivedAt(message.getReceivedAt() ? *message.getReceivedAt() : 0),
-            readAt(message.getReadAt() ? *message.getReadAt() : 0)
-        {
-            readAcquireActions.emplace();
-            if (message.getReadAcquireActions())
-            {
-                for (int i = 0; i < message.getReadAcquireActions()->getCount(); ++i)
-                {
-                    *readAcquireActions += EzAcquireAction((*message.getReadAcquireActions())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::inbox::Message& message);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -97,38 +75,14 @@ public:
     EzMessage(EzMessage&& ezMessage) = default;
     ~EzMessage() = default;
 
-    EzMessage(gs2::inbox::Message message) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(message)
-    {}
+    EzMessage(gs2::inbox::Message message);
 
     EzMessage& operator=(const EzMessage& ezMessage) = default;
     EzMessage& operator=(EzMessage&& ezMessage) = default;
 
-    EzMessage deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzMessage);
-    }
+    EzMessage deepCopy() const;
 
-    gs2::inbox::Message ToModel() const
-    {
-        gs2::inbox::Message message;
-        message.setMessageId(getMessageId());
-        message.setName(getName());
-        message.setMetadata(getMetadata());
-        message.setIsRead(getIsRead());
-        {
-            gs2::List<gs2::inbox::AcquireAction> list;
-            auto& readAcquireActions = getReadAcquireActions();
-            for (int i = 0; i < readAcquireActions.getCount(); ++i)
-            {
-                list += readAcquireActions[i].ToModel();
-            }
-            message.setReadAcquireActions(list);
-        }
-        message.setReceivedAt(getReceivedAt());
-        message.setReadAt(getReadAt());
-        return message;
-    }
+    gs2::inbox::Message ToModel() const;
 
     // ========================================
     //   Getters

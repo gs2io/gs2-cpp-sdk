@@ -14,14 +14,22 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_REALTIME_GS2REALTIMERESTCLIENT_HPP_
-#define GS2_EZ_REALTIME_GS2REALTIMERESTCLIENT_HPP_
+#ifndef GS2_EZ_REALTIME_GS2REALTIMEWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_REALTIME_GS2REALTIMEWEBSOCKETCLIENT_HPP_
 
-#include <gs2/realtime/Gs2RealtimeWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzGetRoomResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace realtime {
+
+class Gs2RealtimeWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -32,10 +40,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::realtime::Gs2RealtimeWebSocketClient m_Client;
+    gs2::realtime::Gs2RealtimeWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  ルームの情報を取得<br />
@@ -53,4 +62,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_REALTIME_GS2REALTIMERESTCLIENT_HPP_
+#endif //GS2_EZ_REALTIME_GS2REALTIMEWEBSOCKETCLIENT_HPP_

@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_MISSION_MODEL_EZACQUIREACTION_HPP_
 #define GS2_EZ_MISSION_MODEL_EZACQUIREACTION_HPP_
 
-#include <gs2/mission/model/AcquireAction.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace mission {
+namespace gs2 {
+
+namespace mission {
+
+class AcquireAction;
+
+}
+
+namespace ez { namespace mission {
 
 class EzAcquireAction : public gs2::Gs2Object
 {
@@ -36,22 +47,9 @@ private:
         gs2::optional<StringHolder> request;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            action(data.action),
-            request(data.request)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::mission::AcquireAction& acquireAction) :
-            action(acquireAction.getAction()),
-            request(acquireAction.getRequest())
-        {
-        }
-
+        Data(const gs2::mission::AcquireAction& acquireAction);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -66,25 +64,14 @@ public:
     EzAcquireAction(EzAcquireAction&& ezAcquireAction) = default;
     ~EzAcquireAction() = default;
 
-    EzAcquireAction(gs2::mission::AcquireAction acquireAction) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(acquireAction)
-    {}
+    EzAcquireAction(gs2::mission::AcquireAction acquireAction);
 
     EzAcquireAction& operator=(const EzAcquireAction& ezAcquireAction) = default;
     EzAcquireAction& operator=(EzAcquireAction&& ezAcquireAction) = default;
 
-    EzAcquireAction deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzAcquireAction);
-    }
+    EzAcquireAction deepCopy() const;
 
-    gs2::mission::AcquireAction ToModel() const
-    {
-        gs2::mission::AcquireAction acquireAction;
-        acquireAction.setAction(getAction());
-        acquireAction.setRequest(getRequest());
-        return acquireAction;
-    }
+    gs2::mission::AcquireAction ToModel() const;
 
     // ========================================
     //   Getters

@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/lottery/Gs2LotteryWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace lottery {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::lottery::Gs2LotteryWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::describeBoxes(
@@ -46,7 +52,7 @@ void Client::describeBoxes(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeBoxes(
+    m_pClient->describeBoxes(
         request,
         [callback](gs2::lottery::AsyncDescribeBoxesResult r)
         {
@@ -84,7 +90,7 @@ void Client::getBox(
     request.setNamespaceName(namespaceName);
     request.setLotteryName(lotteryName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getBox(
+    m_pClient->getBox(
         request,
         [callback](gs2::lottery::AsyncGetBoxResult r)
         {
@@ -122,7 +128,7 @@ void Client::resetBox(
     request.setNamespaceName(namespaceName);
     request.setLotteryName(lotteryName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.resetBox(
+    m_pClient->resetBox(
         request,
         [callback](gs2::lottery::AsyncResetBoxResult r)
         {
@@ -152,7 +158,7 @@ void Client::listProbabilities(
     request.setNamespaceName(namespaceName);
     request.setLotteryName(lotteryName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeProbabilities(
+    m_pClient->describeProbabilities(
         request,
         [callback](gs2::lottery::AsyncDescribeProbabilitiesResult r)
         {

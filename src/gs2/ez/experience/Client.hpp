@@ -14,17 +14,25 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_EXPERIENCE_GS2EXPERIENCERESTCLIENT_HPP_
-#define GS2_EZ_EXPERIENCE_GS2EXPERIENCERESTCLIENT_HPP_
+#ifndef GS2_EZ_EXPERIENCE_GS2EXPERIENCEWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_EXPERIENCE_GS2EXPERIENCEWEBSOCKETCLIENT_HPP_
 
-#include <gs2/experience/Gs2ExperienceWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzListExperienceModelsResult.hpp"
 #include "result/EzGetExperienceModelResult.hpp"
 #include "result/EzListStatusesResult.hpp"
 #include "result/EzGetStatusResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace experience {
+
+class Gs2ExperienceWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -35,10 +43,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::experience::Gs2ExperienceWebSocketClient m_Client;
+    gs2::experience::Gs2ExperienceWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  経験値・ランクアップ閾値モデル情報の一覧を取得<br />
@@ -112,4 +121,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_EXPERIENCE_GS2EXPERIENCERESTCLIENT_HPP_
+#endif //GS2_EZ_EXPERIENCE_GS2EXPERIENCEWEBSOCKETCLIENT_HPP_
