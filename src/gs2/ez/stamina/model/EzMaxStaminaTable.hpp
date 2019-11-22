@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_STAMINA_MODEL_EZMAXSTAMINATABLE_HPP_
 #define GS2_EZ_STAMINA_MODEL_EZMAXSTAMINATABLE_HPP_
 
-#include <gs2/stamina/model/MaxStaminaTable.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace stamina {
+namespace gs2 {
+
+namespace stamina {
+
+class MaxStaminaTable;
+
+}
+
+namespace ez { namespace stamina {
 
 class EzMaxStaminaTable : public gs2::Gs2Object
 {
@@ -40,29 +51,9 @@ private:
         gs2::optional<List<Int32>> values;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata),
-            experienceModelId(data.experienceModelId)
-        {
-            if (data.values)
-            {
-                values = data.values->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::stamina::MaxStaminaTable& maxStaminaTable) :
-            name(maxStaminaTable.getName()),
-            metadata(maxStaminaTable.getMetadata()),
-            experienceModelId(maxStaminaTable.getExperienceModelId()),
-            values(maxStaminaTable.getValues())
-        {
-        }
-
+        Data(const gs2::stamina::MaxStaminaTable& maxStaminaTable);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -77,27 +68,14 @@ public:
     EzMaxStaminaTable(EzMaxStaminaTable&& ezMaxStaminaTable) = default;
     ~EzMaxStaminaTable() = default;
 
-    EzMaxStaminaTable(gs2::stamina::MaxStaminaTable maxStaminaTable) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(maxStaminaTable)
-    {}
+    EzMaxStaminaTable(gs2::stamina::MaxStaminaTable maxStaminaTable);
 
     EzMaxStaminaTable& operator=(const EzMaxStaminaTable& ezMaxStaminaTable) = default;
     EzMaxStaminaTable& operator=(EzMaxStaminaTable&& ezMaxStaminaTable) = default;
 
-    EzMaxStaminaTable deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzMaxStaminaTable);
-    }
+    EzMaxStaminaTable deepCopy() const;
 
-    gs2::stamina::MaxStaminaTable ToModel() const
-    {
-        gs2::stamina::MaxStaminaTable maxStaminaTable;
-        maxStaminaTable.setName(getName());
-        maxStaminaTable.setMetadata(getMetadata());
-        maxStaminaTable.setExperienceModelId(getExperienceModelId());
-        maxStaminaTable.setValues(getValues());
-        return maxStaminaTable;
-    }
+    gs2::stamina::MaxStaminaTable ToModel() const;
 
     // ========================================
     //   Getters

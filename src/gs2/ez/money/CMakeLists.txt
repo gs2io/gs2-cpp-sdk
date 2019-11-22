@@ -31,6 +31,13 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzWalletDetail.cpp
+        model/EzWalletDetail.cpp
+        model/EzReceipt.cpp
+        model/EzResponseCache.cpp
+        model/EzScriptSetting.cpp
+        model/EzLogSetting.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC

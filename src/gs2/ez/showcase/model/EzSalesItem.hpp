@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,12 +17,25 @@
 #ifndef GS2_EZ_SHOWCASE_MODEL_EZSALESITEM_HPP_
 #define GS2_EZ_SHOWCASE_MODEL_EZSALESITEM_HPP_
 
-#include <gs2/showcase/model/SalesItem.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzConsumeAction.hpp"
 #include "EzAcquireAction.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace showcase {
+namespace gs2 {
+
+namespace showcase {
+
+class SalesItem;
+
+}
+
+namespace ez { namespace showcase {
 
 class EzSalesItem : public gs2::Gs2Object
 {
@@ -42,46 +53,9 @@ private:
         gs2::optional<List<EzAcquireAction>> acquireActions;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata)
-        {
-            if (data.consumeActions)
-            {
-                consumeActions = data.consumeActions->deepCopy();
-            }
-            if (data.acquireActions)
-            {
-                acquireActions = data.acquireActions->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::showcase::SalesItem& salesItem) :
-            name(salesItem.getName()),
-            metadata(salesItem.getMetadata())
-        {
-            consumeActions.emplace();
-            if (salesItem.getConsumeActions())
-            {
-                for (int i = 0; i < salesItem.getConsumeActions()->getCount(); ++i)
-                {
-                    *consumeActions += EzConsumeAction((*salesItem.getConsumeActions())[i]);
-                }
-            }
-            acquireActions.emplace();
-            if (salesItem.getAcquireActions())
-            {
-                for (int i = 0; i < salesItem.getAcquireActions()->getCount(); ++i)
-                {
-                    *acquireActions += EzAcquireAction((*salesItem.getAcquireActions())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::showcase::SalesItem& salesItem);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -96,43 +70,14 @@ public:
     EzSalesItem(EzSalesItem&& ezSalesItem) = default;
     ~EzSalesItem() = default;
 
-    EzSalesItem(gs2::showcase::SalesItem salesItem) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(salesItem)
-    {}
+    EzSalesItem(gs2::showcase::SalesItem salesItem);
 
     EzSalesItem& operator=(const EzSalesItem& ezSalesItem) = default;
     EzSalesItem& operator=(EzSalesItem&& ezSalesItem) = default;
 
-    EzSalesItem deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzSalesItem);
-    }
+    EzSalesItem deepCopy() const;
 
-    gs2::showcase::SalesItem ToModel() const
-    {
-        gs2::showcase::SalesItem salesItem;
-        salesItem.setName(getName());
-        salesItem.setMetadata(getMetadata());
-        {
-            gs2::List<gs2::showcase::ConsumeAction> list;
-            auto& consumeActions = getConsumeActions();
-            for (int i = 0; i < consumeActions.getCount(); ++i)
-            {
-                list += consumeActions[i].ToModel();
-            }
-            salesItem.setConsumeActions(list);
-        }
-        {
-            gs2::List<gs2::showcase::AcquireAction> list;
-            auto& acquireActions = getAcquireActions();
-            for (int i = 0; i < acquireActions.getCount(); ++i)
-            {
-                list += acquireActions[i].ToModel();
-            }
-            salesItem.setAcquireActions(list);
-        }
-        return salesItem;
-    }
+    gs2::showcase::SalesItem ToModel() const;
 
     // ========================================
     //   Getters

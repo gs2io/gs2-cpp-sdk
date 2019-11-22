@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_EXPERIENCE_MODEL_EZEXPERIENCEMODEL_HPP_
 #define GS2_EZ_EXPERIENCE_MODEL_EZEXPERIENCEMODEL_HPP_
 
-#include <gs2/experience/model/ExperienceModel.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzThreshold.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace experience {
+namespace gs2 {
+
+namespace experience {
+
+class ExperienceModel;
+
+}
+
+namespace ez { namespace experience {
 
 class EzExperienceModel : public gs2::Gs2Object
 {
@@ -45,33 +56,9 @@ private:
         gs2::optional<EzThreshold> rankThreshold;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata),
-            defaultExperience(data.defaultExperience),
-            defaultRankCap(data.defaultRankCap),
-            maxRankCap(data.maxRankCap)
-        {
-            if (data.rankThreshold)
-            {
-                rankThreshold = data.rankThreshold->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::experience::ExperienceModel& experienceModel) :
-            name(experienceModel.getName()),
-            metadata(experienceModel.getMetadata()),
-            defaultExperience(experienceModel.getDefaultExperience() ? *experienceModel.getDefaultExperience() : 0),
-            defaultRankCap(experienceModel.getDefaultRankCap() ? *experienceModel.getDefaultRankCap() : 0),
-            maxRankCap(experienceModel.getMaxRankCap() ? *experienceModel.getMaxRankCap() : 0),
-            rankThreshold(*experienceModel.getRankThreshold())
-        {
-        }
-
+        Data(const gs2::experience::ExperienceModel& experienceModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -86,29 +73,14 @@ public:
     EzExperienceModel(EzExperienceModel&& ezExperienceModel) = default;
     ~EzExperienceModel() = default;
 
-    EzExperienceModel(gs2::experience::ExperienceModel experienceModel) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(experienceModel)
-    {}
+    EzExperienceModel(gs2::experience::ExperienceModel experienceModel);
 
     EzExperienceModel& operator=(const EzExperienceModel& ezExperienceModel) = default;
     EzExperienceModel& operator=(EzExperienceModel&& ezExperienceModel) = default;
 
-    EzExperienceModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzExperienceModel);
-    }
+    EzExperienceModel deepCopy() const;
 
-    gs2::experience::ExperienceModel ToModel() const
-    {
-        gs2::experience::ExperienceModel experienceModel;
-        experienceModel.setName(getName());
-        experienceModel.setMetadata(getMetadata());
-        experienceModel.setDefaultExperience(getDefaultExperience());
-        experienceModel.setDefaultRankCap(getDefaultRankCap());
-        experienceModel.setMaxRankCap(getMaxRankCap());
-        experienceModel.setRankThreshold(getRankThreshold().ToModel());
-        return experienceModel;
-    }
+    gs2::experience::ExperienceModel ToModel() const;
 
     // ========================================
     //   Getters

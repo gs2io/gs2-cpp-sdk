@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/matchmaking/Gs2MatchmakingWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace matchmaking {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::matchmaking::Gs2MatchmakingWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::createGathering(
@@ -59,7 +65,7 @@ void Client::createGathering(
         request.setAttributeRanges(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.createGathering(
+    m_pClient->createGathering(
         request,
         [callback](gs2::matchmaking::AsyncCreateGatheringResult r)
         {
@@ -107,7 +113,7 @@ void Client::updateGathering(
         request.setAttributeRanges(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.updateGathering(
+    m_pClient->updateGathering(
         request,
         [callback](gs2::matchmaking::AsyncUpdateGatheringResult r)
         {
@@ -150,7 +156,7 @@ void Client::doMatchmaking(
         request.setMatchmakingContextToken(std::move(*matchmakingContextToken));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.doMatchmaking(
+    m_pClient->doMatchmaking(
         request,
         [callback](gs2::matchmaking::AsyncDoMatchmakingResult r)
         {
@@ -186,7 +192,7 @@ void Client::getGathering(
     gs2::matchmaking::GetGatheringRequest request;
     request.setNamespaceName(namespaceName);
     request.setGatheringName(gatheringName);
-    m_Client.getGathering(
+    m_pClient->getGathering(
         request,
         [callback](gs2::matchmaking::AsyncGetGatheringResult r)
         {
@@ -224,7 +230,7 @@ void Client::cancelMatchmaking(
     request.setNamespaceName(namespaceName);
     request.setGatheringName(gatheringName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.cancelMatchmaking(
+    m_pClient->cancelMatchmaking(
         request,
         [callback](gs2::matchmaking::AsyncCancelMatchmakingResult r)
         {

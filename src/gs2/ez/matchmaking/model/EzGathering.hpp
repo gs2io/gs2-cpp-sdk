@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,12 +17,25 @@
 #ifndef GS2_EZ_MATCHMAKING_MODEL_EZGATHERING_HPP_
 #define GS2_EZ_MATCHMAKING_MODEL_EZGATHERING_HPP_
 
-#include <gs2/matchmaking/model/Gathering.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzAttributeRange.hpp"
 #include "EzCapacityOfRole.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace matchmaking {
+namespace gs2 {
+
+namespace matchmaking {
+
+class Gathering;
+
+}
+
+namespace ez { namespace matchmaking {
 
 class EzGathering : public gs2::Gs2Object
 {
@@ -50,57 +61,9 @@ private:
         gs2::optional<Int64> updatedAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            gatheringId(data.gatheringId),
-            name(data.name),
-            metadata(data.metadata),
-            createdAt(data.createdAt),
-            updatedAt(data.updatedAt)
-        {
-            if (data.attributeRanges)
-            {
-                attributeRanges = data.attributeRanges->deepCopy();
-            }
-            if (data.capacityOfRoles)
-            {
-                capacityOfRoles = data.capacityOfRoles->deepCopy();
-            }
-            if (data.allowUserIds)
-            {
-                allowUserIds = data.allowUserIds->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::matchmaking::Gathering& gathering) :
-            gatheringId(gathering.getGatheringId()),
-            name(gathering.getName()),
-            allowUserIds(gathering.getAllowUserIds()),
-            metadata(gathering.getMetadata()),
-            createdAt(gathering.getCreatedAt() ? *gathering.getCreatedAt() : 0),
-            updatedAt(gathering.getUpdatedAt() ? *gathering.getUpdatedAt() : 0)
-        {
-            attributeRanges.emplace();
-            if (gathering.getAttributeRanges())
-            {
-                for (int i = 0; i < gathering.getAttributeRanges()->getCount(); ++i)
-                {
-                    *attributeRanges += EzAttributeRange((*gathering.getAttributeRanges())[i]);
-                }
-            }
-            capacityOfRoles.emplace();
-            if (gathering.getCapacityOfRoles())
-            {
-                for (int i = 0; i < gathering.getCapacityOfRoles()->getCount(); ++i)
-                {
-                    *capacityOfRoles += EzCapacityOfRole((*gathering.getCapacityOfRoles())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::matchmaking::Gathering& gathering);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -115,47 +78,14 @@ public:
     EzGathering(EzGathering&& ezGathering) = default;
     ~EzGathering() = default;
 
-    EzGathering(gs2::matchmaking::Gathering gathering) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(gathering)
-    {}
+    EzGathering(gs2::matchmaking::Gathering gathering);
 
     EzGathering& operator=(const EzGathering& ezGathering) = default;
     EzGathering& operator=(EzGathering&& ezGathering) = default;
 
-    EzGathering deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGathering);
-    }
+    EzGathering deepCopy() const;
 
-    gs2::matchmaking::Gathering ToModel() const
-    {
-        gs2::matchmaking::Gathering gathering;
-        gathering.setGatheringId(getGatheringId());
-        gathering.setName(getName());
-        {
-            gs2::List<gs2::matchmaking::AttributeRange> list;
-            auto& attributeRanges = getAttributeRanges();
-            for (int i = 0; i < attributeRanges.getCount(); ++i)
-            {
-                list += attributeRanges[i].ToModel();
-            }
-            gathering.setAttributeRanges(list);
-        }
-        {
-            gs2::List<gs2::matchmaking::CapacityOfRole> list;
-            auto& capacityOfRoles = getCapacityOfRoles();
-            for (int i = 0; i < capacityOfRoles.getCount(); ++i)
-            {
-                list += capacityOfRoles[i].ToModel();
-            }
-            gathering.setCapacityOfRoles(list);
-        }
-        gathering.setAllowUserIds(getAllowUserIds());
-        gathering.setMetadata(getMetadata());
-        gathering.setCreatedAt(getCreatedAt());
-        gathering.setUpdatedAt(getUpdatedAt());
-        return gathering;
-    }
+    gs2::matchmaking::Gathering ToModel() const;
 
     // ========================================
     //   Getters

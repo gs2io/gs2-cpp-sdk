@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_JOBQUEUE_MODEL_EZJOB_HPP_
 #define GS2_EZ_JOBQUEUE_MODEL_EZJOB_HPP_
 
-#include <gs2/jobQueue/model/Job.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace jobQueue {
+namespace gs2 {
+
+namespace jobQueue {
+
+class Job;
+
+}
+
+namespace ez { namespace jobQueue {
 
 class EzJob : public gs2::Gs2Object
 {
@@ -38,24 +49,9 @@ private:
         gs2::optional<Int32> maxTryCount;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            jobId(data.jobId),
-            currentRetryCount(data.currentRetryCount),
-            maxTryCount(data.maxTryCount)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::jobQueue::Job& job) :
-            jobId(job.getJobId()),
-            currentRetryCount(job.getCurrentRetryCount() ? *job.getCurrentRetryCount() : 0),
-            maxTryCount(job.getMaxTryCount() ? *job.getMaxTryCount() : 0)
-        {
-        }
-
+        Data(const gs2::jobQueue::Job& job);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -70,26 +66,14 @@ public:
     EzJob(EzJob&& ezJob) = default;
     ~EzJob() = default;
 
-    EzJob(gs2::jobQueue::Job job) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(job)
-    {}
+    EzJob(gs2::jobQueue::Job job);
 
     EzJob& operator=(const EzJob& ezJob) = default;
     EzJob& operator=(EzJob&& ezJob) = default;
 
-    EzJob deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzJob);
-    }
+    EzJob deepCopy() const;
 
-    gs2::jobQueue::Job ToModel() const
-    {
-        gs2::jobQueue::Job job;
-        job.setJobId(getJobId());
-        job.setCurrentRetryCount(getCurrentRetryCount());
-        job.setMaxTryCount(getMaxTryCount());
-        return job;
-    }
+    gs2::jobQueue::Job ToModel() const;
 
     // ========================================
     //   Getters

@@ -51,6 +51,20 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzProfile.cpp
+        model/EzFollow.cpp
+        model/EzFriend.cpp
+        model/EzSendBox.cpp
+        model/EzInbox.cpp
+        model/EzResponseCache.cpp
+        model/EzFollowUser.cpp
+        model/EzFriendUser.cpp
+        model/EzFriendRequest.cpp
+        model/EzPublicProfile.cpp
+        model/EzScriptSetting.cpp
+        model/EzNotificationSetting.cpp
+        model/EzLogSetting.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC

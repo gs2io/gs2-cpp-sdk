@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/inbox/Gs2InboxWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace inbox {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::inbox::Gs2InboxWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::list(
@@ -46,7 +52,7 @@ void Client::list(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeMessages(
+    m_pClient->describeMessages(
         request,
         [callback](gs2::inbox::AsyncDescribeMessagesResult r)
         {
@@ -87,7 +93,7 @@ void Client::read(
         request.setMessageName(std::move(*messageName));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.readMessage(
+    m_pClient->readMessage(
         request,
         [callback](gs2::inbox::AsyncReadMessageResult r)
         {
@@ -125,7 +131,7 @@ void Client::delete_(
     request.setNamespaceName(namespaceName);
     request.setMessageName(messageName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.deleteMessage(
+    m_pClient->deleteMessage(
         request,
         [callback](gs2::inbox::AsyncDeleteMessageResult r)
         {

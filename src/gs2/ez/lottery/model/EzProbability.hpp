@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_LOTTERY_MODEL_EZPROBABILITY_HPP_
 #define GS2_EZ_LOTTERY_MODEL_EZPROBABILITY_HPP_
 
-#include <gs2/lottery/model/Probability.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzDrawnPrize.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace lottery {
+namespace gs2 {
+
+namespace lottery {
+
+class Probability;
+
+}
+
+namespace ez { namespace lottery {
 
 class EzProbability : public gs2::Gs2Object
 {
@@ -37,25 +48,9 @@ private:
         gs2::optional<Float> rate;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            rate(data.rate)
-        {
-            if (data.prize)
-            {
-                prize = data.prize->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::lottery::Probability& probability) :
-            prize(*probability.getPrize()),
-            rate(probability.getRate() ? *probability.getRate() : 0)
-        {
-        }
-
+        Data(const gs2::lottery::Probability& probability);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -70,25 +65,14 @@ public:
     EzProbability(EzProbability&& ezProbability) = default;
     ~EzProbability() = default;
 
-    EzProbability(gs2::lottery::Probability probability) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(probability)
-    {}
+    EzProbability(gs2::lottery::Probability probability);
 
     EzProbability& operator=(const EzProbability& ezProbability) = default;
     EzProbability& operator=(EzProbability&& ezProbability) = default;
 
-    EzProbability deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzProbability);
-    }
+    EzProbability deepCopy() const;
 
-    gs2::lottery::Probability ToModel() const
-    {
-        gs2::lottery::Probability probability;
-        probability.setPrize(getPrize().ToModel());
-        probability.setRate(getRate());
-        return probability;
-    }
+    gs2::lottery::Probability ToModel() const;
 
     // ========================================
     //   Getters

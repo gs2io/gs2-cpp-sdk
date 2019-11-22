@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_JOBQUEUE_MODEL_EZJOBRESULTBODY_HPP_
 #define GS2_EZ_JOBQUEUE_MODEL_EZJOBRESULTBODY_HPP_
 
-#include <gs2/jobQueue/model/JobResultBody.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace jobQueue {
+namespace gs2 {
+
+namespace jobQueue {
+
+class JobResultBody;
+
+}
+
+namespace ez { namespace jobQueue {
 
 class EzJobResultBody : public gs2::Gs2Object
 {
@@ -40,26 +51,9 @@ private:
         gs2::optional<Int64> tryAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            tryNumber(data.tryNumber),
-            statusCode(data.statusCode),
-            result(data.result),
-            tryAt(data.tryAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::jobQueue::JobResultBody& jobResultBody) :
-            tryNumber(jobResultBody.getTryNumber() ? *jobResultBody.getTryNumber() : 0),
-            statusCode(jobResultBody.getStatusCode() ? *jobResultBody.getStatusCode() : 0),
-            result(jobResultBody.getResult()),
-            tryAt(jobResultBody.getTryAt() ? *jobResultBody.getTryAt() : 0)
-        {
-        }
-
+        Data(const gs2::jobQueue::JobResultBody& jobResultBody);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -74,27 +68,14 @@ public:
     EzJobResultBody(EzJobResultBody&& ezJobResultBody) = default;
     ~EzJobResultBody() = default;
 
-    EzJobResultBody(gs2::jobQueue::JobResultBody jobResultBody) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(jobResultBody)
-    {}
+    EzJobResultBody(gs2::jobQueue::JobResultBody jobResultBody);
 
     EzJobResultBody& operator=(const EzJobResultBody& ezJobResultBody) = default;
     EzJobResultBody& operator=(EzJobResultBody&& ezJobResultBody) = default;
 
-    EzJobResultBody deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzJobResultBody);
-    }
+    EzJobResultBody deepCopy() const;
 
-    gs2::jobQueue::JobResultBody ToModel() const
-    {
-        gs2::jobQueue::JobResultBody jobResultBody;
-        jobResultBody.setTryNumber(getTryNumber());
-        jobResultBody.setStatusCode(getStatusCode());
-        jobResultBody.setResult(getResult());
-        jobResultBody.setTryAt(getTryAt());
-        return jobResultBody;
-    }
+    gs2::jobQueue::JobResultBody ToModel() const;
 
     // ========================================
     //   Getters

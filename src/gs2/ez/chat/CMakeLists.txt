@@ -40,6 +40,15 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzRoom.cpp
+        model/EzMessage.cpp
+        model/EzSubscribe.cpp
+        model/EzResponseCache.cpp
+        model/EzNotificationType.cpp
+        model/EzScriptSetting.cpp
+        model/EzNotificationSetting.cpp
+        model/EzLogSetting.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC

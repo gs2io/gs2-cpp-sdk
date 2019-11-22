@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_QUEST_MODEL_EZCONTENTS_HPP_
 #define GS2_EZ_QUEST_MODEL_EZCONTENTS_HPP_
 
-#include <gs2/quest/model/Contents.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzAcquireAction.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace quest {
+namespace gs2 {
+
+namespace quest {
+
+class Contents;
+
+}
+
+namespace ez { namespace quest {
 
 class EzContents : public gs2::Gs2Object
 {
@@ -37,32 +48,9 @@ private:
         gs2::optional<List<EzAcquireAction>> completeAcquireActions;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            metadata(data.metadata)
-        {
-            if (data.completeAcquireActions)
-            {
-                completeAcquireActions = data.completeAcquireActions->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::quest::Contents& contents) :
-            metadata(contents.getMetadata())
-        {
-            completeAcquireActions.emplace();
-            if (contents.getCompleteAcquireActions())
-            {
-                for (int i = 0; i < contents.getCompleteAcquireActions()->getCount(); ++i)
-                {
-                    *completeAcquireActions += EzAcquireAction((*contents.getCompleteAcquireActions())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::quest::Contents& contents);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -77,33 +65,14 @@ public:
     EzContents(EzContents&& ezContents) = default;
     ~EzContents() = default;
 
-    EzContents(gs2::quest::Contents contents) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(contents)
-    {}
+    EzContents(gs2::quest::Contents contents);
 
     EzContents& operator=(const EzContents& ezContents) = default;
     EzContents& operator=(EzContents&& ezContents) = default;
 
-    EzContents deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzContents);
-    }
+    EzContents deepCopy() const;
 
-    gs2::quest::Contents ToModel() const
-    {
-        gs2::quest::Contents contents;
-        contents.setMetadata(getMetadata());
-        {
-            gs2::List<gs2::quest::AcquireAction> list;
-            auto& completeAcquireActions = getCompleteAcquireActions();
-            for (int i = 0; i < completeAcquireActions.getCount(); ++i)
-            {
-                list += completeAcquireActions[i].ToModel();
-            }
-            contents.setCompleteAcquireActions(list);
-        }
-        return contents;
-    }
+    gs2::quest::Contents ToModel() const;
 
     // ========================================
     //   Getters

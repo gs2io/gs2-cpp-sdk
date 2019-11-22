@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_QUEST_MODEL_EZPROGRESS_HPP_
 #define GS2_EZ_QUEST_MODEL_EZPROGRESS_HPP_
 
-#include <gs2/quest/model/Progress.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzReward.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace quest {
+namespace gs2 {
+
+namespace quest {
+
+class Progress;
+
+}
+
+namespace ez { namespace quest {
 
 class EzProgress : public gs2::Gs2Object
 {
@@ -43,38 +54,9 @@ private:
         gs2::optional<List<EzReward>> rewards;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            progressId(data.progressId),
-            transactionId(data.transactionId),
-            questModelId(data.questModelId),
-            randomSeed(data.randomSeed)
-        {
-            if (data.rewards)
-            {
-                rewards = data.rewards->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::quest::Progress& progress) :
-            progressId(progress.getProgressId()),
-            transactionId(progress.getTransactionId()),
-            questModelId(progress.getQuestModelId()),
-            randomSeed(progress.getRandomSeed() ? *progress.getRandomSeed() : 0)
-        {
-            rewards.emplace();
-            if (progress.getRewards())
-            {
-                for (int i = 0; i < progress.getRewards()->getCount(); ++i)
-                {
-                    *rewards += EzReward((*progress.getRewards())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::quest::Progress& progress);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -89,36 +71,14 @@ public:
     EzProgress(EzProgress&& ezProgress) = default;
     ~EzProgress() = default;
 
-    EzProgress(gs2::quest::Progress progress) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(progress)
-    {}
+    EzProgress(gs2::quest::Progress progress);
 
     EzProgress& operator=(const EzProgress& ezProgress) = default;
     EzProgress& operator=(EzProgress&& ezProgress) = default;
 
-    EzProgress deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzProgress);
-    }
+    EzProgress deepCopy() const;
 
-    gs2::quest::Progress ToModel() const
-    {
-        gs2::quest::Progress progress;
-        progress.setProgressId(getProgressId());
-        progress.setTransactionId(getTransactionId());
-        progress.setQuestModelId(getQuestModelId());
-        progress.setRandomSeed(getRandomSeed());
-        {
-            gs2::List<gs2::quest::Reward> list;
-            auto& rewards = getRewards();
-            for (int i = 0; i < rewards.getCount(); ++i)
-            {
-                list += rewards[i].ToModel();
-            }
-            progress.setRewards(list);
-        }
-        return progress;
-    }
+    gs2::quest::Progress ToModel() const;
 
     // ========================================
     //   Getters

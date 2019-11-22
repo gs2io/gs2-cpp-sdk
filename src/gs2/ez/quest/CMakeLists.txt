@@ -49,6 +49,23 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzQuestGroupModelMaster.cpp
+        model/EzQuestModelMaster.cpp
+        model/EzCurrentQuestMaster.cpp
+        model/EzResponseCache.cpp
+        model/EzContents.cpp
+        model/EzConsumeAction.cpp
+        model/EzAcquireAction.cpp
+        model/EzReward.cpp
+        model/EzConfig.cpp
+        model/EzGitHubCheckoutSetting.cpp
+        model/EzScriptSetting.cpp
+        model/EzLogSetting.cpp
+        model/EzProgress.cpp
+        model/EzCompletedQuestList.cpp
+        model/EzQuestGroupModel.cpp
+        model/EzQuestModel.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC

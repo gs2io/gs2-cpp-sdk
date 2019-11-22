@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_QUEST_MODEL_EZCOMPLETEDQUESTLIST_HPP_
 #define GS2_EZ_QUEST_MODEL_EZCOMPLETEDQUESTLIST_HPP_
 
-#include <gs2/quest/model/CompletedQuestList.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace quest {
+namespace gs2 {
+
+namespace quest {
+
+class CompletedQuestList;
+
+}
+
+namespace ez { namespace quest {
 
 class EzCompletedQuestList : public gs2::Gs2Object
 {
@@ -36,25 +47,9 @@ private:
         gs2::optional<List<StringHolder>> completeQuestNames;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            questGroupName(data.questGroupName)
-        {
-            if (data.completeQuestNames)
-            {
-                completeQuestNames = data.completeQuestNames->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::quest::CompletedQuestList& completedQuestList) :
-            questGroupName(completedQuestList.getQuestGroupName()),
-            completeQuestNames(completedQuestList.getCompleteQuestNames())
-        {
-        }
-
+        Data(const gs2::quest::CompletedQuestList& completedQuestList);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,25 +64,14 @@ public:
     EzCompletedQuestList(EzCompletedQuestList&& ezCompletedQuestList) = default;
     ~EzCompletedQuestList() = default;
 
-    EzCompletedQuestList(gs2::quest::CompletedQuestList completedQuestList) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(completedQuestList)
-    {}
+    EzCompletedQuestList(gs2::quest::CompletedQuestList completedQuestList);
 
     EzCompletedQuestList& operator=(const EzCompletedQuestList& ezCompletedQuestList) = default;
     EzCompletedQuestList& operator=(EzCompletedQuestList&& ezCompletedQuestList) = default;
 
-    EzCompletedQuestList deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCompletedQuestList);
-    }
+    EzCompletedQuestList deepCopy() const;
 
-    gs2::quest::CompletedQuestList ToModel() const
-    {
-        gs2::quest::CompletedQuestList completedQuestList;
-        completedQuestList.setQuestGroupName(getQuestGroupName());
-        completedQuestList.setCompleteQuestNames(getCompleteQuestNames());
-        return completedQuestList;
-    }
+    gs2::quest::CompletedQuestList ToModel() const;
 
     // ========================================
     //   Getters

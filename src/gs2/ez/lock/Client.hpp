@@ -14,15 +14,23 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_LOCK_GS2LOCKRESTCLIENT_HPP_
-#define GS2_EZ_LOCK_GS2LOCKRESTCLIENT_HPP_
+#ifndef GS2_EZ_LOCK_GS2LOCKWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_LOCK_GS2LOCKWEBSOCKETCLIENT_HPP_
 
-#include <gs2/lock/Gs2LockWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzLockResult.hpp"
 #include "result/EzUnlockResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace lock {
+
+class Gs2LockWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -33,10 +41,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::lock::Gs2LockWebSocketClient m_Client;
+    gs2::lock::Gs2LockWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  ロックを取得<br />
@@ -87,4 +96,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_LOCK_GS2LOCKRESTCLIENT_HPP_
+#endif //GS2_EZ_LOCK_GS2LOCKWEBSOCKETCLIENT_HPP_

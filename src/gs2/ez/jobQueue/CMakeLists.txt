@@ -32,6 +32,15 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzJob.cpp
+        model/EzJobResult.cpp
+        model/EzDeadLetterJob.cpp
+        model/EzResponseCache.cpp
+        model/EzNotificationSetting.cpp
+        model/EzLogSetting.cpp
+        model/EzJobEntry.cpp
+        model/EzJobResultBody.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC

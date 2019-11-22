@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/lock/Gs2LockWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace lock {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::lock::Gs2LockWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::lock(
@@ -42,7 +48,7 @@ void Client::lock(
     request.setTransactionId(transactionId);
     request.setTtl(ttl);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.lock(
+    m_pClient->lock(
         request,
         [callback](gs2::lock::AsyncLockResult r)
         {
@@ -82,7 +88,7 @@ void Client::unlock(
     request.setPropertyId(propertyId);
     request.setTransactionId(transactionId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.unlock(
+    m_pClient->unlock(
         request,
         [callback](gs2::lock::AsyncUnlockResult r)
         {

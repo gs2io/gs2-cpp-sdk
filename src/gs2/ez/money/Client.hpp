@@ -14,15 +14,23 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_MONEY_GS2MONEYRESTCLIENT_HPP_
-#define GS2_EZ_MONEY_GS2MONEYRESTCLIENT_HPP_
+#ifndef GS2_EZ_MONEY_GS2MONEYWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_MONEY_GS2MONEYWEBSOCKETCLIENT_HPP_
 
-#include <gs2/money/Gs2MoneyWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzGetResult.hpp"
 #include "result/EzWithdrawResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace money {
+
+class Gs2MoneyWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -33,10 +41,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::money::Gs2MoneyWebSocketClient m_Client;
+    gs2::money::Gs2MoneyWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  ウォレットを取得します<br />
@@ -77,4 +86,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_MONEY_GS2MONEYRESTCLIENT_HPP_
+#endif //GS2_EZ_MONEY_GS2MONEYWEBSOCKETCLIENT_HPP_

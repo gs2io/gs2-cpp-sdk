@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_EXPERIENCE_MODEL_EZSTATUS_HPP_
 #define GS2_EZ_EXPERIENCE_MODEL_EZSTATUS_HPP_
 
-#include <gs2/experience/model/Status.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace experience {
+namespace gs2 {
+
+namespace experience {
+
+class Status;
+
+}
+
+namespace ez { namespace experience {
 
 class EzStatus : public gs2::Gs2Object
 {
@@ -42,28 +53,9 @@ private:
         gs2::optional<Int64> rankCapValue;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            experienceName(data.experienceName),
-            propertyId(data.propertyId),
-            experienceValue(data.experienceValue),
-            rankValue(data.rankValue),
-            rankCapValue(data.rankCapValue)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::experience::Status& status) :
-            experienceName(status.getExperienceName()),
-            propertyId(status.getPropertyId()),
-            experienceValue(status.getExperienceValue() ? *status.getExperienceValue() : 0),
-            rankValue(status.getRankValue() ? *status.getRankValue() : 0),
-            rankCapValue(status.getRankCapValue() ? *status.getRankCapValue() : 0)
-        {
-        }
-
+        Data(const gs2::experience::Status& status);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -78,28 +70,14 @@ public:
     EzStatus(EzStatus&& ezStatus) = default;
     ~EzStatus() = default;
 
-    EzStatus(gs2::experience::Status status) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(status)
-    {}
+    EzStatus(gs2::experience::Status status);
 
     EzStatus& operator=(const EzStatus& ezStatus) = default;
     EzStatus& operator=(EzStatus&& ezStatus) = default;
 
-    EzStatus deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzStatus);
-    }
+    EzStatus deepCopy() const;
 
-    gs2::experience::Status ToModel() const
-    {
-        gs2::experience::Status status;
-        status.setExperienceName(getExperienceName());
-        status.setPropertyId(getPropertyId());
-        status.setExperienceValue(getExperienceValue());
-        status.setRankValue(getRankValue());
-        status.setRankCapValue(getRankCapValue());
-        return status;
-    }
+    gs2::experience::Status ToModel() const;
 
     // ========================================
     //   Getters

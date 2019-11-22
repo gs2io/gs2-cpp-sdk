@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/friend/Gs2FriendWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace friend_ {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::friend_::Gs2FriendWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::getProfile(
@@ -36,7 +42,7 @@ void Client::getProfile(
     gs2::friend_::GetProfileRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getProfile(
+    m_pClient->getProfile(
         request,
         [callback](gs2::friend_::AsyncGetProfileResult r)
         {
@@ -87,7 +93,7 @@ void Client::updateProfile(
         request.setFriendProfile(std::move(*friendProfile));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.updateProfile(
+    m_pClient->updateProfile(
         request,
         [callback](gs2::friend_::AsyncUpdateProfileResult r)
         {
@@ -123,7 +129,7 @@ void Client::getPublicProfile(
     gs2::friend_::GetPublicProfileRequest request;
     request.setNamespaceName(namespaceName);
     request.setUserId(userId);
-    m_Client.getPublicProfile(
+    m_pClient->getPublicProfile(
         request,
         [callback](gs2::friend_::AsyncGetPublicProfileResult r)
         {
@@ -171,7 +177,7 @@ void Client::describeFollowUsers(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeFollows(
+    m_pClient->describeFollows(
         request,
         [callback](gs2::friend_::AsyncDescribeFollowsResult r)
         {
@@ -209,7 +215,7 @@ void Client::follow(
     request.setNamespaceName(namespaceName);
     request.setTargetUserId(targetUserId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.follow(
+    m_pClient->follow(
         request,
         [callback](gs2::friend_::AsyncFollowResult r)
         {
@@ -247,7 +253,7 @@ void Client::unfollow(
     request.setNamespaceName(namespaceName);
     request.setTargetUserId(targetUserId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.unfollow(
+    m_pClient->unfollow(
         request,
         [callback](gs2::friend_::AsyncUnfollowResult r)
         {
@@ -295,7 +301,7 @@ void Client::describeFriends(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeFriends(
+    m_pClient->describeFriends(
         request,
         [callback](gs2::friend_::AsyncDescribeFriendsResult r)
         {
@@ -335,7 +341,7 @@ void Client::getFriend(
     request.setTargetUserId(targetUserId);
     request.setWithProfile(withProfile);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getFriend(
+    m_pClient->getFriend(
         request,
         [callback](gs2::friend_::AsyncGetFriendResult r)
         {
@@ -373,7 +379,7 @@ void Client::deleteFriend(
     request.setNamespaceName(namespaceName);
     request.setTargetUserId(targetUserId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.deleteFriend(
+    m_pClient->deleteFriend(
         request,
         [callback](gs2::friend_::AsyncDeleteFriendResult r)
         {
@@ -409,7 +415,7 @@ void Client::describeSendRequests(
     gs2::friend_::DescribeSendRequestsRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeSendRequests(
+    m_pClient->describeSendRequests(
         request,
         [callback](gs2::friend_::AsyncDescribeSendRequestsResult r)
         {
@@ -447,7 +453,7 @@ void Client::sendRequest(
     request.setNamespaceName(namespaceName);
     request.setTargetUserId(targetUserId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.sendRequest(
+    m_pClient->sendRequest(
         request,
         [callback](gs2::friend_::AsyncSendRequestResult r)
         {
@@ -485,7 +491,7 @@ void Client::deleteRequest(
     request.setNamespaceName(namespaceName);
     request.setTargetUserId(targetUserId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.deleteRequest(
+    m_pClient->deleteRequest(
         request,
         [callback](gs2::friend_::AsyncDeleteRequestResult r)
         {
@@ -521,7 +527,7 @@ void Client::describeReceiveRequests(
     gs2::friend_::DescribeReceiveRequestsRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeReceiveRequests(
+    m_pClient->describeReceiveRequests(
         request,
         [callback](gs2::friend_::AsyncDescribeReceiveRequestsResult r)
         {
@@ -559,7 +565,7 @@ void Client::accept(
     request.setNamespaceName(namespaceName);
     request.setFromUserId(fromUserId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.acceptRequest(
+    m_pClient->acceptRequest(
         request,
         [callback](gs2::friend_::AsyncAcceptRequestResult r)
         {
@@ -597,7 +603,7 @@ void Client::reject(
     request.setNamespaceName(namespaceName);
     request.setFromUserId(fromUserId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.rejectRequest(
+    m_pClient->rejectRequest(
         request,
         [callback](gs2::friend_::AsyncRejectRequestResult r)
         {

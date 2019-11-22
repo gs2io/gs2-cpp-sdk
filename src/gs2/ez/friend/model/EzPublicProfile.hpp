@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_FRIEND_MODEL_EZPUBLICPROFILE_HPP_
 #define GS2_EZ_FRIEND_MODEL_EZPUBLICPROFILE_HPP_
 
-#include <gs2/friend/model/PublicProfile.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace friend_ {
+namespace gs2 {
+
+namespace friend_ {
+
+class PublicProfile;
+
+}
+
+namespace ez { namespace friend_ {
 
 class EzPublicProfile : public gs2::Gs2Object
 {
@@ -36,22 +47,9 @@ private:
         gs2::optional<StringHolder> publicProfile;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            userId(data.userId),
-            publicProfile(data.publicProfile)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::friend_::PublicProfile& publicProfile) :
-            userId(publicProfile.getUserId()),
-            publicProfile(publicProfile.getPublicProfile())
-        {
-        }
-
+        Data(const gs2::friend_::PublicProfile& publicProfile);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -66,25 +64,14 @@ public:
     EzPublicProfile(EzPublicProfile&& ezPublicProfile) = default;
     ~EzPublicProfile() = default;
 
-    EzPublicProfile(gs2::friend_::PublicProfile publicProfile) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(publicProfile)
-    {}
+    EzPublicProfile(gs2::friend_::PublicProfile publicProfile);
 
     EzPublicProfile& operator=(const EzPublicProfile& ezPublicProfile) = default;
     EzPublicProfile& operator=(EzPublicProfile&& ezPublicProfile) = default;
 
-    EzPublicProfile deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzPublicProfile);
-    }
+    EzPublicProfile deepCopy() const;
 
-    gs2::friend_::PublicProfile ToModel() const
-    {
-        gs2::friend_::PublicProfile publicProfile;
-        publicProfile.setUserId(getUserId());
-        publicProfile.setPublicProfile(getPublicProfile());
-        return publicProfile;
-    }
+    gs2::friend_::PublicProfile ToModel() const;
 
     // ========================================
     //   Getters

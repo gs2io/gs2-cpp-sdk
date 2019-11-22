@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_CHAT_GS2CHATRESTCLIENT_HPP_
-#define GS2_EZ_CHAT_GS2CHATRESTCLIENT_HPP_
+#ifndef GS2_EZ_CHAT_GS2CHATWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_CHAT_GS2CHATWEBSOCKETCLIENT_HPP_
 
-#include <gs2/chat/Gs2ChatWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzCreateRoomResult.hpp"
 #include "result/EzGetRoomResult.hpp"
 #include "result/EzDeleteRoomResult.hpp"
@@ -29,7 +29,15 @@
 #include "result/EzUnsubscribeResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace chat {
+
+class Gs2ChatWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -40,10 +48,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::chat::Gs2ChatWebSocketClient m_Client;
+    gs2::chat::Gs2ChatWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  ルームの作成<br />
@@ -222,4 +231,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_CHAT_GS2CHATRESTCLIENT_HPP_
+#endif //GS2_EZ_CHAT_GS2CHATWEBSOCKETCLIENT_HPP_

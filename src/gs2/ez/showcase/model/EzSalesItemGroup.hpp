@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_SHOWCASE_MODEL_EZSALESITEMGROUP_HPP_
 #define GS2_EZ_SHOWCASE_MODEL_EZSALESITEMGROUP_HPP_
 
-#include <gs2/showcase/model/SalesItemGroup.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzSalesItem.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace showcase {
+namespace gs2 {
+
+namespace showcase {
+
+class SalesItemGroup;
+
+}
+
+namespace ez { namespace showcase {
 
 class EzSalesItemGroup : public gs2::Gs2Object
 {
@@ -39,34 +50,9 @@ private:
         gs2::optional<List<EzSalesItem>> salesItems;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata)
-        {
-            if (data.salesItems)
-            {
-                salesItems = data.salesItems->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::showcase::SalesItemGroup& salesItemGroup) :
-            name(salesItemGroup.getName()),
-            metadata(salesItemGroup.getMetadata())
-        {
-            salesItems.emplace();
-            if (salesItemGroup.getSalesItems())
-            {
-                for (int i = 0; i < salesItemGroup.getSalesItems()->getCount(); ++i)
-                {
-                    *salesItems += EzSalesItem((*salesItemGroup.getSalesItems())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::showcase::SalesItemGroup& salesItemGroup);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -81,34 +67,14 @@ public:
     EzSalesItemGroup(EzSalesItemGroup&& ezSalesItemGroup) = default;
     ~EzSalesItemGroup() = default;
 
-    EzSalesItemGroup(gs2::showcase::SalesItemGroup salesItemGroup) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(salesItemGroup)
-    {}
+    EzSalesItemGroup(gs2::showcase::SalesItemGroup salesItemGroup);
 
     EzSalesItemGroup& operator=(const EzSalesItemGroup& ezSalesItemGroup) = default;
     EzSalesItemGroup& operator=(EzSalesItemGroup&& ezSalesItemGroup) = default;
 
-    EzSalesItemGroup deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzSalesItemGroup);
-    }
+    EzSalesItemGroup deepCopy() const;
 
-    gs2::showcase::SalesItemGroup ToModel() const
-    {
-        gs2::showcase::SalesItemGroup salesItemGroup;
-        salesItemGroup.setName(getName());
-        salesItemGroup.setMetadata(getMetadata());
-        {
-            gs2::List<gs2::showcase::SalesItem> list;
-            auto& salesItems = getSalesItems();
-            for (int i = 0; i < salesItems.getCount(); ++i)
-            {
-                list += salesItems[i].ToModel();
-            }
-            salesItemGroup.setSalesItems(list);
-        }
-        return salesItemGroup;
-    }
+    gs2::showcase::SalesItemGroup ToModel() const;
 
     // ========================================
     //   Getters

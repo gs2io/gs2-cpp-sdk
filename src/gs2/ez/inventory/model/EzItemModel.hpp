@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_INVENTORY_MODEL_EZITEMMODEL_HPP_
 #define GS2_EZ_INVENTORY_MODEL_EZITEMMODEL_HPP_
 
-#include <gs2/inventory/model/ItemModel.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace inventory {
+namespace gs2 {
+
+namespace inventory {
+
+class ItemModel;
+
+}
+
+namespace ez { namespace inventory {
 
 class EzItemModel : public gs2::Gs2Object
 {
@@ -42,28 +53,9 @@ private:
         gs2::optional<Int32> sortValue;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata),
-            stackingLimit(data.stackingLimit),
-            allowMultipleStacks(data.allowMultipleStacks),
-            sortValue(data.sortValue)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::inventory::ItemModel& itemModel) :
-            name(itemModel.getName()),
-            metadata(itemModel.getMetadata()),
-            stackingLimit(itemModel.getStackingLimit() ? *itemModel.getStackingLimit() : 0),
-            allowMultipleStacks(itemModel.getAllowMultipleStacks() ? *itemModel.getAllowMultipleStacks() : false),
-            sortValue(itemModel.getSortValue() ? *itemModel.getSortValue() : 0)
-        {
-        }
-
+        Data(const gs2::inventory::ItemModel& itemModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -78,28 +70,14 @@ public:
     EzItemModel(EzItemModel&& ezItemModel) = default;
     ~EzItemModel() = default;
 
-    EzItemModel(gs2::inventory::ItemModel itemModel) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(itemModel)
-    {}
+    EzItemModel(gs2::inventory::ItemModel itemModel);
 
     EzItemModel& operator=(const EzItemModel& ezItemModel) = default;
     EzItemModel& operator=(EzItemModel&& ezItemModel) = default;
 
-    EzItemModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzItemModel);
-    }
+    EzItemModel deepCopy() const;
 
-    gs2::inventory::ItemModel ToModel() const
-    {
-        gs2::inventory::ItemModel itemModel;
-        itemModel.setName(getName());
-        itemModel.setMetadata(getMetadata());
-        itemModel.setStackingLimit(getStackingLimit());
-        itemModel.setAllowMultipleStacks(getAllowMultipleStacks());
-        itemModel.setSortValue(getSortValue());
-        return itemModel;
-    }
+    gs2::inventory::ItemModel ToModel() const;
 
     // ========================================
     //   Getters

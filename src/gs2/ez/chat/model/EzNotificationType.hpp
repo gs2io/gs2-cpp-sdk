@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_CHAT_MODEL_EZNOTIFICATIONTYPE_HPP_
 #define GS2_EZ_CHAT_MODEL_EZNOTIFICATIONTYPE_HPP_
 
-#include <gs2/chat/model/NotificationType.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace chat {
+namespace gs2 {
+
+namespace chat {
+
+class NotificationType;
+
+}
+
+namespace ez { namespace chat {
 
 class EzNotificationType : public gs2::Gs2Object
 {
@@ -36,22 +47,9 @@ private:
         gs2::optional<Bool> enableTransferMobilePushNotification;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            category(data.category),
-            enableTransferMobilePushNotification(data.enableTransferMobilePushNotification)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::chat::NotificationType& notificationType) :
-            category(notificationType.getCategory() ? *notificationType.getCategory() : 0),
-            enableTransferMobilePushNotification(notificationType.getEnableTransferMobilePushNotification() ? *notificationType.getEnableTransferMobilePushNotification() : false)
-        {
-        }
-
+        Data(const gs2::chat::NotificationType& notificationType);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -66,25 +64,14 @@ public:
     EzNotificationType(EzNotificationType&& ezNotificationType) = default;
     ~EzNotificationType() = default;
 
-    EzNotificationType(gs2::chat::NotificationType notificationType) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(notificationType)
-    {}
+    EzNotificationType(gs2::chat::NotificationType notificationType);
 
     EzNotificationType& operator=(const EzNotificationType& ezNotificationType) = default;
     EzNotificationType& operator=(EzNotificationType&& ezNotificationType) = default;
 
-    EzNotificationType deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzNotificationType);
-    }
+    EzNotificationType deepCopy() const;
 
-    gs2::chat::NotificationType ToModel() const
-    {
-        gs2::chat::NotificationType notificationType;
-        notificationType.setCategory(getCategory());
-        notificationType.setEnableTransferMobilePushNotification(getEnableTransferMobilePushNotification());
-        return notificationType;
-    }
+    gs2::chat::NotificationType ToModel() const;
 
     // ========================================
     //   Getters

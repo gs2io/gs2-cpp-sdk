@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_FRIEND_MODEL_EZFRIENDREQUEST_HPP_
 #define GS2_EZ_FRIEND_MODEL_EZFRIENDREQUEST_HPP_
 
-#include <gs2/friend/model/FriendRequest.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace friend_ {
+namespace gs2 {
+
+namespace friend_ {
+
+class FriendRequest;
+
+}
+
+namespace ez { namespace friend_ {
 
 class EzFriendRequest : public gs2::Gs2Object
 {
@@ -36,22 +47,9 @@ private:
         gs2::optional<StringHolder> targetUserId;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            userId(data.userId),
-            targetUserId(data.targetUserId)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::friend_::FriendRequest& friendRequest) :
-            userId(friendRequest.getUserId()),
-            targetUserId(friendRequest.getTargetUserId())
-        {
-        }
-
+        Data(const gs2::friend_::FriendRequest& friendRequest);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -66,25 +64,14 @@ public:
     EzFriendRequest(EzFriendRequest&& ezFriendRequest) = default;
     ~EzFriendRequest() = default;
 
-    EzFriendRequest(gs2::friend_::FriendRequest friendRequest) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(friendRequest)
-    {}
+    EzFriendRequest(gs2::friend_::FriendRequest friendRequest);
 
     EzFriendRequest& operator=(const EzFriendRequest& ezFriendRequest) = default;
     EzFriendRequest& operator=(EzFriendRequest&& ezFriendRequest) = default;
 
-    EzFriendRequest deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzFriendRequest);
-    }
+    EzFriendRequest deepCopy() const;
 
-    gs2::friend_::FriendRequest ToModel() const
-    {
-        gs2::friend_::FriendRequest friendRequest;
-        friendRequest.setUserId(getUserId());
-        friendRequest.setTargetUserId(getTargetUserId());
-        return friendRequest;
-    }
+    gs2::friend_::FriendRequest ToModel() const;
 
     // ========================================
     //   Getters

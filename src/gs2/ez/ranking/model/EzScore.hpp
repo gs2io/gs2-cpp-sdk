@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_RANKING_MODEL_EZSCORE_HPP_
 #define GS2_EZ_RANKING_MODEL_EZSCORE_HPP_
 
-#include <gs2/ranking/model/Score.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace ranking {
+namespace gs2 {
+
+namespace ranking {
+
+class Score;
+
+}
+
+namespace ez { namespace ranking {
 
 class EzScore : public gs2::Gs2Object
 {
@@ -42,28 +53,9 @@ private:
         gs2::optional<StringHolder> metadata;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            categoryName(data.categoryName),
-            userId(data.userId),
-            scorerUserId(data.scorerUserId),
-            score(data.score),
-            metadata(data.metadata)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::ranking::Score& score) :
-            categoryName(score.getCategoryName()),
-            userId(score.getUserId()),
-            scorerUserId(score.getScorerUserId()),
-            score(score.getScore() ? *score.getScore() : 0),
-            metadata(score.getMetadata())
-        {
-        }
-
+        Data(const gs2::ranking::Score& score);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -78,28 +70,14 @@ public:
     EzScore(EzScore&& ezScore) = default;
     ~EzScore() = default;
 
-    EzScore(gs2::ranking::Score score) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(score)
-    {}
+    EzScore(gs2::ranking::Score score);
 
     EzScore& operator=(const EzScore& ezScore) = default;
     EzScore& operator=(EzScore&& ezScore) = default;
 
-    EzScore deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzScore);
-    }
+    EzScore deepCopy() const;
 
-    gs2::ranking::Score ToModel() const
-    {
-        gs2::ranking::Score score;
-        score.setCategoryName(getCategoryName());
-        score.setUserId(getUserId());
-        score.setScorerUserId(getScorerUserId());
-        score.setScore(getScore());
-        score.setMetadata(getMetadata());
-        return score;
-    }
+    gs2::ranking::Score ToModel() const;
 
     // ========================================
     //   Getters

@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_STAMINA_MODEL_EZSTAMINA_HPP_
 #define GS2_EZ_STAMINA_MODEL_EZSTAMINA_HPP_
 
-#include <gs2/stamina/model/Stamina.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace stamina {
+namespace gs2 {
+
+namespace stamina {
+
+class Stamina;
+
+}
+
+namespace ez { namespace stamina {
 
 class EzStamina : public gs2::Gs2Object
 {
@@ -44,30 +55,9 @@ private:
         gs2::optional<Int64> nextRecoverAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            staminaName(data.staminaName),
-            value(data.value),
-            maxValue(data.maxValue),
-            recoverIntervalMinutes(data.recoverIntervalMinutes),
-            recoverValue(data.recoverValue),
-            nextRecoverAt(data.nextRecoverAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::stamina::Stamina& stamina) :
-            staminaName(stamina.getStaminaName()),
-            value(stamina.getValue() ? *stamina.getValue() : 0),
-            maxValue(stamina.getMaxValue() ? *stamina.getMaxValue() : 0),
-            recoverIntervalMinutes(stamina.getRecoverIntervalMinutes() ? *stamina.getRecoverIntervalMinutes() : 0),
-            recoverValue(stamina.getRecoverValue() ? *stamina.getRecoverValue() : 0),
-            nextRecoverAt(stamina.getNextRecoverAt() ? *stamina.getNextRecoverAt() : 0)
-        {
-        }
-
+        Data(const gs2::stamina::Stamina& stamina);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -82,29 +72,14 @@ public:
     EzStamina(EzStamina&& ezStamina) = default;
     ~EzStamina() = default;
 
-    EzStamina(gs2::stamina::Stamina stamina) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(stamina)
-    {}
+    EzStamina(gs2::stamina::Stamina stamina);
 
     EzStamina& operator=(const EzStamina& ezStamina) = default;
     EzStamina& operator=(EzStamina&& ezStamina) = default;
 
-    EzStamina deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzStamina);
-    }
+    EzStamina deepCopy() const;
 
-    gs2::stamina::Stamina ToModel() const
-    {
-        gs2::stamina::Stamina stamina;
-        stamina.setStaminaName(getStaminaName());
-        stamina.setValue(getValue());
-        stamina.setMaxValue(getMaxValue());
-        stamina.setRecoverIntervalMinutes(getRecoverIntervalMinutes());
-        stamina.setRecoverValue(getRecoverValue());
-        stamina.setNextRecoverAt(getNextRecoverAt());
-        return stamina;
-    }
+    gs2::stamina::Stamina ToModel() const;
 
     // ========================================
     //   Getters

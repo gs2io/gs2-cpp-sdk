@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,13 +17,26 @@
 #ifndef GS2_EZ_VERSION_MODEL_EZVERSIONMODEL_HPP_
 #define GS2_EZ_VERSION_MODEL_EZVERSIONMODEL_HPP_
 
-#include <gs2/version/model/VersionModel.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzVersion.hpp"
 #include "EzVersion.hpp"
 #include "EzVersion.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace version {
+namespace gs2 {
+
+namespace version {
+
+class VersionModel;
+
+}
+
+namespace ez { namespace version {
 
 class EzVersionModel : public gs2::Gs2Object
 {
@@ -49,41 +60,9 @@ private:
         gs2::optional<Bool> needSignature;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata),
-            scope(data.scope),
-            needSignature(data.needSignature)
-        {
-            if (data.warningVersion)
-            {
-                warningVersion = data.warningVersion->deepCopy();
-            }
-            if (data.errorVersion)
-            {
-                errorVersion = data.errorVersion->deepCopy();
-            }
-            if (data.currentVersion)
-            {
-                currentVersion = data.currentVersion->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::version::VersionModel& versionModel) :
-            name(versionModel.getName()),
-            metadata(versionModel.getMetadata()),
-            warningVersion(*versionModel.getWarningVersion()),
-            errorVersion(*versionModel.getErrorVersion()),
-            scope(versionModel.getScope()),
-            currentVersion(*versionModel.getCurrentVersion()),
-            needSignature(versionModel.getNeedSignature() ? *versionModel.getNeedSignature() : false)
-        {
-        }
-
+        Data(const gs2::version::VersionModel& versionModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -98,30 +77,14 @@ public:
     EzVersionModel(EzVersionModel&& ezVersionModel) = default;
     ~EzVersionModel() = default;
 
-    EzVersionModel(gs2::version::VersionModel versionModel) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(versionModel)
-    {}
+    EzVersionModel(gs2::version::VersionModel versionModel);
 
     EzVersionModel& operator=(const EzVersionModel& ezVersionModel) = default;
     EzVersionModel& operator=(EzVersionModel&& ezVersionModel) = default;
 
-    EzVersionModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzVersionModel);
-    }
+    EzVersionModel deepCopy() const;
 
-    gs2::version::VersionModel ToModel() const
-    {
-        gs2::version::VersionModel versionModel;
-        versionModel.setName(getName());
-        versionModel.setMetadata(getMetadata());
-        versionModel.setWarningVersion(getWarningVersion().ToModel());
-        versionModel.setErrorVersion(getErrorVersion().ToModel());
-        versionModel.setScope(getScope());
-        versionModel.setCurrentVersion(getCurrentVersion().ToModel());
-        versionModel.setNeedSignature(getNeedSignature());
-        return versionModel;
-    }
+    gs2::version::VersionModel ToModel() const;
 
     // ========================================
     //   Getters

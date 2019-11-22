@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/account/Gs2AccountWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace account {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::account::Gs2AccountWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::create(
@@ -34,7 +40,7 @@ void Client::create(
 {
     gs2::account::CreateAccountRequest request;
     request.setNamespaceName(namespaceName);
-    m_Client.createAccount(
+    m_pClient->createAccount(
         request,
         [callback](gs2::account::AsyncCreateAccountResult r)
         {
@@ -74,7 +80,7 @@ void Client::authentication(
     request.setUserId(userId);
     request.setKeyId(keyId);
     request.setPassword(password);
-    m_Client.authentication(
+    m_pClient->authentication(
         request,
         [callback](gs2::account::AsyncAuthenticationResult r)
         {
@@ -116,7 +122,7 @@ void Client::addTakeOverSetting(
     request.setUserIdentifier(userIdentifier);
     request.setPassword(password);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.createTakeOver(
+    m_pClient->createTakeOver(
         request,
         [callback](gs2::account::AsyncCreateTakeOverResult r)
         {
@@ -162,7 +168,7 @@ void Client::listTakeOverSettings(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeTakeOvers(
+    m_pClient->describeTakeOvers(
         request,
         [callback](gs2::account::AsyncDescribeTakeOversResult r)
         {
@@ -204,7 +210,7 @@ void Client::updateTakeOverSetting(
     request.setOldPassword(oldPassword);
     request.setPassword(password);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.updateTakeOver(
+    m_pClient->updateTakeOver(
         request,
         [callback](gs2::account::AsyncUpdateTakeOverResult r)
         {
@@ -242,7 +248,7 @@ void Client::deleteTakeOverSetting(
     request.setNamespaceName(namespaceName);
     request.setType(type);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.deleteTakeOver(
+    m_pClient->deleteTakeOver(
         request,
         [callback](gs2::account::AsyncDeleteTakeOverResult r)
         {
@@ -274,7 +280,7 @@ void Client::doTakeOver(
     request.setType(type);
     request.setUserIdentifier(userIdentifier);
     request.setPassword(password);
-    m_Client.doTakeOver(
+    m_pClient->doTakeOver(
         request,
         [callback](gs2::account::AsyncDoTakeOverResult r)
         {

@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_STAMINA_MODEL_EZRECOVERINTERVALTABLE_HPP_
 #define GS2_EZ_STAMINA_MODEL_EZRECOVERINTERVALTABLE_HPP_
 
-#include <gs2/stamina/model/RecoverIntervalTable.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace stamina {
+namespace gs2 {
+
+namespace stamina {
+
+class RecoverIntervalTable;
+
+}
+
+namespace ez { namespace stamina {
 
 class EzRecoverIntervalTable : public gs2::Gs2Object
 {
@@ -40,29 +51,9 @@ private:
         gs2::optional<List<Int32>> values;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata),
-            experienceModelId(data.experienceModelId)
-        {
-            if (data.values)
-            {
-                values = data.values->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::stamina::RecoverIntervalTable& recoverIntervalTable) :
-            name(recoverIntervalTable.getName()),
-            metadata(recoverIntervalTable.getMetadata()),
-            experienceModelId(recoverIntervalTable.getExperienceModelId()),
-            values(recoverIntervalTable.getValues())
-        {
-        }
-
+        Data(const gs2::stamina::RecoverIntervalTable& recoverIntervalTable);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -77,27 +68,14 @@ public:
     EzRecoverIntervalTable(EzRecoverIntervalTable&& ezRecoverIntervalTable) = default;
     ~EzRecoverIntervalTable() = default;
 
-    EzRecoverIntervalTable(gs2::stamina::RecoverIntervalTable recoverIntervalTable) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(recoverIntervalTable)
-    {}
+    EzRecoverIntervalTable(gs2::stamina::RecoverIntervalTable recoverIntervalTable);
 
     EzRecoverIntervalTable& operator=(const EzRecoverIntervalTable& ezRecoverIntervalTable) = default;
     EzRecoverIntervalTable& operator=(EzRecoverIntervalTable&& ezRecoverIntervalTable) = default;
 
-    EzRecoverIntervalTable deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRecoverIntervalTable);
-    }
+    EzRecoverIntervalTable deepCopy() const;
 
-    gs2::stamina::RecoverIntervalTable ToModel() const
-    {
-        gs2::stamina::RecoverIntervalTable recoverIntervalTable;
-        recoverIntervalTable.setName(getName());
-        recoverIntervalTable.setMetadata(getMetadata());
-        recoverIntervalTable.setExperienceModelId(getExperienceModelId());
-        recoverIntervalTable.setValues(getValues());
-        return recoverIntervalTable;
-    }
+    gs2::stamina::RecoverIntervalTable ToModel() const;
 
     // ========================================
     //   Getters

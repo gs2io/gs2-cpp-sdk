@@ -36,6 +36,15 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzGathering.cpp
+        model/EzResponseCache.cpp
+        model/EzNotificationSetting.cpp
+        model/EzLogSetting.cpp
+        model/EzAttributeRange.cpp
+        model/EzCapacityOfRole.cpp
+        model/EzAttribute.cpp
+        model/EzPlayer.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC

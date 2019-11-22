@@ -14,17 +14,25 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_STAMINA_GS2STAMINARESTCLIENT_HPP_
-#define GS2_EZ_STAMINA_GS2STAMINARESTCLIENT_HPP_
+#ifndef GS2_EZ_STAMINA_GS2STAMINAWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_STAMINA_GS2STAMINAWEBSOCKETCLIENT_HPP_
 
-#include <gs2/stamina/Gs2StaminaWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzListStaminaModelsResult.hpp"
 #include "result/EzGetStaminaModelResult.hpp"
 #include "result/EzGetStaminaResult.hpp"
 #include "result/EzConsumeResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace stamina {
+
+class Gs2StaminaWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -35,10 +43,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::stamina::Gs2StaminaWebSocketClient m_Client;
+    gs2::stamina::Gs2StaminaWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  スタミナモデルを認証<br />
@@ -101,4 +110,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_STAMINA_GS2STAMINARESTCLIENT_HPP_
+#endif //GS2_EZ_STAMINA_GS2STAMINAWEBSOCKETCLIENT_HPP_

@@ -40,6 +40,22 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzSalesItemMaster.cpp
+        model/EzSalesItemGroupMaster.cpp
+        model/EzShowcaseMaster.cpp
+        model/EzCurrentShowcaseMaster.cpp
+        model/EzResponseCache.cpp
+        model/EzGitHubCheckoutSetting.cpp
+        model/EzLogSetting.cpp
+        model/EzSalesItem.cpp
+        model/EzSalesItemGroup.cpp
+        model/EzShowcase.cpp
+        model/EzDisplayItem.cpp
+        model/EzConfig.cpp
+        model/EzConsumeAction.cpp
+        model/EzAcquireAction.cpp
+        model/EzDisplayItemMaster.cpp
         )
 
 add_library(${PROJECT_NAME} STATIC

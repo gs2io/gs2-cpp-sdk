@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/inventory/Gs2InventoryWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace inventory {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::inventory::Gs2InventoryWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::listInventoryModels(
@@ -34,7 +40,7 @@ void Client::listInventoryModels(
 {
     gs2::inventory::DescribeInventoryModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_Client.describeInventoryModels(
+    m_pClient->describeInventoryModels(
         request,
         [callback](gs2::inventory::AsyncDescribeInventoryModelsResult r)
         {
@@ -70,7 +76,7 @@ void Client::getInventoryModel(
     gs2::inventory::GetInventoryModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setInventoryName(inventoryName);
-    m_Client.getInventoryModel(
+    m_pClient->getInventoryModel(
         request,
         [callback](gs2::inventory::AsyncGetInventoryModelResult r)
         {
@@ -106,7 +112,7 @@ void Client::listItemModels(
     gs2::inventory::DescribeItemModelsRequest request;
     request.setNamespaceName(namespaceName);
     request.setInventoryName(inventoryName);
-    m_Client.describeItemModels(
+    m_pClient->describeItemModels(
         request,
         [callback](gs2::inventory::AsyncDescribeItemModelsResult r)
         {
@@ -144,7 +150,7 @@ void Client::getItemModel(
     request.setNamespaceName(namespaceName);
     request.setInventoryName(inventoryName);
     request.setItemName(itemName);
-    m_Client.getItemModel(
+    m_pClient->getItemModel(
         request,
         [callback](gs2::inventory::AsyncGetItemModelResult r)
         {
@@ -190,7 +196,7 @@ void Client::listInventories(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeInventories(
+    m_pClient->describeInventories(
         request,
         [callback](gs2::inventory::AsyncDescribeInventoriesResult r)
         {
@@ -228,7 +234,7 @@ void Client::getInventory(
     request.setNamespaceName(namespaceName);
     request.setInventoryName(inventoryName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getInventory(
+    m_pClient->getInventory(
         request,
         [callback](gs2::inventory::AsyncGetInventoryResult r)
         {
@@ -276,7 +282,7 @@ void Client::listItems(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeItemSets(
+    m_pClient->describeItemSets(
         request,
         [callback](gs2::inventory::AsyncDescribeItemSetsResult r)
         {
@@ -316,7 +322,7 @@ void Client::getItem(
     request.setInventoryName(inventoryName);
     request.setItemName(itemName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getItemSet(
+    m_pClient->getItemSet(
         request,
         [callback](gs2::inventory::AsyncGetItemSetResult r)
         {
@@ -358,7 +364,7 @@ void Client::getItemWithSignature(
     request.setItemName(itemName);
     request.setKeyId(keyId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getItemWithSignature(
+    m_pClient->getItemWithSignature(
         request,
         [callback](gs2::inventory::AsyncGetItemWithSignatureResult r)
         {
@@ -400,7 +406,7 @@ void Client::consume(
     request.setItemName(itemName);
     request.setConsumeCount(consumeCount);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.consumeItemSet(
+    m_pClient->consumeItemSet(
         request,
         [callback](gs2::inventory::AsyncConsumeItemSetResult r)
         {

@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_MISSION_GS2MISSIONRESTCLIENT_HPP_
-#define GS2_EZ_MISSION_GS2MISSIONRESTCLIENT_HPP_
+#ifndef GS2_EZ_MISSION_GS2MISSIONWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_MISSION_GS2MISSIONWEBSOCKETCLIENT_HPP_
 
-#include <gs2/mission/Gs2MissionWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzListCompletesResult.hpp"
 #include "result/EzGetCompleteResult.hpp"
 #include "result/EzReceiveRewardsResult.hpp"
@@ -29,7 +29,15 @@
 #include "result/EzGetMissionTaskModelResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace mission {
+
+class Gs2MissionWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -40,10 +48,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::mission::Gs2MissionWebSocketClient m_Client;
+    gs2::mission::Gs2MissionWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  達成したミッションの一覧を取得<br />
@@ -176,4 +185,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_MISSION_GS2MISSIONRESTCLIENT_HPP_
+#endif //GS2_EZ_MISSION_GS2MISSIONWEBSOCKETCLIENT_HPP_

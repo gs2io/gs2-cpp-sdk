@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_VERSION_MODEL_EZTARGETVERSION_HPP_
 #define GS2_EZ_VERSION_MODEL_EZTARGETVERSION_HPP_
 
-#include <gs2/version/model/TargetVersion.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzVersion.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace version {
+namespace gs2 {
+
+namespace version {
+
+class TargetVersion;
+
+}
+
+namespace ez { namespace version {
 
 class EzTargetVersion : public gs2::Gs2Object
 {
@@ -41,29 +52,9 @@ private:
         gs2::optional<StringHolder> signature;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            versionName(data.versionName),
-            body(data.body),
-            signature(data.signature)
-        {
-            if (data.version)
-            {
-                version = data.version->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::version::TargetVersion& targetVersion) :
-            versionName(targetVersion.getVersionName()),
-            version(*targetVersion.getVersion()),
-            body(targetVersion.getBody()),
-            signature(targetVersion.getSignature())
-        {
-        }
-
+        Data(const gs2::version::TargetVersion& targetVersion);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -78,27 +69,14 @@ public:
     EzTargetVersion(EzTargetVersion&& ezTargetVersion) = default;
     ~EzTargetVersion() = default;
 
-    EzTargetVersion(gs2::version::TargetVersion targetVersion) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(targetVersion)
-    {}
+    EzTargetVersion(gs2::version::TargetVersion targetVersion);
 
     EzTargetVersion& operator=(const EzTargetVersion& ezTargetVersion) = default;
     EzTargetVersion& operator=(EzTargetVersion&& ezTargetVersion) = default;
 
-    EzTargetVersion deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzTargetVersion);
-    }
+    EzTargetVersion deepCopy() const;
 
-    gs2::version::TargetVersion ToModel() const
-    {
-        gs2::version::TargetVersion targetVersion;
-        targetVersion.setVersionName(getVersionName());
-        targetVersion.setVersion(getVersion().ToModel());
-        targetVersion.setBody(getBody());
-        targetVersion.setSignature(getSignature());
-        return targetVersion;
-    }
+    gs2::version::TargetVersion ToModel() const;
 
     // ========================================
     //   Getters

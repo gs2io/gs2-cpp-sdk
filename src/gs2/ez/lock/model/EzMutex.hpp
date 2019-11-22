@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_LOCK_MODEL_EZMUTEX_HPP_
 #define GS2_EZ_LOCK_MODEL_EZMUTEX_HPP_
 
-#include <gs2/lock/model/Mutex.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace lock {
+namespace gs2 {
+
+namespace lock {
+
+class Mutex;
+
+}
+
+namespace ez { namespace lock {
 
 class EzMutex : public gs2::Gs2Object
 {
@@ -42,28 +53,9 @@ private:
         gs2::optional<Int64> ttlAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            mutexId(data.mutexId),
-            propertyId(data.propertyId),
-            transactionId(data.transactionId),
-            referenceCount(data.referenceCount),
-            ttlAt(data.ttlAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::lock::Mutex& mutex) :
-            mutexId(mutex.getMutexId()),
-            propertyId(mutex.getPropertyId()),
-            transactionId(mutex.getTransactionId()),
-            referenceCount(mutex.getReferenceCount() ? *mutex.getReferenceCount() : 0),
-            ttlAt(mutex.getTtlAt() ? *mutex.getTtlAt() : 0)
-        {
-        }
-
+        Data(const gs2::lock::Mutex& mutex);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -78,28 +70,14 @@ public:
     EzMutex(EzMutex&& ezMutex) = default;
     ~EzMutex() = default;
 
-    EzMutex(gs2::lock::Mutex mutex) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(mutex)
-    {}
+    EzMutex(gs2::lock::Mutex mutex);
 
     EzMutex& operator=(const EzMutex& ezMutex) = default;
     EzMutex& operator=(EzMutex&& ezMutex) = default;
 
-    EzMutex deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzMutex);
-    }
+    EzMutex deepCopy() const;
 
-    gs2::lock::Mutex ToModel() const
-    {
-        gs2::lock::Mutex mutex;
-        mutex.setMutexId(getMutexId());
-        mutex.setPropertyId(getPropertyId());
-        mutex.setTransactionId(getTransactionId());
-        mutex.setReferenceCount(getReferenceCount());
-        mutex.setTtlAt(getTtlAt());
-        return mutex;
-    }
+    gs2::lock::Mutex ToModel() const;
 
     // ========================================
     //   Getters
