@@ -12,16 +12,23 @@
 # express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-include(CheckFunctionExists)
+if(NOT GS2_ALREADY_INCLUDED_Gs2Sdk)
+    set(GS2_ALREADY_INCLUDED_Gs2Sdk True)
+    set(GS2_CURRENT_LIST_DIR_Gs2Sdk ${CMAKE_CURRENT_LIST_DIR})
 
-function(gs2_inherit_cocos2dx_settings target_name)
-    # 以下の関数が存在しないバージョンでは CocosCompileOptions.cmake でグローバルに設定が反映されているので、個別設定は不要
-    check_function_exists(use_cocos2dx_compile_define function_exists)
-    if(${function_exists})
-        use_cocos2dx_compile_define(${target_name})
-    endif()
-    check_function_exists(use_cocos2dx_compile_options function_exists)
-    if(${function_exists})
-        use_cocos2dx_compile_options(${target_name})
-    endif()
-endfunction()
+    add_custom_target(gs2-cpp-sdk-all)
+
+    include(CheckFunctionExists)
+
+    function(gs2_inherit_cocos2dx_settings target_name)
+        # 以下の関数が存在しないバージョンでは CocosCompileOptions.cmake でグローバルに設定が反映されているので、個別設定は不要
+        check_function_exists(use_cocos2dx_compile_define function_exists)
+        if(${function_exists})
+            use_cocos2dx_compile_define(${target_name})
+        endif()
+        check_function_exists(use_cocos2dx_compile_options function_exists)
+        if(${function_exists})
+            use_cocos2dx_compile_options(${target_name})
+        endif()
+    endfunction()
+endif()
