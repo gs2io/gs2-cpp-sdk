@@ -15,6 +15,8 @@
 cmake_minimum_required(VERSION 3.2)
 project(gs2-cpp-sdk-core)
 
+include(../Gs2Sdk.cmake)
+
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         AbstractGs2Client.hpp
         AsyncResult.hpp
@@ -129,6 +131,10 @@ target_link_libraries(${PROJECT_NAME}
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/../../
+        )
+
+add_dependencies(gs2-cpp-sdk-all
+        ${PROJECT_NAME}
         )
 
 set(GS2_ALL_LIBRARIES
