@@ -104,26 +104,25 @@ set(${PROJECT_NAME}_FILES
         )
 
 
-add_library(${PROJECT_NAME} STATIC
-        ${${PROJECT_NAME}_SOURCE_FILES}
+gs2_add_library(${PROJECT_NAME} STATIC
+        "${${PROJECT_NAME}_SOURCE_FILES}"
         )
 
 gs2_inherit_cocos2dx_settings(${PROJECT_NAME})
 
-target_include_directories(${PROJECT_NAME}
+gs2_target_include_directories(${PROJECT_NAME}
         PUBLIC ../..
         )
-target_link_libraries(${PROJECT_NAME}
-        cocos2d
+
+gs2_target_link_libraries(${PROJECT_NAME}
+        PUBLIC cocos2d
         )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/../../"
-        ARCHIVE_OUTPUT_DIRECTORY "${GS2_SDK_ARCHIVE_OUTPUT_DIRECTORY}"
-        LIBRARY_OUTPUT_DIRECTORY "${GS2_SDK_LIBRARY_OUTPUT_DIRECTORY}"
         )
 
-add_dependencies(gs2-cpp-sdk-all
+gs2_add_dependencies(gs2-cpp-sdk-all
         ${PROJECT_NAME}
         )
 
