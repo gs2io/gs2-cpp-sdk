@@ -52,6 +52,11 @@ add_library(${PROJECT_NAME} STATIC
 gs2_inherit_cocos2dx_settings(${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME} gs2-cpp-sdk-ez)
 
+set_target_properties(${PROJECT_NAME} PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${GS2_SDK_ARCHIVE_OUTPUT_DIRECTORY}"
+        LIBRARY_OUTPUT_DIRECTORY "${GS2_SDK_LIBRARY_OUTPUT_DIRECTORY}"
+        )
+
 add_dependencies(gs2-cpp-sdk-all
         ${PROJECT_NAME}
         )
