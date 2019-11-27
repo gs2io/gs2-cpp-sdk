@@ -60,19 +60,17 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         model/EzLogSetting.cpp
         )
 
-add_library(${PROJECT_NAME} STATIC
-        ${${PROJECT_NAME}_SOURCE_FILES}
+gs2_add_library(${PROJECT_NAME} STATIC
+        "${${PROJECT_NAME}_SOURCE_FILES}"
         )
 
 gs2_inherit_cocos2dx_settings(${PROJECT_NAME})
-target_link_libraries(${PROJECT_NAME} gs2-cpp-sdk-ez)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY "${GS2_SDK_ARCHIVE_OUTPUT_DIRECTORY}"
-        LIBRARY_OUTPUT_DIRECTORY "${GS2_SDK_LIBRARY_OUTPUT_DIRECTORY}"
+gs2_target_link_libraries(${PROJECT_NAME}
+        PUBLIC gs2-cpp-sdk-ez
         )
 
-add_dependencies(gs2-cpp-sdk-all
+gs2_add_dependencies(gs2-cpp-sdk-all
         ${PROJECT_NAME}
         )
 

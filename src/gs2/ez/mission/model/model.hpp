@@ -19,8 +19,8 @@
 
 #include <gs2/core/common.hpp>
 #include "EzCounterScopeModel.hpp"
-#include "EzMissionTaskModel.hpp"
 #include "EzComplete.hpp"
+#include "EzMissionTaskModel.hpp"
 #include "EzCounterModel.hpp"
 #include "EzAcquireAction.hpp"
 #include "EzConfig.hpp"
