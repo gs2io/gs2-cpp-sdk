@@ -18,6 +18,9 @@ if(NOT GS2_ALREADY_INCLUDED_Gs2Sdk)
 
     add_custom_target(gs2-cpp-sdk-all)
 
+    set(GS2_SDK_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+    set(GS2_SDK_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+
     include(CheckFunctionExists)
 
     function(gs2_inherit_cocos2dx_settings target_name)
