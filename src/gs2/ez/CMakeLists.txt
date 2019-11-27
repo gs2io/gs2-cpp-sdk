@@ -15,6 +15,8 @@
 cmake_minimum_required(VERSION 3.2)
 project(gs2-cpp-sdk-ez)
 
+include(../Gs2Sdk.cmake)
+
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Authenticator.hpp
         Client.hpp
