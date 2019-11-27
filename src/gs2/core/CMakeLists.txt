@@ -97,27 +97,15 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
 file(GLOB ${PROJECT_NAME}_ETC_FILES
         )
 
-if(GS2_LIBRARY_BUILD)
-        include(external/CopyExternalFiles.cmake)
-        define_external_file_rule(
-                ${CMAKE_CURRENT_LIST_DIR}/../../external/
-                ${CMAKE_CURRENT_LIST_DIR}/external/
-                EXTERNAL_FILES
-                EXTERNAL_SOURCE_FILES
-                )
-endif()
-
 set(${PROJECT_NAME}_FILES
         ${${PROJECT_NAME}_HEADER_FILES}
         ${${PROJECT_NAME}_SOURCE_FILES}
         ${${PROJECT_NAME}_ETC_FILES}
-        ${EXTERNAL_FILES}
         )
 
 
 add_library(${PROJECT_NAME} STATIC
         ${${PROJECT_NAME}_SOURCE_FILES}
-        ${EXTERNAL_SOURCE_FILES}
         )
 
 gs2_inherit_cocos2dx_settings(${PROJECT_NAME})
@@ -143,17 +131,7 @@ set(GS2_ALL_LIBRARIES
         PARENT_SCOPE
         )
 
-# ライブラリのビルド前に、外部ライブラリの必要なファイルだけをコピーする
-
-if(GS2_LIBRARY_BUILD)
-        add_custom_target(copy_external_files
-                DEPENDS ${EXTERNAL_FILES}
-                )
-
-        add_dependencies(${PROJECT_NAME}
-                copy_external_files
-                )
-endif()
+include(external/Gs2CoreExternal.cmake)
 
 set(gs2-cpp-sdk_FILES
         ${gs2-cpp-sdk_FILES}

@@ -76,25 +76,41 @@ set(EXTERNAL_FILE_ENTRIES
         ${rapidjson_ETC_FILE_ENTRIES}
         )
 
-macro(define_external_file_rule SRC_DIR DST_DIR OUTPUT_FILES_VARIABLE OUTPUT_SOURCE_FILES_VARIABLE)
-    foreach(EXTERNAL_FILE_ENTRY ${EXTERNAL_FILE_ENTRIES})
-        set(TEMP_SRC ${SRC_DIR}/${EXTERNAL_FILE_ENTRY})
-        set(TEMP_DST ${DST_DIR}/${EXTERNAL_FILE_ENTRY})
-        add_custom_command(OUTPUT ${TEMP_DST}
-                DEPENDS ${TEMP_SRC}
-                COMMAND ${CMAKE_COMMAND} -E copy ${TEMP_SRC} ${TEMP_DST}
-                )
-        set(${OUTPUT_FILES_VARIABLE}
-                ${${OUTPUT_FILES_VARIABLE}}
-                ${TEMP_DST}
-                )
-    endforeach(EXTERNAL_FILE_ENTRY ${EXTERNAL_FILE_ENTRIES})
+# 相対パスだと Linux でファイルを発見できない
+include(${CMAKE_CURRENT_LIST_DIR}/../../../../cmake/Gs2CopyExternalFiles.cmake OPTIONAL)
 
-    foreach(EXTERNAL_SOURCE_FILE_ENTRY ${EXTERNAL_SOURCE_FILE_ENTRIES})
-        set(TEMP_DST ${DST_DIR}/${EXTERNAL_SOURCE_FILE_ENTRY})
-        set(${OUTPUT_SOURCE_FILES_VARIABLE}
-                ${${OUTPUT_SOURCE_FILES_VARIABLE}}
-                ${TEMP_DST}
-                )
-    endforeach(EXTERNAL_SOURCE_FILE_ENTRY ${EXTERNAL_SOURCE_FILE_ENTRIES})
-endmacro(define_external_file_rule SRC_DIR DST_DIR OUTPUT_FILES_VARIABLE OUTPUT_SOURCE_FILES_VARIABLE)
+foreach(EXTERNAL_FILE_ENTRY ${EXTERNAL_FILE_ENTRIES})
+    set(EXTERNAL_FILE ${CMAKE_CURRENT_LIST_DIR}/${EXTERNAL_FILE_ENTRY})
+    set(EXTERNAL_FILES
+            ${EXTERNAL_FILES}
+            ${EXTERNAL_FILE}
+            )
+endforeach(EXTERNAL_FILE_ENTRY ${EXTERNAL_FILE_ENTRIES})
+
+foreach(EXTERNAL_SOURCE_FILE_ENTRY ${EXTERNAL_SOURCE_FILE_ENTRIES})
+    set(EXTERNAL_SOURCE_FILE ${CMAKE_CURRENT_LIST_DIR}/${EXTERNAL_SOURCE_FILE_ENTRY})
+    set(EXTERNAL_SOURCE_FILES
+            ${EXTERNAL_SOURCE_FILES}
+            ${EXTERNAL_SOURCE_FILE}
+            )
+endforeach(EXTERNAL_SOURCE_FILE_ENTRY ${EXTERNAL_SOURCE_FILE_ENTRIES})
+
+add_custom_target(gs2-cpp-sdk-core-external
+        DEPENDS ${EXTERNAL_FILES}
+        )
+
+add_dependencies(gs2-cpp-sdk-core
+        gs2-cpp-sdk-core-external
+        )
+
+if(EXTERNAL_SOURCE_FILES)
+    target_sources(gs2-cpp-sdk-core
+            ${EXTERNAL_SOURCE_FILES}
+            )
+endif(EXTERNAL_SOURCE_FILES)
+
+set(gs2-cpp-sdk-core_FILES
+        ${gs2-cpp-sdk-core_FILES}
+        ${EXTERNAL_FILES}
+        PARENT_SCOPE
+        )

@@ -12,24 +12,13 @@
 # express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-cmake_minimum_required(VERSION 3.2)
-project(gs2-cpp-sdk)
+# Gs2CoreExternal.cmake からインクルードして利用
 
-include(external/DownloadProject/DownloadProject.cmake)
-
-if(NOT COCOS2DX_ROOT_PATH)
-    include(cmake/Gs2ImportCocos2dx.cmake)
-
-    # Cocos2d-x 自体のビルドは不要なので、簡略化のために空のファイル一つに置き換える
-    set_target_properties(cocos2d
-            PROPERTIES
-            SOURCES ${CMAKE_CURRENT_LIST_DIR}/cmake/dummy.cpp
+foreach(EXTERNAL_FILE_ENTRY ${EXTERNAL_FILE_ENTRIES})
+    set(TEMP_SRC ${CMAKE_CURRENT_LIST_DIR}/../src/external/${EXTERNAL_FILE_ENTRY})
+    set(TEMP_DST ${CMAKE_CURRENT_LIST_DIR}/../src/gs2/core/external/${EXTERNAL_FILE_ENTRY})
+    add_custom_command(OUTPUT ${TEMP_DST}
+            DEPENDS ${TEMP_SRC}
+            COMMAND ${CMAKE_COMMAND} -E copy ${TEMP_SRC} ${TEMP_DST}
             )
-endif()
-
-add_subdirectory(src/gs2)
-
-set(GS2_ALL_LIBRARIES
-        ${GS2_ALL_LIBRARIES}
-        PARENT_SCOPE
-        )
+endforeach(EXTERNAL_FILE_ENTRY ${EXTERNAL_FILE_ENTRIES})
