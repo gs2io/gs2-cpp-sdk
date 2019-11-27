@@ -47,6 +47,10 @@ add_library(${PROJECT_NAME} STATIC
 gs2_inherit_cocos2dx_settings(${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME} gs2-cpp-sdk-core)
 
+add_dependencies(gs2-cpp-sdk-all
+        ${PROJECT_NAME}
+        )
+
 set(gs2-cpp-sdk_FILES
         ${gs2-cpp-sdk_FILES}
         ${${PROJECT_NAME}_FILES}
