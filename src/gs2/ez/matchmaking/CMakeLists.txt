@@ -49,14 +49,17 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         model/EzPlayer.cpp
         )
 
-add_library(${PROJECT_NAME} STATIC
-        ${${PROJECT_NAME}_SOURCE_FILES}
+gs2_add_library(${PROJECT_NAME} STATIC
+        "${${PROJECT_NAME}_SOURCE_FILES}"
         )
 
 gs2_inherit_cocos2dx_settings(${PROJECT_NAME})
-target_link_libraries(${PROJECT_NAME} gs2-cpp-sdk-ez)
 
-add_dependencies(gs2-cpp-sdk-all
+gs2_target_link_libraries(${PROJECT_NAME}
+        PUBLIC gs2-cpp-sdk-ez
+        )
+
+gs2_add_dependencies(gs2-cpp-sdk-all
         ${PROJECT_NAME}
         )
 

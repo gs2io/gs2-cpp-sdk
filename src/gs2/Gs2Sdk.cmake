@@ -18,6 +18,69 @@ if(NOT GS2_ALREADY_INCLUDED_Gs2Sdk)
 
     add_custom_target(gs2-cpp-sdk-all)
 
+    set(GS2_SDK_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+    set(GS2_SDK_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+
+    if(NOT GS2_SDK_LIBRARY_IMPORT_DIRECTORY)
+        set(GS2_SDK_LIBRARY_IMPORT_DIRECTORY "${GS2_SDK_LIBRARY_OUTPUT_DIRECTORY}")
+    endif(NOT GS2_SDK_LIBRARY_IMPORT_DIRECTORY)
+    set(GS2_LIBRARY_PREFIX ${CMAKE_STATIC_LIBRARY_PREFIX})
+    set(GS2_LIBRARY_SUFFIX ${CMAKE_STATIC_LIBRARY_SUFFIX})
+
+    function(gs2_add_library target_name type source_files)
+        if(GS2_SDK_PREBUILT)
+            add_library(${target_name} ${type} IMPORTED GLOBAL)
+            set_target_properties(${PROJECT_NAME} PROPERTIES
+                    IMPORTED_LOCATION "${GS2_SDK_LIBRARY_IMPORT_DIRECTORY}/${GS2_LIBRARY_PREFIX}${target_name}${GS2_LIBRARY_SUFFIX}"
+                    )
+        else(GS2_SDK_PREBUILT)
+            add_library(${target_name} ${type}
+                    ${source_files}
+                    )
+            set_target_properties(${PROJECT_NAME} PROPERTIES
+                    ARCHIVE_OUTPUT_DIRECTORY "${GS2_SDK_ARCHIVE_OUTPUT_DIRECTORY}"
+                    LIBRARY_OUTPUT_DIRECTORY "${GS2_SDK_LIBRARY_OUTPUT_DIRECTORY}"
+                    )
+
+        endif(GS2_SDK_PREBUILT)
+    endfunction()
+
+    function(gs2_target_include_directories target_name type include_directories)
+        if(GS2_SDK_PREBUILT)
+            if(NOT (${type} STREQUAL "PRIVATE"))
+                target_include_directories(${target_name}
+                        INTERFACE ${include_directories}
+                        )
+            endif()
+        else(GS2_SDK_PREBUILT)
+            target_include_directories(${target_name}
+                    ${type} ${include_directories}
+                    )
+        endif(GS2_SDK_PREBUILT)
+    endfunction()
+
+    function(gs2_target_link_libraries target_name type link_libraries)
+        if(GS2_SDK_PREBUILT)
+            if(NOT (${type} STREQUAL "PRIVATE"))
+                target_link_libraries(${target_name}
+                        INTERFACE ${link_libraries}
+                        )
+            endif()
+        else(GS2_SDK_PREBUILT)
+            target_link_libraries(${target_name}
+                    ${type} ${link_libraries}
+                    )
+        endif(GS2_SDK_PREBUILT)
+    endfunction()
+
+    function(gs2_add_dependencies target_name dependencies)
+        if(NOT GS2_SDK_PREBUILT)
+            add_dependencies(${target_name}
+                    ${dependencies}
+                    )
+        endif(NOT GS2_SDK_PREBUILT)
+    endfunction()
+
     include(CheckFunctionExists)
 
     function(gs2_inherit_cocos2dx_settings target_name)
