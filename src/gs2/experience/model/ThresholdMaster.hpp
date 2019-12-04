@@ -121,7 +121,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         if (json->IsInt64())
                         {
-                            detail::addToList(*this->values, json->GetInt64());
+                            *this->values += json->GetInt64();
                         }
                     }
                 }

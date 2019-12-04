@@ -114,7 +114,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         auto valueStr = json->GetString();
                         StringHolder stringHolder(valueStr);
-                        detail::addToList(*this->output, std::move(stringHolder));
+                        *this->output += std::move(stringHolder);
                     }
                 }
             }

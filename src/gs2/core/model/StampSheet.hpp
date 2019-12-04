@@ -123,7 +123,7 @@ private:
                         {
                             auto valueStr = json->GetString();
                             StringHolder stringHolder(valueStr);
-                            detail::addToList(*this->tasks, std::move(stringHolder));
+                            *this->tasks += std::move(stringHolder);
                         }
                     }
                 }

@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_MISSION_MODEL_EZCOUNTERSCOPEMODEL_HPP_
 #define GS2_EZ_MISSION_MODEL_EZCOUNTERSCOPEMODEL_HPP_
 
-#include <gs2/mission/model/CounterScopeModel.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace mission {
+namespace gs2 {
+
+namespace mission {
+
+class CounterScopeModel;
+
+}
+
+namespace ez { namespace mission {
 
 class EzCounterScopeModel : public gs2::Gs2Object
 {
@@ -40,26 +51,9 @@ private:
         gs2::optional<Int32> resetHour;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            resetType(data.resetType),
-            resetDayOfMonth(data.resetDayOfMonth),
-            resetDayOfWeek(data.resetDayOfWeek),
-            resetHour(data.resetHour)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::mission::CounterScopeModel& counterScopeModel) :
-            resetType(counterScopeModel.getResetType()),
-            resetDayOfMonth(counterScopeModel.getResetDayOfMonth() ? *counterScopeModel.getResetDayOfMonth() : 0),
-            resetDayOfWeek(counterScopeModel.getResetDayOfWeek()),
-            resetHour(counterScopeModel.getResetHour() ? *counterScopeModel.getResetHour() : 0)
-        {
-        }
-
+        Data(const gs2::mission::CounterScopeModel& counterScopeModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -74,27 +68,14 @@ public:
     EzCounterScopeModel(EzCounterScopeModel&& ezCounterScopeModel) = default;
     ~EzCounterScopeModel() = default;
 
-    EzCounterScopeModel(gs2::mission::CounterScopeModel counterScopeModel) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(counterScopeModel)
-    {}
+    EzCounterScopeModel(gs2::mission::CounterScopeModel counterScopeModel);
 
     EzCounterScopeModel& operator=(const EzCounterScopeModel& ezCounterScopeModel) = default;
     EzCounterScopeModel& operator=(EzCounterScopeModel&& ezCounterScopeModel) = default;
 
-    EzCounterScopeModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCounterScopeModel);
-    }
+    EzCounterScopeModel deepCopy() const;
 
-    gs2::mission::CounterScopeModel ToModel() const
-    {
-        gs2::mission::CounterScopeModel counterScopeModel;
-        counterScopeModel.setResetType(getResetType());
-        counterScopeModel.setResetDayOfMonth(getResetDayOfMonth());
-        counterScopeModel.setResetDayOfWeek(getResetDayOfWeek());
-        counterScopeModel.setResetHour(getResetHour());
-        return counterScopeModel;
-    }
+    gs2::mission::CounterScopeModel ToModel() const;
 
     // ========================================
     //   Getters

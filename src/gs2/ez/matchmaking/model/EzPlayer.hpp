@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_MATCHMAKING_MODEL_EZPLAYER_HPP_
 #define GS2_EZ_MATCHMAKING_MODEL_EZPLAYER_HPP_
 
-#include <gs2/matchmaking/model/Player.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzAttribute.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace matchmaking {
+namespace gs2 {
+
+namespace matchmaking {
+
+class Player;
+
+}
+
+namespace ez { namespace matchmaking {
 
 class EzPlayer : public gs2::Gs2Object
 {
@@ -39,34 +50,9 @@ private:
         gs2::optional<StringHolder> roleName;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            userId(data.userId),
-            roleName(data.roleName)
-        {
-            if (data.attributes)
-            {
-                attributes = data.attributes->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::matchmaking::Player& player) :
-            userId(player.getUserId()),
-            roleName(player.getRoleName())
-        {
-            attributes.emplace();
-            if (player.getAttributes())
-            {
-                for (int i = 0; i < player.getAttributes()->getCount(); ++i)
-                {
-                    *attributes += EzAttribute((*player.getAttributes())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::matchmaking::Player& player);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -81,34 +67,14 @@ public:
     EzPlayer(EzPlayer&& ezPlayer) = default;
     ~EzPlayer() = default;
 
-    EzPlayer(gs2::matchmaking::Player player) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(player)
-    {}
+    EzPlayer(gs2::matchmaking::Player player);
 
     EzPlayer& operator=(const EzPlayer& ezPlayer) = default;
     EzPlayer& operator=(EzPlayer&& ezPlayer) = default;
 
-    EzPlayer deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzPlayer);
-    }
+    EzPlayer deepCopy() const;
 
-    gs2::matchmaking::Player ToModel() const
-    {
-        gs2::matchmaking::Player player;
-        player.setUserId(getUserId());
-        {
-            gs2::List<gs2::matchmaking::Attribute> list;
-            auto& attributes = getAttributes();
-            for (int i = 0; i < attributes.getCount(); ++i)
-            {
-                list += attributes[i].ToModel();
-            }
-            player.setAttributes(list);
-        }
-        player.setRoleName(getRoleName());
-        return player;
-    }
+    gs2::matchmaking::Player ToModel() const;
 
     // ========================================
     //   Getters

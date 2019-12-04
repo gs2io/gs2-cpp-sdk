@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_MONEY_MODEL_EZWALLETDETAIL_HPP_
 #define GS2_EZ_MONEY_MODEL_EZWALLETDETAIL_HPP_
 
-#include <gs2/money/model/Wallet.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace money {
+namespace gs2 {
+
+namespace money {
+
+class Wallet;
+
+}
+
+namespace ez { namespace money {
 
 class EzWalletDetail : public gs2::Gs2Object
 {
@@ -40,26 +51,9 @@ private:
         gs2::optional<Int64> updatedAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            slot(data.slot),
-            paid(data.paid),
-            free(data.free),
-            updatedAt(data.updatedAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::money::Wallet& wallet) :
-            slot(wallet.getSlot() ? *wallet.getSlot() : 0),
-            paid(wallet.getPaid() ? *wallet.getPaid() : 0),
-            free(wallet.getFree() ? *wallet.getFree() : 0),
-            updatedAt(wallet.getUpdatedAt() ? *wallet.getUpdatedAt() : 0)
-        {
-        }
-
+        Data(const gs2::money::Wallet& wallet);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -74,27 +68,14 @@ public:
     EzWalletDetail(EzWalletDetail&& ezWalletDetail) = default;
     ~EzWalletDetail() = default;
 
-    EzWalletDetail(gs2::money::Wallet wallet) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(wallet)
-    {}
+    EzWalletDetail(gs2::money::Wallet wallet);
 
     EzWalletDetail& operator=(const EzWalletDetail& ezWalletDetail) = default;
     EzWalletDetail& operator=(EzWalletDetail&& ezWalletDetail) = default;
 
-    EzWalletDetail deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzWalletDetail);
-    }
+    EzWalletDetail deepCopy() const;
 
-    gs2::money::Wallet ToModel() const
-    {
-        gs2::money::Wallet wallet;
-        wallet.setSlot(getSlot());
-        wallet.setPaid(getPaid());
-        wallet.setFree(getFree());
-        wallet.setUpdatedAt(getUpdatedAt());
-        return wallet;
-    }
+    gs2::money::Wallet ToModel() const;
 
     // ========================================
     //   Getters

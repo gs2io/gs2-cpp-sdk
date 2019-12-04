@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_SHOWCASE_MODEL_EZSHOWCASE_HPP_
 #define GS2_EZ_SHOWCASE_MODEL_EZSHOWCASE_HPP_
 
-#include <gs2/showcase/model/Showcase.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzDisplayItem.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace showcase {
+namespace gs2 {
+
+namespace showcase {
+
+class Showcase;
+
+}
+
+namespace ez { namespace showcase {
 
 class EzShowcase : public gs2::Gs2Object
 {
@@ -39,34 +50,9 @@ private:
         gs2::optional<List<EzDisplayItem>> displayItems;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata)
-        {
-            if (data.displayItems)
-            {
-                displayItems = data.displayItems->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::showcase::Showcase& showcase) :
-            name(showcase.getName()),
-            metadata(showcase.getMetadata())
-        {
-            displayItems.emplace();
-            if (showcase.getDisplayItems())
-            {
-                for (int i = 0; i < showcase.getDisplayItems()->getCount(); ++i)
-                {
-                    *displayItems += EzDisplayItem((*showcase.getDisplayItems())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::showcase::Showcase& showcase);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -81,34 +67,14 @@ public:
     EzShowcase(EzShowcase&& ezShowcase) = default;
     ~EzShowcase() = default;
 
-    EzShowcase(gs2::showcase::Showcase showcase) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(showcase)
-    {}
+    EzShowcase(gs2::showcase::Showcase showcase);
 
     EzShowcase& operator=(const EzShowcase& ezShowcase) = default;
     EzShowcase& operator=(EzShowcase&& ezShowcase) = default;
 
-    EzShowcase deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzShowcase);
-    }
+    EzShowcase deepCopy() const;
 
-    gs2::showcase::Showcase ToModel() const
-    {
-        gs2::showcase::Showcase showcase;
-        showcase.setName(getName());
-        showcase.setMetadata(getMetadata());
-        {
-            gs2::List<gs2::showcase::DisplayItem> list;
-            auto& displayItems = getDisplayItems();
-            for (int i = 0; i < displayItems.getCount(); ++i)
-            {
-                list += displayItems[i].ToModel();
-            }
-            showcase.setDisplayItems(list);
-        }
-        return showcase;
-    }
+    gs2::showcase::Showcase ToModel() const;
 
     // ========================================
     //   Getters

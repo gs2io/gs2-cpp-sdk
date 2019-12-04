@@ -103,7 +103,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         ConsumeAction item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        detail::addToList(*this->consumeActions, std::move(item));
+                        *this->consumeActions += std::move(item);
                     }
                 }
             }
@@ -116,7 +116,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         AcquireAction item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        detail::addToList(*this->acquireActions, std::move(item));
+                        *this->acquireActions += std::move(item);
                     }
                 }
             }

@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_SCHEDULE_MODEL_EZEVENT_HPP_
 #define GS2_EZ_SCHEDULE_MODEL_EZEVENT_HPP_
 
-#include <gs2/schedule/model/Event.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace schedule {
+namespace gs2 {
+
+namespace schedule {
+
+class Event;
+
+}
+
+namespace ez { namespace schedule {
 
 class EzEvent : public gs2::Gs2Object
 {
@@ -60,46 +71,9 @@ private:
         gs2::optional<Int32> relativeDuration;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata),
-            scheduleType(data.scheduleType),
-            repeatType(data.repeatType),
-            absoluteBegin(data.absoluteBegin),
-            absoluteEnd(data.absoluteEnd),
-            repeatBeginDayOfMonth(data.repeatBeginDayOfMonth),
-            repeatEndDayOfMonth(data.repeatEndDayOfMonth),
-            repeatBeginDayOfWeek(data.repeatBeginDayOfWeek),
-            repeatEndDayOfWeek(data.repeatEndDayOfWeek),
-            repeatBeginHour(data.repeatBeginHour),
-            repeatEndHour(data.repeatEndHour),
-            relativeTriggerName(data.relativeTriggerName),
-            relativeDuration(data.relativeDuration)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::schedule::Event& event) :
-            name(event.getName()),
-            metadata(event.getMetadata()),
-            scheduleType(event.getScheduleType()),
-            repeatType(event.getRepeatType()),
-            absoluteBegin(event.getAbsoluteBegin() ? *event.getAbsoluteBegin() : 0),
-            absoluteEnd(event.getAbsoluteEnd() ? *event.getAbsoluteEnd() : 0),
-            repeatBeginDayOfMonth(event.getRepeatBeginDayOfMonth() ? *event.getRepeatBeginDayOfMonth() : 0),
-            repeatEndDayOfMonth(event.getRepeatEndDayOfMonth() ? *event.getRepeatEndDayOfMonth() : 0),
-            repeatBeginDayOfWeek(event.getRepeatBeginDayOfWeek()),
-            repeatEndDayOfWeek(event.getRepeatEndDayOfWeek()),
-            repeatBeginHour(event.getRepeatBeginHour() ? *event.getRepeatBeginHour() : 0),
-            repeatEndHour(event.getRepeatEndHour() ? *event.getRepeatEndHour() : 0),
-            relativeTriggerName(event.getRelativeTriggerName()),
-            relativeDuration(event.getRelativeDuration() ? *event.getRelativeDuration() : 0)
-        {
-        }
-
+        Data(const gs2::schedule::Event& event);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -114,37 +88,14 @@ public:
     EzEvent(EzEvent&& ezEvent) = default;
     ~EzEvent() = default;
 
-    EzEvent(gs2::schedule::Event event) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(event)
-    {}
+    EzEvent(gs2::schedule::Event event);
 
     EzEvent& operator=(const EzEvent& ezEvent) = default;
     EzEvent& operator=(EzEvent&& ezEvent) = default;
 
-    EzEvent deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzEvent);
-    }
+    EzEvent deepCopy() const;
 
-    gs2::schedule::Event ToModel() const
-    {
-        gs2::schedule::Event event;
-        event.setName(getName());
-        event.setMetadata(getMetadata());
-        event.setScheduleType(getScheduleType());
-        event.setRepeatType(getRepeatType());
-        event.setAbsoluteBegin(getAbsoluteBegin());
-        event.setAbsoluteEnd(getAbsoluteEnd());
-        event.setRepeatBeginDayOfMonth(getRepeatBeginDayOfMonth());
-        event.setRepeatEndDayOfMonth(getRepeatEndDayOfMonth());
-        event.setRepeatBeginDayOfWeek(getRepeatBeginDayOfWeek());
-        event.setRepeatEndDayOfWeek(getRepeatEndDayOfWeek());
-        event.setRepeatBeginHour(getRepeatBeginHour());
-        event.setRepeatEndHour(getRepeatEndHour());
-        event.setRelativeTriggerName(getRelativeTriggerName());
-        event.setRelativeDuration(getRelativeDuration());
-        return event;
-    }
+    gs2::schedule::Event ToModel() const;
 
     // ========================================
     //   Getters

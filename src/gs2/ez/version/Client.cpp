@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/version/Gs2VersionWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace version {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::version::Gs2VersionWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::listVersionModels(
@@ -34,7 +40,7 @@ void Client::listVersionModels(
 {
     gs2::version::DescribeVersionModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_Client.describeVersionModels(
+    m_pClient->describeVersionModels(
         request,
         [callback](gs2::version::AsyncDescribeVersionModelsResult r)
         {
@@ -70,7 +76,7 @@ void Client::getVersionModel(
     gs2::version::GetVersionModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setVersionName(versionName);
-    m_Client.getVersionModel(
+    m_pClient->getVersionModel(
         request,
         [callback](gs2::version::AsyncGetVersionModelResult r)
         {
@@ -116,7 +122,7 @@ void Client::list(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeAcceptVersions(
+    m_pClient->describeAcceptVersions(
         request,
         [callback](gs2::version::AsyncDescribeAcceptVersionsResult r)
         {
@@ -154,7 +160,7 @@ void Client::delete_(
     request.setNamespaceName(namespaceName);
     request.setVersionName(versionName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.deleteAcceptVersion(
+    m_pClient->deleteAcceptVersion(
         request,
         [callback](gs2::version::AsyncDeleteAcceptVersionResult r)
         {
@@ -192,7 +198,7 @@ void Client::checkVersion(
         request.setTargetVersions(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.checkVersion(
+    m_pClient->checkVersion(
         request,
         [callback](gs2::version::AsyncCheckVersionResult r)
         {

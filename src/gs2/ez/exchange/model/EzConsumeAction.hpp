@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_EXCHANGE_MODEL_EZCONSUMEACTION_HPP_
 #define GS2_EZ_EXCHANGE_MODEL_EZCONSUMEACTION_HPP_
 
-#include <gs2/exchange/model/ConsumeAction.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace exchange {
+namespace gs2 {
+
+namespace exchange {
+
+class ConsumeAction;
+
+}
+
+namespace ez { namespace exchange {
 
 class EzConsumeAction : public gs2::Gs2Object
 {
@@ -36,22 +47,9 @@ private:
         gs2::optional<StringHolder> request;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            action(data.action),
-            request(data.request)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::exchange::ConsumeAction& consumeAction) :
-            action(consumeAction.getAction()),
-            request(consumeAction.getRequest())
-        {
-        }
-
+        Data(const gs2::exchange::ConsumeAction& consumeAction);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -66,25 +64,14 @@ public:
     EzConsumeAction(EzConsumeAction&& ezConsumeAction) = default;
     ~EzConsumeAction() = default;
 
-    EzConsumeAction(gs2::exchange::ConsumeAction consumeAction) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(consumeAction)
-    {}
+    EzConsumeAction(gs2::exchange::ConsumeAction consumeAction);
 
     EzConsumeAction& operator=(const EzConsumeAction& ezConsumeAction) = default;
     EzConsumeAction& operator=(EzConsumeAction&& ezConsumeAction) = default;
 
-    EzConsumeAction deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzConsumeAction);
-    }
+    EzConsumeAction deepCopy() const;
 
-    gs2::exchange::ConsumeAction ToModel() const
-    {
-        gs2::exchange::ConsumeAction consumeAction;
-        consumeAction.setAction(getAction());
-        consumeAction.setRequest(getRequest());
-        return consumeAction;
-    }
+    gs2::exchange::ConsumeAction ToModel() const;
 
     // ========================================
     //   Getters

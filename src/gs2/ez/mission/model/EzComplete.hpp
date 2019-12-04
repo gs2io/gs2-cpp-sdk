@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_MISSION_MODEL_EZCOMPLETE_HPP_
 #define GS2_EZ_MISSION_MODEL_EZCOMPLETE_HPP_
 
-#include <gs2/mission/model/Complete.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace mission {
+namespace gs2 {
+
+namespace mission {
+
+class Complete;
+
+}
+
+namespace ez { namespace mission {
 
 class EzComplete : public gs2::Gs2Object
 {
@@ -38,30 +49,9 @@ private:
         gs2::optional<List<StringHolder>> receivedMissionTaskNames;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            missionGroupName(data.missionGroupName)
-        {
-            if (data.completedMissionTaskNames)
-            {
-                completedMissionTaskNames = data.completedMissionTaskNames->deepCopy();
-            }
-            if (data.receivedMissionTaskNames)
-            {
-                receivedMissionTaskNames = data.receivedMissionTaskNames->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::mission::Complete& complete) :
-            missionGroupName(complete.getMissionGroupName()),
-            completedMissionTaskNames(complete.getCompletedMissionTaskNames()),
-            receivedMissionTaskNames(complete.getReceivedMissionTaskNames())
-        {
-        }
-
+        Data(const gs2::mission::Complete& complete);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -76,26 +66,14 @@ public:
     EzComplete(EzComplete&& ezComplete) = default;
     ~EzComplete() = default;
 
-    EzComplete(gs2::mission::Complete complete) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(complete)
-    {}
+    EzComplete(gs2::mission::Complete complete);
 
     EzComplete& operator=(const EzComplete& ezComplete) = default;
     EzComplete& operator=(EzComplete&& ezComplete) = default;
 
-    EzComplete deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzComplete);
-    }
+    EzComplete deepCopy() const;
 
-    gs2::mission::Complete ToModel() const
-    {
-        gs2::mission::Complete complete;
-        complete.setMissionGroupName(getMissionGroupName());
-        complete.setCompletedMissionTaskNames(getCompletedMissionTaskNames());
-        complete.setReceivedMissionTaskNames(getReceivedMissionTaskNames());
-        return complete;
-    }
+    gs2::mission::Complete ToModel() const;
 
     // ========================================
     //   Getters

@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_LIMIT_MODEL_EZCOUNTER_HPP_
 #define GS2_EZ_LIMIT_MODEL_EZCOUNTER_HPP_
 
-#include <gs2/limit/model/Counter.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace limit {
+namespace gs2 {
+
+namespace limit {
+
+class Counter;
+
+}
+
+namespace ez { namespace limit {
 
 class EzCounter : public gs2::Gs2Object
 {
@@ -42,28 +53,9 @@ private:
         gs2::optional<Int64> updatedAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            counterId(data.counterId),
-            name(data.name),
-            count(data.count),
-            createdAt(data.createdAt),
-            updatedAt(data.updatedAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::limit::Counter& counter) :
-            counterId(counter.getCounterId()),
-            name(counter.getName()),
-            count(counter.getCount() ? *counter.getCount() : 0),
-            createdAt(counter.getCreatedAt() ? *counter.getCreatedAt() : 0),
-            updatedAt(counter.getUpdatedAt() ? *counter.getUpdatedAt() : 0)
-        {
-        }
-
+        Data(const gs2::limit::Counter& counter);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -78,28 +70,14 @@ public:
     EzCounter(EzCounter&& ezCounter) = default;
     ~EzCounter() = default;
 
-    EzCounter(gs2::limit::Counter counter) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(counter)
-    {}
+    EzCounter(gs2::limit::Counter counter);
 
     EzCounter& operator=(const EzCounter& ezCounter) = default;
     EzCounter& operator=(EzCounter&& ezCounter) = default;
 
-    EzCounter deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCounter);
-    }
+    EzCounter deepCopy() const;
 
-    gs2::limit::Counter ToModel() const
-    {
-        gs2::limit::Counter counter;
-        counter.setCounterId(getCounterId());
-        counter.setName(getName());
-        counter.setCount(getCount());
-        counter.setCreatedAt(getCreatedAt());
-        counter.setUpdatedAt(getUpdatedAt());
-        return counter;
-    }
+    gs2::limit::Counter ToModel() const;
 
     // ========================================
     //   Getters

@@ -15,27 +15,29 @@
 cmake_minimum_required(VERSION 3.2)
 project(gs2-cpp-sdk-ez-mission)
 
+include(../../Gs2Sdk.cmake)
+
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzCounter.hpp
+        model/EzCounterScopeModel.hpp
         model/EzMissionGroupModelMaster.hpp
+        model/EzCounter.hpp
         model/EzCurrentMissionMaster.hpp
-        model/EzLogSetting.hpp
-        model/EzConfig.hpp
         model/EzMissionTaskModelMaster.hpp
+        model/EzGitHubCheckoutSetting.hpp
         model/EzComplete.hpp
-        model/EzMissionTaskModel.hpp
+        model/EzNotificationSetting.hpp
         model/EzNamespace.hpp
+        model/EzMissionTaskModel.hpp
+        model/EzLogSetting.hpp
         model/EzCounterModel.hpp
         model/EzScopedValue.hpp
         model/EzAcquireAction.hpp
+        model/EzConfig.hpp
         model/EzResponseCache.hpp
         model/EzCounterModelMaster.hpp
-        model/EzGitHubCheckoutSetting.hpp
         model/EzMissionGroupModel.hpp
-        model/EzNotificationSetting.hpp
-        model/EzCounterScopeModel.hpp
         result/EzListCompletesResult.hpp
         result/EzGetCompleteResult.hpp
         result/EzReceiveRewardsResult.hpp
@@ -49,14 +51,39 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzCounterScopeModel.cpp
+        model/EzMissionGroupModelMaster.cpp
+        model/EzCounter.cpp
+        model/EzCurrentMissionMaster.cpp
+        model/EzMissionTaskModelMaster.cpp
+        model/EzGitHubCheckoutSetting.cpp
+        model/EzComplete.cpp
+        model/EzNotificationSetting.cpp
+        model/EzNamespace.cpp
+        model/EzMissionTaskModel.cpp
+        model/EzLogSetting.cpp
+        model/EzCounterModel.cpp
+        model/EzScopedValue.cpp
+        model/EzAcquireAction.cpp
+        model/EzConfig.cpp
+        model/EzResponseCache.cpp
+        model/EzCounterModelMaster.cpp
+        model/EzMissionGroupModel.cpp
         )
 
-add_library(${PROJECT_NAME} STATIC
-        ${${PROJECT_NAME}_SOURCE_FILES}
+gs2_add_library(${PROJECT_NAME} STATIC
+        "${${PROJECT_NAME}_SOURCE_FILES}"
         )
 
 gs2_inherit_cocos2dx_settings(${PROJECT_NAME})
-target_link_libraries(${PROJECT_NAME} gs2-cpp-sdk-ez)
+
+gs2_target_link_libraries(${PROJECT_NAME}
+        PUBLIC gs2-cpp-sdk-ez
+        )
+
+gs2_add_dependencies(gs2-cpp-sdk-all
+        ${PROJECT_NAME}
+        )
 
 set(GS2_ALL_LIBRARIES
         ${GS2_ALL_LIBRARIES}

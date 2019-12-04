@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_MATCHMAKING_MODEL_EZATTRIBUTERANGE_HPP_
 #define GS2_EZ_MATCHMAKING_MODEL_EZATTRIBUTERANGE_HPP_
 
-#include <gs2/matchmaking/model/AttributeRange.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace matchmaking {
+namespace gs2 {
+
+namespace matchmaking {
+
+class AttributeRange;
+
+}
+
+namespace ez { namespace matchmaking {
 
 class EzAttributeRange : public gs2::Gs2Object
 {
@@ -38,24 +49,9 @@ private:
         gs2::optional<Int32> max;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            min(data.min),
-            max(data.max)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::matchmaking::AttributeRange& attributeRange) :
-            name(attributeRange.getName()),
-            min(attributeRange.getMin() ? *attributeRange.getMin() : 0),
-            max(attributeRange.getMax() ? *attributeRange.getMax() : 0)
-        {
-        }
-
+        Data(const gs2::matchmaking::AttributeRange& attributeRange);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -70,26 +66,14 @@ public:
     EzAttributeRange(EzAttributeRange&& ezAttributeRange) = default;
     ~EzAttributeRange() = default;
 
-    EzAttributeRange(gs2::matchmaking::AttributeRange attributeRange) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(attributeRange)
-    {}
+    EzAttributeRange(gs2::matchmaking::AttributeRange attributeRange);
 
     EzAttributeRange& operator=(const EzAttributeRange& ezAttributeRange) = default;
     EzAttributeRange& operator=(EzAttributeRange&& ezAttributeRange) = default;
 
-    EzAttributeRange deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzAttributeRange);
-    }
+    EzAttributeRange deepCopy() const;
 
-    gs2::matchmaking::AttributeRange ToModel() const
-    {
-        gs2::matchmaking::AttributeRange attributeRange;
-        attributeRange.setName(getName());
-        attributeRange.setMin(getMin());
-        attributeRange.setMax(getMax());
-        return attributeRange;
-    }
+    gs2::matchmaking::AttributeRange ToModel() const;
 
     // ========================================
     //   Getters

@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/mission/Gs2MissionWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace mission {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::mission::Gs2MissionWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::listCompletes(
@@ -46,7 +52,7 @@ void Client::listCompletes(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.describeCompletes(
+    m_pClient->describeCompletes(
         request,
         [callback](gs2::mission::AsyncDescribeCompletesResult r)
         {
@@ -84,7 +90,7 @@ void Client::getComplete(
     request.setNamespaceName(namespaceName);
     request.setMissionGroupName(missionGroupName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getComplete(
+    m_pClient->getComplete(
         request,
         [callback](gs2::mission::AsyncGetCompleteResult r)
         {
@@ -124,7 +130,7 @@ void Client::receiveRewards(
     request.setMissionGroupName(missionGroupName);
     request.setMissionTaskName(missionTaskName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.complete(
+    m_pClient->complete(
         request,
         [callback](gs2::mission::AsyncCompleteResult r)
         {
@@ -160,7 +166,7 @@ void Client::listMissionTaskModels(
     gs2::mission::DescribeMissionTaskModelsRequest request;
     request.setNamespaceName(namespaceName);
     request.setMissionGroupName(missionGroupName);
-    m_Client.describeMissionTaskModels(
+    m_pClient->describeMissionTaskModels(
         request,
         [callback](gs2::mission::AsyncDescribeMissionTaskModelsResult r)
         {
@@ -198,7 +204,7 @@ void Client::getMissionTaskModel(
     request.setNamespaceName(namespaceName);
     request.setMissionGroupName(missionGroupName);
     request.setMissionTaskName(missionTaskName);
-    m_Client.getMissionTaskModel(
+    m_pClient->getMissionTaskModel(
         request,
         [callback](gs2::mission::AsyncGetMissionTaskModelResult r)
         {
@@ -232,7 +238,7 @@ void Client::listCounterModels(
 {
     gs2::mission::DescribeCounterModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_Client.describeCounterModels(
+    m_pClient->describeCounterModels(
         request,
         [callback](gs2::mission::AsyncDescribeCounterModelsResult r)
         {
@@ -268,7 +274,7 @@ void Client::getCounterModel(
     gs2::mission::GetCounterModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setCounterName(counterName);
-    m_Client.getCounterModel(
+    m_pClient->getCounterModel(
         request,
         [callback](gs2::mission::AsyncGetCounterModelResult r)
         {
@@ -302,7 +308,7 @@ void Client::listMissionGroupModels(
 {
     gs2::mission::DescribeMissionGroupModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_Client.describeMissionGroupModels(
+    m_pClient->describeMissionGroupModels(
         request,
         [callback](gs2::mission::AsyncDescribeMissionGroupModelsResult r)
         {
@@ -338,7 +344,7 @@ void Client::getMissionGroupModel(
     gs2::mission::GetMissionGroupModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setMissionGroupName(missionGroupName);
-    m_Client.getMissionGroupModel(
+    m_pClient->getMissionGroupModel(
         request,
         [callback](gs2::mission::AsyncGetMissionGroupModelResult r)
         {

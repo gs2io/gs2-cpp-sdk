@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_LOTTERY_MODEL_EZBOXITEM_HPP_
 #define GS2_EZ_LOTTERY_MODEL_EZBOXITEM_HPP_
 
-#include <gs2/lottery/model/BoxItem.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzAcquireAction.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace lottery {
+namespace gs2 {
+
+namespace lottery {
+
+class BoxItem;
+
+}
+
+namespace ez { namespace lottery {
 
 class EzBoxItem : public gs2::Gs2Object
 {
@@ -39,34 +50,9 @@ private:
         gs2::optional<Int32> initial;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            remaining(data.remaining),
-            initial(data.initial)
-        {
-            if (data.acquireActions)
-            {
-                acquireActions = data.acquireActions->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::lottery::BoxItem& boxItem) :
-            remaining(boxItem.getRemaining() ? *boxItem.getRemaining() : 0),
-            initial(boxItem.getInitial() ? *boxItem.getInitial() : 0)
-        {
-            acquireActions.emplace();
-            if (boxItem.getAcquireActions())
-            {
-                for (int i = 0; i < boxItem.getAcquireActions()->getCount(); ++i)
-                {
-                    *acquireActions += EzAcquireAction((*boxItem.getAcquireActions())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::lottery::BoxItem& boxItem);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -81,34 +67,14 @@ public:
     EzBoxItem(EzBoxItem&& ezBoxItem) = default;
     ~EzBoxItem() = default;
 
-    EzBoxItem(gs2::lottery::BoxItem boxItem) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(boxItem)
-    {}
+    EzBoxItem(gs2::lottery::BoxItem boxItem);
 
     EzBoxItem& operator=(const EzBoxItem& ezBoxItem) = default;
     EzBoxItem& operator=(EzBoxItem&& ezBoxItem) = default;
 
-    EzBoxItem deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzBoxItem);
-    }
+    EzBoxItem deepCopy() const;
 
-    gs2::lottery::BoxItem ToModel() const
-    {
-        gs2::lottery::BoxItem boxItem;
-        {
-            gs2::List<gs2::lottery::AcquireAction> list;
-            auto& acquireActions = getAcquireActions();
-            for (int i = 0; i < acquireActions.getCount(); ++i)
-            {
-                list += acquireActions[i].ToModel();
-            }
-            boxItem.setAcquireActions(list);
-        }
-        boxItem.setRemaining(getRemaining());
-        boxItem.setInitial(getInitial());
-        return boxItem;
-    }
+    gs2::lottery::BoxItem ToModel() const;
 
     // ========================================
     //   Getters

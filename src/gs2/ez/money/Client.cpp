@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/money/Gs2MoneyWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace money {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::money::Gs2MoneyWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::get(
@@ -38,7 +44,7 @@ void Client::get(
     request.setNamespaceName(namespaceName);
     request.setSlot(slot);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.getWallet(
+    m_pClient->getWallet(
         request,
         [callback](gs2::money::AsyncGetWalletResult r)
         {
@@ -80,7 +86,7 @@ void Client::withdraw(
     request.setCount(count);
     request.setPaidOnly(paidOnly);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_Client.withdraw(
+    m_pClient->withdraw(
         request,
         [callback](gs2::money::AsyncWithdrawResult r)
         {

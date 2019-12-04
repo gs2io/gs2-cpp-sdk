@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_INVENTORY_MODEL_EZINVENTORY_HPP_
 #define GS2_EZ_INVENTORY_MODEL_EZINVENTORY_HPP_
 
-#include <gs2/inventory/model/Inventory.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace inventory {
+namespace gs2 {
+
+namespace inventory {
+
+class Inventory;
+
+}
+
+namespace ez { namespace inventory {
 
 class EzInventory : public gs2::Gs2Object
 {
@@ -40,26 +51,9 @@ private:
         gs2::optional<Int32> currentInventoryMaxCapacity;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            inventoryId(data.inventoryId),
-            inventoryName(data.inventoryName),
-            currentInventoryCapacityUsage(data.currentInventoryCapacityUsage),
-            currentInventoryMaxCapacity(data.currentInventoryMaxCapacity)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::inventory::Inventory& inventory) :
-            inventoryId(inventory.getInventoryId()),
-            inventoryName(inventory.getInventoryName()),
-            currentInventoryCapacityUsage(inventory.getCurrentInventoryCapacityUsage() ? *inventory.getCurrentInventoryCapacityUsage() : 0),
-            currentInventoryMaxCapacity(inventory.getCurrentInventoryMaxCapacity() ? *inventory.getCurrentInventoryMaxCapacity() : 0)
-        {
-        }
-
+        Data(const gs2::inventory::Inventory& inventory);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -74,27 +68,14 @@ public:
     EzInventory(EzInventory&& ezInventory) = default;
     ~EzInventory() = default;
 
-    EzInventory(gs2::inventory::Inventory inventory) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(inventory)
-    {}
+    EzInventory(gs2::inventory::Inventory inventory);
 
     EzInventory& operator=(const EzInventory& ezInventory) = default;
     EzInventory& operator=(EzInventory&& ezInventory) = default;
 
-    EzInventory deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzInventory);
-    }
+    EzInventory deepCopy() const;
 
-    gs2::inventory::Inventory ToModel() const
-    {
-        gs2::inventory::Inventory inventory;
-        inventory.setInventoryId(getInventoryId());
-        inventory.setInventoryName(getInventoryName());
-        inventory.setCurrentInventoryCapacityUsage(getCurrentInventoryCapacityUsage());
-        inventory.setCurrentInventoryMaxCapacity(getCurrentInventoryMaxCapacity());
-        return inventory;
-    }
+    gs2::inventory::Inventory ToModel() const;
 
     // ========================================
     //   Getters

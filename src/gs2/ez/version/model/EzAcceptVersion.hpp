@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_VERSION_MODEL_EZACCEPTVERSION_HPP_
 #define GS2_EZ_VERSION_MODEL_EZACCEPTVERSION_HPP_
 
-#include <gs2/version/model/AcceptVersion.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzVersion.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace version {
+namespace gs2 {
+
+namespace version {
+
+class AcceptVersion;
+
+}
+
+namespace ez { namespace version {
 
 class EzAcceptVersion : public gs2::Gs2Object
 {
@@ -39,27 +50,9 @@ private:
         gs2::optional<EzVersion> version;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            versionName(data.versionName),
-            userId(data.userId)
-        {
-            if (data.version)
-            {
-                version = data.version->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::version::AcceptVersion& acceptVersion) :
-            versionName(acceptVersion.getVersionName()),
-            userId(acceptVersion.getUserId()),
-            version(*acceptVersion.getVersion())
-        {
-        }
-
+        Data(const gs2::version::AcceptVersion& acceptVersion);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -74,26 +67,14 @@ public:
     EzAcceptVersion(EzAcceptVersion&& ezAcceptVersion) = default;
     ~EzAcceptVersion() = default;
 
-    EzAcceptVersion(gs2::version::AcceptVersion acceptVersion) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(acceptVersion)
-    {}
+    EzAcceptVersion(gs2::version::AcceptVersion acceptVersion);
 
     EzAcceptVersion& operator=(const EzAcceptVersion& ezAcceptVersion) = default;
     EzAcceptVersion& operator=(EzAcceptVersion&& ezAcceptVersion) = default;
 
-    EzAcceptVersion deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzAcceptVersion);
-    }
+    EzAcceptVersion deepCopy() const;
 
-    gs2::version::AcceptVersion ToModel() const
-    {
-        gs2::version::AcceptVersion acceptVersion;
-        acceptVersion.setVersionName(getVersionName());
-        acceptVersion.setUserId(getUserId());
-        acceptVersion.setVersion(getVersion().ToModel());
-        return acceptVersion;
-    }
+    gs2::version::AcceptVersion ToModel() const;
 
     // ========================================
     //   Getters

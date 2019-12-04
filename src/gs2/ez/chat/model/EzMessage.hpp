@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_CHAT_MODEL_EZMESSAGE_HPP_
 #define GS2_EZ_CHAT_MODEL_EZMESSAGE_HPP_
 
-#include <gs2/chat/model/Message.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace chat {
+namespace gs2 {
+
+namespace chat {
+
+class Message;
+
+}
+
+namespace ez { namespace chat {
 
 class EzMessage : public gs2::Gs2Object
 {
@@ -42,28 +53,9 @@ private:
         gs2::optional<Int64> createdAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            roomName(data.roomName),
-            userId(data.userId),
-            category(data.category),
-            metadata(data.metadata),
-            createdAt(data.createdAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::chat::Message& message) :
-            roomName(message.getRoomName()),
-            userId(message.getUserId()),
-            category(message.getCategory() ? *message.getCategory() : 0),
-            metadata(message.getMetadata()),
-            createdAt(message.getCreatedAt() ? *message.getCreatedAt() : 0)
-        {
-        }
-
+        Data(const gs2::chat::Message& message);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -78,28 +70,14 @@ public:
     EzMessage(EzMessage&& ezMessage) = default;
     ~EzMessage() = default;
 
-    EzMessage(gs2::chat::Message message) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(message)
-    {}
+    EzMessage(gs2::chat::Message message);
 
     EzMessage& operator=(const EzMessage& ezMessage) = default;
     EzMessage& operator=(EzMessage&& ezMessage) = default;
 
-    EzMessage deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzMessage);
-    }
+    EzMessage deepCopy() const;
 
-    gs2::chat::Message ToModel() const
-    {
-        gs2::chat::Message message;
-        message.setRoomName(getRoomName());
-        message.setUserId(getUserId());
-        message.setCategory(getCategory());
-        message.setMetadata(getMetadata());
-        message.setCreatedAt(getCreatedAt());
-        return message;
-    }
+    gs2::chat::Message ToModel() const;
 
     // ========================================
     //   Getters

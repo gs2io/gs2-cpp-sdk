@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_EXPERIENCE_MODEL_EZTHRESHOLD_HPP_
 #define GS2_EZ_EXPERIENCE_MODEL_EZTHRESHOLD_HPP_
 
-#include <gs2/experience/model/Threshold.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace experience {
+namespace gs2 {
+
+namespace experience {
+
+class Threshold;
+
+}
+
+namespace ez { namespace experience {
 
 class EzThreshold : public gs2::Gs2Object
 {
@@ -36,25 +47,9 @@ private:
         gs2::optional<List<Int64>> values;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            metadata(data.metadata)
-        {
-            if (data.values)
-            {
-                values = data.values->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::experience::Threshold& threshold) :
-            metadata(threshold.getMetadata()),
-            values(threshold.getValues())
-        {
-        }
-
+        Data(const gs2::experience::Threshold& threshold);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -69,25 +64,14 @@ public:
     EzThreshold(EzThreshold&& ezThreshold) = default;
     ~EzThreshold() = default;
 
-    EzThreshold(gs2::experience::Threshold threshold) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(threshold)
-    {}
+    EzThreshold(gs2::experience::Threshold threshold);
 
     EzThreshold& operator=(const EzThreshold& ezThreshold) = default;
     EzThreshold& operator=(EzThreshold&& ezThreshold) = default;
 
-    EzThreshold deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzThreshold);
-    }
+    EzThreshold deepCopy() const;
 
-    gs2::experience::Threshold ToModel() const
-    {
-        gs2::experience::Threshold threshold;
-        threshold.setMetadata(getMetadata());
-        threshold.setValues(getValues());
-        return threshold;
-    }
+    gs2::experience::Threshold ToModel() const;
 
     // ========================================
     //   Getters

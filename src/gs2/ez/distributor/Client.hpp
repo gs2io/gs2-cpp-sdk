@@ -14,17 +14,25 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_DISTRIBUTOR_GS2DISTRIBUTORRESTCLIENT_HPP_
-#define GS2_EZ_DISTRIBUTOR_GS2DISTRIBUTORRESTCLIENT_HPP_
+#ifndef GS2_EZ_DISTRIBUTOR_GS2DISTRIBUTORWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_DISTRIBUTOR_GS2DISTRIBUTORWEBSOCKETCLIENT_HPP_
 
-#include <gs2/distributor/Gs2DistributorWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzListDistributorModelsResult.hpp"
 #include "result/EzGetDistributorModelResult.hpp"
 #include "result/EzRunStampTaskResult.hpp"
 #include "result/EzRunStampSheetResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace distributor {
+
+class Gs2DistributorWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -35,10 +43,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::distributor::Gs2DistributorWebSocketClient m_Client;
+    gs2::distributor::Gs2DistributorWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  配信設定を認証<br />
@@ -101,4 +110,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_DISTRIBUTOR_GS2DISTRIBUTORRESTCLIENT_HPP_
+#endif //GS2_EZ_DISTRIBUTOR_GS2DISTRIBUTORWEBSOCKETCLIENT_HPP_

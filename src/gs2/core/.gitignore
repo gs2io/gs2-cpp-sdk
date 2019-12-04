@@ -1,2 +1,2 @@
 /external/*
-!/external/CopyExternalFiles.cmake
+!/external/Gs2CoreExternal.cmake

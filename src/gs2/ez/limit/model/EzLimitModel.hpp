@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_LIMIT_MODEL_EZLIMITMODEL_HPP_
 #define GS2_EZ_LIMIT_MODEL_EZLIMITMODEL_HPP_
 
-#include <gs2/limit/model/LimitModel.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace limit {
+namespace gs2 {
+
+namespace limit {
+
+class LimitModel;
+
+}
+
+namespace ez { namespace limit {
 
 class EzLimitModel : public gs2::Gs2Object
 {
@@ -46,32 +57,9 @@ private:
         gs2::optional<Int32> resetHour;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            limitModelId(data.limitModelId),
-            name(data.name),
-            metadata(data.metadata),
-            resetType(data.resetType),
-            resetDayOfMonth(data.resetDayOfMonth),
-            resetDayOfWeek(data.resetDayOfWeek),
-            resetHour(data.resetHour)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::limit::LimitModel& limitModel) :
-            limitModelId(limitModel.getLimitModelId()),
-            name(limitModel.getName()),
-            metadata(limitModel.getMetadata()),
-            resetType(limitModel.getResetType()),
-            resetDayOfMonth(limitModel.getResetDayOfMonth() ? *limitModel.getResetDayOfMonth() : 0),
-            resetDayOfWeek(limitModel.getResetDayOfWeek()),
-            resetHour(limitModel.getResetHour() ? *limitModel.getResetHour() : 0)
-        {
-        }
-
+        Data(const gs2::limit::LimitModel& limitModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -86,30 +74,14 @@ public:
     EzLimitModel(EzLimitModel&& ezLimitModel) = default;
     ~EzLimitModel() = default;
 
-    EzLimitModel(gs2::limit::LimitModel limitModel) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(limitModel)
-    {}
+    EzLimitModel(gs2::limit::LimitModel limitModel);
 
     EzLimitModel& operator=(const EzLimitModel& ezLimitModel) = default;
     EzLimitModel& operator=(EzLimitModel&& ezLimitModel) = default;
 
-    EzLimitModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzLimitModel);
-    }
+    EzLimitModel deepCopy() const;
 
-    gs2::limit::LimitModel ToModel() const
-    {
-        gs2::limit::LimitModel limitModel;
-        limitModel.setLimitModelId(getLimitModelId());
-        limitModel.setName(getName());
-        limitModel.setMetadata(getMetadata());
-        limitModel.setResetType(getResetType());
-        limitModel.setResetDayOfMonth(getResetDayOfMonth());
-        limitModel.setResetDayOfWeek(getResetDayOfWeek());
-        limitModel.setResetHour(getResetHour());
-        return limitModel;
-    }
+    gs2::limit::LimitModel ToModel() const;
 
     // ========================================
     //   Getters

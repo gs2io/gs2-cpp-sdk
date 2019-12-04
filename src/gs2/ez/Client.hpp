@@ -21,9 +21,11 @@
 #include "account/Client.hpp"
 #include "auth/Client.hpp"
 #include "chat/Client.hpp"
+#include "datastore/Client.hpp"
 #include "distributor/Client.hpp"
 #include "exchange/Client.hpp"
 #include "experience/Client.hpp"
+#include "formation/Client.hpp"
 #include "friend/Client.hpp"
 #include "gateway/Client.hpp"
 #include "inbox/Client.hpp"
@@ -35,6 +37,7 @@
 #include "matchmaking/Client.hpp"
 #include "mission/Client.hpp"
 #include "money/Client.hpp"
+#include "news/Client.hpp"
 #include "quest/Client.hpp"
 #include "ranking/Client.hpp"
 #include "realtime/Client.hpp"
@@ -51,9 +54,11 @@ public:
     account::Client account;
     auth::Client auth;
     chat::Client chat;
+    datastore::Client datastore;
     distributor::Client distributor;
     exchange::Client exchange;
     experience::Client experience;
+    formation::Client formation;
     friend_::Client friend_;
     gateway::Client gateway;
     inbox::Client inbox;
@@ -65,6 +70,7 @@ public:
     matchmaking::Client matchmaking;
     mission::Client mission;
     money::Client money;
+    news::Client news;
     quest::Client quest;
     ranking::Client ranking;
     realtime::Client realtime;
@@ -78,9 +84,11 @@ public:
         account(profile),
         auth(profile),
         chat(profile),
+        datastore(profile),
         distributor(profile),
         exchange(profile),
         experience(profile),
+        formation(profile),
         friend_(profile),
         gateway(profile),
         inbox(profile),
@@ -92,6 +100,7 @@ public:
         matchmaking(profile),
         mission(profile),
         money(profile),
+        news(profile),
         quest(profile),
         ranking(profile),
         realtime(profile),

@@ -14,14 +14,22 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_AUTH_GS2AUTHRESTCLIENT_HPP_
-#define GS2_EZ_AUTH_GS2AUTHRESTCLIENT_HPP_
+#ifndef GS2_EZ_AUTH_GS2AUTHWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_AUTH_GS2AUTHWEBSOCKETCLIENT_HPP_
 
-#include <gs2/auth/Gs2AuthWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzLoginResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace auth {
+
+class Gs2AuthWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -32,10 +40,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::auth::Gs2AuthWebSocketClient m_Client;
+    gs2::auth::Gs2AuthWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  指定したユーザIDでGS2にログイン<br />
@@ -61,4 +70,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_AUTH_GS2AUTHRESTCLIENT_HPP_
+#endif //GS2_EZ_AUTH_GS2AUTHWEBSOCKETCLIENT_HPP_

@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_INVENTORY_GS2INVENTORYRESTCLIENT_HPP_
-#define GS2_EZ_INVENTORY_GS2INVENTORYRESTCLIENT_HPP_
+#ifndef GS2_EZ_INVENTORY_GS2INVENTORYWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_INVENTORY_GS2INVENTORYWEBSOCKETCLIENT_HPP_
 
-#include <gs2/inventory/Gs2InventoryWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzListInventoryModelsResult.hpp"
 #include "result/EzGetInventoryModelResult.hpp"
 #include "result/EzListItemModelsResult.hpp"
@@ -30,7 +30,15 @@
 #include "result/EzConsumeResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace inventory {
+
+class Gs2InventoryWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -41,10 +49,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::inventory::Gs2InventoryWebSocketClient m_Client;
+    gs2::inventory::Gs2InventoryWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  インベントリモデルの一覧を取得<br />
@@ -230,4 +239,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_INVENTORY_GS2INVENTORYRESTCLIENT_HPP_
+#endif //GS2_EZ_INVENTORY_GS2INVENTORYWEBSOCKETCLIENT_HPP_

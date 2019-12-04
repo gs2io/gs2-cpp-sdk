@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,12 +17,25 @@
 #ifndef GS2_EZ_EXCHANGE_MODEL_EZRATEMODEL_HPP_
 #define GS2_EZ_EXCHANGE_MODEL_EZRATEMODEL_HPP_
 
-#include <gs2/exchange/model/RateModel.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzConsumeAction.hpp"
 #include "EzAcquireAction.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace exchange {
+namespace gs2 {
+
+namespace exchange {
+
+class RateModel;
+
+}
+
+namespace ez { namespace exchange {
 
 class EzRateModel : public gs2::Gs2Object
 {
@@ -42,46 +53,9 @@ private:
         gs2::optional<List<EzAcquireAction>> acquireActions;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata)
-        {
-            if (data.consumeActions)
-            {
-                consumeActions = data.consumeActions->deepCopy();
-            }
-            if (data.acquireActions)
-            {
-                acquireActions = data.acquireActions->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::exchange::RateModel& rateModel) :
-            name(rateModel.getName()),
-            metadata(rateModel.getMetadata())
-        {
-            consumeActions.emplace();
-            if (rateModel.getConsumeActions())
-            {
-                for (int i = 0; i < rateModel.getConsumeActions()->getCount(); ++i)
-                {
-                    *consumeActions += EzConsumeAction((*rateModel.getConsumeActions())[i]);
-                }
-            }
-            acquireActions.emplace();
-            if (rateModel.getAcquireActions())
-            {
-                for (int i = 0; i < rateModel.getAcquireActions()->getCount(); ++i)
-                {
-                    *acquireActions += EzAcquireAction((*rateModel.getAcquireActions())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::exchange::RateModel& rateModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -96,43 +70,14 @@ public:
     EzRateModel(EzRateModel&& ezRateModel) = default;
     ~EzRateModel() = default;
 
-    EzRateModel(gs2::exchange::RateModel rateModel) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(rateModel)
-    {}
+    EzRateModel(gs2::exchange::RateModel rateModel);
 
     EzRateModel& operator=(const EzRateModel& ezRateModel) = default;
     EzRateModel& operator=(EzRateModel&& ezRateModel) = default;
 
-    EzRateModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRateModel);
-    }
+    EzRateModel deepCopy() const;
 
-    gs2::exchange::RateModel ToModel() const
-    {
-        gs2::exchange::RateModel rateModel;
-        rateModel.setName(getName());
-        rateModel.setMetadata(getMetadata());
-        {
-            gs2::List<gs2::exchange::ConsumeAction> list;
-            auto& consumeActions = getConsumeActions();
-            for (int i = 0; i < consumeActions.getCount(); ++i)
-            {
-                list += consumeActions[i].ToModel();
-            }
-            rateModel.setConsumeActions(list);
-        }
-        {
-            gs2::List<gs2::exchange::AcquireAction> list;
-            auto& acquireActions = getAcquireActions();
-            for (int i = 0; i < acquireActions.getCount(); ++i)
-            {
-                list += acquireActions[i].ToModel();
-            }
-            rateModel.setAcquireActions(list);
-        }
-        return rateModel;
-    }
+    gs2::exchange::RateModel ToModel() const;
 
     // ========================================
     //   Getters

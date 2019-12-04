@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_MATCHMAKING_MODEL_EZCAPACITYOFROLE_HPP_
 #define GS2_EZ_MATCHMAKING_MODEL_EZCAPACITYOFROLE_HPP_
 
-#include <gs2/matchmaking/model/CapacityOfRole.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzPlayer.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace matchmaking {
+namespace gs2 {
+
+namespace matchmaking {
+
+class CapacityOfRole;
+
+}
+
+namespace ez { namespace matchmaking {
 
 class EzCapacityOfRole : public gs2::Gs2Object
 {
@@ -41,39 +52,9 @@ private:
         gs2::optional<List<EzPlayer>> participants;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            roleName(data.roleName),
-            capacity(data.capacity)
-        {
-            if (data.roleAliases)
-            {
-                roleAliases = data.roleAliases->deepCopy();
-            }
-            if (data.participants)
-            {
-                participants = data.participants->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::matchmaking::CapacityOfRole& capacityOfRole) :
-            roleName(capacityOfRole.getRoleName()),
-            roleAliases(capacityOfRole.getRoleAliases()),
-            capacity(capacityOfRole.getCapacity() ? *capacityOfRole.getCapacity() : 0)
-        {
-            participants.emplace();
-            if (capacityOfRole.getParticipants())
-            {
-                for (int i = 0; i < capacityOfRole.getParticipants()->getCount(); ++i)
-                {
-                    *participants += EzPlayer((*capacityOfRole.getParticipants())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::matchmaking::CapacityOfRole& capacityOfRole);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -88,35 +69,14 @@ public:
     EzCapacityOfRole(EzCapacityOfRole&& ezCapacityOfRole) = default;
     ~EzCapacityOfRole() = default;
 
-    EzCapacityOfRole(gs2::matchmaking::CapacityOfRole capacityOfRole) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(capacityOfRole)
-    {}
+    EzCapacityOfRole(gs2::matchmaking::CapacityOfRole capacityOfRole);
 
     EzCapacityOfRole& operator=(const EzCapacityOfRole& ezCapacityOfRole) = default;
     EzCapacityOfRole& operator=(EzCapacityOfRole&& ezCapacityOfRole) = default;
 
-    EzCapacityOfRole deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzCapacityOfRole);
-    }
+    EzCapacityOfRole deepCopy() const;
 
-    gs2::matchmaking::CapacityOfRole ToModel() const
-    {
-        gs2::matchmaking::CapacityOfRole capacityOfRole;
-        capacityOfRole.setRoleName(getRoleName());
-        capacityOfRole.setRoleAliases(getRoleAliases());
-        capacityOfRole.setCapacity(getCapacity());
-        {
-            gs2::List<gs2::matchmaking::Player> list;
-            auto& participants = getParticipants();
-            for (int i = 0; i < participants.getCount(); ++i)
-            {
-                list += participants[i].ToModel();
-            }
-            capacityOfRole.setParticipants(list);
-        }
-        return capacityOfRole;
-    }
+    gs2::matchmaking::CapacityOfRole ToModel() const;
 
     // ========================================
     //   Getters

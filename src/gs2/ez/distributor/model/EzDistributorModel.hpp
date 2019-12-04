@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_DISTRIBUTOR_MODEL_EZDISTRIBUTORMODEL_HPP_
 #define GS2_EZ_DISTRIBUTOR_MODEL_EZDISTRIBUTORMODEL_HPP_
 
-#include <gs2/distributor/model/DistributorModel.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace distributor {
+namespace gs2 {
+
+namespace distributor {
+
+class DistributorModel;
+
+}
+
+namespace ez { namespace distributor {
 
 class EzDistributorModel : public gs2::Gs2Object
 {
@@ -40,29 +51,9 @@ private:
         gs2::optional<List<StringHolder>> whiteListTargetIds;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            name(data.name),
-            metadata(data.metadata),
-            inboxNamespaceId(data.inboxNamespaceId)
-        {
-            if (data.whiteListTargetIds)
-            {
-                whiteListTargetIds = data.whiteListTargetIds->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::distributor::DistributorModel& distributorModel) :
-            name(distributorModel.getName()),
-            metadata(distributorModel.getMetadata()),
-            inboxNamespaceId(distributorModel.getInboxNamespaceId()),
-            whiteListTargetIds(distributorModel.getWhiteListTargetIds())
-        {
-        }
-
+        Data(const gs2::distributor::DistributorModel& distributorModel);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -77,27 +68,14 @@ public:
     EzDistributorModel(EzDistributorModel&& ezDistributorModel) = default;
     ~EzDistributorModel() = default;
 
-    EzDistributorModel(gs2::distributor::DistributorModel distributorModel) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(distributorModel)
-    {}
+    EzDistributorModel(gs2::distributor::DistributorModel distributorModel);
 
     EzDistributorModel& operator=(const EzDistributorModel& ezDistributorModel) = default;
     EzDistributorModel& operator=(EzDistributorModel&& ezDistributorModel) = default;
 
-    EzDistributorModel deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDistributorModel);
-    }
+    EzDistributorModel deepCopy() const;
 
-    gs2::distributor::DistributorModel ToModel() const
-    {
-        gs2::distributor::DistributorModel distributorModel;
-        distributorModel.setName(getName());
-        distributorModel.setMetadata(getMetadata());
-        distributorModel.setInboxNamespaceId(getInboxNamespaceId());
-        distributorModel.setWhiteListTargetIds(getWhiteListTargetIds());
-        return distributorModel;
-    }
+    gs2::distributor::DistributorModel ToModel() const;
 
     // ========================================
     //   Getters

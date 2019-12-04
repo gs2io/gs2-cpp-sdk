@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,10 +17,23 @@
 #ifndef GS2_EZ_SCHEDULE_MODEL_EZTRIGGER_HPP_
 #define GS2_EZ_SCHEDULE_MODEL_EZTRIGGER_HPP_
 
-#include <gs2/schedule/model/Trigger.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace schedule {
+namespace gs2 {
+
+namespace schedule {
+
+class Trigger;
+
+}
+
+namespace ez { namespace schedule {
 
 class EzTrigger : public gs2::Gs2Object
 {
@@ -40,26 +51,9 @@ private:
         gs2::optional<Int64> expiresAt;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            triggerId(data.triggerId),
-            name(data.name),
-            createdAt(data.createdAt),
-            expiresAt(data.expiresAt)
-        {
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::schedule::Trigger& trigger) :
-            triggerId(trigger.getTriggerId()),
-            name(trigger.getName()),
-            createdAt(trigger.getCreatedAt() ? *trigger.getCreatedAt() : 0),
-            expiresAt(trigger.getExpiresAt() ? *trigger.getExpiresAt() : 0)
-        {
-        }
-
+        Data(const gs2::schedule::Trigger& trigger);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -74,27 +68,14 @@ public:
     EzTrigger(EzTrigger&& ezTrigger) = default;
     ~EzTrigger() = default;
 
-    EzTrigger(gs2::schedule::Trigger trigger) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(trigger)
-    {}
+    EzTrigger(gs2::schedule::Trigger trigger);
 
     EzTrigger& operator=(const EzTrigger& ezTrigger) = default;
     EzTrigger& operator=(EzTrigger&& ezTrigger) = default;
 
-    EzTrigger deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzTrigger);
-    }
+    EzTrigger deepCopy() const;
 
-    gs2::schedule::Trigger ToModel() const
-    {
-        gs2::schedule::Trigger trigger;
-        trigger.setTriggerId(getTriggerId());
-        trigger.setName(getName());
-        trigger.setCreatedAt(getCreatedAt());
-        trigger.setExpiresAt(getExpiresAt());
-        return trigger;
-    }
+    gs2::schedule::Trigger ToModel() const;
 
     // ========================================
     //   Getters

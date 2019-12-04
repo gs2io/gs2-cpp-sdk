@@ -81,7 +81,7 @@ private:
                 for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                     RequestError item;
                     detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                    detail::addToList(errors, std::move(item));
+                    errors += std::move(item);
                 }
             }
         }

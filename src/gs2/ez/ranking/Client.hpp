@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_RANKING_GS2RANKINGRESTCLIENT_HPP_
-#define GS2_EZ_RANKING_GS2RANKINGRESTCLIENT_HPP_
+#ifndef GS2_EZ_RANKING_GS2RANKINGWEBSOCKETCLIENT_HPP_
+#define GS2_EZ_RANKING_GS2RANKINGWEBSOCKETCLIENT_HPP_
 
-#include <gs2/ranking/Gs2RankingWebSocketClient.hpp>
+#include <gs2/core/Gs2Object.hpp>
 #include "result/EzListCategoriesResult.hpp"
 #include "result/EzGetCategoryResult.hpp"
 #include "result/EzListSubscribesResult.hpp"
@@ -28,7 +28,15 @@
 #include "result/EzGetNearRankingResult.hpp"
 
 
-namespace gs2 { namespace ez {
+namespace gs2 {
+
+namespace ranking {
+
+class Gs2RankingWebSocketClient;
+
+}
+
+namespace ez {
 
 class Profile;
 class GameSession;
@@ -39,10 +47,11 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::ranking::Gs2RankingWebSocketClient m_Client;
+    gs2::ranking::Gs2RankingWebSocketClient* m_pClient;
 
 public:
     Client(gs2::ez::Profile& profile);
+    ~Client();
 
     /// <summary>
     ///  カテゴリの一覧を取得<br />
@@ -182,4 +191,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_RANKING_GS2RANKINGRESTCLIENT_HPP_
+#endif //GS2_EZ_RANKING_GS2RANKINGWEBSOCKETCLIENT_HPP_

@@ -15,6 +15,8 @@
 cmake_minimum_required(VERSION 3.2)
 project(gs2-cpp-sdk-core)
 
+include(../Gs2Sdk.cmake)
+
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         AbstractGs2Client.hpp
         AsyncResult.hpp
@@ -95,40 +97,33 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
 file(GLOB ${PROJECT_NAME}_ETC_FILES
         )
 
-if(GS2_LIBRARY_BUILD)
-        include(external/CopyExternalFiles.cmake)
-        define_external_file_rule(
-                ${CMAKE_CURRENT_LIST_DIR}/../../external/
-                ${CMAKE_CURRENT_LIST_DIR}/external/
-                EXTERNAL_FILES
-                EXTERNAL_SOURCE_FILES
-                )
-endif()
-
 set(${PROJECT_NAME}_FILES
         ${${PROJECT_NAME}_HEADER_FILES}
         ${${PROJECT_NAME}_SOURCE_FILES}
         ${${PROJECT_NAME}_ETC_FILES}
-        ${EXTERNAL_FILES}
         )
 
 
-add_library(${PROJECT_NAME} STATIC
-        ${${PROJECT_NAME}_SOURCE_FILES}
-        ${EXTERNAL_SOURCE_FILES}
+gs2_add_library(${PROJECT_NAME} STATIC
+        "${${PROJECT_NAME}_SOURCE_FILES}"
         )
 
 gs2_inherit_cocos2dx_settings(${PROJECT_NAME})
 
-target_include_directories(${PROJECT_NAME}
+gs2_target_include_directories(${PROJECT_NAME}
         PUBLIC ../..
         )
-target_link_libraries(${PROJECT_NAME}
-        cocos2d
+
+gs2_target_link_libraries(${PROJECT_NAME}
+        PUBLIC cocos2d
         )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/../../
+        INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/../../"
+        )
+
+gs2_add_dependencies(gs2-cpp-sdk-all
+        ${PROJECT_NAME}
         )
 
 set(GS2_ALL_LIBRARIES
@@ -137,17 +132,7 @@ set(GS2_ALL_LIBRARIES
         PARENT_SCOPE
         )
 
-# ライブラリのビルド前に、外部ライブラリの必要なファイルだけをコピーする
-
-if(GS2_LIBRARY_BUILD)
-        add_custom_target(copy_external_files
-                DEPENDS ${EXTERNAL_FILES}
-                )
-
-        add_dependencies(${PROJECT_NAME}
-                copy_external_files
-                )
-endif()
+include(external/Gs2CoreExternal.cmake)
 
 set(gs2-cpp-sdk_FILES
         ${gs2-cpp-sdk_FILES}

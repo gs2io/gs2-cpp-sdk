@@ -115,7 +115,7 @@ private:
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
                         if (json->IsInt())
                         {
-                            detail::addToList(*this->values, json->GetInt());
+                            *this->values += json->GetInt();
                         }
                     }
                 }

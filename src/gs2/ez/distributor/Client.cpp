@@ -17,14 +17,20 @@
 #include "Client.hpp"
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
+#include <gs2/distributor/Gs2DistributorWebSocketClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace distributor {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_Client(profile.getGs2Session())
+    m_pClient(new gs2::distributor::Gs2DistributorWebSocketClient(profile.getGs2Session()))
 {
+}
+
+Client::~Client()
+{
+    delete m_pClient;
 }
 
 void Client::listDistributorModels(
@@ -34,7 +40,7 @@ void Client::listDistributorModels(
 {
     gs2::distributor::DescribeDistributorModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_Client.describeDistributorModels(
+    m_pClient->describeDistributorModels(
         request,
         [callback](gs2::distributor::AsyncDescribeDistributorModelsResult r)
         {
@@ -70,7 +76,7 @@ void Client::getDistributorModel(
     gs2::distributor::GetDistributorModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setDistributorName(distributorName);
-    m_Client.getDistributorModel(
+    m_pClient->getDistributorModel(
         request,
         [callback](gs2::distributor::AsyncGetDistributorModelResult r)
         {
@@ -113,7 +119,7 @@ void Client::runStampTask(
     {
         request.setContextStack(std::move(*contextStack));
     }
-    m_Client.runStampTask(
+    m_pClient->runStampTask(
         request,
         [callback](gs2::distributor::AsyncRunStampTaskResult r)
         {
@@ -156,7 +162,7 @@ void Client::runStampSheet(
     {
         request.setContextStack(std::move(*contextStack));
     }
-    m_Client.runStampSheet(
+    m_pClient->runStampSheet(
         request,
         [callback](gs2::distributor::AsyncRunStampSheetResult r)
         {

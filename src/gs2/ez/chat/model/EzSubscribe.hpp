@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
  * Reserved.
@@ -19,11 +17,24 @@
 #ifndef GS2_EZ_CHAT_MODEL_EZSUBSCRIBE_HPP_
 #define GS2_EZ_CHAT_MODEL_EZSUBSCRIBE_HPP_
 
-#include <gs2/chat/model/Subscribe.hpp>
+#include <gs2/core/Gs2Object.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
 #include "EzNotificationType.hpp"
+#include <memory>
 
 
-namespace gs2 { namespace ez { namespace chat {
+namespace gs2 {
+
+namespace chat {
+
+class Subscribe;
+
+}
+
+namespace ez { namespace chat {
 
 class EzSubscribe : public gs2::Gs2Object
 {
@@ -39,34 +50,9 @@ private:
         gs2::optional<List<EzNotificationType>> notificationTypes;
 
         Data() = default;
-
-        Data(const Data& data) :
-            Gs2Object(data),
-            userId(data.userId),
-            roomName(data.roomName)
-        {
-            if (data.notificationTypes)
-            {
-                notificationTypes = data.notificationTypes->deepCopy();
-            }
-        }
-
+        Data(const Data& data);
         Data(Data&& data) = default;
-
-        Data(const gs2::chat::Subscribe& subscribe) :
-            userId(subscribe.getUserId()),
-            roomName(subscribe.getRoomName())
-        {
-            notificationTypes.emplace();
-            if (subscribe.getNotificationTypes())
-            {
-                for (int i = 0; i < subscribe.getNotificationTypes()->getCount(); ++i)
-                {
-                    *notificationTypes += EzNotificationType((*subscribe.getNotificationTypes())[i]);
-                }
-            }
-        }
-
+        Data(const gs2::chat::Subscribe& subscribe);
         ~Data() = default;
 
         Data& operator=(const Data&) = delete;
@@ -81,34 +67,14 @@ public:
     EzSubscribe(EzSubscribe&& ezSubscribe) = default;
     ~EzSubscribe() = default;
 
-    EzSubscribe(gs2::chat::Subscribe subscribe) :
-        GS2_CORE_SHARED_DATA_INITIALIZATION(subscribe)
-    {}
+    EzSubscribe(gs2::chat::Subscribe subscribe);
 
     EzSubscribe& operator=(const EzSubscribe& ezSubscribe) = default;
     EzSubscribe& operator=(EzSubscribe&& ezSubscribe) = default;
 
-    EzSubscribe deepCopy() const
-    {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzSubscribe);
-    }
+    EzSubscribe deepCopy() const;
 
-    gs2::chat::Subscribe ToModel() const
-    {
-        gs2::chat::Subscribe subscribe;
-        subscribe.setUserId(getUserId());
-        subscribe.setRoomName(getRoomName());
-        {
-            gs2::List<gs2::chat::NotificationType> list;
-            auto& notificationTypes = getNotificationTypes();
-            for (int i = 0; i < notificationTypes.getCount(); ++i)
-            {
-                list += notificationTypes[i].ToModel();
-            }
-            subscribe.setNotificationTypes(list);
-        }
-        return subscribe;
-    }
+    gs2::chat::Subscribe ToModel() const;
 
     // ========================================
     //   Getters

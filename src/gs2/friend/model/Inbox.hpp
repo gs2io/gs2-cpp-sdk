@@ -103,7 +103,7 @@ private:
                         {
                             auto valueStr = json->GetString();
                             StringHolder stringHolder(valueStr);
-                            detail::addToList(*this->fromUserIds, std::move(stringHolder));
+                            *this->fromUserIds += std::move(stringHolder);
                         }
                     }
                 }

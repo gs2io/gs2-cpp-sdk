@@ -15,6 +15,8 @@
 cmake_minimum_required(VERSION 3.2)
 project(gs2-cpp-sdk-ez-friend)
 
+include(../../Gs2Sdk.cmake)
+
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
@@ -51,14 +53,35 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzNamespace.cpp
+        model/EzProfile.cpp
+        model/EzFollow.cpp
+        model/EzFriend.cpp
+        model/EzSendBox.cpp
+        model/EzInbox.cpp
+        model/EzResponseCache.cpp
+        model/EzFollowUser.cpp
+        model/EzFriendUser.cpp
+        model/EzFriendRequest.cpp
+        model/EzPublicProfile.cpp
+        model/EzScriptSetting.cpp
+        model/EzNotificationSetting.cpp
+        model/EzLogSetting.cpp
         )
 
-add_library(${PROJECT_NAME} STATIC
-        ${${PROJECT_NAME}_SOURCE_FILES}
+gs2_add_library(${PROJECT_NAME} STATIC
+        "${${PROJECT_NAME}_SOURCE_FILES}"
         )
 
 gs2_inherit_cocos2dx_settings(${PROJECT_NAME})
-target_link_libraries(${PROJECT_NAME} gs2-cpp-sdk-ez)
+
+gs2_target_link_libraries(${PROJECT_NAME}
+        PUBLIC gs2-cpp-sdk-ez
+        )
+
+gs2_add_dependencies(gs2-cpp-sdk-all
+        ${PROJECT_NAME}
+        )
 
 set(GS2_ALL_LIBRARIES
         ${GS2_ALL_LIBRARIES}
