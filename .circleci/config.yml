@@ -37,6 +37,16 @@ jobs:
             cd ../cmake-build
             make gs2-cpp-sdk-all
       -
+        run:
+          name: SDK パッケージの作成
+          command: |
+            cd ../cmake-build
+            make gs2-cpp-sdk-package
+      -
+        store_artifacts:
+          path: /root/gs2-cpp-sdk/src/gs2-cocos2dx-sdk_YYYY.MM.R.zip
+          destination: packages/gs2-cocos2dx-sdk_YYYY.MM.R.zip
+      -
         persist_to_workspace:
           root: /root
           paths:
