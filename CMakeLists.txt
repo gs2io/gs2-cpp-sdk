@@ -33,3 +33,15 @@ set(GS2_ALL_LIBRARIES
         ${GS2_ALL_LIBRARIES}
         PARENT_SCOPE
         )
+
+# パッケージングルール
+
+add_custom_target(gs2-cpp-sdk-package)
+
+add_custom_command(TARGET gs2-cpp-sdk-package
+        COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_COMMAND} -E tar c gs2-cocos2dx-sdk_YYYY.MM.R.zip --format=zip gs2
+        )
+
+add_dependencies(gs2-cpp-sdk-package
+        gs2-cpp-sdk-core-external
+        )
