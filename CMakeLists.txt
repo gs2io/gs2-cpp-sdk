@@ -36,10 +36,17 @@ set(GS2_ALL_LIBRARIES
 
 # パッケージングルール
 
+download_project(
+        PROJ UEWebsocket
+        GIT_REPOSITORY git@github.com:gs2io/UEWebsocket.git
+        GIT_TAG Gs2Customization
+)
+
 add_custom_target(gs2-cpp-sdk-package)
 
 add_custom_command(TARGET gs2-cpp-sdk-package
-        COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_COMMAND} -E tar c gs2-cocos2dx-sdk_YYYY.MM.R.zip --format=zip gs2
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${UEWebsocket_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src/UEWebsocket
+        COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_COMMAND} -E tar c gs2-unreal-engine-sdk_YYYY.MM.R.zip --format=zip gs2 UEWebsocket
         )
 
 add_dependencies(gs2-cpp-sdk-package
