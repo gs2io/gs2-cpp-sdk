@@ -27,6 +27,7 @@
 #include "CurrentItemModelMaster.hpp"
 #include "Inventory.hpp"
 #include "ItemSet.hpp"
+#include "ItemSetGroup.hpp"
 #include "ResponseCache.hpp"
 #include "GitHubCheckoutSetting.hpp"
 #include "ScriptSetting.hpp"

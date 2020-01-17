@@ -55,6 +55,10 @@ private:
         optional<Int64> acquireCount;
         /** 有効期限 */
         optional<Int64> expiresAt;
+        /** 既存の ItemSet に空きがあったとしても、新しい ItemSet を作成するか */
+        optional<Bool> createNewItemSet;
+        /** アイテムセットを識別する名前 */
+        optional<StringHolder> itemSetName;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -68,6 +72,8 @@ private:
             userId(data.userId),
             acquireCount(data.acquireCount),
             expiresAt(data.expiresAt),
+            createNewItemSet(data.createNewItemSet),
+            itemSetName(data.itemSetName),
             duplicationAvoider(data.duplicationAvoider)
         {
         }
@@ -299,6 +305,68 @@ public:
     AcquireItemSetByUserIdRequest& withExpiresAt(Int64 expiresAt)
     {
         ensureData().expiresAt.emplace(expiresAt);
+        return *this;
+    }
+
+    /**
+     * 既存の ItemSet に空きがあったとしても、新しい ItemSet を作成するかを取得
+     *
+     * @return 既存の ItemSet に空きがあったとしても、新しい ItemSet を作成するか
+     */
+    const optional<Bool>& getCreateNewItemSet() const
+    {
+        return ensureData().createNewItemSet;
+    }
+
+    /**
+     * 既存の ItemSet に空きがあったとしても、新しい ItemSet を作成するかを設定
+     *
+     * @param createNewItemSet 既存の ItemSet に空きがあったとしても、新しい ItemSet を作成するか
+     */
+    void setCreateNewItemSet(Bool createNewItemSet)
+    {
+        ensureData().createNewItemSet.emplace(createNewItemSet);
+    }
+
+    /**
+     * 既存の ItemSet に空きがあったとしても、新しい ItemSet を作成するかを設定
+     *
+     * @param createNewItemSet 既存の ItemSet に空きがあったとしても、新しい ItemSet を作成するか
+     */
+    AcquireItemSetByUserIdRequest& withCreateNewItemSet(Bool createNewItemSet)
+    {
+        ensureData().createNewItemSet.emplace(createNewItemSet);
+        return *this;
+    }
+
+    /**
+     * アイテムセットを識別する名前を取得
+     *
+     * @return アイテムセットを識別する名前
+     */
+    const optional<StringHolder>& getItemSetName() const
+    {
+        return ensureData().itemSetName;
+    }
+
+    /**
+     * アイテムセットを識別する名前を設定
+     *
+     * @param itemSetName アイテムセットを識別する名前
+     */
+    void setItemSetName(StringHolder itemSetName)
+    {
+        ensureData().itemSetName.emplace(std::move(itemSetName));
+    }
+
+    /**
+     * アイテムセットを識別する名前を設定
+     *
+     * @param itemSetName アイテムセットを識別する名前
+     */
+    AcquireItemSetByUserIdRequest& withItemSetName(StringHolder itemSetName)
+    {
+        ensureData().itemSetName.emplace(std::move(itemSetName));
         return *this;
     }
 

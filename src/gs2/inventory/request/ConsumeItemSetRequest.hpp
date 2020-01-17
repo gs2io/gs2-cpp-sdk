@@ -53,8 +53,8 @@ private:
         optional<StringHolder> itemName;
         /** 消費する量 */
         optional<Int64> consumeCount;
-        /** 有効期限 */
-        optional<Int64> expiresAt;
+        /** アイテムセットを識別する名前 */
+        optional<StringHolder> itemSetName;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -67,7 +67,7 @@ private:
             inventoryName(data.inventoryName),
             itemName(data.itemName),
             consumeCount(data.consumeCount),
-            expiresAt(data.expiresAt),
+            itemSetName(data.itemSetName),
             duplicationAvoider(data.duplicationAvoider)
         {
         }
@@ -273,33 +273,33 @@ public:
     }
 
     /**
-     * 有効期限を取得
+     * アイテムセットを識別する名前を取得
      *
-     * @return 有効期限
+     * @return アイテムセットを識別する名前
      */
-    const optional<Int64>& getExpiresAt() const
+    const optional<StringHolder>& getItemSetName() const
     {
-        return ensureData().expiresAt;
+        return ensureData().itemSetName;
     }
 
     /**
-     * 有効期限を設定
+     * アイテムセットを識別する名前を設定
      *
-     * @param expiresAt 有効期限
+     * @param itemSetName アイテムセットを識別する名前
      */
-    void setExpiresAt(Int64 expiresAt)
+    void setItemSetName(StringHolder itemSetName)
     {
-        ensureData().expiresAt.emplace(expiresAt);
+        ensureData().itemSetName.emplace(std::move(itemSetName));
     }
 
     /**
-     * 有効期限を設定
+     * アイテムセットを識別する名前を設定
      *
-     * @param expiresAt 有効期限
+     * @param itemSetName アイテムセットを識別する名前
      */
-    ConsumeItemSetRequest& withExpiresAt(Int64 expiresAt)
+    ConsumeItemSetRequest& withItemSetName(StringHolder itemSetName)
     {
-        ensureData().expiresAt.emplace(expiresAt);
+        ensureData().itemSetName.emplace(std::move(itemSetName));
         return *this;
     }
 
