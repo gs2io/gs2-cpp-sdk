@@ -28,6 +28,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzCurrentItemModelMaster.hpp
         model/EzInventory.hpp
         model/EzItemSet.hpp
+        model/EzItemSetGroup.hpp
         model/EzResponseCache.hpp
         model/EzGitHubCheckoutSetting.hpp
         model/EzScriptSetting.hpp
@@ -54,6 +55,7 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         model/EzCurrentItemModelMaster.cpp
         model/EzInventory.cpp
         model/EzItemSet.cpp
+        model/EzItemSetGroup.cpp
         model/EzResponseCache.cpp
         model/EzGitHubCheckoutSetting.cpp
         model/EzScriptSetting.cpp

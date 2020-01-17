@@ -22,7 +22,7 @@ namespace gs2 { namespace ez { namespace inventory {
 
 EzItemSet::Data::Data(const Data& data) :
     Gs2Object(data),
-    itemSetId(data.itemSetId),
+    name(data.name),
     inventoryName(data.inventoryName),
     itemName(data.itemName),
     count(data.count),
@@ -31,7 +31,7 @@ EzItemSet::Data::Data(const Data& data) :
 }
 
 EzItemSet::Data::Data(const gs2::inventory::ItemSet& itemSet) :
-    itemSetId(itemSet.getItemSetId()),
+    name(itemSet.getName()),
     inventoryName(itemSet.getInventoryName()),
     itemName(itemSet.getItemName()),
     count(itemSet.getCount() ? *itemSet.getCount() : 0),
@@ -52,7 +52,7 @@ EzItemSet EzItemSet::deepCopy() const
 gs2::inventory::ItemSet EzItemSet::ToModel() const
 {
     gs2::inventory::ItemSet itemSet;
-    itemSet.setItemSetId(getItemSetId());
+    itemSet.setName(getName());
     itemSet.setInventoryName(getInventoryName());
     itemSet.setItemName(getItemName());
     itemSet.setCount(getCount());

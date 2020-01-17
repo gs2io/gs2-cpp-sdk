@@ -45,6 +45,8 @@ private:
     public:
         /** 有効期限ごとのアイテム所持数量 */
         optional<StringHolder> itemSetId;
+        /** アイテムセットを識別する名前 */
+        optional<StringHolder> name;
         /** インベントリの名前 */
         optional<StringHolder> inventoryName;
         /** ユーザーID */
@@ -67,6 +69,7 @@ private:
         Data(const Data& data) :
             detail::json::IModel(data),
             itemSetId(data.itemSetId),
+            name(data.name),
             inventoryName(data.inventoryName),
             userId(data.userId),
             itemName(data.itemName),
@@ -92,6 +95,13 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->itemSetId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "name") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->name.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "inventoryName") == 0)
@@ -206,6 +216,37 @@ public:
     ItemSet& withItemSetId(StringHolder itemSetId)
     {
         setItemSetId(std::move(itemSetId));
+        return *this;
+    }
+
+    /**
+     * アイテムセットを識別する名前を取得
+     *
+     * @return アイテムセットを識別する名前
+     */
+    const optional<StringHolder>& getName() const
+    {
+        return ensureData().name;
+    }
+
+    /**
+     * アイテムセットを識別する名前を設定
+     *
+     * @param name アイテムセットを識別する名前
+     */
+    void setName(StringHolder name)
+    {
+        ensureData().name.emplace(std::move(name));
+    }
+
+    /**
+     * アイテムセットを識別する名前を設定
+     *
+     * @param name アイテムセットを識別する名前
+     */
+    ItemSet& withName(StringHolder name)
+    {
+        setName(std::move(name));
         return *this;
     }
 
@@ -473,6 +514,10 @@ inline bool operator!=(const ItemSet& lhs, const ItemSet& lhr)
             return true;
         }
         if (lhs.m_pData->itemSetId != lhr.m_pData->itemSetId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->name != lhr.m_pData->name)
         {
             return true;
         }

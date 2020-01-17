@@ -2315,11 +2315,11 @@ private:
                 url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
                 joint[0] = '&';
             }
-            if (m_Request.getExpiresAt())
+            if (m_Request.getItemSetName())
             {
                 url += joint;
-                url += "expiresAt=";
-                url += detail::StringVariable(*m_Request.getExpiresAt()).c_str();
+                url += "itemSetName=";
+                url += detail::StringVariable(*m_Request.getItemSetName(), detail::StringVariable::UrlSafeEncode()).c_str();
                 joint[0] = '&';
             }
 
@@ -2389,11 +2389,11 @@ private:
                 url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
                 joint[0] = '&';
             }
-            if (m_Request.getExpiresAt())
+            if (m_Request.getItemSetName())
             {
                 url += joint;
-                url += "expiresAt=";
-                url += detail::StringVariable(*m_Request.getExpiresAt()).c_str();
+                url += "itemSetName=";
+                url += detail::StringVariable(*m_Request.getItemSetName(), detail::StringVariable::UrlSafeEncode()).c_str();
                 joint[0] = '&';
             }
 
@@ -2455,11 +2455,11 @@ private:
                 url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
                 joint[0] = '&';
             }
-            if (m_Request.getExpiresAt())
+            if (m_Request.getItemSetName())
             {
                 url += joint;
-                url += "expiresAt=";
-                url += detail::StringVariable(*m_Request.getExpiresAt()).c_str();
+                url += "itemSetName=";
+                url += detail::StringVariable(*m_Request.getItemSetName(), detail::StringVariable::UrlSafeEncode()).c_str();
                 joint[0] = '&';
             }
             if (m_Request.getKeyId())
@@ -2536,11 +2536,11 @@ private:
                 url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
                 joint[0] = '&';
             }
-            if (m_Request.getExpiresAt())
+            if (m_Request.getItemSetName())
             {
                 url += joint;
-                url += "expiresAt=";
-                url += detail::StringVariable(*m_Request.getExpiresAt()).c_str();
+                url += "itemSetName=";
+                url += detail::StringVariable(*m_Request.getItemSetName(), detail::StringVariable::UrlSafeEncode()).c_str();
                 joint[0] = '&';
             }
             if (m_Request.getKeyId())
@@ -2622,6 +2622,16 @@ private:
                 jsonWriter.writePropertyName("expiresAt");
                 jsonWriter.writeInt64(*m_Request.getExpiresAt());
             }
+            if (m_Request.getCreateNewItemSet())
+            {
+                jsonWriter.writePropertyName("createNewItemSet");
+                jsonWriter.writeBool(*m_Request.getCreateNewItemSet());
+            }
+            if (m_Request.getItemSetName())
+            {
+                jsonWriter.writePropertyName("itemSetName");
+                jsonWriter.writeCharArray(*m_Request.getItemSetName());
+            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -2690,10 +2700,10 @@ private:
                 jsonWriter.writePropertyName("consumeCount");
                 jsonWriter.writeInt64(*m_Request.getConsumeCount());
             }
-            if (m_Request.getExpiresAt())
+            if (m_Request.getItemSetName())
             {
-                jsonWriter.writePropertyName("expiresAt");
-                jsonWriter.writeInt64(*m_Request.getExpiresAt());
+                jsonWriter.writePropertyName("itemSetName");
+                jsonWriter.writeCharArray(*m_Request.getItemSetName());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -2771,10 +2781,10 @@ private:
                 jsonWriter.writePropertyName("consumeCount");
                 jsonWriter.writeInt64(*m_Request.getConsumeCount());
             }
-            if (m_Request.getExpiresAt())
+            if (m_Request.getItemSetName())
             {
-                jsonWriter.writePropertyName("expiresAt");
-                jsonWriter.writeInt64(*m_Request.getExpiresAt());
+                jsonWriter.writePropertyName("itemSetName");
+                jsonWriter.writeCharArray(*m_Request.getItemSetName());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -2844,11 +2854,11 @@ private:
                 url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
                 joint[0] = '&';
             }
-            if (m_Request.getExpiresAt())
+            if (m_Request.getItemSetName())
             {
                 url += joint;
-                url += "expiresAt=";
-                url += detail::StringVariable(*m_Request.getExpiresAt()).c_str();
+                url += "itemSetName=";
+                url += detail::StringVariable(*m_Request.getItemSetName(), detail::StringVariable::UrlSafeEncode()).c_str();
                 joint[0] = '&';
             }
             {
@@ -3304,6 +3314,11 @@ protected:
             jsonWriter.writePropertyName("itemSetId");
             jsonWriter.writeCharArray(*obj.getItemSetId());
         }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
         if (obj.getInventoryName())
         {
             jsonWriter.writePropertyName("inventoryName");
@@ -3333,6 +3348,113 @@ protected:
         {
             jsonWriter.writePropertyName("expiresAt");
             jsonWriter.writeInt64(*obj.getExpiresAt());
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const ItemSetGroup& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getItemSetGroupId())
+        {
+            jsonWriter.writePropertyName("itemSetGroupId");
+            jsonWriter.writeCharArray(*obj.getItemSetGroupId());
+        }
+        if (obj.getInventoryName())
+        {
+            jsonWriter.writePropertyName("inventoryName");
+            jsonWriter.writeCharArray(*obj.getInventoryName());
+        }
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getItemName())
+        {
+            jsonWriter.writePropertyName("itemName");
+            jsonWriter.writeCharArray(*obj.getItemName());
+        }
+        if (obj.getSortValue())
+        {
+            jsonWriter.writePropertyName("sortValue");
+            jsonWriter.writeInt32(*obj.getSortValue());
+        }
+        if (obj.getItemSetItemSetIdList())
+        {
+            jsonWriter.writePropertyName("itemSetItemSetIdList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetItemSetIdList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeCharArray(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetNameList())
+        {
+            jsonWriter.writePropertyName("itemSetNameList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetNameList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeCharArray(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetCountList())
+        {
+            jsonWriter.writePropertyName("itemSetCountList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetCountList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt64(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetExpiresAtList())
+        {
+            jsonWriter.writePropertyName("itemSetExpiresAtList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetExpiresAtList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt64(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetCreatedAtList())
+        {
+            jsonWriter.writePropertyName("itemSetCreatedAtList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetCreatedAtList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt64(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetUpdatedAtList())
+        {
+            jsonWriter.writePropertyName("itemSetUpdatedAtList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetUpdatedAtList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt64(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
         }
         if (obj.getCreatedAt())
         {
