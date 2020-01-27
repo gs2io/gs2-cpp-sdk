@@ -20,6 +20,7 @@
 #include <gs2/core/Gs2Object.hpp>
 #include "result/EzListCountersResult.hpp"
 #include "result/EzGetCounterResult.hpp"
+#include "result/EzCountUpResult.hpp"
 #include "result/EzListLimitModelsResult.hpp"
 #include "result/EzGetLimitModelResult.hpp"
 
@@ -83,6 +84,28 @@ public:
         StringHolder namespaceName,
         StringHolder limitName,
         StringHolder counterName
+    );
+
+    /// <summary>
+    ///  回数制限名とカウンター名を指定してゲームプレイヤーに紐づく回数制限カウンターをカウントアップ<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="limitName">回数制限の種類の名前</param>
+    /// <param name="counterName">カウンターの名前</param>
+    /// <param name="countUpValue">カウントアップする量</param>
+    /// <param name="maxValue">カウントアップを許容する最大値 を入力してください</param>
+    void countUp(
+        std::function<void(AsyncEzCountUpResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder limitName,
+        StringHolder counterName,
+        gs2::optional<Int32> countUpValue=gs2::nullopt,
+        gs2::optional<Int32> maxValue=gs2::nullopt
     );
 
     /// <summary>

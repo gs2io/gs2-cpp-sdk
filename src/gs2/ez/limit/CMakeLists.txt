@@ -30,6 +30,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzLimitModel.hpp
         result/EzListCountersResult.hpp
         result/EzGetCounterResult.hpp
+        result/EzCountUpResult.hpp
         result/EzListLimitModelsResult.hpp
         result/EzGetLimitModelResult.hpp
         )
