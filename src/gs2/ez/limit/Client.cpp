@@ -114,6 +114,56 @@ void Client::getCounter(
     );
 }
 
+void Client::countUp(
+    std::function<void(AsyncEzCountUpResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder limitName,
+    StringHolder counterName,
+    gs2::optional<Int32> countUpValue,
+    gs2::optional<Int32> maxValue
+)
+{
+    gs2::limit::CountUpRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setLimitName(limitName);
+    request.setCounterName(counterName);
+    if (countUpValue)
+    {
+        request.setCountUpValue(std::move(*countUpValue));
+    }
+    if (maxValue)
+    {
+        request.setMaxValue(std::move(*maxValue));
+    }
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->countUp(
+        request,
+        [callback](gs2::limit::AsyncCountUpResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzCountUpResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzCountUpResult::isConvertible(*r.getResult()))
+            {
+                EzCountUpResult ezResult(*r.getResult());
+                AsyncEzCountUpResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzCountUpResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
 void Client::listLimitModels(
     std::function<void(AsyncEzListLimitModelsResult)> callback,
     StringHolder namespaceName

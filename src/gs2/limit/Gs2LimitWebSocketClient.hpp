@@ -33,6 +33,7 @@
 #include "request/DescribeCountersByUserIdRequest.hpp"
 #include "request/GetCounterRequest.hpp"
 #include "request/GetCounterByUserIdRequest.hpp"
+#include "request/CountUpRequest.hpp"
 #include "request/CountUpByUserIdRequest.hpp"
 #include "request/DeleteCounterByUserIdRequest.hpp"
 #include "request/CountUpByStampTaskRequest.hpp"
@@ -58,6 +59,7 @@
 #include "result/DescribeCountersByUserIdResult.hpp"
 #include "result/GetCounterResult.hpp"
 #include "result/GetCounterByUserIdResult.hpp"
+#include "result/CountUpResult.hpp"
 #include "result/CountUpByUserIdResult.hpp"
 #include "result/DeleteCounterByUserIdResult.hpp"
 #include "result/CountUpByStampTaskResult.hpp"
@@ -710,6 +712,87 @@ private:
         {}
 
         ~GetCounterByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class CountUpTask : public detail::Gs2WebSocketSessionTask<CountUpResult>
+    {
+    private:
+        CountUpRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "limit";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "counter";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "countUp";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getLimitName())
+            {
+                jsonWriter.writePropertyName("limitName");
+                jsonWriter.writeCharArray(*m_Request.getLimitName());
+            }
+            if (m_Request.getCounterName())
+            {
+                jsonWriter.writePropertyName("counterName");
+                jsonWriter.writeCharArray(*m_Request.getCounterName());
+            }
+            if (m_Request.getCountUpValue())
+            {
+                jsonWriter.writePropertyName("countUpValue");
+                jsonWriter.writeInt32(*m_Request.getCountUpValue());
+            }
+            if (m_Request.getMaxValue())
+            {
+                jsonWriter.writePropertyName("maxValue");
+                jsonWriter.writeInt32(*m_Request.getMaxValue());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        CountUpTask(
+            CountUpRequest request,
+            Gs2WebSocketSessionTask<CountUpResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<CountUpResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CountUpTask() GS2_OVERRIDE = default;
     };
 
     class CountUpByUserIdTask : public detail::Gs2WebSocketSessionTask<CountUpByUserIdResult>
@@ -1835,6 +1918,16 @@ protected:
             jsonWriter.writePropertyName("result");
             jsonWriter.writeCharArray(*obj.getResult());
         }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getExpiredAt())
+        {
+            jsonWriter.writePropertyName("expiredAt");
+            jsonWriter.writeInt64(*obj.getExpiredAt());
+        }
         jsonWriter.writeObjectEnd();
     }
 
@@ -2060,6 +2153,18 @@ public:
     void getCounterByUserId(GetCounterByUserIdRequest request, std::function<void(AsyncGetCounterByUserIdResult)> callback)
     {
         GetCounterByUserIdTask& task = *new GetCounterByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * カウントアップ<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void countUp(CountUpRequest request, std::function<void(AsyncCountUpResult)> callback)
+    {
+        CountUpTask& task = *new CountUpTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
