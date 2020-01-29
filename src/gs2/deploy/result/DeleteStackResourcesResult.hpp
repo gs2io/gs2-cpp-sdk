@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_DEPLOY_CONTROL_FORCEDELETESTACKRESULT_HPP_
-#define GS2_DEPLOY_CONTROL_FORCEDELETESTACKRESULT_HPP_
+#ifndef GS2_DEPLOY_CONTROL_DELETESTACKRESOURCESRESULT_HPP_
+#define GS2_DEPLOY_CONTROL_DELETESTACKRESOURCESRESULT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
@@ -32,17 +32,17 @@ namespace gs2 { namespace deploy
 {
 
 /**
- * スタックを強制的に最終削除 のレスポンスモデル
+ * スタックのリソースを削除 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
-class ForceDeleteStackResult : public Gs2Object
+class DeleteStackResourcesResult : public Gs2Object
 {
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 削除したスタック */
+        /** リソースを削除したスタック */
         optional<Stack> item;
 
         Data() = default;
@@ -80,32 +80,32 @@ private:
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    ForceDeleteStackResult() = default;
-    ForceDeleteStackResult(const ForceDeleteStackResult& forceDeleteStackResult) = default;
-    ForceDeleteStackResult(ForceDeleteStackResult&& forceDeleteStackResult) = default;
-    ~ForceDeleteStackResult() = default;
+    DeleteStackResourcesResult() = default;
+    DeleteStackResourcesResult(const DeleteStackResourcesResult& deleteStackResourcesResult) = default;
+    DeleteStackResourcesResult(DeleteStackResourcesResult&& deleteStackResourcesResult) = default;
+    ~DeleteStackResourcesResult() = default;
 
-    ForceDeleteStackResult& operator=(const ForceDeleteStackResult& forceDeleteStackResult) = default;
-    ForceDeleteStackResult& operator=(ForceDeleteStackResult&& forceDeleteStackResult) = default;
+    DeleteStackResourcesResult& operator=(const DeleteStackResourcesResult& deleteStackResourcesResult) = default;
+    DeleteStackResourcesResult& operator=(DeleteStackResourcesResult&& deleteStackResourcesResult) = default;
 
-    ForceDeleteStackResult deepCopy() const
+    DeleteStackResourcesResult deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ForceDeleteStackResult);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteStackResourcesResult);
     }
 
-    const ForceDeleteStackResult* operator->() const
+    const DeleteStackResourcesResult* operator->() const
     {
         return this;
     }
 
-    ForceDeleteStackResult* operator->()
+    DeleteStackResourcesResult* operator->()
     {
         return this;
     }
     /**
-     * 削除したスタックを取得
+     * リソースを削除したスタックを取得
      *
-     * @return 削除したスタック
+     * @return リソースを削除したスタック
      */
     const optional<Stack>& getItem() const
     {
@@ -113,9 +113,9 @@ public:
     }
 
     /**
-     * 削除したスタックを設定
+     * リソースを削除したスタックを設定
      *
-     * @param item 削除したスタック
+     * @param item リソースを削除したスタック
      */
     void setItem(Stack item)
     {
@@ -129,8 +129,8 @@ public:
     }
 };
 
-typedef AsyncResult<ForceDeleteStackResult> AsyncForceDeleteStackResult;
+typedef AsyncResult<DeleteStackResourcesResult> AsyncDeleteStackResourcesResult;
 
 } }
 
-#endif //GS2_DEPLOY_CONTROL_FORCEDELETESTACKRESULT_HPP_
+#endif //GS2_DEPLOY_CONTROL_DELETESTACKRESOURCESRESULT_HPP_

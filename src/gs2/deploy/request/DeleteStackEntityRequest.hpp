@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_DEPLOY_CONTROL_FORCEDELETESTACKREQUEST_HPP_
-#define GS2_DEPLOY_CONTROL_FORCEDELETESTACKREQUEST_HPP_
+#ifndef GS2_DEPLOY_CONTROL_DELETESTACKENTITYREQUEST_HPP_
+#define GS2_DEPLOY_CONTROL_DELETESTACKENTITYREQUEST_HPP_
 
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
@@ -30,11 +30,11 @@ namespace gs2 { namespace deploy
 {
 
 /**
- * スタックを強制的に最終削除 のリクエストモデル
+ * スタックを最終削除 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
-class ForceDeleteStackRequest : public Gs2BasicRequest, public Gs2Deploy
+class DeleteStackEntityRequest : public Gs2BasicRequest, public Gs2Deploy
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -75,25 +75,25 @@ private:
     }
 
 public:
-    ForceDeleteStackRequest() = default;
-    ForceDeleteStackRequest(const ForceDeleteStackRequest& forceDeleteStackRequest) = default;
-    ForceDeleteStackRequest(ForceDeleteStackRequest&& forceDeleteStackRequest) = default;
-    ~ForceDeleteStackRequest() GS2_OVERRIDE = default;
+    DeleteStackEntityRequest() = default;
+    DeleteStackEntityRequest(const DeleteStackEntityRequest& deleteStackEntityRequest) = default;
+    DeleteStackEntityRequest(DeleteStackEntityRequest&& deleteStackEntityRequest) = default;
+    ~DeleteStackEntityRequest() GS2_OVERRIDE = default;
 
-    ForceDeleteStackRequest& operator=(const ForceDeleteStackRequest& forceDeleteStackRequest) = default;
-    ForceDeleteStackRequest& operator=(ForceDeleteStackRequest&& forceDeleteStackRequest) = default;
+    DeleteStackEntityRequest& operator=(const DeleteStackEntityRequest& deleteStackEntityRequest) = default;
+    DeleteStackEntityRequest& operator=(DeleteStackEntityRequest&& deleteStackEntityRequest) = default;
 
-    ForceDeleteStackRequest deepCopy() const
+    DeleteStackEntityRequest deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ForceDeleteStackRequest);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteStackEntityRequest);
     }
 
-    const ForceDeleteStackRequest* operator->() const
+    const DeleteStackEntityRequest* operator->() const
     {
         return this;
     }
 
-    ForceDeleteStackRequest* operator->()
+    DeleteStackEntityRequest* operator->()
     {
         return this;
     }
@@ -123,7 +123,7 @@ public:
      *
      * @param stackName スタック名
      */
-    ForceDeleteStackRequest& withStackName(StringHolder stackName)
+    DeleteStackEntityRequest& withStackName(StringHolder stackName)
     {
         ensureData().stackName.emplace(std::move(stackName));
         return *this;
@@ -136,7 +136,7 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    ForceDeleteStackRequest& withGs2ClientId(StringHolder gs2ClientId)
+    DeleteStackEntityRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
         setGs2ClientId(std::move(gs2ClientId));
         return *this;
@@ -147,7 +147,7 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    ForceDeleteStackRequest& withRequestId(StringHolder gs2RequestId)
+    DeleteStackEntityRequest& withRequestId(StringHolder gs2RequestId)
     {
         setRequestId(std::move(gs2RequestId));
         return *this;
@@ -156,4 +156,4 @@ public:
 
 } }
 
-#endif //GS2_DEPLOY_CONTROL_FORCEDELETESTACKREQUEST_HPP_
+#endif //GS2_DEPLOY_CONTROL_DELETESTACKENTITYREQUEST_HPP_
