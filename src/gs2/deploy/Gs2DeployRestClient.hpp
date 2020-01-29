@@ -32,6 +32,8 @@
 #include "request/UpdateStackFromGitHubRequest.hpp"
 #include "request/DeleteStackRequest.hpp"
 #include "request/ForceDeleteStackRequest.hpp"
+#include "request/DeleteStackResourcesRequest.hpp"
+#include "request/DeleteStackEntityRequest.hpp"
 #include "request/DescribeResourcesRequest.hpp"
 #include "request/GetResourceRequest.hpp"
 #include "request/DescribeEventsRequest.hpp"
@@ -47,6 +49,8 @@
 #include "result/UpdateStackFromGitHubResult.hpp"
 #include "result/DeleteStackResult.hpp"
 #include "result/ForceDeleteStackResult.hpp"
+#include "result/DeleteStackResourcesResult.hpp"
+#include "result/DeleteStackEntityResult.hpp"
 #include "result/DescribeResourcesResult.hpp"
 #include "result/GetResourceResult.hpp"
 #include "result/DescribeEventsResult.hpp"
@@ -564,6 +568,108 @@ private:
         {}
 
         ~ForceDeleteStackTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteStackResourcesTask : public detail::Gs2RestSessionTask<DeleteStackResourcesResult>
+    {
+    private:
+        DeleteStackResourcesRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/{stackName}/resources";
+            {
+                auto& value = m_Request.getStackName();
+                url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        DeleteStackResourcesTask(
+            DeleteStackResourcesRequest request,
+            Gs2RestSessionTask<DeleteStackResourcesResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DeleteStackResourcesResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteStackResourcesTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteStackEntityTask : public detail::Gs2RestSessionTask<DeleteStackEntityResult>
+    {
+    private:
+        DeleteStackEntityRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/{stackName}/entity";
+            {
+                auto& value = m_Request.getStackName();
+                url.replace("{stackName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        DeleteStackEntityTask(
+            DeleteStackEntityRequest request,
+            Gs2RestSessionTask<DeleteStackEntityResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DeleteStackEntityResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteStackEntityTask() GS2_OVERRIDE = default;
     };
 
     class DescribeResourcesTask : public detail::Gs2RestSessionTask<DescribeResourcesResult>
@@ -1366,9 +1472,8 @@ public:
 	/**
 	 * スタックを削除<br>
 	 *   <br>
-	 *   スタックの削除は2段階で行われます。<br>
-	 *   DELETE_COMPLETED ステータスではないスタックを削除すると、まずはスタックによって作成されたリソースの削除を行います。<br>
-	 *   DELETE_COMPLETED ステータスのスタックを削除すると、完全にエンティティを削除します。<br>
+	 *   スタックによって作成されたリソースの削除を行い、成功すればエンティティを削除します。<br>
+	 *   何らかの理由でリソースの削除に失敗した場合はエンティティが残ります。<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -1380,7 +1485,10 @@ public:
     }
 
 	/**
-	 * スタックを削除<br>
+	 * スタックを強制的に最終削除<br>
+	 *   <br>
+	 *   スタックのエンティティを強制的に削除します。<br>
+	 *   スタックが作成したリソースが残っていても、それらは削除されません。<br>
 	 *
      * @param callback コールバック関数
      * @param request リクエストパラメータ
@@ -1388,6 +1496,36 @@ public:
     void forceDeleteStack(ForceDeleteStackRequest request, std::function<void(AsyncForceDeleteStackResult)> callback)
     {
         ForceDeleteStackTask& task = *new ForceDeleteStackTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * スタックのリソースを削除<br>
+	 *   <br>
+	 *   スタックによって作成されたリソースの削除を行います。<br>
+	 *   空のテンプレートでスタックを更新するのとほぼ同様の挙動ですが、スタックに適用されていたテンプレートが残るため、誤操作時に、残ったテンプレートからリソースを復元することができます。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteStackResources(DeleteStackResourcesRequest request, std::function<void(AsyncDeleteStackResourcesResult)> callback)
+    {
+        DeleteStackResourcesTask& task = *new DeleteStackResourcesTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * スタックを最終削除<br>
+	 *   <br>
+	 *   スタックのエンティティを削除します。<br>
+	 *   リソースの残っているスタックを削除しようとするとエラーになります。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteStackEntity(DeleteStackEntityRequest request, std::function<void(AsyncDeleteStackEntityResult)> callback)
+    {
+        DeleteStackEntityTask& task = *new DeleteStackEntityTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 

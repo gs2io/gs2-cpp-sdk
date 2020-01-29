@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_DEPLOY_CONTROL_FORCEDELETESTACKRESULT_HPP_
-#define GS2_DEPLOY_CONTROL_FORCEDELETESTACKRESULT_HPP_
+#ifndef GS2_DEPLOY_CONTROL_DELETESTACKENTITYRESULT_HPP_
+#define GS2_DEPLOY_CONTROL_DELETESTACKENTITYRESULT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
@@ -32,11 +32,11 @@ namespace gs2 { namespace deploy
 {
 
 /**
- * スタックを強制的に最終削除 のレスポンスモデル
+ * スタックを最終削除 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
-class ForceDeleteStackResult : public Gs2Object
+class DeleteStackEntityResult : public Gs2Object
 {
 private:
     class Data : public detail::json::IModel
@@ -80,25 +80,25 @@ private:
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    ForceDeleteStackResult() = default;
-    ForceDeleteStackResult(const ForceDeleteStackResult& forceDeleteStackResult) = default;
-    ForceDeleteStackResult(ForceDeleteStackResult&& forceDeleteStackResult) = default;
-    ~ForceDeleteStackResult() = default;
+    DeleteStackEntityResult() = default;
+    DeleteStackEntityResult(const DeleteStackEntityResult& deleteStackEntityResult) = default;
+    DeleteStackEntityResult(DeleteStackEntityResult&& deleteStackEntityResult) = default;
+    ~DeleteStackEntityResult() = default;
 
-    ForceDeleteStackResult& operator=(const ForceDeleteStackResult& forceDeleteStackResult) = default;
-    ForceDeleteStackResult& operator=(ForceDeleteStackResult&& forceDeleteStackResult) = default;
+    DeleteStackEntityResult& operator=(const DeleteStackEntityResult& deleteStackEntityResult) = default;
+    DeleteStackEntityResult& operator=(DeleteStackEntityResult&& deleteStackEntityResult) = default;
 
-    ForceDeleteStackResult deepCopy() const
+    DeleteStackEntityResult deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ForceDeleteStackResult);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteStackEntityResult);
     }
 
-    const ForceDeleteStackResult* operator->() const
+    const DeleteStackEntityResult* operator->() const
     {
         return this;
     }
 
-    ForceDeleteStackResult* operator->()
+    DeleteStackEntityResult* operator->()
     {
         return this;
     }
@@ -129,8 +129,8 @@ public:
     }
 };
 
-typedef AsyncResult<ForceDeleteStackResult> AsyncForceDeleteStackResult;
+typedef AsyncResult<DeleteStackEntityResult> AsyncDeleteStackEntityResult;
 
 } }
 
-#endif //GS2_DEPLOY_CONTROL_FORCEDELETESTACKRESULT_HPP_
+#endif //GS2_DEPLOY_CONTROL_DELETESTACKENTITYRESULT_HPP_
