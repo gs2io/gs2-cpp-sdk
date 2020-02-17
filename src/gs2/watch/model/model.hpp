@@ -21,5 +21,6 @@
 #include "notification.hpp"
 #include "Chart.hpp"
 #include "Cumulative.hpp"
+#include "BillingActivity.hpp"
 
 #endif //GS2_WATCH_MODEL_MODEL_HPP_
