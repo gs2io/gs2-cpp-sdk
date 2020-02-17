@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_PROJECT_MODEL_PROJECT_HPP_
-#define GS2_PROJECT_MODEL_PROJECT_HPP_
+#ifndef GS2_PROJECT_MODEL_BILLINGMETHOD_HPP_
+#define GS2_PROJECT_MODEL_BILLINGMETHOD_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
@@ -30,37 +30,39 @@
 namespace gs2 { namespace project {
 
 /**
- * プロジェクト
+ * 支払い方法
  *
  * @author Game Server Services, Inc.
  *
  */
-class Project : public Gs2Object
+class BillingMethod : public Gs2Object
 {
-    friend bool operator!=(const Project& lhs, const Project& lhr);
+    friend bool operator!=(const BillingMethod& lhs, const BillingMethod& lhr);
 
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** プロジェクト */
-        optional<StringHolder> projectId;
+        /** 支払い方法 */
+        optional<StringHolder> billingMethodId;
         /** GS2アカウントの名前 */
         optional<StringHolder> accountName;
-        /** プロジェクト名 */
+        /** 名前 */
         optional<StringHolder> name;
-        /** プロジェクトの説明 */
+        /** 名前 */
         optional<StringHolder> description;
-        /** 契約プラン */
-        optional<StringHolder> plan;
-        /** 支払い方法名 */
-        optional<StringHolder> billingMethodName;
-        /** AWS EventBridge の設定 */
-        optional<StringHolder> enableEventBridge;
-        /** 通知に使用するAWSアカウントのID */
-        optional<StringHolder> eventBridgeAwsAccountId;
-        /** 通知に使用するAWSリージョン */
-        optional<StringHolder> eventBridgeAwsRegion;
+        /** 支払い方法 */
+        optional<StringHolder> methodType;
+        /** クレジットカードカスタマーID */
+        optional<StringHolder> cardCustomerId;
+        /** カード署名 */
+        optional<StringHolder> cardSignatureName;
+        /** カードブランド */
+        optional<StringHolder> cardBrand;
+        /** 末尾4桁 */
+        optional<StringHolder> cardLast4;
+        /** パートナーID */
+        optional<StringHolder> partnerId;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -70,15 +72,16 @@ private:
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            projectId(data.projectId),
+            billingMethodId(data.billingMethodId),
             accountName(data.accountName),
             name(data.name),
             description(data.description),
-            plan(data.plan),
-            billingMethodName(data.billingMethodName),
-            enableEventBridge(data.enableEventBridge),
-            eventBridgeAwsAccountId(data.eventBridgeAwsAccountId),
-            eventBridgeAwsRegion(data.eventBridgeAwsRegion),
+            methodType(data.methodType),
+            cardCustomerId(data.cardCustomerId),
+            cardSignatureName(data.cardSignatureName),
+            cardBrand(data.cardBrand),
+            cardLast4(data.cardLast4),
+            partnerId(data.partnerId),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
@@ -93,11 +96,11 @@ private:
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "projectId") == 0)
+            if (std::strcmp(name_, "billingMethodId") == 0)
             {
                 if (jsonValue.IsString())
                 {
-                    this->projectId.emplace(jsonValue.GetString());
+                    this->billingMethodId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "accountName") == 0)
@@ -121,39 +124,46 @@ private:
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "plan") == 0)
+            else if (std::strcmp(name_, "methodType") == 0)
             {
                 if (jsonValue.IsString())
                 {
-                    this->plan.emplace(jsonValue.GetString());
+                    this->methodType.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "billingMethodName") == 0)
+            else if (std::strcmp(name_, "cardCustomerId") == 0)
             {
                 if (jsonValue.IsString())
                 {
-                    this->billingMethodName.emplace(jsonValue.GetString());
+                    this->cardCustomerId.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "enableEventBridge") == 0)
+            else if (std::strcmp(name_, "cardSignatureName") == 0)
             {
                 if (jsonValue.IsString())
                 {
-                    this->enableEventBridge.emplace(jsonValue.GetString());
+                    this->cardSignatureName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "eventBridgeAwsAccountId") == 0)
+            else if (std::strcmp(name_, "cardBrand") == 0)
             {
                 if (jsonValue.IsString())
                 {
-                    this->eventBridgeAwsAccountId.emplace(jsonValue.GetString());
+                    this->cardBrand.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "eventBridgeAwsRegion") == 0)
+            else if (std::strcmp(name_, "cardLast4") == 0)
             {
                 if (jsonValue.IsString())
                 {
-                    this->eventBridgeAwsRegion.emplace(jsonValue.GetString());
+                    this->cardLast4.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "partnerId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->partnerId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -176,56 +186,56 @@ private:
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    Project() = default;
-    Project(const Project& project) = default;
-    Project(Project&& project) = default;
-    ~Project() = default;
+    BillingMethod() = default;
+    BillingMethod(const BillingMethod& billingMethod) = default;
+    BillingMethod(BillingMethod&& billingMethod) = default;
+    ~BillingMethod() = default;
 
-    Project& operator=(const Project& project) = default;
-    Project& operator=(Project&& project) = default;
+    BillingMethod& operator=(const BillingMethod& billingMethod) = default;
+    BillingMethod& operator=(BillingMethod&& billingMethod) = default;
 
-    Project deepCopy() const
+    BillingMethod deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(Project);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(BillingMethod);
     }
 
-    const Project* operator->() const
+    const BillingMethod* operator->() const
     {
         return this;
     }
 
-    Project* operator->()
+    BillingMethod* operator->()
     {
         return this;
     }
     /**
-     * プロジェクトを取得
+     * 支払い方法を取得
      *
-     * @return プロジェクト
+     * @return 支払い方法
      */
-    const optional<StringHolder>& getProjectId() const
+    const optional<StringHolder>& getBillingMethodId() const
     {
-        return ensureData().projectId;
+        return ensureData().billingMethodId;
     }
 
     /**
-     * プロジェクトを設定
+     * 支払い方法を設定
      *
-     * @param projectId プロジェクト
+     * @param billingMethodId 支払い方法
      */
-    void setProjectId(StringHolder projectId)
+    void setBillingMethodId(StringHolder billingMethodId)
     {
-        ensureData().projectId.emplace(std::move(projectId));
+        ensureData().billingMethodId.emplace(std::move(billingMethodId));
     }
 
     /**
-     * プロジェクトを設定
+     * 支払い方法を設定
      *
-     * @param projectId プロジェクト
+     * @param billingMethodId 支払い方法
      */
-    Project& withProjectId(StringHolder projectId)
+    BillingMethod& withBillingMethodId(StringHolder billingMethodId)
     {
-        setProjectId(std::move(projectId));
+        setBillingMethodId(std::move(billingMethodId));
         return *this;
     }
 
@@ -254,16 +264,16 @@ public:
      *
      * @param accountName GS2アカウントの名前
      */
-    Project& withAccountName(StringHolder accountName)
+    BillingMethod& withAccountName(StringHolder accountName)
     {
         setAccountName(std::move(accountName));
         return *this;
     }
 
     /**
-     * プロジェクト名を取得
+     * 名前を取得
      *
-     * @return プロジェクト名
+     * @return 名前
      */
     const optional<StringHolder>& getName() const
     {
@@ -271,9 +281,9 @@ public:
     }
 
     /**
-     * プロジェクト名を設定
+     * 名前を設定
      *
-     * @param name プロジェクト名
+     * @param name 名前
      */
     void setName(StringHolder name)
     {
@@ -281,20 +291,20 @@ public:
     }
 
     /**
-     * プロジェクト名を設定
+     * 名前を設定
      *
-     * @param name プロジェクト名
+     * @param name 名前
      */
-    Project& withName(StringHolder name)
+    BillingMethod& withName(StringHolder name)
     {
         setName(std::move(name));
         return *this;
     }
 
     /**
-     * プロジェクトの説明を取得
+     * 名前を取得
      *
-     * @return プロジェクトの説明
+     * @return 名前
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -302,9 +312,9 @@ public:
     }
 
     /**
-     * プロジェクトの説明を設定
+     * 名前を設定
      *
-     * @param description プロジェクトの説明
+     * @param description 名前
      */
     void setDescription(StringHolder description)
     {
@@ -312,168 +322,199 @@ public:
     }
 
     /**
-     * プロジェクトの説明を設定
+     * 名前を設定
      *
-     * @param description プロジェクトの説明
+     * @param description 名前
      */
-    Project& withDescription(StringHolder description)
+    BillingMethod& withDescription(StringHolder description)
     {
         setDescription(std::move(description));
         return *this;
     }
 
     /**
-     * 契約プランを取得
+     * 支払い方法を取得
      *
-     * @return 契約プラン
+     * @return 支払い方法
      */
-    const optional<StringHolder>& getPlan() const
+    const optional<StringHolder>& getMethodType() const
     {
-        return ensureData().plan;
+        return ensureData().methodType;
     }
 
     /**
-     * 契約プランを設定
+     * 支払い方法を設定
      *
-     * @param plan 契約プラン
+     * @param methodType 支払い方法
      */
-    void setPlan(StringHolder plan)
+    void setMethodType(StringHolder methodType)
     {
-        ensureData().plan.emplace(std::move(plan));
+        ensureData().methodType.emplace(std::move(methodType));
     }
 
     /**
-     * 契約プランを設定
+     * 支払い方法を設定
      *
-     * @param plan 契約プラン
+     * @param methodType 支払い方法
      */
-    Project& withPlan(StringHolder plan)
+    BillingMethod& withMethodType(StringHolder methodType)
     {
-        setPlan(std::move(plan));
+        setMethodType(std::move(methodType));
         return *this;
     }
 
     /**
-     * 支払い方法名を取得
+     * クレジットカードカスタマーIDを取得
      *
-     * @return 支払い方法名
+     * @return クレジットカードカスタマーID
      */
-    const optional<StringHolder>& getBillingMethodName() const
+    const optional<StringHolder>& getCardCustomerId() const
     {
-        return ensureData().billingMethodName;
+        return ensureData().cardCustomerId;
     }
 
     /**
-     * 支払い方法名を設定
+     * クレジットカードカスタマーIDを設定
      *
-     * @param billingMethodName 支払い方法名
+     * @param cardCustomerId クレジットカードカスタマーID
      */
-    void setBillingMethodName(StringHolder billingMethodName)
+    void setCardCustomerId(StringHolder cardCustomerId)
     {
-        ensureData().billingMethodName.emplace(std::move(billingMethodName));
+        ensureData().cardCustomerId.emplace(std::move(cardCustomerId));
     }
 
     /**
-     * 支払い方法名を設定
+     * クレジットカードカスタマーIDを設定
      *
-     * @param billingMethodName 支払い方法名
+     * @param cardCustomerId クレジットカードカスタマーID
      */
-    Project& withBillingMethodName(StringHolder billingMethodName)
+    BillingMethod& withCardCustomerId(StringHolder cardCustomerId)
     {
-        setBillingMethodName(std::move(billingMethodName));
+        setCardCustomerId(std::move(cardCustomerId));
         return *this;
     }
 
     /**
-     * AWS EventBridge の設定を取得
+     * カード署名を取得
      *
-     * @return AWS EventBridge の設定
+     * @return カード署名
      */
-    const optional<StringHolder>& getEnableEventBridge() const
+    const optional<StringHolder>& getCardSignatureName() const
     {
-        return ensureData().enableEventBridge;
+        return ensureData().cardSignatureName;
     }
 
     /**
-     * AWS EventBridge の設定を設定
+     * カード署名を設定
      *
-     * @param enableEventBridge AWS EventBridge の設定
+     * @param cardSignatureName カード署名
      */
-    void setEnableEventBridge(StringHolder enableEventBridge)
+    void setCardSignatureName(StringHolder cardSignatureName)
     {
-        ensureData().enableEventBridge.emplace(std::move(enableEventBridge));
+        ensureData().cardSignatureName.emplace(std::move(cardSignatureName));
     }
 
     /**
-     * AWS EventBridge の設定を設定
+     * カード署名を設定
      *
-     * @param enableEventBridge AWS EventBridge の設定
+     * @param cardSignatureName カード署名
      */
-    Project& withEnableEventBridge(StringHolder enableEventBridge)
+    BillingMethod& withCardSignatureName(StringHolder cardSignatureName)
     {
-        setEnableEventBridge(std::move(enableEventBridge));
+        setCardSignatureName(std::move(cardSignatureName));
         return *this;
     }
 
     /**
-     * 通知に使用するAWSアカウントのIDを取得
+     * カードブランドを取得
      *
-     * @return 通知に使用するAWSアカウントのID
+     * @return カードブランド
      */
-    const optional<StringHolder>& getEventBridgeAwsAccountId() const
+    const optional<StringHolder>& getCardBrand() const
     {
-        return ensureData().eventBridgeAwsAccountId;
+        return ensureData().cardBrand;
     }
 
     /**
-     * 通知に使用するAWSアカウントのIDを設定
+     * カードブランドを設定
      *
-     * @param eventBridgeAwsAccountId 通知に使用するAWSアカウントのID
+     * @param cardBrand カードブランド
      */
-    void setEventBridgeAwsAccountId(StringHolder eventBridgeAwsAccountId)
+    void setCardBrand(StringHolder cardBrand)
     {
-        ensureData().eventBridgeAwsAccountId.emplace(std::move(eventBridgeAwsAccountId));
+        ensureData().cardBrand.emplace(std::move(cardBrand));
     }
 
     /**
-     * 通知に使用するAWSアカウントのIDを設定
+     * カードブランドを設定
      *
-     * @param eventBridgeAwsAccountId 通知に使用するAWSアカウントのID
+     * @param cardBrand カードブランド
      */
-    Project& withEventBridgeAwsAccountId(StringHolder eventBridgeAwsAccountId)
+    BillingMethod& withCardBrand(StringHolder cardBrand)
     {
-        setEventBridgeAwsAccountId(std::move(eventBridgeAwsAccountId));
+        setCardBrand(std::move(cardBrand));
         return *this;
     }
 
     /**
-     * 通知に使用するAWSリージョンを取得
+     * 末尾4桁を取得
      *
-     * @return 通知に使用するAWSリージョン
+     * @return 末尾4桁
      */
-    const optional<StringHolder>& getEventBridgeAwsRegion() const
+    const optional<StringHolder>& getCardLast4() const
     {
-        return ensureData().eventBridgeAwsRegion;
+        return ensureData().cardLast4;
     }
 
     /**
-     * 通知に使用するAWSリージョンを設定
+     * 末尾4桁を設定
      *
-     * @param eventBridgeAwsRegion 通知に使用するAWSリージョン
+     * @param cardLast4 末尾4桁
      */
-    void setEventBridgeAwsRegion(StringHolder eventBridgeAwsRegion)
+    void setCardLast4(StringHolder cardLast4)
     {
-        ensureData().eventBridgeAwsRegion.emplace(std::move(eventBridgeAwsRegion));
+        ensureData().cardLast4.emplace(std::move(cardLast4));
     }
 
     /**
-     * 通知に使用するAWSリージョンを設定
+     * 末尾4桁を設定
      *
-     * @param eventBridgeAwsRegion 通知に使用するAWSリージョン
+     * @param cardLast4 末尾4桁
      */
-    Project& withEventBridgeAwsRegion(StringHolder eventBridgeAwsRegion)
+    BillingMethod& withCardLast4(StringHolder cardLast4)
     {
-        setEventBridgeAwsRegion(std::move(eventBridgeAwsRegion));
+        setCardLast4(std::move(cardLast4));
+        return *this;
+    }
+
+    /**
+     * パートナーIDを取得
+     *
+     * @return パートナーID
+     */
+    const optional<StringHolder>& getPartnerId() const
+    {
+        return ensureData().partnerId;
+    }
+
+    /**
+     * パートナーIDを設定
+     *
+     * @param partnerId パートナーID
+     */
+    void setPartnerId(StringHolder partnerId)
+    {
+        ensureData().partnerId.emplace(std::move(partnerId));
+    }
+
+    /**
+     * パートナーIDを設定
+     *
+     * @param partnerId パートナーID
+     */
+    BillingMethod& withPartnerId(StringHolder partnerId)
+    {
+        setPartnerId(std::move(partnerId));
         return *this;
     }
 
@@ -502,7 +543,7 @@ public:
      *
      * @param createdAt 作成日時
      */
-    Project& withCreatedAt(Int64 createdAt)
+    BillingMethod& withCreatedAt(Int64 createdAt)
     {
         setCreatedAt(createdAt);
         return *this;
@@ -533,7 +574,7 @@ public:
      *
      * @param updatedAt 最終更新日時
      */
-    Project& withUpdatedAt(Int64 updatedAt)
+    BillingMethod& withUpdatedAt(Int64 updatedAt)
     {
         setUpdatedAt(updatedAt);
         return *this;
@@ -546,7 +587,7 @@ public:
     }
 };
 
-inline bool operator!=(const Project& lhs, const Project& lhr)
+inline bool operator!=(const BillingMethod& lhs, const BillingMethod& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -554,7 +595,7 @@ inline bool operator!=(const Project& lhs, const Project& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->projectId != lhr.m_pData->projectId)
+        if (lhs.m_pData->billingMethodId != lhr.m_pData->billingMethodId)
         {
             return true;
         }
@@ -570,23 +611,27 @@ inline bool operator!=(const Project& lhs, const Project& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->plan != lhr.m_pData->plan)
+        if (lhs.m_pData->methodType != lhr.m_pData->methodType)
         {
             return true;
         }
-        if (lhs.m_pData->billingMethodName != lhr.m_pData->billingMethodName)
+        if (lhs.m_pData->cardCustomerId != lhr.m_pData->cardCustomerId)
         {
             return true;
         }
-        if (lhs.m_pData->enableEventBridge != lhr.m_pData->enableEventBridge)
+        if (lhs.m_pData->cardSignatureName != lhr.m_pData->cardSignatureName)
         {
             return true;
         }
-        if (lhs.m_pData->eventBridgeAwsAccountId != lhr.m_pData->eventBridgeAwsAccountId)
+        if (lhs.m_pData->cardBrand != lhr.m_pData->cardBrand)
         {
             return true;
         }
-        if (lhs.m_pData->eventBridgeAwsRegion != lhr.m_pData->eventBridgeAwsRegion)
+        if (lhs.m_pData->cardLast4 != lhr.m_pData->cardLast4)
+        {
+            return true;
+        }
+        if (lhs.m_pData->partnerId != lhr.m_pData->partnerId)
         {
             return true;
         }
@@ -602,11 +647,11 @@ inline bool operator!=(const Project& lhs, const Project& lhr)
     return false;
 }
 
-inline bool operator==(const Project& lhs, const Project& lhr)
+inline bool operator==(const BillingMethod& lhs, const BillingMethod& lhr)
 {
     return !(lhs != lhr);
 }
 
 } }
 
-#endif //GS2_PROJECT_MODEL_PROJECT_HPP_
+#endif //GS2_PROJECT_MODEL_BILLINGMETHOD_HPP_
