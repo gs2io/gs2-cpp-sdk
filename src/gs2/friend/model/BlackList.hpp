@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_FRIEND_MODEL_SENDBOX_HPP_
-#define GS2_FRIEND_MODEL_SENDBOX_HPP_
+#ifndef GS2_FRIEND_MODEL_BLACKLIST_HPP_
+#define GS2_FRIEND_MODEL_BLACKLIST_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/json/IModel.hpp>
@@ -30,24 +30,24 @@
 namespace gs2 { namespace friend_ {
 
 /**
- * フレンドリクエストの受信ボックス
+ * ブラックリスト
  *
  * @author Game Server Services, Inc.
  *
  */
-class SendBox : public Gs2Object
+class BlackList : public Gs2Object
 {
-    friend bool operator!=(const SendBox& lhs, const SendBox& lhr);
+    friend bool operator!=(const BlackList& lhs, const BlackList& lhr);
 
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** フレンドリクエストの受信ボックス */
-        optional<StringHolder> sendBoxId;
+        /** ブラックリスト */
+        optional<StringHolder> blackListId;
         /** ユーザーID */
         optional<StringHolder> userId;
-        /** フレンドリクエストの宛先ユーザーIDリスト */
+        /** ブラックリストのユーザーIDリスト */
         optional<List<StringHolder>> targetUserIds;
         /** 作成日時 */
         optional<Int64> createdAt;
@@ -58,7 +58,7 @@ private:
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            sendBoxId(data.sendBoxId),
+            blackListId(data.blackListId),
             userId(data.userId),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
@@ -78,11 +78,11 @@ private:
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "sendBoxId") == 0)
+            if (std::strcmp(name_, "blackListId") == 0)
             {
                 if (jsonValue.IsString())
                 {
-                    this->sendBoxId.emplace(jsonValue.GetString());
+                    this->blackListId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "userId") == 0)
@@ -128,56 +128,56 @@ private:
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    SendBox() = default;
-    SendBox(const SendBox& sendBox) = default;
-    SendBox(SendBox&& sendBox) = default;
-    ~SendBox() = default;
+    BlackList() = default;
+    BlackList(const BlackList& blackList) = default;
+    BlackList(BlackList&& blackList) = default;
+    ~BlackList() = default;
 
-    SendBox& operator=(const SendBox& sendBox) = default;
-    SendBox& operator=(SendBox&& sendBox) = default;
+    BlackList& operator=(const BlackList& blackList) = default;
+    BlackList& operator=(BlackList&& blackList) = default;
 
-    SendBox deepCopy() const
+    BlackList deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(SendBox);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(BlackList);
     }
 
-    const SendBox* operator->() const
+    const BlackList* operator->() const
     {
         return this;
     }
 
-    SendBox* operator->()
+    BlackList* operator->()
     {
         return this;
     }
     /**
-     * フレンドリクエストの受信ボックスを取得
+     * ブラックリストを取得
      *
-     * @return フレンドリクエストの受信ボックス
+     * @return ブラックリスト
      */
-    const optional<StringHolder>& getSendBoxId() const
+    const optional<StringHolder>& getBlackListId() const
     {
-        return ensureData().sendBoxId;
+        return ensureData().blackListId;
     }
 
     /**
-     * フレンドリクエストの受信ボックスを設定
+     * ブラックリストを設定
      *
-     * @param sendBoxId フレンドリクエストの受信ボックス
+     * @param blackListId ブラックリスト
      */
-    void setSendBoxId(StringHolder sendBoxId)
+    void setBlackListId(StringHolder blackListId)
     {
-        ensureData().sendBoxId.emplace(std::move(sendBoxId));
+        ensureData().blackListId.emplace(std::move(blackListId));
     }
 
     /**
-     * フレンドリクエストの受信ボックスを設定
+     * ブラックリストを設定
      *
-     * @param sendBoxId フレンドリクエストの受信ボックス
+     * @param blackListId ブラックリスト
      */
-    SendBox& withSendBoxId(StringHolder sendBoxId)
+    BlackList& withBlackListId(StringHolder blackListId)
     {
-        setSendBoxId(std::move(sendBoxId));
+        setBlackListId(std::move(blackListId));
         return *this;
     }
 
@@ -206,16 +206,16 @@ public:
      *
      * @param userId ユーザーID
      */
-    SendBox& withUserId(StringHolder userId)
+    BlackList& withUserId(StringHolder userId)
     {
         setUserId(std::move(userId));
         return *this;
     }
 
     /**
-     * フレンドリクエストの宛先ユーザーIDリストを取得
+     * ブラックリストのユーザーIDリストを取得
      *
-     * @return フレンドリクエストの宛先ユーザーIDリスト
+     * @return ブラックリストのユーザーIDリスト
      */
     const optional<List<StringHolder>>& getTargetUserIds() const
     {
@@ -223,9 +223,9 @@ public:
     }
 
     /**
-     * フレンドリクエストの宛先ユーザーIDリストを設定
+     * ブラックリストのユーザーIDリストを設定
      *
-     * @param targetUserIds フレンドリクエストの宛先ユーザーIDリスト
+     * @param targetUserIds ブラックリストのユーザーIDリスト
      */
     void setTargetUserIds(List<StringHolder> targetUserIds)
     {
@@ -233,11 +233,11 @@ public:
     }
 
     /**
-     * フレンドリクエストの宛先ユーザーIDリストを設定
+     * ブラックリストのユーザーIDリストを設定
      *
-     * @param targetUserIds フレンドリクエストの宛先ユーザーIDリスト
+     * @param targetUserIds ブラックリストのユーザーIDリスト
      */
-    SendBox& withTargetUserIds(List<StringHolder> targetUserIds)
+    BlackList& withTargetUserIds(List<StringHolder> targetUserIds)
     {
         setTargetUserIds(std::move(targetUserIds));
         return *this;
@@ -268,7 +268,7 @@ public:
      *
      * @param createdAt 作成日時
      */
-    SendBox& withCreatedAt(Int64 createdAt)
+    BlackList& withCreatedAt(Int64 createdAt)
     {
         setCreatedAt(createdAt);
         return *this;
@@ -299,7 +299,7 @@ public:
      *
      * @param updatedAt 最終更新日時
      */
-    SendBox& withUpdatedAt(Int64 updatedAt)
+    BlackList& withUpdatedAt(Int64 updatedAt)
     {
         setUpdatedAt(updatedAt);
         return *this;
@@ -312,7 +312,7 @@ public:
     }
 };
 
-inline bool operator!=(const SendBox& lhs, const SendBox& lhr)
+inline bool operator!=(const BlackList& lhs, const BlackList& lhr)
 {
     if (lhs.m_pData != lhr.m_pData)
     {
@@ -320,7 +320,7 @@ inline bool operator!=(const SendBox& lhs, const SendBox& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->sendBoxId != lhr.m_pData->sendBoxId)
+        if (lhs.m_pData->blackListId != lhr.m_pData->blackListId)
         {
             return true;
         }
@@ -344,11 +344,11 @@ inline bool operator!=(const SendBox& lhs, const SendBox& lhr)
     return false;
 }
 
-inline bool operator==(const SendBox& lhs, const SendBox& lhr)
+inline bool operator==(const BlackList& lhs, const BlackList& lhr)
 {
     return !(lhs != lhr);
 }
 
 } }
 
-#endif //GS2_FRIEND_MODEL_SENDBOX_HPP_
+#endif //GS2_FRIEND_MODEL_BLACKLIST_HPP_

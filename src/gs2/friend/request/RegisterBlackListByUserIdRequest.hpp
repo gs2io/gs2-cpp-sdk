@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_FRIEND_CONTROL_GETSENDREQUESTREQUEST_HPP_
-#define GS2_FRIEND_CONTROL_GETSENDREQUESTREQUEST_HPP_
+#ifndef GS2_FRIEND_CONTROL_REGISTERBLACKLISTBYUSERIDREQUEST_HPP_
+#define GS2_FRIEND_CONTROL_REGISTERBLACKLISTBYUSERIDREQUEST_HPP_
 
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
@@ -30,11 +30,11 @@ namespace gs2 { namespace friend_
 {
 
 /**
- * 送信したフレンドリクエストを取得 のリクエストモデル
+ * ユーザーIDを指定してブラックリストに登録 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
-class GetSendRequestRequest : public Gs2BasicRequest, public Gs2Friend
+class RegisterBlackListByUserIdRequest : public Gs2BasicRequest, public Gs2Friend
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -43,11 +43,11 @@ private:
     class Data : public Gs2BasicRequest::Data
     {
     public:
-        /** アクセストークン */
-        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
-        /** フレンドリクエストの宛先ユーザーID */
+        /** ユーザーID */
+        optional<StringHolder> userId;
+        /** None */
         optional<StringHolder> targetUserId;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
@@ -56,8 +56,8 @@ private:
 
         Data(const Data& data) :
             Gs2BasicRequest::Data(data),
-            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
+            userId(data.userId),
             targetUserId(data.targetUserId),
             duplicationAvoider(data.duplicationAvoider)
         {
@@ -84,59 +84,27 @@ private:
     }
 
 public:
-    GetSendRequestRequest() = default;
-    GetSendRequestRequest(const GetSendRequestRequest& getSendRequestRequest) = default;
-    GetSendRequestRequest(GetSendRequestRequest&& getSendRequestRequest) = default;
-    ~GetSendRequestRequest() GS2_OVERRIDE = default;
+    RegisterBlackListByUserIdRequest() = default;
+    RegisterBlackListByUserIdRequest(const RegisterBlackListByUserIdRequest& registerBlackListByUserIdRequest) = default;
+    RegisterBlackListByUserIdRequest(RegisterBlackListByUserIdRequest&& registerBlackListByUserIdRequest) = default;
+    ~RegisterBlackListByUserIdRequest() GS2_OVERRIDE = default;
 
-    GetSendRequestRequest& operator=(const GetSendRequestRequest& getSendRequestRequest) = default;
-    GetSendRequestRequest& operator=(GetSendRequestRequest&& getSendRequestRequest) = default;
+    RegisterBlackListByUserIdRequest& operator=(const RegisterBlackListByUserIdRequest& registerBlackListByUserIdRequest) = default;
+    RegisterBlackListByUserIdRequest& operator=(RegisterBlackListByUserIdRequest&& registerBlackListByUserIdRequest) = default;
 
-    GetSendRequestRequest deepCopy() const
+    RegisterBlackListByUserIdRequest deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetSendRequestRequest);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(RegisterBlackListByUserIdRequest);
     }
 
-    const GetSendRequestRequest* operator->() const
+    const RegisterBlackListByUserIdRequest* operator->() const
     {
         return this;
     }
 
-    GetSendRequestRequest* operator->()
+    RegisterBlackListByUserIdRequest* operator->()
     {
         return this;
-    }
-
-    /**
-     * アクセストークンを取得。
-     *
-     * @return アクセストークン
-     */
-    const gs2::optional<StringHolder>& getAccessToken() const
-    {
-        return ensureData().accessToken;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     */
-    void setAccessToken(StringHolder accessToken)
-    {
-        ensureData().accessToken.emplace(std::move(accessToken));
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    GetSendRequestRequest& withAccessToken(StringHolder accessToken)
-    {
-        setAccessToken(std::move(accessToken));
-        return *this;
     }
 
     /**
@@ -164,16 +132,47 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    GetSendRequestRequest& withNamespaceName(StringHolder namespaceName)
+    RegisterBlackListByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
     /**
-     * フレンドリクエストの宛先ユーザーIDを取得
+     * ユーザーIDを取得
      *
-     * @return フレンドリクエストの宛先ユーザーID
+     * @return ユーザーID
+     */
+    const optional<StringHolder>& getUserId() const
+    {
+        return ensureData().userId;
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    void setUserId(StringHolder userId)
+    {
+        ensureData().userId.emplace(std::move(userId));
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    RegisterBlackListByUserIdRequest& withUserId(StringHolder userId)
+    {
+        ensureData().userId.emplace(std::move(userId));
+        return *this;
+    }
+
+    /**
+     * Noneを取得
+     *
+     * @return None
      */
     const optional<StringHolder>& getTargetUserId() const
     {
@@ -181,9 +180,9 @@ public:
     }
 
     /**
-     * フレンドリクエストの宛先ユーザーIDを設定
+     * Noneを設定
      *
-     * @param targetUserId フレンドリクエストの宛先ユーザーID
+     * @param targetUserId None
      */
     void setTargetUserId(StringHolder targetUserId)
     {
@@ -191,11 +190,11 @@ public:
     }
 
     /**
-     * フレンドリクエストの宛先ユーザーIDを設定
+     * Noneを設定
      *
-     * @param targetUserId フレンドリクエストの宛先ユーザーID
+     * @param targetUserId None
      */
-    GetSendRequestRequest& withTargetUserId(StringHolder targetUserId)
+    RegisterBlackListByUserIdRequest& withTargetUserId(StringHolder targetUserId)
     {
         ensureData().targetUserId.emplace(std::move(targetUserId));
         return *this;
@@ -226,7 +225,7 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    GetSendRequestRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
+    RegisterBlackListByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
         ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
@@ -239,7 +238,7 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    GetSendRequestRequest& withGs2ClientId(StringHolder gs2ClientId)
+    RegisterBlackListByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
         setGs2ClientId(std::move(gs2ClientId));
         return *this;
@@ -250,7 +249,7 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    GetSendRequestRequest& withRequestId(StringHolder gs2RequestId)
+    RegisterBlackListByUserIdRequest& withRequestId(StringHolder gs2RequestId)
     {
         setRequestId(std::move(gs2RequestId));
         return *this;
@@ -259,4 +258,4 @@ public:
 
 } }
 
-#endif //GS2_FRIEND_CONTROL_GETSENDREQUESTREQUEST_HPP_
+#endif //GS2_FRIEND_CONTROL_REGISTERBLACKLISTBYUSERIDREQUEST_HPP_

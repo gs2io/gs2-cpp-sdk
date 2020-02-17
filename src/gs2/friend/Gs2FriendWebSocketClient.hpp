@@ -66,6 +66,12 @@
 #include "request/AcceptRequestByUserIdRequest.hpp"
 #include "request/RejectRequestRequest.hpp"
 #include "request/RejectRequestByUserIdRequest.hpp"
+#include "request/DescribeBlackListRequest.hpp"
+#include "request/DescribeBlackListByUserIdRequest.hpp"
+#include "request/RegisterBlackListRequest.hpp"
+#include "request/RegisterBlackListByUserIdRequest.hpp"
+#include "request/UnregisterBlackListRequest.hpp"
+#include "request/UnregisterBlackListByUserIdRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -109,6 +115,12 @@
 #include "result/AcceptRequestByUserIdResult.hpp"
 #include "result/RejectRequestResult.hpp"
 #include "result/RejectRequestByUserIdResult.hpp"
+#include "result/DescribeBlackListResult.hpp"
+#include "result/DescribeBlackListByUserIdResult.hpp"
+#include "result/RegisterBlackListResult.hpp"
+#include "result/RegisterBlackListByUserIdResult.hpp"
+#include "result/UnregisterBlackListResult.hpp"
+#include "result/UnregisterBlackListByUserIdResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace friend_ {
@@ -3041,6 +3053,392 @@ private:
         ~RejectRequestByUserIdTask() GS2_OVERRIDE = default;
     };
 
+    class DescribeBlackListTask : public detail::Gs2WebSocketSessionTask<DescribeBlackListResult>
+    {
+    private:
+        DescribeBlackListRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "friend";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "blackList";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeBlackList";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DescribeBlackListTask(
+            DescribeBlackListRequest request,
+            Gs2WebSocketSessionTask<DescribeBlackListResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeBlackListResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeBlackListTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeBlackListByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeBlackListByUserIdResult>
+    {
+    private:
+        DescribeBlackListByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "friend";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "blackList";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeBlackListByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DescribeBlackListByUserIdTask(
+            DescribeBlackListByUserIdRequest request,
+            Gs2WebSocketSessionTask<DescribeBlackListByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeBlackListByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeBlackListByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class RegisterBlackListTask : public detail::Gs2WebSocketSessionTask<RegisterBlackListResult>
+    {
+    private:
+        RegisterBlackListRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "friend";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "blackList";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "registerBlackList";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getTargetUserId())
+            {
+                jsonWriter.writePropertyName("targetUserId");
+                jsonWriter.writeCharArray(*m_Request.getTargetUserId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        RegisterBlackListTask(
+            RegisterBlackListRequest request,
+            Gs2WebSocketSessionTask<RegisterBlackListResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<RegisterBlackListResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RegisterBlackListTask() GS2_OVERRIDE = default;
+    };
+
+    class RegisterBlackListByUserIdTask : public detail::Gs2WebSocketSessionTask<RegisterBlackListByUserIdResult>
+    {
+    private:
+        RegisterBlackListByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "friend";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "blackList";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "registerBlackListByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getTargetUserId())
+            {
+                jsonWriter.writePropertyName("targetUserId");
+                jsonWriter.writeCharArray(*m_Request.getTargetUserId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        RegisterBlackListByUserIdTask(
+            RegisterBlackListByUserIdRequest request,
+            Gs2WebSocketSessionTask<RegisterBlackListByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<RegisterBlackListByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RegisterBlackListByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class UnregisterBlackListTask : public detail::Gs2WebSocketSessionTask<UnregisterBlackListResult>
+    {
+    private:
+        UnregisterBlackListRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "friend";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "blackList";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "unregisterBlackList";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getTargetUserId())
+            {
+                jsonWriter.writePropertyName("targetUserId");
+                jsonWriter.writeCharArray(*m_Request.getTargetUserId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        UnregisterBlackListTask(
+            UnregisterBlackListRequest request,
+            Gs2WebSocketSessionTask<UnregisterBlackListResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UnregisterBlackListResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UnregisterBlackListTask() GS2_OVERRIDE = default;
+    };
+
+    class UnregisterBlackListByUserIdTask : public detail::Gs2WebSocketSessionTask<UnregisterBlackListByUserIdResult>
+    {
+    private:
+        UnregisterBlackListByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "friend";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "blackList";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "unregisterBlackListByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getTargetUserId())
+            {
+                jsonWriter.writePropertyName("targetUserId");
+                jsonWriter.writeCharArray(*m_Request.getTargetUserId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        UnregisterBlackListByUserIdTask(
+            UnregisterBlackListByUserIdRequest request,
+            Gs2WebSocketSessionTask<UnregisterBlackListByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UnregisterBlackListByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UnregisterBlackListByUserIdTask() GS2_OVERRIDE = default;
+    };
+
 protected:
     static void write(detail::json::JsonWriter& jsonWriter, const Namespace& obj)
     {
@@ -3327,6 +3725,43 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const BlackList& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getBlackListId())
+        {
+            jsonWriter.writePropertyName("blackListId");
+            jsonWriter.writeCharArray(*obj.getBlackListId());
+        }
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getTargetUserIds())
+        {
+            jsonWriter.writePropertyName("targetUserIds");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getTargetUserIds();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeCharArray(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const ResponseCache& obj)
     {
         jsonWriter.writeObjectStart();
@@ -3439,6 +3874,11 @@ protected:
         {
             jsonWriter.writePropertyName("triggerScriptId");
             jsonWriter.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerTargetType())
+        {
+            jsonWriter.writePropertyName("doneTriggerTargetType");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
         }
         if (obj.getDoneTriggerScriptId())
         {
@@ -4010,6 +4450,78 @@ public:
     void rejectRequestByUserId(RejectRequestByUserIdRequest request, std::function<void(AsyncRejectRequestByUserIdResult)> callback)
     {
         RejectRequestByUserIdTask& task = *new RejectRequestByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ブラックリストを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeBlackList(DescribeBlackListRequest request, std::function<void(AsyncDescribeBlackListResult)> callback)
+    {
+        DescribeBlackListTask& task = *new DescribeBlackListTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ユーザーIDを指定してブラックリストを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeBlackListByUserId(DescribeBlackListByUserIdRequest request, std::function<void(AsyncDescribeBlackListByUserIdResult)> callback)
+    {
+        DescribeBlackListByUserIdTask& task = *new DescribeBlackListByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ブラックリストに登録<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void registerBlackList(RegisterBlackListRequest request, std::function<void(AsyncRegisterBlackListResult)> callback)
+    {
+        RegisterBlackListTask& task = *new RegisterBlackListTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ユーザーIDを指定してブラックリストに登録<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void registerBlackListByUserId(RegisterBlackListByUserIdRequest request, std::function<void(AsyncRegisterBlackListByUserIdResult)> callback)
+    {
+        RegisterBlackListByUserIdTask& task = *new RegisterBlackListByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ブラックリストからユーザを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void unregisterBlackList(UnregisterBlackListRequest request, std::function<void(AsyncUnregisterBlackListResult)> callback)
+    {
+        UnregisterBlackListTask& task = *new UnregisterBlackListTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ユーザーIDを指定してブラックリストからユーザを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void unregisterBlackListByUserId(UnregisterBlackListByUserIdRequest request, std::function<void(AsyncUnregisterBlackListByUserIdResult)> callback)
+    {
+        UnregisterBlackListByUserIdTask& task = *new UnregisterBlackListByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

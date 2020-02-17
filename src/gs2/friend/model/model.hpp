@@ -25,6 +25,7 @@
 #include "Friend.hpp"
 #include "SendBox.hpp"
 #include "Inbox.hpp"
+#include "BlackList.hpp"
 #include "ResponseCache.hpp"
 #include "FollowUser.hpp"
 #include "FriendUser.hpp"

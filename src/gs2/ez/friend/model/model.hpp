@@ -19,6 +19,7 @@
 
 #include <gs2/core/common.hpp>
 #include "EzProfile.hpp"
+#include "EzBlackList.hpp"
 #include "EzFollowUser.hpp"
 #include "EzFriendUser.hpp"
 #include "EzFriendRequest.hpp"

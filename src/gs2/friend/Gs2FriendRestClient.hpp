@@ -66,6 +66,12 @@
 #include "request/AcceptRequestByUserIdRequest.hpp"
 #include "request/RejectRequestRequest.hpp"
 #include "request/RejectRequestByUserIdRequest.hpp"
+#include "request/DescribeBlackListRequest.hpp"
+#include "request/DescribeBlackListByUserIdRequest.hpp"
+#include "request/RegisterBlackListRequest.hpp"
+#include "request/RegisterBlackListByUserIdRequest.hpp"
+#include "request/UnregisterBlackListRequest.hpp"
+#include "request/UnregisterBlackListByUserIdRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -109,6 +115,12 @@
 #include "result/AcceptRequestByUserIdResult.hpp"
 #include "result/RejectRequestResult.hpp"
 #include "result/RejectRequestByUserIdResult.hpp"
+#include "result/DescribeBlackListResult.hpp"
+#include "result/DescribeBlackListByUserIdResult.hpp"
+#include "result/RegisterBlackListResult.hpp"
+#include "result/RegisterBlackListByUserIdResult.hpp"
+#include "result/UnregisterBlackListResult.hpp"
+#include "result/UnregisterBlackListByUserIdResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace friend_ {
@@ -2897,6 +2909,368 @@ private:
         ~RejectRequestByUserIdTask() GS2_OVERRIDE = default;
     };
 
+    class DescribeBlackListTask : public detail::Gs2RestSessionTask<DescribeBlackListResult>
+    {
+    private:
+        DescribeBlackListRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "friend";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/blackList";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeBlackListTask(
+            DescribeBlackListRequest request,
+            Gs2RestSessionTask<DescribeBlackListResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeBlackListResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeBlackListTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeBlackListByUserIdTask : public detail::Gs2RestSessionTask<DescribeBlackListByUserIdResult>
+    {
+    private:
+        DescribeBlackListByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "friend";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/blackList/{targetUserId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeBlackListByUserIdTask(
+            DescribeBlackListByUserIdRequest request,
+            Gs2RestSessionTask<DescribeBlackListByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeBlackListByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeBlackListByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class RegisterBlackListTask : public detail::Gs2RestSessionTask<RegisterBlackListResult>
+    {
+    private:
+        RegisterBlackListRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "friend";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/blackList/{targetUserId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getTargetUserId();
+                url.replace("{targetUserId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        RegisterBlackListTask(
+            RegisterBlackListRequest request,
+            Gs2RestSessionTask<RegisterBlackListResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<RegisterBlackListResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RegisterBlackListTask() GS2_OVERRIDE = default;
+    };
+
+    class RegisterBlackListByUserIdTask : public detail::Gs2RestSessionTask<RegisterBlackListByUserIdResult>
+    {
+    private:
+        RegisterBlackListByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "friend";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/blackList/{targetUserId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getTargetUserId();
+                url.replace("{targetUserId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        RegisterBlackListByUserIdTask(
+            RegisterBlackListByUserIdRequest request,
+            Gs2RestSessionTask<RegisterBlackListByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<RegisterBlackListByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RegisterBlackListByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class UnregisterBlackListTask : public detail::Gs2RestSessionTask<UnregisterBlackListResult>
+    {
+    private:
+        UnregisterBlackListRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "friend";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/blackList/{targetUserId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getTargetUserId();
+                url.replace("{targetUserId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        UnregisterBlackListTask(
+            UnregisterBlackListRequest request,
+            Gs2RestSessionTask<UnregisterBlackListResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<UnregisterBlackListResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UnregisterBlackListTask() GS2_OVERRIDE = default;
+    };
+
+    class UnregisterBlackListByUserIdTask : public detail::Gs2RestSessionTask<UnregisterBlackListByUserIdResult>
+    {
+    private:
+        UnregisterBlackListByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "friend";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/blackList/{targetUserId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getTargetUserId();
+                url.replace("{targetUserId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        UnregisterBlackListByUserIdTask(
+            UnregisterBlackListByUserIdRequest request,
+            Gs2RestSessionTask<UnregisterBlackListByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<UnregisterBlackListByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UnregisterBlackListByUserIdTask() GS2_OVERRIDE = default;
+    };
+
 protected:
     static void write(detail::json::JsonWriter& jsonWriter, const Namespace& obj)
     {
@@ -3183,6 +3557,43 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const BlackList& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getBlackListId())
+        {
+            jsonWriter.writePropertyName("blackListId");
+            jsonWriter.writeCharArray(*obj.getBlackListId());
+        }
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getTargetUserIds())
+        {
+            jsonWriter.writePropertyName("targetUserIds");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getTargetUserIds();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeCharArray(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const ResponseCache& obj)
     {
         jsonWriter.writeObjectStart();
@@ -3295,6 +3706,11 @@ protected:
         {
             jsonWriter.writePropertyName("triggerScriptId");
             jsonWriter.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerTargetType())
+        {
+            jsonWriter.writePropertyName("doneTriggerTargetType");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
         }
         if (obj.getDoneTriggerScriptId())
         {
@@ -3867,6 +4283,78 @@ public:
     void rejectRequestByUserId(RejectRequestByUserIdRequest request, std::function<void(AsyncRejectRequestByUserIdResult)> callback)
     {
         RejectRequestByUserIdTask& task = *new RejectRequestByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * ブラックリストを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeBlackList(DescribeBlackListRequest request, std::function<void(AsyncDescribeBlackListResult)> callback)
+    {
+        DescribeBlackListTask& task = *new DescribeBlackListTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * ユーザーIDを指定してブラックリストを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeBlackListByUserId(DescribeBlackListByUserIdRequest request, std::function<void(AsyncDescribeBlackListByUserIdResult)> callback)
+    {
+        DescribeBlackListByUserIdTask& task = *new DescribeBlackListByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * ブラックリストに登録<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void registerBlackList(RegisterBlackListRequest request, std::function<void(AsyncRegisterBlackListResult)> callback)
+    {
+        RegisterBlackListTask& task = *new RegisterBlackListTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * ユーザーIDを指定してブラックリストに登録<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void registerBlackListByUserId(RegisterBlackListByUserIdRequest request, std::function<void(AsyncRegisterBlackListByUserIdResult)> callback)
+    {
+        RegisterBlackListByUserIdTask& task = *new RegisterBlackListByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * ブラックリストからユーザを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void unregisterBlackList(UnregisterBlackListRequest request, std::function<void(AsyncUnregisterBlackListResult)> callback)
+    {
+        UnregisterBlackListTask& task = *new UnregisterBlackListTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * ユーザーIDを指定してブラックリストからユーザを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void unregisterBlackListByUserId(UnregisterBlackListByUserIdRequest request, std::function<void(AsyncUnregisterBlackListByUserIdResult)> callback)
+    {
+        UnregisterBlackListByUserIdTask& task = *new UnregisterBlackListByUserIdTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 
