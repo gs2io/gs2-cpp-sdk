@@ -26,6 +26,7 @@ EzItemSet::Data::Data(const Data& data) :
     inventoryName(data.inventoryName),
     itemName(data.itemName),
     count(data.count),
+    sortValue(data.sortValue),
     expiresAt(data.expiresAt)
 {
 }
@@ -35,6 +36,7 @@ EzItemSet::Data::Data(const gs2::inventory::ItemSet& itemSet) :
     inventoryName(itemSet.getInventoryName()),
     itemName(itemSet.getItemName()),
     count(itemSet.getCount() ? *itemSet.getCount() : 0),
+    sortValue(itemSet.getSortValue() ? *itemSet.getSortValue() : 0),
     expiresAt(itemSet.getExpiresAt() ? *itemSet.getExpiresAt() : 0)
 {
 }
@@ -56,6 +58,7 @@ gs2::inventory::ItemSet EzItemSet::ToModel() const
     itemSet.setInventoryName(getInventoryName());
     itemSet.setItemName(getItemName());
     itemSet.setCount(getCount());
+    itemSet.setSortValue(getSortValue());
     itemSet.setExpiresAt(getExpiresAt());
     return itemSet;
 }

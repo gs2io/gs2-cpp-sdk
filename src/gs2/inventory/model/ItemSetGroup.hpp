@@ -30,7 +30,7 @@
 namespace gs2 { namespace inventory {
 
 /**
- * 有効期限ごとのアイテム所持数量
+ * 有効期限ごとのアイテム所持数量 (このモデルは SDK では使用されません)
  *
  * @author Game Server Services, Inc.
  *
@@ -43,7 +43,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 有効期限ごとのアイテム所持数量 */
+        /** 有効期限ごとのアイテム所持数量 (このモデルは SDK では使用されません) */
         optional<StringHolder> itemSetGroupId;
         /** インベントリの名前 */
         optional<StringHolder> inventoryName;
@@ -283,9 +283,9 @@ public:
         return this;
     }
     /**
-     * 有効期限ごとのアイテム所持数量を取得
+     * 有効期限ごとのアイテム所持数量 (このモデルは SDK では使用されません)を取得
      *
-     * @return 有効期限ごとのアイテム所持数量
+     * @return 有効期限ごとのアイテム所持数量 (このモデルは SDK では使用されません)
      */
     const optional<StringHolder>& getItemSetGroupId() const
     {
@@ -293,9 +293,9 @@ public:
     }
 
     /**
-     * 有効期限ごとのアイテム所持数量を設定
+     * 有効期限ごとのアイテム所持数量 (このモデルは SDK では使用されません)を設定
      *
-     * @param itemSetGroupId 有効期限ごとのアイテム所持数量
+     * @param itemSetGroupId 有効期限ごとのアイテム所持数量 (このモデルは SDK では使用されません)
      */
     void setItemSetGroupId(StringHolder itemSetGroupId)
     {
@@ -303,9 +303,9 @@ public:
     }
 
     /**
-     * 有効期限ごとのアイテム所持数量を設定
+     * 有効期限ごとのアイテム所持数量 (このモデルは SDK では使用されません)を設定
      *
-     * @param itemSetGroupId 有効期限ごとのアイテム所持数量
+     * @param itemSetGroupId 有効期限ごとのアイテム所持数量 (このモデルは SDK では使用されません)
      */
     ItemSetGroup& withItemSetGroupId(StringHolder itemSetGroupId)
     {

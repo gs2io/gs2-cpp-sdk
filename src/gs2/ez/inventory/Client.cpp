@@ -355,7 +355,8 @@ void Client::getItemWithSignature(
     StringHolder namespaceName,
     StringHolder inventoryName,
     StringHolder itemName,
-    StringHolder keyId
+    StringHolder keyId,
+    gs2::optional<StringHolder> itemSetName
 )
 {
     gs2::inventory::GetItemWithSignatureRequest request;
@@ -363,6 +364,10 @@ void Client::getItemWithSignature(
     request.setInventoryName(inventoryName);
     request.setItemName(itemName);
     request.setKeyId(keyId);
+    if (itemSetName)
+    {
+        request.setItemSetName(std::move(*itemSetName));
+    }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->getItemWithSignature(
         request,
@@ -397,7 +402,8 @@ void Client::consume(
     StringHolder namespaceName,
     StringHolder inventoryName,
     StringHolder itemName,
-    Int64 consumeCount
+    Int64 consumeCount,
+    gs2::optional<StringHolder> itemSetName
 )
 {
     gs2::inventory::ConsumeItemSetRequest request;
@@ -405,6 +411,10 @@ void Client::consume(
     request.setInventoryName(inventoryName);
     request.setItemName(itemName);
     request.setConsumeCount(consumeCount);
+    if (itemSetName)
+    {
+        request.setItemSetName(std::move(*itemSetName));
+    }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->consumeItemSet(
         request,
