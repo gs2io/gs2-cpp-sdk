@@ -51,10 +51,12 @@ private:
         optional<StringHolder> namespaceId;
         /** オーナーID */
         optional<StringHolder> ownerId;
-        /** カテゴリー名 */
+        /** ネームスペース名 */
         optional<StringHolder> name;
-        /** ネームスペースの説明 */
+        /** テスト用の変更0 */
         optional<StringHolder> description;
+        /** テスト用の変更1 */
+        optional<StringHolder> description1;
         /** アイテム入手したときに実行するスクリプト */
         optional<ScriptSetting> acquireScript;
         /** 入手上限に当たって入手できなかったときに実行するスクリプト */
@@ -76,6 +78,7 @@ private:
             ownerId(data.ownerId),
             name(data.name),
             description(data.description),
+            description1(data.description1),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
@@ -132,6 +135,13 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "description1") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->description1.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "acquireScript") == 0)
@@ -275,9 +285,9 @@ public:
     }
 
     /**
-     * カテゴリー名を取得
+     * ネームスペース名を取得
      *
-     * @return カテゴリー名
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getName() const
     {
@@ -285,9 +295,9 @@ public:
     }
 
     /**
-     * カテゴリー名を設定
+     * ネームスペース名を設定
      *
-     * @param name カテゴリー名
+     * @param name ネームスペース名
      */
     void setName(StringHolder name)
     {
@@ -295,9 +305,9 @@ public:
     }
 
     /**
-     * カテゴリー名を設定
+     * ネームスペース名を設定
      *
-     * @param name カテゴリー名
+     * @param name ネームスペース名
      */
     Namespace& withName(StringHolder name)
     {
@@ -306,9 +316,9 @@ public:
     }
 
     /**
-     * ネームスペースの説明を取得
+     * テスト用の変更0を取得
      *
-     * @return ネームスペースの説明
+     * @return テスト用の変更0
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -316,9 +326,9 @@ public:
     }
 
     /**
-     * ネームスペースの説明を設定
+     * テスト用の変更0を設定
      *
-     * @param description ネームスペースの説明
+     * @param description テスト用の変更0
      */
     void setDescription(StringHolder description)
     {
@@ -326,13 +336,44 @@ public:
     }
 
     /**
-     * ネームスペースの説明を設定
+     * テスト用の変更0を設定
      *
-     * @param description ネームスペースの説明
+     * @param description テスト用の変更0
      */
     Namespace& withDescription(StringHolder description)
     {
         setDescription(std::move(description));
+        return *this;
+    }
+
+    /**
+     * テスト用の変更1を取得
+     *
+     * @return テスト用の変更1
+     */
+    const optional<StringHolder>& getDescription1() const
+    {
+        return ensureData().description1;
+    }
+
+    /**
+     * テスト用の変更1を設定
+     *
+     * @param description1 テスト用の変更1
+     */
+    void setDescription1(StringHolder description1)
+    {
+        ensureData().description1.emplace(std::move(description1));
+    }
+
+    /**
+     * テスト用の変更1を設定
+     *
+     * @param description1 テスト用の変更1
+     */
+    Namespace& withDescription1(StringHolder description1)
+    {
+        setDescription1(std::move(description1));
         return *this;
     }
 
@@ -550,6 +591,10 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
             return true;
         }
         if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->description1 != lhr.m_pData->description1)
         {
             return true;
         }

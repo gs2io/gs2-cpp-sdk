@@ -3156,6 +3156,11 @@ protected:
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
         }
+        if (obj.getDescription1())
+        {
+            jsonWriter.writePropertyName("description1");
+            jsonWriter.writeCharArray(*obj.getDescription1());
+        }
         if (obj.getAcquireScript())
         {
             jsonWriter.writePropertyName("acquireScript");
@@ -3668,6 +3673,11 @@ protected:
         {
             jsonWriter.writePropertyName("triggerScriptId");
             jsonWriter.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerTargetType())
+        {
+            jsonWriter.writePropertyName("doneTriggerTargetType");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
         }
         if (obj.getDoneTriggerScriptId())
         {

@@ -43,9 +43,9 @@ private:
     class Data : public Gs2BasicRequest::Data
     {
     public:
-        /** カテゴリー名 */
+        /** ネームスペース名 */
         optional<StringHolder> name;
-        /** ネームスペースの説明 */
+        /** テスト用の変更0 */
         optional<StringHolder> description;
         /** アイテム入手したときに実行するスクリプト */
         optional<ScriptSetting> acquireScript;
@@ -126,9 +126,9 @@ public:
     }
 
     /**
-     * カテゴリー名を取得
+     * ネームスペース名を取得
      *
-     * @return カテゴリー名
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getName() const
     {
@@ -136,9 +136,9 @@ public:
     }
 
     /**
-     * カテゴリー名を設定
+     * ネームスペース名を設定
      *
-     * @param name カテゴリー名
+     * @param name ネームスペース名
      */
     void setName(StringHolder name)
     {
@@ -146,9 +146,9 @@ public:
     }
 
     /**
-     * カテゴリー名を設定
+     * ネームスペース名を設定
      *
-     * @param name カテゴリー名
+     * @param name ネームスペース名
      */
     CreateNamespaceRequest& withName(StringHolder name)
     {
@@ -157,9 +157,9 @@ public:
     }
 
     /**
-     * ネームスペースの説明を取得
+     * テスト用の変更0を取得
      *
-     * @return ネームスペースの説明
+     * @return テスト用の変更0
      */
     const optional<StringHolder>& getDescription() const
     {
@@ -167,9 +167,9 @@ public:
     }
 
     /**
-     * ネームスペースの説明を設定
+     * テスト用の変更0を設定
      *
-     * @param description ネームスペースの説明
+     * @param description テスト用の変更0
      */
     void setDescription(StringHolder description)
     {
@@ -177,9 +177,9 @@ public:
     }
 
     /**
-     * ネームスペースの説明を設定
+     * テスト用の変更0を設定
      *
-     * @param description ネームスペースの説明
+     * @param description テスト用の変更0
      */
     CreateNamespaceRequest& withDescription(StringHolder description)
     {

@@ -43,7 +43,7 @@ private:
     class Data : public Gs2BasicRequest::Data
     {
     public:
-        /** カテゴリー名 */
+        /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** データの取得を開始する位置を指定するトークン */
         optional<StringHolder> pageToken;
@@ -105,9 +105,9 @@ public:
     }
 
     /**
-     * カテゴリー名を取得
+     * ネームスペース名を取得
      *
-     * @return カテゴリー名
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getNamespaceName() const
     {
@@ -115,9 +115,9 @@ public:
     }
 
     /**
-     * カテゴリー名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName カテゴリー名
+     * @param namespaceName ネームスペース名
      */
     void setNamespaceName(StringHolder namespaceName)
     {
@@ -125,9 +125,9 @@ public:
     }
 
     /**
-     * カテゴリー名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName カテゴリー名
+     * @param namespaceName ネームスペース名
      */
     DescribeInventoryModelMastersRequest& withNamespaceName(StringHolder namespaceName)
     {
