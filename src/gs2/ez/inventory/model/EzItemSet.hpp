@@ -49,6 +49,8 @@ private:
         gs2::optional<StringHolder> itemName;
         /** 所持数量 */
         gs2::optional<Int64> count;
+        /** 表示順番 */
+        gs2::optional<Int32> sortValue;
         /** 有効期限 */
         gs2::optional<Int64> expiresAt;
 
@@ -103,6 +105,11 @@ public:
         return *ensureData().count;
     }
 
+    Int32 getSortValue() const
+    {
+        return *ensureData().sortValue;
+    }
+
     Int64 getExpiresAt() const
     {
         return *ensureData().expiresAt;
@@ -132,6 +139,11 @@ public:
         ensureData().count = count;
     }
 
+    void setSortValue(Int32 sortValue)
+    {
+        ensureData().sortValue = sortValue;
+    }
+
     void setExpiresAt(Int64 expiresAt)
     {
         ensureData().expiresAt = expiresAt;
@@ -158,6 +170,12 @@ public:
     EzItemSet& withCount(Int64 count)
     {
         setCount(count);
+        return *this;
+    }
+
+    EzItemSet& withSortValue(Int32 sortValue)
+    {
+        setSortValue(sortValue);
         return *this;
     }
 
