@@ -41,8 +41,11 @@
 #include "request/UpdateCurrentDistributorMasterRequest.hpp"
 #include "request/UpdateCurrentDistributorMasterFromGitHubRequest.hpp"
 #include "request/DistributeRequest.hpp"
+#include "request/DistributeWithoutOverflowProcessRequest.hpp"
 #include "request/RunStampTaskRequest.hpp"
 #include "request/RunStampSheetRequest.hpp"
+#include "request/RunStampTaskWithoutNamespaceRequest.hpp"
+#include "request/RunStampSheetWithoutNamespaceRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -61,8 +64,11 @@
 #include "result/UpdateCurrentDistributorMasterResult.hpp"
 #include "result/UpdateCurrentDistributorMasterFromGitHubResult.hpp"
 #include "result/DistributeResult.hpp"
+#include "result/DistributeWithoutOverflowProcessResult.hpp"
 #include "result/RunStampTaskResult.hpp"
 #include "result/RunStampSheetResult.hpp"
+#include "result/RunStampTaskWithoutNamespaceResult.hpp"
+#include "result/RunStampSheetWithoutNamespaceResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace distributor {
@@ -1114,6 +1120,66 @@ private:
         ~DistributeTask() GS2_OVERRIDE = default;
     };
 
+    class DistributeWithoutOverflowProcessTask : public detail::Gs2RestSessionTask<DistributeWithoutOverflowProcessResult>
+    {
+    private:
+        DistributeWithoutOverflowProcessRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "distributor";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/distribute";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getDistributeResource())
+            {
+                jsonWriter.writePropertyName("distributeResource");
+                write(jsonWriter, *m_Request.getDistributeResource());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        DistributeWithoutOverflowProcessTask(
+            DistributeWithoutOverflowProcessRequest request,
+            Gs2RestSessionTask<DistributeWithoutOverflowProcessResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DistributeWithoutOverflowProcessResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DistributeWithoutOverflowProcessTask() GS2_OVERRIDE = default;
+    };
+
     class RunStampTaskTask : public detail::Gs2RestSessionTask<RunStampTaskResult>
     {
     private:
@@ -1242,6 +1308,128 @@ private:
         {}
 
         ~RunStampSheetTask() GS2_OVERRIDE = default;
+    };
+
+    class RunStampTaskWithoutNamespaceTask : public detail::Gs2RestSessionTask<RunStampTaskWithoutNamespaceResult>
+    {
+    private:
+        RunStampTaskWithoutNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "distributor";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stamp/task/run";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampTask())
+            {
+                jsonWriter.writePropertyName("stampTask");
+                jsonWriter.writeCharArray(*m_Request.getStampTask());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        RunStampTaskWithoutNamespaceTask(
+            RunStampTaskWithoutNamespaceRequest request,
+            Gs2RestSessionTask<RunStampTaskWithoutNamespaceResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<RunStampTaskWithoutNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RunStampTaskWithoutNamespaceTask() GS2_OVERRIDE = default;
+    };
+
+    class RunStampSheetWithoutNamespaceTask : public detail::Gs2RestSessionTask<RunStampSheetWithoutNamespaceResult>
+    {
+    private:
+        RunStampSheetWithoutNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "distributor";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/distribute/stamp/sheet/run";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        RunStampSheetWithoutNamespaceTask(
+            RunStampSheetWithoutNamespaceRequest request,
+            Gs2RestSessionTask<RunStampSheetWithoutNamespaceResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<RunStampSheetWithoutNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RunStampSheetWithoutNamespaceTask() GS2_OVERRIDE = default;
     };
 
 protected:
@@ -1725,6 +1913,18 @@ public:
     }
 
 	/**
+	 * 所持品を配布する(溢れた際の救済処置無し)<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void distributeWithoutOverflowProcess(DistributeWithoutOverflowProcessRequest request, std::function<void(AsyncDistributeWithoutOverflowProcessResult)> callback)
+    {
+        DistributeWithoutOverflowProcessTask& task = *new DistributeWithoutOverflowProcessTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
 	 * スタンプシートのタスクを実行する<br>
 	 *
      * @param callback コールバック関数
@@ -1745,6 +1945,36 @@ public:
     void runStampSheet(RunStampSheetRequest request, std::function<void(AsyncRunStampSheetResult)> callback)
     {
         RunStampSheetTask& task = *new RunStampSheetTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * スタンプシートのタスクを実行する<br>
+	 *   <br>
+	 *   ネームスペースの指定を省略することで、<br>
+	 *   ログが記録できない・リソース溢れ処理が実行されないなどの副作用があります。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void runStampTaskWithoutNamespace(RunStampTaskWithoutNamespaceRequest request, std::function<void(AsyncRunStampTaskWithoutNamespaceResult)> callback)
+    {
+        RunStampTaskWithoutNamespaceTask& task = *new RunStampTaskWithoutNamespaceTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * スタンプシートの完了を報告する<br>
+	 *   <br>
+	 *   ネームスペースの指定を省略することで、<br>
+	 *   ログが記録できない・リソース溢れ処理が実行されないなどの副作用があります。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void runStampSheetWithoutNamespace(RunStampSheetWithoutNamespaceRequest request, std::function<void(AsyncRunStampSheetWithoutNamespaceResult)> callback)
+    {
+        RunStampSheetWithoutNamespaceTask& task = *new RunStampSheetWithoutNamespaceTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 
