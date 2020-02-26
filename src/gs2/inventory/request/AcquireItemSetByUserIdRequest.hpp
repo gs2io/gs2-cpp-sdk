@@ -43,7 +43,7 @@ private:
     class Data : public Gs2BasicRequest::Data
     {
     public:
-        /** カテゴリー名 */
+        /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** インベントリの種類名 */
         optional<StringHolder> inventoryName;
@@ -57,7 +57,7 @@ private:
         optional<Int64> expiresAt;
         /** 既存の ItemSet に空きがあったとしても、新しい ItemSet を作成するか */
         optional<Bool> createNewItemSet;
-        /** アイテムセットを識別する名前 */
+        /** 追加先のアイテムセットの名前 */
         optional<StringHolder> itemSetName;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
@@ -123,9 +123,9 @@ public:
     }
 
     /**
-     * カテゴリー名を取得
+     * ネームスペース名を取得
      *
-     * @return カテゴリー名
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getNamespaceName() const
     {
@@ -133,9 +133,9 @@ public:
     }
 
     /**
-     * カテゴリー名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName カテゴリー名
+     * @param namespaceName ネームスペース名
      */
     void setNamespaceName(StringHolder namespaceName)
     {
@@ -143,9 +143,9 @@ public:
     }
 
     /**
-     * カテゴリー名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName カテゴリー名
+     * @param namespaceName ネームスペース名
      */
     AcquireItemSetByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
@@ -340,9 +340,9 @@ public:
     }
 
     /**
-     * アイテムセットを識別する名前を取得
+     * 追加先のアイテムセットの名前を取得
      *
-     * @return アイテムセットを識別する名前
+     * @return 追加先のアイテムセットの名前
      */
     const optional<StringHolder>& getItemSetName() const
     {
@@ -350,9 +350,9 @@ public:
     }
 
     /**
-     * アイテムセットを識別する名前を設定
+     * 追加先のアイテムセットの名前を設定
      *
-     * @param itemSetName アイテムセットを識別する名前
+     * @param itemSetName 追加先のアイテムセットの名前
      */
     void setItemSetName(StringHolder itemSetName)
     {
@@ -360,9 +360,9 @@ public:
     }
 
     /**
-     * アイテムセットを識別する名前を設定
+     * 追加先のアイテムセットの名前を設定
      *
-     * @param itemSetName アイテムセットを識別する名前
+     * @param itemSetName 追加先のアイテムセットの名前
      */
     AcquireItemSetByUserIdRequest& withItemSetName(StringHolder itemSetName)
     {
