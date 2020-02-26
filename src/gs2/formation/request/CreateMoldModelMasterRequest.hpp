@@ -51,8 +51,8 @@ private:
         optional<StringHolder> description;
         /** フォームの保存領域のメタデータ */
         optional<StringHolder> metadata;
-        /** フォームマスター */
-        optional<StringHolder> formModelId;
+        /** フォーム名 */
+        optional<StringHolder> formModelName;
         /** フォームを保存できる初期キャパシティ */
         optional<Int32> initialMaxCapacity;
         /** フォームを保存できるキャパシティ */
@@ -66,7 +66,7 @@ private:
             name(data.name),
             description(data.description),
             metadata(data.metadata),
-            formModelId(data.formModelId),
+            formModelName(data.formModelName),
             initialMaxCapacity(data.initialMaxCapacity),
             maxCapacity(data.maxCapacity)
         {
@@ -241,33 +241,33 @@ public:
     }
 
     /**
-     * フォームマスターを取得
+     * フォーム名を取得
      *
-     * @return フォームマスター
+     * @return フォーム名
      */
-    const optional<StringHolder>& getFormModelId() const
+    const optional<StringHolder>& getFormModelName() const
     {
-        return ensureData().formModelId;
+        return ensureData().formModelName;
     }
 
     /**
-     * フォームマスターを設定
+     * フォーム名を設定
      *
-     * @param formModelId フォームマスター
+     * @param formModelName フォーム名
      */
-    void setFormModelId(StringHolder formModelId)
+    void setFormModelName(StringHolder formModelName)
     {
-        ensureData().formModelId.emplace(std::move(formModelId));
+        ensureData().formModelName.emplace(std::move(formModelName));
     }
 
     /**
-     * フォームマスターを設定
+     * フォーム名を設定
      *
-     * @param formModelId フォームマスター
+     * @param formModelName フォーム名
      */
-    CreateMoldModelMasterRequest& withFormModelId(StringHolder formModelId)
+    CreateMoldModelMasterRequest& withFormModelName(StringHolder formModelName)
     {
-        ensureData().formModelId.emplace(std::move(formModelId));
+        ensureData().formModelName.emplace(std::move(formModelName));
         return *this;
     }
 
