@@ -50,7 +50,7 @@ private:
         optional<StringHolder> name;
         /** メタデータ */
         optional<StringHolder> metadata;
-        /** フォームモデル */
+        /** None */
         optional<FormModel> formModel;
         /** フォームを保存できる初期キャパシティ */
         optional<Int32> initialMaxCapacity;
@@ -248,9 +248,9 @@ public:
     }
 
     /**
-     * フォームモデルを取得
+     * Noneを取得
      *
-     * @return フォームモデル
+     * @return None
      */
     const optional<FormModel>& getFormModel() const
     {
@@ -258,9 +258,9 @@ public:
     }
 
     /**
-     * フォームモデルを設定
+     * Noneを設定
      *
-     * @param formModel フォームモデル
+     * @param formModel None
      */
     void setFormModel(FormModel formModel)
     {
@@ -268,9 +268,9 @@ public:
     }
 
     /**
-     * フォームモデルを設定
+     * Noneを設定
      *
-     * @param formModel フォームモデル
+     * @param formModel None
      */
     MoldModel& withFormModel(FormModel formModel)
     {

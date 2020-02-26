@@ -616,14 +616,14 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/master/model/form/{formName}";
+            url += "/{namespaceName}/master/model/form/{formModelName}";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
             {
-                auto& value = m_Request.getFormName();
-                url.replace("{formName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+                auto& value = m_Request.getFormModelName();
+                url.replace("{formModelName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
 
             Char joint[] = { '?', '\0' };
@@ -667,14 +667,14 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/master/model/form/{formName}";
+            url += "/{namespaceName}/master/model/form/{formModelName}";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
             {
-                auto& value = m_Request.getFormName();
-                url.replace("{formName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+                auto& value = m_Request.getFormModelName();
+                url.replace("{formModelName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
             detail::json::JsonWriter jsonWriter;
 
@@ -743,14 +743,14 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/master/model/form/{formName}";
+            url += "/{namespaceName}/master/model/form/{formModelName}";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
             {
-                auto& value = m_Request.getFormName();
-                url.replace("{formName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+                auto& value = m_Request.getFormModelName();
+                url.replace("{formModelName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
 
             Char joint[] = { '?', '\0' };
@@ -985,10 +985,10 @@ private:
                 jsonWriter.writePropertyName("metadata");
                 jsonWriter.writeCharArray(*m_Request.getMetadata());
             }
-            if (m_Request.getFormModelId())
+            if (m_Request.getFormModelName())
             {
-                jsonWriter.writePropertyName("formModelId");
-                jsonWriter.writeCharArray(*m_Request.getFormModelId());
+                jsonWriter.writePropertyName("formModelName");
+                jsonWriter.writeCharArray(*m_Request.getFormModelName());
             }
             if (m_Request.getInitialMaxCapacity())
             {
@@ -1116,10 +1116,10 @@ private:
                 jsonWriter.writePropertyName("metadata");
                 jsonWriter.writeCharArray(*m_Request.getMetadata());
             }
-            if (m_Request.getFormModelId())
+            if (m_Request.getFormModelName())
             {
-                jsonWriter.writePropertyName("formModelId");
-                jsonWriter.writeCharArray(*m_Request.getFormModelId());
+                jsonWriter.writePropertyName("formModelName");
+                jsonWriter.writeCharArray(*m_Request.getFormModelName());
             }
             if (m_Request.getInitialMaxCapacity())
             {
@@ -3025,10 +3025,10 @@ protected:
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
         }
-        if (obj.getFormModelId())
+        if (obj.getFormModelName())
         {
-            jsonWriter.writePropertyName("formModelId");
-            jsonWriter.writeCharArray(*obj.getFormModelId());
+            jsonWriter.writePropertyName("formModelName");
+            jsonWriter.writeCharArray(*obj.getFormModelName());
         }
         if (obj.getInitialMaxCapacity())
         {
@@ -3327,6 +3327,11 @@ protected:
         {
             jsonWriter.writePropertyName("triggerScriptId");
             jsonWriter.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerTargetType())
+        {
+            jsonWriter.writePropertyName("doneTriggerTargetType");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
         }
         if (obj.getDoneTriggerScriptId())
         {

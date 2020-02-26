@@ -46,14 +46,14 @@ private:
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** フォーム名 */
-        optional<StringHolder> formName;
+        optional<StringHolder> formModelName;
 
         Data() = default;
 
         Data(const Data& data) :
             Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
-            formName(data.formName)
+            formModelName(data.formModelName)
         {
         }
 
@@ -137,29 +137,29 @@ public:
      *
      * @return フォーム名
      */
-    const optional<StringHolder>& getFormName() const
+    const optional<StringHolder>& getFormModelName() const
     {
-        return ensureData().formName;
+        return ensureData().formModelName;
     }
 
     /**
      * フォーム名を設定
      *
-     * @param formName フォーム名
+     * @param formModelName フォーム名
      */
-    void setFormName(StringHolder formName)
+    void setFormModelName(StringHolder formModelName)
     {
-        ensureData().formName.emplace(std::move(formName));
+        ensureData().formModelName.emplace(std::move(formModelName));
     }
 
     /**
      * フォーム名を設定
      *
-     * @param formName フォーム名
+     * @param formModelName フォーム名
      */
-    GetFormModelMasterRequest& withFormName(StringHolder formName)
+    GetFormModelMasterRequest& withFormModelName(StringHolder formModelName)
     {
-        ensureData().formName.emplace(std::move(formName));
+        ensureData().formModelName.emplace(std::move(formModelName));
         return *this;
     }
 
