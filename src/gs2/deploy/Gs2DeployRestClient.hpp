@@ -26,6 +26,7 @@
 #include "request/DescribeStacksRequest.hpp"
 #include "request/CreateStackRequest.hpp"
 #include "request/CreateStackFromGitHubRequest.hpp"
+#include "request/ValidateRequest.hpp"
 #include "request/GetStackStatusRequest.hpp"
 #include "request/GetStackRequest.hpp"
 #include "request/UpdateStackRequest.hpp"
@@ -43,6 +44,7 @@
 #include "result/DescribeStacksResult.hpp"
 #include "result/CreateStackResult.hpp"
 #include "result/CreateStackFromGitHubResult.hpp"
+#include "result/ValidateResult.hpp"
 #include "result/GetStackStatusResult.hpp"
 #include "result/GetStackResult.hpp"
 #include "result/UpdateStackResult.hpp"
@@ -250,6 +252,58 @@ private:
         {}
 
         ~CreateStackFromGitHubTask() GS2_OVERRIDE = default;
+    };
+
+    class ValidateTask : public detail::Gs2RestSessionTask<void>
+    {
+    private:
+        ValidateRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stack/validate";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getTemplate())
+            {
+                jsonWriter.writePropertyName("template");
+                jsonWriter.writeCharArray(*m_Request.getTemplate());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        ValidateTask(
+            ValidateRequest request,
+            Gs2RestSessionTask<void>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<void>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~ValidateTask() GS2_OVERRIDE = default;
     };
 
     class GetStackStatusTask : public detail::Gs2RestSessionTask<GetStackStatusResult>
@@ -1418,6 +1472,21 @@ public:
     void createStackFromGitHub(CreateStackFromGitHubRequest request, std::function<void(AsyncCreateStackFromGitHubResult)> callback)
     {
         CreateStackFromGitHubTask& task = *new CreateStackFromGitHubTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * テンプレートを検証<br>
+	 *   <br>
+	 *   このAPIの検証内容は簡易検証を行うに過ぎず、<br>
+	 *   このAPIで検証をパスしたとしても、実行したらエラーが発生する場合もあります<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void validate(ValidateRequest request, std::function<void(AsyncValidateResult)> callback)
+    {
+        ValidateTask& task = *new ValidateTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 
