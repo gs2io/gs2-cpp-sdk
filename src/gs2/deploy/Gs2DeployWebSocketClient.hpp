@@ -26,6 +26,7 @@
 #include "request/DescribeStacksRequest.hpp"
 #include "request/CreateStackRequest.hpp"
 #include "request/CreateStackFromGitHubRequest.hpp"
+#include "request/ValidateRequest.hpp"
 #include "request/GetStackStatusRequest.hpp"
 #include "request/GetStackRequest.hpp"
 #include "request/UpdateStackRequest.hpp"
@@ -43,6 +44,7 @@
 #include "result/DescribeStacksResult.hpp"
 #include "result/CreateStackResult.hpp"
 #include "result/CreateStackFromGitHubResult.hpp"
+#include "result/ValidateResult.hpp"
 #include "result/GetStackStatusResult.hpp"
 #include "result/GetStackResult.hpp"
 #include "result/UpdateStackResult.hpp"
@@ -247,6 +249,57 @@ private:
         {}
 
         ~CreateStackFromGitHubTask() GS2_OVERRIDE = default;
+    };
+
+    class ValidateTask : public detail::Gs2WebSocketSessionTask<void>
+    {
+    private:
+        ValidateRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "deploy";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "stack";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "validate";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getTemplate())
+            {
+                jsonWriter.writePropertyName("template");
+                jsonWriter.writeCharArray(*m_Request.getTemplate());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        ValidateTask(
+            ValidateRequest request,
+            Gs2WebSocketSessionTask<void>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<void>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~ValidateTask() GS2_OVERRIDE = default;
     };
 
     class GetStackStatusTask : public detail::Gs2WebSocketSessionTask<GetStackStatusResult>
@@ -1437,6 +1490,21 @@ public:
     void createStackFromGitHub(CreateStackFromGitHubRequest request, std::function<void(AsyncCreateStackFromGitHubResult)> callback)
     {
         CreateStackFromGitHubTask& task = *new CreateStackFromGitHubTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * テンプレートを検証<br>
+	 *   <br>
+	 *   このAPIの検証内容は簡易検証を行うに過ぎず、<br>
+	 *   このAPIで検証をパスしたとしても、実行したらエラーが発生する場合もあります<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void validate(ValidateRequest request, std::function<void(AsyncValidateResult)> callback)
+    {
+        ValidateTask& task = *new ValidateTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
