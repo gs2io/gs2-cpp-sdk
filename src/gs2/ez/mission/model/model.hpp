@@ -18,12 +18,14 @@
 #define GS2_EZ_MISSION_MODEL_MODEL_HPP_
 
 #include <gs2/core/common.hpp>
-#include "EzCounterScopeModel.hpp"
-#include "EzComplete.hpp"
-#include "EzMissionTaskModel.hpp"
 #include "EzCounterModel.hpp"
 #include "EzAcquireAction.hpp"
-#include "EzConfig.hpp"
 #include "EzMissionGroupModel.hpp"
+#include "EzComplete.hpp"
+#include "EzConfig.hpp"
+#include "EzScopedValue.hpp"
+#include "EzCounter.hpp"
+#include "EzCounterScopeModel.hpp"
+#include "EzMissionTaskModel.hpp"
 
 #endif //GS2_EZ_MISSION_MODEL_MODEL_HPP_
