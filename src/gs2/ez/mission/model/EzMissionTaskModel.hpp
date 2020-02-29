@@ -48,8 +48,6 @@ private:
         gs2::optional<StringHolder> metadata;
         /** カウンター名 */
         gs2::optional<StringHolder> counterName;
-        /** リセットタイミング */
-        gs2::optional<StringHolder> resetType;
         /** 目標値 */
         gs2::optional<Int64> targetValue;
         /** ミッション達成時の報酬 */
@@ -105,11 +103,6 @@ public:
         return *ensureData().counterName;
     }
 
-    const StringHolder& getResetType() const
-    {
-        return *ensureData().resetType;
-    }
-
     Int64 getTargetValue() const
     {
         return *ensureData().targetValue;
@@ -149,11 +142,6 @@ public:
         ensureData().counterName = std::move(counterName);
     }
 
-    void setResetType(StringHolder resetType)
-    {
-        ensureData().resetType = std::move(resetType);
-    }
-
     void setTargetValue(Int64 targetValue)
     {
         ensureData().targetValue = targetValue;
@@ -189,12 +177,6 @@ public:
     EzMissionTaskModel& withCounterName(StringHolder counterName)
     {
         setCounterName(std::move(counterName));
-        return *this;
-    }
-
-    EzMissionTaskModel& withResetType(StringHolder resetType)
-    {
-        setResetType(std::move(resetType));
         return *this;
     }
 

@@ -24,6 +24,10 @@ EzMissionGroupModel::Data::Data(const Data& data) :
     Gs2Object(data),
     name(data.name),
     metadata(data.metadata),
+    resetType(data.resetType),
+    resetDayOfMonth(data.resetDayOfMonth),
+    resetDayOfWeek(data.resetDayOfWeek),
+    resetHour(data.resetHour),
     completeNotificationNamespaceId(data.completeNotificationNamespaceId)
 {
     if (data.tasks)
@@ -35,6 +39,10 @@ EzMissionGroupModel::Data::Data(const Data& data) :
 EzMissionGroupModel::Data::Data(const gs2::mission::MissionGroupModel& missionGroupModel) :
     name(missionGroupModel.getName()),
     metadata(missionGroupModel.getMetadata()),
+    resetType(missionGroupModel.getResetType()),
+    resetDayOfMonth(missionGroupModel.getResetDayOfMonth() ? *missionGroupModel.getResetDayOfMonth() : 0),
+    resetDayOfWeek(missionGroupModel.getResetDayOfWeek()),
+    resetHour(missionGroupModel.getResetHour() ? *missionGroupModel.getResetHour() : 0),
     completeNotificationNamespaceId(missionGroupModel.getCompleteNotificationNamespaceId())
 {
     tasks.emplace();
@@ -71,6 +79,10 @@ gs2::mission::MissionGroupModel EzMissionGroupModel::ToModel() const
         }
         missionGroupModel.setTasks(list);
     }
+    missionGroupModel.setResetType(getResetType());
+    missionGroupModel.setResetDayOfMonth(getResetDayOfMonth());
+    missionGroupModel.setResetDayOfWeek(getResetDayOfWeek());
+    missionGroupModel.setResetHour(getResetHour());
     missionGroupModel.setCompleteNotificationNamespaceId(getCompleteNotificationNamespaceId());
     return missionGroupModel;
 }
