@@ -20,11 +20,11 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
+        model/EzLogSetting.hpp
         model/EzNotificationSetting.hpp
         model/EzAcquireAction.hpp
         model/EzMissionTaskModel.hpp
         model/EzScriptSetting.hpp
-        model/EzNamespace.hpp
         model/EzScopedValue.hpp
         model/EzGitHubCheckoutSetting.hpp
         model/EzCounterModel.hpp
@@ -38,7 +38,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzResponseCache.hpp
         model/EzConfig.hpp
         model/EzCurrentMissionMaster.hpp
-        model/EzLogSetting.hpp
+        model/EzNamespace.hpp
         result/EzListMissionTaskModelsResult.hpp
         result/EzGetMissionTaskModelResult.hpp
         result/EzListCounterModelsResult.hpp
@@ -54,11 +54,11 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzLogSetting.cpp
         model/EzNotificationSetting.cpp
         model/EzAcquireAction.cpp
         model/EzMissionTaskModel.cpp
         model/EzScriptSetting.cpp
-        model/EzNamespace.cpp
         model/EzScopedValue.cpp
         model/EzGitHubCheckoutSetting.cpp
         model/EzCounterModel.cpp
@@ -72,7 +72,7 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         model/EzResponseCache.cpp
         model/EzConfig.cpp
         model/EzCurrentMissionMaster.cpp
-        model/EzLogSetting.cpp
+        model/EzNamespace.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC
