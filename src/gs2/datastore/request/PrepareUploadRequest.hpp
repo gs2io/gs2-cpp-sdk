@@ -47,6 +47,8 @@ private:
         optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
+        /** データの名前 */
+        optional<StringHolder> name;
         /** アップロードするデータの MIME-Type */
         optional<StringHolder> contentType;
         /** ファイルのアクセス権 */
@@ -62,6 +64,7 @@ private:
             Gs2BasicRequest::Data(data),
             accessToken(data.accessToken),
             namespaceName(data.namespaceName),
+            name(data.name),
             contentType(data.contentType),
             scope(data.scope),
             duplicationAvoider(data.duplicationAvoider)
@@ -176,6 +179,37 @@ public:
     PrepareUploadRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
+        return *this;
+    }
+
+    /**
+     * データの名前を取得
+     *
+     * @return データの名前
+     */
+    const optional<StringHolder>& getName() const
+    {
+        return ensureData().name;
+    }
+
+    /**
+     * データの名前を設定
+     *
+     * @param name データの名前
+     */
+    void setName(StringHolder name)
+    {
+        ensureData().name.emplace(std::move(name));
+    }
+
+    /**
+     * データの名前を設定
+     *
+     * @param name データの名前
+     */
+    PrepareUploadRequest& withName(StringHolder name)
+    {
+        ensureData().name.emplace(std::move(name));
         return *this;
     }
 
