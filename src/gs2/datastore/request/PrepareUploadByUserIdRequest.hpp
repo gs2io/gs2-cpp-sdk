@@ -47,6 +47,8 @@ private:
         optional<StringHolder> namespaceName;
         /** ユーザーID */
         optional<StringHolder> userId;
+        /** データの名前 */
+        optional<StringHolder> name;
         /** アップロードするデータの MIME-Type */
         optional<StringHolder> contentType;
         /** ファイルのアクセス権 */
@@ -62,6 +64,7 @@ private:
             Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             userId(data.userId),
+            name(data.name),
             contentType(data.contentType),
             scope(data.scope),
             duplicationAvoider(data.duplicationAvoider)
@@ -175,6 +178,37 @@ public:
     PrepareUploadByUserIdRequest& withUserId(StringHolder userId)
     {
         ensureData().userId.emplace(std::move(userId));
+        return *this;
+    }
+
+    /**
+     * データの名前を取得
+     *
+     * @return データの名前
+     */
+    const optional<StringHolder>& getName() const
+    {
+        return ensureData().name;
+    }
+
+    /**
+     * データの名前を設定
+     *
+     * @param name データの名前
+     */
+    void setName(StringHolder name)
+    {
+        ensureData().name.emplace(std::move(name));
+    }
+
+    /**
+     * データの名前を設定
+     *
+     * @param name データの名前
+     */
+    PrepareUploadByUserIdRequest& withName(StringHolder name)
+    {
+        ensureData().name.emplace(std::move(name));
         return *this;
     }
 
