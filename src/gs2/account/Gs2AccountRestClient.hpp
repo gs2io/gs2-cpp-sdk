@@ -1794,6 +1794,11 @@ protected:
             jsonWriter.writePropertyName("triggerScriptId");
             jsonWriter.writeCharArray(*obj.getTriggerScriptId());
         }
+        if (obj.getDoneTriggerTargetType())
+        {
+            jsonWriter.writePropertyName("doneTriggerTargetType");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
+        }
         if (obj.getDoneTriggerScriptId())
         {
             jsonWriter.writePropertyName("doneTriggerScriptId");

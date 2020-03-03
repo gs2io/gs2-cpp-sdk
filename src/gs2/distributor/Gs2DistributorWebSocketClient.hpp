@@ -41,8 +41,11 @@
 #include "request/UpdateCurrentDistributorMasterRequest.hpp"
 #include "request/UpdateCurrentDistributorMasterFromGitHubRequest.hpp"
 #include "request/DistributeRequest.hpp"
+#include "request/DistributeWithoutOverflowProcessRequest.hpp"
 #include "request/RunStampTaskRequest.hpp"
 #include "request/RunStampSheetRequest.hpp"
+#include "request/RunStampTaskWithoutNamespaceRequest.hpp"
+#include "request/RunStampSheetWithoutNamespaceRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -61,8 +64,11 @@
 #include "result/UpdateCurrentDistributorMasterResult.hpp"
 #include "result/UpdateCurrentDistributorMasterFromGitHubResult.hpp"
 #include "result/DistributeResult.hpp"
+#include "result/DistributeWithoutOverflowProcessResult.hpp"
 #include "result/RunStampTaskResult.hpp"
 #include "result/RunStampSheetResult.hpp"
+#include "result/RunStampTaskWithoutNamespaceResult.hpp"
+#include "result/RunStampSheetWithoutNamespaceResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace distributor {
@@ -1147,6 +1153,67 @@ private:
         ~DistributeTask() GS2_OVERRIDE = default;
     };
 
+    class DistributeWithoutOverflowProcessTask : public detail::Gs2WebSocketSessionTask<DistributeWithoutOverflowProcessResult>
+    {
+    private:
+        DistributeWithoutOverflowProcessRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "distributor";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "distribute";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "distributeWithoutOverflowProcess";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getDistributeResource())
+            {
+                jsonWriter.writePropertyName("distributeResource");
+                write(jsonWriter, *m_Request.getDistributeResource());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DistributeWithoutOverflowProcessTask(
+            DistributeWithoutOverflowProcessRequest request,
+            Gs2WebSocketSessionTask<DistributeWithoutOverflowProcessResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DistributeWithoutOverflowProcessResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DistributeWithoutOverflowProcessTask() GS2_OVERRIDE = default;
+    };
+
     class RunStampTaskTask : public detail::Gs2WebSocketSessionTask<RunStampTaskResult>
     {
     private:
@@ -1277,6 +1344,128 @@ private:
         {}
 
         ~RunStampSheetTask() GS2_OVERRIDE = default;
+    };
+
+    class RunStampTaskWithoutNamespaceTask : public detail::Gs2WebSocketSessionTask<RunStampTaskWithoutNamespaceResult>
+    {
+    private:
+        RunStampTaskWithoutNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "distributor";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "distribute";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "runStampTaskWithoutNamespace";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampTask())
+            {
+                jsonWriter.writePropertyName("stampTask");
+                jsonWriter.writeCharArray(*m_Request.getStampTask());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        RunStampTaskWithoutNamespaceTask(
+            RunStampTaskWithoutNamespaceRequest request,
+            Gs2WebSocketSessionTask<RunStampTaskWithoutNamespaceResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<RunStampTaskWithoutNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RunStampTaskWithoutNamespaceTask() GS2_OVERRIDE = default;
+    };
+
+    class RunStampSheetWithoutNamespaceTask : public detail::Gs2WebSocketSessionTask<RunStampSheetWithoutNamespaceResult>
+    {
+    private:
+        RunStampSheetWithoutNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "distributor";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "distribute";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "runStampSheetWithoutNamespace";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        RunStampSheetWithoutNamespaceTask(
+            RunStampSheetWithoutNamespaceRequest request,
+            Gs2WebSocketSessionTask<RunStampSheetWithoutNamespaceResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<RunStampSheetWithoutNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RunStampSheetWithoutNamespaceTask() GS2_OVERRIDE = default;
     };
 
 protected:
@@ -1759,6 +1948,18 @@ public:
     }
 
 	/**
+	 * 所持品を配布する(溢れた際の救済処置無し)<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void distributeWithoutOverflowProcess(DistributeWithoutOverflowProcessRequest request, std::function<void(AsyncDistributeWithoutOverflowProcessResult)> callback)
+    {
+        DistributeWithoutOverflowProcessTask& task = *new DistributeWithoutOverflowProcessTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
 	 * スタンプシートのタスクを実行する<br>
 	 *
      * @param callback コールバック関数
@@ -1779,6 +1980,36 @@ public:
     void runStampSheet(RunStampSheetRequest request, std::function<void(AsyncRunStampSheetResult)> callback)
     {
         RunStampSheetTask& task = *new RunStampSheetTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタンプシートのタスクを実行する<br>
+	 *   <br>
+	 *   ネームスペースの指定を省略することで、<br>
+	 *   ログが記録できない・リソース溢れ処理が実行されないなどの副作用があります。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void runStampTaskWithoutNamespace(RunStampTaskWithoutNamespaceRequest request, std::function<void(AsyncRunStampTaskWithoutNamespaceResult)> callback)
+    {
+        RunStampTaskWithoutNamespaceTask& task = *new RunStampTaskWithoutNamespaceTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタンプシートの完了を報告する<br>
+	 *   <br>
+	 *   ネームスペースの指定を省略することで、<br>
+	 *   ログが記録できない・リソース溢れ処理が実行されないなどの副作用があります。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void runStampSheetWithoutNamespace(RunStampSheetWithoutNamespaceRequest request, std::function<void(AsyncRunStampSheetWithoutNamespaceResult)> callback)
+    {
+        RunStampSheetWithoutNamespaceTask& task = *new RunStampSheetWithoutNamespaceTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

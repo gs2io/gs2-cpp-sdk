@@ -21,5 +21,8 @@
 #include "notification.hpp"
 #include "Account.hpp"
 #include "Project.hpp"
+#include "BillingMethod.hpp"
+#include "Receipt.hpp"
+#include "Billing.hpp"
 
 #endif //GS2_PROJECT_MODEL_MODEL_HPP_

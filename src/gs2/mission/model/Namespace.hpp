@@ -24,6 +24,9 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
 #include "NotificationSetting.hpp"
 #include "LogSetting.hpp"
 #include <memory>
@@ -53,24 +56,12 @@ private:
         optional<StringHolder> name;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
-        /** ミッション達成時 に実行されるスクリプト のGRN */
-        optional<StringHolder> missionCompleteTriggerScriptId;
-        /** ミッション達成完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> missionCompleteDoneTriggerScriptId;
-        /** ミッション達成完了時 にジョブが登録されるネームスペース のGRN */
-        optional<StringHolder> missionCompleteDoneTriggerQueueNamespaceId;
-        /** カウンター上昇時 に実行されるスクリプト のGRN */
-        optional<StringHolder> counterIncrementTriggerScriptId;
-        /** カウンター上昇完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> counterIncrementDoneTriggerScriptId;
-        /** カウンター上昇完了時 にジョブが登録されるネームスペース のGRN */
-        optional<StringHolder> counterIncrementDoneTriggerQueueNamespaceId;
-        /** 報酬受け取り時 に実行されるスクリプト のGRN */
-        optional<StringHolder> receiveRewardsTriggerScriptId;
-        /** 報酬受け取り完了時 に実行されるスクリプト のGRN */
-        optional<StringHolder> receiveRewardsDoneTriggerScriptId;
-        /** 報酬受け取り完了時 にジョブが登録されるネームスペース のGRN */
-        optional<StringHolder> receiveRewardsDoneTriggerQueueNamespaceId;
+        /** ミッションを達成したときに実行するスクリプト */
+        optional<ScriptSetting> missionCompleteScript;
+        /** カウンターを上昇したときに実行するスクリプト */
+        optional<ScriptSetting> counterIncrementScript;
+        /** 報酬を受け取ったときに実行するスクリプト */
+        optional<ScriptSetting> receiveRewardsScript;
         /** 報酬付与処理をジョブとして追加するキューネームスペース のGRN */
         optional<StringHolder> queueNamespaceId;
         /** 報酬付与処理のスタンプシートで使用する暗号鍵GRN */
@@ -92,20 +83,23 @@ private:
             ownerId(data.ownerId),
             name(data.name),
             description(data.description),
-            missionCompleteTriggerScriptId(data.missionCompleteTriggerScriptId),
-            missionCompleteDoneTriggerScriptId(data.missionCompleteDoneTriggerScriptId),
-            missionCompleteDoneTriggerQueueNamespaceId(data.missionCompleteDoneTriggerQueueNamespaceId),
-            counterIncrementTriggerScriptId(data.counterIncrementTriggerScriptId),
-            counterIncrementDoneTriggerScriptId(data.counterIncrementDoneTriggerScriptId),
-            counterIncrementDoneTriggerQueueNamespaceId(data.counterIncrementDoneTriggerQueueNamespaceId),
-            receiveRewardsTriggerScriptId(data.receiveRewardsTriggerScriptId),
-            receiveRewardsDoneTriggerScriptId(data.receiveRewardsDoneTriggerScriptId),
-            receiveRewardsDoneTriggerQueueNamespaceId(data.receiveRewardsDoneTriggerQueueNamespaceId),
             queueNamespaceId(data.queueNamespaceId),
             keyId(data.keyId),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
+            if (data.missionCompleteScript)
+            {
+                missionCompleteScript = data.missionCompleteScript->deepCopy();
+            }
+            if (data.counterIncrementScript)
+            {
+                counterIncrementScript = data.counterIncrementScript->deepCopy();
+            }
+            if (data.receiveRewardsScript)
+            {
+                receiveRewardsScript = data.receiveRewardsScript->deepCopy();
+            }
             if (data.completeNotification)
             {
                 completeNotification = data.completeNotification->deepCopy();
@@ -153,67 +147,31 @@ private:
                     this->description.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "missionCompleteTriggerScriptId") == 0)
+            else if (std::strcmp(name_, "missionCompleteScript") == 0)
             {
-                if (jsonValue.IsString())
+                if (jsonValue.IsObject())
                 {
-                    this->missionCompleteTriggerScriptId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->missionCompleteScript.emplace();
+                    detail::json::JsonParser::parse(&this->missionCompleteScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "missionCompleteDoneTriggerScriptId") == 0)
+            else if (std::strcmp(name_, "counterIncrementScript") == 0)
             {
-                if (jsonValue.IsString())
+                if (jsonValue.IsObject())
                 {
-                    this->missionCompleteDoneTriggerScriptId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->counterIncrementScript.emplace();
+                    detail::json::JsonParser::parse(&this->counterIncrementScript->getModel(), jsonObject);
                 }
             }
-            else if (std::strcmp(name_, "missionCompleteDoneTriggerQueueNamespaceId") == 0)
+            else if (std::strcmp(name_, "receiveRewardsScript") == 0)
             {
-                if (jsonValue.IsString())
+                if (jsonValue.IsObject())
                 {
-                    this->missionCompleteDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "counterIncrementTriggerScriptId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->counterIncrementTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "counterIncrementDoneTriggerScriptId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->counterIncrementDoneTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "counterIncrementDoneTriggerQueueNamespaceId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->counterIncrementDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "receiveRewardsTriggerScriptId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->receiveRewardsTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "receiveRewardsDoneTriggerScriptId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->receiveRewardsDoneTriggerScriptId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "receiveRewardsDoneTriggerQueueNamespaceId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->receiveRewardsDoneTriggerQueueNamespaceId.emplace(jsonValue.GetString());
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->receiveRewardsScript.emplace();
+                    detail::json::JsonParser::parse(&this->receiveRewardsScript->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name_, "queueNamespaceId") == 0)
@@ -415,281 +373,95 @@ public:
     }
 
     /**
-     * ミッション達成時 に実行されるスクリプト のGRNを取得
+     * ミッションを達成したときに実行するスクリプトを取得
      *
-     * @return ミッション達成時 に実行されるスクリプト のGRN
+     * @return ミッションを達成したときに実行するスクリプト
      */
-    const optional<StringHolder>& getMissionCompleteTriggerScriptId() const
+    const optional<ScriptSetting>& getMissionCompleteScript() const
     {
-        return ensureData().missionCompleteTriggerScriptId;
+        return ensureData().missionCompleteScript;
     }
 
     /**
-     * ミッション達成時 に実行されるスクリプト のGRNを設定
+     * ミッションを達成したときに実行するスクリプトを設定
      *
-     * @param missionCompleteTriggerScriptId ミッション達成時 に実行されるスクリプト のGRN
+     * @param missionCompleteScript ミッションを達成したときに実行するスクリプト
      */
-    void setMissionCompleteTriggerScriptId(StringHolder missionCompleteTriggerScriptId)
+    void setMissionCompleteScript(ScriptSetting missionCompleteScript)
     {
-        ensureData().missionCompleteTriggerScriptId.emplace(std::move(missionCompleteTriggerScriptId));
+        ensureData().missionCompleteScript.emplace(std::move(missionCompleteScript));
     }
 
     /**
-     * ミッション達成時 に実行されるスクリプト のGRNを設定
+     * ミッションを達成したときに実行するスクリプトを設定
      *
-     * @param missionCompleteTriggerScriptId ミッション達成時 に実行されるスクリプト のGRN
+     * @param missionCompleteScript ミッションを達成したときに実行するスクリプト
      */
-    Namespace& withMissionCompleteTriggerScriptId(StringHolder missionCompleteTriggerScriptId)
+    Namespace& withMissionCompleteScript(ScriptSetting missionCompleteScript)
     {
-        setMissionCompleteTriggerScriptId(std::move(missionCompleteTriggerScriptId));
+        setMissionCompleteScript(std::move(missionCompleteScript));
         return *this;
     }
 
     /**
-     * ミッション達成完了時 に実行されるスクリプト のGRNを取得
+     * カウンターを上昇したときに実行するスクリプトを取得
      *
-     * @return ミッション達成完了時 に実行されるスクリプト のGRN
+     * @return カウンターを上昇したときに実行するスクリプト
      */
-    const optional<StringHolder>& getMissionCompleteDoneTriggerScriptId() const
+    const optional<ScriptSetting>& getCounterIncrementScript() const
     {
-        return ensureData().missionCompleteDoneTriggerScriptId;
+        return ensureData().counterIncrementScript;
     }
 
     /**
-     * ミッション達成完了時 に実行されるスクリプト のGRNを設定
+     * カウンターを上昇したときに実行するスクリプトを設定
      *
-     * @param missionCompleteDoneTriggerScriptId ミッション達成完了時 に実行されるスクリプト のGRN
+     * @param counterIncrementScript カウンターを上昇したときに実行するスクリプト
      */
-    void setMissionCompleteDoneTriggerScriptId(StringHolder missionCompleteDoneTriggerScriptId)
+    void setCounterIncrementScript(ScriptSetting counterIncrementScript)
     {
-        ensureData().missionCompleteDoneTriggerScriptId.emplace(std::move(missionCompleteDoneTriggerScriptId));
+        ensureData().counterIncrementScript.emplace(std::move(counterIncrementScript));
     }
 
     /**
-     * ミッション達成完了時 に実行されるスクリプト のGRNを設定
+     * カウンターを上昇したときに実行するスクリプトを設定
      *
-     * @param missionCompleteDoneTriggerScriptId ミッション達成完了時 に実行されるスクリプト のGRN
+     * @param counterIncrementScript カウンターを上昇したときに実行するスクリプト
      */
-    Namespace& withMissionCompleteDoneTriggerScriptId(StringHolder missionCompleteDoneTriggerScriptId)
+    Namespace& withCounterIncrementScript(ScriptSetting counterIncrementScript)
     {
-        setMissionCompleteDoneTriggerScriptId(std::move(missionCompleteDoneTriggerScriptId));
+        setCounterIncrementScript(std::move(counterIncrementScript));
         return *this;
     }
 
     /**
-     * ミッション達成完了時 にジョブが登録されるネームスペース のGRNを取得
+     * 報酬を受け取ったときに実行するスクリプトを取得
      *
-     * @return ミッション達成完了時 にジョブが登録されるネームスペース のGRN
+     * @return 報酬を受け取ったときに実行するスクリプト
      */
-    const optional<StringHolder>& getMissionCompleteDoneTriggerQueueNamespaceId() const
+    const optional<ScriptSetting>& getReceiveRewardsScript() const
     {
-        return ensureData().missionCompleteDoneTriggerQueueNamespaceId;
+        return ensureData().receiveRewardsScript;
     }
 
     /**
-     * ミッション達成完了時 にジョブが登録されるネームスペース のGRNを設定
+     * 報酬を受け取ったときに実行するスクリプトを設定
      *
-     * @param missionCompleteDoneTriggerQueueNamespaceId ミッション達成完了時 にジョブが登録されるネームスペース のGRN
+     * @param receiveRewardsScript 報酬を受け取ったときに実行するスクリプト
      */
-    void setMissionCompleteDoneTriggerQueueNamespaceId(StringHolder missionCompleteDoneTriggerQueueNamespaceId)
+    void setReceiveRewardsScript(ScriptSetting receiveRewardsScript)
     {
-        ensureData().missionCompleteDoneTriggerQueueNamespaceId.emplace(std::move(missionCompleteDoneTriggerQueueNamespaceId));
+        ensureData().receiveRewardsScript.emplace(std::move(receiveRewardsScript));
     }
 
     /**
-     * ミッション達成完了時 にジョブが登録されるネームスペース のGRNを設定
+     * 報酬を受け取ったときに実行するスクリプトを設定
      *
-     * @param missionCompleteDoneTriggerQueueNamespaceId ミッション達成完了時 にジョブが登録されるネームスペース のGRN
+     * @param receiveRewardsScript 報酬を受け取ったときに実行するスクリプト
      */
-    Namespace& withMissionCompleteDoneTriggerQueueNamespaceId(StringHolder missionCompleteDoneTriggerQueueNamespaceId)
+    Namespace& withReceiveRewardsScript(ScriptSetting receiveRewardsScript)
     {
-        setMissionCompleteDoneTriggerQueueNamespaceId(std::move(missionCompleteDoneTriggerQueueNamespaceId));
-        return *this;
-    }
-
-    /**
-     * カウンター上昇時 に実行されるスクリプト のGRNを取得
-     *
-     * @return カウンター上昇時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getCounterIncrementTriggerScriptId() const
-    {
-        return ensureData().counterIncrementTriggerScriptId;
-    }
-
-    /**
-     * カウンター上昇時 に実行されるスクリプト のGRNを設定
-     *
-     * @param counterIncrementTriggerScriptId カウンター上昇時 に実行されるスクリプト のGRN
-     */
-    void setCounterIncrementTriggerScriptId(StringHolder counterIncrementTriggerScriptId)
-    {
-        ensureData().counterIncrementTriggerScriptId.emplace(std::move(counterIncrementTriggerScriptId));
-    }
-
-    /**
-     * カウンター上昇時 に実行されるスクリプト のGRNを設定
-     *
-     * @param counterIncrementTriggerScriptId カウンター上昇時 に実行されるスクリプト のGRN
-     */
-    Namespace& withCounterIncrementTriggerScriptId(StringHolder counterIncrementTriggerScriptId)
-    {
-        setCounterIncrementTriggerScriptId(std::move(counterIncrementTriggerScriptId));
-        return *this;
-    }
-
-    /**
-     * カウンター上昇完了時 に実行されるスクリプト のGRNを取得
-     *
-     * @return カウンター上昇完了時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getCounterIncrementDoneTriggerScriptId() const
-    {
-        return ensureData().counterIncrementDoneTriggerScriptId;
-    }
-
-    /**
-     * カウンター上昇完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param counterIncrementDoneTriggerScriptId カウンター上昇完了時 に実行されるスクリプト のGRN
-     */
-    void setCounterIncrementDoneTriggerScriptId(StringHolder counterIncrementDoneTriggerScriptId)
-    {
-        ensureData().counterIncrementDoneTriggerScriptId.emplace(std::move(counterIncrementDoneTriggerScriptId));
-    }
-
-    /**
-     * カウンター上昇完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param counterIncrementDoneTriggerScriptId カウンター上昇完了時 に実行されるスクリプト のGRN
-     */
-    Namespace& withCounterIncrementDoneTriggerScriptId(StringHolder counterIncrementDoneTriggerScriptId)
-    {
-        setCounterIncrementDoneTriggerScriptId(std::move(counterIncrementDoneTriggerScriptId));
-        return *this;
-    }
-
-    /**
-     * カウンター上昇完了時 にジョブが登録されるネームスペース のGRNを取得
-     *
-     * @return カウンター上昇完了時 にジョブが登録されるネームスペース のGRN
-     */
-    const optional<StringHolder>& getCounterIncrementDoneTriggerQueueNamespaceId() const
-    {
-        return ensureData().counterIncrementDoneTriggerQueueNamespaceId;
-    }
-
-    /**
-     * カウンター上昇完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param counterIncrementDoneTriggerQueueNamespaceId カウンター上昇完了時 にジョブが登録されるネームスペース のGRN
-     */
-    void setCounterIncrementDoneTriggerQueueNamespaceId(StringHolder counterIncrementDoneTriggerQueueNamespaceId)
-    {
-        ensureData().counterIncrementDoneTriggerQueueNamespaceId.emplace(std::move(counterIncrementDoneTriggerQueueNamespaceId));
-    }
-
-    /**
-     * カウンター上昇完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param counterIncrementDoneTriggerQueueNamespaceId カウンター上昇完了時 にジョブが登録されるネームスペース のGRN
-     */
-    Namespace& withCounterIncrementDoneTriggerQueueNamespaceId(StringHolder counterIncrementDoneTriggerQueueNamespaceId)
-    {
-        setCounterIncrementDoneTriggerQueueNamespaceId(std::move(counterIncrementDoneTriggerQueueNamespaceId));
-        return *this;
-    }
-
-    /**
-     * 報酬受け取り時 に実行されるスクリプト のGRNを取得
-     *
-     * @return 報酬受け取り時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getReceiveRewardsTriggerScriptId() const
-    {
-        return ensureData().receiveRewardsTriggerScriptId;
-    }
-
-    /**
-     * 報酬受け取り時 に実行されるスクリプト のGRNを設定
-     *
-     * @param receiveRewardsTriggerScriptId 報酬受け取り時 に実行されるスクリプト のGRN
-     */
-    void setReceiveRewardsTriggerScriptId(StringHolder receiveRewardsTriggerScriptId)
-    {
-        ensureData().receiveRewardsTriggerScriptId.emplace(std::move(receiveRewardsTriggerScriptId));
-    }
-
-    /**
-     * 報酬受け取り時 に実行されるスクリプト のGRNを設定
-     *
-     * @param receiveRewardsTriggerScriptId 報酬受け取り時 に実行されるスクリプト のGRN
-     */
-    Namespace& withReceiveRewardsTriggerScriptId(StringHolder receiveRewardsTriggerScriptId)
-    {
-        setReceiveRewardsTriggerScriptId(std::move(receiveRewardsTriggerScriptId));
-        return *this;
-    }
-
-    /**
-     * 報酬受け取り完了時 に実行されるスクリプト のGRNを取得
-     *
-     * @return 報酬受け取り完了時 に実行されるスクリプト のGRN
-     */
-    const optional<StringHolder>& getReceiveRewardsDoneTriggerScriptId() const
-    {
-        return ensureData().receiveRewardsDoneTriggerScriptId;
-    }
-
-    /**
-     * 報酬受け取り完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param receiveRewardsDoneTriggerScriptId 報酬受け取り完了時 に実行されるスクリプト のGRN
-     */
-    void setReceiveRewardsDoneTriggerScriptId(StringHolder receiveRewardsDoneTriggerScriptId)
-    {
-        ensureData().receiveRewardsDoneTriggerScriptId.emplace(std::move(receiveRewardsDoneTriggerScriptId));
-    }
-
-    /**
-     * 報酬受け取り完了時 に実行されるスクリプト のGRNを設定
-     *
-     * @param receiveRewardsDoneTriggerScriptId 報酬受け取り完了時 に実行されるスクリプト のGRN
-     */
-    Namespace& withReceiveRewardsDoneTriggerScriptId(StringHolder receiveRewardsDoneTriggerScriptId)
-    {
-        setReceiveRewardsDoneTriggerScriptId(std::move(receiveRewardsDoneTriggerScriptId));
-        return *this;
-    }
-
-    /**
-     * 報酬受け取り完了時 にジョブが登録されるネームスペース のGRNを取得
-     *
-     * @return 報酬受け取り完了時 にジョブが登録されるネームスペース のGRN
-     */
-    const optional<StringHolder>& getReceiveRewardsDoneTriggerQueueNamespaceId() const
-    {
-        return ensureData().receiveRewardsDoneTriggerQueueNamespaceId;
-    }
-
-    /**
-     * 報酬受け取り完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param receiveRewardsDoneTriggerQueueNamespaceId 報酬受け取り完了時 にジョブが登録されるネームスペース のGRN
-     */
-    void setReceiveRewardsDoneTriggerQueueNamespaceId(StringHolder receiveRewardsDoneTriggerQueueNamespaceId)
-    {
-        ensureData().receiveRewardsDoneTriggerQueueNamespaceId.emplace(std::move(receiveRewardsDoneTriggerQueueNamespaceId));
-    }
-
-    /**
-     * 報酬受け取り完了時 にジョブが登録されるネームスペース のGRNを設定
-     *
-     * @param receiveRewardsDoneTriggerQueueNamespaceId 報酬受け取り完了時 にジョブが登録されるネームスペース のGRN
-     */
-    Namespace& withReceiveRewardsDoneTriggerQueueNamespaceId(StringHolder receiveRewardsDoneTriggerQueueNamespaceId)
-    {
-        setReceiveRewardsDoneTriggerQueueNamespaceId(std::move(receiveRewardsDoneTriggerQueueNamespaceId));
+        setReceiveRewardsScript(std::move(receiveRewardsScript));
         return *this;
     }
 
@@ -910,39 +682,15 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->missionCompleteTriggerScriptId != lhr.m_pData->missionCompleteTriggerScriptId)
+        if (lhs.m_pData->missionCompleteScript != lhr.m_pData->missionCompleteScript)
         {
             return true;
         }
-        if (lhs.m_pData->missionCompleteDoneTriggerScriptId != lhr.m_pData->missionCompleteDoneTriggerScriptId)
+        if (lhs.m_pData->counterIncrementScript != lhr.m_pData->counterIncrementScript)
         {
             return true;
         }
-        if (lhs.m_pData->missionCompleteDoneTriggerQueueNamespaceId != lhr.m_pData->missionCompleteDoneTriggerQueueNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->counterIncrementTriggerScriptId != lhr.m_pData->counterIncrementTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->counterIncrementDoneTriggerScriptId != lhr.m_pData->counterIncrementDoneTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->counterIncrementDoneTriggerQueueNamespaceId != lhr.m_pData->counterIncrementDoneTriggerQueueNamespaceId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->receiveRewardsTriggerScriptId != lhr.m_pData->receiveRewardsTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->receiveRewardsDoneTriggerScriptId != lhr.m_pData->receiveRewardsDoneTriggerScriptId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->receiveRewardsDoneTriggerQueueNamespaceId != lhr.m_pData->receiveRewardsDoneTriggerQueueNamespaceId)
+        if (lhs.m_pData->receiveRewardsScript != lhr.m_pData->receiveRewardsScript)
         {
             return true;
         }

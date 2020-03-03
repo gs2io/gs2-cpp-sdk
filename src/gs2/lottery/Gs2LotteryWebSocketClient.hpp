@@ -43,6 +43,7 @@
 #include "request/DescribeBoxesByUserIdRequest.hpp"
 #include "request/GetBoxRequest.hpp"
 #include "request/GetBoxByUserIdRequest.hpp"
+#include "request/GetRawBoxByUserIdRequest.hpp"
 #include "request/ResetBoxRequest.hpp"
 #include "request/ResetBoxByUserIdRequest.hpp"
 #include "request/DescribeLotteryModelsRequest.hpp"
@@ -77,6 +78,7 @@
 #include "result/DescribeBoxesByUserIdResult.hpp"
 #include "result/GetBoxResult.hpp"
 #include "result/GetBoxByUserIdResult.hpp"
+#include "result/GetRawBoxByUserIdResult.hpp"
 #include "result/ResetBoxResult.hpp"
 #include "result/ResetBoxByUserIdResult.hpp"
 #include "result/DescribeLotteryModelsResult.hpp"
@@ -1322,10 +1324,10 @@ private:
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
-            if (m_Request.getLotteryName())
+            if (m_Request.getPrizeTableName())
             {
-                jsonWriter.writePropertyName("lotteryName");
-                jsonWriter.writeCharArray(*m_Request.getLotteryName());
+                jsonWriter.writePropertyName("prizeTableName");
+                jsonWriter.writeCharArray(*m_Request.getPrizeTableName());
             }
             if (m_Request.getRequestId())
             {
@@ -1388,10 +1390,10 @@ private:
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
-            if (m_Request.getLotteryName())
+            if (m_Request.getPrizeTableName())
             {
-                jsonWriter.writePropertyName("lotteryName");
-                jsonWriter.writeCharArray(*m_Request.getLotteryName());
+                jsonWriter.writePropertyName("prizeTableName");
+                jsonWriter.writeCharArray(*m_Request.getPrizeTableName());
             }
             if (m_Request.getUserId())
             {
@@ -1420,6 +1422,72 @@ private:
         {}
 
         ~GetBoxByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRawBoxByUserIdTask : public detail::Gs2WebSocketSessionTask<GetRawBoxByUserIdResult>
+    {
+    private:
+        GetRawBoxByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "lottery";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "box";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getRawBoxByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getPrizeTableName())
+            {
+                jsonWriter.writePropertyName("prizeTableName");
+                jsonWriter.writeCharArray(*m_Request.getPrizeTableName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetRawBoxByUserIdTask(
+            GetRawBoxByUserIdRequest request,
+            Gs2WebSocketSessionTask<GetRawBoxByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetRawBoxByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRawBoxByUserIdTask() GS2_OVERRIDE = default;
     };
 
     class ResetBoxTask : public detail::Gs2WebSocketSessionTask<void>
@@ -1454,10 +1522,10 @@ private:
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
-            if (m_Request.getLotteryName())
+            if (m_Request.getPrizeTableName())
             {
-                jsonWriter.writePropertyName("lotteryName");
-                jsonWriter.writeCharArray(*m_Request.getLotteryName());
+                jsonWriter.writePropertyName("prizeTableName");
+                jsonWriter.writeCharArray(*m_Request.getPrizeTableName());
             }
             if (m_Request.getRequestId())
             {
@@ -1520,10 +1588,10 @@ private:
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
-            if (m_Request.getLotteryName())
+            if (m_Request.getPrizeTableName())
             {
-                jsonWriter.writePropertyName("lotteryName");
-                jsonWriter.writeCharArray(*m_Request.getLotteryName());
+                jsonWriter.writePropertyName("prizeTableName");
+                jsonWriter.writeCharArray(*m_Request.getPrizeTableName());
             }
             if (m_Request.getUserId())
             {
@@ -3046,6 +3114,18 @@ public:
     void getBoxByUserId(GetBoxByUserIdRequest request, std::function<void(AsyncGetBoxByUserIdResult)> callback)
     {
         GetBoxByUserIdTask& task = *new GetBoxByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ユーザIDを指定してボックスを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRawBoxByUserId(GetRawBoxByUserIdRequest request, std::function<void(AsyncGetRawBoxByUserIdResult)> callback)
+    {
+        GetRawBoxByUserIdTask& task = *new GetRawBoxByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

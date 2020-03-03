@@ -61,12 +61,12 @@ private:
         optional<Bool> isOverflow;
         /** 溢れた状況での最大値 */
         optional<Int32> maxCapacity;
-        /** GS2-Experience のランクによって最大スタミナ値を決定する */
-        optional<StringHolder> maxStaminaTableId;
-        /** GS2-Experience のランクによってスタミナの回復間隔を決定する */
-        optional<StringHolder> recoverIntervalTableId;
-        /** GS2-Experience のランクによってスタミナの回復量を決定する */
-        optional<StringHolder> recoverValueTableId;
+        /** GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル名 */
+        optional<StringHolder> maxStaminaTableName;
+        /** GS2-Experience のランクによってスタミナの回復間隔を決定する回復間隔テーブル名 */
+        optional<StringHolder> recoverIntervalTableName;
+        /** GS2-Experience のランクによってスタミナの回復量を決定する回復量テーブル名 */
+        optional<StringHolder> recoverValueTableName;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -85,9 +85,9 @@ private:
             initialCapacity(data.initialCapacity),
             isOverflow(data.isOverflow),
             maxCapacity(data.maxCapacity),
-            maxStaminaTableId(data.maxStaminaTableId),
-            recoverIntervalTableId(data.recoverIntervalTableId),
-            recoverValueTableId(data.recoverValueTableId),
+            maxStaminaTableName(data.maxStaminaTableName),
+            recoverIntervalTableName(data.recoverIntervalTableName),
+            recoverValueTableName(data.recoverValueTableName),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
@@ -165,25 +165,25 @@ private:
                     this->maxCapacity = jsonValue.GetInt();
                 }
             }
-            else if (std::strcmp(name_, "maxStaminaTableId") == 0)
+            else if (std::strcmp(name_, "maxStaminaTableName") == 0)
             {
                 if (jsonValue.IsString())
                 {
-                    this->maxStaminaTableId.emplace(jsonValue.GetString());
+                    this->maxStaminaTableName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "recoverIntervalTableId") == 0)
+            else if (std::strcmp(name_, "recoverIntervalTableName") == 0)
             {
                 if (jsonValue.IsString())
                 {
-                    this->recoverIntervalTableId.emplace(jsonValue.GetString());
+                    this->recoverIntervalTableName.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "recoverValueTableId") == 0)
+            else if (std::strcmp(name_, "recoverValueTableName") == 0)
             {
                 if (jsonValue.IsString())
                 {
-                    this->recoverValueTableId.emplace(jsonValue.GetString());
+                    this->recoverValueTableName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -508,95 +508,95 @@ public:
     }
 
     /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するを取得
+     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル名を取得
      *
-     * @return GS2-Experience のランクによって最大スタミナ値を決定する
+     * @return GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル名
      */
-    const optional<StringHolder>& getMaxStaminaTableId() const
+    const optional<StringHolder>& getMaxStaminaTableName() const
     {
-        return ensureData().maxStaminaTableId;
+        return ensureData().maxStaminaTableName;
     }
 
     /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するを設定
+     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル名を設定
      *
-     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定する
+     * @param maxStaminaTableName GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル名
      */
-    void setMaxStaminaTableId(StringHolder maxStaminaTableId)
+    void setMaxStaminaTableName(StringHolder maxStaminaTableName)
     {
-        ensureData().maxStaminaTableId.emplace(std::move(maxStaminaTableId));
+        ensureData().maxStaminaTableName.emplace(std::move(maxStaminaTableName));
     }
 
     /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するを設定
+     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル名を設定
      *
-     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定する
+     * @param maxStaminaTableName GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル名
      */
-    StaminaModelMaster& withMaxStaminaTableId(StringHolder maxStaminaTableId)
+    StaminaModelMaster& withMaxStaminaTableName(StringHolder maxStaminaTableName)
     {
-        setMaxStaminaTableId(std::move(maxStaminaTableId));
+        setMaxStaminaTableName(std::move(maxStaminaTableName));
         return *this;
     }
 
     /**
-     * GS2-Experience のランクによってスタミナの回復間隔を決定するを取得
+     * GS2-Experience のランクによってスタミナの回復間隔を決定する回復間隔テーブル名を取得
      *
-     * @return GS2-Experience のランクによってスタミナの回復間隔を決定する
+     * @return GS2-Experience のランクによってスタミナの回復間隔を決定する回復間隔テーブル名
      */
-    const optional<StringHolder>& getRecoverIntervalTableId() const
+    const optional<StringHolder>& getRecoverIntervalTableName() const
     {
-        return ensureData().recoverIntervalTableId;
+        return ensureData().recoverIntervalTableName;
     }
 
     /**
-     * GS2-Experience のランクによってスタミナの回復間隔を決定するを設定
+     * GS2-Experience のランクによってスタミナの回復間隔を決定する回復間隔テーブル名を設定
      *
-     * @param recoverIntervalTableId GS2-Experience のランクによってスタミナの回復間隔を決定する
+     * @param recoverIntervalTableName GS2-Experience のランクによってスタミナの回復間隔を決定する回復間隔テーブル名
      */
-    void setRecoverIntervalTableId(StringHolder recoverIntervalTableId)
+    void setRecoverIntervalTableName(StringHolder recoverIntervalTableName)
     {
-        ensureData().recoverIntervalTableId.emplace(std::move(recoverIntervalTableId));
+        ensureData().recoverIntervalTableName.emplace(std::move(recoverIntervalTableName));
     }
 
     /**
-     * GS2-Experience のランクによってスタミナの回復間隔を決定するを設定
+     * GS2-Experience のランクによってスタミナの回復間隔を決定する回復間隔テーブル名を設定
      *
-     * @param recoverIntervalTableId GS2-Experience のランクによってスタミナの回復間隔を決定する
+     * @param recoverIntervalTableName GS2-Experience のランクによってスタミナの回復間隔を決定する回復間隔テーブル名
      */
-    StaminaModelMaster& withRecoverIntervalTableId(StringHolder recoverIntervalTableId)
+    StaminaModelMaster& withRecoverIntervalTableName(StringHolder recoverIntervalTableName)
     {
-        setRecoverIntervalTableId(std::move(recoverIntervalTableId));
+        setRecoverIntervalTableName(std::move(recoverIntervalTableName));
         return *this;
     }
 
     /**
-     * GS2-Experience のランクによってスタミナの回復量を決定するを取得
+     * GS2-Experience のランクによってスタミナの回復量を決定する回復量テーブル名を取得
      *
-     * @return GS2-Experience のランクによってスタミナの回復量を決定する
+     * @return GS2-Experience のランクによってスタミナの回復量を決定する回復量テーブル名
      */
-    const optional<StringHolder>& getRecoverValueTableId() const
+    const optional<StringHolder>& getRecoverValueTableName() const
     {
-        return ensureData().recoverValueTableId;
+        return ensureData().recoverValueTableName;
     }
 
     /**
-     * GS2-Experience のランクによってスタミナの回復量を決定するを設定
+     * GS2-Experience のランクによってスタミナの回復量を決定する回復量テーブル名を設定
      *
-     * @param recoverValueTableId GS2-Experience のランクによってスタミナの回復量を決定する
+     * @param recoverValueTableName GS2-Experience のランクによってスタミナの回復量を決定する回復量テーブル名
      */
-    void setRecoverValueTableId(StringHolder recoverValueTableId)
+    void setRecoverValueTableName(StringHolder recoverValueTableName)
     {
-        ensureData().recoverValueTableId.emplace(std::move(recoverValueTableId));
+        ensureData().recoverValueTableName.emplace(std::move(recoverValueTableName));
     }
 
     /**
-     * GS2-Experience のランクによってスタミナの回復量を決定するを設定
+     * GS2-Experience のランクによってスタミナの回復量を決定する回復量テーブル名を設定
      *
-     * @param recoverValueTableId GS2-Experience のランクによってスタミナの回復量を決定する
+     * @param recoverValueTableName GS2-Experience のランクによってスタミナの回復量を決定する回復量テーブル名
      */
-    StaminaModelMaster& withRecoverValueTableId(StringHolder recoverValueTableId)
+    StaminaModelMaster& withRecoverValueTableName(StringHolder recoverValueTableName)
     {
-        setRecoverValueTableId(std::move(recoverValueTableId));
+        setRecoverValueTableName(std::move(recoverValueTableName));
         return *this;
     }
 
@@ -713,15 +713,15 @@ inline bool operator!=(const StaminaModelMaster& lhs, const StaminaModelMaster& 
         {
             return true;
         }
-        if (lhs.m_pData->maxStaminaTableId != lhr.m_pData->maxStaminaTableId)
+        if (lhs.m_pData->maxStaminaTableName != lhr.m_pData->maxStaminaTableName)
         {
             return true;
         }
-        if (lhs.m_pData->recoverIntervalTableId != lhr.m_pData->recoverIntervalTableId)
+        if (lhs.m_pData->recoverIntervalTableName != lhr.m_pData->recoverIntervalTableName)
         {
             return true;
         }
-        if (lhs.m_pData->recoverValueTableId != lhr.m_pData->recoverValueTableId)
+        if (lhs.m_pData->recoverValueTableName != lhr.m_pData->recoverValueTableName)
         {
             return true;
         }

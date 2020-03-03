@@ -55,8 +55,6 @@ private:
         optional<StringHolder> description;
         /** カウンター名 */
         optional<StringHolder> counterName;
-        /** リセットタイミング */
-        optional<StringHolder> resetType;
         /** 目標値 */
         optional<Int64> targetValue;
         /** ミッション達成時の報酬 */
@@ -76,7 +74,6 @@ private:
             metadata(data.metadata),
             description(data.description),
             counterName(data.counterName),
-            resetType(data.resetType),
             targetValue(data.targetValue),
             challengePeriodEventId(data.challengePeriodEventId),
             premiseMissionTaskName(data.premiseMissionTaskName)
@@ -314,37 +311,6 @@ public:
     CreateMissionTaskModelMasterRequest& withCounterName(StringHolder counterName)
     {
         ensureData().counterName.emplace(std::move(counterName));
-        return *this;
-    }
-
-    /**
-     * リセットタイミングを取得
-     *
-     * @return リセットタイミング
-     */
-    const optional<StringHolder>& getResetType() const
-    {
-        return ensureData().resetType;
-    }
-
-    /**
-     * リセットタイミングを設定
-     *
-     * @param resetType リセットタイミング
-     */
-    void setResetType(StringHolder resetType)
-    {
-        ensureData().resetType.emplace(std::move(resetType));
-    }
-
-    /**
-     * リセットタイミングを設定
-     *
-     * @param resetType リセットタイミング
-     */
-    CreateMissionTaskModelMasterRequest& withResetType(StringHolder resetType)
-    {
-        ensureData().resetType.emplace(std::move(resetType));
         return *this;
     }
 

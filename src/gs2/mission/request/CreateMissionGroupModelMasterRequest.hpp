@@ -51,6 +51,14 @@ private:
         optional<StringHolder> metadata;
         /** ミッショングループの説明 */
         optional<StringHolder> description;
+        /** リセットタイミング */
+        optional<StringHolder> resetType;
+        /** リセットをする日にち */
+        optional<Int32> resetDayOfMonth;
+        /** リセットする曜日 */
+        optional<StringHolder> resetDayOfWeek;
+        /** リセット時刻 */
+        optional<Int32> resetHour;
         /** ミッションを達成したときの通知先ネームスペース のGRN */
         optional<StringHolder> completeNotificationNamespaceId;
 
@@ -62,6 +70,10 @@ private:
             name(data.name),
             metadata(data.metadata),
             description(data.description),
+            resetType(data.resetType),
+            resetDayOfMonth(data.resetDayOfMonth),
+            resetDayOfWeek(data.resetDayOfWeek),
+            resetHour(data.resetHour),
             completeNotificationNamespaceId(data.completeNotificationNamespaceId)
         {
         }
@@ -231,6 +243,130 @@ public:
     CreateMissionGroupModelMasterRequest& withDescription(StringHolder description)
     {
         ensureData().description.emplace(std::move(description));
+        return *this;
+    }
+
+    /**
+     * リセットタイミングを取得
+     *
+     * @return リセットタイミング
+     */
+    const optional<StringHolder>& getResetType() const
+    {
+        return ensureData().resetType;
+    }
+
+    /**
+     * リセットタイミングを設定
+     *
+     * @param resetType リセットタイミング
+     */
+    void setResetType(StringHolder resetType)
+    {
+        ensureData().resetType.emplace(std::move(resetType));
+    }
+
+    /**
+     * リセットタイミングを設定
+     *
+     * @param resetType リセットタイミング
+     */
+    CreateMissionGroupModelMasterRequest& withResetType(StringHolder resetType)
+    {
+        ensureData().resetType.emplace(std::move(resetType));
+        return *this;
+    }
+
+    /**
+     * リセットをする日にちを取得
+     *
+     * @return リセットをする日にち
+     */
+    const optional<Int32>& getResetDayOfMonth() const
+    {
+        return ensureData().resetDayOfMonth;
+    }
+
+    /**
+     * リセットをする日にちを設定
+     *
+     * @param resetDayOfMonth リセットをする日にち
+     */
+    void setResetDayOfMonth(Int32 resetDayOfMonth)
+    {
+        ensureData().resetDayOfMonth.emplace(resetDayOfMonth);
+    }
+
+    /**
+     * リセットをする日にちを設定
+     *
+     * @param resetDayOfMonth リセットをする日にち
+     */
+    CreateMissionGroupModelMasterRequest& withResetDayOfMonth(Int32 resetDayOfMonth)
+    {
+        ensureData().resetDayOfMonth.emplace(resetDayOfMonth);
+        return *this;
+    }
+
+    /**
+     * リセットする曜日を取得
+     *
+     * @return リセットする曜日
+     */
+    const optional<StringHolder>& getResetDayOfWeek() const
+    {
+        return ensureData().resetDayOfWeek;
+    }
+
+    /**
+     * リセットする曜日を設定
+     *
+     * @param resetDayOfWeek リセットする曜日
+     */
+    void setResetDayOfWeek(StringHolder resetDayOfWeek)
+    {
+        ensureData().resetDayOfWeek.emplace(std::move(resetDayOfWeek));
+    }
+
+    /**
+     * リセットする曜日を設定
+     *
+     * @param resetDayOfWeek リセットする曜日
+     */
+    CreateMissionGroupModelMasterRequest& withResetDayOfWeek(StringHolder resetDayOfWeek)
+    {
+        ensureData().resetDayOfWeek.emplace(std::move(resetDayOfWeek));
+        return *this;
+    }
+
+    /**
+     * リセット時刻を取得
+     *
+     * @return リセット時刻
+     */
+    const optional<Int32>& getResetHour() const
+    {
+        return ensureData().resetHour;
+    }
+
+    /**
+     * リセット時刻を設定
+     *
+     * @param resetHour リセット時刻
+     */
+    void setResetHour(Int32 resetHour)
+    {
+        ensureData().resetHour.emplace(resetHour);
+    }
+
+    /**
+     * リセット時刻を設定
+     *
+     * @param resetHour リセット時刻
+     */
+    CreateMissionGroupModelMasterRequest& withResetHour(Int32 resetHour)
+    {
+        ensureData().resetHour.emplace(resetHour);
         return *this;
     }
 

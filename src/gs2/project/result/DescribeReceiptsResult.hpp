@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_MONEY_CONTROL_DESCRIBEWALLETDETAILSBYUSERIDRESULT_HPP_
-#define GS2_MONEY_CONTROL_DESCRIBEWALLETDETAILSBYUSERIDRESULT_HPP_
+#ifndef GS2_PROJECT_CONTROL_DESCRIBERECEIPTSRESULT_HPP_
+#define GS2_PROJECT_CONTROL_DESCRIBERECEIPTSRESULT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
@@ -25,25 +25,25 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
-#include <gs2/money/model/model.hpp>
+#include <gs2/project/model/model.hpp>
 #include <memory>
 
-namespace gs2 { namespace money
+namespace gs2 { namespace project
 {
 
 /**
- * ウォレットの詳細を取得します のレスポンスモデル
+ * 領収書の一覧を取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
-class DescribeWalletDetailsByUserIdResult : public Gs2Object
+class DescribeReceiptsResult : public Gs2Object
 {
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ウォレットの詳細のリスト */
-        optional<List<WalletDetail>> items;
+        /** 領収書のリスト */
+        optional<List<Receipt>> items;
         /** リストの続きを取得するためのページトークン */
         optional<StringHolder> nextPageToken;
 
@@ -75,7 +75,7 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->items.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        WalletDetail item;
+                        Receipt item;
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
                         *this->items += std::move(item);
                     }
@@ -94,44 +94,44 @@ private:
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DescribeWalletDetailsByUserIdResult() = default;
-    DescribeWalletDetailsByUserIdResult(const DescribeWalletDetailsByUserIdResult& describeWalletDetailsByUserIdResult) = default;
-    DescribeWalletDetailsByUserIdResult(DescribeWalletDetailsByUserIdResult&& describeWalletDetailsByUserIdResult) = default;
-    ~DescribeWalletDetailsByUserIdResult() = default;
+    DescribeReceiptsResult() = default;
+    DescribeReceiptsResult(const DescribeReceiptsResult& describeReceiptsResult) = default;
+    DescribeReceiptsResult(DescribeReceiptsResult&& describeReceiptsResult) = default;
+    ~DescribeReceiptsResult() = default;
 
-    DescribeWalletDetailsByUserIdResult& operator=(const DescribeWalletDetailsByUserIdResult& describeWalletDetailsByUserIdResult) = default;
-    DescribeWalletDetailsByUserIdResult& operator=(DescribeWalletDetailsByUserIdResult&& describeWalletDetailsByUserIdResult) = default;
+    DescribeReceiptsResult& operator=(const DescribeReceiptsResult& describeReceiptsResult) = default;
+    DescribeReceiptsResult& operator=(DescribeReceiptsResult&& describeReceiptsResult) = default;
 
-    DescribeWalletDetailsByUserIdResult deepCopy() const
+    DescribeReceiptsResult deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeWalletDetailsByUserIdResult);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeReceiptsResult);
     }
 
-    const DescribeWalletDetailsByUserIdResult* operator->() const
+    const DescribeReceiptsResult* operator->() const
     {
         return this;
     }
 
-    DescribeWalletDetailsByUserIdResult* operator->()
+    DescribeReceiptsResult* operator->()
     {
         return this;
     }
     /**
-     * ウォレットの詳細のリストを取得
+     * 領収書のリストを取得
      *
-     * @return ウォレットの詳細のリスト
+     * @return 領収書のリスト
      */
-    const optional<List<WalletDetail>>& getItems() const
+    const optional<List<Receipt>>& getItems() const
     {
         return ensureData().items;
     }
 
     /**
-     * ウォレットの詳細のリストを設定
+     * 領収書のリストを設定
      *
-     * @param items ウォレットの詳細のリスト
+     * @param items 領収書のリスト
      */
-    void setItems(List<WalletDetail> items)
+    void setItems(List<Receipt> items)
     {
         ensureData().items.emplace(std::move(items));
     }
@@ -163,8 +163,8 @@ public:
     }
 };
 
-typedef AsyncResult<DescribeWalletDetailsByUserIdResult> AsyncDescribeWalletDetailsByUserIdResult;
+typedef AsyncResult<DescribeReceiptsResult> AsyncDescribeReceiptsResult;
 
 } }
 
-#endif //GS2_MONEY_CONTROL_DESCRIBEWALLETDETAILSBYUSERIDRESULT_HPP_
+#endif //GS2_PROJECT_CONTROL_DESCRIBERECEIPTSRESULT_HPP_

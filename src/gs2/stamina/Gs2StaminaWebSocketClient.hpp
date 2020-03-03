@@ -629,20 +629,20 @@ private:
                 jsonWriter.writePropertyName("maxCapacity");
                 jsonWriter.writeInt32(*m_Request.getMaxCapacity());
             }
-            if (m_Request.getMaxStaminaTableId())
+            if (m_Request.getMaxStaminaTableName())
             {
-                jsonWriter.writePropertyName("maxStaminaTableId");
-                jsonWriter.writeCharArray(*m_Request.getMaxStaminaTableId());
+                jsonWriter.writePropertyName("maxStaminaTableName");
+                jsonWriter.writeCharArray(*m_Request.getMaxStaminaTableName());
             }
-            if (m_Request.getRecoverIntervalTableId())
+            if (m_Request.getRecoverIntervalTableName())
             {
-                jsonWriter.writePropertyName("recoverIntervalTableId");
-                jsonWriter.writeCharArray(*m_Request.getRecoverIntervalTableId());
+                jsonWriter.writePropertyName("recoverIntervalTableName");
+                jsonWriter.writeCharArray(*m_Request.getRecoverIntervalTableName());
             }
-            if (m_Request.getRecoverValueTableId())
+            if (m_Request.getRecoverValueTableName())
             {
-                jsonWriter.writePropertyName("recoverValueTableId");
-                jsonWriter.writeCharArray(*m_Request.getRecoverValueTableId());
+                jsonWriter.writePropertyName("recoverValueTableName");
+                jsonWriter.writeCharArray(*m_Request.getRecoverValueTableName());
             }
             if (m_Request.getRequestId())
             {
@@ -791,20 +791,20 @@ private:
                 jsonWriter.writePropertyName("maxCapacity");
                 jsonWriter.writeInt32(*m_Request.getMaxCapacity());
             }
-            if (m_Request.getMaxStaminaTableId())
+            if (m_Request.getMaxStaminaTableName())
             {
-                jsonWriter.writePropertyName("maxStaminaTableId");
-                jsonWriter.writeCharArray(*m_Request.getMaxStaminaTableId());
+                jsonWriter.writePropertyName("maxStaminaTableName");
+                jsonWriter.writeCharArray(*m_Request.getMaxStaminaTableName());
             }
-            if (m_Request.getRecoverIntervalTableId())
+            if (m_Request.getRecoverIntervalTableName())
             {
-                jsonWriter.writePropertyName("recoverIntervalTableId");
-                jsonWriter.writeCharArray(*m_Request.getRecoverIntervalTableId());
+                jsonWriter.writePropertyName("recoverIntervalTableName");
+                jsonWriter.writeCharArray(*m_Request.getRecoverIntervalTableName());
             }
-            if (m_Request.getRecoverValueTableId())
+            if (m_Request.getRecoverValueTableName())
             {
-                jsonWriter.writePropertyName("recoverValueTableId");
-                jsonWriter.writeCharArray(*m_Request.getRecoverValueTableId());
+                jsonWriter.writePropertyName("recoverValueTableName");
+                jsonWriter.writeCharArray(*m_Request.getRecoverValueTableName());
             }
             if (m_Request.getRequestId())
             {
@@ -3845,20 +3845,20 @@ protected:
             jsonWriter.writePropertyName("maxCapacity");
             jsonWriter.writeInt32(*obj.getMaxCapacity());
         }
-        if (obj.getMaxStaminaTableId())
+        if (obj.getMaxStaminaTableName())
         {
-            jsonWriter.writePropertyName("maxStaminaTableId");
-            jsonWriter.writeCharArray(*obj.getMaxStaminaTableId());
+            jsonWriter.writePropertyName("maxStaminaTableName");
+            jsonWriter.writeCharArray(*obj.getMaxStaminaTableName());
         }
-        if (obj.getRecoverIntervalTableId())
+        if (obj.getRecoverIntervalTableName())
         {
-            jsonWriter.writePropertyName("recoverIntervalTableId");
-            jsonWriter.writeCharArray(*obj.getRecoverIntervalTableId());
+            jsonWriter.writePropertyName("recoverIntervalTableName");
+            jsonWriter.writeCharArray(*obj.getRecoverIntervalTableName());
         }
-        if (obj.getRecoverValueTableId())
+        if (obj.getRecoverValueTableName())
         {
-            jsonWriter.writePropertyName("recoverValueTableId");
-            jsonWriter.writeCharArray(*obj.getRecoverValueTableId());
+            jsonWriter.writePropertyName("recoverValueTableName");
+            jsonWriter.writeCharArray(*obj.getRecoverValueTableName());
         }
         if (obj.getCreatedAt())
         {

@@ -45,8 +45,8 @@ private:
     public:
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
-        /** 抽選モデルの種類名 */
-        optional<StringHolder> lotteryName;
+        /** 排出確率テーブル名 */
+        optional<StringHolder> prizeTableName;
         /** ユーザーID */
         optional<StringHolder> userId;
         /** 重複実行回避機能に使用するID */
@@ -57,7 +57,7 @@ private:
         Data(const Data& data) :
             Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
-            lotteryName(data.lotteryName),
+            prizeTableName(data.prizeTableName),
             userId(data.userId),
             duplicationAvoider(data.duplicationAvoider)
         {
@@ -139,33 +139,33 @@ public:
     }
 
     /**
-     * 抽選モデルの種類名を取得
+     * 排出確率テーブル名を取得
      *
-     * @return 抽選モデルの種類名
+     * @return 排出確率テーブル名
      */
-    const optional<StringHolder>& getLotteryName() const
+    const optional<StringHolder>& getPrizeTableName() const
     {
-        return ensureData().lotteryName;
+        return ensureData().prizeTableName;
     }
 
     /**
-     * 抽選モデルの種類名を設定
+     * 排出確率テーブル名を設定
      *
-     * @param lotteryName 抽選モデルの種類名
+     * @param prizeTableName 排出確率テーブル名
      */
-    void setLotteryName(StringHolder lotteryName)
+    void setPrizeTableName(StringHolder prizeTableName)
     {
-        ensureData().lotteryName.emplace(std::move(lotteryName));
+        ensureData().prizeTableName.emplace(std::move(prizeTableName));
     }
 
     /**
-     * 抽選モデルの種類名を設定
+     * 排出確率テーブル名を設定
      *
-     * @param lotteryName 抽選モデルの種類名
+     * @param prizeTableName 排出確率テーブル名
      */
-    GetBoxByUserIdRequest& withLotteryName(StringHolder lotteryName)
+    GetBoxByUserIdRequest& withPrizeTableName(StringHolder prizeTableName)
     {
-        ensureData().lotteryName.emplace(std::move(lotteryName));
+        ensureData().prizeTableName.emplace(std::move(prizeTableName));
         return *this;
     }
 

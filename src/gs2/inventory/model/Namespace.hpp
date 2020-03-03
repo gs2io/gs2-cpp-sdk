@@ -51,7 +51,7 @@ private:
         optional<StringHolder> namespaceId;
         /** オーナーID */
         optional<StringHolder> ownerId;
-        /** カテゴリー名 */
+        /** ネームスペース名 */
         optional<StringHolder> name;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
@@ -275,9 +275,9 @@ public:
     }
 
     /**
-     * カテゴリー名を取得
+     * ネームスペース名を取得
      *
-     * @return カテゴリー名
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getName() const
     {
@@ -285,9 +285,9 @@ public:
     }
 
     /**
-     * カテゴリー名を設定
+     * ネームスペース名を設定
      *
-     * @param name カテゴリー名
+     * @param name ネームスペース名
      */
     void setName(StringHolder name)
     {
@@ -295,9 +295,9 @@ public:
     }
 
     /**
-     * カテゴリー名を設定
+     * ネームスペース名を設定
      *
-     * @param name カテゴリー名
+     * @param name ネームスペース名
      */
     Namespace& withName(StringHolder name)
     {

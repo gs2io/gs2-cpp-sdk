@@ -21,9 +21,9 @@
 #include "notification.hpp"
 #include "Namespace.hpp"
 #include "Wallet.hpp"
-#include "WalletDetail.hpp"
 #include "Receipt.hpp"
 #include "ResponseCache.hpp"
+#include "WalletDetail.hpp"
 #include "ScriptSetting.hpp"
 #include "LogSetting.hpp"
 

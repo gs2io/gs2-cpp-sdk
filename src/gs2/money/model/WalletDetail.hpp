@@ -43,32 +43,17 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** ウォレットの詳細 */
-        optional<StringHolder> walletDetailId;
-        /** ユーザーID */
-        optional<StringHolder> userId;
-        /** None */
-        optional<Int32> slot;
         /** 単価 */
         optional<Float> price;
         /** 所持量 */
         optional<Int32> count;
-        /** 作成日時 */
-        optional<Int64> createdAt;
-        /** 最終更新日時 */
-        optional<Int64> updatedAt;
 
         Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            walletDetailId(data.walletDetailId),
-            userId(data.userId),
-            slot(data.slot),
             price(data.price),
-            count(data.count),
-            createdAt(data.createdAt),
-            updatedAt(data.updatedAt)
+            count(data.count)
         {
         }
 
@@ -81,28 +66,7 @@ private:
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "walletDetailId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->walletDetailId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "userId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->userId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "slot") == 0)
-            {
-                if (jsonValue.IsInt())
-                {
-                    this->slot = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "price") == 0)
+            if (std::strcmp(name_, "price") == 0)
             {
                 if (jsonValue.IsFloat())
                 {
@@ -114,20 +78,6 @@ private:
                 if (jsonValue.IsInt())
                 {
                     this->count = jsonValue.GetInt();
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "updatedAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -158,99 +108,6 @@ public:
     {
         return this;
     }
-    /**
-     * ウォレットの詳細を取得
-     *
-     * @return ウォレットの詳細
-     */
-    const optional<StringHolder>& getWalletDetailId() const
-    {
-        return ensureData().walletDetailId;
-    }
-
-    /**
-     * ウォレットの詳細を設定
-     *
-     * @param walletDetailId ウォレットの詳細
-     */
-    void setWalletDetailId(StringHolder walletDetailId)
-    {
-        ensureData().walletDetailId.emplace(std::move(walletDetailId));
-    }
-
-    /**
-     * ウォレットの詳細を設定
-     *
-     * @param walletDetailId ウォレットの詳細
-     */
-    WalletDetail& withWalletDetailId(StringHolder walletDetailId)
-    {
-        setWalletDetailId(std::move(walletDetailId));
-        return *this;
-    }
-
-    /**
-     * ユーザーIDを取得
-     *
-     * @return ユーザーID
-     */
-    const optional<StringHolder>& getUserId() const
-    {
-        return ensureData().userId;
-    }
-
-    /**
-     * ユーザーIDを設定
-     *
-     * @param userId ユーザーID
-     */
-    void setUserId(StringHolder userId)
-    {
-        ensureData().userId.emplace(std::move(userId));
-    }
-
-    /**
-     * ユーザーIDを設定
-     *
-     * @param userId ユーザーID
-     */
-    WalletDetail& withUserId(StringHolder userId)
-    {
-        setUserId(std::move(userId));
-        return *this;
-    }
-
-    /**
-     * Noneを取得
-     *
-     * @return None
-     */
-    const optional<Int32>& getSlot() const
-    {
-        return ensureData().slot;
-    }
-
-    /**
-     * Noneを設定
-     *
-     * @param slot None
-     */
-    void setSlot(Int32 slot)
-    {
-        ensureData().slot.emplace(slot);
-    }
-
-    /**
-     * Noneを設定
-     *
-     * @param slot None
-     */
-    WalletDetail& withSlot(Int32 slot)
-    {
-        setSlot(slot);
-        return *this;
-    }
-
     /**
      * 単価を取得
      *
@@ -313,68 +170,6 @@ public:
         return *this;
     }
 
-    /**
-     * 作成日時を取得
-     *
-     * @return 作成日時
-     */
-    const optional<Int64>& getCreatedAt() const
-    {
-        return ensureData().createdAt;
-    }
-
-    /**
-     * 作成日時を設定
-     *
-     * @param createdAt 作成日時
-     */
-    void setCreatedAt(Int64 createdAt)
-    {
-        ensureData().createdAt.emplace(createdAt);
-    }
-
-    /**
-     * 作成日時を設定
-     *
-     * @param createdAt 作成日時
-     */
-    WalletDetail& withCreatedAt(Int64 createdAt)
-    {
-        setCreatedAt(createdAt);
-        return *this;
-    }
-
-    /**
-     * 最終更新日時を取得
-     *
-     * @return 最終更新日時
-     */
-    const optional<Int64>& getUpdatedAt() const
-    {
-        return ensureData().updatedAt;
-    }
-
-    /**
-     * 最終更新日時を設定
-     *
-     * @param updatedAt 最終更新日時
-     */
-    void setUpdatedAt(Int64 updatedAt)
-    {
-        ensureData().updatedAt.emplace(updatedAt);
-    }
-
-    /**
-     * 最終更新日時を設定
-     *
-     * @param updatedAt 最終更新日時
-     */
-    WalletDetail& withUpdatedAt(Int64 updatedAt)
-    {
-        setUpdatedAt(updatedAt);
-        return *this;
-    }
-
 
     detail::json::IModel& getModel()
     {
@@ -390,31 +185,11 @@ inline bool operator!=(const WalletDetail& lhs, const WalletDetail& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->walletDetailId != lhr.m_pData->walletDetailId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->userId != lhr.m_pData->userId)
-        {
-            return true;
-        }
-        if (lhs.m_pData->slot != lhr.m_pData->slot)
-        {
-            return true;
-        }
         if (lhs.m_pData->price != lhr.m_pData->price)
         {
             return true;
         }
         if (lhs.m_pData->count != lhr.m_pData->count)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

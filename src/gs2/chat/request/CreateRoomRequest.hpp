@@ -47,6 +47,8 @@ private:
         optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
+        /** ルーム名 */
+        optional<StringHolder> name;
         /** メタデータ */
         optional<StringHolder> metadata;
         /** メッセージを投稿するために必要となるパスワード */
@@ -62,6 +64,7 @@ private:
             Gs2BasicRequest::Data(data),
             accessToken(data.accessToken),
             namespaceName(data.namespaceName),
+            name(data.name),
             metadata(data.metadata),
             password(data.password),
             duplicationAvoider(data.duplicationAvoider)
@@ -176,6 +179,37 @@ public:
     CreateRoomRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
+        return *this;
+    }
+
+    /**
+     * ルーム名を取得
+     *
+     * @return ルーム名
+     */
+    const optional<StringHolder>& getName() const
+    {
+        return ensureData().name;
+    }
+
+    /**
+     * ルーム名を設定
+     *
+     * @param name ルーム名
+     */
+    void setName(StringHolder name)
+    {
+        ensureData().name.emplace(std::move(name));
+    }
+
+    /**
+     * ルーム名を設定
+     *
+     * @param name ルーム名
+     */
+    CreateRoomRequest& withName(StringHolder name)
+    {
+        ensureData().name.emplace(std::move(name));
         return *this;
     }
 

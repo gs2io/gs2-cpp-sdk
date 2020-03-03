@@ -60,6 +60,8 @@ private:
         optional<Int64> receivedAt;
         /** 最終更新日時 */
         optional<Int64> readAt;
+        /** メッセージの有効期限 */
+        optional<Int64> expiresAt;
 
         Data() = default;
 
@@ -71,7 +73,8 @@ private:
             metadata(data.metadata),
             isRead(data.isRead),
             receivedAt(data.receivedAt),
-            readAt(data.readAt)
+            readAt(data.readAt),
+            expiresAt(data.expiresAt)
         {
             if (data.readAcquireActions)
             {
@@ -148,6 +151,13 @@ private:
                 if (jsonValue.IsInt64())
                 {
                     this->readAt = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name_, "expiresAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->expiresAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -426,6 +436,37 @@ public:
         return *this;
     }
 
+    /**
+     * メッセージの有効期限を取得
+     *
+     * @return メッセージの有効期限
+     */
+    const optional<Int64>& getExpiresAt() const
+    {
+        return ensureData().expiresAt;
+    }
+
+    /**
+     * メッセージの有効期限を設定
+     *
+     * @param expiresAt メッセージの有効期限
+     */
+    void setExpiresAt(Int64 expiresAt)
+    {
+        ensureData().expiresAt.emplace(expiresAt);
+    }
+
+    /**
+     * メッセージの有効期限を設定
+     *
+     * @param expiresAt メッセージの有効期限
+     */
+    Message& withExpiresAt(Int64 expiresAt)
+    {
+        setExpiresAt(expiresAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
@@ -470,6 +511,10 @@ inline bool operator!=(const Message& lhs, const Message& lhr)
             return true;
         }
         if (lhs.m_pData->readAt != lhr.m_pData->readAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->expiresAt != lhr.m_pData->expiresAt)
         {
             return true;
         }

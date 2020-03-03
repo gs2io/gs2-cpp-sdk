@@ -44,7 +44,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** インベントリモデルマスター */
+        /** インベントリモデル */
         optional<StringHolder> inventoryModelId;
         /** インベントリの種類名 */
         optional<StringHolder> name;
@@ -159,9 +159,9 @@ public:
         return this;
     }
     /**
-     * インベントリモデルマスターを取得
+     * インベントリモデルを取得
      *
-     * @return インベントリモデルマスター
+     * @return インベントリモデル
      */
     const optional<StringHolder>& getInventoryModelId() const
     {
@@ -169,9 +169,9 @@ public:
     }
 
     /**
-     * インベントリモデルマスターを設定
+     * インベントリモデルを設定
      *
-     * @param inventoryModelId インベントリモデルマスター
+     * @param inventoryModelId インベントリモデル
      */
     void setInventoryModelId(StringHolder inventoryModelId)
     {
@@ -179,9 +179,9 @@ public:
     }
 
     /**
-     * インベントリモデルマスターを設定
+     * インベントリモデルを設定
      *
-     * @param inventoryModelId インベントリモデルマスター
+     * @param inventoryModelId インベントリモデル
      */
     InventoryModel& withInventoryModelId(StringHolder inventoryModelId)
     {

@@ -51,6 +51,14 @@ private:
         optional<StringHolder> metadata;
         /** ミッショングループの説明 */
         optional<StringHolder> description;
+        /** リセットタイミング */
+        optional<StringHolder> resetType;
+        /** リセットをする日にち */
+        optional<Int32> resetDayOfMonth;
+        /** リセットする曜日 */
+        optional<StringHolder> resetDayOfWeek;
+        /** リセット時刻 */
+        optional<Int32> resetHour;
         /** ミッションを達成したときの通知先ネームスペース のGRN */
         optional<StringHolder> completeNotificationNamespaceId;
         /** 作成日時 */
@@ -66,6 +74,10 @@ private:
             name(data.name),
             metadata(data.metadata),
             description(data.description),
+            resetType(data.resetType),
+            resetDayOfMonth(data.resetDayOfMonth),
+            resetDayOfWeek(data.resetDayOfWeek),
+            resetHour(data.resetHour),
             completeNotificationNamespaceId(data.completeNotificationNamespaceId),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
@@ -107,6 +119,34 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "resetType") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->resetType.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "resetDayOfMonth") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->resetDayOfMonth = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "resetDayOfWeek") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->resetDayOfWeek.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "resetHour") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->resetHour = jsonValue.GetInt();
                 }
             }
             else if (std::strcmp(name_, "completeNotificationNamespaceId") == 0)
@@ -283,6 +323,130 @@ public:
     }
 
     /**
+     * リセットタイミングを取得
+     *
+     * @return リセットタイミング
+     */
+    const optional<StringHolder>& getResetType() const
+    {
+        return ensureData().resetType;
+    }
+
+    /**
+     * リセットタイミングを設定
+     *
+     * @param resetType リセットタイミング
+     */
+    void setResetType(StringHolder resetType)
+    {
+        ensureData().resetType.emplace(std::move(resetType));
+    }
+
+    /**
+     * リセットタイミングを設定
+     *
+     * @param resetType リセットタイミング
+     */
+    MissionGroupModelMaster& withResetType(StringHolder resetType)
+    {
+        setResetType(std::move(resetType));
+        return *this;
+    }
+
+    /**
+     * リセットをする日にちを取得
+     *
+     * @return リセットをする日にち
+     */
+    const optional<Int32>& getResetDayOfMonth() const
+    {
+        return ensureData().resetDayOfMonth;
+    }
+
+    /**
+     * リセットをする日にちを設定
+     *
+     * @param resetDayOfMonth リセットをする日にち
+     */
+    void setResetDayOfMonth(Int32 resetDayOfMonth)
+    {
+        ensureData().resetDayOfMonth.emplace(resetDayOfMonth);
+    }
+
+    /**
+     * リセットをする日にちを設定
+     *
+     * @param resetDayOfMonth リセットをする日にち
+     */
+    MissionGroupModelMaster& withResetDayOfMonth(Int32 resetDayOfMonth)
+    {
+        setResetDayOfMonth(resetDayOfMonth);
+        return *this;
+    }
+
+    /**
+     * リセットする曜日を取得
+     *
+     * @return リセットする曜日
+     */
+    const optional<StringHolder>& getResetDayOfWeek() const
+    {
+        return ensureData().resetDayOfWeek;
+    }
+
+    /**
+     * リセットする曜日を設定
+     *
+     * @param resetDayOfWeek リセットする曜日
+     */
+    void setResetDayOfWeek(StringHolder resetDayOfWeek)
+    {
+        ensureData().resetDayOfWeek.emplace(std::move(resetDayOfWeek));
+    }
+
+    /**
+     * リセットする曜日を設定
+     *
+     * @param resetDayOfWeek リセットする曜日
+     */
+    MissionGroupModelMaster& withResetDayOfWeek(StringHolder resetDayOfWeek)
+    {
+        setResetDayOfWeek(std::move(resetDayOfWeek));
+        return *this;
+    }
+
+    /**
+     * リセット時刻を取得
+     *
+     * @return リセット時刻
+     */
+    const optional<Int32>& getResetHour() const
+    {
+        return ensureData().resetHour;
+    }
+
+    /**
+     * リセット時刻を設定
+     *
+     * @param resetHour リセット時刻
+     */
+    void setResetHour(Int32 resetHour)
+    {
+        ensureData().resetHour.emplace(resetHour);
+    }
+
+    /**
+     * リセット時刻を設定
+     *
+     * @param resetHour リセット時刻
+     */
+    MissionGroupModelMaster& withResetHour(Int32 resetHour)
+    {
+        setResetHour(resetHour);
+        return *this;
+    }
+
+    /**
      * ミッションを達成したときの通知先ネームスペース のGRNを取得
      *
      * @return ミッションを達成したときの通知先ネームスペース のGRN
@@ -403,6 +567,22 @@ inline bool operator!=(const MissionGroupModelMaster& lhs, const MissionGroupMod
             return true;
         }
         if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->resetType != lhr.m_pData->resetType)
+        {
+            return true;
+        }
+        if (lhs.m_pData->resetDayOfMonth != lhr.m_pData->resetDayOfMonth)
+        {
+            return true;
+        }
+        if (lhs.m_pData->resetDayOfWeek != lhr.m_pData->resetDayOfWeek)
+        {
+            return true;
+        }
+        if (lhs.m_pData->resetHour != lhr.m_pData->resetHour)
         {
             return true;
         }

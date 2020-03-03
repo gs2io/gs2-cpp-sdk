@@ -45,6 +45,8 @@ private:
     public:
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
+        /** ルーム名 */
+        optional<StringHolder> name;
         /** ユーザID */
         optional<StringHolder> userId;
         /** メタデータ */
@@ -61,6 +63,7 @@ private:
         Data(const Data& data) :
             Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
+            name(data.name),
             userId(data.userId),
             metadata(data.metadata),
             password(data.password),
@@ -144,6 +147,37 @@ public:
     CreateRoomFromBackendRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
+        return *this;
+    }
+
+    /**
+     * ルーム名を取得
+     *
+     * @return ルーム名
+     */
+    const optional<StringHolder>& getName() const
+    {
+        return ensureData().name;
+    }
+
+    /**
+     * ルーム名を設定
+     *
+     * @param name ルーム名
+     */
+    void setName(StringHolder name)
+    {
+        ensureData().name.emplace(std::move(name));
+    }
+
+    /**
+     * ルーム名を設定
+     *
+     * @param name ルーム名
+     */
+    CreateRoomFromBackendRequest& withName(StringHolder name)
+    {
+        ensureData().name.emplace(std::move(name));
         return *this;
     }
 
