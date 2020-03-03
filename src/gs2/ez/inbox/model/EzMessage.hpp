@@ -56,6 +56,8 @@ private:
         gs2::optional<Int64> receivedAt;
         /** 最終更新日時 */
         gs2::optional<Int64> readAt;
+        /** メッセージの有効期限 */
+        gs2::optional<Int64> expiresAt;
 
         Data() = default;
         Data(const Data& data);
@@ -123,6 +125,11 @@ public:
         return *ensureData().readAt;
     }
 
+    Int64 getExpiresAt() const
+    {
+        return *ensureData().expiresAt;
+    }
+
     // ========================================
     //   Setters
     // ========================================
@@ -160,6 +167,11 @@ public:
     void setReadAt(Int64 readAt)
     {
         ensureData().readAt = readAt;
+    }
+
+    void setExpiresAt(Int64 expiresAt)
+    {
+        ensureData().expiresAt = expiresAt;
     }
 
     EzMessage& withMessageId(StringHolder messageId)
@@ -201,6 +213,12 @@ public:
     EzMessage& withReadAt(Int64 readAt)
     {
         setReadAt(readAt);
+        return *this;
+    }
+
+    EzMessage& withExpiresAt(Int64 expiresAt)
+    {
+        setExpiresAt(expiresAt);
         return *this;
     }
 };

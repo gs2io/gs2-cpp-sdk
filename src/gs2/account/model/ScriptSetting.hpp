@@ -45,6 +45,8 @@ private:
     public:
         /** 実行前に使用する GS2-Script のスクリプト のGRN */
         optional<StringHolder> triggerScriptId;
+        /** 完了通知の通知先 */
+        optional<StringHolder> doneTriggerTargetType;
         /** 完了時に使用する GS2-Script のスクリプト のGRN */
         optional<StringHolder> doneTriggerScriptId;
         /** 完了時に使用する GS2-JobQueue のネームスペース のGRN */
@@ -55,6 +57,7 @@ private:
         Data(const Data& data) :
             detail::json::IModel(data),
             triggerScriptId(data.triggerScriptId),
+            doneTriggerTargetType(data.doneTriggerTargetType),
             doneTriggerScriptId(data.doneTriggerScriptId),
             doneTriggerQueueNamespaceId(data.doneTriggerQueueNamespaceId)
         {
@@ -74,6 +77,13 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->triggerScriptId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "doneTriggerTargetType") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->doneTriggerTargetType.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "doneTriggerScriptId") == 0)
@@ -146,6 +156,37 @@ public:
     ScriptSetting& withTriggerScriptId(StringHolder triggerScriptId)
     {
         setTriggerScriptId(std::move(triggerScriptId));
+        return *this;
+    }
+
+    /**
+     * 完了通知の通知先を取得
+     *
+     * @return 完了通知の通知先
+     */
+    const optional<StringHolder>& getDoneTriggerTargetType() const
+    {
+        return ensureData().doneTriggerTargetType;
+    }
+
+    /**
+     * 完了通知の通知先を設定
+     *
+     * @param doneTriggerTargetType 完了通知の通知先
+     */
+    void setDoneTriggerTargetType(StringHolder doneTriggerTargetType)
+    {
+        ensureData().doneTriggerTargetType.emplace(std::move(doneTriggerTargetType));
+    }
+
+    /**
+     * 完了通知の通知先を設定
+     *
+     * @param doneTriggerTargetType 完了通知の通知先
+     */
+    ScriptSetting& withDoneTriggerTargetType(StringHolder doneTriggerTargetType)
+    {
+        setDoneTriggerTargetType(std::move(doneTriggerTargetType));
         return *this;
     }
 
@@ -227,6 +268,10 @@ inline bool operator!=(const ScriptSetting& lhs, const ScriptSetting& lhr)
             return true;
         }
         if (lhs.m_pData->triggerScriptId != lhr.m_pData->triggerScriptId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->doneTriggerTargetType != lhr.m_pData->doneTriggerTargetType)
         {
             return true;
         }

@@ -14,27 +14,27 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_MONEY_CONTROL_DESCRIBEWALLETDETAILSBYUSERIDREQUEST_HPP_
-#define GS2_MONEY_CONTROL_DESCRIBEWALLETDETAILSBYUSERIDREQUEST_HPP_
+#ifndef GS2_FRIEND_CONTROL_UNREGISTERBLACKLISTBYUSERIDREQUEST_HPP_
+#define GS2_FRIEND_CONTROL_UNREGISTERBLACKLISTBYUSERIDREQUEST_HPP_
 
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
-#include <gs2/money/Gs2MoneyConst.hpp>
-#include <gs2/money/model/model.hpp>
+#include <gs2/friend/Gs2FriendConst.hpp>
+#include <gs2/friend/model/model.hpp>
 #include <memory>
 
-namespace gs2 { namespace money
+namespace gs2 { namespace friend_
 {
 
 /**
- * ウォレットの詳細を取得します のリクエストモデル
+ * ユーザーIDを指定してブラックリストからユーザを削除 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
-class DescribeWalletDetailsByUserIdRequest : public Gs2BasicRequest, public Gs2Money
+class UnregisterBlackListByUserIdRequest : public Gs2BasicRequest, public Gs2Friend
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -43,16 +43,12 @@ private:
     class Data : public Gs2BasicRequest::Data
     {
     public:
-        /** ネームスペースの名前 */
+        /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** ユーザーID */
         optional<StringHolder> userId;
         /** None */
-        optional<Int32> slot;
-        /** データの取得を開始する位置を指定するトークン */
-        optional<StringHolder> pageToken;
-        /** データの取得件数 */
-        optional<Int64> limit;
+        optional<StringHolder> targetUserId;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -62,9 +58,7 @@ private:
             Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             userId(data.userId),
-            slot(data.slot),
-            pageToken(data.pageToken),
-            limit(data.limit),
+            targetUserId(data.targetUserId),
             duplicationAvoider(data.duplicationAvoider)
         {
         }
@@ -90,33 +84,33 @@ private:
     }
 
 public:
-    DescribeWalletDetailsByUserIdRequest() = default;
-    DescribeWalletDetailsByUserIdRequest(const DescribeWalletDetailsByUserIdRequest& describeWalletDetailsByUserIdRequest) = default;
-    DescribeWalletDetailsByUserIdRequest(DescribeWalletDetailsByUserIdRequest&& describeWalletDetailsByUserIdRequest) = default;
-    ~DescribeWalletDetailsByUserIdRequest() GS2_OVERRIDE = default;
+    UnregisterBlackListByUserIdRequest() = default;
+    UnregisterBlackListByUserIdRequest(const UnregisterBlackListByUserIdRequest& unregisterBlackListByUserIdRequest) = default;
+    UnregisterBlackListByUserIdRequest(UnregisterBlackListByUserIdRequest&& unregisterBlackListByUserIdRequest) = default;
+    ~UnregisterBlackListByUserIdRequest() GS2_OVERRIDE = default;
 
-    DescribeWalletDetailsByUserIdRequest& operator=(const DescribeWalletDetailsByUserIdRequest& describeWalletDetailsByUserIdRequest) = default;
-    DescribeWalletDetailsByUserIdRequest& operator=(DescribeWalletDetailsByUserIdRequest&& describeWalletDetailsByUserIdRequest) = default;
+    UnregisterBlackListByUserIdRequest& operator=(const UnregisterBlackListByUserIdRequest& unregisterBlackListByUserIdRequest) = default;
+    UnregisterBlackListByUserIdRequest& operator=(UnregisterBlackListByUserIdRequest&& unregisterBlackListByUserIdRequest) = default;
 
-    DescribeWalletDetailsByUserIdRequest deepCopy() const
+    UnregisterBlackListByUserIdRequest deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeWalletDetailsByUserIdRequest);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UnregisterBlackListByUserIdRequest);
     }
 
-    const DescribeWalletDetailsByUserIdRequest* operator->() const
+    const UnregisterBlackListByUserIdRequest* operator->() const
     {
         return this;
     }
 
-    DescribeWalletDetailsByUserIdRequest* operator->()
+    UnregisterBlackListByUserIdRequest* operator->()
     {
         return this;
     }
 
     /**
-     * ネームスペースの名前を取得
+     * ネームスペース名を取得
      *
-     * @return ネームスペースの名前
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getNamespaceName() const
     {
@@ -124,9 +118,9 @@ public:
     }
 
     /**
-     * ネームスペースの名前を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName ネームスペースの名前
+     * @param namespaceName ネームスペース名
      */
     void setNamespaceName(StringHolder namespaceName)
     {
@@ -134,11 +128,11 @@ public:
     }
 
     /**
-     * ネームスペースの名前を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName ネームスペースの名前
+     * @param namespaceName ネームスペース名
      */
-    DescribeWalletDetailsByUserIdRequest& withNamespaceName(StringHolder namespaceName)
+    UnregisterBlackListByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
@@ -169,7 +163,7 @@ public:
      *
      * @param userId ユーザーID
      */
-    DescribeWalletDetailsByUserIdRequest& withUserId(StringHolder userId)
+    UnregisterBlackListByUserIdRequest& withUserId(StringHolder userId)
     {
         ensureData().userId.emplace(std::move(userId));
         return *this;
@@ -180,91 +174,29 @@ public:
      *
      * @return None
      */
-    const optional<Int32>& getSlot() const
+    const optional<StringHolder>& getTargetUserId() const
     {
-        return ensureData().slot;
+        return ensureData().targetUserId;
     }
 
     /**
      * Noneを設定
      *
-     * @param slot None
+     * @param targetUserId None
      */
-    void setSlot(Int32 slot)
+    void setTargetUserId(StringHolder targetUserId)
     {
-        ensureData().slot.emplace(slot);
+        ensureData().targetUserId.emplace(std::move(targetUserId));
     }
 
     /**
      * Noneを設定
      *
-     * @param slot None
+     * @param targetUserId None
      */
-    DescribeWalletDetailsByUserIdRequest& withSlot(Int32 slot)
+    UnregisterBlackListByUserIdRequest& withTargetUserId(StringHolder targetUserId)
     {
-        ensureData().slot.emplace(slot);
-        return *this;
-    }
-
-    /**
-     * データの取得を開始する位置を指定するトークンを取得
-     *
-     * @return データの取得を開始する位置を指定するトークン
-     */
-    const optional<StringHolder>& getPageToken() const
-    {
-        return ensureData().pageToken;
-    }
-
-    /**
-     * データの取得を開始する位置を指定するトークンを設定
-     *
-     * @param pageToken データの取得を開始する位置を指定するトークン
-     */
-    void setPageToken(StringHolder pageToken)
-    {
-        ensureData().pageToken.emplace(std::move(pageToken));
-    }
-
-    /**
-     * データの取得を開始する位置を指定するトークンを設定
-     *
-     * @param pageToken データの取得を開始する位置を指定するトークン
-     */
-    DescribeWalletDetailsByUserIdRequest& withPageToken(StringHolder pageToken)
-    {
-        ensureData().pageToken.emplace(std::move(pageToken));
-        return *this;
-    }
-
-    /**
-     * データの取得件数を取得
-     *
-     * @return データの取得件数
-     */
-    const optional<Int64>& getLimit() const
-    {
-        return ensureData().limit;
-    }
-
-    /**
-     * データの取得件数を設定
-     *
-     * @param limit データの取得件数
-     */
-    void setLimit(Int64 limit)
-    {
-        ensureData().limit.emplace(limit);
-    }
-
-    /**
-     * データの取得件数を設定
-     *
-     * @param limit データの取得件数
-     */
-    DescribeWalletDetailsByUserIdRequest& withLimit(Int64 limit)
-    {
-        ensureData().limit.emplace(limit);
+        ensureData().targetUserId.emplace(std::move(targetUserId));
         return *this;
     }
 
@@ -293,7 +225,7 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    DescribeWalletDetailsByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
+    UnregisterBlackListByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
         ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
@@ -306,7 +238,7 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    DescribeWalletDetailsByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
+    UnregisterBlackListByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
         setGs2ClientId(std::move(gs2ClientId));
         return *this;
@@ -317,7 +249,7 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    DescribeWalletDetailsByUserIdRequest& withRequestId(StringHolder gs2RequestId)
+    UnregisterBlackListByUserIdRequest& withRequestId(StringHolder gs2RequestId)
     {
         setRequestId(std::move(gs2RequestId));
         return *this;
@@ -326,4 +258,4 @@ public:
 
 } }
 
-#endif //GS2_MONEY_CONTROL_DESCRIBEWALLETDETAILSBYUSERIDREQUEST_HPP_
+#endif //GS2_FRIEND_CONTROL_UNREGISTERBLACKLISTBYUSERIDREQUEST_HPP_

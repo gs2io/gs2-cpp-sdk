@@ -14,13 +14,13 @@
  * permissions and limitations under the License.
  */
 
-#include "EzWalletDetail.hpp"
+#include "EzWallet.hpp"
 #include <gs2/money/model/Wallet.hpp>
 
 
 namespace gs2 { namespace ez { namespace money {
 
-EzWalletDetail::Data::Data(const Data& data) :
+EzWallet::Data::Data(const Data& data) :
     Gs2Object(data),
     slot(data.slot),
     paid(data.paid),
@@ -29,7 +29,7 @@ EzWalletDetail::Data::Data(const Data& data) :
 {
 }
 
-EzWalletDetail::Data::Data(const gs2::money::Wallet& wallet) :
+EzWallet::Data::Data(const gs2::money::Wallet& wallet) :
     slot(wallet.getSlot() ? *wallet.getSlot() : 0),
     paid(wallet.getPaid() ? *wallet.getPaid() : 0),
     free(wallet.getFree() ? *wallet.getFree() : 0),
@@ -37,17 +37,17 @@ EzWalletDetail::Data::Data(const gs2::money::Wallet& wallet) :
 {
 }
 
-EzWalletDetail::EzWalletDetail(gs2::money::Wallet wallet) :
+EzWallet::EzWallet(gs2::money::Wallet wallet) :
     GS2_CORE_SHARED_DATA_INITIALIZATION(wallet)
 {
 }
 
-EzWalletDetail EzWalletDetail::deepCopy() const
+EzWallet EzWallet::deepCopy() const
 {
-    GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzWalletDetail);
+    GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzWallet);
 }
 
-gs2::money::Wallet EzWalletDetail::ToModel() const
+gs2::money::Wallet EzWallet::ToModel() const
 {
     gs2::money::Wallet wallet;
     wallet.setSlot(getSlot());

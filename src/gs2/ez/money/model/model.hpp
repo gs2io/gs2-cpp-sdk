@@ -18,6 +18,6 @@
 #define GS2_EZ_MONEY_MODEL_MODEL_HPP_
 
 #include <gs2/core/common.hpp>
-#include "EzWalletDetail.hpp"
+#include "EzWallet.hpp"
 
 #endif //GS2_EZ_MONEY_MODEL_MODEL_HPP_

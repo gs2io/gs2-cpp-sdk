@@ -65,6 +65,7 @@ public:
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="name">ルーム名</param>
     /// <param name="metadata">メタデータ</param>
     /// <param name="password">メッセージを投稿するために必要となるパスワード</param>
     /// <param name="whiteListUserIds">ルームに参加可能なユーザIDリスト</param>
@@ -72,6 +73,7 @@ public:
         std::function<void(AsyncEzCreateRoomResult)> callback,
         GameSession& session,
         StringHolder namespaceName,
+        gs2::optional<StringHolder> name=gs2::nullopt,
         gs2::optional<StringHolder> metadata=gs2::nullopt,
         gs2::optional<StringHolder> password=gs2::nullopt,
         gs2::optional<List<StringHolder>> whiteListUserIds=gs2::nullopt

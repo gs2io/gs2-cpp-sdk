@@ -61,12 +61,12 @@ private:
         optional<Bool> isOverflow;
         /** 溢れた状況での最大値 */
         optional<Int32> maxCapacity;
-        /** GS2-Experience のランクによって最大スタミナ値を決定する */
-        optional<StringHolder> maxStaminaTableId;
-        /** GS2-Experience のランクによってスタミナの回復間隔を決定する */
-        optional<StringHolder> recoverIntervalTableId;
-        /** GS2-Experience のランクによってスタミナの回復量を決定する */
-        optional<StringHolder> recoverValueTableId;
+        /** GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル名 */
+        optional<StringHolder> maxStaminaTableName;
+        /** GS2-Experience のランクによってスタミナの回復間隔を決定する回復間隔テーブル名 */
+        optional<StringHolder> recoverIntervalTableName;
+        /** GS2-Experience のランクによってスタミナの回復量を決定する回復量テーブル名 */
+        optional<StringHolder> recoverValueTableName;
 
         Data() = default;
 
@@ -81,9 +81,9 @@ private:
             initialCapacity(data.initialCapacity),
             isOverflow(data.isOverflow),
             maxCapacity(data.maxCapacity),
-            maxStaminaTableId(data.maxStaminaTableId),
-            recoverIntervalTableId(data.recoverIntervalTableId),
-            recoverValueTableId(data.recoverValueTableId)
+            maxStaminaTableName(data.maxStaminaTableName),
+            recoverIntervalTableName(data.recoverIntervalTableName),
+            recoverValueTableName(data.recoverValueTableName)
         {
         }
 
@@ -411,95 +411,95 @@ public:
     }
 
     /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するを取得
+     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル名を取得
      *
-     * @return GS2-Experience のランクによって最大スタミナ値を決定する
+     * @return GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル名
      */
-    const optional<StringHolder>& getMaxStaminaTableId() const
+    const optional<StringHolder>& getMaxStaminaTableName() const
     {
-        return ensureData().maxStaminaTableId;
+        return ensureData().maxStaminaTableName;
     }
 
     /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するを設定
+     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル名を設定
      *
-     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定する
+     * @param maxStaminaTableName GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル名
      */
-    void setMaxStaminaTableId(StringHolder maxStaminaTableId)
+    void setMaxStaminaTableName(StringHolder maxStaminaTableName)
     {
-        ensureData().maxStaminaTableId.emplace(std::move(maxStaminaTableId));
+        ensureData().maxStaminaTableName.emplace(std::move(maxStaminaTableName));
     }
 
     /**
-     * GS2-Experience のランクによって最大スタミナ値を決定するを設定
+     * GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル名を設定
      *
-     * @param maxStaminaTableId GS2-Experience のランクによって最大スタミナ値を決定する
+     * @param maxStaminaTableName GS2-Experience のランクによって最大スタミナ値を決定するスタミナ最大値テーブル名
      */
-    CreateStaminaModelMasterRequest& withMaxStaminaTableId(StringHolder maxStaminaTableId)
+    CreateStaminaModelMasterRequest& withMaxStaminaTableName(StringHolder maxStaminaTableName)
     {
-        ensureData().maxStaminaTableId.emplace(std::move(maxStaminaTableId));
+        ensureData().maxStaminaTableName.emplace(std::move(maxStaminaTableName));
         return *this;
     }
 
     /**
-     * GS2-Experience のランクによってスタミナの回復間隔を決定するを取得
+     * GS2-Experience のランクによってスタミナの回復間隔を決定する回復間隔テーブル名を取得
      *
-     * @return GS2-Experience のランクによってスタミナの回復間隔を決定する
+     * @return GS2-Experience のランクによってスタミナの回復間隔を決定する回復間隔テーブル名
      */
-    const optional<StringHolder>& getRecoverIntervalTableId() const
+    const optional<StringHolder>& getRecoverIntervalTableName() const
     {
-        return ensureData().recoverIntervalTableId;
+        return ensureData().recoverIntervalTableName;
     }
 
     /**
-     * GS2-Experience のランクによってスタミナの回復間隔を決定するを設定
+     * GS2-Experience のランクによってスタミナの回復間隔を決定する回復間隔テーブル名を設定
      *
-     * @param recoverIntervalTableId GS2-Experience のランクによってスタミナの回復間隔を決定する
+     * @param recoverIntervalTableName GS2-Experience のランクによってスタミナの回復間隔を決定する回復間隔テーブル名
      */
-    void setRecoverIntervalTableId(StringHolder recoverIntervalTableId)
+    void setRecoverIntervalTableName(StringHolder recoverIntervalTableName)
     {
-        ensureData().recoverIntervalTableId.emplace(std::move(recoverIntervalTableId));
+        ensureData().recoverIntervalTableName.emplace(std::move(recoverIntervalTableName));
     }
 
     /**
-     * GS2-Experience のランクによってスタミナの回復間隔を決定するを設定
+     * GS2-Experience のランクによってスタミナの回復間隔を決定する回復間隔テーブル名を設定
      *
-     * @param recoverIntervalTableId GS2-Experience のランクによってスタミナの回復間隔を決定する
+     * @param recoverIntervalTableName GS2-Experience のランクによってスタミナの回復間隔を決定する回復間隔テーブル名
      */
-    CreateStaminaModelMasterRequest& withRecoverIntervalTableId(StringHolder recoverIntervalTableId)
+    CreateStaminaModelMasterRequest& withRecoverIntervalTableName(StringHolder recoverIntervalTableName)
     {
-        ensureData().recoverIntervalTableId.emplace(std::move(recoverIntervalTableId));
+        ensureData().recoverIntervalTableName.emplace(std::move(recoverIntervalTableName));
         return *this;
     }
 
     /**
-     * GS2-Experience のランクによってスタミナの回復量を決定するを取得
+     * GS2-Experience のランクによってスタミナの回復量を決定する回復量テーブル名を取得
      *
-     * @return GS2-Experience のランクによってスタミナの回復量を決定する
+     * @return GS2-Experience のランクによってスタミナの回復量を決定する回復量テーブル名
      */
-    const optional<StringHolder>& getRecoverValueTableId() const
+    const optional<StringHolder>& getRecoverValueTableName() const
     {
-        return ensureData().recoverValueTableId;
+        return ensureData().recoverValueTableName;
     }
 
     /**
-     * GS2-Experience のランクによってスタミナの回復量を決定するを設定
+     * GS2-Experience のランクによってスタミナの回復量を決定する回復量テーブル名を設定
      *
-     * @param recoverValueTableId GS2-Experience のランクによってスタミナの回復量を決定する
+     * @param recoverValueTableName GS2-Experience のランクによってスタミナの回復量を決定する回復量テーブル名
      */
-    void setRecoverValueTableId(StringHolder recoverValueTableId)
+    void setRecoverValueTableName(StringHolder recoverValueTableName)
     {
-        ensureData().recoverValueTableId.emplace(std::move(recoverValueTableId));
+        ensureData().recoverValueTableName.emplace(std::move(recoverValueTableName));
     }
 
     /**
-     * GS2-Experience のランクによってスタミナの回復量を決定するを設定
+     * GS2-Experience のランクによってスタミナの回復量を決定する回復量テーブル名を設定
      *
-     * @param recoverValueTableId GS2-Experience のランクによってスタミナの回復量を決定する
+     * @param recoverValueTableName GS2-Experience のランクによってスタミナの回復量を決定する回復量テーブル名
      */
-    CreateStaminaModelMasterRequest& withRecoverValueTableId(StringHolder recoverValueTableId)
+    CreateStaminaModelMasterRequest& withRecoverValueTableName(StringHolder recoverValueTableName)
     {
-        ensureData().recoverValueTableId.emplace(std::move(recoverValueTableId));
+        ensureData().recoverValueTableName.emplace(std::move(recoverValueTableName));
         return *this;
     }
 

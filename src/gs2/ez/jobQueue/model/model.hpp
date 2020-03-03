@@ -19,6 +19,7 @@
 
 #include <gs2/core/common.hpp>
 #include "EzJob.hpp"
+#include "EzJobEntry.hpp"
 #include "EzJobResultBody.hpp"
 
 #endif //GS2_EZ_JOBQUEUE_MODEL_MODEL_HPP_

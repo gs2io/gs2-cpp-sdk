@@ -26,6 +26,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzFriend.hpp
         model/EzSendBox.hpp
         model/EzInbox.hpp
+        model/EzBlackList.hpp
         model/EzResponseCache.hpp
         model/EzFollowUser.hpp
         model/EzFriendUser.hpp
@@ -49,6 +50,9 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         result/EzDescribeReceiveRequestsResult.hpp
         result/EzAcceptResult.hpp
         result/EzRejectResult.hpp
+        result/EzGetBlackListResult.hpp
+        result/EzRegisterBlackListResult.hpp
+        result/EzUnregisterBlackListResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
@@ -59,6 +63,7 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         model/EzFriend.cpp
         model/EzSendBox.cpp
         model/EzInbox.cpp
+        model/EzBlackList.cpp
         model/EzResponseCache.cpp
         model/EzFollowUser.cpp
         model/EzFriendUser.cpp

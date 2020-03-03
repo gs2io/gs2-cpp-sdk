@@ -21,10 +21,10 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
         model/EzNamespace.hpp
-        model/EzWalletDetail.hpp
-        model/EzWalletDetail.hpp
+        model/EzWallet.hpp
         model/EzReceipt.hpp
         model/EzResponseCache.hpp
+        model/EzWalletDetail.hpp
         model/EzScriptSetting.hpp
         model/EzLogSetting.hpp
         result/EzGetResult.hpp
@@ -34,10 +34,10 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
         model/EzNamespace.cpp
-        model/EzWalletDetail.cpp
-        model/EzWalletDetail.cpp
+        model/EzWallet.cpp
         model/EzReceipt.cpp
         model/EzResponseCache.cpp
+        model/EzWalletDetail.cpp
         model/EzScriptSetting.cpp
         model/EzLogSetting.cpp
         )

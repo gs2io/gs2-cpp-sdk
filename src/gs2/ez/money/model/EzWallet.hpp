@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_MONEY_MODEL_EZWALLETDETAIL_HPP_
-#define GS2_EZ_MONEY_MODEL_EZWALLETDETAIL_HPP_
+#ifndef GS2_EZ_MONEY_MODEL_EZWALLET_HPP_
+#define GS2_EZ_MONEY_MODEL_EZWALLET_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/util/List.hpp>
@@ -35,7 +35,7 @@ class Wallet;
 
 namespace ez { namespace money {
 
-class EzWalletDetail : public gs2::Gs2Object
+class EzWallet : public gs2::Gs2Object
 {
 private:
     class Data : public gs2::Gs2Object
@@ -63,17 +63,17 @@ private:
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzWalletDetail() = default;
-    EzWalletDetail(const EzWalletDetail& ezWalletDetail) = default;
-    EzWalletDetail(EzWalletDetail&& ezWalletDetail) = default;
-    ~EzWalletDetail() = default;
+    EzWallet() = default;
+    EzWallet(const EzWallet& ezWallet) = default;
+    EzWallet(EzWallet&& ezWallet) = default;
+    ~EzWallet() = default;
 
-    EzWalletDetail(gs2::money::Wallet wallet);
+    EzWallet(gs2::money::Wallet wallet);
 
-    EzWalletDetail& operator=(const EzWalletDetail& ezWalletDetail) = default;
-    EzWalletDetail& operator=(EzWalletDetail&& ezWalletDetail) = default;
+    EzWallet& operator=(const EzWallet& ezWallet) = default;
+    EzWallet& operator=(EzWallet&& ezWallet) = default;
 
-    EzWalletDetail deepCopy() const;
+    EzWallet deepCopy() const;
 
     gs2::money::Wallet ToModel() const;
 
@@ -125,25 +125,25 @@ public:
         ensureData().updatedAt = updatedAt;
     }
 
-    EzWalletDetail& withSlot(Int32 slot)
+    EzWallet& withSlot(Int32 slot)
     {
         setSlot(slot);
         return *this;
     }
 
-    EzWalletDetail& withPaid(Int32 paid)
+    EzWallet& withPaid(Int32 paid)
     {
         setPaid(paid);
         return *this;
     }
 
-    EzWalletDetail& withFree(Int32 free)
+    EzWallet& withFree(Int32 free)
     {
         setFree(free);
         return *this;
     }
 
-    EzWalletDetail& withUpdatedAt(Int64 updatedAt)
+    EzWallet& withUpdatedAt(Int64 updatedAt)
     {
         setUpdatedAt(updatedAt);
         return *this;
@@ -152,4 +152,4 @@ public:
 
 }}}
 
-#endif //GS2_EZ_MONEY_EZWALLETDETAIL_HPP_
+#endif //GS2_EZ_MONEY_EZWALLET_HPP_

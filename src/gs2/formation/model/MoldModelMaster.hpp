@@ -51,8 +51,8 @@ private:
         optional<StringHolder> description;
         /** フォームの保存領域のメタデータ */
         optional<StringHolder> metadata;
-        /** フォームマスター */
-        optional<StringHolder> formModelId;
+        /** フォーム名 */
+        optional<StringHolder> formModelName;
         /** フォームを保存できる初期キャパシティ */
         optional<Int32> initialMaxCapacity;
         /** フォームを保存できるキャパシティ */
@@ -70,7 +70,7 @@ private:
             name(data.name),
             description(data.description),
             metadata(data.metadata),
-            formModelId(data.formModelId),
+            formModelName(data.formModelName),
             initialMaxCapacity(data.initialMaxCapacity),
             maxCapacity(data.maxCapacity),
             createdAt(data.createdAt),
@@ -115,11 +115,11 @@ private:
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "formModelId") == 0)
+            else if (std::strcmp(name_, "formModelName") == 0)
             {
                 if (jsonValue.IsString())
                 {
-                    this->formModelId.emplace(jsonValue.GetString());
+                    this->formModelName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "initialMaxCapacity") == 0)
@@ -303,33 +303,33 @@ public:
     }
 
     /**
-     * フォームマスターを取得
+     * フォーム名を取得
      *
-     * @return フォームマスター
+     * @return フォーム名
      */
-    const optional<StringHolder>& getFormModelId() const
+    const optional<StringHolder>& getFormModelName() const
     {
-        return ensureData().formModelId;
+        return ensureData().formModelName;
     }
 
     /**
-     * フォームマスターを設定
+     * フォーム名を設定
      *
-     * @param formModelId フォームマスター
+     * @param formModelName フォーム名
      */
-    void setFormModelId(StringHolder formModelId)
+    void setFormModelName(StringHolder formModelName)
     {
-        ensureData().formModelId.emplace(std::move(formModelId));
+        ensureData().formModelName.emplace(std::move(formModelName));
     }
 
     /**
-     * フォームマスターを設定
+     * フォーム名を設定
      *
-     * @param formModelId フォームマスター
+     * @param formModelName フォーム名
      */
-    MoldModelMaster& withFormModelId(StringHolder formModelId)
+    MoldModelMaster& withFormModelName(StringHolder formModelName)
     {
-        setFormModelId(std::move(formModelId));
+        setFormModelName(std::move(formModelName));
         return *this;
     }
 
@@ -488,7 +488,7 @@ inline bool operator!=(const MoldModelMaster& lhs, const MoldModelMaster& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->formModelId != lhr.m_pData->formModelId)
+        if (lhs.m_pData->formModelName != lhr.m_pData->formModelName)
         {
             return true;
         }

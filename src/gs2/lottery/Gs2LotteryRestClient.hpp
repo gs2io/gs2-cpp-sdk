@@ -43,6 +43,7 @@
 #include "request/DescribeBoxesByUserIdRequest.hpp"
 #include "request/GetBoxRequest.hpp"
 #include "request/GetBoxByUserIdRequest.hpp"
+#include "request/GetRawBoxByUserIdRequest.hpp"
 #include "request/ResetBoxRequest.hpp"
 #include "request/ResetBoxByUserIdRequest.hpp"
 #include "request/DescribeLotteryModelsRequest.hpp"
@@ -77,6 +78,7 @@
 #include "result/DescribeBoxesByUserIdResult.hpp"
 #include "result/GetBoxResult.hpp"
 #include "result/GetBoxByUserIdResult.hpp"
+#include "result/GetRawBoxByUserIdResult.hpp"
 #include "result/ResetBoxResult.hpp"
 #include "result/ResetBoxByUserIdResult.hpp"
 #include "result/DescribeLotteryModelsResult.hpp"
@@ -1278,14 +1280,14 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/user/me/box/{lotteryName}";
+            url += "/{namespaceName}/user/me/box/{prizeTableName}";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
             {
-                auto& value = m_Request.getLotteryName();
-                url.replace("{lotteryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+                auto& value = m_Request.getPrizeTableName();
+                url.replace("{prizeTableName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
 
             Char joint[] = { '?', '\0' };
@@ -1337,14 +1339,14 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/user/{userId}/box/{lotteryName}";
+            url += "/{namespaceName}/user/{userId}/box/{prizeTableName}";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
             {
-                auto& value = m_Request.getLotteryName();
-                url.replace("{lotteryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+                auto& value = m_Request.getPrizeTableName();
+                url.replace("{prizeTableName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
             {
                 auto& value = m_Request.getUserId();
@@ -1384,6 +1386,65 @@ private:
         ~GetBoxByUserIdTask() GS2_OVERRIDE = default;
     };
 
+    class GetRawBoxByUserIdTask : public detail::Gs2RestSessionTask<GetRawBoxByUserIdResult>
+    {
+    private:
+        GetRawBoxByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "lottery";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/box/{prizeTableName}/raw";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getPrizeTableName();
+                url.replace("{prizeTableName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetRawBoxByUserIdTask(
+            GetRawBoxByUserIdRequest request,
+            Gs2RestSessionTask<GetRawBoxByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetRawBoxByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRawBoxByUserIdTask() GS2_OVERRIDE = default;
+    };
+
     class ResetBoxTask : public detail::Gs2RestSessionTask<void>
     {
     private:
@@ -1396,14 +1457,14 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/user/me/box/{lotteryName}";
+            url += "/{namespaceName}/user/me/box/{prizeTableName}";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
             {
-                auto& value = m_Request.getLotteryName();
-                url.replace("{lotteryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+                auto& value = m_Request.getPrizeTableName();
+                url.replace("{prizeTableName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
 
             Char joint[] = { '?', '\0' };
@@ -1459,14 +1520,14 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/user/{userId}/box/{lotteryName}";
+            url += "/{namespaceName}/user/{userId}/box/{prizeTableName}";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
             {
-                auto& value = m_Request.getLotteryName();
-                url.replace("{lotteryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+                auto& value = m_Request.getPrizeTableName();
+                url.replace("{prizeTableName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
             {
                 auto& value = m_Request.getUserId();
@@ -1731,18 +1792,6 @@ private:
                 auto& value = m_Request.getUserId();
                 url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
-            {
-                auto& value = m_Request.getCount();
-                if (value.has_value())
-                {
-                    detail::StringVariable urlSafeValue(*value);
-                    url.replace("{count}", urlSafeValue.c_str());
-                }
-                else
-                {
-                    url.replace("{count}", "null");
-                }
-            }
             detail::json::JsonWriter jsonWriter;
 
             jsonWriter.writeObjectStart();
@@ -1750,6 +1799,11 @@ private:
             {
                 jsonWriter.writePropertyName("contextStack");
                 jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getCount())
+            {
+                jsonWriter.writePropertyName("count");
+                jsonWriter.writeInt32(*m_Request.getCount());
             }
             if (m_Request.getConfig())
             {
@@ -2967,6 +3021,18 @@ public:
     void getBoxByUserId(GetBoxByUserIdRequest request, std::function<void(AsyncGetBoxByUserIdResult)> callback)
     {
         GetBoxByUserIdTask& task = *new GetBoxByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * ユーザIDを指定してボックスを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRawBoxByUserId(GetRawBoxByUserIdRequest request, std::function<void(AsyncGetRawBoxByUserIdResult)> callback)
+    {
+        GetRawBoxByUserIdTask& task = *new GetRawBoxByUserIdTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 

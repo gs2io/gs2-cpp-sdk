@@ -47,7 +47,7 @@ private:
         optional<StringHolder> sendBoxId;
         /** ユーザーID */
         optional<StringHolder> userId;
-        /** フレンドリクエストを出しているユーザーIDリスト */
+        /** フレンドリクエストの宛先ユーザーIDリスト */
         optional<List<StringHolder>> targetUserIds;
         /** 作成日時 */
         optional<Int64> createdAt;
@@ -213,9 +213,9 @@ public:
     }
 
     /**
-     * フレンドリクエストを出しているユーザーIDリストを取得
+     * フレンドリクエストの宛先ユーザーIDリストを取得
      *
-     * @return フレンドリクエストを出しているユーザーIDリスト
+     * @return フレンドリクエストの宛先ユーザーIDリスト
      */
     const optional<List<StringHolder>>& getTargetUserIds() const
     {
@@ -223,9 +223,9 @@ public:
     }
 
     /**
-     * フレンドリクエストを出しているユーザーIDリストを設定
+     * フレンドリクエストの宛先ユーザーIDリストを設定
      *
-     * @param targetUserIds フレンドリクエストを出しているユーザーIDリスト
+     * @param targetUserIds フレンドリクエストの宛先ユーザーIDリスト
      */
     void setTargetUserIds(List<StringHolder> targetUserIds)
     {
@@ -233,9 +233,9 @@ public:
     }
 
     /**
-     * フレンドリクエストを出しているユーザーIDリストを設定
+     * フレンドリクエストの宛先ユーザーIDリストを設定
      *
-     * @param targetUserIds フレンドリクエストを出しているユーザーIDリスト
+     * @param targetUserIds フレンドリクエストの宛先ユーザーIDリスト
      */
     SendBox& withTargetUserIds(List<StringHolder> targetUserIds)
     {

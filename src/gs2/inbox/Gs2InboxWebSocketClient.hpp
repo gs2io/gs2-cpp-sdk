@@ -669,6 +669,16 @@ private:
                 }
                 jsonWriter.writeArrayEnd();
             }
+            if (m_Request.getExpiresAt())
+            {
+                jsonWriter.writePropertyName("expiresAt");
+                jsonWriter.writeInt64(*m_Request.getExpiresAt());
+            }
+            if (m_Request.getExpiresTimeSpan())
+            {
+                jsonWriter.writePropertyName("expiresTimeSpan");
+                write(jsonWriter, *m_Request.getExpiresTimeSpan());
+            }
             if (m_Request.getRequestId())
             {
                 jsonWriter.writePropertyName("xGs2RequestId");
@@ -1430,6 +1440,11 @@ protected:
             jsonWriter.writePropertyName("readAt");
             jsonWriter.writeInt64(*obj.getReadAt());
         }
+        if (obj.getExpiresAt())
+        {
+            jsonWriter.writePropertyName("expiresAt");
+            jsonWriter.writeInt64(*obj.getExpiresAt());
+        }
         jsonWriter.writeObjectEnd();
     }
 
@@ -1488,6 +1503,11 @@ protected:
             jsonWriter.writePropertyName("triggerScriptId");
             jsonWriter.writeCharArray(*obj.getTriggerScriptId());
         }
+        if (obj.getDoneTriggerTargetType())
+        {
+            jsonWriter.writePropertyName("doneTriggerTargetType");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
+        }
         if (obj.getDoneTriggerScriptId())
         {
             jsonWriter.writePropertyName("doneTriggerScriptId");
@@ -1529,6 +1549,27 @@ protected:
         {
             jsonWriter.writePropertyName("loggingNamespaceId");
             jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const TimeSpan& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getDays())
+        {
+            jsonWriter.writePropertyName("days");
+            jsonWriter.writeInt32(*obj.getDays());
+        }
+        if (obj.getHours())
+        {
+            jsonWriter.writePropertyName("hours");
+            jsonWriter.writeInt32(*obj.getHours());
+        }
+        if (obj.getMinutes())
+        {
+            jsonWriter.writePropertyName("minutes");
+            jsonWriter.writeInt32(*obj.getMinutes());
         }
         jsonWriter.writeObjectEnd();
     }

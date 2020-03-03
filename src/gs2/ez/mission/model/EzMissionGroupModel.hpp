@@ -48,6 +48,14 @@ private:
         gs2::optional<StringHolder> metadata;
         /** タスクリスト */
         gs2::optional<List<EzMissionTaskModel>> tasks;
+        /** リセットタイミング */
+        gs2::optional<StringHolder> resetType;
+        /** リセットをする日にち */
+        gs2::optional<Int32> resetDayOfMonth;
+        /** リセットする曜日 */
+        gs2::optional<StringHolder> resetDayOfWeek;
+        /** リセット時刻 */
+        gs2::optional<Int32> resetHour;
         /** ミッションを達成したときの通知先ネームスペース のGRN */
         gs2::optional<StringHolder> completeNotificationNamespaceId;
 
@@ -97,6 +105,26 @@ public:
         return *ensureData().tasks;
     }
 
+    const StringHolder& getResetType() const
+    {
+        return *ensureData().resetType;
+    }
+
+    Int32 getResetDayOfMonth() const
+    {
+        return *ensureData().resetDayOfMonth;
+    }
+
+    const StringHolder& getResetDayOfWeek() const
+    {
+        return *ensureData().resetDayOfWeek;
+    }
+
+    Int32 getResetHour() const
+    {
+        return *ensureData().resetHour;
+    }
+
     const StringHolder& getCompleteNotificationNamespaceId() const
     {
         return *ensureData().completeNotificationNamespaceId;
@@ -121,6 +149,26 @@ public:
         ensureData().tasks = std::move(tasks);
     }
 
+    void setResetType(StringHolder resetType)
+    {
+        ensureData().resetType = std::move(resetType);
+    }
+
+    void setResetDayOfMonth(Int32 resetDayOfMonth)
+    {
+        ensureData().resetDayOfMonth = resetDayOfMonth;
+    }
+
+    void setResetDayOfWeek(StringHolder resetDayOfWeek)
+    {
+        ensureData().resetDayOfWeek = std::move(resetDayOfWeek);
+    }
+
+    void setResetHour(Int32 resetHour)
+    {
+        ensureData().resetHour = resetHour;
+    }
+
     void setCompleteNotificationNamespaceId(StringHolder completeNotificationNamespaceId)
     {
         ensureData().completeNotificationNamespaceId = std::move(completeNotificationNamespaceId);
@@ -141,6 +189,30 @@ public:
     EzMissionGroupModel& withTasks(List<EzMissionTaskModel> tasks)
     {
         setTasks(std::move(tasks));
+        return *this;
+    }
+
+    EzMissionGroupModel& withResetType(StringHolder resetType)
+    {
+        setResetType(std::move(resetType));
+        return *this;
+    }
+
+    EzMissionGroupModel& withResetDayOfMonth(Int32 resetDayOfMonth)
+    {
+        setResetDayOfMonth(resetDayOfMonth);
+        return *this;
+    }
+
+    EzMissionGroupModel& withResetDayOfWeek(StringHolder resetDayOfWeek)
+    {
+        setResetDayOfWeek(std::move(resetDayOfWeek));
+        return *this;
+    }
+
+    EzMissionGroupModel& withResetHour(Int32 resetHour)
+    {
+        setResetHour(resetHour);
         return *this;
     }
 

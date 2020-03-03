@@ -25,7 +25,6 @@ EzMissionTaskModel::Data::Data(const Data& data) :
     name(data.name),
     metadata(data.metadata),
     counterName(data.counterName),
-    resetType(data.resetType),
     targetValue(data.targetValue),
     challengePeriodEventId(data.challengePeriodEventId),
     premiseMissionTaskName(data.premiseMissionTaskName)
@@ -40,7 +39,6 @@ EzMissionTaskModel::Data::Data(const gs2::mission::MissionTaskModel& missionTask
     name(missionTaskModel.getName()),
     metadata(missionTaskModel.getMetadata()),
     counterName(missionTaskModel.getCounterName()),
-    resetType(missionTaskModel.getResetType()),
     targetValue(missionTaskModel.getTargetValue() ? *missionTaskModel.getTargetValue() : 0),
     challengePeriodEventId(missionTaskModel.getChallengePeriodEventId()),
     premiseMissionTaskName(missionTaskModel.getPremiseMissionTaskName())
@@ -71,7 +69,6 @@ gs2::mission::MissionTaskModel EzMissionTaskModel::ToModel() const
     missionTaskModel.setName(getName());
     missionTaskModel.setMetadata(getMetadata());
     missionTaskModel.setCounterName(getCounterName());
-    missionTaskModel.setResetType(getResetType());
     missionTaskModel.setTargetValue(getTargetValue());
     {
         gs2::List<gs2::mission::AcquireAction> list;

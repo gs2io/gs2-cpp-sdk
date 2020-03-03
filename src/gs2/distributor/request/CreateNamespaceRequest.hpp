@@ -47,7 +47,7 @@ private:
         optional<StringHolder> name;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
-        /** 所持品の配布処理の権限判定に使用する ユーザ のGRN */
+        /** リソース溢れ処理に使用する ユーザ のGRN */
         optional<StringHolder> assumeUserId;
         /** ログの出力設定 */
         optional<LogSetting> logSetting;
@@ -173,9 +173,9 @@ public:
     }
 
     /**
-     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを取得
+     * リソース溢れ処理に使用する ユーザ のGRNを取得
      *
-     * @return 所持品の配布処理の権限判定に使用する ユーザ のGRN
+     * @return リソース溢れ処理に使用する ユーザ のGRN
      */
     const optional<StringHolder>& getAssumeUserId() const
     {
@@ -183,9 +183,9 @@ public:
     }
 
     /**
-     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
+     * リソース溢れ処理に使用する ユーザ のGRNを設定
      *
-     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
+     * @param assumeUserId リソース溢れ処理に使用する ユーザ のGRN
      */
     void setAssumeUserId(StringHolder assumeUserId)
     {
@@ -193,9 +193,9 @@ public:
     }
 
     /**
-     * 所持品の配布処理の権限判定に使用する ユーザ のGRNを設定
+     * リソース溢れ処理に使用する ユーザ のGRNを設定
      *
-     * @param assumeUserId 所持品の配布処理の権限判定に使用する ユーザ のGRN
+     * @param assumeUserId リソース溢れ処理に使用する ユーザ のGRN
      */
     CreateNamespaceRequest& withAssumeUserId(StringHolder assumeUserId)
     {

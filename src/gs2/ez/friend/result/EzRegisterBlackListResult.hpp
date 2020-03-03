@@ -14,24 +14,24 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_QUEST_EZDELETERESULT_HPP_
-#define GS2_EZ_QUEST_EZDELETERESULT_HPP_
+#ifndef GS2_EZ_FRIEND_EZREGISTERBLACKLISTRESULT_HPP_
+#define GS2_EZ_FRIEND_EZREGISTERBLACKLISTRESULT_HPP_
 
 #include "../model/model.hpp"
 #include <gs2/core/AsyncResult.hpp>
-#include <gs2/quest/result/DeleteProgressResult.hpp>
+#include <gs2/friend/result/RegisterBlackListResult.hpp>
 
 
-namespace gs2 { namespace ez { namespace quest {
+namespace gs2 { namespace ez { namespace friend_ {
 
-class EzDeleteResult : public gs2::Gs2Object
+class EzRegisterBlackListResult : public gs2::Gs2Object
 {
 private:
     class Data : public gs2::Gs2Object
     {
     public:
-        /** クエスト挑戦 */
-        EzProgress item;
+        /** ブラックリスト */
+        EzBlackList item;
 
         Data() = default;
 
@@ -43,8 +43,8 @@ private:
 
         Data(Data&& data) = default;
 
-        Data(const gs2::quest::DeleteProgressResult& deleteProgressResult) :
-            item(*deleteProgressResult.getItem())
+        Data(const gs2::friend_::RegisterBlackListResult& registerBlackListResult) :
+            item(*registerBlackListResult.getItem())
         {
         }
 
@@ -57,24 +57,24 @@ private:
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzDeleteResult() = default;
-    EzDeleteResult(const EzDeleteResult& result) = default;
-    EzDeleteResult(EzDeleteResult&& result) = default;
-    ~EzDeleteResult() = default;
+    EzRegisterBlackListResult() = default;
+    EzRegisterBlackListResult(const EzRegisterBlackListResult& result) = default;
+    EzRegisterBlackListResult(EzRegisterBlackListResult&& result) = default;
+    ~EzRegisterBlackListResult() = default;
 
-    EzDeleteResult(gs2::quest::DeleteProgressResult result) :
+    EzRegisterBlackListResult(gs2::friend_::RegisterBlackListResult result) :
         GS2_CORE_SHARED_DATA_INITIALIZATION(result)
     {}
 
-    EzDeleteResult& operator=(const EzDeleteResult& result) = default;
-    EzDeleteResult& operator=(EzDeleteResult&& result) = default;
+    EzRegisterBlackListResult& operator=(const EzRegisterBlackListResult& result) = default;
+    EzRegisterBlackListResult& operator=(EzRegisterBlackListResult&& result) = default;
 
-    EzDeleteResult deepCopy() const
+    EzRegisterBlackListResult deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzDeleteResult);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzRegisterBlackListResult);
     }
 
-    static bool isConvertible(const gs2::quest::DeleteProgressResult& result)
+    static bool isConvertible(const gs2::friend_::RegisterBlackListResult& result)
     {
         return
             result.getItem().has_value();
@@ -84,14 +84,14 @@ public:
     //   Getters
     // ========================================
 
-    const EzProgress& getItem() const
+    const EzBlackList& getItem() const
     {
         return ensureData().item;
     }
 };
 
-typedef gs2::AsyncResult<EzDeleteResult> AsyncEzDeleteResult;
+typedef gs2::AsyncResult<EzRegisterBlackListResult> AsyncEzRegisterBlackListResult;
 
 }}}
 
-#endif //GS2_EZ_QUEST_EZDELETERESULT_HPP_
+#endif //GS2_EZ_FRIEND_EZREGISTERBLACKLISTRESULT_HPP_

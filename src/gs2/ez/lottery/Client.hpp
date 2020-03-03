@@ -75,12 +75,12 @@ public:
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="lotteryName">抽選モデルの種類名</param>
+    /// <param name="prizeTableName">排出確率テーブル名</param>
     void getBox(
         std::function<void(AsyncEzGetBoxResult)> callback,
         GameSession& session,
         StringHolder namespaceName,
-        StringHolder lotteryName
+        StringHolder prizeTableName
     );
 
     /// <summary>
@@ -91,12 +91,12 @@ public:
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="lotteryName">抽選モデルの種類名</param>
+    /// <param name="prizeTableName">排出確率テーブル名</param>
     void resetBox(
         std::function<void(AsyncEzResetBoxResult)> callback,
         GameSession& session,
         StringHolder namespaceName,
-        StringHolder lotteryName
+        StringHolder prizeTableName
     );
 
     /// <summary>

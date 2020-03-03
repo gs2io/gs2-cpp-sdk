@@ -604,6 +604,11 @@ private:
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
+            if (m_Request.getName())
+            {
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
+            }
             if (m_Request.getContentType())
             {
                 jsonWriter.writePropertyName("contentType");
@@ -690,6 +695,11 @@ private:
             {
                 jsonWriter.writePropertyName("userId");
                 jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getName())
+            {
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
             }
             if (m_Request.getContentType())
             {

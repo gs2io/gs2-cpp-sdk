@@ -51,6 +51,16 @@ private:
         optional<StringHolder> name;
         /** プロジェクトの説明 */
         optional<StringHolder> description;
+        /** 契約プラン */
+        optional<StringHolder> plan;
+        /** 支払い方法名 */
+        optional<StringHolder> billingMethodName;
+        /** AWS EventBridge の設定 */
+        optional<StringHolder> enableEventBridge;
+        /** 通知に使用するAWSアカウントのID */
+        optional<StringHolder> eventBridgeAwsAccountId;
+        /** 通知に使用するAWSリージョン */
+        optional<StringHolder> eventBridgeAwsRegion;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -64,6 +74,11 @@ private:
             accountName(data.accountName),
             name(data.name),
             description(data.description),
+            plan(data.plan),
+            billingMethodName(data.billingMethodName),
+            enableEventBridge(data.enableEventBridge),
+            eventBridgeAwsAccountId(data.eventBridgeAwsAccountId),
+            eventBridgeAwsRegion(data.eventBridgeAwsRegion),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
@@ -104,6 +119,41 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "plan") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->plan.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "billingMethodName") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->billingMethodName.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "enableEventBridge") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->enableEventBridge.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "eventBridgeAwsAccountId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->eventBridgeAwsAccountId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "eventBridgeAwsRegion") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->eventBridgeAwsRegion.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -273,6 +323,161 @@ public:
     }
 
     /**
+     * 契約プランを取得
+     *
+     * @return 契約プラン
+     */
+    const optional<StringHolder>& getPlan() const
+    {
+        return ensureData().plan;
+    }
+
+    /**
+     * 契約プランを設定
+     *
+     * @param plan 契約プラン
+     */
+    void setPlan(StringHolder plan)
+    {
+        ensureData().plan.emplace(std::move(plan));
+    }
+
+    /**
+     * 契約プランを設定
+     *
+     * @param plan 契約プラン
+     */
+    Project& withPlan(StringHolder plan)
+    {
+        setPlan(std::move(plan));
+        return *this;
+    }
+
+    /**
+     * 支払い方法名を取得
+     *
+     * @return 支払い方法名
+     */
+    const optional<StringHolder>& getBillingMethodName() const
+    {
+        return ensureData().billingMethodName;
+    }
+
+    /**
+     * 支払い方法名を設定
+     *
+     * @param billingMethodName 支払い方法名
+     */
+    void setBillingMethodName(StringHolder billingMethodName)
+    {
+        ensureData().billingMethodName.emplace(std::move(billingMethodName));
+    }
+
+    /**
+     * 支払い方法名を設定
+     *
+     * @param billingMethodName 支払い方法名
+     */
+    Project& withBillingMethodName(StringHolder billingMethodName)
+    {
+        setBillingMethodName(std::move(billingMethodName));
+        return *this;
+    }
+
+    /**
+     * AWS EventBridge の設定を取得
+     *
+     * @return AWS EventBridge の設定
+     */
+    const optional<StringHolder>& getEnableEventBridge() const
+    {
+        return ensureData().enableEventBridge;
+    }
+
+    /**
+     * AWS EventBridge の設定を設定
+     *
+     * @param enableEventBridge AWS EventBridge の設定
+     */
+    void setEnableEventBridge(StringHolder enableEventBridge)
+    {
+        ensureData().enableEventBridge.emplace(std::move(enableEventBridge));
+    }
+
+    /**
+     * AWS EventBridge の設定を設定
+     *
+     * @param enableEventBridge AWS EventBridge の設定
+     */
+    Project& withEnableEventBridge(StringHolder enableEventBridge)
+    {
+        setEnableEventBridge(std::move(enableEventBridge));
+        return *this;
+    }
+
+    /**
+     * 通知に使用するAWSアカウントのIDを取得
+     *
+     * @return 通知に使用するAWSアカウントのID
+     */
+    const optional<StringHolder>& getEventBridgeAwsAccountId() const
+    {
+        return ensureData().eventBridgeAwsAccountId;
+    }
+
+    /**
+     * 通知に使用するAWSアカウントのIDを設定
+     *
+     * @param eventBridgeAwsAccountId 通知に使用するAWSアカウントのID
+     */
+    void setEventBridgeAwsAccountId(StringHolder eventBridgeAwsAccountId)
+    {
+        ensureData().eventBridgeAwsAccountId.emplace(std::move(eventBridgeAwsAccountId));
+    }
+
+    /**
+     * 通知に使用するAWSアカウントのIDを設定
+     *
+     * @param eventBridgeAwsAccountId 通知に使用するAWSアカウントのID
+     */
+    Project& withEventBridgeAwsAccountId(StringHolder eventBridgeAwsAccountId)
+    {
+        setEventBridgeAwsAccountId(std::move(eventBridgeAwsAccountId));
+        return *this;
+    }
+
+    /**
+     * 通知に使用するAWSリージョンを取得
+     *
+     * @return 通知に使用するAWSリージョン
+     */
+    const optional<StringHolder>& getEventBridgeAwsRegion() const
+    {
+        return ensureData().eventBridgeAwsRegion;
+    }
+
+    /**
+     * 通知に使用するAWSリージョンを設定
+     *
+     * @param eventBridgeAwsRegion 通知に使用するAWSリージョン
+     */
+    void setEventBridgeAwsRegion(StringHolder eventBridgeAwsRegion)
+    {
+        ensureData().eventBridgeAwsRegion.emplace(std::move(eventBridgeAwsRegion));
+    }
+
+    /**
+     * 通知に使用するAWSリージョンを設定
+     *
+     * @param eventBridgeAwsRegion 通知に使用するAWSリージョン
+     */
+    Project& withEventBridgeAwsRegion(StringHolder eventBridgeAwsRegion)
+    {
+        setEventBridgeAwsRegion(std::move(eventBridgeAwsRegion));
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -362,6 +567,26 @@ inline bool operator!=(const Project& lhs, const Project& lhr)
             return true;
         }
         if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->plan != lhr.m_pData->plan)
+        {
+            return true;
+        }
+        if (lhs.m_pData->billingMethodName != lhr.m_pData->billingMethodName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->enableEventBridge != lhr.m_pData->enableEventBridge)
+        {
+            return true;
+        }
+        if (lhs.m_pData->eventBridgeAwsAccountId != lhr.m_pData->eventBridgeAwsAccountId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->eventBridgeAwsRegion != lhr.m_pData->eventBridgeAwsRegion)
         {
             return true;
         }

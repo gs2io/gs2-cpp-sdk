@@ -39,7 +39,6 @@
 #include "request/WithdrawByUserIdRequest.hpp"
 #include "request/DepositByStampSheetRequest.hpp"
 #include "request/WithdrawByStampTaskRequest.hpp"
-#include "request/DescribeWalletDetailsByUserIdRequest.hpp"
 #include "request/DescribeReceiptsRequest.hpp"
 #include "request/GetByUserIdAndTransactionIdRequest.hpp"
 #include "request/RecordReceiptRequest.hpp"
@@ -60,7 +59,6 @@
 #include "result/WithdrawByUserIdResult.hpp"
 #include "result/DepositByStampSheetResult.hpp"
 #include "result/WithdrawByStampTaskResult.hpp"
-#include "result/DescribeWalletDetailsByUserIdResult.hpp"
 #include "result/DescribeReceiptsResult.hpp"
 #include "result/GetByUserIdAndTransactionIdResult.hpp"
 #include "result/RecordReceiptResult.hpp"
@@ -1185,82 +1183,6 @@ private:
         ~WithdrawByStampTaskTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeWalletDetailsByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeWalletDetailsByUserIdResult>
-    {
-    private:
-        DescribeWalletDetailsByUserIdRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "money";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "walletDetail";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeWalletDetailsByUserId";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getUserId())
-            {
-                jsonWriter.writePropertyName("userId");
-                jsonWriter.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getSlot())
-            {
-                jsonWriter.writePropertyName("slot");
-                jsonWriter.writeInt32(*m_Request.getSlot());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DescribeWalletDetailsByUserIdTask(
-            DescribeWalletDetailsByUserIdRequest request,
-            Gs2WebSocketSessionTask<DescribeWalletDetailsByUserIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeWalletDetailsByUserIdResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeWalletDetailsByUserIdTask() GS2_OVERRIDE = default;
-    };
-
     class DescribeReceiptsTask : public detail::Gs2WebSocketSessionTask<DescribeReceiptsResult>
     {
     private:
@@ -1665,46 +1587,16 @@ protected:
             jsonWriter.writePropertyName("free");
             jsonWriter.writeInt32(*obj.getFree());
         }
-        if (obj.getCreatedAt())
+        if (obj.getDetail())
         {
-            jsonWriter.writePropertyName("createdAt");
-            jsonWriter.writeInt64(*obj.getCreatedAt());
-        }
-        if (obj.getUpdatedAt())
-        {
-            jsonWriter.writePropertyName("updatedAt");
-            jsonWriter.writeInt64(*obj.getUpdatedAt());
-        }
-        jsonWriter.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& jsonWriter, const WalletDetail& obj)
-    {
-        jsonWriter.writeObjectStart();
-        if (obj.getWalletDetailId())
-        {
-            jsonWriter.writePropertyName("walletDetailId");
-            jsonWriter.writeCharArray(*obj.getWalletDetailId());
-        }
-        if (obj.getUserId())
-        {
-            jsonWriter.writePropertyName("userId");
-            jsonWriter.writeCharArray(*obj.getUserId());
-        }
-        if (obj.getSlot())
-        {
-            jsonWriter.writePropertyName("slot");
-            jsonWriter.writeInt32(*obj.getSlot());
-        }
-        if (obj.getPrice())
-        {
-            jsonWriter.writePropertyName("price");
-            jsonWriter.writeFloat(*obj.getPrice());
-        }
-        if (obj.getCount())
-        {
-            jsonWriter.writePropertyName("count");
-            jsonWriter.writeInt32(*obj.getCount());
+            jsonWriter.writePropertyName("detail");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getDetail();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(jsonWriter, list[i]);
+            }
+            jsonWriter.writeArrayEnd();
         }
         if (obj.getCreatedAt())
         {
@@ -1811,6 +1703,22 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const WalletDetail& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getPrice())
+        {
+            jsonWriter.writePropertyName("price");
+            jsonWriter.writeFloat(*obj.getPrice());
+        }
+        if (obj.getCount())
+        {
+            jsonWriter.writePropertyName("count");
+            jsonWriter.writeInt32(*obj.getCount());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const ScriptSetting& obj)
     {
         jsonWriter.writeObjectStart();
@@ -1818,6 +1726,11 @@ protected:
         {
             jsonWriter.writePropertyName("triggerScriptId");
             jsonWriter.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerTargetType())
+        {
+            jsonWriter.writePropertyName("doneTriggerTargetType");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
         }
         if (obj.getDoneTriggerScriptId())
         {
@@ -2044,18 +1957,6 @@ public:
     void withdrawByStampTask(WithdrawByStampTaskRequest request, std::function<void(AsyncWithdrawByStampTaskResult)> callback)
     {
         WithdrawByStampTaskTask& task = *new WithdrawByStampTaskTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ウォレットの詳細を取得します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeWalletDetailsByUserId(DescribeWalletDetailsByUserIdRequest request, std::function<void(AsyncDescribeWalletDetailsByUserIdResult)> callback)
-    {
-        DescribeWalletDetailsByUserIdTask& task = *new DescribeWalletDetailsByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

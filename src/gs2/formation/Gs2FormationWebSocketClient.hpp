@@ -642,10 +642,10 @@ private:
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
-            if (m_Request.getFormName())
+            if (m_Request.getFormModelName())
             {
-                jsonWriter.writePropertyName("formName");
-                jsonWriter.writeCharArray(*m_Request.getFormName());
+                jsonWriter.writePropertyName("formModelName");
+                jsonWriter.writeCharArray(*m_Request.getFormModelName());
             }
             if (m_Request.getRequestId())
             {
@@ -698,10 +698,10 @@ private:
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
-            if (m_Request.getFormName())
+            if (m_Request.getFormModelName())
             {
-                jsonWriter.writePropertyName("formName");
-                jsonWriter.writeCharArray(*m_Request.getFormName());
+                jsonWriter.writePropertyName("formModelName");
+                jsonWriter.writeCharArray(*m_Request.getFormModelName());
             }
             if (m_Request.getDescription())
             {
@@ -775,10 +775,10 @@ private:
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
-            if (m_Request.getFormName())
+            if (m_Request.getFormModelName())
             {
-                jsonWriter.writePropertyName("formName");
-                jsonWriter.writeCharArray(*m_Request.getFormName());
+                jsonWriter.writePropertyName("formModelName");
+                jsonWriter.writeCharArray(*m_Request.getFormModelName());
             }
             if (m_Request.getRequestId())
             {
@@ -1014,10 +1014,10 @@ private:
                 jsonWriter.writePropertyName("metadata");
                 jsonWriter.writeCharArray(*m_Request.getMetadata());
             }
-            if (m_Request.getFormModelId())
+            if (m_Request.getFormModelName())
             {
-                jsonWriter.writePropertyName("formModelId");
-                jsonWriter.writeCharArray(*m_Request.getFormModelId());
+                jsonWriter.writePropertyName("formModelName");
+                jsonWriter.writeCharArray(*m_Request.getFormModelName());
             }
             if (m_Request.getInitialMaxCapacity())
             {
@@ -1151,10 +1151,10 @@ private:
                 jsonWriter.writePropertyName("metadata");
                 jsonWriter.writeCharArray(*m_Request.getMetadata());
             }
-            if (m_Request.getFormModelId())
+            if (m_Request.getFormModelName())
             {
-                jsonWriter.writePropertyName("formModelId");
-                jsonWriter.writeCharArray(*m_Request.getFormModelId());
+                jsonWriter.writePropertyName("formModelName");
+                jsonWriter.writeCharArray(*m_Request.getFormModelName());
             }
             if (m_Request.getInitialMaxCapacity())
             {
@@ -3078,10 +3078,10 @@ protected:
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
         }
-        if (obj.getFormModelId())
+        if (obj.getFormModelName())
         {
-            jsonWriter.writePropertyName("formModelId");
-            jsonWriter.writeCharArray(*obj.getFormModelId());
+            jsonWriter.writePropertyName("formModelName");
+            jsonWriter.writeCharArray(*obj.getFormModelName());
         }
         if (obj.getInitialMaxCapacity())
         {
@@ -3380,6 +3380,11 @@ protected:
         {
             jsonWriter.writePropertyName("triggerScriptId");
             jsonWriter.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerTargetType())
+        {
+            jsonWriter.writePropertyName("doneTriggerTargetType");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
         }
         if (obj.getDoneTriggerScriptId())
         {

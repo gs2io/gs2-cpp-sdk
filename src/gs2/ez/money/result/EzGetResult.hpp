@@ -31,7 +31,7 @@ private:
     {
     public:
         /** ウォレット */
-        EzWalletDetail item;
+        EzWallet item;
 
         Data() = default;
 
@@ -84,7 +84,7 @@ public:
     //   Getters
     // ========================================
 
-    const EzWalletDetail& getItem() const
+    const EzWallet& getItem() const
     {
         return ensureData().item;
     }

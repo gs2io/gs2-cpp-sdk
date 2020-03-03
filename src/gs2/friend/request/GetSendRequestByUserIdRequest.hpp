@@ -47,7 +47,7 @@ private:
         optional<StringHolder> namespaceName;
         /** ユーザーID */
         optional<StringHolder> userId;
-        /** ユーザーID */
+        /** フレンドリクエストの宛先ユーザーID */
         optional<StringHolder> targetUserId;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
@@ -170,9 +170,9 @@ public:
     }
 
     /**
-     * ユーザーIDを取得
+     * フレンドリクエストの宛先ユーザーIDを取得
      *
-     * @return ユーザーID
+     * @return フレンドリクエストの宛先ユーザーID
      */
     const optional<StringHolder>& getTargetUserId() const
     {
@@ -180,9 +180,9 @@ public:
     }
 
     /**
-     * ユーザーIDを設定
+     * フレンドリクエストの宛先ユーザーIDを設定
      *
-     * @param targetUserId ユーザーID
+     * @param targetUserId フレンドリクエストの宛先ユーザーID
      */
     void setTargetUserId(StringHolder targetUserId)
     {
@@ -190,9 +190,9 @@ public:
     }
 
     /**
-     * ユーザーIDを設定
+     * フレンドリクエストの宛先ユーザーIDを設定
      *
-     * @param targetUserId ユーザーID
+     * @param targetUserId フレンドリクエストの宛先ユーザーID
      */
     GetSendRequestByUserIdRequest& withTargetUserId(StringHolder targetUserId)
     {

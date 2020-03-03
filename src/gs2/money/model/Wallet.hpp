@@ -24,6 +24,7 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "WalletDetail.hpp"
 #include <memory>
 #include <cstring>
 
@@ -53,6 +54,8 @@ private:
         optional<Int32> paid;
         /** 無償課金通貨所持量 */
         optional<Int32> free;
+        /** 詳細 */
+        optional<List<WalletDetail>> detail;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -70,6 +73,10 @@ private:
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
+            if (data.detail)
+            {
+                detail = data.detail->deepCopy();
+            }
         }
 
         Data(Data&& data) = default;
@@ -114,6 +121,19 @@ private:
                 if (jsonValue.IsInt())
                 {
                     this->free = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "detail") == 0)
+            {
+                if (jsonValue.IsArray())
+                {
+                    const auto& array = jsonValue.GetArray();
+                    this->detail.emplace();
+                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
+                        WalletDetail item;
+                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->detail += std::move(item);
+                    }
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -314,6 +334,37 @@ public:
     }
 
     /**
+     * 詳細を取得
+     *
+     * @return 詳細
+     */
+    const optional<List<WalletDetail>>& getDetail() const
+    {
+        return ensureData().detail;
+    }
+
+    /**
+     * 詳細を設定
+     *
+     * @param detail 詳細
+     */
+    void setDetail(List<WalletDetail> detail)
+    {
+        ensureData().detail.emplace(std::move(detail));
+    }
+
+    /**
+     * 詳細を設定
+     *
+     * @param detail 詳細
+     */
+    Wallet& withDetail(List<WalletDetail> detail)
+    {
+        setDetail(std::move(detail));
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -407,6 +458,10 @@ inline bool operator!=(const Wallet& lhs, const Wallet& lhr)
             return true;
         }
         if (lhs.m_pData->free != lhr.m_pData->free)
+        {
+            return true;
+        }
+        if (lhs.m_pData->detail != lhr.m_pData->detail)
         {
             return true;
         }

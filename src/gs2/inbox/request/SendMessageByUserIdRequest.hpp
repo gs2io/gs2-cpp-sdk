@@ -51,6 +51,10 @@ private:
         optional<StringHolder> metadata;
         /** 開封時に実行する入手アクション */
         optional<List<AcquireAction>> readAcquireActions;
+        /** メッセージの有効期限 */
+        optional<Int64> expiresAt;
+        /** メッセージの有効期限までの差分 */
+        optional<TimeSpan> expiresTimeSpan;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -61,11 +65,16 @@ private:
             namespaceName(data.namespaceName),
             userId(data.userId),
             metadata(data.metadata),
+            expiresAt(data.expiresAt),
             duplicationAvoider(data.duplicationAvoider)
         {
             if (data.readAcquireActions)
             {
                 readAcquireActions = data.readAcquireActions->deepCopy();
+            }
+            if (data.expiresTimeSpan)
+            {
+                expiresTimeSpan = data.expiresTimeSpan->deepCopy();
             }
         }
 
@@ -234,6 +243,68 @@ public:
     SendMessageByUserIdRequest& withReadAcquireActions(List<AcquireAction> readAcquireActions)
     {
         ensureData().readAcquireActions.emplace(std::move(readAcquireActions));
+        return *this;
+    }
+
+    /**
+     * メッセージの有効期限を取得
+     *
+     * @return メッセージの有効期限
+     */
+    const optional<Int64>& getExpiresAt() const
+    {
+        return ensureData().expiresAt;
+    }
+
+    /**
+     * メッセージの有効期限を設定
+     *
+     * @param expiresAt メッセージの有効期限
+     */
+    void setExpiresAt(Int64 expiresAt)
+    {
+        ensureData().expiresAt.emplace(expiresAt);
+    }
+
+    /**
+     * メッセージの有効期限を設定
+     *
+     * @param expiresAt メッセージの有効期限
+     */
+    SendMessageByUserIdRequest& withExpiresAt(Int64 expiresAt)
+    {
+        ensureData().expiresAt.emplace(expiresAt);
+        return *this;
+    }
+
+    /**
+     * メッセージの有効期限までの差分を取得
+     *
+     * @return メッセージの有効期限までの差分
+     */
+    const optional<TimeSpan>& getExpiresTimeSpan() const
+    {
+        return ensureData().expiresTimeSpan;
+    }
+
+    /**
+     * メッセージの有効期限までの差分を設定
+     *
+     * @param expiresTimeSpan メッセージの有効期限までの差分
+     */
+    void setExpiresTimeSpan(TimeSpan expiresTimeSpan)
+    {
+        ensureData().expiresTimeSpan.emplace(std::move(expiresTimeSpan));
+    }
+
+    /**
+     * メッセージの有効期限までの差分を設定
+     *
+     * @param expiresTimeSpan メッセージの有効期限までの差分
+     */
+    SendMessageByUserIdRequest& withExpiresTimeSpan(TimeSpan expiresTimeSpan)
+    {
+        ensureData().expiresTimeSpan.emplace(std::move(expiresTimeSpan));
         return *this;
     }
 

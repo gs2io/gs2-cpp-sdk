@@ -26,6 +26,7 @@
 #include "ScriptSetting.hpp"
 #include "NotificationSetting.hpp"
 #include "LogSetting.hpp"
+#include "TimeSpan.hpp"
 #include "AcquireAction.hpp"
 
 #endif //GS2_INBOX_MODEL_MODEL_HPP_
