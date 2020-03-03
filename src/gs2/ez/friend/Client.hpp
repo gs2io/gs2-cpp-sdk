@@ -33,6 +33,9 @@
 #include "result/EzDescribeReceiveRequestsResult.hpp"
 #include "result/EzAcceptResult.hpp"
 #include "result/EzRejectResult.hpp"
+#include "result/EzGetBlackListResult.hpp"
+#include "result/EzRegisterBlackListResult.hpp"
+#include "result/EzUnregisterBlackListResult.hpp"
 
 
 namespace gs2 {
@@ -303,6 +306,52 @@ public:
         GameSession& session,
         StringHolder namespaceName,
         StringHolder fromUserId
+    );
+
+    /// <summary>
+    ///  ブラックリストを取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    void getBlackList(
+        std::function<void(AsyncEzGetBlackListResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName
+    );
+
+    /// <summary>
+    ///  ブラックリストにユーザを登録<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="targetUserId">None</param>
+    void registerBlackList(
+        std::function<void(AsyncEzRegisterBlackListResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder targetUserId
+    );
+
+    /// <summary>
+    ///  ブラックリストからユーザを削除<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="targetUserId">None</param>
+    void unregisterBlackList(
+        std::function<void(AsyncEzUnregisterBlackListResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder targetUserId
     );
 };
 

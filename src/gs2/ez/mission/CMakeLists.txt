@@ -20,55 +20,59 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
+        model/EzConfig.hpp
+        model/EzNamespace.hpp
         model/EzCounterScopeModel.hpp
         model/EzMissionGroupModelMaster.hpp
-        model/EzCounter.hpp
+        model/EzResponseCache.hpp
+        model/EzMissionTaskModel.hpp
+        model/EzAcquireAction.hpp
         model/EzCurrentMissionMaster.hpp
+        model/EzLogSetting.hpp
+        model/EzMissionGroupModel.hpp
+        model/EzNotificationSetting.hpp
+        model/EzScriptSetting.hpp
+        model/EzCounterModelMaster.hpp
+        model/EzComplete.hpp
         model/EzMissionTaskModelMaster.hpp
         model/EzGitHubCheckoutSetting.hpp
-        model/EzComplete.hpp
-        model/EzNotificationSetting.hpp
-        model/EzNamespace.hpp
-        model/EzMissionTaskModel.hpp
-        model/EzLogSetting.hpp
-        model/EzCounterModel.hpp
         model/EzScopedValue.hpp
-        model/EzAcquireAction.hpp
-        model/EzConfig.hpp
-        model/EzResponseCache.hpp
-        model/EzCounterModelMaster.hpp
-        model/EzMissionGroupModel.hpp
+        model/EzCounterModel.hpp
+        model/EzCounter.hpp
+        result/EzListMissionTaskModelsResult.hpp
+        result/EzGetMissionTaskModelResult.hpp
+        result/EzListMissionGroupModelsResult.hpp
+        result/EzGetMissionGroupModelResult.hpp
         result/EzListCompletesResult.hpp
         result/EzGetCompleteResult.hpp
         result/EzReceiveRewardsResult.hpp
-        result/EzListMissionTaskModelsResult.hpp
-        result/EzGetMissionTaskModelResult.hpp
         result/EzListCounterModelsResult.hpp
         result/EzGetCounterModelResult.hpp
-        result/EzListMissionGroupModelsResult.hpp
-        result/EzGetMissionGroupModelResult.hpp
+        result/EzListCountersResult.hpp
+        result/EzGetCounterResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzConfig.cpp
+        model/EzNamespace.cpp
         model/EzCounterScopeModel.cpp
         model/EzMissionGroupModelMaster.cpp
-        model/EzCounter.cpp
+        model/EzResponseCache.cpp
+        model/EzMissionTaskModel.cpp
+        model/EzAcquireAction.cpp
         model/EzCurrentMissionMaster.cpp
+        model/EzLogSetting.cpp
+        model/EzMissionGroupModel.cpp
+        model/EzNotificationSetting.cpp
+        model/EzScriptSetting.cpp
+        model/EzCounterModelMaster.cpp
+        model/EzComplete.cpp
         model/EzMissionTaskModelMaster.cpp
         model/EzGitHubCheckoutSetting.cpp
-        model/EzComplete.cpp
-        model/EzNotificationSetting.cpp
-        model/EzNamespace.cpp
-        model/EzMissionTaskModel.cpp
-        model/EzLogSetting.cpp
-        model/EzCounterModel.cpp
         model/EzScopedValue.cpp
-        model/EzAcquireAction.cpp
-        model/EzConfig.cpp
-        model/EzResponseCache.cpp
-        model/EzCounterModelMaster.cpp
-        model/EzMissionGroupModel.cpp
+        model/EzCounterModel.cpp
+        model/EzCounter.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

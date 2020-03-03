@@ -60,7 +60,7 @@ public:
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">カテゴリー名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     void listInventoryModels(
         std::function<void(AsyncEzListInventoryModelsResult)> callback,
         StringHolder namespaceName
@@ -71,7 +71,7 @@ public:
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">カテゴリー名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="inventoryName">インベントリの種類名</param>
     void getInventoryModel(
         std::function<void(AsyncEzGetInventoryModelResult)> callback,
@@ -84,7 +84,7 @@ public:
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">カテゴリー名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="inventoryName">インベントリの種類名</param>
     void listItemModels(
         std::function<void(AsyncEzListItemModelsResult)> callback,
@@ -97,7 +97,7 @@ public:
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">カテゴリー名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="inventoryName">インベントリの種類名</param>
     /// <param name="itemName">アイテムモデルの種類名</param>
     void getItemModel(
@@ -116,7 +116,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
-    /// <param name="namespaceName">カテゴリー名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
     void listInventories(
@@ -134,7 +134,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
-    /// <param name="namespaceName">カテゴリー名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="inventoryName">インベントリの種類名</param>
     void getInventory(
         std::function<void(AsyncEzGetInventoryResult)> callback,
@@ -150,7 +150,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
-    /// <param name="namespaceName">カテゴリー名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="inventoryName">インベントリの種類名</param>
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
@@ -173,7 +173,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
-    /// <param name="namespaceName">カテゴリー名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="inventoryName">インベントリの種類名</param>
     /// <param name="itemName">アイテムモデルの種類名</param>
     void getItem(
@@ -193,9 +193,10 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
-    /// <param name="namespaceName">カテゴリー名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="inventoryName">インベントリの種類名</param>
     /// <param name="itemName">アイテムモデルの種類名</param>
+    /// <param name="itemSetName">アイテムセットを識別する名前</param>
     /// <param name="keyId">署名の発行に使用する暗号鍵 のGRN</param>
     void getItemWithSignature(
         std::function<void(AsyncEzGetItemWithSignatureResult)> callback,
@@ -203,7 +204,8 @@ public:
         StringHolder namespaceName,
         StringHolder inventoryName,
         StringHolder itemName,
-        StringHolder keyId
+        StringHolder keyId,
+        gs2::optional<StringHolder> itemSetName=gs2::nullopt
     );
 
     /// <summary>
@@ -221,17 +223,19 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
-    /// <param name="namespaceName">カテゴリー名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="inventoryName">インベントリの名前</param>
     /// <param name="itemName">アイテムマスターの名前</param>
     /// <param name="consumeCount">消費する量</param>
+    /// <param name="itemSetName">アイテムセットを識別する名前</param>
     void consume(
         std::function<void(AsyncEzConsumeResult)> callback,
         GameSession& session,
         StringHolder namespaceName,
         StringHolder inventoryName,
         StringHolder itemName,
-        Int64 consumeCount
+        Int64 consumeCount,
+        gs2::optional<StringHolder> itemSetName=gs2::nullopt
     );
 };
 

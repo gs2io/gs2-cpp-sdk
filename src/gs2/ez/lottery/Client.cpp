@@ -83,12 +83,12 @@ void Client::getBox(
     std::function<void(AsyncEzGetBoxResult)> callback,
     GameSession& session,
     StringHolder namespaceName,
-    StringHolder lotteryName
+    StringHolder prizeTableName
 )
 {
     gs2::lottery::GetBoxRequest request;
     request.setNamespaceName(namespaceName);
-    request.setLotteryName(lotteryName);
+    request.setPrizeTableName(prizeTableName);
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->getBox(
         request,
@@ -121,12 +121,12 @@ void Client::resetBox(
     std::function<void(AsyncEzResetBoxResult)> callback,
     GameSession& session,
     StringHolder namespaceName,
-    StringHolder lotteryName
+    StringHolder prizeTableName
 )
 {
     gs2::lottery::ResetBoxRequest request;
     request.setNamespaceName(namespaceName);
-    request.setLotteryName(lotteryName);
+    request.setPrizeTableName(prizeTableName);
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->resetBox(
         request,

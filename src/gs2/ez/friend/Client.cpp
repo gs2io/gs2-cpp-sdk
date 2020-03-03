@@ -630,4 +630,116 @@ void Client::reject(
     );
 }
 
+void Client::getBlackList(
+    std::function<void(AsyncEzGetBlackListResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName
+)
+{
+    gs2::friend_::DescribeBlackListRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->describeBlackList(
+        request,
+        [callback](gs2::friend_::AsyncDescribeBlackListResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetBlackListResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetBlackListResult::isConvertible(*r.getResult()))
+            {
+                EzGetBlackListResult ezResult(*r.getResult());
+                AsyncEzGetBlackListResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetBlackListResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::registerBlackList(
+    std::function<void(AsyncEzRegisterBlackListResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder targetUserId
+)
+{
+    gs2::friend_::RegisterBlackListRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setTargetUserId(targetUserId);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->registerBlackList(
+        request,
+        [callback](gs2::friend_::AsyncRegisterBlackListResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzRegisterBlackListResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzRegisterBlackListResult::isConvertible(*r.getResult()))
+            {
+                EzRegisterBlackListResult ezResult(*r.getResult());
+                AsyncEzRegisterBlackListResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzRegisterBlackListResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::unregisterBlackList(
+    std::function<void(AsyncEzUnregisterBlackListResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder targetUserId
+)
+{
+    gs2::friend_::UnregisterBlackListRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setTargetUserId(targetUserId);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->unregisterBlackList(
+        request,
+        [callback](gs2::friend_::AsyncUnregisterBlackListResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzUnregisterBlackListResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzUnregisterBlackListResult::isConvertible(*r.getResult()))
+            {
+                EzUnregisterBlackListResult ezResult(*r.getResult());
+                AsyncEzUnregisterBlackListResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzUnregisterBlackListResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
 }}}

@@ -37,6 +37,7 @@ void Client::createRoom(
     std::function<void(AsyncEzCreateRoomResult)> callback,
     GameSession& session,
     StringHolder namespaceName,
+    gs2::optional<StringHolder> name,
     gs2::optional<StringHolder> metadata,
     gs2::optional<StringHolder> password,
     gs2::optional<List<StringHolder>> whiteListUserIds
@@ -44,6 +45,10 @@ void Client::createRoom(
 {
     gs2::chat::CreateRoomRequest request;
     request.setNamespaceName(namespaceName);
+    if (name)
+    {
+        request.setName(std::move(*name));
+    }
     if (metadata)
     {
         request.setMetadata(std::move(*metadata));

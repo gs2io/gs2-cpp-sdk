@@ -14,24 +14,24 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_MONEY_EZGETRESULT_HPP_
-#define GS2_EZ_MONEY_EZGETRESULT_HPP_
+#ifndef GS2_EZ_MISSION_EZGETCOUNTERRESULT_HPP_
+#define GS2_EZ_MISSION_EZGETCOUNTERRESULT_HPP_
 
 #include "../model/model.hpp"
 #include <gs2/core/AsyncResult.hpp>
-#include <gs2/money/result/GetWalletResult.hpp>
+#include <gs2/mission/result/GetCounterResult.hpp>
 
 
-namespace gs2 { namespace ez { namespace money {
+namespace gs2 { namespace ez { namespace mission {
 
-class EzGetResult : public gs2::Gs2Object
+class EzGetCounterResult : public gs2::Gs2Object
 {
 private:
     class Data : public gs2::Gs2Object
     {
     public:
-        /** ウォレット */
-        EzWallet item;
+        /** カウンター */
+        EzCounter item;
 
         Data() = default;
 
@@ -43,8 +43,8 @@ private:
 
         Data(Data&& data) = default;
 
-        Data(const gs2::money::GetWalletResult& getWalletResult) :
-            item(*getWalletResult.getItem())
+        Data(const gs2::mission::GetCounterResult& getCounterResult) :
+            item(*getCounterResult.getItem())
         {
         }
 
@@ -57,24 +57,24 @@ private:
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetResult() = default;
-    EzGetResult(const EzGetResult& result) = default;
-    EzGetResult(EzGetResult&& result) = default;
-    ~EzGetResult() = default;
+    EzGetCounterResult() = default;
+    EzGetCounterResult(const EzGetCounterResult& result) = default;
+    EzGetCounterResult(EzGetCounterResult&& result) = default;
+    ~EzGetCounterResult() = default;
 
-    EzGetResult(gs2::money::GetWalletResult result) :
+    EzGetCounterResult(gs2::mission::GetCounterResult result) :
         GS2_CORE_SHARED_DATA_INITIALIZATION(result)
     {}
 
-    EzGetResult& operator=(const EzGetResult& result) = default;
-    EzGetResult& operator=(EzGetResult&& result) = default;
+    EzGetCounterResult& operator=(const EzGetCounterResult& result) = default;
+    EzGetCounterResult& operator=(EzGetCounterResult&& result) = default;
 
-    EzGetResult deepCopy() const
+    EzGetCounterResult deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetResult);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetCounterResult);
     }
 
-    static bool isConvertible(const gs2::money::GetWalletResult& result)
+    static bool isConvertible(const gs2::mission::GetCounterResult& result)
     {
         return
             result.getItem().has_value();
@@ -84,14 +84,14 @@ public:
     //   Getters
     // ========================================
 
-    const EzWallet& getItem() const
+    const EzCounter& getItem() const
     {
         return ensureData().item;
     }
 };
 
-typedef gs2::AsyncResult<EzGetResult> AsyncEzGetResult;
+typedef gs2::AsyncResult<EzGetCounterResult> AsyncEzGetCounterResult;
 
 }}}
 
-#endif //GS2_EZ_MONEY_EZGETRESULT_HPP_
+#endif //GS2_EZ_MISSION_EZGETCOUNTERRESULT_HPP_

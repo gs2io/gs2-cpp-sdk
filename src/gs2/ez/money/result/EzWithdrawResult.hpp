@@ -31,7 +31,7 @@ private:
     {
     public:
         /** 消費後のウォレット */
-        EzWalletDetail item;
+        EzWallet item;
         /** 消費した通貨の価格 */
         Float price;
 
@@ -89,7 +89,7 @@ public:
     //   Getters
     // ========================================
 
-    const EzWalletDetail& getItem() const
+    const EzWallet& getItem() const
     {
         return ensureData().item;
     }

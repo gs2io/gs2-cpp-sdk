@@ -27,6 +27,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzScriptSetting.hpp
         model/EzNotificationSetting.hpp
         model/EzLogSetting.hpp
+        model/EzTimeSpan.hpp
         model/EzAcquireAction.hpp
         result/EzListResult.hpp
         result/EzReadResult.hpp
@@ -42,6 +43,7 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         model/EzScriptSetting.cpp
         model/EzNotificationSetting.cpp
         model/EzLogSetting.cpp
+        model/EzTimeSpan.cpp
         model/EzAcquireAction.cpp
         )
 

@@ -22,6 +22,8 @@
 #include "result/EzGetDistributorModelResult.hpp"
 #include "result/EzRunStampTaskResult.hpp"
 #include "result/EzRunStampSheetResult.hpp"
+#include "result/EzRunStampTaskWithoutNamespaceResult.hpp"
+#include "result/EzRunStampSheetWithoutNamespaceResult.hpp"
 
 
 namespace gs2 {
@@ -102,6 +104,42 @@ public:
     void runStampSheet(
         std::function<void(AsyncEzRunStampSheetResult)> callback,
         StringHolder namespaceName,
+        StringHolder stampSheet,
+        StringHolder keyId,
+        gs2::optional<StringHolder> contextStack=gs2::nullopt
+    );
+
+    /// <summary>
+    ///  スタンプタスクを実行<br />
+    ///    <br />
+    ///    ネームスペースの指定を省略することで、<br />
+    ///    ログが記録できない・リソース溢れ処理が実行されないなどの副作用があります。<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="stampTask">実行するスタンプタスク</param>
+    /// <param name="keyId">スタンプシートの暗号化に使用した暗号鍵GRN</param>
+    /// <param name="contextStack">スタンプシートの実行状況を記録するスタックメモリ</param>
+    void runStampTaskWithoutNamespace(
+        std::function<void(AsyncEzRunStampTaskWithoutNamespaceResult)> callback,
+        StringHolder stampTask,
+        StringHolder keyId,
+        gs2::optional<StringHolder> contextStack=gs2::nullopt
+    );
+
+    /// <summary>
+    ///  スタンプシートを実行<br />
+    ///    <br />
+    ///    ネームスペースの指定を省略することで、<br />
+    ///    ログが記録できない・リソース溢れ処理が実行されないなどの副作用があります。<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="stampSheet">実行するスタンプタスク</param>
+    /// <param name="keyId">スタンプシートの暗号化に使用した暗号鍵GRN</param>
+    /// <param name="contextStack">スタンプシートの実行状況を記録するスタックメモリ</param>
+    void runStampSheetWithoutNamespace(
+        std::function<void(AsyncEzRunStampSheetWithoutNamespaceResult)> callback,
         StringHolder stampSheet,
         StringHolder keyId,
         gs2::optional<StringHolder> contextStack=gs2::nullopt

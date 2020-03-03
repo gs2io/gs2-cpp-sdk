@@ -14,24 +14,24 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_MONEY_EZGETRESULT_HPP_
-#define GS2_EZ_MONEY_EZGETRESULT_HPP_
+#ifndef GS2_EZ_FRIEND_EZUNREGISTERBLACKLISTRESULT_HPP_
+#define GS2_EZ_FRIEND_EZUNREGISTERBLACKLISTRESULT_HPP_
 
 #include "../model/model.hpp"
 #include <gs2/core/AsyncResult.hpp>
-#include <gs2/money/result/GetWalletResult.hpp>
+#include <gs2/friend/result/UnregisterBlackListResult.hpp>
 
 
-namespace gs2 { namespace ez { namespace money {
+namespace gs2 { namespace ez { namespace friend_ {
 
-class EzGetResult : public gs2::Gs2Object
+class EzUnregisterBlackListResult : public gs2::Gs2Object
 {
 private:
     class Data : public gs2::Gs2Object
     {
     public:
-        /** ウォレット */
-        EzWallet item;
+        /** ブラックリスト */
+        EzBlackList item;
 
         Data() = default;
 
@@ -43,8 +43,8 @@ private:
 
         Data(Data&& data) = default;
 
-        Data(const gs2::money::GetWalletResult& getWalletResult) :
-            item(*getWalletResult.getItem())
+        Data(const gs2::friend_::UnregisterBlackListResult& unregisterBlackListResult) :
+            item(*unregisterBlackListResult.getItem())
         {
         }
 
@@ -57,24 +57,24 @@ private:
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzGetResult() = default;
-    EzGetResult(const EzGetResult& result) = default;
-    EzGetResult(EzGetResult&& result) = default;
-    ~EzGetResult() = default;
+    EzUnregisterBlackListResult() = default;
+    EzUnregisterBlackListResult(const EzUnregisterBlackListResult& result) = default;
+    EzUnregisterBlackListResult(EzUnregisterBlackListResult&& result) = default;
+    ~EzUnregisterBlackListResult() = default;
 
-    EzGetResult(gs2::money::GetWalletResult result) :
+    EzUnregisterBlackListResult(gs2::friend_::UnregisterBlackListResult result) :
         GS2_CORE_SHARED_DATA_INITIALIZATION(result)
     {}
 
-    EzGetResult& operator=(const EzGetResult& result) = default;
-    EzGetResult& operator=(EzGetResult&& result) = default;
+    EzUnregisterBlackListResult& operator=(const EzUnregisterBlackListResult& result) = default;
+    EzUnregisterBlackListResult& operator=(EzUnregisterBlackListResult&& result) = default;
 
-    EzGetResult deepCopy() const
+    EzUnregisterBlackListResult deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetResult);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzUnregisterBlackListResult);
     }
 
-    static bool isConvertible(const gs2::money::GetWalletResult& result)
+    static bool isConvertible(const gs2::friend_::UnregisterBlackListResult& result)
     {
         return
             result.getItem().has_value();
@@ -84,14 +84,14 @@ public:
     //   Getters
     // ========================================
 
-    const EzWallet& getItem() const
+    const EzBlackList& getItem() const
     {
         return ensureData().item;
     }
 };
 
-typedef gs2::AsyncResult<EzGetResult> AsyncEzGetResult;
+typedef gs2::AsyncResult<EzUnregisterBlackListResult> AsyncEzUnregisterBlackListResult;
 
 }}}
 
-#endif //GS2_EZ_MONEY_EZGETRESULT_HPP_
+#endif //GS2_EZ_FRIEND_EZUNREGISTERBLACKLISTRESULT_HPP_

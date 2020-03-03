@@ -14,24 +14,24 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_EZ_SHOWCASE_EZLISTRESULT_HPP_
-#define GS2_EZ_SHOWCASE_EZLISTRESULT_HPP_
+#ifndef GS2_EZ_FRIEND_EZGETBLACKLISTRESULT_HPP_
+#define GS2_EZ_FRIEND_EZGETBLACKLISTRESULT_HPP_
 
 #include "../model/model.hpp"
 #include <gs2/core/AsyncResult.hpp>
-#include <gs2/showcase/result/DescribeShowcasesResult.hpp>
+#include <gs2/friend/result/DescribeBlackListResult.hpp>
 
 
-namespace gs2 { namespace ez { namespace showcase {
+namespace gs2 { namespace ez { namespace friend_ {
 
-class EzListResult : public gs2::Gs2Object
+class EzGetBlackListResult : public gs2::Gs2Object
 {
 private:
     class Data : public gs2::Gs2Object
     {
     public:
-        /** 陳列棚のリスト */
-        List<EzShowcase> items;
+        /** ブラックリストに登録されたユーザIDリスト */
+        List<StringHolder> items;
 
         Data() = default;
 
@@ -43,15 +43,9 @@ private:
 
         Data(Data&& data) = default;
 
-        Data(const gs2::showcase::DescribeShowcasesResult& describeShowcasesResult)
+        Data(const gs2::friend_::DescribeBlackListResult& describeBlackListResult) :
+            items(*describeBlackListResult.getItems())
         {
-            {
-                auto& list = *describeShowcasesResult.getItems();
-                for (int i = 0; i < list.getCount(); ++i)
-                {
-                    items += EzShowcase(list[i]);
-                }
-            }
         }
 
         ~Data() = default;
@@ -63,24 +57,24 @@ private:
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    EzListResult() = default;
-    EzListResult(const EzListResult& result) = default;
-    EzListResult(EzListResult&& result) = default;
-    ~EzListResult() = default;
+    EzGetBlackListResult() = default;
+    EzGetBlackListResult(const EzGetBlackListResult& result) = default;
+    EzGetBlackListResult(EzGetBlackListResult&& result) = default;
+    ~EzGetBlackListResult() = default;
 
-    EzListResult(gs2::showcase::DescribeShowcasesResult result) :
+    EzGetBlackListResult(gs2::friend_::DescribeBlackListResult result) :
         GS2_CORE_SHARED_DATA_INITIALIZATION(result)
     {}
 
-    EzListResult& operator=(const EzListResult& result) = default;
-    EzListResult& operator=(EzListResult&& result) = default;
+    EzGetBlackListResult& operator=(const EzGetBlackListResult& result) = default;
+    EzGetBlackListResult& operator=(EzGetBlackListResult&& result) = default;
 
-    EzListResult deepCopy() const
+    EzGetBlackListResult deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzListResult);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(EzGetBlackListResult);
     }
 
-    static bool isConvertible(const gs2::showcase::DescribeShowcasesResult& result)
+    static bool isConvertible(const gs2::friend_::DescribeBlackListResult& result)
     {
         return
             result.getItems().has_value();
@@ -90,14 +84,14 @@ public:
     //   Getters
     // ========================================
 
-    const List<EzShowcase>& getItems() const
+    const List<StringHolder>& getItems() const
     {
         return ensureData().items;
     }
 };
 
-typedef gs2::AsyncResult<EzListResult> AsyncEzListResult;
+typedef gs2::AsyncResult<EzGetBlackListResult> AsyncEzGetBlackListResult;
 
 }}}
 
-#endif //GS2_EZ_SHOWCASE_EZLISTRESULT_HPP_
+#endif //GS2_EZ_FRIEND_EZGETBLACKLISTRESULT_HPP_

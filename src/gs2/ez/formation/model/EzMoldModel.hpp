@@ -46,7 +46,7 @@ private:
         gs2::optional<StringHolder> name;
         /** メタデータ */
         gs2::optional<StringHolder> metadata;
-        /** フォームモデル */
+        /** None */
         gs2::optional<EzFormModel> formModel;
         /** フォームを保存できる初期キャパシティ */
         gs2::optional<Int32> initialMaxCapacity;

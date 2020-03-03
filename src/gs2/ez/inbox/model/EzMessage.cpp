@@ -27,7 +27,8 @@ EzMessage::Data::Data(const Data& data) :
     metadata(data.metadata),
     isRead(data.isRead),
     receivedAt(data.receivedAt),
-    readAt(data.readAt)
+    readAt(data.readAt),
+    expiresAt(data.expiresAt)
 {
     if (data.readAcquireActions)
     {
@@ -41,7 +42,8 @@ EzMessage::Data::Data(const gs2::inbox::Message& message) :
     metadata(message.getMetadata()),
     isRead(message.getIsRead() ? *message.getIsRead() : false),
     receivedAt(message.getReceivedAt() ? *message.getReceivedAt() : 0),
-    readAt(message.getReadAt() ? *message.getReadAt() : 0)
+    readAt(message.getReadAt() ? *message.getReadAt() : 0),
+    expiresAt(message.getExpiresAt() ? *message.getExpiresAt() : 0)
 {
     readAcquireActions.emplace();
     if (message.getReadAcquireActions())
@@ -81,6 +83,7 @@ gs2::inbox::Message EzMessage::ToModel() const
     }
     message.setReceivedAt(getReceivedAt());
     message.setReadAt(getReadAt());
+    message.setExpiresAt(getExpiresAt());
     return message;
 }
 
