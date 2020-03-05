@@ -49,6 +49,8 @@ private:
         optional<StringHolder> namespaceName;
         /** カテゴリ名 */
         optional<StringHolder> categoryName;
+        /** ランキングの取得を開始するインデックス */
+        optional<Int64> startIndex;
         /** データの取得を開始する位置を指定するトークン */
         optional<StringHolder> pageToken;
         /** データの取得件数 */
@@ -63,6 +65,7 @@ private:
             accessToken(data.accessToken),
             namespaceName(data.namespaceName),
             categoryName(data.categoryName),
+            startIndex(data.startIndex),
             pageToken(data.pageToken),
             limit(data.limit),
             duplicationAvoider(data.duplicationAvoider)
@@ -204,6 +207,37 @@ public:
     DescribeRankingsRequest& withCategoryName(StringHolder categoryName)
     {
         ensureData().categoryName.emplace(std::move(categoryName));
+        return *this;
+    }
+
+    /**
+     * ランキングの取得を開始するインデックスを取得
+     *
+     * @return ランキングの取得を開始するインデックス
+     */
+    const optional<Int64>& getStartIndex() const
+    {
+        return ensureData().startIndex;
+    }
+
+    /**
+     * ランキングの取得を開始するインデックスを設定
+     *
+     * @param startIndex ランキングの取得を開始するインデックス
+     */
+    void setStartIndex(Int64 startIndex)
+    {
+        ensureData().startIndex.emplace(startIndex);
+    }
+
+    /**
+     * ランキングの取得を開始するインデックスを設定
+     *
+     * @param startIndex ランキングの取得を開始するインデックス
+     */
+    DescribeRankingsRequest& withStartIndex(Int64 startIndex)
+    {
+        ensureData().startIndex.emplace(startIndex);
         return *this;
     }
 
