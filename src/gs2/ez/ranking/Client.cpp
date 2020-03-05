@@ -271,6 +271,7 @@ void Client::getRanking(
     GameSession& session,
     StringHolder namespaceName,
     StringHolder categoryName,
+    gs2::optional<Int64> startIndex,
     gs2::optional<StringHolder> pageToken,
     gs2::optional<Int64> limit
 )
@@ -278,6 +279,10 @@ void Client::getRanking(
     gs2::ranking::DescribeRankingsRequest request;
     request.setNamespaceName(namespaceName);
     request.setCategoryName(categoryName);
+    if (startIndex)
+    {
+        request.setStartIndex(std::move(*startIndex));
+    }
     if (pageToken)
     {
         request.setPageToken(std::move(*pageToken));
