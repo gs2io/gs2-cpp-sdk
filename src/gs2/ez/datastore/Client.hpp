@@ -99,6 +99,7 @@ public:
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="name">データの名前</param>
     /// <param name="scope">ファイルのアクセス権</param>
     /// <param name="allowUserIds">公開するユーザIDリスト</param>
     void prepareUpload(
@@ -106,7 +107,8 @@ public:
         GameSession& session,
         StringHolder namespaceName,
         StringHolder scope,
-        List<StringHolder> allowUserIds
+        List<StringHolder> allowUserIds,
+        gs2::optional<StringHolder> name=gs2::nullopt
     );
 
     /// <summary>
@@ -174,7 +176,7 @@ public:
     );
 
     /// <summary>
-    ///  データのアップロード準備<br />
+    ///  データオブジェクト履歴の一覧を取得<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>

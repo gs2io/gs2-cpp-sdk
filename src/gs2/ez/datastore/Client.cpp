@@ -129,13 +129,18 @@ void Client::prepareUpload(
     GameSession& session,
     StringHolder namespaceName,
     StringHolder scope,
-    List<StringHolder> allowUserIds
+    List<StringHolder> allowUserIds,
+    gs2::optional<StringHolder> name
 )
 {
     gs2::datastore::PrepareUploadRequest request;
     request.setNamespaceName(namespaceName);
     request.setScope(scope);
     request.setAllowUserIds(allowUserIds);
+    if (name)
+    {
+        request.setName(std::move(*name));
+    }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->prepareUpload(
         request,
