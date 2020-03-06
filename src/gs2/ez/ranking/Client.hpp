@@ -164,13 +164,15 @@ public:
     /// <param name="categoryName">カテゴリ名</param>
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
+    /// <param name="startIndex">ランキングの取得を開始するインデックス</param>
     void getRanking(
         std::function<void(AsyncEzGetRankingResult)> callback,
         GameSession& session,
         StringHolder namespaceName,
         StringHolder categoryName,
         gs2::optional<StringHolder> pageToken=gs2::nullopt,
-        gs2::optional<Int64> limit=gs2::nullopt
+        gs2::optional<Int64> limit=gs2::nullopt,
+        gs2::optional<Int64> startIndex=gs2::nullopt
     );
 
     /// <summary>

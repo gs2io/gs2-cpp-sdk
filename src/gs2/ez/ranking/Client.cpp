@@ -272,7 +272,8 @@ void Client::getRanking(
     StringHolder namespaceName,
     StringHolder categoryName,
     gs2::optional<StringHolder> pageToken,
-    gs2::optional<Int64> limit
+    gs2::optional<Int64> limit,
+    gs2::optional<Int64> startIndex
 )
 {
     gs2::ranking::DescribeRankingsRequest request;
@@ -285,6 +286,10 @@ void Client::getRanking(
     if (limit)
     {
         request.setLimit(std::move(*limit));
+    }
+    if (startIndex)
+    {
+        request.setStartIndex(std::move(*startIndex));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->describeRankings(
