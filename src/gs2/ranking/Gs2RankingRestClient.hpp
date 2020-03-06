@@ -1420,6 +1420,13 @@ private:
                 url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
                 joint[0] = '&';
             }
+            if (m_Request.getStartIndex())
+            {
+                url += joint;
+                url += "startIndex=";
+                url += detail::StringVariable(*m_Request.getStartIndex()).c_str();
+                joint[0] = '&';
+            }
             if (m_Request.getPageToken())
             {
                 url += joint;
@@ -1495,6 +1502,13 @@ private:
                 url += joint;
                 url += "contextStack=";
                 url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getStartIndex())
+            {
+                url += joint;
+                url += "startIndex=";
+                url += detail::StringVariable(*m_Request.getStartIndex()).c_str();
                 joint[0] = '&';
             }
             if (m_Request.getPageToken())
