@@ -1495,6 +1495,11 @@ private:
                 jsonWriter.writePropertyName("categoryName");
                 jsonWriter.writeCharArray(*m_Request.getCategoryName());
             }
+            if (m_Request.getStartIndex())
+            {
+                jsonWriter.writePropertyName("startIndex");
+                jsonWriter.writeInt64(*m_Request.getStartIndex());
+            }
             if (m_Request.getPageToken())
             {
                 jsonWriter.writePropertyName("pageToken");
@@ -1575,6 +1580,11 @@ private:
             {
                 jsonWriter.writePropertyName("userId");
                 jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getStartIndex())
+            {
+                jsonWriter.writePropertyName("startIndex");
+                jsonWriter.writeInt64(*m_Request.getStartIndex());
             }
             if (m_Request.getPageToken())
             {
