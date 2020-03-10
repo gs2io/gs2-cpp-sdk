@@ -18,10 +18,6 @@
 #define GS2_EZ_MISSION_GS2MISSIONWEBSOCKETCLIENT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
-#include "result/EzListMissionTaskModelsResult.hpp"
-#include "result/EzGetMissionTaskModelResult.hpp"
-#include "result/EzListMissionGroupModelsResult.hpp"
-#include "result/EzGetMissionGroupModelResult.hpp"
 #include "result/EzListCounterModelsResult.hpp"
 #include "result/EzGetCounterModelResult.hpp"
 #include "result/EzListCountersResult.hpp"
@@ -29,6 +25,10 @@
 #include "result/EzListCompletesResult.hpp"
 #include "result/EzGetCompleteResult.hpp"
 #include "result/EzReceiveRewardsResult.hpp"
+#include "result/EzListMissionGroupModelsResult.hpp"
+#include "result/EzGetMissionGroupModelResult.hpp"
+#include "result/EzListMissionTaskModelsResult.hpp"
+#include "result/EzGetMissionTaskModelResult.hpp"
 
 
 namespace gs2 {
@@ -55,58 +55,6 @@ private:
 public:
     Client(gs2::ez::Profile& profile);
     ~Client();
-
-    /// <summary>
-    ///  ミッションタスクモデルの一覧を取得<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="missionGroupName">グループ名</param>
-    void listMissionTaskModels(
-        std::function<void(AsyncEzListMissionTaskModelsResult)> callback,
-        StringHolder namespaceName,
-        StringHolder missionGroupName
-    );
-
-    /// <summary>
-    ///  ミッションタスク名を指定してミッションタスクモデルを取得<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="missionGroupName">グループ名</param>
-    /// <param name="missionTaskName">タスク名</param>
-    void getMissionTaskModel(
-        std::function<void(AsyncEzGetMissionTaskModelResult)> callback,
-        StringHolder namespaceName,
-        StringHolder missionGroupName,
-        StringHolder missionTaskName
-    );
-
-    /// <summary>
-    ///  ミッショングループモデルの一覧を取得<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    void listMissionGroupModels(
-        std::function<void(AsyncEzListMissionGroupModelsResult)> callback,
-        StringHolder namespaceName
-    );
-
-    /// <summary>
-    ///  ミッショングループ名を指定してミッショングループモデルを取得<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="missionGroupName">グループ名</param>
-    void getMissionGroupModel(
-        std::function<void(AsyncEzGetMissionGroupModelResult)> callback,
-        StringHolder namespaceName,
-        StringHolder missionGroupName
-    );
 
     /// <summary>
     ///  カウンターの種類を認証<br />
@@ -213,6 +161,58 @@ public:
     void receiveRewards(
         std::function<void(AsyncEzReceiveRewardsResult)> callback,
         GameSession& session,
+        StringHolder namespaceName,
+        StringHolder missionGroupName,
+        StringHolder missionTaskName
+    );
+
+    /// <summary>
+    ///  ミッショングループモデルの一覧を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    void listMissionGroupModels(
+        std::function<void(AsyncEzListMissionGroupModelsResult)> callback,
+        StringHolder namespaceName
+    );
+
+    /// <summary>
+    ///  ミッショングループ名を指定してミッショングループモデルを取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="missionGroupName">グループ名</param>
+    void getMissionGroupModel(
+        std::function<void(AsyncEzGetMissionGroupModelResult)> callback,
+        StringHolder namespaceName,
+        StringHolder missionGroupName
+    );
+
+    /// <summary>
+    ///  ミッションタスクモデルの一覧を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="missionGroupName">グループ名</param>
+    void listMissionTaskModels(
+        std::function<void(AsyncEzListMissionTaskModelsResult)> callback,
+        StringHolder namespaceName,
+        StringHolder missionGroupName
+    );
+
+    /// <summary>
+    ///  ミッションタスク名を指定してミッションタスクモデルを取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="missionGroupName">グループ名</param>
+    /// <param name="missionTaskName">タスク名</param>
+    void getMissionTaskModel(
+        std::function<void(AsyncEzGetMissionTaskModelResult)> callback,
         StringHolder namespaceName,
         StringHolder missionGroupName,
         StringHolder missionTaskName
