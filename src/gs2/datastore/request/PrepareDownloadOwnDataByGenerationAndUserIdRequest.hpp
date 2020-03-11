@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_DATASTORE_CONTROL_PREPAREDOWNLOADBYGENERATIONREQUEST_HPP_
-#define GS2_DATASTORE_CONTROL_PREPAREDOWNLOADBYGENERATIONREQUEST_HPP_
+#ifndef GS2_DATASTORE_CONTROL_PREPAREDOWNLOADOWNDATABYGENERATIONANDUSERIDREQUEST_HPP_
+#define GS2_DATASTORE_CONTROL_PREPAREDOWNLOADOWNDATABYGENERATIONANDUSERIDREQUEST_HPP_
 
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
@@ -30,11 +30,11 @@ namespace gs2 { namespace datastore
 {
 
 /**
- * データオブジェクトを世代を指定してダウンロード準備する のリクエストモデル
+ * ユーザIDを指定してデータオブジェクトを世代を指定してダウンロード準備する のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
-class PrepareDownloadByGenerationRequest : public Gs2BasicRequest, public Gs2Datastore
+class PrepareDownloadOwnDataByGenerationAndUserIdRequest : public Gs2BasicRequest, public Gs2Datastore
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -43,12 +43,12 @@ private:
     class Data : public Gs2BasicRequest::Data
     {
     public:
-        /** アクセストークン */
-        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
-        /** データオブジェクト */
-        optional<StringHolder> dataObjectId;
+        /** ユーザーID */
+        optional<StringHolder> userId;
+        /** データの名前 */
+        optional<StringHolder> dataObjectName;
         /** 世代 */
         optional<StringHolder> generation;
         /** 重複実行回避機能に使用するID */
@@ -58,9 +58,9 @@ private:
 
         Data(const Data& data) :
             Gs2BasicRequest::Data(data),
-            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
-            dataObjectId(data.dataObjectId),
+            userId(data.userId),
+            dataObjectName(data.dataObjectName),
             generation(data.generation),
             duplicationAvoider(data.duplicationAvoider)
         {
@@ -87,59 +87,27 @@ private:
     }
 
 public:
-    PrepareDownloadByGenerationRequest() = default;
-    PrepareDownloadByGenerationRequest(const PrepareDownloadByGenerationRequest& prepareDownloadByGenerationRequest) = default;
-    PrepareDownloadByGenerationRequest(PrepareDownloadByGenerationRequest&& prepareDownloadByGenerationRequest) = default;
-    ~PrepareDownloadByGenerationRequest() GS2_OVERRIDE = default;
+    PrepareDownloadOwnDataByGenerationAndUserIdRequest() = default;
+    PrepareDownloadOwnDataByGenerationAndUserIdRequest(const PrepareDownloadOwnDataByGenerationAndUserIdRequest& prepareDownloadOwnDataByGenerationAndUserIdRequest) = default;
+    PrepareDownloadOwnDataByGenerationAndUserIdRequest(PrepareDownloadOwnDataByGenerationAndUserIdRequest&& prepareDownloadOwnDataByGenerationAndUserIdRequest) = default;
+    ~PrepareDownloadOwnDataByGenerationAndUserIdRequest() GS2_OVERRIDE = default;
 
-    PrepareDownloadByGenerationRequest& operator=(const PrepareDownloadByGenerationRequest& prepareDownloadByGenerationRequest) = default;
-    PrepareDownloadByGenerationRequest& operator=(PrepareDownloadByGenerationRequest&& prepareDownloadByGenerationRequest) = default;
+    PrepareDownloadOwnDataByGenerationAndUserIdRequest& operator=(const PrepareDownloadOwnDataByGenerationAndUserIdRequest& prepareDownloadOwnDataByGenerationAndUserIdRequest) = default;
+    PrepareDownloadOwnDataByGenerationAndUserIdRequest& operator=(PrepareDownloadOwnDataByGenerationAndUserIdRequest&& prepareDownloadOwnDataByGenerationAndUserIdRequest) = default;
 
-    PrepareDownloadByGenerationRequest deepCopy() const
+    PrepareDownloadOwnDataByGenerationAndUserIdRequest deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(PrepareDownloadByGenerationRequest);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(PrepareDownloadOwnDataByGenerationAndUserIdRequest);
     }
 
-    const PrepareDownloadByGenerationRequest* operator->() const
+    const PrepareDownloadOwnDataByGenerationAndUserIdRequest* operator->() const
     {
         return this;
     }
 
-    PrepareDownloadByGenerationRequest* operator->()
+    PrepareDownloadOwnDataByGenerationAndUserIdRequest* operator->()
     {
         return this;
-    }
-
-    /**
-     * アクセストークンを取得。
-     *
-     * @return アクセストークン
-     */
-    const gs2::optional<StringHolder>& getAccessToken() const
-    {
-        return ensureData().accessToken;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     */
-    void setAccessToken(StringHolder accessToken)
-    {
-        ensureData().accessToken.emplace(std::move(accessToken));
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    PrepareDownloadByGenerationRequest& withAccessToken(StringHolder accessToken)
-    {
-        setAccessToken(std::move(accessToken));
-        return *this;
     }
 
     /**
@@ -167,40 +135,71 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    PrepareDownloadByGenerationRequest& withNamespaceName(StringHolder namespaceName)
+    PrepareDownloadOwnDataByGenerationAndUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
     /**
-     * データオブジェクトを取得
+     * ユーザーIDを取得
      *
-     * @return データオブジェクト
+     * @return ユーザーID
      */
-    const optional<StringHolder>& getDataObjectId() const
+    const optional<StringHolder>& getUserId() const
     {
-        return ensureData().dataObjectId;
+        return ensureData().userId;
     }
 
     /**
-     * データオブジェクトを設定
+     * ユーザーIDを設定
      *
-     * @param dataObjectId データオブジェクト
+     * @param userId ユーザーID
      */
-    void setDataObjectId(StringHolder dataObjectId)
+    void setUserId(StringHolder userId)
     {
-        ensureData().dataObjectId.emplace(std::move(dataObjectId));
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
-     * データオブジェクトを設定
+     * ユーザーIDを設定
      *
-     * @param dataObjectId データオブジェクト
+     * @param userId ユーザーID
      */
-    PrepareDownloadByGenerationRequest& withDataObjectId(StringHolder dataObjectId)
+    PrepareDownloadOwnDataByGenerationAndUserIdRequest& withUserId(StringHolder userId)
     {
-        ensureData().dataObjectId.emplace(std::move(dataObjectId));
+        ensureData().userId.emplace(std::move(userId));
+        return *this;
+    }
+
+    /**
+     * データの名前を取得
+     *
+     * @return データの名前
+     */
+    const optional<StringHolder>& getDataObjectName() const
+    {
+        return ensureData().dataObjectName;
+    }
+
+    /**
+     * データの名前を設定
+     *
+     * @param dataObjectName データの名前
+     */
+    void setDataObjectName(StringHolder dataObjectName)
+    {
+        ensureData().dataObjectName.emplace(std::move(dataObjectName));
+    }
+
+    /**
+     * データの名前を設定
+     *
+     * @param dataObjectName データの名前
+     */
+    PrepareDownloadOwnDataByGenerationAndUserIdRequest& withDataObjectName(StringHolder dataObjectName)
+    {
+        ensureData().dataObjectName.emplace(std::move(dataObjectName));
         return *this;
     }
 
@@ -229,7 +228,7 @@ public:
      *
      * @param generation 世代
      */
-    PrepareDownloadByGenerationRequest& withGeneration(StringHolder generation)
+    PrepareDownloadOwnDataByGenerationAndUserIdRequest& withGeneration(StringHolder generation)
     {
         ensureData().generation.emplace(std::move(generation));
         return *this;
@@ -260,7 +259,7 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    PrepareDownloadByGenerationRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
+    PrepareDownloadOwnDataByGenerationAndUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
         ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
@@ -273,7 +272,7 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    PrepareDownloadByGenerationRequest& withGs2ClientId(StringHolder gs2ClientId)
+    PrepareDownloadOwnDataByGenerationAndUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
         setGs2ClientId(std::move(gs2ClientId));
         return *this;
@@ -284,7 +283,7 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    PrepareDownloadByGenerationRequest& withRequestId(StringHolder gs2RequestId)
+    PrepareDownloadOwnDataByGenerationAndUserIdRequest& withRequestId(StringHolder gs2RequestId)
     {
         setRequestId(std::move(gs2RequestId));
         return *this;
@@ -293,4 +292,4 @@ public:
 
 } }
 
-#endif //GS2_DATASTORE_CONTROL_PREPAREDOWNLOADBYGENERATIONREQUEST_HPP_
+#endif //GS2_DATASTORE_CONTROL_PREPAREDOWNLOADOWNDATABYGENERATIONANDUSERIDREQUEST_HPP_
