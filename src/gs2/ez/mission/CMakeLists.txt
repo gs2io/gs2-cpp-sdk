@@ -33,8 +33,8 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzComplete.hpp
         model/EzResponseCache.hpp
         model/EzNotificationSetting.hpp
-        model/EzCurrentMissionMaster.hpp
         model/EzMissionGroupModel.hpp
+        model/EzCurrentMissionMaster.hpp
         model/EzScriptSetting.hpp
         model/EzMissionGroupModelMaster.hpp
         model/EzGitHubCheckoutSetting.hpp
@@ -67,8 +67,8 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         model/EzComplete.cpp
         model/EzResponseCache.cpp
         model/EzNotificationSetting.cpp
-        model/EzCurrentMissionMaster.cpp
         model/EzMissionGroupModel.cpp
+        model/EzCurrentMissionMaster.cpp
         model/EzScriptSetting.cpp
         model/EzMissionGroupModelMaster.cpp
         model/EzGitHubCheckoutSetting.cpp
