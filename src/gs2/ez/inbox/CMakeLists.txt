@@ -35,6 +35,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzTimeSpan.hpp
         model/EzAcquireAction.hpp
         result/EzListResult.hpp
+        result/EzReceiveGlobalMessageResult.hpp
         result/EzReadResult.hpp
         result/EzDeleteResult.hpp
         )

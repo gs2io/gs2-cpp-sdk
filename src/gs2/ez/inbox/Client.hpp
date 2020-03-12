@@ -19,6 +19,7 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include "result/EzListResult.hpp"
+#include "result/EzReceiveGlobalMessageResult.hpp"
 #include "result/EzReadResult.hpp"
 #include "result/EzDeleteResult.hpp"
 
@@ -66,6 +67,20 @@ public:
         StringHolder namespaceName,
         gs2::optional<StringHolder> pageToken=gs2::nullopt,
         gs2::optional<Int64> limit=gs2::nullopt
+    );
+
+    /// <summary>
+    ///  グローバルメッセージを受信する<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    void receiveGlobalMessage(
+        std::function<void(AsyncEzReceiveGlobalMessageResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName
     );
 
     /// <summary>
