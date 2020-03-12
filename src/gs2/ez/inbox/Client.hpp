@@ -57,7 +57,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
-    /// <param name="namespaceName">プレゼントボックス名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
     void list(
@@ -75,7 +75,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
-    /// <param name="namespaceName">プレゼントボックス名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="messageName">メッセージID</param>
     void read(
         std::function<void(AsyncEzReadResult)> callback,
@@ -93,7 +93,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
-    /// <param name="namespaceName">プレゼントボックス名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="messageName">メッセージID</param>
     void delete_(
         std::function<void(AsyncEzDeleteResult)> callback,

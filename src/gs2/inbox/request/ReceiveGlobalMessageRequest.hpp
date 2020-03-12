@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INBOX_CONTROL_READMESSAGEREQUEST_HPP_
-#define GS2_INBOX_CONTROL_READMESSAGEREQUEST_HPP_
+#ifndef GS2_INBOX_CONTROL_RECEIVEGLOBALMESSAGEREQUEST_HPP_
+#define GS2_INBOX_CONTROL_RECEIVEGLOBALMESSAGEREQUEST_HPP_
 
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
@@ -30,11 +30,11 @@ namespace gs2 { namespace inbox
 {
 
 /**
- * メッセージを開封 のリクエストモデル
+ * グローバルメッセージのうちまだ受け取っていないメッセージを受信 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
-class ReadMessageRequest : public Gs2BasicRequest, public Gs2Inbox
+class ReceiveGlobalMessageRequest : public Gs2BasicRequest, public Gs2Inbox
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -47,10 +47,6 @@ private:
         optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
-        /** メッセージID */
-        optional<StringHolder> messageName;
-        /** スタンプシートの変数に適用する設定値 */
-        optional<List<Config>> config;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -60,13 +56,8 @@ private:
             Gs2BasicRequest::Data(data),
             accessToken(data.accessToken),
             namespaceName(data.namespaceName),
-            messageName(data.messageName),
             duplicationAvoider(data.duplicationAvoider)
         {
-            if (data.config)
-            {
-                config = data.config->deepCopy();
-            }
         }
 
         Data(Data&& data) = default;
@@ -90,25 +81,25 @@ private:
     }
 
 public:
-    ReadMessageRequest() = default;
-    ReadMessageRequest(const ReadMessageRequest& readMessageRequest) = default;
-    ReadMessageRequest(ReadMessageRequest&& readMessageRequest) = default;
-    ~ReadMessageRequest() GS2_OVERRIDE = default;
+    ReceiveGlobalMessageRequest() = default;
+    ReceiveGlobalMessageRequest(const ReceiveGlobalMessageRequest& receiveGlobalMessageRequest) = default;
+    ReceiveGlobalMessageRequest(ReceiveGlobalMessageRequest&& receiveGlobalMessageRequest) = default;
+    ~ReceiveGlobalMessageRequest() GS2_OVERRIDE = default;
 
-    ReadMessageRequest& operator=(const ReadMessageRequest& readMessageRequest) = default;
-    ReadMessageRequest& operator=(ReadMessageRequest&& readMessageRequest) = default;
+    ReceiveGlobalMessageRequest& operator=(const ReceiveGlobalMessageRequest& receiveGlobalMessageRequest) = default;
+    ReceiveGlobalMessageRequest& operator=(ReceiveGlobalMessageRequest&& receiveGlobalMessageRequest) = default;
 
-    ReadMessageRequest deepCopy() const
+    ReceiveGlobalMessageRequest deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ReadMessageRequest);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ReceiveGlobalMessageRequest);
     }
 
-    const ReadMessageRequest* operator->() const
+    const ReceiveGlobalMessageRequest* operator->() const
     {
         return this;
     }
 
-    ReadMessageRequest* operator->()
+    ReceiveGlobalMessageRequest* operator->()
     {
         return this;
     }
@@ -139,7 +130,7 @@ public:
      * @param accessToken アクセストークン
      * @return this
      */
-    ReadMessageRequest& withAccessToken(StringHolder accessToken)
+    ReceiveGlobalMessageRequest& withAccessToken(StringHolder accessToken)
     {
         setAccessToken(std::move(accessToken));
         return *this;
@@ -170,71 +161,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    ReadMessageRequest& withNamespaceName(StringHolder namespaceName)
+    ReceiveGlobalMessageRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
-        return *this;
-    }
-
-    /**
-     * メッセージIDを取得
-     *
-     * @return メッセージID
-     */
-    const optional<StringHolder>& getMessageName() const
-    {
-        return ensureData().messageName;
-    }
-
-    /**
-     * メッセージIDを設定
-     *
-     * @param messageName メッセージID
-     */
-    void setMessageName(StringHolder messageName)
-    {
-        ensureData().messageName.emplace(std::move(messageName));
-    }
-
-    /**
-     * メッセージIDを設定
-     *
-     * @param messageName メッセージID
-     */
-    ReadMessageRequest& withMessageName(StringHolder messageName)
-    {
-        ensureData().messageName.emplace(std::move(messageName));
-        return *this;
-    }
-
-    /**
-     * スタンプシートの変数に適用する設定値を取得
-     *
-     * @return スタンプシートの変数に適用する設定値
-     */
-    const optional<List<Config>>& getConfig() const
-    {
-        return ensureData().config;
-    }
-
-    /**
-     * スタンプシートの変数に適用する設定値を設定
-     *
-     * @param config スタンプシートの変数に適用する設定値
-     */
-    void setConfig(List<Config> config)
-    {
-        ensureData().config.emplace(std::move(config));
-    }
-
-    /**
-     * スタンプシートの変数に適用する設定値を設定
-     *
-     * @param config スタンプシートの変数に適用する設定値
-     */
-    ReadMessageRequest& withConfig(List<Config> config)
-    {
-        ensureData().config.emplace(std::move(config));
         return *this;
     }
 
@@ -263,7 +192,7 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    ReadMessageRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
+    ReceiveGlobalMessageRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
         ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
@@ -276,7 +205,7 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    ReadMessageRequest& withGs2ClientId(StringHolder gs2ClientId)
+    ReceiveGlobalMessageRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
         setGs2ClientId(std::move(gs2ClientId));
         return *this;
@@ -287,7 +216,7 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    ReadMessageRequest& withRequestId(StringHolder gs2RequestId)
+    ReceiveGlobalMessageRequest& withRequestId(StringHolder gs2RequestId)
     {
         setRequestId(std::move(gs2RequestId));
         return *this;
@@ -296,4 +225,4 @@ public:
 
 } }
 
-#endif //GS2_INBOX_CONTROL_READMESSAGEREQUEST_HPP_
+#endif //GS2_INBOX_CONTROL_RECEIVEGLOBALMESSAGEREQUEST_HPP_

@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INBOX_CONTROL_GETNAMESPACESTATUSREQUEST_HPP_
-#define GS2_INBOX_CONTROL_GETNAMESPACESTATUSREQUEST_HPP_
+#ifndef GS2_INBOX_CONTROL_EXPORTMASTERREQUEST_HPP_
+#define GS2_INBOX_CONTROL_EXPORTMASTERREQUEST_HPP_
 
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
@@ -30,11 +30,11 @@ namespace gs2 { namespace inbox
 {
 
 /**
- * ネームスペースの状態を取得 のリクエストモデル
+ * 現在有効なグローバルメッセージ設定のマスターデータをエクスポートします のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
-class GetNamespaceStatusRequest : public Gs2BasicRequest, public Gs2Inbox
+class ExportMasterRequest : public Gs2BasicRequest, public Gs2Inbox
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -75,25 +75,25 @@ private:
     }
 
 public:
-    GetNamespaceStatusRequest() = default;
-    GetNamespaceStatusRequest(const GetNamespaceStatusRequest& getNamespaceStatusRequest) = default;
-    GetNamespaceStatusRequest(GetNamespaceStatusRequest&& getNamespaceStatusRequest) = default;
-    ~GetNamespaceStatusRequest() GS2_OVERRIDE = default;
+    ExportMasterRequest() = default;
+    ExportMasterRequest(const ExportMasterRequest& exportMasterRequest) = default;
+    ExportMasterRequest(ExportMasterRequest&& exportMasterRequest) = default;
+    ~ExportMasterRequest() GS2_OVERRIDE = default;
 
-    GetNamespaceStatusRequest& operator=(const GetNamespaceStatusRequest& getNamespaceStatusRequest) = default;
-    GetNamespaceStatusRequest& operator=(GetNamespaceStatusRequest&& getNamespaceStatusRequest) = default;
+    ExportMasterRequest& operator=(const ExportMasterRequest& exportMasterRequest) = default;
+    ExportMasterRequest& operator=(ExportMasterRequest&& exportMasterRequest) = default;
 
-    GetNamespaceStatusRequest deepCopy() const
+    ExportMasterRequest deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetNamespaceStatusRequest);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ExportMasterRequest);
     }
 
-    const GetNamespaceStatusRequest* operator->() const
+    const ExportMasterRequest* operator->() const
     {
         return this;
     }
 
-    GetNamespaceStatusRequest* operator->()
+    ExportMasterRequest* operator->()
     {
         return this;
     }
@@ -123,7 +123,7 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    GetNamespaceStatusRequest& withNamespaceName(StringHolder namespaceName)
+    ExportMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
@@ -136,7 +136,7 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    GetNamespaceStatusRequest& withGs2ClientId(StringHolder gs2ClientId)
+    ExportMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
         setGs2ClientId(std::move(gs2ClientId));
         return *this;
@@ -147,7 +147,7 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    GetNamespaceStatusRequest& withRequestId(StringHolder gs2RequestId)
+    ExportMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
         setRequestId(std::move(gs2RequestId));
         return *this;
@@ -156,4 +156,4 @@ public:
 
 } }
 
-#endif //GS2_INBOX_CONTROL_GETNAMESPACESTATUSREQUEST_HPP_
+#endif //GS2_INBOX_CONTROL_EXPORTMASTERREQUEST_HPP_
