@@ -43,7 +43,7 @@ private:
     class Data : public Gs2BasicRequest::Data
     {
     public:
-        /** プレゼントボックス名 */
+        /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** ユーザーID */
         optional<StringHolder> userId;
@@ -108,9 +108,9 @@ public:
     }
 
     /**
-     * プレゼントボックス名を取得
+     * ネームスペース名を取得
      *
-     * @return プレゼントボックス名
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getNamespaceName() const
     {
@@ -118,9 +118,9 @@ public:
     }
 
     /**
-     * プレゼントボックス名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName プレゼントボックス名
+     * @param namespaceName ネームスペース名
      */
     void setNamespaceName(StringHolder namespaceName)
     {
@@ -128,9 +128,9 @@ public:
     }
 
     /**
-     * プレゼントボックス名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName プレゼントボックス名
+     * @param namespaceName ネームスペース名
      */
     GetMessageByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {

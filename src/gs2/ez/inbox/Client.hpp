@@ -19,6 +19,7 @@
 
 #include <gs2/core/Gs2Object.hpp>
 #include "result/EzListResult.hpp"
+#include "result/EzReceiveGlobalMessageResult.hpp"
 #include "result/EzReadResult.hpp"
 #include "result/EzDeleteResult.hpp"
 
@@ -57,7 +58,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
-    /// <param name="namespaceName">プレゼントボックス名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
     void list(
@@ -69,13 +70,27 @@ public:
     );
 
     /// <summary>
+    ///  グローバルメッセージを受信する<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    void receiveGlobalMessage(
+        std::function<void(AsyncEzReceiveGlobalMessageResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName
+    );
+
+    /// <summary>
     ///  メッセージを既読にする<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
-    /// <param name="namespaceName">プレゼントボックス名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="messageName">メッセージID</param>
     void read(
         std::function<void(AsyncEzReadResult)> callback,
@@ -93,7 +108,7 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
-    /// <param name="namespaceName">プレゼントボックス名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="messageName">メッセージID</param>
     void delete_(
         std::function<void(AsyncEzDeleteResult)> callback,

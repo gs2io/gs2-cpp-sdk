@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INBOX_CONTROL_GETNAMESPACESTATUSREQUEST_HPP_
-#define GS2_INBOX_CONTROL_GETNAMESPACESTATUSREQUEST_HPP_
+#ifndef GS2_INBOX_CONTROL_GETGLOBALMESSAGEREQUEST_HPP_
+#define GS2_INBOX_CONTROL_GETGLOBALMESSAGEREQUEST_HPP_
 
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
@@ -30,11 +30,11 @@ namespace gs2 { namespace inbox
 {
 
 /**
- * ネームスペースの状態を取得 のリクエストモデル
+ * 全ユーザに向けたメッセージを取得 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
-class GetNamespaceStatusRequest : public Gs2BasicRequest, public Gs2Inbox
+class GetGlobalMessageRequest : public Gs2BasicRequest, public Gs2Inbox
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -45,12 +45,15 @@ private:
     public:
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
+        /** 全ユーザに向けたメッセージ名 */
+        optional<StringHolder> globalMessageName;
 
         Data() = default;
 
         Data(const Data& data) :
             Gs2BasicRequest::Data(data),
-            namespaceName(data.namespaceName)
+            namespaceName(data.namespaceName),
+            globalMessageName(data.globalMessageName)
         {
         }
 
@@ -75,25 +78,25 @@ private:
     }
 
 public:
-    GetNamespaceStatusRequest() = default;
-    GetNamespaceStatusRequest(const GetNamespaceStatusRequest& getNamespaceStatusRequest) = default;
-    GetNamespaceStatusRequest(GetNamespaceStatusRequest&& getNamespaceStatusRequest) = default;
-    ~GetNamespaceStatusRequest() GS2_OVERRIDE = default;
+    GetGlobalMessageRequest() = default;
+    GetGlobalMessageRequest(const GetGlobalMessageRequest& getGlobalMessageRequest) = default;
+    GetGlobalMessageRequest(GetGlobalMessageRequest&& getGlobalMessageRequest) = default;
+    ~GetGlobalMessageRequest() GS2_OVERRIDE = default;
 
-    GetNamespaceStatusRequest& operator=(const GetNamespaceStatusRequest& getNamespaceStatusRequest) = default;
-    GetNamespaceStatusRequest& operator=(GetNamespaceStatusRequest&& getNamespaceStatusRequest) = default;
+    GetGlobalMessageRequest& operator=(const GetGlobalMessageRequest& getGlobalMessageRequest) = default;
+    GetGlobalMessageRequest& operator=(GetGlobalMessageRequest&& getGlobalMessageRequest) = default;
 
-    GetNamespaceStatusRequest deepCopy() const
+    GetGlobalMessageRequest deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetNamespaceStatusRequest);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetGlobalMessageRequest);
     }
 
-    const GetNamespaceStatusRequest* operator->() const
+    const GetGlobalMessageRequest* operator->() const
     {
         return this;
     }
 
-    GetNamespaceStatusRequest* operator->()
+    GetGlobalMessageRequest* operator->()
     {
         return this;
     }
@@ -123,9 +126,40 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    GetNamespaceStatusRequest& withNamespaceName(StringHolder namespaceName)
+    GetGlobalMessageRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
+        return *this;
+    }
+
+    /**
+     * 全ユーザに向けたメッセージ名を取得
+     *
+     * @return 全ユーザに向けたメッセージ名
+     */
+    const optional<StringHolder>& getGlobalMessageName() const
+    {
+        return ensureData().globalMessageName;
+    }
+
+    /**
+     * 全ユーザに向けたメッセージ名を設定
+     *
+     * @param globalMessageName 全ユーザに向けたメッセージ名
+     */
+    void setGlobalMessageName(StringHolder globalMessageName)
+    {
+        ensureData().globalMessageName.emplace(std::move(globalMessageName));
+    }
+
+    /**
+     * 全ユーザに向けたメッセージ名を設定
+     *
+     * @param globalMessageName 全ユーザに向けたメッセージ名
+     */
+    GetGlobalMessageRequest& withGlobalMessageName(StringHolder globalMessageName)
+    {
+        ensureData().globalMessageName.emplace(std::move(globalMessageName));
         return *this;
     }
 
@@ -136,7 +170,7 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    GetNamespaceStatusRequest& withGs2ClientId(StringHolder gs2ClientId)
+    GetGlobalMessageRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
         setGs2ClientId(std::move(gs2ClientId));
         return *this;
@@ -147,7 +181,7 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    GetNamespaceStatusRequest& withRequestId(StringHolder gs2RequestId)
+    GetGlobalMessageRequest& withRequestId(StringHolder gs2RequestId)
     {
         setRequestId(std::move(gs2RequestId));
         return *this;
@@ -156,4 +190,4 @@ public:
 
 } }
 
-#endif //GS2_INBOX_CONTROL_GETNAMESPACESTATUSREQUEST_HPP_
+#endif //GS2_INBOX_CONTROL_GETGLOBALMESSAGEREQUEST_HPP_
