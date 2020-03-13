@@ -40,7 +40,8 @@ void Client::createGathering(
     EzPlayer player,
     List<EzCapacityOfRole> capacityOfRoles,
     List<StringHolder> allowUserIds,
-    gs2::optional<List<EzAttributeRange>> attributeRanges
+    gs2::optional<List<EzAttributeRange>> attributeRanges,
+    gs2::optional<Int64> expiresAt
 )
 {
     gs2::matchmaking::CreateGatheringRequest request;
@@ -63,6 +64,10 @@ void Client::createGathering(
             list += (*attributeRanges)[i].ToModel();
         }
         request.setAttributeRanges(list);
+    }
+    if (expiresAt)
+    {
+        request.setExpiresAt(std::move(*expiresAt));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->createGathering(

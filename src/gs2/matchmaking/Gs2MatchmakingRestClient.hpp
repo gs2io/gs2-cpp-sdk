@@ -610,6 +610,11 @@ private:
                 }
                 jsonWriter.writeArrayEnd();
             }
+            if (m_Request.getExpiresAt())
+            {
+                jsonWriter.writePropertyName("expiresAt");
+                jsonWriter.writeInt64(*m_Request.getExpiresAt());
+            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -710,6 +715,11 @@ private:
                     jsonWriter.writeCharArray(list[i]);
                 }
                 jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getExpiresAt())
+            {
+                jsonWriter.writePropertyName("expiresAt");
+                jsonWriter.writeInt64(*m_Request.getExpiresAt());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -1388,6 +1398,11 @@ protected:
         {
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getExpiresAt())
+        {
+            jsonWriter.writePropertyName("expiresAt");
+            jsonWriter.writeInt64(*obj.getExpiresAt());
         }
         if (obj.getCreatedAt())
         {

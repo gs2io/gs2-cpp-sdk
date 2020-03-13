@@ -64,6 +64,7 @@ public:
     /// <param name="attributeRanges">募集条件</param>
     /// <param name="capacityOfRoles">参加者</param>
     /// <param name="allowUserIds">参加を許可するユーザIDリスト</param>
+    /// <param name="expiresAt">ギャザリングの有効期限</param>
     void createGathering(
         std::function<void(AsyncEzCreateGatheringResult)> callback,
         GameSession& session,
@@ -71,7 +72,8 @@ public:
         EzPlayer player,
         List<EzCapacityOfRole> capacityOfRoles,
         List<StringHolder> allowUserIds,
-        gs2::optional<List<EzAttributeRange>> attributeRanges=gs2::nullopt
+        gs2::optional<List<EzAttributeRange>> attributeRanges=gs2::nullopt,
+        gs2::optional<Int64> expiresAt=gs2::nullopt
     );
 
     /// <summary>

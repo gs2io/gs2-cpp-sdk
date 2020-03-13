@@ -55,6 +55,8 @@ private:
         optional<List<CapacityOfRole>> capacityOfRoles;
         /** 参加を許可するユーザIDリスト */
         optional<List<StringHolder>> allowUserIds;
+        /** ギャザリングの有効期限 */
+        optional<Int64> expiresAt;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -64,6 +66,7 @@ private:
             Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             userId(data.userId),
+            expiresAt(data.expiresAt),
             duplicationAvoider(data.duplicationAvoider)
         {
             if (data.player)
@@ -311,6 +314,37 @@ public:
     CreateGatheringByUserIdRequest& withAllowUserIds(List<StringHolder> allowUserIds)
     {
         ensureData().allowUserIds.emplace(std::move(allowUserIds));
+        return *this;
+    }
+
+    /**
+     * ギャザリングの有効期限を取得
+     *
+     * @return ギャザリングの有効期限
+     */
+    const optional<Int64>& getExpiresAt() const
+    {
+        return ensureData().expiresAt;
+    }
+
+    /**
+     * ギャザリングの有効期限を設定
+     *
+     * @param expiresAt ギャザリングの有効期限
+     */
+    void setExpiresAt(Int64 expiresAt)
+    {
+        ensureData().expiresAt.emplace(expiresAt);
+    }
+
+    /**
+     * ギャザリングの有効期限を設定
+     *
+     * @param expiresAt ギャザリングの有効期限
+     */
+    CreateGatheringByUserIdRequest& withExpiresAt(Int64 expiresAt)
+    {
+        ensureData().expiresAt.emplace(expiresAt);
         return *this;
     }
 
