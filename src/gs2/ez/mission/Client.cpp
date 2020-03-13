@@ -33,6 +33,93 @@ Client::~Client()
     delete m_pClient;
 }
 
+void Client::listCounters(
+    std::function<void(AsyncEzListCountersResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> pageToken,
+    gs2::optional<Int64> limit
+)
+{
+    gs2::mission::DescribeCountersRequest request;
+    request.setNamespaceName(namespaceName);
+    if (pageToken)
+    {
+        request.setPageToken(std::move(*pageToken));
+    }
+    if (limit)
+    {
+        request.setLimit(std::move(*limit));
+    }
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->describeCounters(
+        request,
+        [callback](gs2::mission::AsyncDescribeCountersResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzListCountersResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzListCountersResult::isConvertible(*r.getResult()))
+            {
+                EzListCountersResult ezResult(*r.getResult());
+                AsyncEzListCountersResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzListCountersResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::getCounter(
+    std::function<void(AsyncEzGetCounterResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> counterName
+)
+{
+    gs2::mission::GetCounterRequest request;
+    request.setNamespaceName(namespaceName);
+    if (counterName)
+    {
+        request.setCounterName(std::move(*counterName));
+    }
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->getCounter(
+        request,
+        [callback](gs2::mission::AsyncGetCounterResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetCounterResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetCounterResult::isConvertible(*r.getResult()))
+            {
+                EzGetCounterResult ezResult(*r.getResult());
+                AsyncEzGetCounterResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetCounterResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
 void Client::listMissionGroupModels(
     std::function<void(AsyncEzListMissionGroupModelsResult)> callback,
     StringHolder namespaceName
@@ -365,93 +452,6 @@ void Client::getCounterModel(
                 Gs2ClientException gs2ClientException;
                 gs2ClientException.setType(Gs2ClientException::UnknownException);
                 AsyncEzGetCounterModelResult asyncResult(std::move(gs2ClientException));
-                callback(asyncResult);
-            }
-        }
-    );
-}
-
-void Client::listCounters(
-    std::function<void(AsyncEzListCountersResult)> callback,
-    GameSession& session,
-    StringHolder namespaceName,
-    gs2::optional<StringHolder> pageToken,
-    gs2::optional<Int64> limit
-)
-{
-    gs2::mission::DescribeCountersRequest request;
-    request.setNamespaceName(namespaceName);
-    if (pageToken)
-    {
-        request.setPageToken(std::move(*pageToken));
-    }
-    if (limit)
-    {
-        request.setLimit(std::move(*limit));
-    }
-    request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeCounters(
-        request,
-        [callback](gs2::mission::AsyncDescribeCountersResult r)
-        {
-            if (r.getError())
-            {
-                auto gs2ClientException = *r.getError();
-                AsyncEzListCountersResult asyncResult(std::move(gs2ClientException));
-                callback(asyncResult);
-            }
-            else if (r.getResult() && EzListCountersResult::isConvertible(*r.getResult()))
-            {
-                EzListCountersResult ezResult(*r.getResult());
-                AsyncEzListCountersResult asyncResult(std::move(ezResult));
-                callback(asyncResult);
-            }
-            else
-            {
-                Gs2ClientException gs2ClientException;
-                gs2ClientException.setType(Gs2ClientException::UnknownException);
-                AsyncEzListCountersResult asyncResult(std::move(gs2ClientException));
-                callback(asyncResult);
-            }
-        }
-    );
-}
-
-void Client::getCounter(
-    std::function<void(AsyncEzGetCounterResult)> callback,
-    GameSession& session,
-    StringHolder namespaceName,
-    gs2::optional<StringHolder> counterName
-)
-{
-    gs2::mission::GetCounterRequest request;
-    request.setNamespaceName(namespaceName);
-    if (counterName)
-    {
-        request.setCounterName(std::move(*counterName));
-    }
-    request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getCounter(
-        request,
-        [callback](gs2::mission::AsyncGetCounterResult r)
-        {
-            if (r.getError())
-            {
-                auto gs2ClientException = *r.getError();
-                AsyncEzGetCounterResult asyncResult(std::move(gs2ClientException));
-                callback(asyncResult);
-            }
-            else if (r.getResult() && EzGetCounterResult::isConvertible(*r.getResult()))
-            {
-                EzGetCounterResult ezResult(*r.getResult());
-                AsyncEzGetCounterResult asyncResult(std::move(ezResult));
-                callback(asyncResult);
-            }
-            else
-            {
-                Gs2ClientException gs2ClientException;
-                gs2ClientException.setType(Gs2ClientException::UnknownException);
-                AsyncEzGetCounterResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
         }
