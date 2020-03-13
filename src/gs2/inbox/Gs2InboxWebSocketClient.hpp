@@ -455,7 +455,7 @@ private:
         ~UpdateNamespaceTask() GS2_OVERRIDE = default;
     };
 
-    class DeleteNamespaceTask : public detail::Gs2WebSocketSessionTask<void>
+    class DeleteNamespaceTask : public detail::Gs2WebSocketSessionTask<DeleteNamespaceResult>
     {
     private:
         DeleteNamespaceRequest m_Request;
@@ -497,9 +497,9 @@ private:
     public:
         DeleteNamespaceTask(
             DeleteNamespaceRequest request,
-            Gs2WebSocketSessionTask<void>::CallbackType callback
+            Gs2WebSocketSessionTask<DeleteNamespaceResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<void>(callback),
+            Gs2WebSocketSessionTask<DeleteNamespaceResult>(callback),
             m_Request(std::move(request))
         {}
 

@@ -449,7 +449,7 @@ private:
         ~UpdateNamespaceTask() GS2_OVERRIDE = default;
     };
 
-    class DeleteNamespaceTask : public detail::Gs2RestSessionTask<void>
+    class DeleteNamespaceTask : public detail::Gs2RestSessionTask<DeleteNamespaceResult>
     {
     private:
         DeleteNamespaceRequest m_Request;
@@ -491,9 +491,9 @@ private:
     public:
         DeleteNamespaceTask(
             DeleteNamespaceRequest request,
-            Gs2RestSessionTask<void>::CallbackType callback
+            Gs2RestSessionTask<DeleteNamespaceResult>::CallbackType callback
         ) :
-            Gs2RestSessionTask<void>(callback),
+            Gs2RestSessionTask<DeleteNamespaceResult>(callback),
             m_Request(std::move(request))
         {}
 

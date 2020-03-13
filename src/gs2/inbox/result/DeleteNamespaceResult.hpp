@@ -31,7 +31,105 @@
 namespace gs2 { namespace inbox
 {
 
-typedef AsyncResult<void> AsyncDeleteNamespaceResult;
+/**
+ * ネームスペースを削除 のレスポンスモデル
+ *
+ * @author Game Server Services, Inc.
+ */
+class DeleteNamespaceResult : public Gs2Object
+{
+private:
+    class Data : public detail::json::IModel
+    {
+    public:
+        /** 削除したネームスペース */
+        optional<Namespace> item;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            detail::json::IModel(data)
+        {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
+        }
+
+        Data(Data&& data) = default;
+
+        virtual ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+
+        virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
+        {
+            if (std::strcmp(name_, "item") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->item.emplace();
+                    detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
+                }
+            }
+        }
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+public:
+    DeleteNamespaceResult() = default;
+    DeleteNamespaceResult(const DeleteNamespaceResult& deleteNamespaceResult) = default;
+    DeleteNamespaceResult(DeleteNamespaceResult&& deleteNamespaceResult) = default;
+    ~DeleteNamespaceResult() = default;
+
+    DeleteNamespaceResult& operator=(const DeleteNamespaceResult& deleteNamespaceResult) = default;
+    DeleteNamespaceResult& operator=(DeleteNamespaceResult&& deleteNamespaceResult) = default;
+
+    DeleteNamespaceResult deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteNamespaceResult);
+    }
+
+    const DeleteNamespaceResult* operator->() const
+    {
+        return this;
+    }
+
+    DeleteNamespaceResult* operator->()
+    {
+        return this;
+    }
+    /**
+     * 削除したネームスペースを取得
+     *
+     * @return 削除したネームスペース
+     */
+    const optional<Namespace>& getItem() const
+    {
+        return ensureData().item;
+    }
+
+    /**
+     * 削除したネームスペースを設定
+     *
+     * @param item 削除したネームスペース
+     */
+    void setItem(Namespace item)
+    {
+        ensureData().item.emplace(std::move(item));
+    }
+
+
+    detail::json::IModel& getModel()
+    {
+        return ensureData();
+    }
+};
+
+typedef AsyncResult<DeleteNamespaceResult> AsyncDeleteNamespaceResult;
 
 } }
 
