@@ -20,25 +20,27 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzAcquireAction.hpp
+        model/EzScopedValue.hpp
+        model/EzCounterModelMaster.hpp
+        model/EzCounterModel.hpp
         model/EzLogSetting.hpp
-        model/EzCounter.hpp
-        model/EzMissionGroupModel.hpp
+        model/EzAcquireAction.hpp
         model/EzNotificationSetting.hpp
-        model/EzMissionGroupModelMaster.hpp
+        model/EzCounter.hpp
         model/EzScriptSetting.hpp
+        model/EzMissionGroupModel.hpp
+        model/EzMissionGroupModelMaster.hpp
+        model/EzGitHubCheckoutSetting.hpp
         model/EzNamespace.hpp
         model/EzComplete.hpp
         model/EzMissionTaskModelMaster.hpp
         model/EzCounterScopeModel.hpp
-        model/EzGitHubCheckoutSetting.hpp
         model/EzResponseCache.hpp
         model/EzMissionTaskModel.hpp
         model/EzCurrentMissionMaster.hpp
-        model/EzScopedValue.hpp
-        model/EzCounterModelMaster.hpp
-        model/EzCounterModel.hpp
         model/EzConfig.hpp
+        result/EzListCounterModelsResult.hpp
+        result/EzGetCounterModelResult.hpp
         result/EzListCountersResult.hpp
         result/EzGetCounterResult.hpp
         result/EzListMissionGroupModelsResult.hpp
@@ -48,30 +50,28 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         result/EzReceiveRewardsResult.hpp
         result/EzListMissionTaskModelsResult.hpp
         result/EzGetMissionTaskModelResult.hpp
-        result/EzListCounterModelsResult.hpp
-        result/EzGetCounterModelResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
-        model/EzAcquireAction.cpp
+        model/EzScopedValue.cpp
+        model/EzCounterModelMaster.cpp
+        model/EzCounterModel.cpp
         model/EzLogSetting.cpp
-        model/EzCounter.cpp
-        model/EzMissionGroupModel.cpp
+        model/EzAcquireAction.cpp
         model/EzNotificationSetting.cpp
-        model/EzMissionGroupModelMaster.cpp
+        model/EzCounter.cpp
         model/EzScriptSetting.cpp
+        model/EzMissionGroupModel.cpp
+        model/EzMissionGroupModelMaster.cpp
+        model/EzGitHubCheckoutSetting.cpp
         model/EzNamespace.cpp
         model/EzComplete.cpp
         model/EzMissionTaskModelMaster.cpp
         model/EzCounterScopeModel.cpp
-        model/EzGitHubCheckoutSetting.cpp
         model/EzResponseCache.cpp
         model/EzMissionTaskModel.cpp
         model/EzCurrentMissionMaster.cpp
-        model/EzScopedValue.cpp
-        model/EzCounterModelMaster.cpp
-        model/EzCounterModel.cpp
         model/EzConfig.cpp
         )
 
