@@ -18,10 +18,10 @@
 #define GS2_EZ_MISSION_GS2MISSIONWEBSOCKETCLIENT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
-#include "result/EzListCounterModelsResult.hpp"
-#include "result/EzGetCounterModelResult.hpp"
 #include "result/EzListMissionTaskModelsResult.hpp"
 #include "result/EzGetMissionTaskModelResult.hpp"
+#include "result/EzListCounterModelsResult.hpp"
+#include "result/EzGetCounterModelResult.hpp"
 #include "result/EzListMissionGroupModelsResult.hpp"
 #include "result/EzGetMissionGroupModelResult.hpp"
 #include "result/EzListCountersResult.hpp"
@@ -57,30 +57,6 @@ public:
     ~Client();
 
     /// <summary>
-    ///  カウンターの種類を認証<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    void listCounterModels(
-        std::function<void(AsyncEzListCounterModelsResult)> callback,
-        StringHolder namespaceName
-    );
-
-    /// <summary>
-    ///  カウンターの種類を認証<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="counterName">カウンター名</param>
-    void getCounterModel(
-        std::function<void(AsyncEzGetCounterModelResult)> callback,
-        StringHolder namespaceName,
-        StringHolder counterName
-    );
-
-    /// <summary>
     ///  ミッションタスクモデルの一覧を取得<br />
     /// </summary>
     ///
@@ -106,6 +82,30 @@ public:
         StringHolder namespaceName,
         StringHolder missionGroupName,
         StringHolder missionTaskName
+    );
+
+    /// <summary>
+    ///  カウンターの種類を認証<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    void listCounterModels(
+        std::function<void(AsyncEzListCounterModelsResult)> callback,
+        StringHolder namespaceName
+    );
+
+    /// <summary>
+    ///  カウンターの種類を認証<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="counterName">カウンター名</param>
+    void getCounterModel(
+        std::function<void(AsyncEzGetCounterModelResult)> callback,
+        StringHolder namespaceName,
+        StringHolder counterName
     );
 
     /// <summary>
