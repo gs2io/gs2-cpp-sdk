@@ -623,6 +623,11 @@ private:
                 }
                 jsonWriter.writeArrayEnd();
             }
+            if (m_Request.getUpdateIfExists())
+            {
+                jsonWriter.writePropertyName("updateIfExists");
+                jsonWriter.writeBool(*m_Request.getUpdateIfExists());
+            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -711,6 +716,11 @@ private:
                     jsonWriter.writeCharArray(list[i]);
                 }
                 jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getUpdateIfExists())
+            {
+                jsonWriter.writePropertyName("updateIfExists");
+                jsonWriter.writeBool(*m_Request.getUpdateIfExists());
             }
             jsonWriter.writeObjectEnd();
             {

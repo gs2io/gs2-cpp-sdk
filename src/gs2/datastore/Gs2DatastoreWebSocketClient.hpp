@@ -636,6 +636,11 @@ private:
                 }
                 jsonWriter.writeArrayEnd();
             }
+            if (m_Request.getUpdateIfExists())
+            {
+                jsonWriter.writePropertyName("updateIfExists");
+                jsonWriter.writeBool(*m_Request.getUpdateIfExists());
+            }
             if (m_Request.getRequestId())
             {
                 jsonWriter.writePropertyName("xGs2RequestId");
@@ -727,6 +732,11 @@ private:
                     jsonWriter.writeCharArray(list[i]);
                 }
                 jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getUpdateIfExists())
+            {
+                jsonWriter.writePropertyName("updateIfExists");
+                jsonWriter.writeBool(*m_Request.getUpdateIfExists());
             }
             if (m_Request.getRequestId())
             {

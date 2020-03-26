@@ -103,12 +103,14 @@ public:
     /// <param name="name">データの名前</param>
     /// <param name="scope">ファイルのアクセス権</param>
     /// <param name="allowUserIds">公開するユーザIDリスト</param>
+    /// <param name="updateIfExists">公開するユーザIDリスト</param>
     void prepareUpload(
         std::function<void(AsyncEzPrepareUploadResult)> callback,
         GameSession& session,
         StringHolder namespaceName,
         StringHolder scope,
         List<StringHolder> allowUserIds,
+        List<StringHolder> updateIfExists,
         gs2::optional<StringHolder> name=gs2::nullopt
     );
 

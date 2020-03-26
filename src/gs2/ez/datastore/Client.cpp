@@ -130,6 +130,7 @@ void Client::prepareUpload(
     StringHolder namespaceName,
     StringHolder scope,
     List<StringHolder> allowUserIds,
+    List<StringHolder> updateIfExists,
     gs2::optional<StringHolder> name
 )
 {
@@ -137,6 +138,7 @@ void Client::prepareUpload(
     request.setNamespaceName(namespaceName);
     request.setScope(scope);
     request.setAllowUserIds(allowUserIds);
+    request.setUpdateIfExists(updateIfExists);
     if (name)
     {
         request.setName(std::move(*name));
