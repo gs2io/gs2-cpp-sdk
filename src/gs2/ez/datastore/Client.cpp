@@ -130,7 +130,7 @@ void Client::prepareUpload(
     StringHolder namespaceName,
     StringHolder scope,
     List<StringHolder> allowUserIds,
-    List<StringHolder> updateIfExists,
+    Bool updateIfExists,
     gs2::optional<StringHolder> name
 )
 {
