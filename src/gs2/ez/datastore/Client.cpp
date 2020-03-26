@@ -130,18 +130,21 @@ void Client::prepareUpload(
     StringHolder namespaceName,
     StringHolder scope,
     List<StringHolder> allowUserIds,
-    Bool updateIfExists,
-    gs2::optional<StringHolder> name
+    gs2::optional<StringHolder> name,
+    gs2::optional<Bool> updateIfExists
 )
 {
     gs2::datastore::PrepareUploadRequest request;
     request.setNamespaceName(namespaceName);
     request.setScope(scope);
     request.setAllowUserIds(allowUserIds);
-    request.setUpdateIfExists(updateIfExists);
     if (name)
     {
         request.setName(std::move(*name));
+    }
+    if (updateIfExists)
+    {
+        request.setUpdateIfExists(std::move(*updateIfExists));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->prepareUpload(

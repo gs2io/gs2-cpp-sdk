@@ -110,8 +110,8 @@ public:
         StringHolder namespaceName,
         StringHolder scope,
         List<StringHolder> allowUserIds,
-        Bool updateIfExists,
-        gs2::optional<StringHolder> name=gs2::nullopt
+        gs2::optional<StringHolder> name=gs2::nullopt,
+        gs2::optional<Bool> updateIfExists=gs2::nullopt
     );
 
     /// <summary>
