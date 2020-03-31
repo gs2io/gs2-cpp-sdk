@@ -63,6 +63,10 @@ private:
         optional<Bool> uniqueByUserId;
         /** スコアの集計間隔(分) */
         optional<Int32> calculateIntervalMinutes;
+        /** スコアの登録可能期間とするイベントマスター のGRN */
+        optional<StringHolder> entryPeriodEventId;
+        /** アクセス可能期間とするイベントマスター のGRN */
+        optional<StringHolder> accessPeriodEventId;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -82,6 +86,8 @@ private:
             scope(data.scope),
             uniqueByUserId(data.uniqueByUserId),
             calculateIntervalMinutes(data.calculateIntervalMinutes),
+            entryPeriodEventId(data.entryPeriodEventId),
+            accessPeriodEventId(data.accessPeriodEventId),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
@@ -164,6 +170,20 @@ private:
                 if (jsonValue.IsInt())
                 {
                     this->calculateIntervalMinutes = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "entryPeriodEventId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->entryPeriodEventId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "accessPeriodEventId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->accessPeriodEventId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -519,6 +539,68 @@ public:
     }
 
     /**
+     * スコアの登録可能期間とするイベントマスター のGRNを取得
+     *
+     * @return スコアの登録可能期間とするイベントマスター のGRN
+     */
+    const optional<StringHolder>& getEntryPeriodEventId() const
+    {
+        return ensureData().entryPeriodEventId;
+    }
+
+    /**
+     * スコアの登録可能期間とするイベントマスター のGRNを設定
+     *
+     * @param entryPeriodEventId スコアの登録可能期間とするイベントマスター のGRN
+     */
+    void setEntryPeriodEventId(StringHolder entryPeriodEventId)
+    {
+        ensureData().entryPeriodEventId.emplace(std::move(entryPeriodEventId));
+    }
+
+    /**
+     * スコアの登録可能期間とするイベントマスター のGRNを設定
+     *
+     * @param entryPeriodEventId スコアの登録可能期間とするイベントマスター のGRN
+     */
+    CategoryModelMaster& withEntryPeriodEventId(StringHolder entryPeriodEventId)
+    {
+        setEntryPeriodEventId(std::move(entryPeriodEventId));
+        return *this;
+    }
+
+    /**
+     * アクセス可能期間とするイベントマスター のGRNを取得
+     *
+     * @return アクセス可能期間とするイベントマスター のGRN
+     */
+    const optional<StringHolder>& getAccessPeriodEventId() const
+    {
+        return ensureData().accessPeriodEventId;
+    }
+
+    /**
+     * アクセス可能期間とするイベントマスター のGRNを設定
+     *
+     * @param accessPeriodEventId アクセス可能期間とするイベントマスター のGRN
+     */
+    void setAccessPeriodEventId(StringHolder accessPeriodEventId)
+    {
+        ensureData().accessPeriodEventId.emplace(std::move(accessPeriodEventId));
+    }
+
+    /**
+     * アクセス可能期間とするイベントマスター のGRNを設定
+     *
+     * @param accessPeriodEventId アクセス可能期間とするイベントマスター のGRN
+     */
+    CategoryModelMaster& withAccessPeriodEventId(StringHolder accessPeriodEventId)
+    {
+        setAccessPeriodEventId(std::move(accessPeriodEventId));
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -632,6 +714,14 @@ inline bool operator!=(const CategoryModelMaster& lhs, const CategoryModelMaster
             return true;
         }
         if (lhs.m_pData->calculateIntervalMinutes != lhr.m_pData->calculateIntervalMinutes)
+        {
+            return true;
+        }
+        if (lhs.m_pData->entryPeriodEventId != lhr.m_pData->entryPeriodEventId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->accessPeriodEventId != lhr.m_pData->accessPeriodEventId)
         {
             return true;
         }

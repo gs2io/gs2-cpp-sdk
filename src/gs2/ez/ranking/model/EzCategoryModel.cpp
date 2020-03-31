@@ -23,13 +23,17 @@ namespace gs2 { namespace ez { namespace ranking {
 EzCategoryModel::Data::Data(const Data& data) :
     Gs2Object(data),
     name(data.name),
-    metadata(data.metadata)
+    metadata(data.metadata),
+    entryPeriodEventId(data.entryPeriodEventId),
+    accessPeriodEventId(data.accessPeriodEventId)
 {
 }
 
 EzCategoryModel::Data::Data(const gs2::ranking::CategoryModel& categoryModel) :
     name(categoryModel.getName()),
-    metadata(categoryModel.getMetadata())
+    metadata(categoryModel.getMetadata()),
+    entryPeriodEventId(categoryModel.getEntryPeriodEventId()),
+    accessPeriodEventId(categoryModel.getAccessPeriodEventId())
 {
 }
 
@@ -48,6 +52,8 @@ gs2::ranking::CategoryModel EzCategoryModel::ToModel() const
     gs2::ranking::CategoryModel categoryModel;
     categoryModel.setName(getName());
     categoryModel.setMetadata(getMetadata());
+    categoryModel.setEntryPeriodEventId(getEntryPeriodEventId());
+    categoryModel.setAccessPeriodEventId(getAccessPeriodEventId());
     return categoryModel;
 }
 

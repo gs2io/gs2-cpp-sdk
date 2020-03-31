@@ -63,6 +63,10 @@ private:
         optional<Bool> uniqueByUserId;
         /** スコアの集計間隔(分) */
         optional<Int32> calculateIntervalMinutes;
+        /** スコアの登録可能期間とするイベントマスター のGRN */
+        optional<StringHolder> entryPeriodEventId;
+        /** アクセス可能期間とするイベントマスター のGRN */
+        optional<StringHolder> accessPeriodEventId;
 
         Data() = default;
 
@@ -77,7 +81,9 @@ private:
             orderDirection(data.orderDirection),
             scope(data.scope),
             uniqueByUserId(data.uniqueByUserId),
-            calculateIntervalMinutes(data.calculateIntervalMinutes)
+            calculateIntervalMinutes(data.calculateIntervalMinutes),
+            entryPeriodEventId(data.entryPeriodEventId),
+            accessPeriodEventId(data.accessPeriodEventId)
         {
         }
 
@@ -432,6 +438,68 @@ public:
     UpdateCategoryModelMasterRequest& withCalculateIntervalMinutes(Int32 calculateIntervalMinutes)
     {
         ensureData().calculateIntervalMinutes.emplace(calculateIntervalMinutes);
+        return *this;
+    }
+
+    /**
+     * スコアの登録可能期間とするイベントマスター のGRNを取得
+     *
+     * @return スコアの登録可能期間とするイベントマスター のGRN
+     */
+    const optional<StringHolder>& getEntryPeriodEventId() const
+    {
+        return ensureData().entryPeriodEventId;
+    }
+
+    /**
+     * スコアの登録可能期間とするイベントマスター のGRNを設定
+     *
+     * @param entryPeriodEventId スコアの登録可能期間とするイベントマスター のGRN
+     */
+    void setEntryPeriodEventId(StringHolder entryPeriodEventId)
+    {
+        ensureData().entryPeriodEventId.emplace(std::move(entryPeriodEventId));
+    }
+
+    /**
+     * スコアの登録可能期間とするイベントマスター のGRNを設定
+     *
+     * @param entryPeriodEventId スコアの登録可能期間とするイベントマスター のGRN
+     */
+    UpdateCategoryModelMasterRequest& withEntryPeriodEventId(StringHolder entryPeriodEventId)
+    {
+        ensureData().entryPeriodEventId.emplace(std::move(entryPeriodEventId));
+        return *this;
+    }
+
+    /**
+     * アクセス可能期間とするイベントマスター のGRNを取得
+     *
+     * @return アクセス可能期間とするイベントマスター のGRN
+     */
+    const optional<StringHolder>& getAccessPeriodEventId() const
+    {
+        return ensureData().accessPeriodEventId;
+    }
+
+    /**
+     * アクセス可能期間とするイベントマスター のGRNを設定
+     *
+     * @param accessPeriodEventId アクセス可能期間とするイベントマスター のGRN
+     */
+    void setAccessPeriodEventId(StringHolder accessPeriodEventId)
+    {
+        ensureData().accessPeriodEventId.emplace(std::move(accessPeriodEventId));
+    }
+
+    /**
+     * アクセス可能期間とするイベントマスター のGRNを設定
+     *
+     * @param accessPeriodEventId アクセス可能期間とするイベントマスター のGRN
+     */
+    UpdateCategoryModelMasterRequest& withAccessPeriodEventId(StringHolder accessPeriodEventId)
+    {
+        ensureData().accessPeriodEventId.emplace(std::move(accessPeriodEventId));
         return *this;
     }
 

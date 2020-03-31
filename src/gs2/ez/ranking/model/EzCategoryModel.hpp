@@ -45,6 +45,10 @@ private:
         gs2::optional<StringHolder> name;
         /** カテゴリのメタデータ */
         gs2::optional<StringHolder> metadata;
+        /** スコアの登録可能期間とするイベントマスター のGRN */
+        gs2::optional<StringHolder> entryPeriodEventId;
+        /** アクセス可能期間とするイベントマスター のGRN */
+        gs2::optional<StringHolder> accessPeriodEventId;
 
         Data() = default;
         Data(const Data& data);
@@ -87,6 +91,16 @@ public:
         return *ensureData().metadata;
     }
 
+    const StringHolder& getEntryPeriodEventId() const
+    {
+        return *ensureData().entryPeriodEventId;
+    }
+
+    const StringHolder& getAccessPeriodEventId() const
+    {
+        return *ensureData().accessPeriodEventId;
+    }
+
     // ========================================
     //   Setters
     // ========================================
@@ -101,6 +115,16 @@ public:
         ensureData().metadata = std::move(metadata);
     }
 
+    void setEntryPeriodEventId(StringHolder entryPeriodEventId)
+    {
+        ensureData().entryPeriodEventId = std::move(entryPeriodEventId);
+    }
+
+    void setAccessPeriodEventId(StringHolder accessPeriodEventId)
+    {
+        ensureData().accessPeriodEventId = std::move(accessPeriodEventId);
+    }
+
     EzCategoryModel& withName(StringHolder name)
     {
         setName(std::move(name));
@@ -110,6 +134,18 @@ public:
     EzCategoryModel& withMetadata(StringHolder metadata)
     {
         setMetadata(std::move(metadata));
+        return *this;
+    }
+
+    EzCategoryModel& withEntryPeriodEventId(StringHolder entryPeriodEventId)
+    {
+        setEntryPeriodEventId(std::move(entryPeriodEventId));
+        return *this;
+    }
+
+    EzCategoryModel& withAccessPeriodEventId(StringHolder accessPeriodEventId)
+    {
+        setAccessPeriodEventId(std::move(accessPeriodEventId));
         return *this;
     }
 };
