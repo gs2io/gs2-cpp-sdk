@@ -37,7 +37,9 @@ void Client::listCounters(
     std::function<void(AsyncEzListCountersResult)> callback,
     GameSession& session,
     StringHolder namespaceName,
-    gs2::optional<StringHolder> limitName
+    gs2::optional<StringHolder> limitName,
+    gs2::optional<StringHolder> pageToken,
+    gs2::optional<Int64> limit
 )
 {
     gs2::limit::DescribeCountersRequest request;
@@ -45,6 +47,14 @@ void Client::listCounters(
     if (limitName)
     {
         request.setLimitName(std::move(*limitName));
+    }
+    if (pageToken)
+    {
+        request.setPageToken(std::move(*pageToken));
+    }
+    if (limit)
+    {
+        request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->describeCounters(
