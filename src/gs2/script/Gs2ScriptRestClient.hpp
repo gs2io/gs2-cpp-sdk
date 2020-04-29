@@ -36,6 +36,7 @@
 #include "request/UpdateScriptRequest.hpp"
 #include "request/UpdateScriptFromGitHubRequest.hpp"
 #include "request/DeleteScriptRequest.hpp"
+#include "request/InvokeScriptRequest.hpp"
 #include "request/DebugInvokeRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
@@ -50,6 +51,7 @@
 #include "result/UpdateScriptResult.hpp"
 #include "result/UpdateScriptFromGitHubResult.hpp"
 #include "result/DeleteScriptResult.hpp"
+#include "result/InvokeScriptResult.hpp"
 #include "result/DebugInvokeResult.hpp"
 #include <cstring>
 
@@ -819,6 +821,63 @@ private:
         ~DeleteScriptTask() GS2_OVERRIDE = default;
     };
 
+    class InvokeScriptTask : public detail::Gs2RestSessionTask<InvokeScriptResult>
+    {
+    private:
+        InvokeScriptRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "script";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/invoke";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getScriptId())
+            {
+                jsonWriter.writePropertyName("scriptId");
+                jsonWriter.writeCharArray(*m_Request.getScriptId());
+            }
+            if (m_Request.getArgs())
+            {
+                jsonWriter.writePropertyName("args");
+                jsonWriter.writeInt32(*m_Request.getArgs());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        InvokeScriptTask(
+            InvokeScriptRequest request,
+            Gs2RestSessionTask<InvokeScriptResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<InvokeScriptResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~InvokeScriptTask() GS2_OVERRIDE = default;
+    };
+
     class DebugInvokeTask : public detail::Gs2RestSessionTask<DebugInvokeResult>
     {
     private:
@@ -1177,6 +1236,18 @@ public:
     void deleteScript(DeleteScriptRequest request, std::function<void(AsyncDeleteScriptResult)> callback)
     {
         DeleteScriptTask& task = *new DeleteScriptTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * スクリプトを実行します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void invokeScript(InvokeScriptRequest request, std::function<void(AsyncInvokeScriptResult)> callback)
+    {
+        InvokeScriptTask& task = *new InvokeScriptTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 
