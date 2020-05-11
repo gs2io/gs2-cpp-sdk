@@ -19,6 +19,7 @@
 
 #include <gs2/core/common.hpp>
 #include "EzEntryModel.hpp"
+#include "EzEntry.hpp"
 #include "EzConfig.hpp"
 
 #endif //GS2_EZ_DICTIONARY_MODEL_MODEL_HPP_
