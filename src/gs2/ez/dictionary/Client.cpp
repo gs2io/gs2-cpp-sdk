@@ -105,11 +105,13 @@ void Client::getEntryModel(
 
 void Client::listEntries(
     std::function<void(AsyncEzListEntriesResult)> callback,
+    GameSession& session,
     StringHolder namespaceName
 )
 {
     gs2::dictionary::DescribeEntriesRequest request;
     request.setNamespaceName(namespaceName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->describeEntries(
         request,
         [callback](gs2::dictionary::AsyncDescribeEntriesResult r)
@@ -139,6 +141,7 @@ void Client::listEntries(
 
 void Client::getEntry(
     std::function<void(AsyncEzGetEntryResult)> callback,
+    GameSession& session,
     StringHolder namespaceName,
     StringHolder entryModelName
 )
@@ -146,6 +149,7 @@ void Client::getEntry(
     gs2::dictionary::GetEntryRequest request;
     request.setNamespaceName(namespaceName);
     request.setEntryModelName(entryModelName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->getEntry(
         request,
         [callback](gs2::dictionary::AsyncGetEntryResult r)

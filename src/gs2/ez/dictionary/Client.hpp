@@ -78,9 +78,12 @@ public:
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     void listEntries(
         std::function<void(AsyncEzListEntriesResult)> callback,
+        GameSession& session,
         StringHolder namespaceName
     );
 
@@ -89,10 +92,13 @@ public:
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="entryModelName">エントリー名</param>
     void getEntry(
         std::function<void(AsyncEzGetEntryResult)> callback,
+        GameSession& session,
         StringHolder namespaceName,
         StringHolder entryModelName
     );
