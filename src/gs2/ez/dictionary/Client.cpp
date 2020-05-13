@@ -106,11 +106,21 @@ void Client::getEntryModel(
 void Client::listEntries(
     std::function<void(AsyncEzListEntriesResult)> callback,
     GameSession& session,
-    StringHolder namespaceName
+    StringHolder namespaceName,
+    gs2::optional<Int64> limit,
+    gs2::optional<StringHolder> pageToken
 )
 {
     gs2::dictionary::DescribeEntriesRequest request;
     request.setNamespaceName(namespaceName);
+    if (limit)
+    {
+        request.setLimit(std::move(*limit));
+    }
+    if (pageToken)
+    {
+        request.setPageToken(std::move(*pageToken));
+    }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->describeEntries(
         request,
