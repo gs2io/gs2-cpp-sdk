@@ -44,6 +44,7 @@
 #include "request/GetEntryWithSignatureRequest.hpp"
 #include "request/GetEntryWithSignatureByUserIdRequest.hpp"
 #include "request/ResetByUserIdRequest.hpp"
+#include "request/AddEntriesByStampSheetRequest.hpp"
 #include "request/ExportMasterRequest.hpp"
 #include "request/GetCurrentEntryMasterRequest.hpp"
 #include "request/UpdateCurrentEntryMasterRequest.hpp"
@@ -69,6 +70,7 @@
 #include "result/GetEntryWithSignatureResult.hpp"
 #include "result/GetEntryWithSignatureByUserIdResult.hpp"
 #include "result/ResetByUserIdResult.hpp"
+#include "result/AddEntriesByStampSheetResult.hpp"
 #include "result/ExportMasterResult.hpp"
 #include "result/GetCurrentEntryMasterResult.hpp"
 #include "result/UpdateCurrentEntryMasterResult.hpp"
@@ -1325,6 +1327,67 @@ private:
         ~ResetByUserIdTask() GS2_OVERRIDE = default;
     };
 
+    class AddEntriesByStampSheetTask : public detail::Gs2RestSessionTask<AddEntriesByStampSheetResult>
+    {
+    private:
+        AddEntriesByStampSheetRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "dictionary";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stamp/entry/add";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        AddEntriesByStampSheetTask(
+            AddEntriesByStampSheetRequest request,
+            Gs2RestSessionTask<AddEntriesByStampSheetResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<AddEntriesByStampSheetResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~AddEntriesByStampSheetTask() GS2_OVERRIDE = default;
+    };
+
     class ExportMasterTask : public detail::Gs2RestSessionTask<ExportMasterResult>
     {
     private:
@@ -2075,6 +2138,18 @@ public:
     void resetByUserId(ResetByUserIdRequest request, std::function<void(AsyncResetByUserIdResult)> callback)
     {
         ResetByUserIdTask& task = *new ResetByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * スタンプシートでエントリーを追加<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void addEntriesByStampSheet(AddEntriesByStampSheetRequest request, std::function<void(AsyncAddEntriesByStampSheetResult)> callback)
+    {
+        AddEntriesByStampSheetTask& task = *new AddEntriesByStampSheetTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 
