@@ -34,6 +34,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         result/EzGetEntryModelResult.hpp
         result/EzListEntriesResult.hpp
         result/EzGetEntryResult.hpp
+        result/EzGetEntryWithSignatureResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES

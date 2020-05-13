@@ -187,4 +187,44 @@ void Client::getEntry(
     );
 }
 
+void Client::getEntryWithSignature(
+    std::function<void(AsyncEzGetEntryWithSignatureResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder entryModelName,
+    StringHolder keyId
+)
+{
+    gs2::dictionary::GetEntryWithSignatureRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setEntryModelName(entryModelName);
+    request.setKeyId(keyId);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->getEntryWithSignature(
+        request,
+        [callback](gs2::dictionary::AsyncGetEntryWithSignatureResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetEntryWithSignatureResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetEntryWithSignatureResult::isConvertible(*r.getResult()))
+            {
+                EzGetEntryWithSignatureResult ezResult(*r.getResult());
+                AsyncEzGetEntryWithSignatureResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetEntryWithSignatureResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
 }}}

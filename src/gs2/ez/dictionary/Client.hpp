@@ -22,6 +22,7 @@
 #include "result/EzGetEntryModelResult.hpp"
 #include "result/EzListEntriesResult.hpp"
 #include "result/EzGetEntryResult.hpp"
+#include "result/EzGetEntryWithSignatureResult.hpp"
 
 
 namespace gs2 {
@@ -105,6 +106,24 @@ public:
         GameSession& session,
         StringHolder namespaceName,
         StringHolder entryModelName
+    );
+
+    /// <summary>
+    ///  エントリーを取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="entryModelName">エントリー名</param>
+    /// <param name="keyId">署名の発行に使用する暗号鍵 のGRN</param>
+    void getEntryWithSignature(
+        std::function<void(AsyncEzGetEntryWithSignatureResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder entryModelName,
+        StringHolder keyId
     );
 };
 
