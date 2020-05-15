@@ -651,6 +651,16 @@ private:
                 jsonWriter.writePropertyName("calculateIntervalMinutes");
                 jsonWriter.writeInt32(*m_Request.getCalculateIntervalMinutes());
             }
+            if (m_Request.getEntryPeriodEventId())
+            {
+                jsonWriter.writePropertyName("entryPeriodEventId");
+                jsonWriter.writeCharArray(*m_Request.getEntryPeriodEventId());
+            }
+            if (m_Request.getAccessPeriodEventId())
+            {
+                jsonWriter.writePropertyName("accessPeriodEventId");
+                jsonWriter.writeCharArray(*m_Request.getAccessPeriodEventId());
+            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -796,6 +806,16 @@ private:
             {
                 jsonWriter.writePropertyName("calculateIntervalMinutes");
                 jsonWriter.writeInt32(*m_Request.getCalculateIntervalMinutes());
+            }
+            if (m_Request.getEntryPeriodEventId())
+            {
+                jsonWriter.writePropertyName("entryPeriodEventId");
+                jsonWriter.writeCharArray(*m_Request.getEntryPeriodEventId());
+            }
+            if (m_Request.getAccessPeriodEventId())
+            {
+                jsonWriter.writePropertyName("accessPeriodEventId");
+                jsonWriter.writeCharArray(*m_Request.getAccessPeriodEventId());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -2061,6 +2081,16 @@ protected:
             jsonWriter.writePropertyName("calculateIntervalMinutes");
             jsonWriter.writeInt32(*obj.getCalculateIntervalMinutes());
         }
+        if (obj.getEntryPeriodEventId())
+        {
+            jsonWriter.writePropertyName("entryPeriodEventId");
+            jsonWriter.writeCharArray(*obj.getEntryPeriodEventId());
+        }
+        if (obj.getAccessPeriodEventId())
+        {
+            jsonWriter.writePropertyName("accessPeriodEventId");
+            jsonWriter.writeCharArray(*obj.getAccessPeriodEventId());
+        }
         jsonWriter.writeObjectEnd();
     }
 
@@ -2116,6 +2146,16 @@ protected:
         {
             jsonWriter.writePropertyName("calculateIntervalMinutes");
             jsonWriter.writeInt32(*obj.getCalculateIntervalMinutes());
+        }
+        if (obj.getEntryPeriodEventId())
+        {
+            jsonWriter.writePropertyName("entryPeriodEventId");
+            jsonWriter.writeCharArray(*obj.getEntryPeriodEventId());
+        }
+        if (obj.getAccessPeriodEventId())
+        {
+            jsonWriter.writePropertyName("accessPeriodEventId");
+            jsonWriter.writeCharArray(*obj.getAccessPeriodEventId());
         }
         if (obj.getCreatedAt())
         {
