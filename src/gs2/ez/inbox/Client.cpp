@@ -79,6 +79,42 @@ void Client::list(
     );
 }
 
+void Client::receiveGlobalMessage(
+    std::function<void(AsyncEzReceiveGlobalMessageResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName
+)
+{
+    gs2::inbox::ReceiveGlobalMessageRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->receiveGlobalMessage(
+        request,
+        [callback](gs2::inbox::AsyncReceiveGlobalMessageResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzReceiveGlobalMessageResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzReceiveGlobalMessageResult::isConvertible(*r.getResult()))
+            {
+                EzReceiveGlobalMessageResult ezResult(*r.getResult());
+                AsyncEzReceiveGlobalMessageResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzReceiveGlobalMessageResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
 void Client::read(
     std::function<void(AsyncEzReadResult)> callback,
     GameSession& session,
