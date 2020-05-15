@@ -57,6 +57,8 @@ private:
         optional<List<StringHolder>> allowUserIds;
         /** メタデータ */
         optional<StringHolder> metadata;
+        /** ギャザリングの有効期限 */
+        optional<Int64> expiresAt;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -69,6 +71,7 @@ private:
             gatheringId(data.gatheringId),
             name(data.name),
             metadata(data.metadata),
+            expiresAt(data.expiresAt),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
@@ -156,6 +159,13 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->metadata.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "expiresAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->expiresAt = jsonValue.GetInt64();
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -387,6 +397,37 @@ public:
     }
 
     /**
+     * ギャザリングの有効期限を取得
+     *
+     * @return ギャザリングの有効期限
+     */
+    const optional<Int64>& getExpiresAt() const
+    {
+        return ensureData().expiresAt;
+    }
+
+    /**
+     * ギャザリングの有効期限を設定
+     *
+     * @param expiresAt ギャザリングの有効期限
+     */
+    void setExpiresAt(Int64 expiresAt)
+    {
+        ensureData().expiresAt.emplace(expiresAt);
+    }
+
+    /**
+     * ギャザリングの有効期限を設定
+     *
+     * @param expiresAt ギャザリングの有効期限
+     */
+    Gathering& withExpiresAt(Int64 expiresAt)
+    {
+        setExpiresAt(expiresAt);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -484,6 +525,10 @@ inline bool operator!=(const Gathering& lhs, const Gathering& lhr)
             return true;
         }
         if (lhs.m_pData->metadata != lhr.m_pData->metadata)
+        {
+            return true;
+        }
+        if (lhs.m_pData->expiresAt != lhr.m_pData->expiresAt)
         {
             return true;
         }
