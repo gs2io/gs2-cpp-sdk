@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INBOX_CONTROL_DELETENAMESPACERESULT_HPP_
-#define GS2_INBOX_CONTROL_DELETENAMESPACERESULT_HPP_
+#ifndef GS2_INBOX_CONTROL_UPDATECURRENTMESSAGEMASTERFROMGITHUBRESULT_HPP_
+#define GS2_INBOX_CONTROL_UPDATECURRENTMESSAGEMASTERFROMGITHUBRESULT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
@@ -32,18 +32,18 @@ namespace gs2 { namespace inbox
 {
 
 /**
- * ネームスペースを削除 のレスポンスモデル
+ * 現在有効なグローバルメッセージ設定を更新します のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
-class DeleteNamespaceResult : public Gs2Object
+class UpdateCurrentMessageMasterFromGitHubResult : public Gs2Object
 {
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 削除したネームスペース */
-        optional<Namespace> item;
+        /** 更新した現在有効なグローバルメッセージ設定 */
+        optional<CurrentMessageMaster> item;
 
         Data() = default;
 
@@ -80,44 +80,44 @@ private:
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DeleteNamespaceResult() = default;
-    DeleteNamespaceResult(const DeleteNamespaceResult& deleteNamespaceResult) = default;
-    DeleteNamespaceResult(DeleteNamespaceResult&& deleteNamespaceResult) = default;
-    ~DeleteNamespaceResult() = default;
+    UpdateCurrentMessageMasterFromGitHubResult() = default;
+    UpdateCurrentMessageMasterFromGitHubResult(const UpdateCurrentMessageMasterFromGitHubResult& updateCurrentMessageMasterFromGitHubResult) = default;
+    UpdateCurrentMessageMasterFromGitHubResult(UpdateCurrentMessageMasterFromGitHubResult&& updateCurrentMessageMasterFromGitHubResult) = default;
+    ~UpdateCurrentMessageMasterFromGitHubResult() = default;
 
-    DeleteNamespaceResult& operator=(const DeleteNamespaceResult& deleteNamespaceResult) = default;
-    DeleteNamespaceResult& operator=(DeleteNamespaceResult&& deleteNamespaceResult) = default;
+    UpdateCurrentMessageMasterFromGitHubResult& operator=(const UpdateCurrentMessageMasterFromGitHubResult& updateCurrentMessageMasterFromGitHubResult) = default;
+    UpdateCurrentMessageMasterFromGitHubResult& operator=(UpdateCurrentMessageMasterFromGitHubResult&& updateCurrentMessageMasterFromGitHubResult) = default;
 
-    DeleteNamespaceResult deepCopy() const
+    UpdateCurrentMessageMasterFromGitHubResult deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteNamespaceResult);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateCurrentMessageMasterFromGitHubResult);
     }
 
-    const DeleteNamespaceResult* operator->() const
+    const UpdateCurrentMessageMasterFromGitHubResult* operator->() const
     {
         return this;
     }
 
-    DeleteNamespaceResult* operator->()
+    UpdateCurrentMessageMasterFromGitHubResult* operator->()
     {
         return this;
     }
     /**
-     * 削除したネームスペースを取得
+     * 更新した現在有効なグローバルメッセージ設定を取得
      *
-     * @return 削除したネームスペース
+     * @return 更新した現在有効なグローバルメッセージ設定
      */
-    const optional<Namespace>& getItem() const
+    const optional<CurrentMessageMaster>& getItem() const
     {
         return ensureData().item;
     }
 
     /**
-     * 削除したネームスペースを設定
+     * 更新した現在有効なグローバルメッセージ設定を設定
      *
-     * @param item 削除したネームスペース
+     * @param item 更新した現在有効なグローバルメッセージ設定
      */
-    void setItem(Namespace item)
+    void setItem(CurrentMessageMaster item)
     {
         ensureData().item.emplace(std::move(item));
     }
@@ -129,8 +129,8 @@ public:
     }
 };
 
-typedef AsyncResult<DeleteNamespaceResult> AsyncDeleteNamespaceResult;
+typedef AsyncResult<UpdateCurrentMessageMasterFromGitHubResult> AsyncUpdateCurrentMessageMasterFromGitHubResult;
 
 } }
 
-#endif //GS2_INBOX_CONTROL_DELETENAMESPACERESULT_HPP_
+#endif //GS2_INBOX_CONTROL_UPDATECURRENTMESSAGEMASTERFROMGITHUBRESULT_HPP_

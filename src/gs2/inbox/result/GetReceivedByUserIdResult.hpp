@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INBOX_CONTROL_DELETENAMESPACERESULT_HPP_
-#define GS2_INBOX_CONTROL_DELETENAMESPACERESULT_HPP_
+#ifndef GS2_INBOX_CONTROL_GETRECEIVEDBYUSERIDRESULT_HPP_
+#define GS2_INBOX_CONTROL_GETRECEIVEDBYUSERIDRESULT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
@@ -32,18 +32,18 @@ namespace gs2 { namespace inbox
 {
 
 /**
- * ネームスペースを削除 のレスポンスモデル
+ * ユーザーIDを指定して受信済みグローバルメッセージ名を取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
-class DeleteNamespaceResult : public Gs2Object
+class GetReceivedByUserIdResult : public Gs2Object
 {
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 削除したネームスペース */
-        optional<Namespace> item;
+        /** 受信済みグローバルメッセージ名 */
+        optional<Received> item;
 
         Data() = default;
 
@@ -80,44 +80,44 @@ private:
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DeleteNamespaceResult() = default;
-    DeleteNamespaceResult(const DeleteNamespaceResult& deleteNamespaceResult) = default;
-    DeleteNamespaceResult(DeleteNamespaceResult&& deleteNamespaceResult) = default;
-    ~DeleteNamespaceResult() = default;
+    GetReceivedByUserIdResult() = default;
+    GetReceivedByUserIdResult(const GetReceivedByUserIdResult& getReceivedByUserIdResult) = default;
+    GetReceivedByUserIdResult(GetReceivedByUserIdResult&& getReceivedByUserIdResult) = default;
+    ~GetReceivedByUserIdResult() = default;
 
-    DeleteNamespaceResult& operator=(const DeleteNamespaceResult& deleteNamespaceResult) = default;
-    DeleteNamespaceResult& operator=(DeleteNamespaceResult&& deleteNamespaceResult) = default;
+    GetReceivedByUserIdResult& operator=(const GetReceivedByUserIdResult& getReceivedByUserIdResult) = default;
+    GetReceivedByUserIdResult& operator=(GetReceivedByUserIdResult&& getReceivedByUserIdResult) = default;
 
-    DeleteNamespaceResult deepCopy() const
+    GetReceivedByUserIdResult deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteNamespaceResult);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetReceivedByUserIdResult);
     }
 
-    const DeleteNamespaceResult* operator->() const
+    const GetReceivedByUserIdResult* operator->() const
     {
         return this;
     }
 
-    DeleteNamespaceResult* operator->()
+    GetReceivedByUserIdResult* operator->()
     {
         return this;
     }
     /**
-     * 削除したネームスペースを取得
+     * 受信済みグローバルメッセージ名を取得
      *
-     * @return 削除したネームスペース
+     * @return 受信済みグローバルメッセージ名
      */
-    const optional<Namespace>& getItem() const
+    const optional<Received>& getItem() const
     {
         return ensureData().item;
     }
 
     /**
-     * 削除したネームスペースを設定
+     * 受信済みグローバルメッセージ名を設定
      *
-     * @param item 削除したネームスペース
+     * @param item 受信済みグローバルメッセージ名
      */
-    void setItem(Namespace item)
+    void setItem(Received item)
     {
         ensureData().item.emplace(std::move(item));
     }
@@ -129,8 +129,8 @@ public:
     }
 };
 
-typedef AsyncResult<DeleteNamespaceResult> AsyncDeleteNamespaceResult;
+typedef AsyncResult<GetReceivedByUserIdResult> AsyncGetReceivedByUserIdResult;
 
 } }
 
-#endif //GS2_INBOX_CONTROL_DELETENAMESPACERESULT_HPP_
+#endif //GS2_INBOX_CONTROL_GETRECEIVEDBYUSERIDRESULT_HPP_

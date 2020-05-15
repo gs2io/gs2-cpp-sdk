@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INBOX_CONTROL_READMESSAGEREQUEST_HPP_
-#define GS2_INBOX_CONTROL_READMESSAGEREQUEST_HPP_
+#ifndef GS2_INBOX_CONTROL_GETRECEIVEDBYUSERIDREQUEST_HPP_
+#define GS2_INBOX_CONTROL_GETRECEIVEDBYUSERIDREQUEST_HPP_
 
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
@@ -30,11 +30,11 @@ namespace gs2 { namespace inbox
 {
 
 /**
- * メッセージを開封 のリクエストモデル
+ * ユーザーIDを指定して受信済みグローバルメッセージ名を取得 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
-class ReadMessageRequest : public Gs2BasicRequest, public Gs2Inbox
+class GetReceivedByUserIdRequest : public Gs2BasicRequest, public Gs2Inbox
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -43,14 +43,10 @@ private:
     class Data : public Gs2BasicRequest::Data
     {
     public:
-        /** アクセストークン */
-        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
-        /** メッセージID */
-        optional<StringHolder> messageName;
-        /** スタンプシートの変数に適用する設定値 */
-        optional<List<Config>> config;
+        /** ユーザーID */
+        optional<StringHolder> userId;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -58,15 +54,10 @@ private:
 
         Data(const Data& data) :
             Gs2BasicRequest::Data(data),
-            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
-            messageName(data.messageName),
+            userId(data.userId),
             duplicationAvoider(data.duplicationAvoider)
         {
-            if (data.config)
-            {
-                config = data.config->deepCopy();
-            }
         }
 
         Data(Data&& data) = default;
@@ -90,59 +81,27 @@ private:
     }
 
 public:
-    ReadMessageRequest() = default;
-    ReadMessageRequest(const ReadMessageRequest& readMessageRequest) = default;
-    ReadMessageRequest(ReadMessageRequest&& readMessageRequest) = default;
-    ~ReadMessageRequest() GS2_OVERRIDE = default;
+    GetReceivedByUserIdRequest() = default;
+    GetReceivedByUserIdRequest(const GetReceivedByUserIdRequest& getReceivedByUserIdRequest) = default;
+    GetReceivedByUserIdRequest(GetReceivedByUserIdRequest&& getReceivedByUserIdRequest) = default;
+    ~GetReceivedByUserIdRequest() GS2_OVERRIDE = default;
 
-    ReadMessageRequest& operator=(const ReadMessageRequest& readMessageRequest) = default;
-    ReadMessageRequest& operator=(ReadMessageRequest&& readMessageRequest) = default;
+    GetReceivedByUserIdRequest& operator=(const GetReceivedByUserIdRequest& getReceivedByUserIdRequest) = default;
+    GetReceivedByUserIdRequest& operator=(GetReceivedByUserIdRequest&& getReceivedByUserIdRequest) = default;
 
-    ReadMessageRequest deepCopy() const
+    GetReceivedByUserIdRequest deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ReadMessageRequest);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetReceivedByUserIdRequest);
     }
 
-    const ReadMessageRequest* operator->() const
+    const GetReceivedByUserIdRequest* operator->() const
     {
         return this;
     }
 
-    ReadMessageRequest* operator->()
+    GetReceivedByUserIdRequest* operator->()
     {
         return this;
-    }
-
-    /**
-     * アクセストークンを取得。
-     *
-     * @return アクセストークン
-     */
-    const gs2::optional<StringHolder>& getAccessToken() const
-    {
-        return ensureData().accessToken;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     */
-    void setAccessToken(StringHolder accessToken)
-    {
-        ensureData().accessToken.emplace(std::move(accessToken));
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    ReadMessageRequest& withAccessToken(StringHolder accessToken)
-    {
-        setAccessToken(std::move(accessToken));
-        return *this;
     }
 
     /**
@@ -170,71 +129,40 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    ReadMessageRequest& withNamespaceName(StringHolder namespaceName)
+    GetReceivedByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
     /**
-     * メッセージIDを取得
+     * ユーザーIDを取得
      *
-     * @return メッセージID
+     * @return ユーザーID
      */
-    const optional<StringHolder>& getMessageName() const
+    const optional<StringHolder>& getUserId() const
     {
-        return ensureData().messageName;
+        return ensureData().userId;
     }
 
     /**
-     * メッセージIDを設定
+     * ユーザーIDを設定
      *
-     * @param messageName メッセージID
+     * @param userId ユーザーID
      */
-    void setMessageName(StringHolder messageName)
+    void setUserId(StringHolder userId)
     {
-        ensureData().messageName.emplace(std::move(messageName));
+        ensureData().userId.emplace(std::move(userId));
     }
 
     /**
-     * メッセージIDを設定
+     * ユーザーIDを設定
      *
-     * @param messageName メッセージID
+     * @param userId ユーザーID
      */
-    ReadMessageRequest& withMessageName(StringHolder messageName)
+    GetReceivedByUserIdRequest& withUserId(StringHolder userId)
     {
-        ensureData().messageName.emplace(std::move(messageName));
-        return *this;
-    }
-
-    /**
-     * スタンプシートの変数に適用する設定値を取得
-     *
-     * @return スタンプシートの変数に適用する設定値
-     */
-    const optional<List<Config>>& getConfig() const
-    {
-        return ensureData().config;
-    }
-
-    /**
-     * スタンプシートの変数に適用する設定値を設定
-     *
-     * @param config スタンプシートの変数に適用する設定値
-     */
-    void setConfig(List<Config> config)
-    {
-        ensureData().config.emplace(std::move(config));
-    }
-
-    /**
-     * スタンプシートの変数に適用する設定値を設定
-     *
-     * @param config スタンプシートの変数に適用する設定値
-     */
-    ReadMessageRequest& withConfig(List<Config> config)
-    {
-        ensureData().config.emplace(std::move(config));
+        ensureData().userId.emplace(std::move(userId));
         return *this;
     }
 
@@ -263,7 +191,7 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    ReadMessageRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
+    GetReceivedByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
         ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
@@ -276,7 +204,7 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    ReadMessageRequest& withGs2ClientId(StringHolder gs2ClientId)
+    GetReceivedByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
         setGs2ClientId(std::move(gs2ClientId));
         return *this;
@@ -287,7 +215,7 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    ReadMessageRequest& withRequestId(StringHolder gs2RequestId)
+    GetReceivedByUserIdRequest& withRequestId(StringHolder gs2RequestId)
     {
         setRequestId(std::move(gs2RequestId));
         return *this;
@@ -296,4 +224,4 @@ public:
 
 } }
 
-#endif //GS2_INBOX_CONTROL_READMESSAGEREQUEST_HPP_
+#endif //GS2_INBOX_CONTROL_GETRECEIVEDBYUSERIDREQUEST_HPP_

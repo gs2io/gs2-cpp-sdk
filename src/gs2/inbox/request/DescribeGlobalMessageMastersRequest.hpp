@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INBOX_CONTROL_DESCRIBEMESSAGESBYUSERIDREQUEST_HPP_
-#define GS2_INBOX_CONTROL_DESCRIBEMESSAGESBYUSERIDREQUEST_HPP_
+#ifndef GS2_INBOX_CONTROL_DESCRIBEGLOBALMESSAGEMASTERSREQUEST_HPP_
+#define GS2_INBOX_CONTROL_DESCRIBEGLOBALMESSAGEMASTERSREQUEST_HPP_
 
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
@@ -30,11 +30,11 @@ namespace gs2 { namespace inbox
 {
 
 /**
- * メッセージの一覧を取得 のリクエストモデル
+ * 全ユーザに向けたメッセージの一覧を取得 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
-class DescribeMessagesByUserIdRequest : public Gs2BasicRequest, public Gs2Inbox
+class DescribeGlobalMessageMastersRequest : public Gs2BasicRequest, public Gs2Inbox
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -45,24 +45,18 @@ private:
     public:
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
-        /** ユーザーID */
-        optional<StringHolder> userId;
         /** データの取得を開始する位置を指定するトークン */
         optional<StringHolder> pageToken;
         /** データの取得件数 */
         optional<Int64> limit;
-        /** 重複実行回避機能に使用するID */
-        optional<StringHolder> duplicationAvoider;
 
         Data() = default;
 
         Data(const Data& data) :
             Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
-            userId(data.userId),
             pageToken(data.pageToken),
-            limit(data.limit),
-            duplicationAvoider(data.duplicationAvoider)
+            limit(data.limit)
         {
         }
 
@@ -87,25 +81,25 @@ private:
     }
 
 public:
-    DescribeMessagesByUserIdRequest() = default;
-    DescribeMessagesByUserIdRequest(const DescribeMessagesByUserIdRequest& describeMessagesByUserIdRequest) = default;
-    DescribeMessagesByUserIdRequest(DescribeMessagesByUserIdRequest&& describeMessagesByUserIdRequest) = default;
-    ~DescribeMessagesByUserIdRequest() GS2_OVERRIDE = default;
+    DescribeGlobalMessageMastersRequest() = default;
+    DescribeGlobalMessageMastersRequest(const DescribeGlobalMessageMastersRequest& describeGlobalMessageMastersRequest) = default;
+    DescribeGlobalMessageMastersRequest(DescribeGlobalMessageMastersRequest&& describeGlobalMessageMastersRequest) = default;
+    ~DescribeGlobalMessageMastersRequest() GS2_OVERRIDE = default;
 
-    DescribeMessagesByUserIdRequest& operator=(const DescribeMessagesByUserIdRequest& describeMessagesByUserIdRequest) = default;
-    DescribeMessagesByUserIdRequest& operator=(DescribeMessagesByUserIdRequest&& describeMessagesByUserIdRequest) = default;
+    DescribeGlobalMessageMastersRequest& operator=(const DescribeGlobalMessageMastersRequest& describeGlobalMessageMastersRequest) = default;
+    DescribeGlobalMessageMastersRequest& operator=(DescribeGlobalMessageMastersRequest&& describeGlobalMessageMastersRequest) = default;
 
-    DescribeMessagesByUserIdRequest deepCopy() const
+    DescribeGlobalMessageMastersRequest deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeMessagesByUserIdRequest);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DescribeGlobalMessageMastersRequest);
     }
 
-    const DescribeMessagesByUserIdRequest* operator->() const
+    const DescribeGlobalMessageMastersRequest* operator->() const
     {
         return this;
     }
 
-    DescribeMessagesByUserIdRequest* operator->()
+    DescribeGlobalMessageMastersRequest* operator->()
     {
         return this;
     }
@@ -135,40 +129,9 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    DescribeMessagesByUserIdRequest& withNamespaceName(StringHolder namespaceName)
+    DescribeGlobalMessageMastersRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
-        return *this;
-    }
-
-    /**
-     * ユーザーIDを取得
-     *
-     * @return ユーザーID
-     */
-    const optional<StringHolder>& getUserId() const
-    {
-        return ensureData().userId;
-    }
-
-    /**
-     * ユーザーIDを設定
-     *
-     * @param userId ユーザーID
-     */
-    void setUserId(StringHolder userId)
-    {
-        ensureData().userId.emplace(std::move(userId));
-    }
-
-    /**
-     * ユーザーIDを設定
-     *
-     * @param userId ユーザーID
-     */
-    DescribeMessagesByUserIdRequest& withUserId(StringHolder userId)
-    {
-        ensureData().userId.emplace(std::move(userId));
         return *this;
     }
 
@@ -197,7 +160,7 @@ public:
      *
      * @param pageToken データの取得を開始する位置を指定するトークン
      */
-    DescribeMessagesByUserIdRequest& withPageToken(StringHolder pageToken)
+    DescribeGlobalMessageMastersRequest& withPageToken(StringHolder pageToken)
     {
         ensureData().pageToken.emplace(std::move(pageToken));
         return *this;
@@ -228,40 +191,9 @@ public:
      *
      * @param limit データの取得件数
      */
-    DescribeMessagesByUserIdRequest& withLimit(Int64 limit)
+    DescribeGlobalMessageMastersRequest& withLimit(Int64 limit)
     {
         ensureData().limit.emplace(limit);
-        return *this;
-    }
-
-    /**
-     * 重複実行回避機能に使用するIDを取得
-     *
-     * @return 重複実行回避機能に使用するID
-     */
-    const optional<StringHolder>& getDuplicationAvoider() const
-    {
-        return ensureData().duplicationAvoider;
-    }
-
-    /**
-     * 重複実行回避機能に使用するIDを設定
-     *
-     * @param duplicationAvoider 重複実行回避機能に使用するID
-     */
-    void setDuplicationAvoider(StringHolder duplicationAvoider)
-    {
-        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
-    }
-
-    /**
-     * 重複実行回避機能に使用するIDを設定
-     *
-     * @param duplicationAvoider 重複実行回避機能に使用するID
-     */
-    DescribeMessagesByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
-    {
-        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
     }
 
@@ -272,7 +204,7 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    DescribeMessagesByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
+    DescribeGlobalMessageMastersRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
         setGs2ClientId(std::move(gs2ClientId));
         return *this;
@@ -283,7 +215,7 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    DescribeMessagesByUserIdRequest& withRequestId(StringHolder gs2RequestId)
+    DescribeGlobalMessageMastersRequest& withRequestId(StringHolder gs2RequestId)
     {
         setRequestId(std::move(gs2RequestId));
         return *this;
@@ -292,4 +224,4 @@ public:
 
 } }
 
-#endif //GS2_INBOX_CONTROL_DESCRIBEMESSAGESBYUSERIDREQUEST_HPP_
+#endif //GS2_INBOX_CONTROL_DESCRIBEGLOBALMESSAGEMASTERSREQUEST_HPP_

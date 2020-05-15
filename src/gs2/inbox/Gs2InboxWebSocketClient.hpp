@@ -34,6 +34,8 @@
 #include "request/SendMessageByUserIdRequest.hpp"
 #include "request/GetMessageRequest.hpp"
 #include "request/GetMessageByUserIdRequest.hpp"
+#include "request/ReceiveGlobalMessageRequest.hpp"
+#include "request/ReceiveGlobalMessageByUserIdRequest.hpp"
 #include "request/OpenMessageRequest.hpp"
 #include "request/OpenMessageByUserIdRequest.hpp"
 #include "request/ReadMessageRequest.hpp"
@@ -41,6 +43,20 @@
 #include "request/DeleteMessageRequest.hpp"
 #include "request/DeleteMessageByUserIdRequest.hpp"
 #include "request/OpenByStampTaskRequest.hpp"
+#include "request/ExportMasterRequest.hpp"
+#include "request/GetCurrentMessageMasterRequest.hpp"
+#include "request/UpdateCurrentMessageMasterRequest.hpp"
+#include "request/UpdateCurrentMessageMasterFromGitHubRequest.hpp"
+#include "request/DescribeGlobalMessageMastersRequest.hpp"
+#include "request/CreateGlobalMessageMasterRequest.hpp"
+#include "request/GetGlobalMessageMasterRequest.hpp"
+#include "request/UpdateGlobalMessageMasterRequest.hpp"
+#include "request/DeleteGlobalMessageMasterRequest.hpp"
+#include "request/DescribeGlobalMessagesRequest.hpp"
+#include "request/GetGlobalMessageRequest.hpp"
+#include "request/GetReceivedByUserIdRequest.hpp"
+#include "request/UpdateReceivedByUserIdRequest.hpp"
+#include "request/DeleteReceivedByUserIdRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -52,6 +68,8 @@
 #include "result/SendMessageByUserIdResult.hpp"
 #include "result/GetMessageResult.hpp"
 #include "result/GetMessageByUserIdResult.hpp"
+#include "result/ReceiveGlobalMessageResult.hpp"
+#include "result/ReceiveGlobalMessageByUserIdResult.hpp"
 #include "result/OpenMessageResult.hpp"
 #include "result/OpenMessageByUserIdResult.hpp"
 #include "result/ReadMessageResult.hpp"
@@ -59,6 +77,20 @@
 #include "result/DeleteMessageResult.hpp"
 #include "result/DeleteMessageByUserIdResult.hpp"
 #include "result/OpenByStampTaskResult.hpp"
+#include "result/ExportMasterResult.hpp"
+#include "result/GetCurrentMessageMasterResult.hpp"
+#include "result/UpdateCurrentMessageMasterResult.hpp"
+#include "result/UpdateCurrentMessageMasterFromGitHubResult.hpp"
+#include "result/DescribeGlobalMessageMastersResult.hpp"
+#include "result/CreateGlobalMessageMasterResult.hpp"
+#include "result/GetGlobalMessageMasterResult.hpp"
+#include "result/UpdateGlobalMessageMasterResult.hpp"
+#include "result/DeleteGlobalMessageMasterResult.hpp"
+#include "result/DescribeGlobalMessagesResult.hpp"
+#include "result/GetGlobalMessageResult.hpp"
+#include "result/GetReceivedByUserIdResult.hpp"
+#include "result/UpdateReceivedByUserIdResult.hpp"
+#include "result/DeleteReceivedByUserIdResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace inbox {
@@ -423,7 +455,7 @@ private:
         ~UpdateNamespaceTask() GS2_OVERRIDE = default;
     };
 
-    class DeleteNamespaceTask : public detail::Gs2WebSocketSessionTask<void>
+    class DeleteNamespaceTask : public detail::Gs2WebSocketSessionTask<DeleteNamespaceResult>
     {
     private:
         DeleteNamespaceRequest m_Request;
@@ -465,9 +497,9 @@ private:
     public:
         DeleteNamespaceTask(
             DeleteNamespaceRequest request,
-            Gs2WebSocketSessionTask<void>::CallbackType callback
+            Gs2WebSocketSessionTask<DeleteNamespaceResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<void>(callback),
+            Gs2WebSocketSessionTask<DeleteNamespaceResult>(callback),
             m_Request(std::move(request))
         {}
 
@@ -833,6 +865,128 @@ private:
         {}
 
         ~GetMessageByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class ReceiveGlobalMessageTask : public detail::Gs2WebSocketSessionTask<ReceiveGlobalMessageResult>
+    {
+    private:
+        ReceiveGlobalMessageRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "message";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "receiveGlobalMessage";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        ReceiveGlobalMessageTask(
+            ReceiveGlobalMessageRequest request,
+            Gs2WebSocketSessionTask<ReceiveGlobalMessageResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<ReceiveGlobalMessageResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~ReceiveGlobalMessageTask() GS2_OVERRIDE = default;
+    };
+
+    class ReceiveGlobalMessageByUserIdTask : public detail::Gs2WebSocketSessionTask<ReceiveGlobalMessageByUserIdResult>
+    {
+    private:
+        ReceiveGlobalMessageByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "message";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "receiveGlobalMessageByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        ReceiveGlobalMessageByUserIdTask(
+            ReceiveGlobalMessageByUserIdRequest request,
+            Gs2WebSocketSessionTask<ReceiveGlobalMessageByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<ReceiveGlobalMessageByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~ReceiveGlobalMessageByUserIdTask() GS2_OVERRIDE = default;
     };
 
     class OpenMessageTask : public detail::Gs2WebSocketSessionTask<OpenMessageResult>
@@ -1314,6 +1468,858 @@ private:
         ~OpenByStampTaskTask() GS2_OVERRIDE = default;
     };
 
+    class ExportMasterTask : public detail::Gs2WebSocketSessionTask<ExportMasterResult>
+    {
+    private:
+        ExportMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "currentMessageMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "exportMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        ExportMasterTask(
+            ExportMasterRequest request,
+            Gs2WebSocketSessionTask<ExportMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<ExportMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~ExportMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class GetCurrentMessageMasterTask : public detail::Gs2WebSocketSessionTask<GetCurrentMessageMasterResult>
+    {
+    private:
+        GetCurrentMessageMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "currentMessageMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getCurrentMessageMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        GetCurrentMessageMasterTask(
+            GetCurrentMessageMasterRequest request,
+            Gs2WebSocketSessionTask<GetCurrentMessageMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetCurrentMessageMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetCurrentMessageMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateCurrentMessageMasterTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentMessageMasterResult>
+    {
+    private:
+        UpdateCurrentMessageMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "currentMessageMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateCurrentMessageMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getSettings())
+            {
+                jsonWriter.writePropertyName("settings");
+                jsonWriter.writeCharArray(*m_Request.getSettings());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        UpdateCurrentMessageMasterTask(
+            UpdateCurrentMessageMasterRequest request,
+            Gs2WebSocketSessionTask<UpdateCurrentMessageMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateCurrentMessageMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateCurrentMessageMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateCurrentMessageMasterFromGitHubTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentMessageMasterFromGitHubResult>
+    {
+    private:
+        UpdateCurrentMessageMasterFromGitHubRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "currentMessageMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateCurrentMessageMasterFromGitHub";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCheckoutSetting())
+            {
+                jsonWriter.writePropertyName("checkoutSetting");
+                write(jsonWriter, *m_Request.getCheckoutSetting());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        UpdateCurrentMessageMasterFromGitHubTask(
+            UpdateCurrentMessageMasterFromGitHubRequest request,
+            Gs2WebSocketSessionTask<UpdateCurrentMessageMasterFromGitHubResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateCurrentMessageMasterFromGitHubResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateCurrentMessageMasterFromGitHubTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeGlobalMessageMastersTask : public detail::Gs2WebSocketSessionTask<DescribeGlobalMessageMastersResult>
+    {
+    private:
+        DescribeGlobalMessageMastersRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "globalMessageMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeGlobalMessageMasters";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getPageToken())
+            {
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        DescribeGlobalMessageMastersTask(
+            DescribeGlobalMessageMastersRequest request,
+            Gs2WebSocketSessionTask<DescribeGlobalMessageMastersResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeGlobalMessageMastersResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeGlobalMessageMastersTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateGlobalMessageMasterTask : public detail::Gs2WebSocketSessionTask<CreateGlobalMessageMasterResult>
+    {
+    private:
+        CreateGlobalMessageMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "globalMessageMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "createGlobalMessageMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getName())
+            {
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
+            }
+            if (m_Request.getMetadata())
+            {
+                jsonWriter.writePropertyName("metadata");
+                jsonWriter.writeCharArray(*m_Request.getMetadata());
+            }
+            if (m_Request.getReadAcquireActions())
+            {
+                jsonWriter.writePropertyName("readAcquireActions");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getReadAcquireActions();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getExpiresTimeSpan())
+            {
+                jsonWriter.writePropertyName("expiresTimeSpan");
+                write(jsonWriter, *m_Request.getExpiresTimeSpan());
+            }
+            if (m_Request.getExpiresAt())
+            {
+                jsonWriter.writePropertyName("expiresAt");
+                jsonWriter.writeInt64(*m_Request.getExpiresAt());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        CreateGlobalMessageMasterTask(
+            CreateGlobalMessageMasterRequest request,
+            Gs2WebSocketSessionTask<CreateGlobalMessageMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<CreateGlobalMessageMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateGlobalMessageMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class GetGlobalMessageMasterTask : public detail::Gs2WebSocketSessionTask<GetGlobalMessageMasterResult>
+    {
+    private:
+        GetGlobalMessageMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "globalMessageMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getGlobalMessageMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getGlobalMessageName())
+            {
+                jsonWriter.writePropertyName("globalMessageName");
+                jsonWriter.writeCharArray(*m_Request.getGlobalMessageName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        GetGlobalMessageMasterTask(
+            GetGlobalMessageMasterRequest request,
+            Gs2WebSocketSessionTask<GetGlobalMessageMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetGlobalMessageMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetGlobalMessageMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateGlobalMessageMasterTask : public detail::Gs2WebSocketSessionTask<UpdateGlobalMessageMasterResult>
+    {
+    private:
+        UpdateGlobalMessageMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "globalMessageMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateGlobalMessageMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getGlobalMessageName())
+            {
+                jsonWriter.writePropertyName("globalMessageName");
+                jsonWriter.writeCharArray(*m_Request.getGlobalMessageName());
+            }
+            if (m_Request.getMetadata())
+            {
+                jsonWriter.writePropertyName("metadata");
+                jsonWriter.writeCharArray(*m_Request.getMetadata());
+            }
+            if (m_Request.getReadAcquireActions())
+            {
+                jsonWriter.writePropertyName("readAcquireActions");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getReadAcquireActions();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getExpiresTimeSpan())
+            {
+                jsonWriter.writePropertyName("expiresTimeSpan");
+                write(jsonWriter, *m_Request.getExpiresTimeSpan());
+            }
+            if (m_Request.getExpiresAt())
+            {
+                jsonWriter.writePropertyName("expiresAt");
+                jsonWriter.writeInt64(*m_Request.getExpiresAt());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        UpdateGlobalMessageMasterTask(
+            UpdateGlobalMessageMasterRequest request,
+            Gs2WebSocketSessionTask<UpdateGlobalMessageMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateGlobalMessageMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateGlobalMessageMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteGlobalMessageMasterTask : public detail::Gs2WebSocketSessionTask<void>
+    {
+    private:
+        DeleteGlobalMessageMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "globalMessageMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteGlobalMessageMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getGlobalMessageName())
+            {
+                jsonWriter.writePropertyName("globalMessageName");
+                jsonWriter.writeCharArray(*m_Request.getGlobalMessageName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        DeleteGlobalMessageMasterTask(
+            DeleteGlobalMessageMasterRequest request,
+            Gs2WebSocketSessionTask<void>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<void>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteGlobalMessageMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeGlobalMessagesTask : public detail::Gs2WebSocketSessionTask<DescribeGlobalMessagesResult>
+    {
+    private:
+        DescribeGlobalMessagesRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "globalMessage";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeGlobalMessages";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        DescribeGlobalMessagesTask(
+            DescribeGlobalMessagesRequest request,
+            Gs2WebSocketSessionTask<DescribeGlobalMessagesResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeGlobalMessagesResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeGlobalMessagesTask() GS2_OVERRIDE = default;
+    };
+
+    class GetGlobalMessageTask : public detail::Gs2WebSocketSessionTask<GetGlobalMessageResult>
+    {
+    private:
+        GetGlobalMessageRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "globalMessage";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getGlobalMessage";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getGlobalMessageName())
+            {
+                jsonWriter.writePropertyName("globalMessageName");
+                jsonWriter.writeCharArray(*m_Request.getGlobalMessageName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        GetGlobalMessageTask(
+            GetGlobalMessageRequest request,
+            Gs2WebSocketSessionTask<GetGlobalMessageResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetGlobalMessageResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetGlobalMessageTask() GS2_OVERRIDE = default;
+    };
+
+    class GetReceivedByUserIdTask : public detail::Gs2WebSocketSessionTask<GetReceivedByUserIdResult>
+    {
+    private:
+        GetReceivedByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "received";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getReceivedByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetReceivedByUserIdTask(
+            GetReceivedByUserIdRequest request,
+            Gs2WebSocketSessionTask<GetReceivedByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetReceivedByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetReceivedByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateReceivedByUserIdTask : public detail::Gs2WebSocketSessionTask<void>
+    {
+    private:
+        UpdateReceivedByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "received";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateReceivedByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getReceivedGlobalMessageNames())
+            {
+                jsonWriter.writePropertyName("receivedGlobalMessageNames");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getReceivedGlobalMessageNames();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    jsonWriter.writeCharArray(list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        UpdateReceivedByUserIdTask(
+            UpdateReceivedByUserIdRequest request,
+            Gs2WebSocketSessionTask<void>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<void>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateReceivedByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteReceivedByUserIdTask : public detail::Gs2WebSocketSessionTask<void>
+    {
+    private:
+        DeleteReceivedByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inbox";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "received";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteReceivedByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DeleteReceivedByUserIdTask(
+            DeleteReceivedByUserIdRequest request,
+            Gs2WebSocketSessionTask<void>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<void>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteReceivedByUserIdTask() GS2_OVERRIDE = default;
+    };
+
 protected:
     static void write(detail::json::JsonWriter& jsonWriter, const Namespace& obj)
     {
@@ -1448,6 +2454,148 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const CurrentMessageMaster& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getNamespaceName())
+        {
+            jsonWriter.writePropertyName("namespaceName");
+            jsonWriter.writeCharArray(*obj.getNamespaceName());
+        }
+        if (obj.getSettings())
+        {
+            jsonWriter.writePropertyName("settings");
+            jsonWriter.writeCharArray(*obj.getSettings());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const GlobalMessageMaster& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getGlobalMessageId())
+        {
+            jsonWriter.writePropertyName("globalMessageId");
+            jsonWriter.writeCharArray(*obj.getGlobalMessageId());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getReadAcquireActions())
+        {
+            jsonWriter.writePropertyName("readAcquireActions");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getReadAcquireActions();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(jsonWriter, list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getExpiresTimeSpan())
+        {
+            jsonWriter.writePropertyName("expiresTimeSpan");
+            write(jsonWriter, *obj.getExpiresTimeSpan());
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getExpiresAt())
+        {
+            jsonWriter.writePropertyName("expiresAt");
+            jsonWriter.writeInt64(*obj.getExpiresAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const GlobalMessage& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getGlobalMessageId())
+        {
+            jsonWriter.writePropertyName("globalMessageId");
+            jsonWriter.writeCharArray(*obj.getGlobalMessageId());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getReadAcquireActions())
+        {
+            jsonWriter.writePropertyName("readAcquireActions");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getReadAcquireActions();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(jsonWriter, list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getExpiresTimeSpan())
+        {
+            jsonWriter.writePropertyName("expiresTimeSpan");
+            write(jsonWriter, *obj.getExpiresTimeSpan());
+        }
+        if (obj.getExpiresAt())
+        {
+            jsonWriter.writePropertyName("expiresAt");
+            jsonWriter.writeInt64(*obj.getExpiresAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const Received& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getReceivedId())
+        {
+            jsonWriter.writePropertyName("receivedId");
+            jsonWriter.writeCharArray(*obj.getReceivedId());
+        }
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getReceivedGlobalMessageNames())
+        {
+            jsonWriter.writePropertyName("receivedGlobalMessageNames");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getReceivedGlobalMessageNames();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeCharArray(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const ResponseCache& obj)
     {
         jsonWriter.writeObjectStart();
@@ -1538,6 +2686,47 @@ protected:
         {
             jsonWriter.writePropertyName("sound");
             jsonWriter.writeCharArray(*obj.getSound());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const GitHubCheckoutSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            jsonWriter.writePropertyName("gitHubApiKeyId");
+            jsonWriter.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            jsonWriter.writePropertyName("repositoryName");
+            jsonWriter.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            jsonWriter.writePropertyName("sourcePath");
+            jsonWriter.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            jsonWriter.writePropertyName("referenceType");
+            jsonWriter.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            jsonWriter.writePropertyName("commitHash");
+            jsonWriter.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            jsonWriter.writePropertyName("branchName");
+            jsonWriter.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            jsonWriter.writePropertyName("tagName");
+            jsonWriter.writeCharArray(*obj.getTagName());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -1735,6 +2924,30 @@ public:
     }
 
 	/**
+	 * グローバルメッセージのうちまだ受け取っていないメッセージを受信<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void receiveGlobalMessage(ReceiveGlobalMessageRequest request, std::function<void(AsyncReceiveGlobalMessageResult)> callback)
+    {
+        ReceiveGlobalMessageTask& task = *new ReceiveGlobalMessageTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ユーザーIDを指定してグローバルメッセージのうちまだ受け取っていないメッセージを受信<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void receiveGlobalMessageByUserId(ReceiveGlobalMessageByUserIdRequest request, std::function<void(AsyncReceiveGlobalMessageByUserIdResult)> callback)
+    {
+        ReceiveGlobalMessageByUserIdTask& task = *new ReceiveGlobalMessageByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
 	 * メッセージを開封<br>
 	 *
      * @param callback コールバック関数
@@ -1815,6 +3028,174 @@ public:
     void openByStampTask(OpenByStampTaskRequest request, std::function<void(AsyncOpenByStampTaskResult)> callback)
     {
         OpenByStampTaskTask& task = *new OpenByStampTaskTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 現在有効なグローバルメッセージ設定のマスターデータをエクスポートします<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void exportMaster(ExportMasterRequest request, std::function<void(AsyncExportMasterResult)> callback)
+    {
+        ExportMasterTask& task = *new ExportMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 現在有効なグローバルメッセージ設定を取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getCurrentMessageMaster(GetCurrentMessageMasterRequest request, std::function<void(AsyncGetCurrentMessageMasterResult)> callback)
+    {
+        GetCurrentMessageMasterTask& task = *new GetCurrentMessageMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 現在有効なグローバルメッセージ設定を更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentMessageMaster(UpdateCurrentMessageMasterRequest request, std::function<void(AsyncUpdateCurrentMessageMasterResult)> callback)
+    {
+        UpdateCurrentMessageMasterTask& task = *new UpdateCurrentMessageMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 現在有効なグローバルメッセージ設定を更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentMessageMasterFromGitHub(UpdateCurrentMessageMasterFromGitHubRequest request, std::function<void(AsyncUpdateCurrentMessageMasterFromGitHubResult)> callback)
+    {
+        UpdateCurrentMessageMasterFromGitHubTask& task = *new UpdateCurrentMessageMasterFromGitHubTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 全ユーザに向けたメッセージの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeGlobalMessageMasters(DescribeGlobalMessageMastersRequest request, std::function<void(AsyncDescribeGlobalMessageMastersResult)> callback)
+    {
+        DescribeGlobalMessageMastersTask& task = *new DescribeGlobalMessageMastersTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 全ユーザに向けたメッセージを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createGlobalMessageMaster(CreateGlobalMessageMasterRequest request, std::function<void(AsyncCreateGlobalMessageMasterResult)> callback)
+    {
+        CreateGlobalMessageMasterTask& task = *new CreateGlobalMessageMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 全ユーザに向けたメッセージを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getGlobalMessageMaster(GetGlobalMessageMasterRequest request, std::function<void(AsyncGetGlobalMessageMasterResult)> callback)
+    {
+        GetGlobalMessageMasterTask& task = *new GetGlobalMessageMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 全ユーザに向けたメッセージを開封<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateGlobalMessageMaster(UpdateGlobalMessageMasterRequest request, std::function<void(AsyncUpdateGlobalMessageMasterResult)> callback)
+    {
+        UpdateGlobalMessageMasterTask& task = *new UpdateGlobalMessageMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 全ユーザに向けたメッセージを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteGlobalMessageMaster(DeleteGlobalMessageMasterRequest request, std::function<void(AsyncDeleteGlobalMessageMasterResult)> callback)
+    {
+        DeleteGlobalMessageMasterTask& task = *new DeleteGlobalMessageMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 全ユーザに向けたメッセージの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeGlobalMessages(DescribeGlobalMessagesRequest request, std::function<void(AsyncDescribeGlobalMessagesResult)> callback)
+    {
+        DescribeGlobalMessagesTask& task = *new DescribeGlobalMessagesTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 全ユーザに向けたメッセージを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getGlobalMessage(GetGlobalMessageRequest request, std::function<void(AsyncGetGlobalMessageResult)> callback)
+    {
+        GetGlobalMessageTask& task = *new GetGlobalMessageTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ユーザーIDを指定して受信済みグローバルメッセージ名を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getReceivedByUserId(GetReceivedByUserIdRequest request, std::function<void(AsyncGetReceivedByUserIdResult)> callback)
+    {
+        GetReceivedByUserIdTask& task = *new GetReceivedByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ユーザーIDを指定して受信済みグローバルメッセージ名を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateReceivedByUserId(UpdateReceivedByUserIdRequest request, std::function<void(AsyncUpdateReceivedByUserIdResult)> callback)
+    {
+        UpdateReceivedByUserIdTask& task = *new UpdateReceivedByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ユーザーIDを指定して受信済みグローバルメッセージ名を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteReceivedByUserId(DeleteReceivedByUserIdRequest request, std::function<void(AsyncDeleteReceivedByUserIdResult)> callback)
+    {
+        DeleteReceivedByUserIdTask& task = *new DeleteReceivedByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

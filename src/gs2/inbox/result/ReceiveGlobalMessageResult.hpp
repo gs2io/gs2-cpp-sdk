@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INBOX_CONTROL_DELETENAMESPACERESULT_HPP_
-#define GS2_INBOX_CONTROL_DELETENAMESPACERESULT_HPP_
+#ifndef GS2_INBOX_CONTROL_RECEIVEGLOBALMESSAGERESULT_HPP_
+#define GS2_INBOX_CONTROL_RECEIVEGLOBALMESSAGERESULT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
@@ -32,18 +32,18 @@ namespace gs2 { namespace inbox
 {
 
 /**
- * ネームスペースを削除 のレスポンスモデル
+ * グローバルメッセージのうちまだ受け取っていないメッセージを受信 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
-class DeleteNamespaceResult : public Gs2Object
+class ReceiveGlobalMessageResult : public Gs2Object
 {
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 削除したネームスペース */
-        optional<Namespace> item;
+        /** 受信したメッセージ一覧 */
+        optional<List<Message>> item;
 
         Data() = default;
 
@@ -67,11 +67,15 @@ private:
         {
             if (std::strcmp(name_, "item") == 0)
             {
-                if (jsonValue.IsObject())
+                if (jsonValue.IsArray())
                 {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    const auto& array = jsonValue.GetArray();
                     this->item.emplace();
-                    detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
+                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
+                        Message item;
+                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->item += std::move(item);
+                    }
                 }
             }
         }
@@ -80,44 +84,44 @@ private:
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DeleteNamespaceResult() = default;
-    DeleteNamespaceResult(const DeleteNamespaceResult& deleteNamespaceResult) = default;
-    DeleteNamespaceResult(DeleteNamespaceResult&& deleteNamespaceResult) = default;
-    ~DeleteNamespaceResult() = default;
+    ReceiveGlobalMessageResult() = default;
+    ReceiveGlobalMessageResult(const ReceiveGlobalMessageResult& receiveGlobalMessageResult) = default;
+    ReceiveGlobalMessageResult(ReceiveGlobalMessageResult&& receiveGlobalMessageResult) = default;
+    ~ReceiveGlobalMessageResult() = default;
 
-    DeleteNamespaceResult& operator=(const DeleteNamespaceResult& deleteNamespaceResult) = default;
-    DeleteNamespaceResult& operator=(DeleteNamespaceResult&& deleteNamespaceResult) = default;
+    ReceiveGlobalMessageResult& operator=(const ReceiveGlobalMessageResult& receiveGlobalMessageResult) = default;
+    ReceiveGlobalMessageResult& operator=(ReceiveGlobalMessageResult&& receiveGlobalMessageResult) = default;
 
-    DeleteNamespaceResult deepCopy() const
+    ReceiveGlobalMessageResult deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteNamespaceResult);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(ReceiveGlobalMessageResult);
     }
 
-    const DeleteNamespaceResult* operator->() const
+    const ReceiveGlobalMessageResult* operator->() const
     {
         return this;
     }
 
-    DeleteNamespaceResult* operator->()
+    ReceiveGlobalMessageResult* operator->()
     {
         return this;
     }
     /**
-     * 削除したネームスペースを取得
+     * 受信したメッセージ一覧を取得
      *
-     * @return 削除したネームスペース
+     * @return 受信したメッセージ一覧
      */
-    const optional<Namespace>& getItem() const
+    const optional<List<Message>>& getItem() const
     {
         return ensureData().item;
     }
 
     /**
-     * 削除したネームスペースを設定
+     * 受信したメッセージ一覧を設定
      *
-     * @param item 削除したネームスペース
+     * @param item 受信したメッセージ一覧
      */
-    void setItem(Namespace item)
+    void setItem(List<Message> item)
     {
         ensureData().item.emplace(std::move(item));
     }
@@ -129,8 +133,8 @@ public:
     }
 };
 
-typedef AsyncResult<DeleteNamespaceResult> AsyncDeleteNamespaceResult;
+typedef AsyncResult<ReceiveGlobalMessageResult> AsyncReceiveGlobalMessageResult;
 
 } }
 
-#endif //GS2_INBOX_CONTROL_DELETENAMESPACERESULT_HPP_
+#endif //GS2_INBOX_CONTROL_RECEIVEGLOBALMESSAGERESULT_HPP_

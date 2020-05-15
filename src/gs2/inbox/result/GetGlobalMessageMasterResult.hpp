@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INBOX_CONTROL_DELETENAMESPACERESULT_HPP_
-#define GS2_INBOX_CONTROL_DELETENAMESPACERESULT_HPP_
+#ifndef GS2_INBOX_CONTROL_GETGLOBALMESSAGEMASTERRESULT_HPP_
+#define GS2_INBOX_CONTROL_GETGLOBALMESSAGEMASTERRESULT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
 #include <gs2/core/AsyncResult.hpp>
@@ -32,18 +32,18 @@ namespace gs2 { namespace inbox
 {
 
 /**
- * ネームスペースを削除 のレスポンスモデル
+ * 全ユーザに向けたメッセージを取得 のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
-class DeleteNamespaceResult : public Gs2Object
+class GetGlobalMessageMasterResult : public Gs2Object
 {
 private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 削除したネームスペース */
-        optional<Namespace> item;
+        /** 全ユーザに向けたメッセージ */
+        optional<GlobalMessageMaster> item;
 
         Data() = default;
 
@@ -80,44 +80,44 @@ private:
     GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
 
 public:
-    DeleteNamespaceResult() = default;
-    DeleteNamespaceResult(const DeleteNamespaceResult& deleteNamespaceResult) = default;
-    DeleteNamespaceResult(DeleteNamespaceResult&& deleteNamespaceResult) = default;
-    ~DeleteNamespaceResult() = default;
+    GetGlobalMessageMasterResult() = default;
+    GetGlobalMessageMasterResult(const GetGlobalMessageMasterResult& getGlobalMessageMasterResult) = default;
+    GetGlobalMessageMasterResult(GetGlobalMessageMasterResult&& getGlobalMessageMasterResult) = default;
+    ~GetGlobalMessageMasterResult() = default;
 
-    DeleteNamespaceResult& operator=(const DeleteNamespaceResult& deleteNamespaceResult) = default;
-    DeleteNamespaceResult& operator=(DeleteNamespaceResult&& deleteNamespaceResult) = default;
+    GetGlobalMessageMasterResult& operator=(const GetGlobalMessageMasterResult& getGlobalMessageMasterResult) = default;
+    GetGlobalMessageMasterResult& operator=(GetGlobalMessageMasterResult&& getGlobalMessageMasterResult) = default;
 
-    DeleteNamespaceResult deepCopy() const
+    GetGlobalMessageMasterResult deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(DeleteNamespaceResult);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetGlobalMessageMasterResult);
     }
 
-    const DeleteNamespaceResult* operator->() const
+    const GetGlobalMessageMasterResult* operator->() const
     {
         return this;
     }
 
-    DeleteNamespaceResult* operator->()
+    GetGlobalMessageMasterResult* operator->()
     {
         return this;
     }
     /**
-     * 削除したネームスペースを取得
+     * 全ユーザに向けたメッセージを取得
      *
-     * @return 削除したネームスペース
+     * @return 全ユーザに向けたメッセージ
      */
-    const optional<Namespace>& getItem() const
+    const optional<GlobalMessageMaster>& getItem() const
     {
         return ensureData().item;
     }
 
     /**
-     * 削除したネームスペースを設定
+     * 全ユーザに向けたメッセージを設定
      *
-     * @param item 削除したネームスペース
+     * @param item 全ユーザに向けたメッセージ
      */
-    void setItem(Namespace item)
+    void setItem(GlobalMessageMaster item)
     {
         ensureData().item.emplace(std::move(item));
     }
@@ -129,8 +129,8 @@ public:
     }
 };
 
-typedef AsyncResult<DeleteNamespaceResult> AsyncDeleteNamespaceResult;
+typedef AsyncResult<GetGlobalMessageMasterResult> AsyncGetGlobalMessageMasterResult;
 
 } }
 
-#endif //GS2_INBOX_CONTROL_DELETENAMESPACERESULT_HPP_
+#endif //GS2_INBOX_CONTROL_GETGLOBALMESSAGEMASTERRESULT_HPP_

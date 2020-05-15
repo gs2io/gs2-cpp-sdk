@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_INBOX_CONTROL_SENDMESSAGEBYUSERIDREQUEST_HPP_
-#define GS2_INBOX_CONTROL_SENDMESSAGEBYUSERIDREQUEST_HPP_
+#ifndef GS2_INBOX_CONTROL_UPDATEGLOBALMESSAGEMASTERREQUEST_HPP_
+#define GS2_INBOX_CONTROL_UPDATEGLOBALMESSAGEMASTERREQUEST_HPP_
 
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
@@ -30,11 +30,11 @@ namespace gs2 { namespace inbox
 {
 
 /**
- * メッセージを新規作成 のリクエストモデル
+ * 全ユーザに向けたメッセージを開封 のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */
-class SendMessageByUserIdRequest : public Gs2BasicRequest, public Gs2Inbox
+class UpdateGlobalMessageMasterRequest : public Gs2BasicRequest, public Gs2Inbox
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -45,28 +45,25 @@ private:
     public:
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
-        /** ユーザーID */
-        optional<StringHolder> userId;
-        /** メッセージの内容に相当するメタデータ */
+        /** 全ユーザに向けたメッセージ名 */
+        optional<StringHolder> globalMessageName;
+        /** 全ユーザに向けたメッセージの内容に相当するメタデータ */
         optional<StringHolder> metadata;
         /** 開封時に実行する入手アクション */
         optional<List<AcquireAction>> readAcquireActions;
-        /** メッセージの有効期限 */
-        optional<Int64> expiresAt;
-        /** メッセージの有効期限までの差分 */
+        /** メッセージを受信したあとメッセージが削除されるまでの期間 */
         optional<TimeSpan> expiresTimeSpan;
-        /** 重複実行回避機能に使用するID */
-        optional<StringHolder> duplicationAvoider;
+        /** 全ユーザに向けたメッセージの受信期限 */
+        optional<Int64> expiresAt;
 
         Data() = default;
 
         Data(const Data& data) :
             Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
-            userId(data.userId),
+            globalMessageName(data.globalMessageName),
             metadata(data.metadata),
-            expiresAt(data.expiresAt),
-            duplicationAvoider(data.duplicationAvoider)
+            expiresAt(data.expiresAt)
         {
             if (data.readAcquireActions)
             {
@@ -99,25 +96,25 @@ private:
     }
 
 public:
-    SendMessageByUserIdRequest() = default;
-    SendMessageByUserIdRequest(const SendMessageByUserIdRequest& sendMessageByUserIdRequest) = default;
-    SendMessageByUserIdRequest(SendMessageByUserIdRequest&& sendMessageByUserIdRequest) = default;
-    ~SendMessageByUserIdRequest() GS2_OVERRIDE = default;
+    UpdateGlobalMessageMasterRequest() = default;
+    UpdateGlobalMessageMasterRequest(const UpdateGlobalMessageMasterRequest& updateGlobalMessageMasterRequest) = default;
+    UpdateGlobalMessageMasterRequest(UpdateGlobalMessageMasterRequest&& updateGlobalMessageMasterRequest) = default;
+    ~UpdateGlobalMessageMasterRequest() GS2_OVERRIDE = default;
 
-    SendMessageByUserIdRequest& operator=(const SendMessageByUserIdRequest& sendMessageByUserIdRequest) = default;
-    SendMessageByUserIdRequest& operator=(SendMessageByUserIdRequest&& sendMessageByUserIdRequest) = default;
+    UpdateGlobalMessageMasterRequest& operator=(const UpdateGlobalMessageMasterRequest& updateGlobalMessageMasterRequest) = default;
+    UpdateGlobalMessageMasterRequest& operator=(UpdateGlobalMessageMasterRequest&& updateGlobalMessageMasterRequest) = default;
 
-    SendMessageByUserIdRequest deepCopy() const
+    UpdateGlobalMessageMasterRequest deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(SendMessageByUserIdRequest);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(UpdateGlobalMessageMasterRequest);
     }
 
-    const SendMessageByUserIdRequest* operator->() const
+    const UpdateGlobalMessageMasterRequest* operator->() const
     {
         return this;
     }
 
-    SendMessageByUserIdRequest* operator->()
+    UpdateGlobalMessageMasterRequest* operator->()
     {
         return this;
     }
@@ -147,47 +144,47 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    SendMessageByUserIdRequest& withNamespaceName(StringHolder namespaceName)
+    UpdateGlobalMessageMasterRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
         return *this;
     }
 
     /**
-     * ユーザーIDを取得
+     * 全ユーザに向けたメッセージ名を取得
      *
-     * @return ユーザーID
+     * @return 全ユーザに向けたメッセージ名
      */
-    const optional<StringHolder>& getUserId() const
+    const optional<StringHolder>& getGlobalMessageName() const
     {
-        return ensureData().userId;
+        return ensureData().globalMessageName;
     }
 
     /**
-     * ユーザーIDを設定
+     * 全ユーザに向けたメッセージ名を設定
      *
-     * @param userId ユーザーID
+     * @param globalMessageName 全ユーザに向けたメッセージ名
      */
-    void setUserId(StringHolder userId)
+    void setGlobalMessageName(StringHolder globalMessageName)
     {
-        ensureData().userId.emplace(std::move(userId));
+        ensureData().globalMessageName.emplace(std::move(globalMessageName));
     }
 
     /**
-     * ユーザーIDを設定
+     * 全ユーザに向けたメッセージ名を設定
      *
-     * @param userId ユーザーID
+     * @param globalMessageName 全ユーザに向けたメッセージ名
      */
-    SendMessageByUserIdRequest& withUserId(StringHolder userId)
+    UpdateGlobalMessageMasterRequest& withGlobalMessageName(StringHolder globalMessageName)
     {
-        ensureData().userId.emplace(std::move(userId));
+        ensureData().globalMessageName.emplace(std::move(globalMessageName));
         return *this;
     }
 
     /**
-     * メッセージの内容に相当するメタデータを取得
+     * 全ユーザに向けたメッセージの内容に相当するメタデータを取得
      *
-     * @return メッセージの内容に相当するメタデータ
+     * @return 全ユーザに向けたメッセージの内容に相当するメタデータ
      */
     const optional<StringHolder>& getMetadata() const
     {
@@ -195,9 +192,9 @@ public:
     }
 
     /**
-     * メッセージの内容に相当するメタデータを設定
+     * 全ユーザに向けたメッセージの内容に相当するメタデータを設定
      *
-     * @param metadata メッセージの内容に相当するメタデータ
+     * @param metadata 全ユーザに向けたメッセージの内容に相当するメタデータ
      */
     void setMetadata(StringHolder metadata)
     {
@@ -205,11 +202,11 @@ public:
     }
 
     /**
-     * メッセージの内容に相当するメタデータを設定
+     * 全ユーザに向けたメッセージの内容に相当するメタデータを設定
      *
-     * @param metadata メッセージの内容に相当するメタデータ
+     * @param metadata 全ユーザに向けたメッセージの内容に相当するメタデータ
      */
-    SendMessageByUserIdRequest& withMetadata(StringHolder metadata)
+    UpdateGlobalMessageMasterRequest& withMetadata(StringHolder metadata)
     {
         ensureData().metadata.emplace(std::move(metadata));
         return *this;
@@ -240,47 +237,16 @@ public:
      *
      * @param readAcquireActions 開封時に実行する入手アクション
      */
-    SendMessageByUserIdRequest& withReadAcquireActions(List<AcquireAction> readAcquireActions)
+    UpdateGlobalMessageMasterRequest& withReadAcquireActions(List<AcquireAction> readAcquireActions)
     {
         ensureData().readAcquireActions.emplace(std::move(readAcquireActions));
         return *this;
     }
 
     /**
-     * メッセージの有効期限を取得
+     * メッセージを受信したあとメッセージが削除されるまでの期間を取得
      *
-     * @return メッセージの有効期限
-     */
-    const optional<Int64>& getExpiresAt() const
-    {
-        return ensureData().expiresAt;
-    }
-
-    /**
-     * メッセージの有効期限を設定
-     *
-     * @param expiresAt メッセージの有効期限
-     */
-    void setExpiresAt(Int64 expiresAt)
-    {
-        ensureData().expiresAt.emplace(expiresAt);
-    }
-
-    /**
-     * メッセージの有効期限を設定
-     *
-     * @param expiresAt メッセージの有効期限
-     */
-    SendMessageByUserIdRequest& withExpiresAt(Int64 expiresAt)
-    {
-        ensureData().expiresAt.emplace(expiresAt);
-        return *this;
-    }
-
-    /**
-     * メッセージの有効期限までの差分を取得
-     *
-     * @return メッセージの有効期限までの差分
+     * @return メッセージを受信したあとメッセージが削除されるまでの期間
      */
     const optional<TimeSpan>& getExpiresTimeSpan() const
     {
@@ -288,9 +254,9 @@ public:
     }
 
     /**
-     * メッセージの有効期限までの差分を設定
+     * メッセージを受信したあとメッセージが削除されるまでの期間を設定
      *
-     * @param expiresTimeSpan メッセージの有効期限までの差分
+     * @param expiresTimeSpan メッセージを受信したあとメッセージが削除されるまでの期間
      */
     void setExpiresTimeSpan(TimeSpan expiresTimeSpan)
     {
@@ -298,44 +264,44 @@ public:
     }
 
     /**
-     * メッセージの有効期限までの差分を設定
+     * メッセージを受信したあとメッセージが削除されるまでの期間を設定
      *
-     * @param expiresTimeSpan メッセージの有効期限までの差分
+     * @param expiresTimeSpan メッセージを受信したあとメッセージが削除されるまでの期間
      */
-    SendMessageByUserIdRequest& withExpiresTimeSpan(TimeSpan expiresTimeSpan)
+    UpdateGlobalMessageMasterRequest& withExpiresTimeSpan(TimeSpan expiresTimeSpan)
     {
         ensureData().expiresTimeSpan.emplace(std::move(expiresTimeSpan));
         return *this;
     }
 
     /**
-     * 重複実行回避機能に使用するIDを取得
+     * 全ユーザに向けたメッセージの受信期限を取得
      *
-     * @return 重複実行回避機能に使用するID
+     * @return 全ユーザに向けたメッセージの受信期限
      */
-    const optional<StringHolder>& getDuplicationAvoider() const
+    const optional<Int64>& getExpiresAt() const
     {
-        return ensureData().duplicationAvoider;
+        return ensureData().expiresAt;
     }
 
     /**
-     * 重複実行回避機能に使用するIDを設定
+     * 全ユーザに向けたメッセージの受信期限を設定
      *
-     * @param duplicationAvoider 重複実行回避機能に使用するID
+     * @param expiresAt 全ユーザに向けたメッセージの受信期限
      */
-    void setDuplicationAvoider(StringHolder duplicationAvoider)
+    void setExpiresAt(Int64 expiresAt)
     {
-        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
+        ensureData().expiresAt.emplace(expiresAt);
     }
 
     /**
-     * 重複実行回避機能に使用するIDを設定
+     * 全ユーザに向けたメッセージの受信期限を設定
      *
-     * @param duplicationAvoider 重複実行回避機能に使用するID
+     * @param expiresAt 全ユーザに向けたメッセージの受信期限
      */
-    SendMessageByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
+    UpdateGlobalMessageMasterRequest& withExpiresAt(Int64 expiresAt)
     {
-        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
+        ensureData().expiresAt.emplace(expiresAt);
         return *this;
     }
 
@@ -346,7 +312,7 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    SendMessageByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
+    UpdateGlobalMessageMasterRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
         setGs2ClientId(std::move(gs2ClientId));
         return *this;
@@ -357,7 +323,7 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    SendMessageByUserIdRequest& withRequestId(StringHolder gs2RequestId)
+    UpdateGlobalMessageMasterRequest& withRequestId(StringHolder gs2RequestId)
     {
         setRequestId(std::move(gs2RequestId));
         return *this;
@@ -366,4 +332,4 @@ public:
 
 } }
 
-#endif //GS2_INBOX_CONTROL_SENDMESSAGEBYUSERIDREQUEST_HPP_
+#endif //GS2_INBOX_CONTROL_UPDATEGLOBALMESSAGEMASTERREQUEST_HPP_
