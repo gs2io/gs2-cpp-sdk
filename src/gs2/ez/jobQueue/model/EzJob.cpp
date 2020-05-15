@@ -23,6 +23,8 @@ namespace gs2 { namespace ez { namespace jobQueue {
 EzJob::Data::Data(const Data& data) :
     Gs2Object(data),
     jobId(data.jobId),
+    scriptId(data.scriptId),
+    args(data.args),
     currentRetryCount(data.currentRetryCount),
     maxTryCount(data.maxTryCount)
 {
@@ -30,6 +32,8 @@ EzJob::Data::Data(const Data& data) :
 
 EzJob::Data::Data(const gs2::jobQueue::Job& job) :
     jobId(job.getJobId()),
+    scriptId(job.getScriptId()),
+    args(job.getArgs()),
     currentRetryCount(job.getCurrentRetryCount() ? *job.getCurrentRetryCount() : 0),
     maxTryCount(job.getMaxTryCount() ? *job.getMaxTryCount() : 0)
 {
@@ -49,6 +53,8 @@ gs2::jobQueue::Job EzJob::ToModel() const
 {
     gs2::jobQueue::Job job;
     job.setJobId(getJobId());
+    job.setScriptId(getScriptId());
+    job.setArgs(getArgs());
     job.setCurrentRetryCount(getCurrentRetryCount());
     job.setMaxTryCount(getMaxTryCount());
     return job;
