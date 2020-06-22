@@ -55,6 +55,8 @@ private:
         optional<Int32> initialCapacity;
         /** インベントリの最大サイズ */
         optional<Int32> maxCapacity;
+        /** 参照元が登録されているアイテムセットは削除できなくする */
+        optional<Bool> protectReferencedItem;
 
         Data() = default;
 
@@ -65,7 +67,8 @@ private:
             description(data.description),
             metadata(data.metadata),
             initialCapacity(data.initialCapacity),
-            maxCapacity(data.maxCapacity)
+            maxCapacity(data.maxCapacity),
+            protectReferencedItem(data.protectReferencedItem)
         {
         }
 
@@ -296,6 +299,37 @@ public:
     CreateInventoryModelMasterRequest& withMaxCapacity(Int32 maxCapacity)
     {
         ensureData().maxCapacity.emplace(maxCapacity);
+        return *this;
+    }
+
+    /**
+     * 参照元が登録されているアイテムセットは削除できなくするを取得
+     *
+     * @return 参照元が登録されているアイテムセットは削除できなくする
+     */
+    const optional<Bool>& getProtectReferencedItem() const
+    {
+        return ensureData().protectReferencedItem;
+    }
+
+    /**
+     * 参照元が登録されているアイテムセットは削除できなくするを設定
+     *
+     * @param protectReferencedItem 参照元が登録されているアイテムセットは削除できなくする
+     */
+    void setProtectReferencedItem(Bool protectReferencedItem)
+    {
+        ensureData().protectReferencedItem.emplace(protectReferencedItem);
+    }
+
+    /**
+     * 参照元が登録されているアイテムセットは削除できなくするを設定
+     *
+     * @param protectReferencedItem 参照元が登録されているアイテムセットは削除できなくする
+     */
+    CreateInventoryModelMasterRequest& withProtectReferencedItem(Bool protectReferencedItem)
+    {
+        ensureData().protectReferencedItem.emplace(protectReferencedItem);
         return *this;
     }
 

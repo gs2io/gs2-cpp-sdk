@@ -55,6 +55,8 @@ private:
         optional<Int32> initialCapacity;
         /** インベントリの最大サイズ */
         optional<Int32> maxCapacity;
+        /** 参照元が登録されているアイテムセットは削除できなくする */
+        optional<Bool> protectReferencedItem;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -70,6 +72,7 @@ private:
             description(data.description),
             initialCapacity(data.initialCapacity),
             maxCapacity(data.maxCapacity),
+            protectReferencedItem(data.protectReferencedItem),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
@@ -124,6 +127,13 @@ private:
                 if (jsonValue.IsInt())
                 {
                     this->maxCapacity = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "protectReferencedItem") == 0)
+            {
+                if (jsonValue.IsBool())
+                {
+                    this->protectReferencedItem = jsonValue.GetBool();
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -355,6 +365,37 @@ public:
     }
 
     /**
+     * 参照元が登録されているアイテムセットは削除できなくするを取得
+     *
+     * @return 参照元が登録されているアイテムセットは削除できなくする
+     */
+    const optional<Bool>& getProtectReferencedItem() const
+    {
+        return ensureData().protectReferencedItem;
+    }
+
+    /**
+     * 参照元が登録されているアイテムセットは削除できなくするを設定
+     *
+     * @param protectReferencedItem 参照元が登録されているアイテムセットは削除できなくする
+     */
+    void setProtectReferencedItem(Bool protectReferencedItem)
+    {
+        ensureData().protectReferencedItem.emplace(protectReferencedItem);
+    }
+
+    /**
+     * 参照元が登録されているアイテムセットは削除できなくするを設定
+     *
+     * @param protectReferencedItem 参照元が登録されているアイテムセットは削除できなくする
+     */
+    InventoryModelMaster& withProtectReferencedItem(Bool protectReferencedItem)
+    {
+        setProtectReferencedItem(protectReferencedItem);
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -452,6 +493,10 @@ inline bool operator!=(const InventoryModelMaster& lhs, const InventoryModelMast
             return true;
         }
         if (lhs.m_pData->maxCapacity != lhr.m_pData->maxCapacity)
+        {
+            return true;
+        }
+        if (lhs.m_pData->protectReferencedItem != lhr.m_pData->protectReferencedItem)
         {
             return true;
         }

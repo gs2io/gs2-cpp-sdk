@@ -54,6 +54,8 @@ private:
         optional<Int32> initialCapacity;
         /** インベントリの最大サイズ */
         optional<Int32> maxCapacity;
+        /** 参照元が登録されているアイテムセットは削除できなくする */
+        optional<Bool> protectReferencedItem;
         /** インベントリに格納可能なアイテムモデル一覧 */
         optional<List<ItemModel>> itemModels;
 
@@ -65,7 +67,8 @@ private:
             name(data.name),
             metadata(data.metadata),
             initialCapacity(data.initialCapacity),
-            maxCapacity(data.maxCapacity)
+            maxCapacity(data.maxCapacity),
+            protectReferencedItem(data.protectReferencedItem)
         {
             if (data.itemModels)
             {
@@ -115,6 +118,13 @@ private:
                 if (jsonValue.IsInt())
                 {
                     this->maxCapacity = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "protectReferencedItem") == 0)
+            {
+                if (jsonValue.IsBool())
+                {
+                    this->protectReferencedItem = jsonValue.GetBool();
                 }
             }
             else if (std::strcmp(name_, "itemModels") == 0)
@@ -314,6 +324,37 @@ public:
     }
 
     /**
+     * 参照元が登録されているアイテムセットは削除できなくするを取得
+     *
+     * @return 参照元が登録されているアイテムセットは削除できなくする
+     */
+    const optional<Bool>& getProtectReferencedItem() const
+    {
+        return ensureData().protectReferencedItem;
+    }
+
+    /**
+     * 参照元が登録されているアイテムセットは削除できなくするを設定
+     *
+     * @param protectReferencedItem 参照元が登録されているアイテムセットは削除できなくする
+     */
+    void setProtectReferencedItem(Bool protectReferencedItem)
+    {
+        ensureData().protectReferencedItem.emplace(protectReferencedItem);
+    }
+
+    /**
+     * 参照元が登録されているアイテムセットは削除できなくするを設定
+     *
+     * @param protectReferencedItem 参照元が登録されているアイテムセットは削除できなくする
+     */
+    InventoryModel& withProtectReferencedItem(Bool protectReferencedItem)
+    {
+        setProtectReferencedItem(protectReferencedItem);
+        return *this;
+    }
+
+    /**
      * インベントリに格納可能なアイテムモデル一覧を取得
      *
      * @return インベントリに格納可能なアイテムモデル一覧
@@ -376,6 +417,10 @@ inline bool operator!=(const InventoryModel& lhs, const InventoryModel& lhr)
             return true;
         }
         if (lhs.m_pData->maxCapacity != lhr.m_pData->maxCapacity)
+        {
+            return true;
+        }
+        if (lhs.m_pData->protectReferencedItem != lhr.m_pData->protectReferencedItem)
         {
             return true;
         }

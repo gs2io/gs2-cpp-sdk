@@ -55,6 +55,8 @@ private:
         optional<StringHolder> itemName;
         /** 所持数量 */
         optional<Int64> count;
+        /** この所持品の参照元リスト */
+        optional<List<StringHolder>> referenceOf;
         /** 表示順番 */
         optional<Int32> sortValue;
         /** 有効期限 */
@@ -79,6 +81,10 @@ private:
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
+            if (data.referenceOf)
+            {
+                referenceOf = data.referenceOf->deepCopy();
+            }
         }
 
         Data(Data&& data) = default;
@@ -130,6 +136,22 @@ private:
                 if (jsonValue.IsInt64())
                 {
                     this->count = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name_, "referenceOf") == 0)
+            {
+                if (jsonValue.IsArray())
+                {
+                    const auto& array = jsonValue.GetArray();
+                    this->referenceOf.emplace();
+                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
+                        if (json->IsString())
+                        {
+                            auto valueStr = json->GetString();
+                            StringHolder stringHolder(valueStr);
+                            *this->referenceOf += std::move(stringHolder);
+                        }
+                    }
                 }
             }
             else if (std::strcmp(name_, "sortValue") == 0)
@@ -375,6 +397,37 @@ public:
     }
 
     /**
+     * この所持品の参照元リストを取得
+     *
+     * @return この所持品の参照元リスト
+     */
+    const optional<List<StringHolder>>& getReferenceOf() const
+    {
+        return ensureData().referenceOf;
+    }
+
+    /**
+     * この所持品の参照元リストを設定
+     *
+     * @param referenceOf この所持品の参照元リスト
+     */
+    void setReferenceOf(List<StringHolder> referenceOf)
+    {
+        ensureData().referenceOf.emplace(std::move(referenceOf));
+    }
+
+    /**
+     * この所持品の参照元リストを設定
+     *
+     * @param referenceOf この所持品の参照元リスト
+     */
+    ItemSet& withReferenceOf(List<StringHolder> referenceOf)
+    {
+        setReferenceOf(std::move(referenceOf));
+        return *this;
+    }
+
+    /**
      * 表示順番を取得
      *
      * @return 表示順番
@@ -534,6 +587,10 @@ inline bool operator!=(const ItemSet& lhs, const ItemSet& lhr)
             return true;
         }
         if (lhs.m_pData->count != lhr.m_pData->count)
+        {
+            return true;
+        }
+        if (lhs.m_pData->referenceOf != lhr.m_pData->referenceOf)
         {
             return true;
         }
