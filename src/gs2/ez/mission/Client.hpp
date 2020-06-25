@@ -22,13 +22,13 @@
 #include "result/EzGetCounterResult.hpp"
 #include "result/EzListMissionTaskModelsResult.hpp"
 #include "result/EzGetMissionTaskModelResult.hpp"
-#include "result/EzListCounterModelsResult.hpp"
-#include "result/EzGetCounterModelResult.hpp"
 #include "result/EzListCompletesResult.hpp"
 #include "result/EzGetCompleteResult.hpp"
 #include "result/EzReceiveRewardsResult.hpp"
 #include "result/EzListMissionGroupModelsResult.hpp"
 #include "result/EzGetMissionGroupModelResult.hpp"
+#include "result/EzListCounterModelsResult.hpp"
+#include "result/EzGetCounterModelResult.hpp"
 
 
 namespace gs2 {
@@ -119,30 +119,6 @@ public:
     );
 
     /// <summary>
-    ///  カウンターの種類を認証<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    void listCounterModels(
-        std::function<void(AsyncEzListCounterModelsResult)> callback,
-        StringHolder namespaceName
-    );
-
-    /// <summary>
-    ///  カウンターの種類を認証<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="counterName">カウンター名</param>
-    void getCounterModel(
-        std::function<void(AsyncEzGetCounterModelResult)> callback,
-        StringHolder namespaceName,
-        StringHolder counterName
-    );
-
-    /// <summary>
     ///  達成したミッションの一覧を取得<br />
     /// </summary>
     ///
@@ -216,6 +192,30 @@ public:
         std::function<void(AsyncEzGetMissionGroupModelResult)> callback,
         StringHolder namespaceName,
         StringHolder missionGroupName
+    );
+
+    /// <summary>
+    ///  カウンターの種類を認証<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    void listCounterModels(
+        std::function<void(AsyncEzListCounterModelsResult)> callback,
+        StringHolder namespaceName
+    );
+
+    /// <summary>
+    ///  カウンターの種類を認証<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="counterName">カウンター名</param>
+    void getCounterModel(
+        std::function<void(AsyncEzGetCounterModelResult)> callback,
+        StringHolder namespaceName,
+        StringHolder counterName
     );
 };
 
