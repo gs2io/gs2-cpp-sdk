@@ -55,6 +55,8 @@ private:
         gs2::optional<List<StringHolder>> allowUserIds;
         /** メタデータ */
         gs2::optional<StringHolder> metadata;
+        /** ギャザリングの有効期限 */
+        gs2::optional<Int64> expiresAt;
         /** 作成日時 */
         gs2::optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -121,6 +123,11 @@ public:
         return *ensureData().metadata;
     }
 
+    Int64 getExpiresAt() const
+    {
+        return *ensureData().expiresAt;
+    }
+
     Int64 getCreatedAt() const
     {
         return *ensureData().createdAt;
@@ -163,6 +170,11 @@ public:
     void setMetadata(StringHolder metadata)
     {
         ensureData().metadata = std::move(metadata);
+    }
+
+    void setExpiresAt(Int64 expiresAt)
+    {
+        ensureData().expiresAt = expiresAt;
     }
 
     void setCreatedAt(Int64 createdAt)
@@ -208,6 +220,12 @@ public:
     EzGathering& withMetadata(StringHolder metadata)
     {
         setMetadata(std::move(metadata));
+        return *this;
+    }
+
+    EzGathering& withExpiresAt(Int64 expiresAt)
+    {
+        setExpiresAt(expiresAt);
         return *this;
     }
 

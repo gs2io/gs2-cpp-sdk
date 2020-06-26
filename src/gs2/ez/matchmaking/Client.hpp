@@ -23,6 +23,13 @@
 #include "result/EzDoMatchmakingResult.hpp"
 #include "result/EzGetGatheringResult.hpp"
 #include "result/EzCancelMatchmakingResult.hpp"
+#include "result/EzListRatingModelsResult.hpp"
+#include "result/EzGetRatingModelResult.hpp"
+#include "result/EzListRatingsResult.hpp"
+#include "result/EzGetRatingResult.hpp"
+#include "result/EzCreateVoteResult.hpp"
+#include "result/EzVoteResult.hpp"
+#include "result/EzVoteMultipleResult.hpp"
 
 
 namespace gs2 {
@@ -64,6 +71,7 @@ public:
     /// <param name="attributeRanges">募集条件</param>
     /// <param name="capacityOfRoles">参加者</param>
     /// <param name="allowUserIds">参加を許可するユーザIDリスト</param>
+    /// <param name="expiresAt">ギャザリングの有効期限</param>
     void createGathering(
         std::function<void(AsyncEzCreateGatheringResult)> callback,
         GameSession& session,
@@ -71,7 +79,8 @@ public:
         EzPlayer player,
         List<EzCapacityOfRole> capacityOfRoles,
         List<StringHolder> allowUserIds,
-        gs2::optional<List<EzAttributeRange>> attributeRanges=gs2::nullopt
+        gs2::optional<List<EzAttributeRange>> attributeRanges=gs2::nullopt,
+        gs2::optional<Int64> expiresAt=gs2::nullopt
     );
 
     /// <summary>
@@ -143,6 +152,111 @@ public:
         GameSession& session,
         StringHolder namespaceName,
         StringHolder gatheringName
+    );
+
+    /// <summary>
+    ///  レーティングモデルの一覧を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    void listRatingModels(
+        std::function<void(AsyncEzListRatingModelsResult)> callback,
+        StringHolder namespaceName
+    );
+
+    /// <summary>
+    ///  レーティング名を指定してレーティングモデルを取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="ratingName">レーティングの種類名</param>
+    void getRatingModel(
+        std::function<void(AsyncEzGetRatingModelResult)> callback,
+        StringHolder namespaceName,
+        StringHolder ratingName
+    );
+
+    /// <summary>
+    ///  投票用紙を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
+    /// <param name="limit">データの取得件数</param>
+    void listRatings(
+        std::function<void(AsyncEzListRatingsResult)> callback,
+        StringHolder namespaceName,
+        gs2::optional<StringHolder> pageToken=gs2::nullopt,
+        gs2::optional<Int64> limit=gs2::nullopt
+    );
+
+    /// <summary>
+    ///  投票用紙を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="ratingName">レーティング名</param>
+    void getRating(
+        std::function<void(AsyncEzGetRatingResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder ratingName
+    );
+
+    /// <summary>
+    ///  投票用紙を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="ratingName">レーティング名</param>
+    /// <param name="gatheringName">レーティング名</param>
+    void createVote(
+        std::function<void(AsyncEzCreateVoteResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder ratingName,
+        StringHolder gatheringName
+    );
+
+    /// <summary>
+    ///  投票を実行<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="ballotBody">投票用紙の署名対象のデータ</param>
+    /// <param name="ballotSignature">投票用紙の署名</param>
+    /// <param name="gameResults">投票内容。対戦を行ったプレイヤーグループ1に所属するユーザIDのリスト</param>
+    void vote(
+        std::function<void(AsyncEzVoteResult)> callback,
+        StringHolder namespaceName,
+        StringHolder ballotBody,
+        StringHolder ballotSignature,
+        gs2::optional<List<EzGameResult>> gameResults=gs2::nullopt
+    );
+
+    /// <summary>
+    ///  投票を実行<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="signedBallots">署名付の投票用紙リスト</param>
+    /// <param name="gameResults">投票内容。対戦を行ったプレイヤーグループ1に所属するユーザIDのリスト</param>
+    void voteMultiple(
+        std::function<void(AsyncEzVoteMultipleResult)> callback,
+        StringHolder namespaceName,
+        List<EzSignedBallot> signedBallots,
+        gs2::optional<List<EzGameResult>> gameResults=gs2::nullopt
     );
 };
 

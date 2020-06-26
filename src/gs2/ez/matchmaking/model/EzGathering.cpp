@@ -25,6 +25,7 @@ EzGathering::Data::Data(const Data& data) :
     gatheringId(data.gatheringId),
     name(data.name),
     metadata(data.metadata),
+    expiresAt(data.expiresAt),
     createdAt(data.createdAt),
     updatedAt(data.updatedAt)
 {
@@ -47,6 +48,7 @@ EzGathering::Data::Data(const gs2::matchmaking::Gathering& gathering) :
     name(gathering.getName()),
     allowUserIds(gathering.getAllowUserIds()),
     metadata(gathering.getMetadata()),
+    expiresAt(gathering.getExpiresAt() ? *gathering.getExpiresAt() : 0),
     createdAt(gathering.getCreatedAt() ? *gathering.getCreatedAt() : 0),
     updatedAt(gathering.getUpdatedAt() ? *gathering.getUpdatedAt() : 0)
 {
@@ -103,6 +105,7 @@ gs2::matchmaking::Gathering EzGathering::ToModel() const
     }
     gathering.setAllowUserIds(getAllowUserIds());
     gathering.setMetadata(getMetadata());
+    gathering.setExpiresAt(getExpiresAt());
     gathering.setCreatedAt(getCreatedAt());
     gathering.setUpdatedAt(getUpdatedAt());
     return gathering;

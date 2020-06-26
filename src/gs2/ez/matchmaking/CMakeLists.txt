@@ -22,31 +22,58 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/model.hpp
         model/EzNamespace.hpp
         model/EzGathering.hpp
+        model/EzRatingModelMaster.hpp
+        model/EzRatingModel.hpp
+        model/EzCurrentRatingModelMaster.hpp
         model/EzResponseCache.hpp
         model/EzNotificationSetting.hpp
         model/EzLogSetting.hpp
+        model/EzGitHubCheckoutSetting.hpp
         model/EzAttributeRange.hpp
         model/EzCapacityOfRole.hpp
         model/EzAttribute.hpp
         model/EzPlayer.hpp
+        model/EzRating.hpp
+        model/EzGameResult.hpp
+        model/EzBallot.hpp
+        model/EzSignedBallot.hpp
+        model/EzWrittenBallot.hpp
+        model/EzVote.hpp
         result/EzCreateGatheringResult.hpp
         result/EzUpdateGatheringResult.hpp
         result/EzDoMatchmakingResult.hpp
         result/EzGetGatheringResult.hpp
         result/EzCancelMatchmakingResult.hpp
+        result/EzListRatingModelsResult.hpp
+        result/EzGetRatingModelResult.hpp
+        result/EzListRatingsResult.hpp
+        result/EzGetRatingResult.hpp
+        result/EzCreateVoteResult.hpp
+        result/EzVoteResult.hpp
+        result/EzVoteMultipleResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
         model/EzNamespace.cpp
         model/EzGathering.cpp
+        model/EzRatingModelMaster.cpp
+        model/EzRatingModel.cpp
+        model/EzCurrentRatingModelMaster.cpp
         model/EzResponseCache.cpp
         model/EzNotificationSetting.cpp
         model/EzLogSetting.cpp
+        model/EzGitHubCheckoutSetting.cpp
         model/EzAttributeRange.cpp
         model/EzCapacityOfRole.cpp
         model/EzAttribute.cpp
         model/EzPlayer.cpp
+        model/EzRating.cpp
+        model/EzGameResult.cpp
+        model/EzBallot.cpp
+        model/EzSignedBallot.cpp
+        model/EzWrittenBallot.cpp
+        model/EzVote.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

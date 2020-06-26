@@ -19,9 +19,13 @@
 
 #include <gs2/core/common.hpp>
 #include "EzGathering.hpp"
+#include "EzRatingModel.hpp"
 #include "EzAttributeRange.hpp"
 #include "EzCapacityOfRole.hpp"
 #include "EzAttribute.hpp"
 #include "EzPlayer.hpp"
+#include "EzRating.hpp"
+#include "EzBallot.hpp"
+#include "EzSignedBallot.hpp"
 
 #endif //GS2_EZ_MATCHMAKING_MODEL_MODEL_HPP_

@@ -40,7 +40,8 @@ void Client::createGathering(
     EzPlayer player,
     List<EzCapacityOfRole> capacityOfRoles,
     List<StringHolder> allowUserIds,
-    gs2::optional<List<EzAttributeRange>> attributeRanges
+    gs2::optional<List<EzAttributeRange>> attributeRanges,
+    gs2::optional<Int64> expiresAt
 )
 {
     gs2::matchmaking::CreateGatheringRequest request;
@@ -63,6 +64,10 @@ void Client::createGathering(
             list += (*attributeRanges)[i].ToModel();
         }
         request.setAttributeRanges(list);
+    }
+    if (expiresAt)
+    {
+        request.setExpiresAt(std::move(*expiresAt));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->createGathering(
@@ -251,6 +256,299 @@ void Client::cancelMatchmaking(
                 Gs2ClientException gs2ClientException;
                 gs2ClientException.setType(Gs2ClientException::UnknownException);
                 AsyncEzCancelMatchmakingResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::listRatingModels(
+    std::function<void(AsyncEzListRatingModelsResult)> callback,
+    StringHolder namespaceName
+)
+{
+    gs2::matchmaking::DescribeRatingModelsRequest request;
+    request.setNamespaceName(namespaceName);
+    m_pClient->describeRatingModels(
+        request,
+        [callback](gs2::matchmaking::AsyncDescribeRatingModelsResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzListRatingModelsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzListRatingModelsResult::isConvertible(*r.getResult()))
+            {
+                EzListRatingModelsResult ezResult(*r.getResult());
+                AsyncEzListRatingModelsResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzListRatingModelsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::getRatingModel(
+    std::function<void(AsyncEzGetRatingModelResult)> callback,
+    StringHolder namespaceName,
+    StringHolder ratingName
+)
+{
+    gs2::matchmaking::GetRatingModelRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setRatingName(ratingName);
+    m_pClient->getRatingModel(
+        request,
+        [callback](gs2::matchmaking::AsyncGetRatingModelResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetRatingModelResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetRatingModelResult::isConvertible(*r.getResult()))
+            {
+                EzGetRatingModelResult ezResult(*r.getResult());
+                AsyncEzGetRatingModelResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetRatingModelResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::listRatings(
+    std::function<void(AsyncEzListRatingsResult)> callback,
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> pageToken,
+    gs2::optional<Int64> limit
+)
+{
+    gs2::matchmaking::DescribeRatingsRequest request;
+    request.setNamespaceName(namespaceName);
+    if (pageToken)
+    {
+        request.setPageToken(std::move(*pageToken));
+    }
+    if (limit)
+    {
+        request.setLimit(std::move(*limit));
+    }
+    m_pClient->describeRatings(
+        request,
+        [callback](gs2::matchmaking::AsyncDescribeRatingsResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzListRatingsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzListRatingsResult::isConvertible(*r.getResult()))
+            {
+                EzListRatingsResult ezResult(*r.getResult());
+                AsyncEzListRatingsResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzListRatingsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::getRating(
+    std::function<void(AsyncEzGetRatingResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder ratingName
+)
+{
+    gs2::matchmaking::GetRatingRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setRatingName(ratingName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->getRating(
+        request,
+        [callback](gs2::matchmaking::AsyncGetRatingResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetRatingResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetRatingResult::isConvertible(*r.getResult()))
+            {
+                EzGetRatingResult ezResult(*r.getResult());
+                AsyncEzGetRatingResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetRatingResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::createVote(
+    std::function<void(AsyncEzCreateVoteResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder ratingName,
+    StringHolder gatheringName
+)
+{
+    gs2::matchmaking::GetBallotRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setRatingName(ratingName);
+    request.setGatheringName(gatheringName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->getBallot(
+        request,
+        [callback](gs2::matchmaking::AsyncGetBallotResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzCreateVoteResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzCreateVoteResult::isConvertible(*r.getResult()))
+            {
+                EzCreateVoteResult ezResult(*r.getResult());
+                AsyncEzCreateVoteResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzCreateVoteResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::vote(
+    std::function<void(AsyncEzVoteResult)> callback,
+    StringHolder namespaceName,
+    StringHolder ballotBody,
+    StringHolder ballotSignature,
+    gs2::optional<List<EzGameResult>> gameResults
+)
+{
+    gs2::matchmaking::VoteRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setBallotBody(ballotBody);
+    request.setBallotSignature(ballotSignature);
+    if (gameResults)
+    {
+        gs2::List<gs2::matchmaking::GameResult> list;
+        for (int i = 0; i < gameResults->getCount(); ++i)
+        {
+            list += (*gameResults)[i].ToModel();
+        }
+        request.setGameResults(list);
+    }
+    m_pClient->vote(
+        request,
+        [callback](gs2::matchmaking::AsyncVoteResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzVoteResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzVoteResult::isConvertible(*r.getResult()))
+            {
+                EzVoteResult ezResult(*r.getResult());
+                AsyncEzVoteResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzVoteResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::voteMultiple(
+    std::function<void(AsyncEzVoteMultipleResult)> callback,
+    StringHolder namespaceName,
+    List<EzSignedBallot> signedBallots,
+    gs2::optional<List<EzGameResult>> gameResults
+)
+{
+    gs2::matchmaking::VoteMultipleRequest request;
+    request.setNamespaceName(namespaceName);
+    {
+        gs2::List<gs2::matchmaking::SignedBallot> list;
+        for (int i = 0; i < signedBallots.getCount(); ++i)
+        {
+            list += signedBallots[i].ToModel();
+        }
+        request.setSignedBallots(list);
+    }
+    if (gameResults)
+    {
+        gs2::List<gs2::matchmaking::GameResult> list;
+        for (int i = 0; i < gameResults->getCount(); ++i)
+        {
+            list += (*gameResults)[i].ToModel();
+        }
+        request.setGameResults(list);
+    }
+    m_pClient->voteMultiple(
+        request,
+        [callback](gs2::matchmaking::AsyncVoteMultipleResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzVoteMultipleResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzVoteMultipleResult::isConvertible(*r.getResult()))
+            {
+                EzVoteMultipleResult ezResult(*r.getResult());
+                AsyncEzVoteMultipleResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzVoteMultipleResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
         }
