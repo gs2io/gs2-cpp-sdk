@@ -47,6 +47,8 @@ private:
         optional<StringHolder> namespaceName;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
+        /** レーティング計算機能を使用するか */
+        optional<Bool> enableRating;
         /** ギャザリング新規作成時のアクション */
         optional<StringHolder> createGatheringTriggerType;
         /** ギャザリング新規作成時 にルームを作成するネームスペース のGRN */
@@ -74,6 +76,7 @@ private:
             Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             description(data.description),
+            enableRating(data.enableRating),
             createGatheringTriggerType(data.createGatheringTriggerType),
             createGatheringTriggerRealtimeNamespaceId(data.createGatheringTriggerRealtimeNamespaceId),
             createGatheringTriggerScriptId(data.createGatheringTriggerScriptId),
@@ -202,6 +205,37 @@ public:
     UpdateNamespaceRequest& withDescription(StringHolder description)
     {
         ensureData().description.emplace(std::move(description));
+        return *this;
+    }
+
+    /**
+     * レーティング計算機能を使用するかを取得
+     *
+     * @return レーティング計算機能を使用するか
+     */
+    const optional<Bool>& getEnableRating() const
+    {
+        return ensureData().enableRating;
+    }
+
+    /**
+     * レーティング計算機能を使用するかを設定
+     *
+     * @param enableRating レーティング計算機能を使用するか
+     */
+    void setEnableRating(Bool enableRating)
+    {
+        ensureData().enableRating.emplace(enableRating);
+    }
+
+    /**
+     * レーティング計算機能を使用するかを設定
+     *
+     * @param enableRating レーティング計算機能を使用するか
+     */
+    UpdateNamespaceRequest& withEnableRating(Bool enableRating)
+    {
+        ensureData().enableRating.emplace(enableRating);
         return *this;
     }
 

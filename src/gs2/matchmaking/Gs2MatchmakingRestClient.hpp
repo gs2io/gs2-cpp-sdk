@@ -40,6 +40,27 @@
 #include "request/CancelMatchmakingRequest.hpp"
 #include "request/CancelMatchmakingByUserIdRequest.hpp"
 #include "request/DeleteGatheringRequest.hpp"
+#include "request/DescribeRatingModelMastersRequest.hpp"
+#include "request/CreateRatingModelMasterRequest.hpp"
+#include "request/GetRatingModelMasterRequest.hpp"
+#include "request/UpdateRatingModelMasterRequest.hpp"
+#include "request/DeleteRatingModelMasterRequest.hpp"
+#include "request/DescribeRatingModelsRequest.hpp"
+#include "request/GetRatingModelRequest.hpp"
+#include "request/ExportMasterRequest.hpp"
+#include "request/GetCurrentRatingModelMasterRequest.hpp"
+#include "request/UpdateCurrentRatingModelMasterRequest.hpp"
+#include "request/UpdateCurrentRatingModelMasterFromGitHubRequest.hpp"
+#include "request/DescribeRatingsRequest.hpp"
+#include "request/DescribeRatingsByUserIdRequest.hpp"
+#include "request/GetRatingRequest.hpp"
+#include "request/PutResultRequest.hpp"
+#include "request/DeleteRatingRequest.hpp"
+#include "request/GetBallotRequest.hpp"
+#include "request/GetBallotByUserIdRequest.hpp"
+#include "request/VoteRequest.hpp"
+#include "request/VoteMultipleRequest.hpp"
+#include "request/CommitVoteRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -57,6 +78,27 @@
 #include "result/CancelMatchmakingResult.hpp"
 #include "result/CancelMatchmakingByUserIdResult.hpp"
 #include "result/DeleteGatheringResult.hpp"
+#include "result/DescribeRatingModelMastersResult.hpp"
+#include "result/CreateRatingModelMasterResult.hpp"
+#include "result/GetRatingModelMasterResult.hpp"
+#include "result/UpdateRatingModelMasterResult.hpp"
+#include "result/DeleteRatingModelMasterResult.hpp"
+#include "result/DescribeRatingModelsResult.hpp"
+#include "result/GetRatingModelResult.hpp"
+#include "result/ExportMasterResult.hpp"
+#include "result/GetCurrentRatingModelMasterResult.hpp"
+#include "result/UpdateCurrentRatingModelMasterResult.hpp"
+#include "result/UpdateCurrentRatingModelMasterFromGitHubResult.hpp"
+#include "result/DescribeRatingsResult.hpp"
+#include "result/DescribeRatingsByUserIdResult.hpp"
+#include "result/GetRatingResult.hpp"
+#include "result/PutResultResult.hpp"
+#include "result/DeleteRatingResult.hpp"
+#include "result/GetBallotResult.hpp"
+#include "result/GetBallotByUserIdResult.hpp"
+#include "result/VoteResult.hpp"
+#include "result/VoteMultipleResult.hpp"
+#include "result/CommitVoteResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace matchmaking {
@@ -158,6 +200,11 @@ private:
             {
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getEnableRating())
+            {
+                jsonWriter.writePropertyName("enableRating");
+                jsonWriter.writeBool(*m_Request.getEnableRating());
             }
             if (m_Request.getCreateGatheringTriggerType())
             {
@@ -358,6 +405,11 @@ private:
             {
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getEnableRating())
+            {
+                jsonWriter.writePropertyName("enableRating");
+                jsonWriter.writeBool(*m_Request.getEnableRating());
             }
             if (m_Request.getCreateGatheringTriggerType())
             {
@@ -1261,6 +1313,1328 @@ private:
         ~DeleteGatheringTask() GS2_OVERRIDE = default;
     };
 
+    class DescribeRatingModelMastersTask : public detail::Gs2RestSessionTask<DescribeRatingModelMastersResult>
+    {
+    private:
+        DescribeRatingModelMastersRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/master/rating";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeRatingModelMastersTask(
+            DescribeRatingModelMastersRequest request,
+            Gs2RestSessionTask<DescribeRatingModelMastersResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeRatingModelMastersResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeRatingModelMastersTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateRatingModelMasterTask : public detail::Gs2RestSessionTask<CreateRatingModelMasterResult>
+    {
+    private:
+        CreateRatingModelMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/master/rating";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getName())
+            {
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getMetadata())
+            {
+                jsonWriter.writePropertyName("metadata");
+                jsonWriter.writeCharArray(*m_Request.getMetadata());
+            }
+            if (m_Request.getVolatility())
+            {
+                jsonWriter.writePropertyName("volatility");
+                jsonWriter.writeInt32(*m_Request.getVolatility());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        CreateRatingModelMasterTask(
+            CreateRatingModelMasterRequest request,
+            Gs2RestSessionTask<CreateRatingModelMasterResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<CreateRatingModelMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateRatingModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRatingModelMasterTask : public detail::Gs2RestSessionTask<GetRatingModelMasterResult>
+    {
+    private:
+        GetRatingModelMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/master/rating/{ratingName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getRatingName();
+                url.replace("{ratingName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetRatingModelMasterTask(
+            GetRatingModelMasterRequest request,
+            Gs2RestSessionTask<GetRatingModelMasterResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetRatingModelMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRatingModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateRatingModelMasterTask : public detail::Gs2RestSessionTask<UpdateRatingModelMasterResult>
+    {
+    private:
+        UpdateRatingModelMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/master/rating/{ratingName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getRatingName();
+                url.replace("{ratingName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getMetadata())
+            {
+                jsonWriter.writePropertyName("metadata");
+                jsonWriter.writeCharArray(*m_Request.getMetadata());
+            }
+            if (m_Request.getVolatility())
+            {
+                jsonWriter.writePropertyName("volatility");
+                jsonWriter.writeInt32(*m_Request.getVolatility());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Put;
+        }
+
+    public:
+        UpdateRatingModelMasterTask(
+            UpdateRatingModelMasterRequest request,
+            Gs2RestSessionTask<UpdateRatingModelMasterResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<UpdateRatingModelMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateRatingModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteRatingModelMasterTask : public detail::Gs2RestSessionTask<DeleteRatingModelMasterResult>
+    {
+    private:
+        DeleteRatingModelMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/master/rating/{ratingName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getRatingName();
+                url.replace("{ratingName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        DeleteRatingModelMasterTask(
+            DeleteRatingModelMasterRequest request,
+            Gs2RestSessionTask<DeleteRatingModelMasterResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DeleteRatingModelMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteRatingModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeRatingModelsTask : public detail::Gs2RestSessionTask<DescribeRatingModelsResult>
+    {
+    private:
+        DescribeRatingModelsRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/rating";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeRatingModelsTask(
+            DescribeRatingModelsRequest request,
+            Gs2RestSessionTask<DescribeRatingModelsResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeRatingModelsResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeRatingModelsTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRatingModelTask : public detail::Gs2RestSessionTask<GetRatingModelResult>
+    {
+    private:
+        GetRatingModelRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/rating/{ratingName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getRatingName();
+                url.replace("{ratingName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetRatingModelTask(
+            GetRatingModelRequest request,
+            Gs2RestSessionTask<GetRatingModelResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetRatingModelResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRatingModelTask() GS2_OVERRIDE = default;
+    };
+
+    class ExportMasterTask : public detail::Gs2RestSessionTask<ExportMasterResult>
+    {
+    private:
+        ExportMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/master/export";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        ExportMasterTask(
+            ExportMasterRequest request,
+            Gs2RestSessionTask<ExportMasterResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<ExportMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~ExportMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class GetCurrentRatingModelMasterTask : public detail::Gs2RestSessionTask<GetCurrentRatingModelMasterResult>
+    {
+    private:
+        GetCurrentRatingModelMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/master";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetCurrentRatingModelMasterTask(
+            GetCurrentRatingModelMasterRequest request,
+            Gs2RestSessionTask<GetCurrentRatingModelMasterResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetCurrentRatingModelMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetCurrentRatingModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateCurrentRatingModelMasterTask : public detail::Gs2RestSessionTask<UpdateCurrentRatingModelMasterResult>
+    {
+    private:
+        UpdateCurrentRatingModelMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/master";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getSettings())
+            {
+                jsonWriter.writePropertyName("settings");
+                jsonWriter.writeCharArray(*m_Request.getSettings());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Put;
+        }
+
+    public:
+        UpdateCurrentRatingModelMasterTask(
+            UpdateCurrentRatingModelMasterRequest request,
+            Gs2RestSessionTask<UpdateCurrentRatingModelMasterResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<UpdateCurrentRatingModelMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateCurrentRatingModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateCurrentRatingModelMasterFromGitHubTask : public detail::Gs2RestSessionTask<UpdateCurrentRatingModelMasterFromGitHubResult>
+    {
+    private:
+        UpdateCurrentRatingModelMasterFromGitHubRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/master/from_git_hub";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getCheckoutSetting())
+            {
+                jsonWriter.writePropertyName("checkoutSetting");
+                write(jsonWriter, *m_Request.getCheckoutSetting());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Put;
+        }
+
+    public:
+        UpdateCurrentRatingModelMasterFromGitHubTask(
+            UpdateCurrentRatingModelMasterFromGitHubRequest request,
+            Gs2RestSessionTask<UpdateCurrentRatingModelMasterFromGitHubResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<UpdateCurrentRatingModelMasterFromGitHubResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateCurrentRatingModelMasterFromGitHubTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeRatingsTask : public detail::Gs2RestSessionTask<DescribeRatingsResult>
+    {
+    private:
+        DescribeRatingsRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/rating";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeRatingsTask(
+            DescribeRatingsRequest request,
+            Gs2RestSessionTask<DescribeRatingsResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeRatingsResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeRatingsTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeRatingsByUserIdTask : public detail::Gs2RestSessionTask<DescribeRatingsByUserIdResult>
+    {
+    private:
+        DescribeRatingsByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/rating";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeRatingsByUserIdTask(
+            DescribeRatingsByUserIdRequest request,
+            Gs2RestSessionTask<DescribeRatingsByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeRatingsByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeRatingsByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRatingTask : public detail::Gs2RestSessionTask<GetRatingResult>
+    {
+    private:
+        GetRatingRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/rating/{ratingName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getRatingName();
+                url.replace("{ratingName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetRatingTask(
+            GetRatingRequest request,
+            Gs2RestSessionTask<GetRatingResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetRatingResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRatingTask() GS2_OVERRIDE = default;
+    };
+
+    class PutResultTask : public detail::Gs2RestSessionTask<PutResultResult>
+    {
+    private:
+        PutResultRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/rating/{ratingName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getRatingName();
+                url.replace("{ratingName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getGameResults())
+            {
+                jsonWriter.writePropertyName("gameResults");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getGameResults();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        PutResultTask(
+            PutResultRequest request,
+            Gs2RestSessionTask<PutResultResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<PutResultResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~PutResultTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteRatingTask : public detail::Gs2RestSessionTask<DeleteRatingResult>
+    {
+    private:
+        DeleteRatingRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/rating/{ratingName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getRatingName();
+                url.replace("{ratingName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("[]");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        DeleteRatingTask(
+            DeleteRatingRequest request,
+            Gs2RestSessionTask<DeleteRatingResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DeleteRatingResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteRatingTask() GS2_OVERRIDE = default;
+    };
+
+    class GetBallotTask : public detail::Gs2RestSessionTask<GetBallotResult>
+    {
+    private:
+        GetBallotRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/vote/ballot";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getRatingName();
+                url.replace("{ratingName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getGatheringName();
+                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getGatheringName();
+                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNumberOfPlayer())
+            {
+                jsonWriter.writePropertyName("numberOfPlayer");
+                jsonWriter.writeInt32(*m_Request.getNumberOfPlayer());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        GetBallotTask(
+            GetBallotRequest request,
+            Gs2RestSessionTask<GetBallotResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetBallotResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetBallotTask() GS2_OVERRIDE = default;
+    };
+
+    class GetBallotByUserIdTask : public detail::Gs2RestSessionTask<GetBallotByUserIdResult>
+    {
+    private:
+        GetBallotByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/vote/ballot";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getRatingName();
+                url.replace("{ratingName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getGatheringName();
+                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getGatheringName();
+                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNumberOfPlayer())
+            {
+                jsonWriter.writePropertyName("numberOfPlayer");
+                jsonWriter.writeInt32(*m_Request.getNumberOfPlayer());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        GetBallotByUserIdTask(
+            GetBallotByUserIdRequest request,
+            Gs2RestSessionTask<GetBallotByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetBallotByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetBallotByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class VoteTask : public detail::Gs2RestSessionTask<VoteResult>
+    {
+    private:
+        VoteRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/vote";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getBallotBody())
+            {
+                jsonWriter.writePropertyName("ballotBody");
+                jsonWriter.writeCharArray(*m_Request.getBallotBody());
+            }
+            if (m_Request.getBallotSignature())
+            {
+                jsonWriter.writePropertyName("ballotSignature");
+                jsonWriter.writeCharArray(*m_Request.getBallotSignature());
+            }
+            if (m_Request.getGameResults())
+            {
+                jsonWriter.writePropertyName("gameResults");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getGameResults();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        VoteTask(
+            VoteRequest request,
+            Gs2RestSessionTask<VoteResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<VoteResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~VoteTask() GS2_OVERRIDE = default;
+    };
+
+    class VoteMultipleTask : public detail::Gs2RestSessionTask<VoteMultipleResult>
+    {
+    private:
+        VoteMultipleRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/vote/multiple";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getSignedBallots())
+            {
+                jsonWriter.writePropertyName("signedBallots");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getSignedBallots();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getGameResults())
+            {
+                jsonWriter.writePropertyName("gameResults");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getGameResults();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        VoteMultipleTask(
+            VoteMultipleRequest request,
+            Gs2RestSessionTask<VoteMultipleResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<VoteMultipleResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~VoteMultipleTask() GS2_OVERRIDE = default;
+    };
+
+    class CommitVoteTask : public detail::Gs2RestSessionTask<void>
+    {
+    private:
+        CommitVoteRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/vote/{ratingName}/{gatheringName}/commit";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getRatingName();
+                url.replace("{ratingName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getGatheringName();
+                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        CommitVoteTask(
+            CommitVoteRequest request,
+            Gs2RestSessionTask<void>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<void>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CommitVoteTask() GS2_OVERRIDE = default;
+    };
+
 protected:
     static void write(detail::json::JsonWriter& jsonWriter, const Namespace& obj)
     {
@@ -1284,6 +2658,11 @@ protected:
         {
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
+        }
+        if (obj.getEnableRating())
+        {
+            jsonWriter.writePropertyName("enableRating");
+            jsonWriter.writeBool(*obj.getEnableRating());
         }
         if (obj.getCreateGatheringTriggerType())
         {
@@ -1417,6 +2796,89 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const RatingModelMaster& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRatingModelId())
+        {
+            jsonWriter.writePropertyName("ratingModelId");
+            jsonWriter.writeCharArray(*obj.getRatingModelId());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getDescription())
+        {
+            jsonWriter.writePropertyName("description");
+            jsonWriter.writeCharArray(*obj.getDescription());
+        }
+        if (obj.getVolatility())
+        {
+            jsonWriter.writePropertyName("volatility");
+            jsonWriter.writeInt32(*obj.getVolatility());
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const RatingModel& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRatingModelId())
+        {
+            jsonWriter.writePropertyName("ratingModelId");
+            jsonWriter.writeCharArray(*obj.getRatingModelId());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getVolatility())
+        {
+            jsonWriter.writePropertyName("volatility");
+            jsonWriter.writeInt32(*obj.getVolatility());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const CurrentRatingModelMaster& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getNamespaceName())
+        {
+            jsonWriter.writePropertyName("namespaceName");
+            jsonWriter.writeCharArray(*obj.getNamespaceName());
+        }
+        if (obj.getSettings())
+        {
+            jsonWriter.writePropertyName("settings");
+            jsonWriter.writeCharArray(*obj.getSettings());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const ResponseCache& obj)
     {
         jsonWriter.writeObjectStart();
@@ -1476,6 +2938,47 @@ protected:
         {
             jsonWriter.writePropertyName("loggingNamespaceId");
             jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const GitHubCheckoutSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            jsonWriter.writePropertyName("gitHubApiKeyId");
+            jsonWriter.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            jsonWriter.writePropertyName("repositoryName");
+            jsonWriter.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            jsonWriter.writePropertyName("sourcePath");
+            jsonWriter.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            jsonWriter.writePropertyName("referenceType");
+            jsonWriter.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            jsonWriter.writePropertyName("commitHash");
+            jsonWriter.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            jsonWriter.writePropertyName("branchName");
+            jsonWriter.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            jsonWriter.writePropertyName("tagName");
+            jsonWriter.writeCharArray(*obj.getTagName());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -1589,6 +3092,164 @@ protected:
                 jsonWriter.writeCharArray(list[i]);
             }
             jsonWriter.writeArrayEnd();
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const Rating& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRatingId())
+        {
+            jsonWriter.writePropertyName("ratingId");
+            jsonWriter.writeCharArray(*obj.getRatingId());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getRateValue())
+        {
+            jsonWriter.writePropertyName("rateValue");
+            jsonWriter.writeFloat(*obj.getRateValue());
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const GameResult& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRank())
+        {
+            jsonWriter.writePropertyName("rank");
+            jsonWriter.writeInt32(*obj.getRank());
+        }
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const Ballot& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getRatingName())
+        {
+            jsonWriter.writePropertyName("ratingName");
+            jsonWriter.writeCharArray(*obj.getRatingName());
+        }
+        if (obj.getGatheringName())
+        {
+            jsonWriter.writePropertyName("gatheringName");
+            jsonWriter.writeCharArray(*obj.getGatheringName());
+        }
+        if (obj.getNumberOfPlayer())
+        {
+            jsonWriter.writePropertyName("numberOfPlayer");
+            jsonWriter.writeInt32(*obj.getNumberOfPlayer());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const SignedBallot& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getBody())
+        {
+            jsonWriter.writePropertyName("body");
+            jsonWriter.writeCharArray(*obj.getBody());
+        }
+        if (obj.getSignature())
+        {
+            jsonWriter.writePropertyName("signature");
+            jsonWriter.writeCharArray(*obj.getSignature());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const WrittenBallot& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getBallot())
+        {
+            jsonWriter.writePropertyName("ballot");
+            write(jsonWriter, *obj.getBallot());
+        }
+        if (obj.getGameResults())
+        {
+            jsonWriter.writePropertyName("gameResults");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getGameResults();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(jsonWriter, list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const Vote& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getVoteId())
+        {
+            jsonWriter.writePropertyName("voteId");
+            jsonWriter.writeCharArray(*obj.getVoteId());
+        }
+        if (obj.getRatingName())
+        {
+            jsonWriter.writePropertyName("ratingName");
+            jsonWriter.writeCharArray(*obj.getRatingName());
+        }
+        if (obj.getGatheringName())
+        {
+            jsonWriter.writePropertyName("gatheringName");
+            jsonWriter.writeCharArray(*obj.getGatheringName());
+        }
+        if (obj.getWrittenBallots())
+        {
+            jsonWriter.writePropertyName("writtenBallots");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getWrittenBallots();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(jsonWriter, list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -1867,6 +3528,276 @@ public:
     void deleteGathering(DeleteGatheringRequest request, std::function<void(AsyncDeleteGatheringResult)> callback)
     {
         DeleteGatheringTask& task = *new DeleteGatheringTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * レーティングモデルマスターの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeRatingModelMasters(DescribeRatingModelMastersRequest request, std::function<void(AsyncDescribeRatingModelMastersResult)> callback)
+    {
+        DescribeRatingModelMastersTask& task = *new DescribeRatingModelMastersTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * レーティングモデルマスターを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createRatingModelMaster(CreateRatingModelMasterRequest request, std::function<void(AsyncCreateRatingModelMasterResult)> callback)
+    {
+        CreateRatingModelMasterTask& task = *new CreateRatingModelMasterTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * レーティングモデルマスターを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRatingModelMaster(GetRatingModelMasterRequest request, std::function<void(AsyncGetRatingModelMasterResult)> callback)
+    {
+        GetRatingModelMasterTask& task = *new GetRatingModelMasterTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * レーティングモデルマスターを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateRatingModelMaster(UpdateRatingModelMasterRequest request, std::function<void(AsyncUpdateRatingModelMasterResult)> callback)
+    {
+        UpdateRatingModelMasterTask& task = *new UpdateRatingModelMasterTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * レーティングモデルマスターを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteRatingModelMaster(DeleteRatingModelMasterRequest request, std::function<void(AsyncDeleteRatingModelMasterResult)> callback)
+    {
+        DeleteRatingModelMasterTask& task = *new DeleteRatingModelMasterTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * レーティングモデルの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeRatingModels(DescribeRatingModelsRequest request, std::function<void(AsyncDescribeRatingModelsResult)> callback)
+    {
+        DescribeRatingModelsTask& task = *new DescribeRatingModelsTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * レーティングモデルを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRatingModel(GetRatingModelRequest request, std::function<void(AsyncGetRatingModelResult)> callback)
+    {
+        GetRatingModelTask& task = *new GetRatingModelTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 現在有効な所持品マスターのマスターデータをエクスポートします<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void exportMaster(ExportMasterRequest request, std::function<void(AsyncExportMasterResult)> callback)
+    {
+        ExportMasterTask& task = *new ExportMasterTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 現在有効な所持品マスターを取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getCurrentRatingModelMaster(GetCurrentRatingModelMasterRequest request, std::function<void(AsyncGetCurrentRatingModelMasterResult)> callback)
+    {
+        GetCurrentRatingModelMasterTask& task = *new GetCurrentRatingModelMasterTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 現在有効な所持品マスターを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentRatingModelMaster(UpdateCurrentRatingModelMasterRequest request, std::function<void(AsyncUpdateCurrentRatingModelMasterResult)> callback)
+    {
+        UpdateCurrentRatingModelMasterTask& task = *new UpdateCurrentRatingModelMasterTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 現在有効な所持品マスターを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentRatingModelMasterFromGitHub(UpdateCurrentRatingModelMasterFromGitHubRequest request, std::function<void(AsyncUpdateCurrentRatingModelMasterFromGitHubResult)> callback)
+    {
+        UpdateCurrentRatingModelMasterFromGitHubTask& task = *new UpdateCurrentRatingModelMasterFromGitHubTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * レーティングの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeRatings(DescribeRatingsRequest request, std::function<void(AsyncDescribeRatingsResult)> callback)
+    {
+        DescribeRatingsTask& task = *new DescribeRatingsTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * ユーザIDを指定してレーティングの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeRatingsByUserId(DescribeRatingsByUserIdRequest request, std::function<void(AsyncDescribeRatingsByUserIdResult)> callback)
+    {
+        DescribeRatingsByUserIdTask& task = *new DescribeRatingsByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * レーティングを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRating(GetRatingRequest request, std::function<void(AsyncGetRatingResult)> callback)
+    {
+        GetRatingTask& task = *new GetRatingTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * レーティング値の再計算を実行<br>
+	 *   <br>
+	 *   レーティングの計算処理には Glicko-2 rating system をベースとした計算アルゴリズムを採用しています。<br>
+	 *   レーティング値の初期値は1500で、レーティングの値が離れた相手に勝利するほど上昇幅は大きく、同じく負けた側は減少幅は大きくなります。<br>
+	 *   <br>
+	 *   レーティングの計算には参加したユーザIDのリストが必要となります。<br>
+	 *   そのため、クライアントから直接このAPIを呼び出すのは適切ではありません。ゲームの勝敗を判断できるゲームサーバから呼び出すようにしてください。<br>
+	 *   P2P 対戦など、クライアント主導で対戦を実現している場合は、投票機能を利用して勝敗を決定するようにしてください。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void putResult(PutResultRequest request, std::function<void(AsyncPutResultResult)> callback)
+    {
+        PutResultTask& task = *new PutResultTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * レーティングを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteRating(DeleteRatingRequest request, std::function<void(AsyncDeleteRatingResult)> callback)
+    {
+        DeleteRatingTask& task = *new DeleteRatingTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 投票用紙を取得します。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getBallot(GetBallotRequest request, std::function<void(AsyncGetBallotResult)> callback)
+    {
+        GetBallotTask& task = *new GetBallotTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 投票用紙を取得します。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getBallotByUserId(GetBallotByUserIdRequest request, std::function<void(AsyncGetBallotByUserIdResult)> callback)
+    {
+        GetBallotByUserIdTask& task = *new GetBallotByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 対戦結果を投票します。<br>
+	 *   <br>
+	 *   投票は最初の投票が行われてから5分以内に行う必要があります。<br>
+	 *   つまり、結果は即座に反映されず、投票開始からおよそ5分後または全てのプレイヤーが投票を行った際に結果が反映されます。<br>
+	 *   5分以内に全ての投票用紙を回収できなかった場合はその時点の投票内容で多数決をとって結果を決定します。<br>
+	 *   各結果の投票数が同一だった場合は結果は捨てられます（スクリプトで挙動を変更可）。<br>
+	 *   <br>
+	 *   結果を即座に反映したい場合は、勝利した側の代表プレイヤーが投票用紙を各プレイヤーから集めて voteMultiple を呼び出すことで結果を即座に反映できます。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void vote(VoteRequest request, std::function<void(AsyncVoteResult)> callback)
+    {
+        VoteTask& task = *new VoteTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 対戦結果をまとめて投票します。<br>
+	 *   <br>
+	 *   ゲームに勝利した側が他プレイヤーの投票用紙を集めてまとめて投票するのに使用します。<br>
+	 *   『勝利した側』としているのは、敗北した側が自分たちが勝ったことにして報告することにインセンティブはありますが、その逆はないためです。<br>
+	 *   負けた側が投票用紙を渡してこない可能性がありますが、その場合も過半数の投票用紙があれば結果を通すことができます。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void voteMultiple(VoteMultipleRequest request, std::function<void(AsyncVoteMultipleResult)> callback)
+    {
+        VoteMultipleTask& task = *new VoteMultipleTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 投票状況を強制確定<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void commitVote(CommitVoteRequest request, std::function<void(AsyncCommitVoteResult)> callback)
+    {
+        CommitVoteTask& task = *new CommitVoteTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 
