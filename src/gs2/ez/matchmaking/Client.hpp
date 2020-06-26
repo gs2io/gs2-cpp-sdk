@@ -198,13 +198,14 @@ public:
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="userId">ユーザーID</param>
     /// <param name="ratingName">レーティング名</param>
     void getRating(
         std::function<void(AsyncEzGetRatingResult)> callback,
+        GameSession& session,
         StringHolder namespaceName,
-        StringHolder userId,
         StringHolder ratingName
     );
 
@@ -215,9 +216,9 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="callback">コールバックハンドラ</param>
     /// <param name="session">ゲームセッション</param>
-    /// <param name="namespaceName">投票対象となるネームスペース名</param>
+    /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="ratingName">レーティング名</param>
-    /// <param name="gatheringName">投票対象となるギャザリング名</param>
+    /// <param name="gatheringName">レーティング名</param>
     void createVote(
         std::function<void(AsyncEzCreateVoteResult)> callback,
         GameSession& session,

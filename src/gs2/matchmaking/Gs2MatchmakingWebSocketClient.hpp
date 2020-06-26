@@ -54,6 +54,7 @@
 #include "request/DescribeRatingsRequest.hpp"
 #include "request/DescribeRatingsByUserIdRequest.hpp"
 #include "request/GetRatingRequest.hpp"
+#include "request/GetRatingByUserIdRequest.hpp"
 #include "request/PutResultRequest.hpp"
 #include "request/DeleteRatingRequest.hpp"
 #include "request/GetBallotRequest.hpp"
@@ -92,6 +93,7 @@
 #include "result/DescribeRatingsResult.hpp"
 #include "result/DescribeRatingsByUserIdResult.hpp"
 #include "result/GetRatingResult.hpp"
+#include "result/GetRatingByUserIdResult.hpp"
 #include "result/PutResultResult.hpp"
 #include "result/DeleteRatingResult.hpp"
 #include "result/GetBallotResult.hpp"
@@ -2153,6 +2155,72 @@ private:
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
+            if (m_Request.getRatingName())
+            {
+                jsonWriter.writePropertyName("ratingName");
+                jsonWriter.writeCharArray(*m_Request.getRatingName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetRatingTask(
+            GetRatingRequest request,
+            Gs2WebSocketSessionTask<GetRatingResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetRatingResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRatingTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRatingByUserIdTask : public detail::Gs2WebSocketSessionTask<GetRatingByUserIdResult>
+    {
+    private:
+        GetRatingByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "rating";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getRatingByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
             if (m_Request.getUserId())
             {
                 jsonWriter.writePropertyName("userId");
@@ -2176,15 +2244,15 @@ private:
         }
 
     public:
-        GetRatingTask(
-            GetRatingRequest request,
-            Gs2WebSocketSessionTask<GetRatingResult>::CallbackType callback
+        GetRatingByUserIdTask(
+            GetRatingByUserIdRequest request,
+            Gs2WebSocketSessionTask<GetRatingByUserIdResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<GetRatingResult>(callback),
+            Gs2WebSocketSessionTask<GetRatingByUserIdResult>(callback),
             m_Request(std::move(request))
         {}
 
-        ~GetRatingTask() GS2_OVERRIDE = default;
+        ~GetRatingByUserIdTask() GS2_OVERRIDE = default;
     };
 
     class PutResultTask : public detail::Gs2WebSocketSessionTask<PutResultResult>
@@ -2362,15 +2430,10 @@ private:
                 jsonWriter.writePropertyName("gatheringName");
                 jsonWriter.writeCharArray(*m_Request.getGatheringName());
             }
-            if (m_Request.getNamespaceName())
+            if (m_Request.getGatheringId())
             {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getGatheringName())
-            {
-                jsonWriter.writePropertyName("gatheringName");
-                jsonWriter.writeCharArray(*m_Request.getGatheringName());
+                jsonWriter.writePropertyName("gatheringId");
+                jsonWriter.writeCharArray(*m_Request.getGatheringId());
             }
             if (m_Request.getNumberOfPlayer())
             {
@@ -2458,15 +2521,10 @@ private:
                 jsonWriter.writePropertyName("userId");
                 jsonWriter.writeCharArray(*m_Request.getUserId());
             }
-            if (m_Request.getNamespaceName())
+            if (m_Request.getGatheringId())
             {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getGatheringName())
-            {
-                jsonWriter.writePropertyName("gatheringName");
-                jsonWriter.writeCharArray(*m_Request.getGatheringName());
+                jsonWriter.writePropertyName("gatheringId");
+                jsonWriter.writeCharArray(*m_Request.getGatheringId());
             }
             if (m_Request.getNumberOfPlayer())
             {
@@ -2688,16 +2746,6 @@ private:
             {
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRatingName())
-            {
-                jsonWriter.writePropertyName("ratingName");
-                jsonWriter.writeCharArray(*m_Request.getRatingName());
-            }
-            if (m_Request.getGatheringName())
-            {
-                jsonWriter.writePropertyName("gatheringName");
-                jsonWriter.writeCharArray(*m_Request.getGatheringName());
             }
             if (m_Request.getRequestId())
             {
@@ -3778,6 +3826,18 @@ public:
     void getRating(GetRatingRequest request, std::function<void(AsyncGetRatingResult)> callback)
     {
         GetRatingTask& task = *new GetRatingTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * レーティングを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRatingByUserId(GetRatingByUserIdRequest request, std::function<void(AsyncGetRatingByUserIdResult)> callback)
+    {
+        GetRatingByUserIdTask& task = *new GetRatingByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

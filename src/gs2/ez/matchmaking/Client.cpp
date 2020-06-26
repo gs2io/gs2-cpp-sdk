@@ -378,15 +378,15 @@ void Client::listRatings(
 
 void Client::getRating(
     std::function<void(AsyncEzGetRatingResult)> callback,
+    GameSession& session,
     StringHolder namespaceName,
-    StringHolder userId,
     StringHolder ratingName
 )
 {
     gs2::matchmaking::GetRatingRequest request;
     request.setNamespaceName(namespaceName);
-    request.setUserId(userId);
     request.setRatingName(ratingName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->getRating(
         request,
         [callback](gs2::matchmaking::AsyncGetRatingResult r)

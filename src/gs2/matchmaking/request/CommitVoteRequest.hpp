@@ -45,18 +45,12 @@ private:
     public:
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
-        /** レーティング名 */
-        optional<StringHolder> ratingName;
-        /** レーティング名 */
-        optional<StringHolder> gatheringName;
 
         Data() = default;
 
         Data(const Data& data) :
             Gs2BasicRequest::Data(data),
-            namespaceName(data.namespaceName),
-            ratingName(data.ratingName),
-            gatheringName(data.gatheringName)
+            namespaceName(data.namespaceName)
         {
         }
 
@@ -132,68 +126,6 @@ public:
     CommitVoteRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
-        return *this;
-    }
-
-    /**
-     * レーティング名を取得
-     *
-     * @return レーティング名
-     */
-    const optional<StringHolder>& getRatingName() const
-    {
-        return ensureData().ratingName;
-    }
-
-    /**
-     * レーティング名を設定
-     *
-     * @param ratingName レーティング名
-     */
-    void setRatingName(StringHolder ratingName)
-    {
-        ensureData().ratingName.emplace(std::move(ratingName));
-    }
-
-    /**
-     * レーティング名を設定
-     *
-     * @param ratingName レーティング名
-     */
-    CommitVoteRequest& withRatingName(StringHolder ratingName)
-    {
-        ensureData().ratingName.emplace(std::move(ratingName));
-        return *this;
-    }
-
-    /**
-     * レーティング名を取得
-     *
-     * @return レーティング名
-     */
-    const optional<StringHolder>& getGatheringName() const
-    {
-        return ensureData().gatheringName;
-    }
-
-    /**
-     * レーティング名を設定
-     *
-     * @param gatheringName レーティング名
-     */
-    void setGatheringName(StringHolder gatheringName)
-    {
-        ensureData().gatheringName.emplace(std::move(gatheringName));
-    }
-
-    /**
-     * レーティング名を設定
-     *
-     * @param gatheringName レーティング名
-     */
-    CommitVoteRequest& withGatheringName(StringHolder gatheringName)
-    {
-        ensureData().gatheringName.emplace(std::move(gatheringName));
         return *this;
     }
 

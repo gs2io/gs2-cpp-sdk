@@ -51,10 +51,8 @@ private:
         optional<StringHolder> ratingName;
         /** レーティング名 */
         optional<StringHolder> gatheringName;
-        /** 投票対象となるネームスペース名 */
-        optional<StringHolder> namespaceName;
-        /** 投票対象となるギャザリング名 */
-        optional<StringHolder> gatheringName;
+        /** 投票対象となる */
+        optional<StringHolder> gatheringId;
         /** 参加人数 */
         optional<Int32> numberOfPlayer;
         /** 投票用紙の署名計算に使用する暗号鍵 のGRN */
@@ -70,8 +68,7 @@ private:
             namespaceName(data.namespaceName),
             ratingName(data.ratingName),
             gatheringName(data.gatheringName),
-            namespaceName(data.namespaceName),
-            gatheringName(data.gatheringName),
+            gatheringId(data.gatheringId),
             numberOfPlayer(data.numberOfPlayer),
             keyId(data.keyId),
             duplicationAvoider(data.duplicationAvoider)
@@ -248,64 +245,33 @@ public:
     }
 
     /**
-     * 投票対象となるネームスペース名を取得
+     * 投票対象となるを取得
      *
-     * @return 投票対象となるネームスペース名
+     * @return 投票対象となる
      */
-    const optional<StringHolder>& getNamespaceName() const
+    const optional<StringHolder>& getGatheringId() const
     {
-        return ensureData().namespaceName;
+        return ensureData().gatheringId;
     }
 
     /**
-     * 投票対象となるネームスペース名を設定
+     * 投票対象となるを設定
      *
-     * @param namespaceName 投票対象となるネームスペース名
+     * @param gatheringId 投票対象となる
      */
-    void setNamespaceName(StringHolder namespaceName)
+    void setGatheringId(StringHolder gatheringId)
     {
-        ensureData().namespaceName.emplace(std::move(namespaceName));
+        ensureData().gatheringId.emplace(std::move(gatheringId));
     }
 
     /**
-     * 投票対象となるネームスペース名を設定
+     * 投票対象となるを設定
      *
-     * @param namespaceName 投票対象となるネームスペース名
+     * @param gatheringId 投票対象となる
      */
-    GetBallotRequest& withNamespaceName(StringHolder namespaceName)
+    GetBallotRequest& withGatheringId(StringHolder gatheringId)
     {
-        ensureData().namespaceName.emplace(std::move(namespaceName));
-        return *this;
-    }
-
-    /**
-     * 投票対象となるギャザリング名を取得
-     *
-     * @return 投票対象となるギャザリング名
-     */
-    const optional<StringHolder>& getGatheringName() const
-    {
-        return ensureData().gatheringName;
-    }
-
-    /**
-     * 投票対象となるギャザリング名を設定
-     *
-     * @param gatheringName 投票対象となるギャザリング名
-     */
-    void setGatheringName(StringHolder gatheringName)
-    {
-        ensureData().gatheringName.emplace(std::move(gatheringName));
-    }
-
-    /**
-     * 投票対象となるギャザリング名を設定
-     *
-     * @param gatheringName 投票対象となるギャザリング名
-     */
-    GetBallotRequest& withGatheringName(StringHolder gatheringName)
-    {
-        ensureData().gatheringName.emplace(std::move(gatheringName));
+        ensureData().gatheringId.emplace(std::move(gatheringId));
         return *this;
     }
 

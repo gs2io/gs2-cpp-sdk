@@ -54,6 +54,7 @@
 #include "request/DescribeRatingsRequest.hpp"
 #include "request/DescribeRatingsByUserIdRequest.hpp"
 #include "request/GetRatingRequest.hpp"
+#include "request/GetRatingByUserIdRequest.hpp"
 #include "request/PutResultRequest.hpp"
 #include "request/DeleteRatingRequest.hpp"
 #include "request/GetBallotRequest.hpp"
@@ -92,6 +93,7 @@
 #include "result/DescribeRatingsResult.hpp"
 #include "result/DescribeRatingsByUserIdResult.hpp"
 #include "result/GetRatingResult.hpp"
+#include "result/GetRatingByUserIdResult.hpp"
 #include "result/PutResultResult.hpp"
 #include "result/DeleteRatingResult.hpp"
 #include "result/GetBallotResult.hpp"
@@ -1937,7 +1939,7 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/user/{userId}/rating";
+            url += "/{namespaceName}/user/me/rating";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -2075,6 +2077,65 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
+            url += "/{namespaceName}/user/me/rating/{ratingName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getRatingName();
+                url.replace("{ratingName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetRatingTask(
+            GetRatingRequest request,
+            Gs2RestSessionTask<GetRatingResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetRatingResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRatingTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRatingByUserIdTask : public detail::Gs2RestSessionTask<GetRatingByUserIdResult>
+    {
+    private:
+        GetRatingByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
             url += "/{namespaceName}/user/{userId}/rating/{ratingName}";
             {
                 auto& value = m_Request.getNamespaceName();
@@ -2111,15 +2172,15 @@ private:
         }
 
     public:
-        GetRatingTask(
-            GetRatingRequest request,
-            Gs2RestSessionTask<GetRatingResult>::CallbackType callback
+        GetRatingByUserIdTask(
+            GetRatingByUserIdRequest request,
+            Gs2RestSessionTask<GetRatingByUserIdResult>::CallbackType callback
         ) :
-            Gs2RestSessionTask<GetRatingResult>(callback),
+            Gs2RestSessionTask<GetRatingByUserIdResult>(callback),
             m_Request(std::move(request))
         {}
 
-        ~GetRatingTask() GS2_OVERRIDE = default;
+        ~GetRatingByUserIdTask() GS2_OVERRIDE = default;
     };
 
     class PutResultTask : public detail::Gs2RestSessionTask<PutResultResult>
@@ -2134,7 +2195,7 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/user/{userId}/rating/{ratingName}";
+            url += "/{namespaceName}/rating/{ratingName}/vote";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -2263,7 +2324,7 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/user/me/vote/ballot";
+            url += "/{namespaceName}/user/me/vote/{ratingName}/{gatheringName}/ballot";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -2276,14 +2337,6 @@ private:
                 auto& value = m_Request.getGatheringName();
                 url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
-            {
-                auto& value = m_Request.getNamespaceName();
-                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-            }
-            {
-                auto& value = m_Request.getGatheringName();
-                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-            }
             detail::json::JsonWriter jsonWriter;
 
             jsonWriter.writeObjectStart();
@@ -2291,6 +2344,11 @@ private:
             {
                 jsonWriter.writePropertyName("contextStack");
                 jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getGatheringId())
+            {
+                jsonWriter.writePropertyName("gatheringId");
+                jsonWriter.writeCharArray(*m_Request.getGatheringId());
             }
             if (m_Request.getNumberOfPlayer())
             {
@@ -2348,7 +2406,7 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/user/{userId}/vote/ballot";
+            url += "/{namespaceName}/user/{userId}/vote/{ratingName}/{gatheringName}/ballot";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -2365,14 +2423,6 @@ private:
                 auto& value = m_Request.getUserId();
                 url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
-            {
-                auto& value = m_Request.getNamespaceName();
-                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-            }
-            {
-                auto& value = m_Request.getGatheringName();
-                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-            }
             detail::json::JsonWriter jsonWriter;
 
             jsonWriter.writeObjectStart();
@@ -2380,6 +2430,11 @@ private:
             {
                 jsonWriter.writePropertyName("contextStack");
                 jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getGatheringId())
+            {
+                jsonWriter.writePropertyName("gatheringId");
+                jsonWriter.writeCharArray(*m_Request.getGatheringId());
             }
             if (m_Request.getNumberOfPlayer())
             {
@@ -2433,7 +2488,7 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/vote";
+            url += "/{namespaceName}/action/vote";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -2510,7 +2565,7 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/vote/multiple";
+            url += "/{namespaceName}/action/vote/multiple";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -2588,18 +2643,10 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/user/{userId}/vote/{ratingName}/{gatheringName}/commit";
+            url += "/{namespaceName}/action/vote/commit";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-            }
-            {
-                auto& value = m_Request.getRatingName();
-                url.replace("{ratingName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-            }
-            {
-                auto& value = m_Request.getGatheringName();
-                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
             detail::json::JsonWriter jsonWriter;
 
@@ -3696,6 +3743,18 @@ public:
     void getRating(GetRatingRequest request, std::function<void(AsyncGetRatingResult)> callback)
     {
         GetRatingTask& task = *new GetRatingTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * レーティングを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRatingByUserId(GetRatingByUserIdRequest request, std::function<void(AsyncGetRatingByUserIdResult)> callback)
+    {
+        GetRatingByUserIdTask& task = *new GetRatingByUserIdTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 

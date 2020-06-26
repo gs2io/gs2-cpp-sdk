@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-#ifndef GS2_MATCHMAKING_CONTROL_GETRATINGREQUEST_HPP_
-#define GS2_MATCHMAKING_CONTROL_GETRATINGREQUEST_HPP_
+#ifndef GS2_MATCHMAKING_CONTROL_GETRATINGBYUSERIDREQUEST_HPP_
+#define GS2_MATCHMAKING_CONTROL_GETRATINGBYUSERIDREQUEST_HPP_
 
 #include <gs2/core/control/Gs2BasicRequest.hpp>
 #include <gs2/core/util/List.hpp>
@@ -34,7 +34,7 @@ namespace gs2 { namespace matchmaking
  *
  * @author Game Server Services, Inc.
  */
-class GetRatingRequest : public Gs2BasicRequest, public Gs2Matchmaking
+class GetRatingByUserIdRequest : public Gs2BasicRequest, public Gs2Matchmaking
 {
 public:
     constexpr static const Char* const FUNCTION = "";
@@ -43,10 +43,10 @@ private:
     class Data : public Gs2BasicRequest::Data
     {
     public:
-        /** アクセストークン */
-        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
+        /** ユーザーID */
+        optional<StringHolder> userId;
         /** レーティング名 */
         optional<StringHolder> ratingName;
         /** 重複実行回避機能に使用するID */
@@ -56,8 +56,8 @@ private:
 
         Data(const Data& data) :
             Gs2BasicRequest::Data(data),
-            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
+            userId(data.userId),
             ratingName(data.ratingName),
             duplicationAvoider(data.duplicationAvoider)
         {
@@ -84,59 +84,27 @@ private:
     }
 
 public:
-    GetRatingRequest() = default;
-    GetRatingRequest(const GetRatingRequest& getRatingRequest) = default;
-    GetRatingRequest(GetRatingRequest&& getRatingRequest) = default;
-    ~GetRatingRequest() GS2_OVERRIDE = default;
+    GetRatingByUserIdRequest() = default;
+    GetRatingByUserIdRequest(const GetRatingByUserIdRequest& getRatingByUserIdRequest) = default;
+    GetRatingByUserIdRequest(GetRatingByUserIdRequest&& getRatingByUserIdRequest) = default;
+    ~GetRatingByUserIdRequest() GS2_OVERRIDE = default;
 
-    GetRatingRequest& operator=(const GetRatingRequest& getRatingRequest) = default;
-    GetRatingRequest& operator=(GetRatingRequest&& getRatingRequest) = default;
+    GetRatingByUserIdRequest& operator=(const GetRatingByUserIdRequest& getRatingByUserIdRequest) = default;
+    GetRatingByUserIdRequest& operator=(GetRatingByUserIdRequest&& getRatingByUserIdRequest) = default;
 
-    GetRatingRequest deepCopy() const
+    GetRatingByUserIdRequest deepCopy() const
     {
-        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetRatingRequest);
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetRatingByUserIdRequest);
     }
 
-    const GetRatingRequest* operator->() const
+    const GetRatingByUserIdRequest* operator->() const
     {
         return this;
     }
 
-    GetRatingRequest* operator->()
+    GetRatingByUserIdRequest* operator->()
     {
         return this;
-    }
-
-    /**
-     * アクセストークンを取得。
-     *
-     * @return アクセストークン
-     */
-    const gs2::optional<StringHolder>& getAccessToken() const
-    {
-        return ensureData().accessToken;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     */
-    void setAccessToken(StringHolder accessToken)
-    {
-        ensureData().accessToken.emplace(std::move(accessToken));
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    GetRatingRequest& withAccessToken(StringHolder accessToken)
-    {
-        setAccessToken(std::move(accessToken));
-        return *this;
     }
 
     /**
@@ -164,9 +132,40 @@ public:
      *
      * @param namespaceName ネームスペース名
      */
-    GetRatingRequest& withNamespaceName(StringHolder namespaceName)
+    GetRatingByUserIdRequest& withNamespaceName(StringHolder namespaceName)
     {
         ensureData().namespaceName.emplace(std::move(namespaceName));
+        return *this;
+    }
+
+    /**
+     * ユーザーIDを取得
+     *
+     * @return ユーザーID
+     */
+    const optional<StringHolder>& getUserId() const
+    {
+        return ensureData().userId;
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    void setUserId(StringHolder userId)
+    {
+        ensureData().userId.emplace(std::move(userId));
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    GetRatingByUserIdRequest& withUserId(StringHolder userId)
+    {
+        ensureData().userId.emplace(std::move(userId));
         return *this;
     }
 
@@ -195,7 +194,7 @@ public:
      *
      * @param ratingName レーティング名
      */
-    GetRatingRequest& withRatingName(StringHolder ratingName)
+    GetRatingByUserIdRequest& withRatingName(StringHolder ratingName)
     {
         ensureData().ratingName.emplace(std::move(ratingName));
         return *this;
@@ -226,7 +225,7 @@ public:
      *
      * @param duplicationAvoider 重複実行回避機能に使用するID
      */
-    GetRatingRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
+    GetRatingByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
     {
         ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
         return *this;
@@ -239,7 +238,7 @@ public:
      *
      * @param gs2ClientId GS2認証クライアントID
      */
-    GetRatingRequest& withGs2ClientId(StringHolder gs2ClientId)
+    GetRatingByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
     {
         setGs2ClientId(std::move(gs2ClientId));
         return *this;
@@ -250,7 +249,7 @@ public:
      *
      * @param gs2RequestId GS2リクエストID
      */
-    GetRatingRequest& withRequestId(StringHolder gs2RequestId)
+    GetRatingByUserIdRequest& withRequestId(StringHolder gs2RequestId)
     {
         setRequestId(std::move(gs2RequestId));
         return *this;
@@ -259,4 +258,4 @@ public:
 
 } }
 
-#endif //GS2_MATCHMAKING_CONTROL_GETRATINGREQUEST_HPP_
+#endif //GS2_MATCHMAKING_CONTROL_GETRATINGBYUSERIDREQUEST_HPP_
