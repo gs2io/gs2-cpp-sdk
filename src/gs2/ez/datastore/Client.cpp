@@ -326,6 +326,44 @@ void Client::prepareDownloadOwnData(
     );
 }
 
+void Client::prepareDownloadByUserIdAndDataObjectName(
+    std::function<void(AsyncEzPrepareDownloadByUserIdAndDataObjectNameResult)> callback,
+    StringHolder namespaceName,
+    StringHolder userId,
+    StringHolder dataObjectName
+)
+{
+    gs2::datastore::PrepareDownloadByUserIdAndDataObjectNameRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setUserId(userId);
+    request.setDataObjectName(dataObjectName);
+    m_pClient->prepareDownloadByUserIdAndDataObjectName(
+        request,
+        [callback](gs2::datastore::AsyncPrepareDownloadByUserIdAndDataObjectNameResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzPrepareDownloadByUserIdAndDataObjectNameResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzPrepareDownloadByUserIdAndDataObjectNameResult::isConvertible(*r.getResult()))
+            {
+                EzPrepareDownloadByUserIdAndDataObjectNameResult ezResult(*r.getResult());
+                AsyncEzPrepareDownloadByUserIdAndDataObjectNameResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzPrepareDownloadByUserIdAndDataObjectNameResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
 void Client::deleteDataObject(
     std::function<void(AsyncEzDeleteDataObjectResult)> callback,
     GameSession& session,

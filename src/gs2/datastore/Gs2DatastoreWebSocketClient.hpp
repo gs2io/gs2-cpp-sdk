@@ -46,8 +46,9 @@
 #include "request/PrepareDownloadByGenerationRequest.hpp"
 #include "request/PrepareDownloadByGenerationAndUserIdRequest.hpp"
 #include "request/PrepareDownloadOwnDataRequest.hpp"
+#include "request/PrepareDownloadByUserIdAndDataObjectNameRequest.hpp"
 #include "request/PrepareDownloadOwnDataByGenerationRequest.hpp"
-#include "request/PrepareDownloadOwnDataByGenerationAndUserIdRequest.hpp"
+#include "request/PrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest.hpp"
 #include "request/DescribeDataObjectHistoriesRequest.hpp"
 #include "request/DescribeDataObjectHistoriesByUserIdRequest.hpp"
 #include "request/GetDataObjectHistoryRequest.hpp"
@@ -75,8 +76,9 @@
 #include "result/PrepareDownloadByGenerationResult.hpp"
 #include "result/PrepareDownloadByGenerationAndUserIdResult.hpp"
 #include "result/PrepareDownloadOwnDataResult.hpp"
+#include "result/PrepareDownloadByUserIdAndDataObjectNameResult.hpp"
 #include "result/PrepareDownloadOwnDataByGenerationResult.hpp"
-#include "result/PrepareDownloadOwnDataByGenerationAndUserIdResult.hpp"
+#include "result/PrepareDownloadByUserIdAndDataObjectNameAndGenerationResult.hpp"
 #include "result/DescribeDataObjectHistoriesResult.hpp"
 #include "result/DescribeDataObjectHistoriesByUserIdResult.hpp"
 #include "result/GetDataObjectHistoryResult.hpp"
@@ -1672,6 +1674,72 @@ private:
         ~PrepareDownloadOwnDataTask() GS2_OVERRIDE = default;
     };
 
+    class PrepareDownloadByUserIdAndDataObjectNameTask : public detail::Gs2WebSocketSessionTask<PrepareDownloadByUserIdAndDataObjectNameResult>
+    {
+    private:
+        PrepareDownloadByUserIdAndDataObjectNameRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "datastore";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "dataObject";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "prepareDownloadByUserIdAndDataObjectName";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getDataObjectName())
+            {
+                jsonWriter.writePropertyName("dataObjectName");
+                jsonWriter.writeCharArray(*m_Request.getDataObjectName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        PrepareDownloadByUserIdAndDataObjectNameTask(
+            PrepareDownloadByUserIdAndDataObjectNameRequest request,
+            Gs2WebSocketSessionTask<PrepareDownloadByUserIdAndDataObjectNameResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<PrepareDownloadByUserIdAndDataObjectNameResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~PrepareDownloadByUserIdAndDataObjectNameTask() GS2_OVERRIDE = default;
+    };
+
     class PrepareDownloadOwnDataByGenerationTask : public detail::Gs2WebSocketSessionTask<PrepareDownloadOwnDataByGenerationResult>
     {
     private:
@@ -1743,10 +1811,10 @@ private:
         ~PrepareDownloadOwnDataByGenerationTask() GS2_OVERRIDE = default;
     };
 
-    class PrepareDownloadOwnDataByGenerationAndUserIdTask : public detail::Gs2WebSocketSessionTask<PrepareDownloadOwnDataByGenerationAndUserIdResult>
+    class PrepareDownloadByUserIdAndDataObjectNameAndGenerationTask : public detail::Gs2WebSocketSessionTask<PrepareDownloadByUserIdAndDataObjectNameAndGenerationResult>
     {
     private:
-        PrepareDownloadOwnDataByGenerationAndUserIdRequest m_Request;
+        PrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest m_Request;
 
         const char* getServiceName() const GS2_OVERRIDE
         {
@@ -1760,7 +1828,7 @@ private:
 
         const char* getFunctionName() const GS2_OVERRIDE
         {
-            return "prepareDownloadOwnDataByGenerationAndUserId";
+            return "prepareDownloadByUserIdAndDataObjectNameAndGeneration";
         }
 
         void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
@@ -1803,15 +1871,15 @@ private:
         }
 
     public:
-        PrepareDownloadOwnDataByGenerationAndUserIdTask(
-            PrepareDownloadOwnDataByGenerationAndUserIdRequest request,
-            Gs2WebSocketSessionTask<PrepareDownloadOwnDataByGenerationAndUserIdResult>::CallbackType callback
+        PrepareDownloadByUserIdAndDataObjectNameAndGenerationTask(
+            PrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest request,
+            Gs2WebSocketSessionTask<PrepareDownloadByUserIdAndDataObjectNameAndGenerationResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<PrepareDownloadOwnDataByGenerationAndUserIdResult>(callback),
+            Gs2WebSocketSessionTask<PrepareDownloadByUserIdAndDataObjectNameAndGenerationResult>(callback),
             m_Request(std::move(request))
         {}
 
-        ~PrepareDownloadOwnDataByGenerationAndUserIdTask() GS2_OVERRIDE = default;
+        ~PrepareDownloadByUserIdAndDataObjectNameAndGenerationTask() GS2_OVERRIDE = default;
     };
 
     class DescribeDataObjectHistoriesTask : public detail::Gs2WebSocketSessionTask<DescribeDataObjectHistoriesResult>
@@ -2579,6 +2647,18 @@ public:
     }
 
 	/**
+	 * ユーザIDとオブジェクト名を指定してデータオブジェクトをダウンロード準備する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void prepareDownloadByUserIdAndDataObjectName(PrepareDownloadByUserIdAndDataObjectNameRequest request, std::function<void(AsyncPrepareDownloadByUserIdAndDataObjectNameResult)> callback)
+    {
+        PrepareDownloadByUserIdAndDataObjectNameTask& task = *new PrepareDownloadByUserIdAndDataObjectNameTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
 	 * データオブジェクトを世代を指定してダウンロード準備する<br>
 	 *
      * @param callback コールバック関数
@@ -2596,9 +2676,9 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void prepareDownloadOwnDataByGenerationAndUserId(PrepareDownloadOwnDataByGenerationAndUserIdRequest request, std::function<void(AsyncPrepareDownloadOwnDataByGenerationAndUserIdResult)> callback)
+    void prepareDownloadByUserIdAndDataObjectNameAndGeneration(PrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest request, std::function<void(AsyncPrepareDownloadByUserIdAndDataObjectNameAndGenerationResult)> callback)
     {
-        PrepareDownloadOwnDataByGenerationAndUserIdTask& task = *new PrepareDownloadOwnDataByGenerationAndUserIdTask(std::move(request), callback);
+        PrepareDownloadByUserIdAndDataObjectNameAndGenerationTask& task = *new PrepareDownloadByUserIdAndDataObjectNameAndGenerationTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

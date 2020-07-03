@@ -25,6 +25,7 @@
 #include "result/EzDoneUploadResult.hpp"
 #include "result/EzPrepareDownloadResult.hpp"
 #include "result/EzPrepareDownloadOwnDataResult.hpp"
+#include "result/EzPrepareDownloadByUserIdAndDataObjectNameResult.hpp"
 #include "result/EzDeleteDataObjectResult.hpp"
 #include "result/EzListDataObhectHistoriesResult.hpp"
 
@@ -175,6 +176,21 @@ public:
         std::function<void(AsyncEzPrepareDownloadOwnDataResult)> callback,
         GameSession& session,
         StringHolder namespaceName,
+        StringHolder dataObjectName
+    );
+
+    /// <summary>
+    ///  ユーザIDとデータ名を指定してデータをダウンロード<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="userId">ユーザーID</param>
+    /// <param name="dataObjectName">データの名前</param>
+    void prepareDownloadByUserIdAndDataObjectName(
+        std::function<void(AsyncEzPrepareDownloadByUserIdAndDataObjectNameResult)> callback,
+        StringHolder namespaceName,
+        StringHolder userId,
         StringHolder dataObjectName
     );
 
