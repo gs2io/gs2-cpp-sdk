@@ -44,6 +44,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         result/EzGetMoldResult.hpp
         result/EzListFormsResult.hpp
         result/EzGetFormResult.hpp
+        result/EzGetFormWithSignatureResult.hpp
         result/EzSetFormResult.hpp
         )
 

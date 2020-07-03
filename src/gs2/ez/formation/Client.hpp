@@ -24,6 +24,7 @@
 #include "result/EzGetMoldResult.hpp"
 #include "result/EzListFormsResult.hpp"
 #include "result/EzGetFormResult.hpp"
+#include "result/EzGetFormWithSignatureResult.hpp"
 #include "result/EzSetFormResult.hpp"
 
 
@@ -148,6 +149,26 @@ public:
         StringHolder namespaceName,
         StringHolder moldName,
         Int32 index
+    );
+
+    /// <summary>
+    ///  フォームを取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="moldName">フォームの保存領域の名前</param>
+    /// <param name="index">保存領域のインデックス</param>
+    /// <param name="keyId">署名の発行に使用する暗号鍵 のGRN</param>
+    void getFormWithSignature(
+        std::function<void(AsyncEzGetFormWithSignatureResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder moldName,
+        Int32 index,
+        StringHolder keyId
     );
 
     /// <summary>
