@@ -1639,7 +1639,7 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/user/{userId}/file";
+            url += "/{namespaceName}/user/{userId}/data/{dataObjectName}/file";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -1652,19 +1652,15 @@ private:
                 auto& value = m_Request.getDataObjectName();
                 url.replace("{dataObjectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
-            detail::json::JsonWriter jsonWriter;
 
-            jsonWriter.writeObjectStart();
+            Char joint[] = { '?', '\0' };
             if (m_Request.getContextStack())
             {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
             }
-            jsonWriter.writeObjectEnd();
-            {
-                gs2HttpTask.setBody(jsonWriter.toString());
-            }
-            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
 
             if (m_Request.getRequestId())
             {
@@ -1675,7 +1671,7 @@ private:
                 gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
             }
 
-            return detail::Gs2HttpTask::Verb::Post;
+            return detail::Gs2HttpTask::Verb::Get;
         }
 
     public:
