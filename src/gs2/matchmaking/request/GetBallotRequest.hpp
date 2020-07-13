@@ -49,7 +49,7 @@ private:
         optional<StringHolder> namespaceName;
         /** レーティング名 */
         optional<StringHolder> ratingName;
-        /** レーティング名 */
+        /** 投票対象のギャザリング名 */
         optional<StringHolder> gatheringName;
         /** 投票対象となる */
         optional<StringHolder> gatheringId;
@@ -214,9 +214,9 @@ public:
     }
 
     /**
-     * レーティング名を取得
+     * 投票対象のギャザリング名を取得
      *
-     * @return レーティング名
+     * @return 投票対象のギャザリング名
      */
     const optional<StringHolder>& getGatheringName() const
     {
@@ -224,9 +224,9 @@ public:
     }
 
     /**
-     * レーティング名を設定
+     * 投票対象のギャザリング名を設定
      *
-     * @param gatheringName レーティング名
+     * @param gatheringName 投票対象のギャザリング名
      */
     void setGatheringName(StringHolder gatheringName)
     {
@@ -234,9 +234,9 @@ public:
     }
 
     /**
-     * レーティング名を設定
+     * 投票対象のギャザリング名を設定
      *
-     * @param gatheringName レーティング名
+     * @param gatheringName 投票対象のギャザリング名
      */
     GetBallotRequest& withGatheringName(StringHolder gatheringName)
     {

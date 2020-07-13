@@ -32,7 +32,7 @@ namespace gs2 { namespace matchmaking
 {
 
 /**
- * 現在有効な所持品マスターのマスターデータをエクスポートします のレスポンスモデル
+ * 現在有効なレーティングマスターのマスターデータをエクスポートします のレスポンスモデル
  *
  * @author Game Server Services, Inc.
  */
@@ -42,7 +42,7 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** 現在有効な所持品マスター */
+        /** 現在有効なレーティングマスター */
         optional<CurrentRatingModelMaster> item;
 
         Data() = default;
@@ -103,9 +103,9 @@ public:
         return this;
     }
     /**
-     * 現在有効な所持品マスターを取得
+     * 現在有効なレーティングマスターを取得
      *
-     * @return 現在有効な所持品マスター
+     * @return 現在有効なレーティングマスター
      */
     const optional<CurrentRatingModelMaster>& getItem() const
     {
@@ -113,9 +113,9 @@ public:
     }
 
     /**
-     * 現在有効な所持品マスターを設定
+     * 現在有効なレーティングマスターを設定
      *
-     * @param item 現在有効な所持品マスター
+     * @param item 現在有効なレーティングマスター
      */
     void setItem(CurrentRatingModelMaster item)
     {

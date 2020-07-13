@@ -25,6 +25,7 @@
 #include "EzAttribute.hpp"
 #include "EzPlayer.hpp"
 #include "EzRating.hpp"
+#include "EzGameResult.hpp"
 #include "EzBallot.hpp"
 #include "EzSignedBallot.hpp"
 

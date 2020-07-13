@@ -30,7 +30,7 @@ namespace gs2 { namespace matchmaking
 {
 
 /**
- * 現在有効な所持品マスターを更新します のリクエストモデル
+ * 現在有効なレーティングマスターを更新します のリクエストモデル
  *
  * @author Game Server Services, Inc.
  */

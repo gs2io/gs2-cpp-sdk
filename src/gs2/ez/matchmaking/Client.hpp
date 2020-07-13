@@ -179,7 +179,7 @@ public:
     );
 
     /// <summary>
-    ///  投票用紙を取得<br />
+    ///  レーティング名を指定してレーティングを取得<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
@@ -218,7 +218,7 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="ratingName">レーティング名</param>
-    /// <param name="gatheringName">レーティング名</param>
+    /// <param name="gatheringName">投票対象のギャザリング名</param>
     void createVote(
         std::function<void(AsyncEzCreateVoteResult)> callback,
         GameSession& session,
@@ -228,7 +228,14 @@ public:
     );
 
     /// <summary>
-    ///  投票を実行<br />
+    ///  対戦結果を投票します。<br />
+    ///    <br />
+    ///    投票は最初の投票が行われてから5分以内に行う必要があります。<br />
+    ///    つまり、結果は即座に反映されず、投票開始からおよそ5分後または全てのプレイヤーが投票を行った際に結果が反映されます。<br />
+    ///    5分以内に全ての投票用紙を回収できなかった場合はその時点の投票内容で多数決をとって結果を決定します。<br />
+    ///    各結果の投票数が同一だった場合は結果は捨てられます（スクリプトで挙動を変更可）。<br />
+    ///    <br />
+    ///    結果を即座に反映したい場合は、勝利した側の代表プレイヤーが投票用紙を各プレイヤーから集めて voteMultiple を呼び出すことで結果を即座に反映できます。<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
@@ -245,7 +252,11 @@ public:
     );
 
     /// <summary>
-    ///  投票を実行<br />
+    ///  対戦結果をまとめて投票します。<br />
+    ///    <br />
+    ///    ゲームに勝利した側が他プレイヤーの投票用紙を集めてまとめて投票するのに使用します。<br />
+    ///    『勝利した側』としているのは、敗北した側が自分たちが勝ったことにして報告することにインセンティブはありますが、その逆はないためです。<br />
+    ///    負けた側が投票用紙を渡してこない可能性がありますが、その場合も過半数の投票用紙があれば結果を通すことができます。<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
