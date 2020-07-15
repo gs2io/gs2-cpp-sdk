@@ -29,11 +29,16 @@ EzPlayer::Data::Data(const Data& data) :
     {
         attributes = data.attributes->deepCopy();
     }
+    if (data.denyUserIds)
+    {
+        denyUserIds = data.denyUserIds->deepCopy();
+    }
 }
 
 EzPlayer::Data::Data(const gs2::matchmaking::Player& player) :
     userId(player.getUserId()),
-    roleName(player.getRoleName())
+    roleName(player.getRoleName()),
+    denyUserIds(player.getDenyUserIds())
 {
     attributes.emplace();
     if (player.getAttributes())
@@ -69,6 +74,7 @@ gs2::matchmaking::Player EzPlayer::ToModel() const
         player.setAttributes(list);
     }
     player.setRoleName(getRoleName());
+    player.setDenyUserIds(getDenyUserIds());
     return player;
 }
 

@@ -48,6 +48,8 @@ private:
         gs2::optional<List<EzAttribute>> attributes;
         /** ロール名 */
         gs2::optional<StringHolder> roleName;
+        /** 参加を拒否するユーザIDリスト */
+        gs2::optional<List<StringHolder>> denyUserIds;
 
         Data() = default;
         Data(const Data& data);
@@ -95,6 +97,11 @@ public:
         return *ensureData().roleName;
     }
 
+    const List<StringHolder>& getDenyUserIds() const
+    {
+        return *ensureData().denyUserIds;
+    }
+
     // ========================================
     //   Setters
     // ========================================
@@ -114,6 +121,11 @@ public:
         ensureData().roleName = std::move(roleName);
     }
 
+    void setDenyUserIds(List<StringHolder> denyUserIds)
+    {
+        ensureData().denyUserIds = std::move(denyUserIds);
+    }
+
     EzPlayer& withUserId(StringHolder userId)
     {
         setUserId(std::move(userId));
@@ -129,6 +141,12 @@ public:
     EzPlayer& withRoleName(StringHolder roleName)
     {
         setRoleName(std::move(roleName));
+        return *this;
+    }
+
+    EzPlayer& withDenyUserIds(List<StringHolder> denyUserIds)
+    {
+        setDenyUserIds(std::move(denyUserIds));
         return *this;
     }
 };
