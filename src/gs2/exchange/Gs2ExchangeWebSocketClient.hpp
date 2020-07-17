@@ -38,10 +38,25 @@
 #include "request/DeleteRateModelMasterRequest.hpp"
 #include "request/ExchangeRequest.hpp"
 #include "request/ExchangeByUserIdRequest.hpp"
+#include "request/ExchangeByStampSheetRequest.hpp"
 #include "request/ExportMasterRequest.hpp"
 #include "request/GetCurrentRateMasterRequest.hpp"
 #include "request/UpdateCurrentRateMasterRequest.hpp"
 #include "request/UpdateCurrentRateMasterFromGitHubRequest.hpp"
+#include "request/CreateAwaitByUserIdRequest.hpp"
+#include "request/DescribeAwaitsRequest.hpp"
+#include "request/DescribeAwaitsByUserIdRequest.hpp"
+#include "request/GetAwaitRequest.hpp"
+#include "request/GetAwaitByUserIdRequest.hpp"
+#include "request/AcquireRequest.hpp"
+#include "request/AcquireByUserIdRequest.hpp"
+#include "request/AcquireForceByUserIdRequest.hpp"
+#include "request/SkipRequest.hpp"
+#include "request/SkipByUserIdRequest.hpp"
+#include "request/DeleteAwaitRequest.hpp"
+#include "request/DeleteAwaitByUserIdRequest.hpp"
+#include "request/CreateAwaitByStampSheetRequest.hpp"
+#include "request/DeleteAwaitByStampTaskRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -57,10 +72,25 @@
 #include "result/DeleteRateModelMasterResult.hpp"
 #include "result/ExchangeResult.hpp"
 #include "result/ExchangeByUserIdResult.hpp"
+#include "result/ExchangeByStampSheetResult.hpp"
 #include "result/ExportMasterResult.hpp"
 #include "result/GetCurrentRateMasterResult.hpp"
 #include "result/UpdateCurrentRateMasterResult.hpp"
 #include "result/UpdateCurrentRateMasterFromGitHubResult.hpp"
+#include "result/CreateAwaitByUserIdResult.hpp"
+#include "result/DescribeAwaitsResult.hpp"
+#include "result/DescribeAwaitsByUserIdResult.hpp"
+#include "result/GetAwaitResult.hpp"
+#include "result/GetAwaitByUserIdResult.hpp"
+#include "result/AcquireResult.hpp"
+#include "result/AcquireByUserIdResult.hpp"
+#include "result/AcquireForceByUserIdResult.hpp"
+#include "result/SkipResult.hpp"
+#include "result/SkipByUserIdResult.hpp"
+#include "result/DeleteAwaitResult.hpp"
+#include "result/DeleteAwaitByUserIdResult.hpp"
+#include "result/CreateAwaitByStampSheetResult.hpp"
+#include "result/DeleteAwaitByStampTaskResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace exchange {
@@ -167,6 +197,16 @@ private:
             {
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getEnableAwaitExchange())
+            {
+                jsonWriter.writePropertyName("enableAwaitExchange");
+                jsonWriter.writeBool(*m_Request.getEnableAwaitExchange());
+            }
+            if (m_Request.getEnableDirectExchange())
+            {
+                jsonWriter.writePropertyName("enableDirectExchange");
+                jsonWriter.writeBool(*m_Request.getEnableDirectExchange());
             }
             if (m_Request.getQueueNamespaceId())
             {
@@ -340,6 +380,16 @@ private:
             {
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getEnableAwaitExchange())
+            {
+                jsonWriter.writePropertyName("enableAwaitExchange");
+                jsonWriter.writeBool(*m_Request.getEnableAwaitExchange());
+            }
+            if (m_Request.getEnableDirectExchange())
+            {
+                jsonWriter.writePropertyName("enableDirectExchange");
+                jsonWriter.writeBool(*m_Request.getEnableDirectExchange());
             }
             if (m_Request.getQueueNamespaceId())
             {
@@ -641,6 +691,32 @@ private:
                 jsonWriter.writePropertyName("metadata");
                 jsonWriter.writeCharArray(*m_Request.getMetadata());
             }
+            if (m_Request.getTimingType())
+            {
+                jsonWriter.writePropertyName("timingType");
+                jsonWriter.writeCharArray(*m_Request.getTimingType());
+            }
+            if (m_Request.getLockTime())
+            {
+                jsonWriter.writePropertyName("lockTime");
+                jsonWriter.writeInt32(*m_Request.getLockTime());
+            }
+            if (m_Request.getEnableSkip())
+            {
+                jsonWriter.writePropertyName("enableSkip");
+                jsonWriter.writeBool(*m_Request.getEnableSkip());
+            }
+            if (m_Request.getSkipConsumeActions())
+            {
+                jsonWriter.writePropertyName("skipConsumeActions");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getSkipConsumeActions();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
             if (m_Request.getAcquireActions())
             {
                 jsonWriter.writePropertyName("acquireActions");
@@ -784,6 +860,32 @@ private:
             {
                 jsonWriter.writePropertyName("metadata");
                 jsonWriter.writeCharArray(*m_Request.getMetadata());
+            }
+            if (m_Request.getTimingType())
+            {
+                jsonWriter.writePropertyName("timingType");
+                jsonWriter.writeCharArray(*m_Request.getTimingType());
+            }
+            if (m_Request.getLockTime())
+            {
+                jsonWriter.writePropertyName("lockTime");
+                jsonWriter.writeInt32(*m_Request.getLockTime());
+            }
+            if (m_Request.getEnableSkip())
+            {
+                jsonWriter.writePropertyName("enableSkip");
+                jsonWriter.writeBool(*m_Request.getEnableSkip());
+            }
+            if (m_Request.getSkipConsumeActions())
+            {
+                jsonWriter.writePropertyName("skipConsumeActions");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getSkipConsumeActions();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
             }
             if (m_Request.getAcquireActions())
             {
@@ -1046,6 +1148,67 @@ private:
         ~ExchangeByUserIdTask() GS2_OVERRIDE = default;
     };
 
+    class ExchangeByStampSheetTask : public detail::Gs2WebSocketSessionTask<ExchangeByStampSheetResult>
+    {
+    private:
+        ExchangeByStampSheetRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "exchangeByStampSheet";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        ExchangeByStampSheetTask(
+            ExchangeByStampSheetRequest request,
+            Gs2WebSocketSessionTask<ExchangeByStampSheetResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<ExchangeByStampSheetResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~ExchangeByStampSheetTask() GS2_OVERRIDE = default;
+    };
+
     class ExportMasterTask : public detail::Gs2WebSocketSessionTask<ExportMasterResult>
     {
     private:
@@ -1260,6 +1423,1045 @@ private:
         ~UpdateCurrentRateMasterFromGitHubTask() GS2_OVERRIDE = default;
     };
 
+    class CreateAwaitByUserIdTask : public detail::Gs2WebSocketSessionTask<CreateAwaitByUserIdResult>
+    {
+    private:
+        CreateAwaitByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "await";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "createAwaitByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRateName())
+            {
+                jsonWriter.writePropertyName("rateName");
+                jsonWriter.writeCharArray(*m_Request.getRateName());
+            }
+            if (m_Request.getCount())
+            {
+                jsonWriter.writePropertyName("count");
+                jsonWriter.writeInt32(*m_Request.getCount());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        CreateAwaitByUserIdTask(
+            CreateAwaitByUserIdRequest request,
+            Gs2WebSocketSessionTask<CreateAwaitByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<CreateAwaitByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateAwaitByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeAwaitsTask : public detail::Gs2WebSocketSessionTask<DescribeAwaitsResult>
+    {
+    private:
+        DescribeAwaitsRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "await";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeAwaits";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRateName())
+            {
+                jsonWriter.writePropertyName("rateName");
+                jsonWriter.writeCharArray(*m_Request.getRateName());
+            }
+            if (m_Request.getPageToken())
+            {
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DescribeAwaitsTask(
+            DescribeAwaitsRequest request,
+            Gs2WebSocketSessionTask<DescribeAwaitsResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeAwaitsResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeAwaitsTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeAwaitsByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeAwaitsByUserIdResult>
+    {
+    private:
+        DescribeAwaitsByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "await";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeAwaitsByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRateName())
+            {
+                jsonWriter.writePropertyName("rateName");
+                jsonWriter.writeCharArray(*m_Request.getRateName());
+            }
+            if (m_Request.getPageToken())
+            {
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DescribeAwaitsByUserIdTask(
+            DescribeAwaitsByUserIdRequest request,
+            Gs2WebSocketSessionTask<DescribeAwaitsByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeAwaitsByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeAwaitsByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class GetAwaitTask : public detail::Gs2WebSocketSessionTask<GetAwaitResult>
+    {
+    private:
+        GetAwaitRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "await";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getAwait";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRateName())
+            {
+                jsonWriter.writePropertyName("rateName");
+                jsonWriter.writeCharArray(*m_Request.getRateName());
+            }
+            if (m_Request.getAwaitName())
+            {
+                jsonWriter.writePropertyName("awaitName");
+                jsonWriter.writeCharArray(*m_Request.getAwaitName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetAwaitTask(
+            GetAwaitRequest request,
+            Gs2WebSocketSessionTask<GetAwaitResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetAwaitResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetAwaitTask() GS2_OVERRIDE = default;
+    };
+
+    class GetAwaitByUserIdTask : public detail::Gs2WebSocketSessionTask<GetAwaitByUserIdResult>
+    {
+    private:
+        GetAwaitByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "await";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getAwaitByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRateName())
+            {
+                jsonWriter.writePropertyName("rateName");
+                jsonWriter.writeCharArray(*m_Request.getRateName());
+            }
+            if (m_Request.getAwaitName())
+            {
+                jsonWriter.writePropertyName("awaitName");
+                jsonWriter.writeCharArray(*m_Request.getAwaitName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetAwaitByUserIdTask(
+            GetAwaitByUserIdRequest request,
+            Gs2WebSocketSessionTask<GetAwaitByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetAwaitByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetAwaitByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class AcquireTask : public detail::Gs2WebSocketSessionTask<AcquireResult>
+    {
+    private:
+        AcquireRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "await";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "acquire";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRateName())
+            {
+                jsonWriter.writePropertyName("rateName");
+                jsonWriter.writeCharArray(*m_Request.getRateName());
+            }
+            if (m_Request.getAwaitName())
+            {
+                jsonWriter.writePropertyName("awaitName");
+                jsonWriter.writeCharArray(*m_Request.getAwaitName());
+            }
+            if (m_Request.getConfig())
+            {
+                jsonWriter.writePropertyName("config");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getConfig();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        AcquireTask(
+            AcquireRequest request,
+            Gs2WebSocketSessionTask<AcquireResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<AcquireResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~AcquireTask() GS2_OVERRIDE = default;
+    };
+
+    class AcquireByUserIdTask : public detail::Gs2WebSocketSessionTask<AcquireByUserIdResult>
+    {
+    private:
+        AcquireByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "await";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "acquireByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRateName())
+            {
+                jsonWriter.writePropertyName("rateName");
+                jsonWriter.writeCharArray(*m_Request.getRateName());
+            }
+            if (m_Request.getAwaitName())
+            {
+                jsonWriter.writePropertyName("awaitName");
+                jsonWriter.writeCharArray(*m_Request.getAwaitName());
+            }
+            if (m_Request.getConfig())
+            {
+                jsonWriter.writePropertyName("config");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getConfig();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        AcquireByUserIdTask(
+            AcquireByUserIdRequest request,
+            Gs2WebSocketSessionTask<AcquireByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<AcquireByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~AcquireByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class AcquireForceByUserIdTask : public detail::Gs2WebSocketSessionTask<AcquireForceByUserIdResult>
+    {
+    private:
+        AcquireForceByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "await";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "acquireForceByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRateName())
+            {
+                jsonWriter.writePropertyName("rateName");
+                jsonWriter.writeCharArray(*m_Request.getRateName());
+            }
+            if (m_Request.getAwaitName())
+            {
+                jsonWriter.writePropertyName("awaitName");
+                jsonWriter.writeCharArray(*m_Request.getAwaitName());
+            }
+            if (m_Request.getConfig())
+            {
+                jsonWriter.writePropertyName("config");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getConfig();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        AcquireForceByUserIdTask(
+            AcquireForceByUserIdRequest request,
+            Gs2WebSocketSessionTask<AcquireForceByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<AcquireForceByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~AcquireForceByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class SkipTask : public detail::Gs2WebSocketSessionTask<SkipResult>
+    {
+    private:
+        SkipRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "await";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "skip";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRateName())
+            {
+                jsonWriter.writePropertyName("rateName");
+                jsonWriter.writeCharArray(*m_Request.getRateName());
+            }
+            if (m_Request.getAwaitName())
+            {
+                jsonWriter.writePropertyName("awaitName");
+                jsonWriter.writeCharArray(*m_Request.getAwaitName());
+            }
+            if (m_Request.getConfig())
+            {
+                jsonWriter.writePropertyName("config");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getConfig();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        SkipTask(
+            SkipRequest request,
+            Gs2WebSocketSessionTask<SkipResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<SkipResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~SkipTask() GS2_OVERRIDE = default;
+    };
+
+    class SkipByUserIdTask : public detail::Gs2WebSocketSessionTask<SkipByUserIdResult>
+    {
+    private:
+        SkipByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "await";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "skipByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRateName())
+            {
+                jsonWriter.writePropertyName("rateName");
+                jsonWriter.writeCharArray(*m_Request.getRateName());
+            }
+            if (m_Request.getAwaitName())
+            {
+                jsonWriter.writePropertyName("awaitName");
+                jsonWriter.writeCharArray(*m_Request.getAwaitName());
+            }
+            if (m_Request.getConfig())
+            {
+                jsonWriter.writePropertyName("config");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getConfig();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        SkipByUserIdTask(
+            SkipByUserIdRequest request,
+            Gs2WebSocketSessionTask<SkipByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<SkipByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~SkipByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteAwaitTask : public detail::Gs2WebSocketSessionTask<DeleteAwaitResult>
+    {
+    private:
+        DeleteAwaitRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "await";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteAwait";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRateName())
+            {
+                jsonWriter.writePropertyName("rateName");
+                jsonWriter.writeCharArray(*m_Request.getRateName());
+            }
+            if (m_Request.getAwaitName())
+            {
+                jsonWriter.writePropertyName("awaitName");
+                jsonWriter.writeCharArray(*m_Request.getAwaitName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DeleteAwaitTask(
+            DeleteAwaitRequest request,
+            Gs2WebSocketSessionTask<DeleteAwaitResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DeleteAwaitResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteAwaitTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteAwaitByUserIdTask : public detail::Gs2WebSocketSessionTask<DeleteAwaitByUserIdResult>
+    {
+    private:
+        DeleteAwaitByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "await";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteAwaitByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRateName())
+            {
+                jsonWriter.writePropertyName("rateName");
+                jsonWriter.writeCharArray(*m_Request.getRateName());
+            }
+            if (m_Request.getAwaitName())
+            {
+                jsonWriter.writePropertyName("awaitName");
+                jsonWriter.writeCharArray(*m_Request.getAwaitName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DeleteAwaitByUserIdTask(
+            DeleteAwaitByUserIdRequest request,
+            Gs2WebSocketSessionTask<DeleteAwaitByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DeleteAwaitByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteAwaitByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateAwaitByStampSheetTask : public detail::Gs2WebSocketSessionTask<CreateAwaitByStampSheetResult>
+    {
+    private:
+        CreateAwaitByStampSheetRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "await";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "createAwaitByStampSheet";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        CreateAwaitByStampSheetTask(
+            CreateAwaitByStampSheetRequest request,
+            Gs2WebSocketSessionTask<CreateAwaitByStampSheetResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<CreateAwaitByStampSheetResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateAwaitByStampSheetTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteAwaitByStampTaskTask : public detail::Gs2WebSocketSessionTask<DeleteAwaitByStampTaskResult>
+    {
+    private:
+        DeleteAwaitByStampTaskRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "exchange";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "await";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteAwaitByStampTask";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampTask())
+            {
+                jsonWriter.writePropertyName("stampTask");
+                jsonWriter.writeCharArray(*m_Request.getStampTask());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DeleteAwaitByStampTaskTask(
+            DeleteAwaitByStampTaskRequest request,
+            Gs2WebSocketSessionTask<DeleteAwaitByStampTaskResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DeleteAwaitByStampTaskResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteAwaitByStampTaskTask() GS2_OVERRIDE = default;
+    };
+
 protected:
     static void write(detail::json::JsonWriter& jsonWriter, const Namespace& obj)
     {
@@ -1284,6 +2486,16 @@ protected:
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
         }
+        if (obj.getEnableDirectExchange())
+        {
+            jsonWriter.writePropertyName("enableDirectExchange");
+            jsonWriter.writeBool(*obj.getEnableDirectExchange());
+        }
+        if (obj.getEnableAwaitExchange())
+        {
+            jsonWriter.writePropertyName("enableAwaitExchange");
+            jsonWriter.writeBool(*obj.getEnableAwaitExchange());
+        }
         if (obj.getQueueNamespaceId())
         {
             jsonWriter.writePropertyName("queueNamespaceId");
@@ -1298,6 +2510,11 @@ protected:
         {
             jsonWriter.writePropertyName("logSetting");
             write(jsonWriter, *obj.getLogSetting());
+        }
+        if (obj.getStatus())
+        {
+            jsonWriter.writePropertyName("status");
+            jsonWriter.writeCharArray(*obj.getStatus());
         }
         if (obj.getCreatedAt())
         {
@@ -1335,6 +2552,32 @@ protected:
             jsonWriter.writePropertyName("consumeActions");
             jsonWriter.writeArrayStart();
             auto& list = *obj.getConsumeActions();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(jsonWriter, list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getTimingType())
+        {
+            jsonWriter.writePropertyName("timingType");
+            jsonWriter.writeCharArray(*obj.getTimingType());
+        }
+        if (obj.getLockTime())
+        {
+            jsonWriter.writePropertyName("lockTime");
+            jsonWriter.writeInt32(*obj.getLockTime());
+        }
+        if (obj.getEnableSkip())
+        {
+            jsonWriter.writePropertyName("enableSkip");
+            jsonWriter.writeBool(*obj.getEnableSkip());
+        }
+        if (obj.getSkipConsumeActions())
+        {
+            jsonWriter.writePropertyName("skipConsumeActions");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getSkipConsumeActions();
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
                 write(jsonWriter, list[i]);
@@ -1389,6 +2632,32 @@ protected:
             }
             jsonWriter.writeArrayEnd();
         }
+        if (obj.getTimingType())
+        {
+            jsonWriter.writePropertyName("timingType");
+            jsonWriter.writeCharArray(*obj.getTimingType());
+        }
+        if (obj.getLockTime())
+        {
+            jsonWriter.writePropertyName("lockTime");
+            jsonWriter.writeInt32(*obj.getLockTime());
+        }
+        if (obj.getEnableSkip())
+        {
+            jsonWriter.writePropertyName("enableSkip");
+            jsonWriter.writeBool(*obj.getEnableSkip());
+        }
+        if (obj.getSkipConsumeActions())
+        {
+            jsonWriter.writePropertyName("skipConsumeActions");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getSkipConsumeActions();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(jsonWriter, list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
         if (obj.getAcquireActions())
         {
             jsonWriter.writePropertyName("acquireActions");
@@ -1425,6 +2694,42 @@ protected:
         {
             jsonWriter.writePropertyName("settings");
             jsonWriter.writeCharArray(*obj.getSettings());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const Await& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getAwaitId())
+        {
+            jsonWriter.writePropertyName("awaitId");
+            jsonWriter.writeCharArray(*obj.getAwaitId());
+        }
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getRateName())
+        {
+            jsonWriter.writePropertyName("rateName");
+            jsonWriter.writeCharArray(*obj.getRateName());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getCount())
+        {
+            jsonWriter.writePropertyName("count");
+            jsonWriter.writeInt32(*obj.getCount());
+        }
+        if (obj.getExchangedAt())
+        {
+            jsonWriter.writePropertyName("exchangedAt");
+            jsonWriter.writeInt64(*obj.getExchangedAt());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -1753,6 +3058,18 @@ public:
     }
 
 	/**
+	 * スタンプシートで交換を実行<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void exchangeByStampSheet(ExchangeByStampSheetRequest request, std::function<void(AsyncExchangeByStampSheetResult)> callback)
+    {
+        ExchangeByStampSheetTask& task = *new ExchangeByStampSheetTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
 	 * 現在有効な交換レート設定のマスターデータをエクスポートします<br>
 	 *
      * @param callback コールバック関数
@@ -1797,6 +3114,174 @@ public:
     void updateCurrentRateMasterFromGitHub(UpdateCurrentRateMasterFromGitHubRequest request, std::function<void(AsyncUpdateCurrentRateMasterFromGitHubResult)> callback)
     {
         UpdateCurrentRateMasterFromGitHubTask& task = *new UpdateCurrentRateMasterFromGitHubTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 交換待機を作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createAwaitByUserId(CreateAwaitByUserIdRequest request, std::function<void(AsyncCreateAwaitByUserIdResult)> callback)
+    {
+        CreateAwaitByUserIdTask& task = *new CreateAwaitByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 交換待機の一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeAwaits(DescribeAwaitsRequest request, std::function<void(AsyncDescribeAwaitsResult)> callback)
+    {
+        DescribeAwaitsTask& task = *new DescribeAwaitsTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 交換待機の一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeAwaitsByUserId(DescribeAwaitsByUserIdRequest request, std::function<void(AsyncDescribeAwaitsByUserIdResult)> callback)
+    {
+        DescribeAwaitsByUserIdTask& task = *new DescribeAwaitsByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 交換待機を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getAwait(GetAwaitRequest request, std::function<void(AsyncGetAwaitResult)> callback)
+    {
+        GetAwaitTask& task = *new GetAwaitTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 交換待機を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getAwaitByUserId(GetAwaitByUserIdRequest request, std::function<void(AsyncGetAwaitByUserIdResult)> callback)
+    {
+        GetAwaitByUserIdTask& task = *new GetAwaitByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 交換待機の報酬を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void acquire(AcquireRequest request, std::function<void(AsyncAcquireResult)> callback)
+    {
+        AcquireTask& task = *new AcquireTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 交換待機の報酬を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void acquireByUserId(AcquireByUserIdRequest request, std::function<void(AsyncAcquireByUserIdResult)> callback)
+    {
+        AcquireByUserIdTask& task = *new AcquireByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 交換待機の報酬を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void acquireForceByUserId(AcquireForceByUserIdRequest request, std::function<void(AsyncAcquireForceByUserIdResult)> callback)
+    {
+        AcquireForceByUserIdTask& task = *new AcquireForceByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 交換待機を対価を払ってスキップ<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void skip(SkipRequest request, std::function<void(AsyncSkipResult)> callback)
+    {
+        SkipTask& task = *new SkipTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 交換待機を対価を払ってスキップ<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void skipByUserId(SkipByUserIdRequest request, std::function<void(AsyncSkipByUserIdResult)> callback)
+    {
+        SkipByUserIdTask& task = *new SkipByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 交換待機を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteAwait(DeleteAwaitRequest request, std::function<void(AsyncDeleteAwaitResult)> callback)
+    {
+        DeleteAwaitTask& task = *new DeleteAwaitTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 交換待機を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteAwaitByUserId(DeleteAwaitByUserIdRequest request, std::function<void(AsyncDeleteAwaitByUserIdResult)> callback)
+    {
+        DeleteAwaitByUserIdTask& task = *new DeleteAwaitByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタンプシートで交換待機 を作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createAwaitByStampSheet(CreateAwaitByStampSheetRequest request, std::function<void(AsyncCreateAwaitByStampSheetResult)> callback)
+    {
+        CreateAwaitByStampSheetTask& task = *new CreateAwaitByStampSheetTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタンプタスクで 交換待機 を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteAwaitByStampTask(DeleteAwaitByStampTaskRequest request, std::function<void(AsyncDeleteAwaitByStampTaskResult)> callback)
+    {
+        DeleteAwaitByStampTaskTask& task = *new DeleteAwaitByStampTaskTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
