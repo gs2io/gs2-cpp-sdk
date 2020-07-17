@@ -1208,6 +1208,11 @@ protected:
             jsonWriter.writePropertyName("firehoseStreamName");
             jsonWriter.writeCharArray(*obj.getFirehoseStreamName());
         }
+        if (obj.getStatus())
+        {
+            jsonWriter.writePropertyName("status");
+            jsonWriter.writeCharArray(*obj.getStatus());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
