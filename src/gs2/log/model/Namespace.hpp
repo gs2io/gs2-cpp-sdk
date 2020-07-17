@@ -67,6 +67,8 @@ private:
         optional<StringHolder> awsSecretAccessKey;
         /** Kinesis Firehose のストリーム名 */
         optional<StringHolder> firehoseStreamName;
+        /** None */
+        optional<StringHolder> status;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -88,6 +90,7 @@ private:
             awsAccessKeyId(data.awsAccessKeyId),
             awsSecretAccessKey(data.awsSecretAccessKey),
             firehoseStreamName(data.firehoseStreamName),
+            status(data.status),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
@@ -184,6 +187,13 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->firehoseStreamName.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "status") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->status.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -601,6 +611,37 @@ public:
     }
 
     /**
+     * Noneを取得
+     *
+     * @return None
+     */
+    const optional<StringHolder>& getStatus() const
+    {
+        return ensureData().status;
+    }
+
+    /**
+     * Noneを設定
+     *
+     * @param status None
+     */
+    void setStatus(StringHolder status)
+    {
+        ensureData().status.emplace(std::move(status));
+    }
+
+    /**
+     * Noneを設定
+     *
+     * @param status None
+     */
+    Namespace& withStatus(StringHolder status)
+    {
+        setStatus(std::move(status));
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -722,6 +763,10 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
             return true;
         }
         if (lhs.m_pData->firehoseStreamName != lhr.m_pData->firehoseStreamName)
+        {
+            return true;
+        }
+        if (lhs.m_pData->status != lhr.m_pData->status)
         {
             return true;
         }
