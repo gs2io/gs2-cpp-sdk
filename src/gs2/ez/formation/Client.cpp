@@ -278,6 +278,48 @@ void Client::getForm(
     );
 }
 
+void Client::getFormWithSignature(
+    std::function<void(AsyncEzGetFormWithSignatureResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder moldName,
+    Int32 index,
+    StringHolder keyId
+)
+{
+    gs2::formation::GetFormWithSignatureRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setMoldName(moldName);
+    request.setIndex(index);
+    request.setKeyId(keyId);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->getFormWithSignature(
+        request,
+        [callback](gs2::formation::AsyncGetFormWithSignatureResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetFormWithSignatureResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetFormWithSignatureResult::isConvertible(*r.getResult()))
+            {
+                EzGetFormWithSignatureResult ezResult(*r.getResult());
+                AsyncEzGetFormWithSignatureResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetFormWithSignatureResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
 void Client::setForm(
     std::function<void(AsyncEzSetFormResult)> callback,
     GameSession& session,
