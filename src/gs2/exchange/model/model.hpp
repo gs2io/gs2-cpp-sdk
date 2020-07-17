@@ -23,6 +23,7 @@
 #include "RateModel.hpp"
 #include "RateModelMaster.hpp"
 #include "CurrentRateMaster.hpp"
+#include "Await.hpp"
 #include "ResponseCache.hpp"
 #include "Config.hpp"
 #include "GitHubCheckoutSetting.hpp"

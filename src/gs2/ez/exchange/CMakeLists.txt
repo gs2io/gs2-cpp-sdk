@@ -24,6 +24,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzRateModel.hpp
         model/EzRateModelMaster.hpp
         model/EzCurrentRateMaster.hpp
+        model/EzAwait.hpp
         model/EzResponseCache.hpp
         model/EzConfig.hpp
         model/EzGitHubCheckoutSetting.hpp
@@ -33,6 +34,11 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         result/EzListRateModelsResult.hpp
         result/EzGetRateModelResult.hpp
         result/EzExchangeResult.hpp
+        result/EzListAwaitsResult.hpp
+        result/EzGetAwaitResult.hpp
+        result/EzAcquireResult.hpp
+        result/EzSkipResult.hpp
+        result/EzDeleteAwaitResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
@@ -41,6 +47,7 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         model/EzRateModel.cpp
         model/EzRateModelMaster.cpp
         model/EzCurrentRateMaster.cpp
+        model/EzAwait.cpp
         model/EzResponseCache.cpp
         model/EzConfig.cpp
         model/EzGitHubCheckoutSetting.cpp

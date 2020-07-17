@@ -21,6 +21,11 @@
 #include "result/EzListRateModelsResult.hpp"
 #include "result/EzGetRateModelResult.hpp"
 #include "result/EzExchangeResult.hpp"
+#include "result/EzListAwaitsResult.hpp"
+#include "result/EzGetAwaitResult.hpp"
+#include "result/EzAcquireResult.hpp"
+#include "result/EzSkipResult.hpp"
+#include "result/EzDeleteAwaitResult.hpp"
 
 
 namespace gs2 {
@@ -90,6 +95,77 @@ public:
         StringHolder rateName,
         Int32 count,
         gs2::optional<List<EzConfig>> config=gs2::nullopt
+    );
+
+    /// <summary>
+    ///  交換待機情報の一覧を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    void listAwaits(
+        std::function<void(AsyncEzListAwaitsResult)> callback,
+        StringHolder namespaceName
+    );
+
+    /// <summary>
+    ///  交換待機情報を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="userId">ユーザーID</param>
+    /// <param name="awaitName">交換待機の名前</param>
+    void getAwait(
+        std::function<void(AsyncEzGetAwaitResult)> callback,
+        StringHolder namespaceName,
+        StringHolder userId,
+        StringHolder awaitName
+    );
+
+    /// <summary>
+    ///  交換待機の報酬を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="userId">ユーザーID</param>
+    /// <param name="awaitName">交換待機の名前</param>
+    void acquire(
+        std::function<void(AsyncEzAcquireResult)> callback,
+        StringHolder namespaceName,
+        StringHolder userId,
+        StringHolder awaitName
+    );
+
+    /// <summary>
+    ///  交換待機を対価を払ってスキップ<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="userId">ユーザーID</param>
+    /// <param name="awaitName">交換待機の名前</param>
+    void skip(
+        std::function<void(AsyncEzSkipResult)> callback,
+        StringHolder namespaceName,
+        StringHolder userId,
+        StringHolder awaitName
+    );
+
+    /// <summary>
+    ///  交換待機情報を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="userId">ユーザーID</param>
+    /// <param name="awaitName">交換待機の名前</param>
+    void deleteAwait(
+        std::function<void(AsyncEzDeleteAwaitResult)> callback,
+        StringHolder namespaceName,
+        StringHolder userId,
+        StringHolder awaitName
     );
 };
 

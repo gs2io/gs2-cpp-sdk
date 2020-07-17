@@ -51,6 +51,14 @@ private:
         optional<StringHolder> description;
         /** 交換レートのメタデータ */
         optional<StringHolder> metadata;
+        /** 交換の種類 */
+        optional<StringHolder> timingType;
+        /** 交換実行から実際に報酬を受け取れるようになるまでの待ち時間（分） */
+        optional<Int32> lockTime;
+        /** スキップをすることができるか */
+        optional<Bool> enableSkip;
+        /** 時短消費アクションリスト */
+        optional<List<ConsumeAction>> skipConsumeActions;
         /** 入手アクションリスト */
         optional<List<AcquireAction>> acquireActions;
         /** 消費アクションリスト */
@@ -63,8 +71,15 @@ private:
             namespaceName(data.namespaceName),
             rateName(data.rateName),
             description(data.description),
-            metadata(data.metadata)
+            metadata(data.metadata),
+            timingType(data.timingType),
+            lockTime(data.lockTime),
+            enableSkip(data.enableSkip)
         {
+            if (data.skipConsumeActions)
+            {
+                skipConsumeActions = data.skipConsumeActions->deepCopy();
+            }
             if (data.acquireActions)
             {
                 acquireActions = data.acquireActions->deepCopy();
@@ -240,6 +255,130 @@ public:
     UpdateRateModelMasterRequest& withMetadata(StringHolder metadata)
     {
         ensureData().metadata.emplace(std::move(metadata));
+        return *this;
+    }
+
+    /**
+     * 交換の種類を取得
+     *
+     * @return 交換の種類
+     */
+    const optional<StringHolder>& getTimingType() const
+    {
+        return ensureData().timingType;
+    }
+
+    /**
+     * 交換の種類を設定
+     *
+     * @param timingType 交換の種類
+     */
+    void setTimingType(StringHolder timingType)
+    {
+        ensureData().timingType.emplace(std::move(timingType));
+    }
+
+    /**
+     * 交換の種類を設定
+     *
+     * @param timingType 交換の種類
+     */
+    UpdateRateModelMasterRequest& withTimingType(StringHolder timingType)
+    {
+        ensureData().timingType.emplace(std::move(timingType));
+        return *this;
+    }
+
+    /**
+     * 交換実行から実際に報酬を受け取れるようになるまでの待ち時間（分）を取得
+     *
+     * @return 交換実行から実際に報酬を受け取れるようになるまでの待ち時間（分）
+     */
+    const optional<Int32>& getLockTime() const
+    {
+        return ensureData().lockTime;
+    }
+
+    /**
+     * 交換実行から実際に報酬を受け取れるようになるまでの待ち時間（分）を設定
+     *
+     * @param lockTime 交換実行から実際に報酬を受け取れるようになるまでの待ち時間（分）
+     */
+    void setLockTime(Int32 lockTime)
+    {
+        ensureData().lockTime.emplace(lockTime);
+    }
+
+    /**
+     * 交換実行から実際に報酬を受け取れるようになるまでの待ち時間（分）を設定
+     *
+     * @param lockTime 交換実行から実際に報酬を受け取れるようになるまでの待ち時間（分）
+     */
+    UpdateRateModelMasterRequest& withLockTime(Int32 lockTime)
+    {
+        ensureData().lockTime.emplace(lockTime);
+        return *this;
+    }
+
+    /**
+     * スキップをすることができるかを取得
+     *
+     * @return スキップをすることができるか
+     */
+    const optional<Bool>& getEnableSkip() const
+    {
+        return ensureData().enableSkip;
+    }
+
+    /**
+     * スキップをすることができるかを設定
+     *
+     * @param enableSkip スキップをすることができるか
+     */
+    void setEnableSkip(Bool enableSkip)
+    {
+        ensureData().enableSkip.emplace(enableSkip);
+    }
+
+    /**
+     * スキップをすることができるかを設定
+     *
+     * @param enableSkip スキップをすることができるか
+     */
+    UpdateRateModelMasterRequest& withEnableSkip(Bool enableSkip)
+    {
+        ensureData().enableSkip.emplace(enableSkip);
+        return *this;
+    }
+
+    /**
+     * 時短消費アクションリストを取得
+     *
+     * @return 時短消費アクションリスト
+     */
+    const optional<List<ConsumeAction>>& getSkipConsumeActions() const
+    {
+        return ensureData().skipConsumeActions;
+    }
+
+    /**
+     * 時短消費アクションリストを設定
+     *
+     * @param skipConsumeActions 時短消費アクションリスト
+     */
+    void setSkipConsumeActions(List<ConsumeAction> skipConsumeActions)
+    {
+        ensureData().skipConsumeActions.emplace(std::move(skipConsumeActions));
+    }
+
+    /**
+     * 時短消費アクションリストを設定
+     *
+     * @param skipConsumeActions 時短消費アクションリスト
+     */
+    UpdateRateModelMasterRequest& withSkipConsumeActions(List<ConsumeAction> skipConsumeActions)
+    {
+        ensureData().skipConsumeActions.emplace(std::move(skipConsumeActions));
         return *this;
     }
 

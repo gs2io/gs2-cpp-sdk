@@ -47,6 +47,10 @@ private:
         optional<StringHolder> namespaceName;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
+        /** 交換結果の受け取りに待ち時間の発生する交換機能を利用するか */
+        optional<Bool> enableAwaitExchange;
+        /** 直接交換APIの呼び出しを許可する。許可しない場合はスタンプシート経由でしか交換できない */
+        optional<Bool> enableDirectExchange;
         /** 交換処理をジョブとして追加するキューのネームスペース のGRN */
         optional<StringHolder> queueNamespaceId;
         /** 交換処理のスタンプシートで使用する暗号鍵GRN */
@@ -60,6 +64,8 @@ private:
             Gs2BasicRequest::Data(data),
             namespaceName(data.namespaceName),
             description(data.description),
+            enableAwaitExchange(data.enableAwaitExchange),
+            enableDirectExchange(data.enableDirectExchange),
             queueNamespaceId(data.queueNamespaceId),
             keyId(data.keyId)
         {
@@ -172,6 +178,68 @@ public:
     UpdateNamespaceRequest& withDescription(StringHolder description)
     {
         ensureData().description.emplace(std::move(description));
+        return *this;
+    }
+
+    /**
+     * 交換結果の受け取りに待ち時間の発生する交換機能を利用するかを取得
+     *
+     * @return 交換結果の受け取りに待ち時間の発生する交換機能を利用するか
+     */
+    const optional<Bool>& getEnableAwaitExchange() const
+    {
+        return ensureData().enableAwaitExchange;
+    }
+
+    /**
+     * 交換結果の受け取りに待ち時間の発生する交換機能を利用するかを設定
+     *
+     * @param enableAwaitExchange 交換結果の受け取りに待ち時間の発生する交換機能を利用するか
+     */
+    void setEnableAwaitExchange(Bool enableAwaitExchange)
+    {
+        ensureData().enableAwaitExchange.emplace(enableAwaitExchange);
+    }
+
+    /**
+     * 交換結果の受け取りに待ち時間の発生する交換機能を利用するかを設定
+     *
+     * @param enableAwaitExchange 交換結果の受け取りに待ち時間の発生する交換機能を利用するか
+     */
+    UpdateNamespaceRequest& withEnableAwaitExchange(Bool enableAwaitExchange)
+    {
+        ensureData().enableAwaitExchange.emplace(enableAwaitExchange);
+        return *this;
+    }
+
+    /**
+     * 直接交換APIの呼び出しを許可する。許可しない場合はスタンプシート経由でしか交換できないを取得
+     *
+     * @return 直接交換APIの呼び出しを許可する。許可しない場合はスタンプシート経由でしか交換できない
+     */
+    const optional<Bool>& getEnableDirectExchange() const
+    {
+        return ensureData().enableDirectExchange;
+    }
+
+    /**
+     * 直接交換APIの呼び出しを許可する。許可しない場合はスタンプシート経由でしか交換できないを設定
+     *
+     * @param enableDirectExchange 直接交換APIの呼び出しを許可する。許可しない場合はスタンプシート経由でしか交換できない
+     */
+    void setEnableDirectExchange(Bool enableDirectExchange)
+    {
+        ensureData().enableDirectExchange.emplace(enableDirectExchange);
+    }
+
+    /**
+     * 直接交換APIの呼び出しを許可する。許可しない場合はスタンプシート経由でしか交換できないを設定
+     *
+     * @param enableDirectExchange 直接交換APIの呼び出しを許可する。許可しない場合はスタンプシート経由でしか交換できない
+     */
+    UpdateNamespaceRequest& withEnableDirectExchange(Bool enableDirectExchange)
+    {
+        ensureData().enableDirectExchange.emplace(enableDirectExchange);
         return *this;
     }
 
