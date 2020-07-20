@@ -44,8 +44,10 @@
 #include "request/DistributeWithoutOverflowProcessRequest.hpp"
 #include "request/RunStampTaskRequest.hpp"
 #include "request/RunStampSheetRequest.hpp"
+#include "request/RunRequest.hpp"
 #include "request/RunStampTaskWithoutNamespaceRequest.hpp"
 #include "request/RunStampSheetWithoutNamespaceRequest.hpp"
+#include "request/RunWithoutNamespaceRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -67,8 +69,10 @@
 #include "result/DistributeWithoutOverflowProcessResult.hpp"
 #include "result/RunStampTaskResult.hpp"
 #include "result/RunStampSheetResult.hpp"
+#include "result/RunResult.hpp"
 #include "result/RunStampTaskWithoutNamespaceResult.hpp"
 #include "result/RunStampSheetWithoutNamespaceResult.hpp"
+#include "result/RunWithoutNamespaceResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace distributor {
@@ -1310,6 +1314,71 @@ private:
         ~RunStampSheetTask() GS2_OVERRIDE = default;
     };
 
+    class RunTask : public detail::Gs2RestSessionTask<RunResult>
+    {
+    private:
+        RunRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "distributor";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/distribute/stamp/run";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        RunTask(
+            RunRequest request,
+            Gs2RestSessionTask<RunResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<RunResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RunTask() GS2_OVERRIDE = default;
+    };
+
     class RunStampTaskWithoutNamespaceTask : public detail::Gs2RestSessionTask<RunStampTaskWithoutNamespaceResult>
     {
     private:
@@ -1430,6 +1499,67 @@ private:
         {}
 
         ~RunStampSheetWithoutNamespaceTask() GS2_OVERRIDE = default;
+    };
+
+    class RunWithoutNamespaceTask : public detail::Gs2RestSessionTask<RunWithoutNamespaceResult>
+    {
+    private:
+        RunWithoutNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "distributor";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/distribute/stamp/run";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        RunWithoutNamespaceTask(
+            RunWithoutNamespaceRequest request,
+            Gs2RestSessionTask<RunWithoutNamespaceResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<RunWithoutNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RunWithoutNamespaceTask() GS2_OVERRIDE = default;
     };
 
 protected:
@@ -1954,6 +2084,18 @@ public:
     }
 
 	/**
+	 * スタンプタスクおよびスタンプシートを実行する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void run(RunRequest request, std::function<void(AsyncRunResult)> callback)
+    {
+        RunTask& task = *new RunTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
 	 * スタンプシートのタスクを実行する<br>
 	 *   <br>
 	 *   ネームスペースの指定を省略することで、<br>
@@ -1980,6 +2122,18 @@ public:
     void runStampSheetWithoutNamespace(RunStampSheetWithoutNamespaceRequest request, std::function<void(AsyncRunStampSheetWithoutNamespaceResult)> callback)
     {
         RunStampSheetWithoutNamespaceTask& task = *new RunStampSheetWithoutNamespaceTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * スタンプタスクおよびスタンプシートを実行する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void runWithoutNamespace(RunWithoutNamespaceRequest request, std::function<void(AsyncRunWithoutNamespaceResult)> callback)
+    {
+        RunWithoutNamespaceTask& task = *new RunWithoutNamespaceTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 
