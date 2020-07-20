@@ -32,8 +32,10 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         result/EzGetDistributorModelResult.hpp
         result/EzRunStampTaskResult.hpp
         result/EzRunStampSheetResult.hpp
+        result/EzRunOneShotStampSheetResult.hpp
         result/EzRunStampTaskWithoutNamespaceResult.hpp
         result/EzRunStampSheetWithoutNamespaceResult.hpp
+        result/EzRunOneShotStampSheetWithoutNamespaceResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
