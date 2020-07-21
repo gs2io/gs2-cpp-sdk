@@ -22,10 +22,10 @@
 #include "result/EzGetDistributorModelResult.hpp"
 #include "result/EzRunStampTaskResult.hpp"
 #include "result/EzRunStampSheetResult.hpp"
-#include "result/EzRunOneShotStampSheetResult.hpp"
+#include "result/EzRunStampSheetExpressResult.hpp"
 #include "result/EzRunStampTaskWithoutNamespaceResult.hpp"
 #include "result/EzRunStampSheetWithoutNamespaceResult.hpp"
-#include "result/EzRunOneShotStampSheetWithoutNamespaceResult.hpp"
+#include "result/EzRunStampSheetExpressWithoutNamespaceResult.hpp"
 
 
 namespace gs2 {
@@ -123,8 +123,8 @@ public:
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="stampSheet">実行するスタンプタスク</param>
     /// <param name="keyId">スタンプシートの暗号化に使用した暗号鍵GRN</param>
-    void runOneShotStampSheet(
-        std::function<void(AsyncEzRunOneShotStampSheetResult)> callback,
+    void runStampSheetExpress(
+        std::function<void(AsyncEzRunStampSheetExpressResult)> callback,
         StringHolder namespaceName,
         StringHolder stampSheet,
         StringHolder keyId
@@ -180,8 +180,8 @@ public:
     /// <returns>IEnumerator</returns>
     /// <param name="stampSheet">実行するスタンプタスク</param>
     /// <param name="keyId">スタンプシートの暗号化に使用した暗号鍵GRN</param>
-    void runOneShotStampSheetWithoutNamespace(
-        std::function<void(AsyncEzRunOneShotStampSheetWithoutNamespaceResult)> callback,
+    void runStampSheetExpressWithoutNamespace(
+        std::function<void(AsyncEzRunStampSheetExpressWithoutNamespaceResult)> callback,
         StringHolder stampSheet,
         StringHolder keyId
     );

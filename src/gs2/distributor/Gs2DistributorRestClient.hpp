@@ -44,10 +44,10 @@
 #include "request/DistributeWithoutOverflowProcessRequest.hpp"
 #include "request/RunStampTaskRequest.hpp"
 #include "request/RunStampSheetRequest.hpp"
-#include "request/RunRequest.hpp"
+#include "request/RunStampSheetExpressRequest.hpp"
 #include "request/RunStampTaskWithoutNamespaceRequest.hpp"
 #include "request/RunStampSheetWithoutNamespaceRequest.hpp"
-#include "request/RunWithoutNamespaceRequest.hpp"
+#include "request/RunStampSheetExpressWithoutNamespaceRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -69,10 +69,10 @@
 #include "result/DistributeWithoutOverflowProcessResult.hpp"
 #include "result/RunStampTaskResult.hpp"
 #include "result/RunStampSheetResult.hpp"
-#include "result/RunResult.hpp"
+#include "result/RunStampSheetExpressResult.hpp"
 #include "result/RunStampTaskWithoutNamespaceResult.hpp"
 #include "result/RunStampSheetWithoutNamespaceResult.hpp"
-#include "result/RunWithoutNamespaceResult.hpp"
+#include "result/RunStampSheetExpressWithoutNamespaceResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace distributor {
@@ -1314,10 +1314,10 @@ private:
         ~RunStampSheetTask() GS2_OVERRIDE = default;
     };
 
-    class RunTask : public detail::Gs2RestSessionTask<RunResult>
+    class RunStampSheetExpressTask : public detail::Gs2RestSessionTask<RunStampSheetExpressResult>
     {
     private:
-        RunRequest m_Request;
+        RunStampSheetExpressRequest m_Request;
 
         const char* getServiceName() const GS2_OVERRIDE
         {
@@ -1368,15 +1368,15 @@ private:
         }
 
     public:
-        RunTask(
-            RunRequest request,
-            Gs2RestSessionTask<RunResult>::CallbackType callback
+        RunStampSheetExpressTask(
+            RunStampSheetExpressRequest request,
+            Gs2RestSessionTask<RunStampSheetExpressResult>::CallbackType callback
         ) :
-            Gs2RestSessionTask<RunResult>(callback),
+            Gs2RestSessionTask<RunStampSheetExpressResult>(callback),
             m_Request(std::move(request))
         {}
 
-        ~RunTask() GS2_OVERRIDE = default;
+        ~RunStampSheetExpressTask() GS2_OVERRIDE = default;
     };
 
     class RunStampTaskWithoutNamespaceTask : public detail::Gs2RestSessionTask<RunStampTaskWithoutNamespaceResult>
@@ -1501,10 +1501,10 @@ private:
         ~RunStampSheetWithoutNamespaceTask() GS2_OVERRIDE = default;
     };
 
-    class RunWithoutNamespaceTask : public detail::Gs2RestSessionTask<RunWithoutNamespaceResult>
+    class RunStampSheetExpressWithoutNamespaceTask : public detail::Gs2RestSessionTask<RunStampSheetExpressWithoutNamespaceResult>
     {
     private:
-        RunWithoutNamespaceRequest m_Request;
+        RunStampSheetExpressWithoutNamespaceRequest m_Request;
 
         const char* getServiceName() const GS2_OVERRIDE
         {
@@ -1551,15 +1551,15 @@ private:
         }
 
     public:
-        RunWithoutNamespaceTask(
-            RunWithoutNamespaceRequest request,
-            Gs2RestSessionTask<RunWithoutNamespaceResult>::CallbackType callback
+        RunStampSheetExpressWithoutNamespaceTask(
+            RunStampSheetExpressWithoutNamespaceRequest request,
+            Gs2RestSessionTask<RunStampSheetExpressWithoutNamespaceResult>::CallbackType callback
         ) :
-            Gs2RestSessionTask<RunWithoutNamespaceResult>(callback),
+            Gs2RestSessionTask<RunStampSheetExpressWithoutNamespaceResult>(callback),
             m_Request(std::move(request))
         {}
 
-        ~RunWithoutNamespaceTask() GS2_OVERRIDE = default;
+        ~RunStampSheetExpressWithoutNamespaceTask() GS2_OVERRIDE = default;
     };
 
 protected:
@@ -2089,9 +2089,9 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void run(RunRequest request, std::function<void(AsyncRunResult)> callback)
+    void runStampSheetExpress(RunStampSheetExpressRequest request, std::function<void(AsyncRunStampSheetExpressResult)> callback)
     {
-        RunTask& task = *new RunTask(std::move(request), callback);
+        RunStampSheetExpressTask& task = *new RunStampSheetExpressTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 
@@ -2131,9 +2131,9 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void runWithoutNamespace(RunWithoutNamespaceRequest request, std::function<void(AsyncRunWithoutNamespaceResult)> callback)
+    void runStampSheetExpressWithoutNamespace(RunStampSheetExpressWithoutNamespaceRequest request, std::function<void(AsyncRunStampSheetExpressWithoutNamespaceResult)> callback)
     {
-        RunWithoutNamespaceTask& task = *new RunWithoutNamespaceTask(std::move(request), callback);
+        RunStampSheetExpressWithoutNamespaceTask& task = *new RunStampSheetExpressWithoutNamespaceTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 
