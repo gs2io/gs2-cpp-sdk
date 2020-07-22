@@ -56,7 +56,7 @@ public:
     ~Client();
 
     /// <summary>
-    ///  データのアップロード準備<br />
+    ///  データオブジェクトの一覧を取得<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
@@ -76,7 +76,7 @@ public:
     );
 
     /// <summary>
-    ///  データのアップロード準備<br />
+    ///  データオブジェクトを更新<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
@@ -132,7 +132,7 @@ public:
     );
 
     /// <summary>
-    ///  データのアップロード準備<br />
+    ///  データのアップロード完了を報告<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
@@ -148,7 +148,7 @@ public:
     );
 
     /// <summary>
-    ///  データをダウンロード<br />
+    ///  データをダウンロード準備<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
@@ -164,7 +164,7 @@ public:
     );
 
     /// <summary>
-    ///  自分のデータをダウンロード<br />
+    ///  自分のデータをダウンロード準備<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
@@ -180,7 +180,7 @@ public:
     );
 
     /// <summary>
-    ///  ユーザIDとデータ名を指定してデータをダウンロード<br />
+    ///  ユーザIDとデータ名を指定してデータをダウンロード準備<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
