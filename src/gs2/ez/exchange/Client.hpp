@@ -113,14 +113,15 @@ public:
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="userId">ユーザーID</param>
-    /// <param name="awaitName">交換待機の名前</param>
+    /// <param name="rateName">交換レート名</param>
     void getAwait(
         std::function<void(AsyncEzGetAwaitResult)> callback,
+        GameSession& session,
         StringHolder namespaceName,
-        StringHolder userId,
-        StringHolder awaitName
+        StringHolder rateName
     );
 
     /// <summary>
@@ -128,14 +129,15 @@ public:
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="userId">ユーザーID</param>
-    /// <param name="awaitName">交換待機の名前</param>
+    /// <param name="rateName">交換レート名</param>
     void acquire(
         std::function<void(AsyncEzAcquireResult)> callback,
+        GameSession& session,
         StringHolder namespaceName,
-        StringHolder userId,
-        StringHolder awaitName
+        StringHolder rateName
     );
 
     /// <summary>
@@ -143,14 +145,15 @@ public:
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="userId">ユーザーID</param>
-    /// <param name="awaitName">交換待機の名前</param>
+    /// <param name="rateName">交換レート名</param>
     void skip(
         std::function<void(AsyncEzSkipResult)> callback,
+        GameSession& session,
         StringHolder namespaceName,
-        StringHolder userId,
-        StringHolder awaitName
+        StringHolder rateName
     );
 
     /// <summary>
@@ -158,14 +161,15 @@ public:
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="userId">ユーザーID</param>
-    /// <param name="awaitName">交換待機の名前</param>
+    /// <param name="rateName">交換レート名</param>
     void deleteAwait(
         std::function<void(AsyncEzDeleteAwaitResult)> callback,
+        GameSession& session,
         StringHolder namespaceName,
-        StringHolder userId,
-        StringHolder awaitName
+        StringHolder rateName
     );
 };
 

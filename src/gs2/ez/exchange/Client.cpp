@@ -189,15 +189,15 @@ void Client::listAwaits(
 
 void Client::getAwait(
     std::function<void(AsyncEzGetAwaitResult)> callback,
+    GameSession& session,
     StringHolder namespaceName,
-    StringHolder userId,
-    StringHolder awaitName
+    StringHolder rateName
 )
 {
     gs2::exchange::GetAwaitRequest request;
     request.setNamespaceName(namespaceName);
-    request.setUserId(userId);
-    request.setAwaitName(awaitName);
+    request.setRateName(rateName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->getAwait(
         request,
         [callback](gs2::exchange::AsyncGetAwaitResult r)
@@ -227,15 +227,15 @@ void Client::getAwait(
 
 void Client::acquire(
     std::function<void(AsyncEzAcquireResult)> callback,
+    GameSession& session,
     StringHolder namespaceName,
-    StringHolder userId,
-    StringHolder awaitName
+    StringHolder rateName
 )
 {
     gs2::exchange::AcquireRequest request;
     request.setNamespaceName(namespaceName);
-    request.setUserId(userId);
-    request.setAwaitName(awaitName);
+    request.setRateName(rateName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->acquire(
         request,
         [callback](gs2::exchange::AsyncAcquireResult r)
@@ -265,15 +265,15 @@ void Client::acquire(
 
 void Client::skip(
     std::function<void(AsyncEzSkipResult)> callback,
+    GameSession& session,
     StringHolder namespaceName,
-    StringHolder userId,
-    StringHolder awaitName
+    StringHolder rateName
 )
 {
     gs2::exchange::SkipRequest request;
     request.setNamespaceName(namespaceName);
-    request.setUserId(userId);
-    request.setAwaitName(awaitName);
+    request.setRateName(rateName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->skip(
         request,
         [callback](gs2::exchange::AsyncSkipResult r)
@@ -303,15 +303,15 @@ void Client::skip(
 
 void Client::deleteAwait(
     std::function<void(AsyncEzDeleteAwaitResult)> callback,
+    GameSession& session,
     StringHolder namespaceName,
-    StringHolder userId,
-    StringHolder awaitName
+    StringHolder rateName
 )
 {
     gs2::exchange::DeleteAwaitRequest request;
     request.setNamespaceName(namespaceName);
-    request.setUserId(userId);
-    request.setAwaitName(awaitName);
+    request.setRateName(rateName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->deleteAwait(
         request,
         [callback](gs2::exchange::AsyncDeleteAwaitResult r)

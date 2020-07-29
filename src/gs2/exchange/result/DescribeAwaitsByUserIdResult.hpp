@@ -44,11 +44,14 @@ private:
     public:
         /** 交換待機のリスト */
         optional<List<Await>> items;
+        /** 次のページを取得するためのトークン */
+        optional<StringHolder> nextPageToken;
 
         Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data)
+            detail::json::IModel(data),
+            nextPageToken(data.nextPageToken)
         {
             if (data.items)
             {
@@ -76,6 +79,13 @@ private:
                         detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
                         *this->items += std::move(item);
                     }
+                }
+            }
+            else if (std::strcmp(name_, "nextPageToken") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->nextPageToken.emplace(jsonValue.GetString());
                 }
             }
         }
@@ -124,6 +134,26 @@ public:
     void setItems(List<Await> items)
     {
         ensureData().items.emplace(std::move(items));
+    }
+
+    /**
+     * 次のページを取得するためのトークンを取得
+     *
+     * @return 次のページを取得するためのトークン
+     */
+    const optional<StringHolder>& getNextPageToken() const
+    {
+        return ensureData().nextPageToken;
+    }
+
+    /**
+     * 次のページを取得するためのトークンを設定
+     *
+     * @param nextPageToken 次のページを取得するためのトークン
+     */
+    void setNextPageToken(StringHolder nextPageToken)
+    {
+        ensureData().nextPageToken.emplace(std::move(nextPageToken));
     }
 
 

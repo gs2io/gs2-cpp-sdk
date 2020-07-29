@@ -32,18 +32,22 @@ private:
     public:
         /** 交換待機のリスト */
         List<EzAwait> items;
+        /** 次のページを取得するためのトークン */
+        optional<StringHolder> nextPageToken;
 
         Data() = default;
 
         Data(const Data& data) :
-            Gs2Object(data)
+            Gs2Object(data),
+            nextPageToken(data.nextPageToken)
         {
             items = data.items.deepCopy();
         }
 
         Data(Data&& data) = default;
 
-        Data(const gs2::exchange::DescribeAwaitsResult& describeAwaitsResult)
+        Data(const gs2::exchange::DescribeAwaitsResult& describeAwaitsResult) :
+            nextPageToken(describeAwaitsResult.getNextPageToken())
         {
             {
                 auto& list = *describeAwaitsResult.getItems();
@@ -93,6 +97,11 @@ public:
     const List<EzAwait>& getItems() const
     {
         return ensureData().items;
+    }
+
+    const optional<StringHolder>& getNextPageToken() const
+    {
+        return ensureData().nextPageToken;
     }
 };
 
