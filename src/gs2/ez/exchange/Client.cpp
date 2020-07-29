@@ -155,11 +155,16 @@ void Client::exchange(
 
 void Client::listAwaits(
     std::function<void(AsyncEzListAwaitsResult)> callback,
-    StringHolder namespaceName
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> pageToken
 )
 {
     gs2::exchange::DescribeAwaitsRequest request;
     request.setNamespaceName(namespaceName);
+    if (pageToken)
+    {
+        request.setPageToken(std::move(*pageToken));
+    }
     m_pClient->describeAwaits(
         request,
         [callback](gs2::exchange::AsyncDescribeAwaitsResult r)

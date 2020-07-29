@@ -103,9 +103,11 @@ public:
     ///
     /// <returns>IEnumerator</returns>
     /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     void listAwaits(
         std::function<void(AsyncEzListAwaitsResult)> callback,
-        StringHolder namespaceName
+        StringHolder namespaceName,
+        gs2::optional<StringHolder> pageToken=gs2::nullopt
     );
 
     /// <summary>
