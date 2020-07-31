@@ -20,6 +20,8 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
+        model/EzConfig.hpp
+        model/EzCounter.hpp
         model/EzCurrentMissionMaster.hpp
         model/EzCounterModelMaster.hpp
         model/EzAcquireAction.hpp
@@ -37,8 +39,8 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzCounterScopeModel.hpp
         model/EzScopedValue.hpp
         model/EzMissionTaskModelMaster.hpp
-        model/EzConfig.hpp
-        model/EzCounter.hpp
+        result/EzListCountersResult.hpp
+        result/EzGetCounterResult.hpp
         result/EzListMissionGroupModelsResult.hpp
         result/EzGetMissionGroupModelResult.hpp
         result/EzListCounterModelsResult.hpp
@@ -48,12 +50,12 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         result/EzListCompletesResult.hpp
         result/EzGetCompleteResult.hpp
         result/EzReceiveRewardsResult.hpp
-        result/EzListCountersResult.hpp
-        result/EzGetCounterResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
+        model/EzConfig.cpp
+        model/EzCounter.cpp
         model/EzCurrentMissionMaster.cpp
         model/EzCounterModelMaster.cpp
         model/EzAcquireAction.cpp
@@ -71,8 +73,6 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         model/EzCounterScopeModel.cpp
         model/EzScopedValue.cpp
         model/EzMissionTaskModelMaster.cpp
-        model/EzConfig.cpp
-        model/EzCounter.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC
