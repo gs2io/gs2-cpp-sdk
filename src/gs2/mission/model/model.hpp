@@ -24,6 +24,7 @@
 #include "CounterScopeModel.hpp"
 #include "MissionTaskModelMaster.hpp"
 #include "Counter.hpp"
+#include "ScopedValue.hpp"
 #include "CurrentMissionMaster.hpp"
 #include "ResponseCache.hpp"
 #include "ScriptSetting.hpp"
@@ -37,6 +38,5 @@
 #include "MissionGroupModel.hpp"
 #include "CounterModel.hpp"
 #include "MissionGroupModelMaster.hpp"
-#include "ScopedValue.hpp"
 
 #endif //GS2_MISSION_MODEL_MODEL_HPP_
