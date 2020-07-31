@@ -20,25 +20,25 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzConfig.hpp
         model/EzCounter.hpp
         model/EzCurrentMissionMaster.hpp
+        model/EzLogSetting.hpp
+        model/EzScriptSetting.hpp
         model/EzCounterModelMaster.hpp
         model/EzAcquireAction.hpp
         model/EzResponseCache.hpp
-        model/EzLogSetting.hpp
-        model/EzScriptSetting.hpp
         model/EzMissionGroupModel.hpp
+        model/EzGitHubCheckoutSetting.hpp
         model/EzCounterModel.hpp
         model/EzMissionTaskModel.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzComplete.hpp
         model/EzNotificationSetting.hpp
+        model/EzComplete.hpp
         model/EzMissionGroupModelMaster.hpp
         model/EzNamespace.hpp
         model/EzCounterScopeModel.hpp
         model/EzScopedValue.hpp
         model/EzMissionTaskModelMaster.hpp
+        model/EzConfig.hpp
         result/EzListCountersResult.hpp
         result/EzGetCounterResult.hpp
         result/EzListMissionGroupModelsResult.hpp
@@ -54,25 +54,25 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
-        model/EzConfig.cpp
         model/EzCounter.cpp
         model/EzCurrentMissionMaster.cpp
+        model/EzLogSetting.cpp
+        model/EzScriptSetting.cpp
         model/EzCounterModelMaster.cpp
         model/EzAcquireAction.cpp
         model/EzResponseCache.cpp
-        model/EzLogSetting.cpp
-        model/EzScriptSetting.cpp
         model/EzMissionGroupModel.cpp
+        model/EzGitHubCheckoutSetting.cpp
         model/EzCounterModel.cpp
         model/EzMissionTaskModel.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzComplete.cpp
         model/EzNotificationSetting.cpp
+        model/EzComplete.cpp
         model/EzMissionGroupModelMaster.cpp
         model/EzNamespace.cpp
         model/EzCounterScopeModel.cpp
         model/EzScopedValue.cpp
         model/EzMissionTaskModelMaster.cpp
+        model/EzConfig.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

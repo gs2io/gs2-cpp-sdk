@@ -23,6 +23,12 @@
 #include <gs2/core/network/Gs2WebSocketSession.hpp>
 #include <gs2/core/util/StringVariable.hpp>
 #include "model/model.hpp"
+#include "request/DescribeNamespacesRequest.hpp"
+#include "request/CreateNamespaceRequest.hpp"
+#include "request/GetNamespaceStatusRequest.hpp"
+#include "request/GetNamespaceRequest.hpp"
+#include "request/UpdateNamespaceRequest.hpp"
+#include "request/DeleteNamespaceRequest.hpp"
 #include "request/DescribeMissionTaskModelMastersRequest.hpp"
 #include "request/CreateMissionTaskModelMasterRequest.hpp"
 #include "request/GetMissionTaskModelMasterRequest.hpp"
@@ -64,12 +70,12 @@
 #include "request/GetMissionGroupModelMasterRequest.hpp"
 #include "request/UpdateMissionGroupModelMasterRequest.hpp"
 #include "request/DeleteMissionGroupModelMasterRequest.hpp"
-#include "request/DescribeNamespacesRequest.hpp"
-#include "request/CreateNamespaceRequest.hpp"
-#include "request/GetNamespaceStatusRequest.hpp"
-#include "request/GetNamespaceRequest.hpp"
-#include "request/UpdateNamespaceRequest.hpp"
-#include "request/DeleteNamespaceRequest.hpp"
+#include "result/DescribeNamespacesResult.hpp"
+#include "result/CreateNamespaceResult.hpp"
+#include "result/GetNamespaceStatusResult.hpp"
+#include "result/GetNamespaceResult.hpp"
+#include "result/UpdateNamespaceResult.hpp"
+#include "result/DeleteNamespaceResult.hpp"
 #include "result/DescribeMissionTaskModelMastersResult.hpp"
 #include "result/CreateMissionTaskModelMasterResult.hpp"
 #include "result/GetMissionTaskModelMasterResult.hpp"
@@ -111,12 +117,6 @@
 #include "result/GetMissionGroupModelMasterResult.hpp"
 #include "result/UpdateMissionGroupModelMasterResult.hpp"
 #include "result/DeleteMissionGroupModelMasterResult.hpp"
-#include "result/DescribeNamespacesResult.hpp"
-#include "result/CreateNamespaceResult.hpp"
-#include "result/GetNamespaceStatusResult.hpp"
-#include "result/GetNamespaceResult.hpp"
-#include "result/UpdateNamespaceResult.hpp"
-#include "result/DeleteNamespaceResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace mission {
@@ -130,6 +130,397 @@ namespace gs2 { namespace mission {
 class Gs2MissionWebSocketClient : public AbstractGs2ClientBase
 {
 private:
+
+    class DescribeNamespacesTask : public detail::Gs2WebSocketSessionTask<DescribeNamespacesResult>
+    {
+    private:
+        DescribeNamespacesRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "mission";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "namespace";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeNamespaces";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getPageToken())
+            {
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        DescribeNamespacesTask(
+            DescribeNamespacesRequest request,
+            Gs2WebSocketSessionTask<DescribeNamespacesResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeNamespacesResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeNamespacesTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateNamespaceTask : public detail::Gs2WebSocketSessionTask<CreateNamespaceResult>
+    {
+    private:
+        CreateNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "mission";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "namespace";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "createNamespace";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getName())
+            {
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getMissionCompleteScript())
+            {
+                jsonWriter.writePropertyName("missionCompleteScript");
+                write(jsonWriter, *m_Request.getMissionCompleteScript());
+            }
+            if (m_Request.getCounterIncrementScript())
+            {
+                jsonWriter.writePropertyName("counterIncrementScript");
+                write(jsonWriter, *m_Request.getCounterIncrementScript());
+            }
+            if (m_Request.getReceiveRewardsScript())
+            {
+                jsonWriter.writePropertyName("receiveRewardsScript");
+                write(jsonWriter, *m_Request.getReceiveRewardsScript());
+            }
+            if (m_Request.getQueueNamespaceId())
+            {
+                jsonWriter.writePropertyName("queueNamespaceId");
+                jsonWriter.writeCharArray(*m_Request.getQueueNamespaceId());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getCompleteNotification())
+            {
+                jsonWriter.writePropertyName("completeNotification");
+                write(jsonWriter, *m_Request.getCompleteNotification());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        CreateNamespaceTask(
+            CreateNamespaceRequest request,
+            Gs2WebSocketSessionTask<CreateNamespaceResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<CreateNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateNamespaceTask() GS2_OVERRIDE = default;
+    };
+
+    class GetNamespaceStatusTask : public detail::Gs2WebSocketSessionTask<GetNamespaceStatusResult>
+    {
+    private:
+        GetNamespaceStatusRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "mission";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "namespace";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getNamespaceStatus";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        GetNamespaceStatusTask(
+            GetNamespaceStatusRequest request,
+            Gs2WebSocketSessionTask<GetNamespaceStatusResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetNamespaceStatusResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetNamespaceStatusTask() GS2_OVERRIDE = default;
+    };
+
+    class GetNamespaceTask : public detail::Gs2WebSocketSessionTask<GetNamespaceResult>
+    {
+    private:
+        GetNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "mission";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "namespace";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getNamespace";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        GetNamespaceTask(
+            GetNamespaceRequest request,
+            Gs2WebSocketSessionTask<GetNamespaceResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetNamespaceTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateNamespaceTask : public detail::Gs2WebSocketSessionTask<UpdateNamespaceResult>
+    {
+    private:
+        UpdateNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "mission";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "namespace";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateNamespace";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getMissionCompleteScript())
+            {
+                jsonWriter.writePropertyName("missionCompleteScript");
+                write(jsonWriter, *m_Request.getMissionCompleteScript());
+            }
+            if (m_Request.getCounterIncrementScript())
+            {
+                jsonWriter.writePropertyName("counterIncrementScript");
+                write(jsonWriter, *m_Request.getCounterIncrementScript());
+            }
+            if (m_Request.getReceiveRewardsScript())
+            {
+                jsonWriter.writePropertyName("receiveRewardsScript");
+                write(jsonWriter, *m_Request.getReceiveRewardsScript());
+            }
+            if (m_Request.getQueueNamespaceId())
+            {
+                jsonWriter.writePropertyName("queueNamespaceId");
+                jsonWriter.writeCharArray(*m_Request.getQueueNamespaceId());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getCompleteNotification())
+            {
+                jsonWriter.writePropertyName("completeNotification");
+                write(jsonWriter, *m_Request.getCompleteNotification());
+            }
+            if (m_Request.getLogSetting())
+            {
+                jsonWriter.writePropertyName("logSetting");
+                write(jsonWriter, *m_Request.getLogSetting());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        UpdateNamespaceTask(
+            UpdateNamespaceRequest request,
+            Gs2WebSocketSessionTask<UpdateNamespaceResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateNamespaceTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteNamespaceTask : public detail::Gs2WebSocketSessionTask<DeleteNamespaceResult>
+    {
+    private:
+        DeleteNamespaceRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "mission";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "namespace";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteNamespace";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        DeleteNamespaceTask(
+            DeleteNamespaceRequest request,
+            Gs2WebSocketSessionTask<DeleteNamespaceResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DeleteNamespaceResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteNamespaceTask() GS2_OVERRIDE = default;
+    };
 
     class DescribeMissionTaskModelMastersTask : public detail::Gs2WebSocketSessionTask<DescribeMissionTaskModelMastersResult>
     {
@@ -2868,398 +3259,99 @@ private:
         ~DeleteMissionGroupModelMasterTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeNamespacesTask : public detail::Gs2WebSocketSessionTask<DescribeNamespacesResult>
-    {
-    private:
-        DescribeNamespacesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "mission";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "namespace";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeNamespaces";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeNamespacesTask(
-            DescribeNamespacesRequest request,
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeNamespacesTask() GS2_OVERRIDE = default;
-    };
-
-    class CreateNamespaceTask : public detail::Gs2WebSocketSessionTask<CreateNamespaceResult>
-    {
-    private:
-        CreateNamespaceRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "mission";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "namespace";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "createNamespace";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getName())
-            {
-                jsonWriter.writePropertyName("name");
-                jsonWriter.writeCharArray(*m_Request.getName());
-            }
-            if (m_Request.getDescription())
-            {
-                jsonWriter.writePropertyName("description");
-                jsonWriter.writeCharArray(*m_Request.getDescription());
-            }
-            if (m_Request.getMissionCompleteScript())
-            {
-                jsonWriter.writePropertyName("missionCompleteScript");
-                write(jsonWriter, *m_Request.getMissionCompleteScript());
-            }
-            if (m_Request.getCounterIncrementScript())
-            {
-                jsonWriter.writePropertyName("counterIncrementScript");
-                write(jsonWriter, *m_Request.getCounterIncrementScript());
-            }
-            if (m_Request.getReceiveRewardsScript())
-            {
-                jsonWriter.writePropertyName("receiveRewardsScript");
-                write(jsonWriter, *m_Request.getReceiveRewardsScript());
-            }
-            if (m_Request.getQueueNamespaceId())
-            {
-                jsonWriter.writePropertyName("queueNamespaceId");
-                jsonWriter.writeCharArray(*m_Request.getQueueNamespaceId());
-            }
-            if (m_Request.getKeyId())
-            {
-                jsonWriter.writePropertyName("keyId");
-                jsonWriter.writeCharArray(*m_Request.getKeyId());
-            }
-            if (m_Request.getCompleteNotification())
-            {
-                jsonWriter.writePropertyName("completeNotification");
-                write(jsonWriter, *m_Request.getCompleteNotification());
-            }
-            if (m_Request.getLogSetting())
-            {
-                jsonWriter.writePropertyName("logSetting");
-                write(jsonWriter, *m_Request.getLogSetting());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        CreateNamespaceTask(
-            CreateNamespaceRequest request,
-            Gs2WebSocketSessionTask<CreateNamespaceResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<CreateNamespaceResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~CreateNamespaceTask() GS2_OVERRIDE = default;
-    };
-
-    class GetNamespaceStatusTask : public detail::Gs2WebSocketSessionTask<GetNamespaceStatusResult>
-    {
-    private:
-        GetNamespaceStatusRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "mission";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "namespace";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "getNamespaceStatus";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        GetNamespaceStatusTask(
-            GetNamespaceStatusRequest request,
-            Gs2WebSocketSessionTask<GetNamespaceStatusResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<GetNamespaceStatusResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~GetNamespaceStatusTask() GS2_OVERRIDE = default;
-    };
-
-    class GetNamespaceTask : public detail::Gs2WebSocketSessionTask<GetNamespaceResult>
-    {
-    private:
-        GetNamespaceRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "mission";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "namespace";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "getNamespace";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        GetNamespaceTask(
-            GetNamespaceRequest request,
-            Gs2WebSocketSessionTask<GetNamespaceResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<GetNamespaceResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~GetNamespaceTask() GS2_OVERRIDE = default;
-    };
-
-    class UpdateNamespaceTask : public detail::Gs2WebSocketSessionTask<UpdateNamespaceResult>
-    {
-    private:
-        UpdateNamespaceRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "mission";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "namespace";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "updateNamespace";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getDescription())
-            {
-                jsonWriter.writePropertyName("description");
-                jsonWriter.writeCharArray(*m_Request.getDescription());
-            }
-            if (m_Request.getMissionCompleteScript())
-            {
-                jsonWriter.writePropertyName("missionCompleteScript");
-                write(jsonWriter, *m_Request.getMissionCompleteScript());
-            }
-            if (m_Request.getCounterIncrementScript())
-            {
-                jsonWriter.writePropertyName("counterIncrementScript");
-                write(jsonWriter, *m_Request.getCounterIncrementScript());
-            }
-            if (m_Request.getReceiveRewardsScript())
-            {
-                jsonWriter.writePropertyName("receiveRewardsScript");
-                write(jsonWriter, *m_Request.getReceiveRewardsScript());
-            }
-            if (m_Request.getQueueNamespaceId())
-            {
-                jsonWriter.writePropertyName("queueNamespaceId");
-                jsonWriter.writeCharArray(*m_Request.getQueueNamespaceId());
-            }
-            if (m_Request.getKeyId())
-            {
-                jsonWriter.writePropertyName("keyId");
-                jsonWriter.writeCharArray(*m_Request.getKeyId());
-            }
-            if (m_Request.getCompleteNotification())
-            {
-                jsonWriter.writePropertyName("completeNotification");
-                write(jsonWriter, *m_Request.getCompleteNotification());
-            }
-            if (m_Request.getLogSetting())
-            {
-                jsonWriter.writePropertyName("logSetting");
-                write(jsonWriter, *m_Request.getLogSetting());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        UpdateNamespaceTask(
-            UpdateNamespaceRequest request,
-            Gs2WebSocketSessionTask<UpdateNamespaceResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<UpdateNamespaceResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~UpdateNamespaceTask() GS2_OVERRIDE = default;
-    };
-
-    class DeleteNamespaceTask : public detail::Gs2WebSocketSessionTask<DeleteNamespaceResult>
-    {
-    private:
-        DeleteNamespaceRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "mission";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "namespace";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "deleteNamespace";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DeleteNamespaceTask(
-            DeleteNamespaceRequest request,
-            Gs2WebSocketSessionTask<DeleteNamespaceResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DeleteNamespaceResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DeleteNamespaceTask() GS2_OVERRIDE = default;
-    };
-
 protected:
+    static void write(detail::json::JsonWriter& jsonWriter, const Config& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getKey())
+        {
+            jsonWriter.writePropertyName("key");
+            jsonWriter.writeCharArray(*obj.getKey());
+        }
+        if (obj.getValue())
+        {
+            jsonWriter.writePropertyName("value");
+            jsonWriter.writeCharArray(*obj.getValue());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const Namespace& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getNamespaceId())
+        {
+            jsonWriter.writePropertyName("namespaceId");
+            jsonWriter.writeCharArray(*obj.getNamespaceId());
+        }
+        if (obj.getOwnerId())
+        {
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getDescription())
+        {
+            jsonWriter.writePropertyName("description");
+            jsonWriter.writeCharArray(*obj.getDescription());
+        }
+        if (obj.getMissionCompleteScript())
+        {
+            jsonWriter.writePropertyName("missionCompleteScript");
+            write(jsonWriter, *obj.getMissionCompleteScript());
+        }
+        if (obj.getCounterIncrementScript())
+        {
+            jsonWriter.writePropertyName("counterIncrementScript");
+            write(jsonWriter, *obj.getCounterIncrementScript());
+        }
+        if (obj.getReceiveRewardsScript())
+        {
+            jsonWriter.writePropertyName("receiveRewardsScript");
+            write(jsonWriter, *obj.getReceiveRewardsScript());
+        }
+        if (obj.getQueueNamespaceId())
+        {
+            jsonWriter.writePropertyName("queueNamespaceId");
+            jsonWriter.writeCharArray(*obj.getQueueNamespaceId());
+        }
+        if (obj.getKeyId())
+        {
+            jsonWriter.writePropertyName("keyId");
+            jsonWriter.writeCharArray(*obj.getKeyId());
+        }
+        if (obj.getCompleteNotification())
+        {
+            jsonWriter.writePropertyName("completeNotification");
+            write(jsonWriter, *obj.getCompleteNotification());
+        }
+        if (obj.getLogSetting())
+        {
+            jsonWriter.writePropertyName("logSetting");
+            write(jsonWriter, *obj.getLogSetting());
+        }
+        if (obj.getStatus())
+        {
+            jsonWriter.writePropertyName("status");
+            jsonWriter.writeCharArray(*obj.getStatus());
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const CounterScopeModel& obj)
     {
         jsonWriter.writeObjectStart();
@@ -3282,22 +3374,6 @@ protected:
         {
             jsonWriter.writePropertyName("resetHour");
             jsonWriter.writeInt32(*obj.getResetHour());
-        }
-        jsonWriter.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& jsonWriter, const Config& obj)
-    {
-        jsonWriter.writeObjectStart();
-        if (obj.getKey())
-        {
-            jsonWriter.writePropertyName("key");
-            jsonWriter.writeCharArray(*obj.getKey());
-        }
-        if (obj.getValue())
-        {
-            jsonWriter.writePropertyName("value");
-            jsonWriter.writeCharArray(*obj.getValue());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -3458,6 +3534,43 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const ScriptSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getTriggerScriptId())
+        {
+            jsonWriter.writePropertyName("triggerScriptId");
+            jsonWriter.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerTargetType())
+        {
+            jsonWriter.writePropertyName("doneTriggerTargetType");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
+        }
+        if (obj.getDoneTriggerScriptId())
+        {
+            jsonWriter.writePropertyName("doneTriggerScriptId");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerScriptId());
+        }
+        if (obj.getDoneTriggerQueueNamespaceId())
+        {
+            jsonWriter.writePropertyName("doneTriggerQueueNamespaceId");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const MissionTaskModel& obj)
     {
         jsonWriter.writeObjectStart();
@@ -3510,43 +3623,6 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& jsonWriter, const ScriptSetting& obj)
-    {
-        jsonWriter.writeObjectStart();
-        if (obj.getTriggerScriptId())
-        {
-            jsonWriter.writePropertyName("triggerScriptId");
-            jsonWriter.writeCharArray(*obj.getTriggerScriptId());
-        }
-        if (obj.getDoneTriggerTargetType())
-        {
-            jsonWriter.writePropertyName("doneTriggerTargetType");
-            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
-        }
-        if (obj.getDoneTriggerScriptId())
-        {
-            jsonWriter.writePropertyName("doneTriggerScriptId");
-            jsonWriter.writeCharArray(*obj.getDoneTriggerScriptId());
-        }
-        if (obj.getDoneTriggerQueueNamespaceId())
-        {
-            jsonWriter.writePropertyName("doneTriggerQueueNamespaceId");
-            jsonWriter.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
-        }
-        jsonWriter.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
-    {
-        jsonWriter.writeObjectStart();
-        if (obj.getLoggingNamespaceId())
-        {
-            jsonWriter.writePropertyName("loggingNamespaceId");
-            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
-        }
-        jsonWriter.writeObjectEnd();
-    }
-
     static void write(detail::json::JsonWriter& jsonWriter, const CounterModelMaster& obj)
     {
         jsonWriter.writeObjectStart();
@@ -3595,6 +3671,47 @@ protected:
         {
             jsonWriter.writePropertyName("updatedAt");
             jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const GitHubCheckoutSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            jsonWriter.writePropertyName("gitHubApiKeyId");
+            jsonWriter.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            jsonWriter.writePropertyName("repositoryName");
+            jsonWriter.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            jsonWriter.writePropertyName("sourcePath");
+            jsonWriter.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            jsonWriter.writePropertyName("referenceType");
+            jsonWriter.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            jsonWriter.writePropertyName("commitHash");
+            jsonWriter.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            jsonWriter.writePropertyName("branchName");
+            jsonWriter.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            jsonWriter.writePropertyName("tagName");
+            jsonWriter.writeCharArray(*obj.getTagName());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -3668,6 +3785,27 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const NotificationSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getGatewayNamespaceId())
+        {
+            jsonWriter.writePropertyName("gatewayNamespaceId");
+            jsonWriter.writeCharArray(*obj.getGatewayNamespaceId());
+        }
+        if (obj.getEnableTransferMobileNotification())
+        {
+            jsonWriter.writePropertyName("enableTransferMobileNotification");
+            jsonWriter.writeBool(*obj.getEnableTransferMobileNotification());
+        }
+        if (obj.getSound())
+        {
+            jsonWriter.writePropertyName("sound");
+            jsonWriter.writeCharArray(*obj.getSound());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const MissionGroupModel& obj)
     {
         jsonWriter.writeObjectStart();
@@ -3721,68 +3859,6 @@ protected:
         {
             jsonWriter.writePropertyName("completeNotificationNamespaceId");
             jsonWriter.writeCharArray(*obj.getCompleteNotificationNamespaceId());
-        }
-        jsonWriter.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& jsonWriter, const GitHubCheckoutSetting& obj)
-    {
-        jsonWriter.writeObjectStart();
-        if (obj.getGitHubApiKeyId())
-        {
-            jsonWriter.writePropertyName("gitHubApiKeyId");
-            jsonWriter.writeCharArray(*obj.getGitHubApiKeyId());
-        }
-        if (obj.getRepositoryName())
-        {
-            jsonWriter.writePropertyName("repositoryName");
-            jsonWriter.writeCharArray(*obj.getRepositoryName());
-        }
-        if (obj.getSourcePath())
-        {
-            jsonWriter.writePropertyName("sourcePath");
-            jsonWriter.writeCharArray(*obj.getSourcePath());
-        }
-        if (obj.getReferenceType())
-        {
-            jsonWriter.writePropertyName("referenceType");
-            jsonWriter.writeCharArray(*obj.getReferenceType());
-        }
-        if (obj.getCommitHash())
-        {
-            jsonWriter.writePropertyName("commitHash");
-            jsonWriter.writeCharArray(*obj.getCommitHash());
-        }
-        if (obj.getBranchName())
-        {
-            jsonWriter.writePropertyName("branchName");
-            jsonWriter.writeCharArray(*obj.getBranchName());
-        }
-        if (obj.getTagName())
-        {
-            jsonWriter.writePropertyName("tagName");
-            jsonWriter.writeCharArray(*obj.getTagName());
-        }
-        jsonWriter.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& jsonWriter, const NotificationSetting& obj)
-    {
-        jsonWriter.writeObjectStart();
-        if (obj.getGatewayNamespaceId())
-        {
-            jsonWriter.writePropertyName("gatewayNamespaceId");
-            jsonWriter.writeCharArray(*obj.getGatewayNamespaceId());
-        }
-        if (obj.getEnableTransferMobileNotification())
-        {
-            jsonWriter.writePropertyName("enableTransferMobileNotification");
-            jsonWriter.writeBool(*obj.getEnableTransferMobileNotification());
-        }
-        if (obj.getSound())
-        {
-            jsonWriter.writePropertyName("sound");
-            jsonWriter.writeCharArray(*obj.getSound());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -3906,82 +3982,6 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& jsonWriter, const Namespace& obj)
-    {
-        jsonWriter.writeObjectStart();
-        if (obj.getNamespaceId())
-        {
-            jsonWriter.writePropertyName("namespaceId");
-            jsonWriter.writeCharArray(*obj.getNamespaceId());
-        }
-        if (obj.getOwnerId())
-        {
-            jsonWriter.writePropertyName("ownerId");
-            jsonWriter.writeCharArray(*obj.getOwnerId());
-        }
-        if (obj.getName())
-        {
-            jsonWriter.writePropertyName("name");
-            jsonWriter.writeCharArray(*obj.getName());
-        }
-        if (obj.getDescription())
-        {
-            jsonWriter.writePropertyName("description");
-            jsonWriter.writeCharArray(*obj.getDescription());
-        }
-        if (obj.getMissionCompleteScript())
-        {
-            jsonWriter.writePropertyName("missionCompleteScript");
-            write(jsonWriter, *obj.getMissionCompleteScript());
-        }
-        if (obj.getCounterIncrementScript())
-        {
-            jsonWriter.writePropertyName("counterIncrementScript");
-            write(jsonWriter, *obj.getCounterIncrementScript());
-        }
-        if (obj.getReceiveRewardsScript())
-        {
-            jsonWriter.writePropertyName("receiveRewardsScript");
-            write(jsonWriter, *obj.getReceiveRewardsScript());
-        }
-        if (obj.getQueueNamespaceId())
-        {
-            jsonWriter.writePropertyName("queueNamespaceId");
-            jsonWriter.writeCharArray(*obj.getQueueNamespaceId());
-        }
-        if (obj.getKeyId())
-        {
-            jsonWriter.writePropertyName("keyId");
-            jsonWriter.writeCharArray(*obj.getKeyId());
-        }
-        if (obj.getCompleteNotification())
-        {
-            jsonWriter.writePropertyName("completeNotification");
-            write(jsonWriter, *obj.getCompleteNotification());
-        }
-        if (obj.getLogSetting())
-        {
-            jsonWriter.writePropertyName("logSetting");
-            write(jsonWriter, *obj.getLogSetting());
-        }
-        if (obj.getStatus())
-        {
-            jsonWriter.writePropertyName("status");
-            jsonWriter.writeCharArray(*obj.getStatus());
-        }
-        if (obj.getCreatedAt())
-        {
-            jsonWriter.writePropertyName("createdAt");
-            jsonWriter.writeInt64(*obj.getCreatedAt());
-        }
-        if (obj.getUpdatedAt())
-        {
-            jsonWriter.writePropertyName("updatedAt");
-            jsonWriter.writeInt64(*obj.getUpdatedAt());
-        }
-        jsonWriter.writeObjectEnd();
-    }
-
 
 public:
     /**
@@ -3992,6 +3992,78 @@ public:
     explicit Gs2MissionWebSocketClient(Gs2WebSocketSession& gs2WebSocketSession) :
         AbstractGs2ClientBase(gs2WebSocketSession)
     {
+    }
+
+	/**
+	 * ネームスペースの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeNamespaces(DescribeNamespacesRequest request, std::function<void(AsyncDescribeNamespacesResult)> callback)
+    {
+        DescribeNamespacesTask& task = *new DescribeNamespacesTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ネームスペースを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createNamespace(CreateNamespaceRequest request, std::function<void(AsyncCreateNamespaceResult)> callback)
+    {
+        CreateNamespaceTask& task = *new CreateNamespaceTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ネームスペースの状態を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getNamespaceStatus(GetNamespaceStatusRequest request, std::function<void(AsyncGetNamespaceStatusResult)> callback)
+    {
+        GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ネームスペースを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getNamespace(GetNamespaceRequest request, std::function<void(AsyncGetNamespaceResult)> callback)
+    {
+        GetNamespaceTask& task = *new GetNamespaceTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ネームスペースを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateNamespace(UpdateNamespaceRequest request, std::function<void(AsyncUpdateNamespaceResult)> callback)
+    {
+        UpdateNamespaceTask& task = *new UpdateNamespaceTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ネームスペースを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteNamespace(DeleteNamespaceRequest request, std::function<void(AsyncDeleteNamespaceResult)> callback)
+    {
+        DeleteNamespaceTask& task = *new DeleteNamespaceTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
     }
 
 	/**
@@ -4483,78 +4555,6 @@ public:
     void deleteMissionGroupModelMaster(DeleteMissionGroupModelMasterRequest request, std::function<void(AsyncDeleteMissionGroupModelMasterResult)> callback)
     {
         DeleteMissionGroupModelMasterTask& task = *new DeleteMissionGroupModelMasterTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ネームスペースの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeNamespaces(DescribeNamespacesRequest request, std::function<void(AsyncDescribeNamespacesResult)> callback)
-    {
-        DescribeNamespacesTask& task = *new DescribeNamespacesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ネームスペースを新規作成<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void createNamespace(CreateNamespaceRequest request, std::function<void(AsyncCreateNamespaceResult)> callback)
-    {
-        CreateNamespaceTask& task = *new CreateNamespaceTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ネームスペースの状態を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getNamespaceStatus(GetNamespaceStatusRequest request, std::function<void(AsyncGetNamespaceStatusResult)> callback)
-    {
-        GetNamespaceStatusTask& task = *new GetNamespaceStatusTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ネームスペースを取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getNamespace(GetNamespaceRequest request, std::function<void(AsyncGetNamespaceResult)> callback)
-    {
-        GetNamespaceTask& task = *new GetNamespaceTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ネームスペースを更新<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateNamespace(UpdateNamespaceRequest request, std::function<void(AsyncUpdateNamespaceResult)> callback)
-    {
-        UpdateNamespaceTask& task = *new UpdateNamespaceTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ネームスペースを削除<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void deleteNamespace(DeleteNamespaceRequest request, std::function<void(AsyncDeleteNamespaceResult)> callback)
-    {
-        DeleteNamespaceTask& task = *new DeleteNamespaceTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
