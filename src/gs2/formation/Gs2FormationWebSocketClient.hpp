@@ -3374,6 +3374,11 @@ protected:
             jsonWriter.writePropertyName("propertyId");
             jsonWriter.writeCharArray(*obj.getPropertyId());
         }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
         jsonWriter.writeObjectEnd();
     }
 
@@ -3451,6 +3456,11 @@ protected:
         {
             jsonWriter.writePropertyName("signature");
             jsonWriter.writeCharArray(*obj.getSignature());
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
         }
         jsonWriter.writeObjectEnd();
     }

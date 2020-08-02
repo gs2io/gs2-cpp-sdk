@@ -23,13 +23,15 @@ namespace gs2 { namespace ez { namespace formation {
 EzSlot::Data::Data(const Data& data) :
     Gs2Object(data),
     name(data.name),
-    propertyId(data.propertyId)
+    propertyId(data.propertyId),
+    metadata(data.metadata)
 {
 }
 
 EzSlot::Data::Data(const gs2::formation::Slot& slot) :
     name(slot.getName()),
-    propertyId(slot.getPropertyId())
+    propertyId(slot.getPropertyId()),
+    metadata(slot.getMetadata())
 {
 }
 
@@ -48,6 +50,7 @@ gs2::formation::Slot EzSlot::ToModel() const
     gs2::formation::Slot slot;
     slot.setName(getName());
     slot.setPropertyId(getPropertyId());
+    slot.setMetadata(getMetadata());
     return slot;
 }
 

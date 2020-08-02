@@ -25,7 +25,8 @@ EzSlotWithSignature::Data::Data(const Data& data) :
     name(data.name),
     propertyType(data.propertyType),
     body(data.body),
-    signature(data.signature)
+    signature(data.signature),
+    metadata(data.metadata)
 {
 }
 
@@ -33,7 +34,8 @@ EzSlotWithSignature::Data::Data(const gs2::formation::SlotWithSignature& slotWit
     name(slotWithSignature.getName()),
     propertyType(slotWithSignature.getPropertyType()),
     body(slotWithSignature.getBody()),
-    signature(slotWithSignature.getSignature())
+    signature(slotWithSignature.getSignature()),
+    metadata(slotWithSignature.getMetadata())
 {
 }
 
@@ -54,6 +56,7 @@ gs2::formation::SlotWithSignature EzSlotWithSignature::ToModel() const
     slotWithSignature.setPropertyType(getPropertyType());
     slotWithSignature.setBody(getBody());
     slotWithSignature.setSignature(getSignature());
+    slotWithSignature.setMetadata(getMetadata());
     return slotWithSignature;
 }
 

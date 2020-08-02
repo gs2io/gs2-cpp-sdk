@@ -51,6 +51,8 @@ private:
         optional<StringHolder> body;
         /** プロパティIDのリソースを所有していることを証明する署名 */
         optional<StringHolder> signature;
+        /** メタデータ */
+        optional<StringHolder> metadata;
 
         Data() = default;
 
@@ -59,7 +61,8 @@ private:
             name(data.name),
             propertyType(data.propertyType),
             body(data.body),
-            signature(data.signature)
+            signature(data.signature),
+            metadata(data.metadata)
         {
         }
 
@@ -98,6 +101,13 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->signature.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->metadata.emplace(jsonValue.GetString());
                 }
             }
         }
@@ -252,6 +262,37 @@ public:
         return *this;
     }
 
+    /**
+     * メタデータを取得
+     *
+     * @return メタデータ
+     */
+    const optional<StringHolder>& getMetadata() const
+    {
+        return ensureData().metadata;
+    }
+
+    /**
+     * メタデータを設定
+     *
+     * @param metadata メタデータ
+     */
+    void setMetadata(StringHolder metadata)
+    {
+        ensureData().metadata.emplace(std::move(metadata));
+    }
+
+    /**
+     * メタデータを設定
+     *
+     * @param metadata メタデータ
+     */
+    SlotWithSignature& withMetadata(StringHolder metadata)
+    {
+        setMetadata(std::move(metadata));
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
@@ -280,6 +321,10 @@ inline bool operator!=(const SlotWithSignature& lhs, const SlotWithSignature& lh
             return true;
         }
         if (lhs.m_pData->signature != lhr.m_pData->signature)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
         {
             return true;
         }

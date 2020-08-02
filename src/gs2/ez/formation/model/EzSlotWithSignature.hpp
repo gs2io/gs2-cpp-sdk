@@ -49,6 +49,8 @@ private:
         gs2::optional<StringHolder> body;
         /** プロパティIDのリソースを所有していることを証明する署名 */
         gs2::optional<StringHolder> signature;
+        /** メタデータ */
+        gs2::optional<StringHolder> metadata;
 
         Data() = default;
         Data(const Data& data);
@@ -101,6 +103,11 @@ public:
         return *ensureData().signature;
     }
 
+    const StringHolder& getMetadata() const
+    {
+        return *ensureData().metadata;
+    }
+
     // ========================================
     //   Setters
     // ========================================
@@ -125,6 +132,11 @@ public:
         ensureData().signature = std::move(signature);
     }
 
+    void setMetadata(StringHolder metadata)
+    {
+        ensureData().metadata = std::move(metadata);
+    }
+
     EzSlotWithSignature& withName(StringHolder name)
     {
         setName(std::move(name));
@@ -146,6 +158,12 @@ public:
     EzSlotWithSignature& withSignature(StringHolder signature)
     {
         setSignature(std::move(signature));
+        return *this;
+    }
+
+    EzSlotWithSignature& withMetadata(StringHolder metadata)
+    {
+        setMetadata(std::move(metadata));
         return *this;
     }
 };
