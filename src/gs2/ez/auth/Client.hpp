@@ -52,6 +52,7 @@ public:
     ///    body と signature には GS2-Account::Authentication の結果を指定します。<br />
     ///    body と signature の検証に成功すると、 `アクセストークン` を応答します。<br />
     ///    `アクセストークン` は有効期限が1時間の一時的な認証情報で、GS2内の各サービスでゲームプレイヤーを識別するために使用されます。<br />
+    ///    なおGS2-Account::AuthenticationとこのAPIをひとまとめにしたものがGS2-Profile::Loginではじめかた⇒サンプルプログラムで解説しています。<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
