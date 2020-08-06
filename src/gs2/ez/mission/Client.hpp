@@ -18,15 +18,15 @@
 #define GS2_EZ_MISSION_GS2MISSIONWEBSOCKETCLIENT_HPP_
 
 #include <gs2/core/Gs2Object.hpp>
-#include "result/EzListMissionGroupModelsResult.hpp"
-#include "result/EzGetMissionGroupModelResult.hpp"
-#include "result/EzListCounterModelsResult.hpp"
-#include "result/EzGetCounterModelResult.hpp"
 #include "result/EzListMissionTaskModelsResult.hpp"
 #include "result/EzGetMissionTaskModelResult.hpp"
 #include "result/EzListCompletesResult.hpp"
 #include "result/EzGetCompleteResult.hpp"
 #include "result/EzReceiveRewardsResult.hpp"
+#include "result/EzListMissionGroupModelsResult.hpp"
+#include "result/EzGetMissionGroupModelResult.hpp"
+#include "result/EzListCounterModelsResult.hpp"
+#include "result/EzGetCounterModelResult.hpp"
 #include "result/EzListCountersResult.hpp"
 #include "result/EzGetCounterResult.hpp"
 
@@ -55,54 +55,6 @@ private:
 public:
     Client(gs2::ez::Profile& profile);
     ~Client();
-
-    /// <summary>
-    ///  ミッショングループモデルの一覧を取得<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    void listMissionGroupModels(
-        std::function<void(AsyncEzListMissionGroupModelsResult)> callback,
-        StringHolder namespaceName
-    );
-
-    /// <summary>
-    ///  ミッショングループ名を指定してミッショングループモデルを取得<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="missionGroupName">グループ名</param>
-    void getMissionGroupModel(
-        std::function<void(AsyncEzGetMissionGroupModelResult)> callback,
-        StringHolder namespaceName,
-        StringHolder missionGroupName
-    );
-
-    /// <summary>
-    ///  カウンターの種類を認証<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    void listCounterModels(
-        std::function<void(AsyncEzListCounterModelsResult)> callback,
-        StringHolder namespaceName
-    );
-
-    /// <summary>
-    ///  カウンターの種類を認証<br />
-    /// </summary>
-    ///
-    /// <returns>IEnumerator</returns>
-    /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="counterName">カウンター名</param>
-    void getCounterModel(
-        std::function<void(AsyncEzGetCounterModelResult)> callback,
-        StringHolder namespaceName,
-        StringHolder counterName
-    );
 
     /// <summary>
     ///  ミッションタスクモデルの一覧を取得<br />
@@ -182,6 +134,54 @@ public:
         StringHolder namespaceName,
         StringHolder missionGroupName,
         StringHolder missionTaskName
+    );
+
+    /// <summary>
+    ///  ミッショングループモデルの一覧を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    void listMissionGroupModels(
+        std::function<void(AsyncEzListMissionGroupModelsResult)> callback,
+        StringHolder namespaceName
+    );
+
+    /// <summary>
+    ///  ミッショングループ名を指定してミッショングループモデルを取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="missionGroupName">グループ名</param>
+    void getMissionGroupModel(
+        std::function<void(AsyncEzGetMissionGroupModelResult)> callback,
+        StringHolder namespaceName,
+        StringHolder missionGroupName
+    );
+
+    /// <summary>
+    ///  カウンターの種類を認証<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    void listCounterModels(
+        std::function<void(AsyncEzListCounterModelsResult)> callback,
+        StringHolder namespaceName
+    );
+
+    /// <summary>
+    ///  カウンターの種類を認証<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="counterName">カウンター名</param>
+    void getCounterModel(
+        std::function<void(AsyncEzGetCounterModelResult)> callback,
+        StringHolder namespaceName,
+        StringHolder counterName
     );
 
     /// <summary>

@@ -21,33 +21,33 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
         model/EzCurrentMissionMaster.hpp
+        model/EzLogSetting.hpp
+        model/EzScriptSetting.hpp
+        model/EzResponseCache.hpp
+        model/EzGitHubCheckoutSetting.hpp
+        model/EzMissionTaskModel.hpp
+        model/EzNotificationSetting.hpp
         model/EzCounterModelMaster.hpp
         model/EzAcquireAction.hpp
-        model/EzResponseCache.hpp
+        model/EzComplete.hpp
         model/EzMissionGroupModel.hpp
         model/EzCounterModel.hpp
-        model/EzScriptSetting.hpp
-        model/EzLogSetting.hpp
-        model/EzMissionTaskModel.hpp
-        model/EzComplete.hpp
+        model/EzConfig.hpp
         model/EzMissionGroupModelMaster.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzNotificationSetting.hpp
+        model/EzScopedValue.hpp
         model/EzNamespace.hpp
         model/EzCounterScopeModel.hpp
-        model/EzScopedValue.hpp
         model/EzMissionTaskModelMaster.hpp
-        model/EzConfig.hpp
         model/EzCounter.hpp
-        result/EzListMissionGroupModelsResult.hpp
-        result/EzGetMissionGroupModelResult.hpp
-        result/EzListCounterModelsResult.hpp
-        result/EzGetCounterModelResult.hpp
         result/EzListMissionTaskModelsResult.hpp
         result/EzGetMissionTaskModelResult.hpp
         result/EzListCompletesResult.hpp
         result/EzGetCompleteResult.hpp
         result/EzReceiveRewardsResult.hpp
+        result/EzListMissionGroupModelsResult.hpp
+        result/EzGetMissionGroupModelResult.hpp
+        result/EzListCounterModelsResult.hpp
+        result/EzGetCounterModelResult.hpp
         result/EzListCountersResult.hpp
         result/EzGetCounterResult.hpp
         )
@@ -55,23 +55,23 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
         model/EzCurrentMissionMaster.cpp
+        model/EzLogSetting.cpp
+        model/EzScriptSetting.cpp
+        model/EzResponseCache.cpp
+        model/EzGitHubCheckoutSetting.cpp
+        model/EzMissionTaskModel.cpp
+        model/EzNotificationSetting.cpp
         model/EzCounterModelMaster.cpp
         model/EzAcquireAction.cpp
-        model/EzResponseCache.cpp
+        model/EzComplete.cpp
         model/EzMissionGroupModel.cpp
         model/EzCounterModel.cpp
-        model/EzScriptSetting.cpp
-        model/EzLogSetting.cpp
-        model/EzMissionTaskModel.cpp
-        model/EzComplete.cpp
+        model/EzConfig.cpp
         model/EzMissionGroupModelMaster.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzNotificationSetting.cpp
+        model/EzScopedValue.cpp
         model/EzNamespace.cpp
         model/EzCounterScopeModel.cpp
-        model/EzScopedValue.cpp
         model/EzMissionTaskModelMaster.cpp
-        model/EzConfig.cpp
         model/EzCounter.cpp
         )
 
