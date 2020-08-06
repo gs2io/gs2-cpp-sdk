@@ -19,6 +19,7 @@
 
 #include "../Gs2Object.hpp"
 #include "../external/optional/optional.hpp"
+#include "../util/StringHolder.hpp"
 #include "Gs2SessionTaskId.hpp"
 #include <network/WebSocket.h>
 #include <mutex>
@@ -66,6 +67,8 @@ private:
 
     State m_State;
 
+    StringHolder m_Url;
+
     optional<cocos2d::network::WebSocket> m_WebSocket;
     Delegate m_Delegate;
 
@@ -80,7 +83,7 @@ public:
     WebSocket();
     virtual ~WebSocket();
 
-    bool open();
+    bool open(StringHolder url);
 
     void close();
 
