@@ -32,6 +32,8 @@ private:
     public:
         /** スタミナ */
         EzStamina item;
+        /** スタミナモデル */
+        EzStaminaModel staminaModel;
 
         Data() = default;
 
@@ -39,12 +41,14 @@ private:
             Gs2Object(data)
         {
             item = data.item.deepCopy();
+            staminaModel = data.staminaModel.deepCopy();
         }
 
         Data(Data&& data) = default;
 
         Data(const gs2::stamina::ConsumeStaminaResult& consumeStaminaResult) :
-            item(*consumeStaminaResult.getItem())
+            item(*consumeStaminaResult.getItem()),
+            staminaModel(*consumeStaminaResult.getStaminaModel())
         {
         }
 
@@ -77,7 +81,8 @@ public:
     static bool isConvertible(const gs2::stamina::ConsumeStaminaResult& result)
     {
         return
-            result.getItem().has_value();
+            result.getItem().has_value() &&
+            result.getStaminaModel().has_value();
     }
 
     // ========================================
@@ -87,6 +92,11 @@ public:
     const EzStamina& getItem() const
     {
         return ensureData().item;
+    }
+
+    const EzStaminaModel& getStaminaModel() const
+    {
+        return ensureData().staminaModel;
     }
 };
 
