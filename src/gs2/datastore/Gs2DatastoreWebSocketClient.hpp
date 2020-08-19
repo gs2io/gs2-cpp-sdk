@@ -195,6 +195,11 @@ private:
                 jsonWriter.writePropertyName("logSetting");
                 write(jsonWriter, *m_Request.getLogSetting());
             }
+            if (m_Request.getDoneUploadScript())
+            {
+                jsonWriter.writePropertyName("doneUploadScript");
+                write(jsonWriter, *m_Request.getDoneUploadScript());
+            }
             if (m_Request.getRequestId())
             {
                 jsonWriter.writePropertyName("xGs2RequestId");
@@ -357,6 +362,11 @@ private:
             {
                 jsonWriter.writePropertyName("logSetting");
                 write(jsonWriter, *m_Request.getLogSetting());
+            }
+            if (m_Request.getDoneUploadScript())
+            {
+                jsonWriter.writePropertyName("doneUploadScript");
+                write(jsonWriter, *m_Request.getDoneUploadScript());
             }
             if (m_Request.getRequestId())
             {
@@ -2200,6 +2210,11 @@ protected:
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
         }
+        if (obj.getDoneUploadScript())
+        {
+            jsonWriter.writePropertyName("doneUploadScript");
+            write(jsonWriter, *obj.getDoneUploadScript());
+        }
         if (obj.getLogSetting())
         {
             jsonWriter.writePropertyName("logSetting");
@@ -2219,6 +2234,32 @@ protected:
         {
             jsonWriter.writePropertyName("updatedAt");
             jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const ScriptSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getTriggerScriptId())
+        {
+            jsonWriter.writePropertyName("triggerScriptId");
+            jsonWriter.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerTargetType())
+        {
+            jsonWriter.writePropertyName("doneTriggerTargetType");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
+        }
+        if (obj.getDoneTriggerScriptId())
+        {
+            jsonWriter.writePropertyName("doneTriggerScriptId");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerScriptId());
+        }
+        if (obj.getDoneTriggerQueueNamespaceId())
+        {
+            jsonWriter.writePropertyName("doneTriggerQueueNamespaceId");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }

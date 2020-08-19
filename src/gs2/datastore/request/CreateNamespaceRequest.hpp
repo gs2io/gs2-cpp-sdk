@@ -49,6 +49,8 @@ private:
         optional<StringHolder> description;
         /** ログの出力設定 */
         optional<LogSetting> logSetting;
+        /** アップロード完了報告時に実行するスクリプト */
+        optional<ScriptSetting> doneUploadScript;
 
         Data() = default;
 
@@ -60,6 +62,10 @@ private:
             if (data.logSetting)
             {
                 logSetting = data.logSetting->deepCopy();
+            }
+            if (data.doneUploadScript)
+            {
+                doneUploadScript = data.doneUploadScript->deepCopy();
             }
         }
 
@@ -197,6 +203,37 @@ public:
     CreateNamespaceRequest& withLogSetting(LogSetting logSetting)
     {
         ensureData().logSetting.emplace(std::move(logSetting));
+        return *this;
+    }
+
+    /**
+     * アップロード完了報告時に実行するスクリプトを取得
+     *
+     * @return アップロード完了報告時に実行するスクリプト
+     */
+    const optional<ScriptSetting>& getDoneUploadScript() const
+    {
+        return ensureData().doneUploadScript;
+    }
+
+    /**
+     * アップロード完了報告時に実行するスクリプトを設定
+     *
+     * @param doneUploadScript アップロード完了報告時に実行するスクリプト
+     */
+    void setDoneUploadScript(ScriptSetting doneUploadScript)
+    {
+        ensureData().doneUploadScript.emplace(std::move(doneUploadScript));
+    }
+
+    /**
+     * アップロード完了報告時に実行するスクリプトを設定
+     *
+     * @param doneUploadScript アップロード完了報告時に実行するスクリプト
+     */
+    CreateNamespaceRequest& withDoneUploadScript(ScriptSetting doneUploadScript)
+    {
+        ensureData().doneUploadScript.emplace(std::move(doneUploadScript));
         return *this;
     }
 

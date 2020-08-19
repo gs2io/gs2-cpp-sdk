@@ -24,6 +24,7 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "ScriptSetting.hpp"
 #include "LogSetting.hpp"
 #include <memory>
 #include <cstring>
@@ -52,6 +53,8 @@ private:
         optional<StringHolder> name;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
+        /** アップロード完了報告時に実行するスクリプト */
+        optional<ScriptSetting> doneUploadScript;
         /** ログの出力設定 */
         optional<LogSetting> logSetting;
         /** None */
@@ -73,6 +76,10 @@ private:
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
+            if (data.doneUploadScript)
+            {
+                doneUploadScript = data.doneUploadScript->deepCopy();
+            }
             if (data.logSetting)
             {
                 logSetting = data.logSetting->deepCopy();
@@ -114,6 +121,15 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "doneUploadScript") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->doneUploadScript.emplace();
+                    detail::json::JsonParser::parse(&this->doneUploadScript->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name_, "logSetting") == 0)
@@ -299,6 +315,37 @@ public:
     }
 
     /**
+     * アップロード完了報告時に実行するスクリプトを取得
+     *
+     * @return アップロード完了報告時に実行するスクリプト
+     */
+    const optional<ScriptSetting>& getDoneUploadScript() const
+    {
+        return ensureData().doneUploadScript;
+    }
+
+    /**
+     * アップロード完了報告時に実行するスクリプトを設定
+     *
+     * @param doneUploadScript アップロード完了報告時に実行するスクリプト
+     */
+    void setDoneUploadScript(ScriptSetting doneUploadScript)
+    {
+        ensureData().doneUploadScript.emplace(std::move(doneUploadScript));
+    }
+
+    /**
+     * アップロード完了報告時に実行するスクリプトを設定
+     *
+     * @param doneUploadScript アップロード完了報告時に実行するスクリプト
+     */
+    Namespace& withDoneUploadScript(ScriptSetting doneUploadScript)
+    {
+        setDoneUploadScript(std::move(doneUploadScript));
+        return *this;
+    }
+
+    /**
      * ログの出力設定を取得
      *
      * @return ログの出力設定
@@ -450,6 +497,10 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
             return true;
         }
         if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->doneUploadScript != lhr.m_pData->doneUploadScript)
         {
             return true;
         }

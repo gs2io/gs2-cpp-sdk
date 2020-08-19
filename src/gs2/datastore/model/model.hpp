@@ -20,6 +20,7 @@
 #include <gs2/core/common.hpp>
 #include "notification.hpp"
 #include "Namespace.hpp"
+#include "ScriptSetting.hpp"
 #include "DataObject.hpp"
 #include "DataObjectHistory.hpp"
 #include "ResponseCache.hpp"
