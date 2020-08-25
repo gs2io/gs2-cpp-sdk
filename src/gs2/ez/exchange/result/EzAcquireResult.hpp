@@ -34,12 +34,15 @@ private:
         EzAwait item;
         /** 報酬取得処理の実行に使用するスタンプシート */
         StringHolder stampSheet;
+        /** スタンプシートの署名計算に使用した暗号鍵GRN */
+        StringHolder stampSheetEncryptionKeyId;
 
         Data() = default;
 
         Data(const Data& data) :
             Gs2Object(data),
-            stampSheet(data.stampSheet)
+            stampSheet(data.stampSheet),
+            stampSheetEncryptionKeyId(data.stampSheetEncryptionKeyId)
         {
             item = data.item.deepCopy();
         }
@@ -48,7 +51,8 @@ private:
 
         Data(const gs2::exchange::AcquireResult& acquireResult) :
             item(*acquireResult.getItem()),
-            stampSheet(*acquireResult.getStampSheet())
+            stampSheet(*acquireResult.getStampSheet()),
+            stampSheetEncryptionKeyId(*acquireResult.getStampSheetEncryptionKeyId())
         {
         }
 
@@ -82,7 +86,8 @@ public:
     {
         return
             result.getItem().has_value() &&
-            result.getStampSheet().has_value();
+            result.getStampSheet().has_value() &&
+            result.getStampSheetEncryptionKeyId().has_value();
     }
 
     // ========================================
@@ -97,6 +102,11 @@ public:
     const StringHolder& getStampSheet() const
     {
         return ensureData().stampSheet;
+    }
+
+    const StringHolder& getStampSheetEncryptionKeyId() const
+    {
+        return ensureData().stampSheetEncryptionKeyId;
     }
 };
 
