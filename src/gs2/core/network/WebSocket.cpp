@@ -75,6 +75,7 @@ void WebSocket::Delegate::onError(cocos2d::network::WebSocket* pWebSocket, const
 
 WebSocket::WebSocket() :
     m_State(State::Idle),
+    m_Url(""),
     m_Delegate(*this)
 {
     // ping を定期的に送信する
@@ -94,7 +95,7 @@ WebSocket::~WebSocket()
     // TODO: close をきちんと待つ
 }
 
-bool WebSocket::open()
+bool WebSocket::open(StringHolder url)
 {
     std::lock_guard<std::mutex> lock(m_Mutex);
 
@@ -105,11 +106,13 @@ bool WebSocket::open()
 
     m_WebSocket.emplace();
 
+    m_Url = std::move(url);
+
     auto path = std::move(cocos2d::FileUtils::getInstance()->getWritablePath() + "root-ca");
 
     if (cocos2d::FileUtils::getInstance()->isFileExist(path))
     {
-        bool isSuccessful = m_WebSocket->init(m_Delegate, "wss://gateway-ws.ap-northeast-1.gen2.gs2io.com", nullptr, path);
+        bool isSuccessful = m_WebSocket->init(m_Delegate, m_Url.getCString(), nullptr, path);
 
         if (isSuccessful)
         {
@@ -148,7 +151,7 @@ void WebSocket::writeRootCaCertificatesCallback(bool isSuccessful)
     if (isSuccessful)
     {
         auto path = std::move(cocos2d::FileUtils::getInstance()->getWritablePath() + "root-ca");
-        isSuccessful = m_WebSocket->init(m_Delegate, "wss://gateway-ws.ap-northeast-1.gen2.gs2io.com", nullptr, path);
+        isSuccessful = m_WebSocket->init(m_Delegate, m_Url.getCString(), nullptr, path);
     }
 
     if (isSuccessful)
