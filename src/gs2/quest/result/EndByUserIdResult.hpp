@@ -46,12 +46,15 @@ private:
         optional<Progress> item;
         /** 報酬付与処理の実行に使用するスタンプシート */
         optional<StringHolder> stampSheet;
+        /** スタンプシートの署名計算に使用した暗号鍵GRN */
+        optional<StringHolder> stampSheetEncryptionKeyId;
 
         Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            stampSheet(data.stampSheet)
+            stampSheet(data.stampSheet),
+            stampSheetEncryptionKeyId(data.stampSheetEncryptionKeyId)
         {
             if (data.item)
             {
@@ -82,6 +85,13 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->stampSheet.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "stampSheetEncryptionKeyId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->stampSheetEncryptionKeyId.emplace(jsonValue.GetString());
                 }
             }
         }
@@ -150,6 +160,26 @@ public:
     void setStampSheet(StringHolder stampSheet)
     {
         ensureData().stampSheet.emplace(std::move(stampSheet));
+    }
+
+    /**
+     * スタンプシートの署名計算に使用した暗号鍵GRNを取得
+     *
+     * @return スタンプシートの署名計算に使用した暗号鍵GRN
+     */
+    const optional<StringHolder>& getStampSheetEncryptionKeyId() const
+    {
+        return ensureData().stampSheetEncryptionKeyId;
+    }
+
+    /**
+     * スタンプシートの署名計算に使用した暗号鍵GRNを設定
+     *
+     * @param stampSheetEncryptionKeyId スタンプシートの署名計算に使用した暗号鍵GRN
+     */
+    void setStampSheetEncryptionKeyId(StringHolder stampSheetEncryptionKeyId)
+    {
+        ensureData().stampSheetEncryptionKeyId.emplace(std::move(stampSheetEncryptionKeyId));
     }
 
 

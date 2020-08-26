@@ -32,19 +32,23 @@ private:
     public:
         /** クエストの開始処理の実行に使用するスタンプシート */
         StringHolder stampSheet;
+        /** スタンプシートの署名計算に使用した暗号鍵GRN */
+        StringHolder stampSheetEncryptionKeyId;
 
         Data() = default;
 
         Data(const Data& data) :
             Gs2Object(data),
-            stampSheet(data.stampSheet)
+            stampSheet(data.stampSheet),
+            stampSheetEncryptionKeyId(data.stampSheetEncryptionKeyId)
         {
         }
 
         Data(Data&& data) = default;
 
         Data(const gs2::quest::StartResult& startResult) :
-            stampSheet(*startResult.getStampSheet())
+            stampSheet(*startResult.getStampSheet()),
+            stampSheetEncryptionKeyId(*startResult.getStampSheetEncryptionKeyId())
         {
         }
 
@@ -77,7 +81,8 @@ public:
     static bool isConvertible(const gs2::quest::StartResult& result)
     {
         return
-            result.getStampSheet().has_value();
+            result.getStampSheet().has_value() &&
+            result.getStampSheetEncryptionKeyId().has_value();
     }
 
     // ========================================
@@ -87,6 +92,11 @@ public:
     const StringHolder& getStampSheet() const
     {
         return ensureData().stampSheet;
+    }
+
+    const StringHolder& getStampSheetEncryptionKeyId() const
+    {
+        return ensureData().stampSheetEncryptionKeyId;
     }
 };
 
