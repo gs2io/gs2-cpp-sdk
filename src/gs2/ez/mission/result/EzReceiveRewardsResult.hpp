@@ -32,19 +32,23 @@ private:
     public:
         /** ミッションの達成報酬を受領するスタンプシート */
         StringHolder stampSheet;
+        /** スタンプシートの署名計算に使用した暗号鍵GRN */
+        StringHolder stampSheetEncryptionKeyId;
 
         Data() = default;
 
         Data(const Data& data) :
             Gs2Object(data),
-            stampSheet(data.stampSheet)
+            stampSheet(data.stampSheet),
+            stampSheetEncryptionKeyId(data.stampSheetEncryptionKeyId)
         {
         }
 
         Data(Data&& data) = default;
 
         Data(const gs2::mission::CompleteResult& completeResult) :
-            stampSheet(*completeResult.getStampSheet())
+            stampSheet(*completeResult.getStampSheet()),
+            stampSheetEncryptionKeyId(*completeResult.getStampSheetEncryptionKeyId())
         {
         }
 
@@ -77,7 +81,8 @@ public:
     static bool isConvertible(const gs2::mission::CompleteResult& result)
     {
         return
-            result.getStampSheet().has_value();
+            result.getStampSheet().has_value() &&
+            result.getStampSheetEncryptionKeyId().has_value();
     }
 
     // ========================================
@@ -87,6 +92,11 @@ public:
     const StringHolder& getStampSheet() const
     {
         return ensureData().stampSheet;
+    }
+
+    const StringHolder& getStampSheetEncryptionKeyId() const
+    {
+        return ensureData().stampSheetEncryptionKeyId;
     }
 };
 
