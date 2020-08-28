@@ -103,87 +103,70 @@ void Client::getMissionGroupModel(
     );
 }
 
-void Client::listCounters(
-    std::function<void(AsyncEzListCountersResult)> callback,
-    GameSession& session,
-    StringHolder namespaceName,
-    gs2::optional<StringHolder> pageToken,
-    gs2::optional<Int64> limit
+void Client::listCounterModels(
+    std::function<void(AsyncEzListCounterModelsResult)> callback,
+    StringHolder namespaceName
 )
 {
-    gs2::mission::DescribeCountersRequest request;
+    gs2::mission::DescribeCounterModelsRequest request;
     request.setNamespaceName(namespaceName);
-    if (pageToken)
-    {
-        request.setPageToken(std::move(*pageToken));
-    }
-    if (limit)
-    {
-        request.setLimit(std::move(*limit));
-    }
-    request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeCounters(
+    m_pClient->describeCounterModels(
         request,
-        [callback](gs2::mission::AsyncDescribeCountersResult r)
+        [callback](gs2::mission::AsyncDescribeCounterModelsResult r)
         {
             if (r.getError())
             {
                 auto gs2ClientException = *r.getError();
-                AsyncEzListCountersResult asyncResult(std::move(gs2ClientException));
+                AsyncEzListCounterModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListCountersResult::isConvertible(*r.getResult()))
+            else if (r.getResult() && EzListCounterModelsResult::isConvertible(*r.getResult()))
             {
-                EzListCountersResult ezResult(*r.getResult());
-                AsyncEzListCountersResult asyncResult(std::move(ezResult));
+                EzListCounterModelsResult ezResult(*r.getResult());
+                AsyncEzListCounterModelsResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
                 Gs2ClientException gs2ClientException;
                 gs2ClientException.setType(Gs2ClientException::UnknownException);
-                AsyncEzListCountersResult asyncResult(std::move(gs2ClientException));
+                AsyncEzListCounterModelsResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
         }
     );
 }
 
-void Client::getCounter(
-    std::function<void(AsyncEzGetCounterResult)> callback,
-    GameSession& session,
+void Client::getCounterModel(
+    std::function<void(AsyncEzGetCounterModelResult)> callback,
     StringHolder namespaceName,
-    gs2::optional<StringHolder> counterName
+    StringHolder counterName
 )
 {
-    gs2::mission::GetCounterRequest request;
+    gs2::mission::GetCounterModelRequest request;
     request.setNamespaceName(namespaceName);
-    if (counterName)
-    {
-        request.setCounterName(std::move(*counterName));
-    }
-    request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getCounter(
+    request.setCounterName(counterName);
+    m_pClient->getCounterModel(
         request,
-        [callback](gs2::mission::AsyncGetCounterResult r)
+        [callback](gs2::mission::AsyncGetCounterModelResult r)
         {
             if (r.getError())
             {
                 auto gs2ClientException = *r.getError();
-                AsyncEzGetCounterResult asyncResult(std::move(gs2ClientException));
+                AsyncEzGetCounterModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetCounterResult::isConvertible(*r.getResult()))
+            else if (r.getResult() && EzGetCounterModelResult::isConvertible(*r.getResult()))
             {
-                EzGetCounterResult ezResult(*r.getResult());
-                AsyncEzGetCounterResult asyncResult(std::move(ezResult));
+                EzGetCounterModelResult ezResult(*r.getResult());
+                AsyncEzGetCounterModelResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
                 Gs2ClientException gs2ClientException;
                 gs2ClientException.setType(Gs2ClientException::UnknownException);
-                AsyncEzGetCounterResult asyncResult(std::move(gs2ClientException));
+                AsyncEzGetCounterModelResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
         }
@@ -388,70 +371,87 @@ void Client::receiveRewards(
     );
 }
 
-void Client::listCounterModels(
-    std::function<void(AsyncEzListCounterModelsResult)> callback,
-    StringHolder namespaceName
+void Client::listCounters(
+    std::function<void(AsyncEzListCountersResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> pageToken,
+    gs2::optional<Int64> limit
 )
 {
-    gs2::mission::DescribeCounterModelsRequest request;
+    gs2::mission::DescribeCountersRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->describeCounterModels(
+    if (pageToken)
+    {
+        request.setPageToken(std::move(*pageToken));
+    }
+    if (limit)
+    {
+        request.setLimit(std::move(*limit));
+    }
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->describeCounters(
         request,
-        [callback](gs2::mission::AsyncDescribeCounterModelsResult r)
+        [callback](gs2::mission::AsyncDescribeCountersResult r)
         {
             if (r.getError())
             {
                 auto gs2ClientException = *r.getError();
-                AsyncEzListCounterModelsResult asyncResult(std::move(gs2ClientException));
+                AsyncEzListCountersResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzListCounterModelsResult::isConvertible(*r.getResult()))
+            else if (r.getResult() && EzListCountersResult::isConvertible(*r.getResult()))
             {
-                EzListCounterModelsResult ezResult(*r.getResult());
-                AsyncEzListCounterModelsResult asyncResult(std::move(ezResult));
+                EzListCountersResult ezResult(*r.getResult());
+                AsyncEzListCountersResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
                 Gs2ClientException gs2ClientException;
                 gs2ClientException.setType(Gs2ClientException::UnknownException);
-                AsyncEzListCounterModelsResult asyncResult(std::move(gs2ClientException));
+                AsyncEzListCountersResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
         }
     );
 }
 
-void Client::getCounterModel(
-    std::function<void(AsyncEzGetCounterModelResult)> callback,
+void Client::getCounter(
+    std::function<void(AsyncEzGetCounterResult)> callback,
+    GameSession& session,
     StringHolder namespaceName,
-    StringHolder counterName
+    gs2::optional<StringHolder> counterName
 )
 {
-    gs2::mission::GetCounterModelRequest request;
+    gs2::mission::GetCounterRequest request;
     request.setNamespaceName(namespaceName);
-    request.setCounterName(counterName);
-    m_pClient->getCounterModel(
+    if (counterName)
+    {
+        request.setCounterName(std::move(*counterName));
+    }
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->getCounter(
         request,
-        [callback](gs2::mission::AsyncGetCounterModelResult r)
+        [callback](gs2::mission::AsyncGetCounterResult r)
         {
             if (r.getError())
             {
                 auto gs2ClientException = *r.getError();
-                AsyncEzGetCounterModelResult asyncResult(std::move(gs2ClientException));
+                AsyncEzGetCounterResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
-            else if (r.getResult() && EzGetCounterModelResult::isConvertible(*r.getResult()))
+            else if (r.getResult() && EzGetCounterResult::isConvertible(*r.getResult()))
             {
-                EzGetCounterModelResult ezResult(*r.getResult());
-                AsyncEzGetCounterModelResult asyncResult(std::move(ezResult));
+                EzGetCounterResult ezResult(*r.getResult());
+                AsyncEzGetCounterResult asyncResult(std::move(ezResult));
                 callback(asyncResult);
             }
             else
             {
                 Gs2ClientException gs2ClientException;
                 gs2ClientException.setType(Gs2ClientException::UnknownException);
-                AsyncEzGetCounterModelResult asyncResult(std::move(gs2ClientException));
+                AsyncEzGetCounterResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
         }

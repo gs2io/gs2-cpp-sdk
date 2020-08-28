@@ -20,15 +20,15 @@
 #include <gs2/core/Gs2Object.hpp>
 #include "result/EzListMissionGroupModelsResult.hpp"
 #include "result/EzGetMissionGroupModelResult.hpp"
-#include "result/EzListCountersResult.hpp"
-#include "result/EzGetCounterResult.hpp"
+#include "result/EzListCounterModelsResult.hpp"
+#include "result/EzGetCounterModelResult.hpp"
 #include "result/EzListMissionTaskModelsResult.hpp"
 #include "result/EzGetMissionTaskModelResult.hpp"
 #include "result/EzListCompletesResult.hpp"
 #include "result/EzGetCompleteResult.hpp"
 #include "result/EzReceiveRewardsResult.hpp"
-#include "result/EzListCounterModelsResult.hpp"
-#include "result/EzGetCounterModelResult.hpp"
+#include "result/EzListCountersResult.hpp"
+#include "result/EzGetCounterResult.hpp"
 
 
 namespace gs2 {
@@ -81,37 +81,27 @@ public:
     );
 
     /// <summary>
-    ///  達成したミッションの一覧を取得<br />
+    ///  カウンターの種類を認証<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
-    /// <param name="callback">コールバックハンドラ</param>
-    /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
-    /// <param name="limit">データの取得件数</param>
-    void listCounters(
-        std::function<void(AsyncEzListCountersResult)> callback,
-        GameSession& session,
-        StringHolder namespaceName,
-        gs2::optional<StringHolder> pageToken=gs2::nullopt,
-        gs2::optional<Int64> limit=gs2::nullopt
+    void listCounterModels(
+        std::function<void(AsyncEzListCounterModelsResult)> callback,
+        StringHolder namespaceName
     );
 
     /// <summary>
-    ///  ミッショングループを指定して達成したミッションを取得<br />
+    ///  カウンターの種類を認証<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
-    /// <param name="callback">コールバックハンドラ</param>
-    /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="counterName">カウンター名</param>
-    void getCounter(
-        std::function<void(AsyncEzGetCounterResult)> callback,
-        GameSession& session,
+    void getCounterModel(
+        std::function<void(AsyncEzGetCounterModelResult)> callback,
         StringHolder namespaceName,
-        gs2::optional<StringHolder> counterName=gs2::nullopt
+        StringHolder counterName
     );
 
     /// <summary>
@@ -195,27 +185,37 @@ public:
     );
 
     /// <summary>
-    ///  カウンターの種類を認証<br />
+    ///  達成したミッションの一覧を取得<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
-    void listCounterModels(
-        std::function<void(AsyncEzListCounterModelsResult)> callback,
-        StringHolder namespaceName
+    /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
+    /// <param name="limit">データの取得件数</param>
+    void listCounters(
+        std::function<void(AsyncEzListCountersResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        gs2::optional<StringHolder> pageToken=gs2::nullopt,
+        gs2::optional<Int64> limit=gs2::nullopt
     );
 
     /// <summary>
-    ///  カウンターの種類を認証<br />
+    ///  ミッショングループを指定して達成したミッションを取得<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="counterName">カウンター名</param>
-    void getCounterModel(
-        std::function<void(AsyncEzGetCounterModelResult)> callback,
+    void getCounter(
+        std::function<void(AsyncEzGetCounterResult)> callback,
+        GameSession& session,
         StringHolder namespaceName,
-        StringHolder counterName
+        gs2::optional<StringHolder> counterName=gs2::nullopt
     );
 };
 
