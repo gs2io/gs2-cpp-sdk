@@ -21,5 +21,6 @@
 #include "EzRateModel.hpp"
 #include "EzProgress.hpp"
 #include "EzConfig.hpp"
+#include "EzMaterial.hpp"
 
 #endif //GS2_EZ_ENHANCE_MODEL_MODEL_HPP_

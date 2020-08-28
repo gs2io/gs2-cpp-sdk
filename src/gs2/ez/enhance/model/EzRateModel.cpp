@@ -24,7 +24,9 @@ EzRateModel::Data::Data(const Data& data) :
     Gs2Object(data),
     name(data.name),
     metadata(data.metadata),
-    materialInventoryId(data.materialInventoryId),
+    targetInventoryModelId(data.targetInventoryModelId),
+    acquireExperienceSuffix(data.acquireExperienceSuffix),
+    materialInventoryModelId(data.materialInventoryModelId),
     experienceModelId(data.experienceModelId)
 {
 }
@@ -32,7 +34,9 @@ EzRateModel::Data::Data(const Data& data) :
 EzRateModel::Data::Data(const gs2::enhance::RateModel& rateModel) :
     name(rateModel.getName()),
     metadata(rateModel.getMetadata()),
-    materialInventoryId(rateModel.getMaterialInventoryId()),
+    targetInventoryModelId(rateModel.getTargetInventoryModelId()),
+    acquireExperienceSuffix(rateModel.getAcquireExperienceSuffix()),
+    materialInventoryModelId(rateModel.getMaterialInventoryModelId()),
     experienceModelId(rateModel.getExperienceModelId())
 {
 }
@@ -52,7 +56,9 @@ gs2::enhance::RateModel EzRateModel::ToModel() const
     gs2::enhance::RateModel rateModel;
     rateModel.setName(getName());
     rateModel.setMetadata(getMetadata());
-    rateModel.setMaterialInventoryId(getMaterialInventoryId());
+    rateModel.setTargetInventoryModelId(getTargetInventoryModelId());
+    rateModel.setAcquireExperienceSuffix(getAcquireExperienceSuffix());
+    rateModel.setMaterialInventoryModelId(getMaterialInventoryModelId());
     rateModel.setExperienceModelId(getExperienceModelId());
     return rateModel;
 }

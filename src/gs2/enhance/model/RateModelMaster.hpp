@@ -52,12 +52,12 @@ private:
         optional<StringHolder> description;
         /** 強化レートのメタデータ */
         optional<StringHolder> metadata;
-        /** 強化対象に使用できるインベントリ のGRN */
-        optional<StringHolder> targetInventoryId;
+        /** 強化対象に使用できるインベントリモデル のGRN */
+        optional<StringHolder> targetInventoryModelId;
         /** GS2-Experience で入手した経験値を格納する プロパティID に付与するサフィックス */
         optional<StringHolder> acquireExperienceSuffix;
-        /** 強化素材に使用できるインベントリ のGRN */
-        optional<StringHolder> materialInventoryId;
+        /** 強化素材に使用できるインベントリモデル のGRN */
+        optional<StringHolder> materialInventoryModelId;
         /** 入手経験値を格納しているメタデータのJSON階層 */
         optional<List<StringHolder>> acquireExperienceHierarchy;
         /** 獲得できる経験値の種類マスター のGRN */
@@ -77,9 +77,9 @@ private:
             name(data.name),
             description(data.description),
             metadata(data.metadata),
-            targetInventoryId(data.targetInventoryId),
+            targetInventoryModelId(data.targetInventoryModelId),
             acquireExperienceSuffix(data.acquireExperienceSuffix),
-            materialInventoryId(data.materialInventoryId),
+            materialInventoryModelId(data.materialInventoryModelId),
             experienceModelId(data.experienceModelId),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
@@ -131,11 +131,11 @@ private:
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "targetInventoryId") == 0)
+            else if (std::strcmp(name_, "targetInventoryModelId") == 0)
             {
                 if (jsonValue.IsString())
                 {
-                    this->targetInventoryId.emplace(jsonValue.GetString());
+                    this->targetInventoryModelId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "acquireExperienceSuffix") == 0)
@@ -145,11 +145,11 @@ private:
                     this->acquireExperienceSuffix.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "materialInventoryId") == 0)
+            else if (std::strcmp(name_, "materialInventoryModelId") == 0)
             {
                 if (jsonValue.IsString())
                 {
-                    this->materialInventoryId.emplace(jsonValue.GetString());
+                    this->materialInventoryModelId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "acquireExperienceHierarchy") == 0)
@@ -355,33 +355,33 @@ public:
     }
 
     /**
-     * 強化対象に使用できるインベントリ のGRNを取得
+     * 強化対象に使用できるインベントリモデル のGRNを取得
      *
-     * @return 強化対象に使用できるインベントリ のGRN
+     * @return 強化対象に使用できるインベントリモデル のGRN
      */
-    const optional<StringHolder>& getTargetInventoryId() const
+    const optional<StringHolder>& getTargetInventoryModelId() const
     {
-        return ensureData().targetInventoryId;
+        return ensureData().targetInventoryModelId;
     }
 
     /**
-     * 強化対象に使用できるインベントリ のGRNを設定
+     * 強化対象に使用できるインベントリモデル のGRNを設定
      *
-     * @param targetInventoryId 強化対象に使用できるインベントリ のGRN
+     * @param targetInventoryModelId 強化対象に使用できるインベントリモデル のGRN
      */
-    void setTargetInventoryId(StringHolder targetInventoryId)
+    void setTargetInventoryModelId(StringHolder targetInventoryModelId)
     {
-        ensureData().targetInventoryId.emplace(std::move(targetInventoryId));
+        ensureData().targetInventoryModelId.emplace(std::move(targetInventoryModelId));
     }
 
     /**
-     * 強化対象に使用できるインベントリ のGRNを設定
+     * 強化対象に使用できるインベントリモデル のGRNを設定
      *
-     * @param targetInventoryId 強化対象に使用できるインベントリ のGRN
+     * @param targetInventoryModelId 強化対象に使用できるインベントリモデル のGRN
      */
-    RateModelMaster& withTargetInventoryId(StringHolder targetInventoryId)
+    RateModelMaster& withTargetInventoryModelId(StringHolder targetInventoryModelId)
     {
-        setTargetInventoryId(std::move(targetInventoryId));
+        setTargetInventoryModelId(std::move(targetInventoryModelId));
         return *this;
     }
 
@@ -417,33 +417,33 @@ public:
     }
 
     /**
-     * 強化素材に使用できるインベントリ のGRNを取得
+     * 強化素材に使用できるインベントリモデル のGRNを取得
      *
-     * @return 強化素材に使用できるインベントリ のGRN
+     * @return 強化素材に使用できるインベントリモデル のGRN
      */
-    const optional<StringHolder>& getMaterialInventoryId() const
+    const optional<StringHolder>& getMaterialInventoryModelId() const
     {
-        return ensureData().materialInventoryId;
+        return ensureData().materialInventoryModelId;
     }
 
     /**
-     * 強化素材に使用できるインベントリ のGRNを設定
+     * 強化素材に使用できるインベントリモデル のGRNを設定
      *
-     * @param materialInventoryId 強化素材に使用できるインベントリ のGRN
+     * @param materialInventoryModelId 強化素材に使用できるインベントリモデル のGRN
      */
-    void setMaterialInventoryId(StringHolder materialInventoryId)
+    void setMaterialInventoryModelId(StringHolder materialInventoryModelId)
     {
-        ensureData().materialInventoryId.emplace(std::move(materialInventoryId));
+        ensureData().materialInventoryModelId.emplace(std::move(materialInventoryModelId));
     }
 
     /**
-     * 強化素材に使用できるインベントリ のGRNを設定
+     * 強化素材に使用できるインベントリモデル のGRNを設定
      *
-     * @param materialInventoryId 強化素材に使用できるインベントリ のGRN
+     * @param materialInventoryModelId 強化素材に使用できるインベントリモデル のGRN
      */
-    RateModelMaster& withMaterialInventoryId(StringHolder materialInventoryId)
+    RateModelMaster& withMaterialInventoryModelId(StringHolder materialInventoryModelId)
     {
-        setMaterialInventoryId(std::move(materialInventoryId));
+        setMaterialInventoryModelId(std::move(materialInventoryModelId));
         return *this;
     }
 
@@ -633,7 +633,7 @@ inline bool operator!=(const RateModelMaster& lhs, const RateModelMaster& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->targetInventoryId != lhr.m_pData->targetInventoryId)
+        if (lhs.m_pData->targetInventoryModelId != lhr.m_pData->targetInventoryModelId)
         {
             return true;
         }
@@ -641,7 +641,7 @@ inline bool operator!=(const RateModelMaster& lhs, const RateModelMaster& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->materialInventoryId != lhr.m_pData->materialInventoryId)
+        if (lhs.m_pData->materialInventoryModelId != lhr.m_pData->materialInventoryModelId)
         {
             return true;
         }

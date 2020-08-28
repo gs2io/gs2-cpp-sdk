@@ -45,8 +45,12 @@ private:
         gs2::optional<StringHolder> name;
         /** 強化レートのメタデータ */
         gs2::optional<StringHolder> metadata;
-        /** 強化素材に使用できるインベントリ のGRN */
-        gs2::optional<StringHolder> materialInventoryId;
+        /** 強化対象に使用できるインベントリモデル のGRN */
+        gs2::optional<StringHolder> targetInventoryModelId;
+        /** GS2-Experience で入手した経験値を格納する プロパティID に付与するサフィックス */
+        gs2::optional<StringHolder> acquireExperienceSuffix;
+        /** 強化素材に使用できるインベントリモデル のGRN */
+        gs2::optional<StringHolder> materialInventoryModelId;
         /** 獲得できる経験値の種類マスター のGRN */
         gs2::optional<StringHolder> experienceModelId;
 
@@ -91,9 +95,19 @@ public:
         return *ensureData().metadata;
     }
 
-    const StringHolder& getMaterialInventoryId() const
+    const StringHolder& getTargetInventoryModelId() const
     {
-        return *ensureData().materialInventoryId;
+        return *ensureData().targetInventoryModelId;
+    }
+
+    const StringHolder& getAcquireExperienceSuffix() const
+    {
+        return *ensureData().acquireExperienceSuffix;
+    }
+
+    const StringHolder& getMaterialInventoryModelId() const
+    {
+        return *ensureData().materialInventoryModelId;
     }
 
     const StringHolder& getExperienceModelId() const
@@ -115,9 +129,19 @@ public:
         ensureData().metadata = std::move(metadata);
     }
 
-    void setMaterialInventoryId(StringHolder materialInventoryId)
+    void setTargetInventoryModelId(StringHolder targetInventoryModelId)
     {
-        ensureData().materialInventoryId = std::move(materialInventoryId);
+        ensureData().targetInventoryModelId = std::move(targetInventoryModelId);
+    }
+
+    void setAcquireExperienceSuffix(StringHolder acquireExperienceSuffix)
+    {
+        ensureData().acquireExperienceSuffix = std::move(acquireExperienceSuffix);
+    }
+
+    void setMaterialInventoryModelId(StringHolder materialInventoryModelId)
+    {
+        ensureData().materialInventoryModelId = std::move(materialInventoryModelId);
     }
 
     void setExperienceModelId(StringHolder experienceModelId)
@@ -137,9 +161,21 @@ public:
         return *this;
     }
 
-    EzRateModel& withMaterialInventoryId(StringHolder materialInventoryId)
+    EzRateModel& withTargetInventoryModelId(StringHolder targetInventoryModelId)
     {
-        setMaterialInventoryId(std::move(materialInventoryId));
+        setTargetInventoryModelId(std::move(targetInventoryModelId));
+        return *this;
+    }
+
+    EzRateModel& withAcquireExperienceSuffix(StringHolder acquireExperienceSuffix)
+    {
+        setAcquireExperienceSuffix(std::move(acquireExperienceSuffix));
+        return *this;
+    }
+
+    EzRateModel& withMaterialInventoryModelId(StringHolder materialInventoryModelId)
+    {
+        setMaterialInventoryModelId(std::move(materialInventoryModelId));
         return *this;
     }
 

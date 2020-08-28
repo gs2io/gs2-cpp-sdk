@@ -51,12 +51,12 @@ private:
         optional<StringHolder> description;
         /** 強化レートのメタデータ */
         optional<StringHolder> metadata;
-        /** 強化対象に使用できるインベントリ のGRN */
-        optional<StringHolder> targetInventoryId;
+        /** 強化対象に使用できるインベントリモデル のGRN */
+        optional<StringHolder> targetInventoryModelId;
         /** GS2-Experience で入手した経験値を格納する プロパティID に付与するサフィックス */
         optional<StringHolder> acquireExperienceSuffix;
-        /** 強化素材に使用できるインベントリ のGRN */
-        optional<StringHolder> materialInventoryId;
+        /** 強化素材に使用できるインベントリモデル のGRN */
+        optional<StringHolder> materialInventoryModelId;
         /** 入手経験値を格納しているメタデータのJSON階層 */
         optional<List<StringHolder>> acquireExperienceHierarchy;
         /** 獲得できる経験値の種類マスター のGRN */
@@ -72,9 +72,9 @@ private:
             name(data.name),
             description(data.description),
             metadata(data.metadata),
-            targetInventoryId(data.targetInventoryId),
+            targetInventoryModelId(data.targetInventoryModelId),
             acquireExperienceSuffix(data.acquireExperienceSuffix),
-            materialInventoryId(data.materialInventoryId),
+            materialInventoryModelId(data.materialInventoryModelId),
             experienceModelId(data.experienceModelId)
         {
             if (data.acquireExperienceHierarchy)
@@ -256,33 +256,33 @@ public:
     }
 
     /**
-     * 強化対象に使用できるインベントリ のGRNを取得
+     * 強化対象に使用できるインベントリモデル のGRNを取得
      *
-     * @return 強化対象に使用できるインベントリ のGRN
+     * @return 強化対象に使用できるインベントリモデル のGRN
      */
-    const optional<StringHolder>& getTargetInventoryId() const
+    const optional<StringHolder>& getTargetInventoryModelId() const
     {
-        return ensureData().targetInventoryId;
+        return ensureData().targetInventoryModelId;
     }
 
     /**
-     * 強化対象に使用できるインベントリ のGRNを設定
+     * 強化対象に使用できるインベントリモデル のGRNを設定
      *
-     * @param targetInventoryId 強化対象に使用できるインベントリ のGRN
+     * @param targetInventoryModelId 強化対象に使用できるインベントリモデル のGRN
      */
-    void setTargetInventoryId(StringHolder targetInventoryId)
+    void setTargetInventoryModelId(StringHolder targetInventoryModelId)
     {
-        ensureData().targetInventoryId.emplace(std::move(targetInventoryId));
+        ensureData().targetInventoryModelId.emplace(std::move(targetInventoryModelId));
     }
 
     /**
-     * 強化対象に使用できるインベントリ のGRNを設定
+     * 強化対象に使用できるインベントリモデル のGRNを設定
      *
-     * @param targetInventoryId 強化対象に使用できるインベントリ のGRN
+     * @param targetInventoryModelId 強化対象に使用できるインベントリモデル のGRN
      */
-    CreateRateModelMasterRequest& withTargetInventoryId(StringHolder targetInventoryId)
+    CreateRateModelMasterRequest& withTargetInventoryModelId(StringHolder targetInventoryModelId)
     {
-        ensureData().targetInventoryId.emplace(std::move(targetInventoryId));
+        ensureData().targetInventoryModelId.emplace(std::move(targetInventoryModelId));
         return *this;
     }
 
@@ -318,33 +318,33 @@ public:
     }
 
     /**
-     * 強化素材に使用できるインベントリ のGRNを取得
+     * 強化素材に使用できるインベントリモデル のGRNを取得
      *
-     * @return 強化素材に使用できるインベントリ のGRN
+     * @return 強化素材に使用できるインベントリモデル のGRN
      */
-    const optional<StringHolder>& getMaterialInventoryId() const
+    const optional<StringHolder>& getMaterialInventoryModelId() const
     {
-        return ensureData().materialInventoryId;
+        return ensureData().materialInventoryModelId;
     }
 
     /**
-     * 強化素材に使用できるインベントリ のGRNを設定
+     * 強化素材に使用できるインベントリモデル のGRNを設定
      *
-     * @param materialInventoryId 強化素材に使用できるインベントリ のGRN
+     * @param materialInventoryModelId 強化素材に使用できるインベントリモデル のGRN
      */
-    void setMaterialInventoryId(StringHolder materialInventoryId)
+    void setMaterialInventoryModelId(StringHolder materialInventoryModelId)
     {
-        ensureData().materialInventoryId.emplace(std::move(materialInventoryId));
+        ensureData().materialInventoryModelId.emplace(std::move(materialInventoryModelId));
     }
 
     /**
-     * 強化素材に使用できるインベントリ のGRNを設定
+     * 強化素材に使用できるインベントリモデル のGRNを設定
      *
-     * @param materialInventoryId 強化素材に使用できるインベントリ のGRN
+     * @param materialInventoryModelId 強化素材に使用できるインベントリモデル のGRN
      */
-    CreateRateModelMasterRequest& withMaterialInventoryId(StringHolder materialInventoryId)
+    CreateRateModelMasterRequest& withMaterialInventoryModelId(StringHolder materialInventoryModelId)
     {
-        ensureData().materialInventoryId.emplace(std::move(materialInventoryId));
+        ensureData().materialInventoryModelId.emplace(std::move(materialInventoryModelId));
         return *this;
     }
 

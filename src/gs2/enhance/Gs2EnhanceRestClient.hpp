@@ -655,20 +655,20 @@ private:
                 jsonWriter.writePropertyName("metadata");
                 jsonWriter.writeCharArray(*m_Request.getMetadata());
             }
-            if (m_Request.getTargetInventoryId())
+            if (m_Request.getTargetInventoryModelId())
             {
-                jsonWriter.writePropertyName("targetInventoryId");
-                jsonWriter.writeCharArray(*m_Request.getTargetInventoryId());
+                jsonWriter.writePropertyName("targetInventoryModelId");
+                jsonWriter.writeCharArray(*m_Request.getTargetInventoryModelId());
             }
             if (m_Request.getAcquireExperienceSuffix())
             {
                 jsonWriter.writePropertyName("acquireExperienceSuffix");
                 jsonWriter.writeCharArray(*m_Request.getAcquireExperienceSuffix());
             }
-            if (m_Request.getMaterialInventoryId())
+            if (m_Request.getMaterialInventoryModelId())
             {
-                jsonWriter.writePropertyName("materialInventoryId");
-                jsonWriter.writeCharArray(*m_Request.getMaterialInventoryId());
+                jsonWriter.writePropertyName("materialInventoryModelId");
+                jsonWriter.writeCharArray(*m_Request.getMaterialInventoryModelId());
             }
             if (m_Request.getAcquireExperienceHierarchy())
             {
@@ -813,20 +813,20 @@ private:
                 jsonWriter.writePropertyName("metadata");
                 jsonWriter.writeCharArray(*m_Request.getMetadata());
             }
-            if (m_Request.getTargetInventoryId())
+            if (m_Request.getTargetInventoryModelId())
             {
-                jsonWriter.writePropertyName("targetInventoryId");
-                jsonWriter.writeCharArray(*m_Request.getTargetInventoryId());
+                jsonWriter.writePropertyName("targetInventoryModelId");
+                jsonWriter.writeCharArray(*m_Request.getTargetInventoryModelId());
             }
             if (m_Request.getAcquireExperienceSuffix())
             {
                 jsonWriter.writePropertyName("acquireExperienceSuffix");
                 jsonWriter.writeCharArray(*m_Request.getAcquireExperienceSuffix());
             }
-            if (m_Request.getMaterialInventoryId())
+            if (m_Request.getMaterialInventoryModelId())
             {
-                jsonWriter.writePropertyName("materialInventoryId");
-                jsonWriter.writeCharArray(*m_Request.getMaterialInventoryId());
+                jsonWriter.writePropertyName("materialInventoryModelId");
+                jsonWriter.writeCharArray(*m_Request.getMaterialInventoryModelId());
             }
             if (m_Request.getAcquireExperienceHierarchy())
             {
@@ -2305,20 +2305,20 @@ protected:
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
         }
-        if (obj.getTargetInventoryId())
+        if (obj.getTargetInventoryModelId())
         {
-            jsonWriter.writePropertyName("targetInventoryId");
-            jsonWriter.writeCharArray(*obj.getTargetInventoryId());
+            jsonWriter.writePropertyName("targetInventoryModelId");
+            jsonWriter.writeCharArray(*obj.getTargetInventoryModelId());
         }
         if (obj.getAcquireExperienceSuffix())
         {
             jsonWriter.writePropertyName("acquireExperienceSuffix");
             jsonWriter.writeCharArray(*obj.getAcquireExperienceSuffix());
         }
-        if (obj.getMaterialInventoryId())
+        if (obj.getMaterialInventoryModelId())
         {
-            jsonWriter.writePropertyName("materialInventoryId");
-            jsonWriter.writeCharArray(*obj.getMaterialInventoryId());
+            jsonWriter.writePropertyName("materialInventoryModelId");
+            jsonWriter.writeCharArray(*obj.getMaterialInventoryModelId());
         }
         if (obj.getAcquireExperienceHierarchy())
         {
@@ -2373,20 +2373,20 @@ protected:
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
         }
-        if (obj.getTargetInventoryId())
+        if (obj.getTargetInventoryModelId())
         {
-            jsonWriter.writePropertyName("targetInventoryId");
-            jsonWriter.writeCharArray(*obj.getTargetInventoryId());
+            jsonWriter.writePropertyName("targetInventoryModelId");
+            jsonWriter.writeCharArray(*obj.getTargetInventoryModelId());
         }
         if (obj.getAcquireExperienceSuffix())
         {
             jsonWriter.writePropertyName("acquireExperienceSuffix");
             jsonWriter.writeCharArray(*obj.getAcquireExperienceSuffix());
         }
-        if (obj.getMaterialInventoryId())
+        if (obj.getMaterialInventoryModelId())
         {
-            jsonWriter.writePropertyName("materialInventoryId");
-            jsonWriter.writeCharArray(*obj.getMaterialInventoryId());
+            jsonWriter.writePropertyName("materialInventoryModelId");
+            jsonWriter.writeCharArray(*obj.getMaterialInventoryModelId());
         }
         if (obj.getAcquireExperienceHierarchy())
         {
