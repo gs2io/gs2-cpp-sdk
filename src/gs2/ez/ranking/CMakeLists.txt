@@ -37,9 +37,12 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         result/EzListSubscribesResult.hpp
         result/EzSubscribeResult.hpp
         result/EzUnsubscribeResult.hpp
+        result/EzListScoresResult.hpp
+        result/EzGetScoreResult.hpp
         result/EzPutScoreResult.hpp
         result/EzGetRankingResult.hpp
         result/EzGetNearRankingResult.hpp
+        result/EzGetRankResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES

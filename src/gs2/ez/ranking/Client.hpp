@@ -23,9 +23,12 @@
 #include "result/EzListSubscribesResult.hpp"
 #include "result/EzSubscribeResult.hpp"
 #include "result/EzUnsubscribeResult.hpp"
+#include "result/EzListScoresResult.hpp"
+#include "result/EzGetScoreResult.hpp"
 #include "result/EzPutScoreResult.hpp"
 #include "result/EzGetRankingResult.hpp"
 #include "result/EzGetNearRankingResult.hpp"
+#include "result/EzGetRankResult.hpp"
 
 
 namespace gs2 {
@@ -134,6 +137,50 @@ public:
     );
 
     /// <summary>
+    ///  ゲームプレイヤーが登録したスコアの一覧を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="categoryName">カテゴリ名</param>
+    /// <param name="scorerUserId">スコアを獲得したユーザID</param>
+    /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
+    /// <param name="limit">データの取得件数</param>
+    void listScores(
+        std::function<void(AsyncEzListScoresResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder categoryName,
+        StringHolder scorerUserId,
+        gs2::optional<StringHolder> pageToken=gs2::nullopt,
+        gs2::optional<Int64> limit=gs2::nullopt
+    );
+
+    /// <summary>
+    ///  ゲームプレイヤーが登録したスコアを取得<br />
+    ///    <br />
+    ///    ユーザID毎にスコアを1つしか登録できないカテゴリを指定する場合、ユニークIDは省略可能です<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="categoryName">カテゴリ名</param>
+    /// <param name="scorerUserId">スコアを獲得したユーザID</param>
+    /// <param name="uniqueId">スコアのユニークID</param>
+    void getScore(
+        std::function<void(AsyncEzGetScoreResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder categoryName,
+        StringHolder scorerUserId,
+        gs2::optional<StringHolder> uniqueId=gs2::nullopt
+    );
+
+    /// <summary>
     ///  ランキングの一覧を取得<br />
     /// </summary>
     ///
@@ -188,6 +235,28 @@ public:
         StringHolder namespaceName,
         StringHolder categoryName,
         Int64 score
+    );
+
+    /// <summary>
+    ///  ランキングを取得<br />
+    ///    <br />
+    ///    ユーザID毎にスコアを1つしか登録できないカテゴリを指定する場合、ユニークIDは省略可能です<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="categoryName">カテゴリ名</param>
+    /// <param name="scorerUserId">スコアを獲得したユーザID</param>
+    /// <param name="uniqueId">スコアのユニークID</param>
+    void getRank(
+        std::function<void(AsyncEzGetRankResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder categoryName,
+        StringHolder scorerUserId,
+        gs2::optional<StringHolder> uniqueId=gs2::nullopt
     );
 };
 
