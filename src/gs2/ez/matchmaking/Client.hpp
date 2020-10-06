@@ -187,11 +187,14 @@ public:
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
     /// <param name="limit">データの取得件数</param>
     void listRatings(
         std::function<void(AsyncEzListRatingsResult)> callback,
+        GameSession& session,
         StringHolder namespaceName,
         gs2::optional<StringHolder> pageToken=gs2::nullopt,
         gs2::optional<Int64> limit=gs2::nullopt

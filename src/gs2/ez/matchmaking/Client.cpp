@@ -334,6 +334,7 @@ void Client::getRatingModel(
 
 void Client::listRatings(
     std::function<void(AsyncEzListRatingsResult)> callback,
+    GameSession& session,
     StringHolder namespaceName,
     gs2::optional<StringHolder> pageToken,
     gs2::optional<Int64> limit
@@ -349,6 +350,7 @@ void Client::listRatings(
     {
         request.setLimit(std::move(*limit));
     }
+    request.setAccessToken(*session.getAccessToken()->getToken());
     m_pClient->describeRatings(
         request,
         [callback](gs2::matchmaking::AsyncDescribeRatingsResult r)
