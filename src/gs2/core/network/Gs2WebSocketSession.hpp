@@ -27,6 +27,9 @@ class Gs2WebSocketSession : public Gs2Session
 {
     friend class detail::Gs2WebSocketSessionTaskBase;
 
+public:
+    static const char* EndpointHost;
+
 private:
     static const detail::Gs2SessionTaskId::ValueType LoginTaskIdValue = 1U;
 
