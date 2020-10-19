@@ -59,12 +59,18 @@ private:
         optional<StringHolder> scope;
         /** ユーザID毎にスコアを1つしか登録されないようにする */
         optional<Bool> uniqueByUserId;
+        /** スコアの固定集計開始時刻(時) */
+        optional<Int32> calculateFixedTimingHour;
+        /** スコアの固定集計開始時刻(分) */
+        optional<Int32> calculateFixedTimingMinute;
         /** スコアの集計間隔(分) */
         optional<Int32> calculateIntervalMinutes;
         /** スコアの登録可能期間とするイベントマスター のGRN */
         optional<StringHolder> entryPeriodEventId;
         /** アクセス可能期間とするイベントマスター のGRN */
         optional<StringHolder> accessPeriodEventId;
+        /** ランキングの世代 */
+        optional<StringHolder> generation;
 
         Data() = default;
 
@@ -78,9 +84,12 @@ private:
             orderDirection(data.orderDirection),
             scope(data.scope),
             uniqueByUserId(data.uniqueByUserId),
+            calculateFixedTimingHour(data.calculateFixedTimingHour),
+            calculateFixedTimingMinute(data.calculateFixedTimingMinute),
             calculateIntervalMinutes(data.calculateIntervalMinutes),
             entryPeriodEventId(data.entryPeriodEventId),
-            accessPeriodEventId(data.accessPeriodEventId)
+            accessPeriodEventId(data.accessPeriodEventId),
+            generation(data.generation)
         {
         }
 
@@ -149,6 +158,20 @@ private:
                     this->uniqueByUserId = jsonValue.GetBool();
                 }
             }
+            else if (std::strcmp(name_, "calculateFixedTimingHour") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->calculateFixedTimingHour = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "calculateFixedTimingMinute") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->calculateFixedTimingMinute = jsonValue.GetInt();
+                }
+            }
             else if (std::strcmp(name_, "calculateIntervalMinutes") == 0)
             {
                 if (jsonValue.IsInt())
@@ -168,6 +191,13 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->accessPeriodEventId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "generation") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->generation.emplace(jsonValue.GetString());
                 }
             }
         }
@@ -447,6 +477,68 @@ public:
     }
 
     /**
+     * スコアの固定集計開始時刻(時)を取得
+     *
+     * @return スコアの固定集計開始時刻(時)
+     */
+    const optional<Int32>& getCalculateFixedTimingHour() const
+    {
+        return ensureData().calculateFixedTimingHour;
+    }
+
+    /**
+     * スコアの固定集計開始時刻(時)を設定
+     *
+     * @param calculateFixedTimingHour スコアの固定集計開始時刻(時)
+     */
+    void setCalculateFixedTimingHour(Int32 calculateFixedTimingHour)
+    {
+        ensureData().calculateFixedTimingHour.emplace(calculateFixedTimingHour);
+    }
+
+    /**
+     * スコアの固定集計開始時刻(時)を設定
+     *
+     * @param calculateFixedTimingHour スコアの固定集計開始時刻(時)
+     */
+    CategoryModel& withCalculateFixedTimingHour(Int32 calculateFixedTimingHour)
+    {
+        setCalculateFixedTimingHour(calculateFixedTimingHour);
+        return *this;
+    }
+
+    /**
+     * スコアの固定集計開始時刻(分)を取得
+     *
+     * @return スコアの固定集計開始時刻(分)
+     */
+    const optional<Int32>& getCalculateFixedTimingMinute() const
+    {
+        return ensureData().calculateFixedTimingMinute;
+    }
+
+    /**
+     * スコアの固定集計開始時刻(分)を設定
+     *
+     * @param calculateFixedTimingMinute スコアの固定集計開始時刻(分)
+     */
+    void setCalculateFixedTimingMinute(Int32 calculateFixedTimingMinute)
+    {
+        ensureData().calculateFixedTimingMinute.emplace(calculateFixedTimingMinute);
+    }
+
+    /**
+     * スコアの固定集計開始時刻(分)を設定
+     *
+     * @param calculateFixedTimingMinute スコアの固定集計開始時刻(分)
+     */
+    CategoryModel& withCalculateFixedTimingMinute(Int32 calculateFixedTimingMinute)
+    {
+        setCalculateFixedTimingMinute(calculateFixedTimingMinute);
+        return *this;
+    }
+
+    /**
      * スコアの集計間隔(分)を取得
      *
      * @return スコアの集計間隔(分)
@@ -539,6 +631,37 @@ public:
         return *this;
     }
 
+    /**
+     * ランキングの世代を取得
+     *
+     * @return ランキングの世代
+     */
+    const optional<StringHolder>& getGeneration() const
+    {
+        return ensureData().generation;
+    }
+
+    /**
+     * ランキングの世代を設定
+     *
+     * @param generation ランキングの世代
+     */
+    void setGeneration(StringHolder generation)
+    {
+        ensureData().generation.emplace(std::move(generation));
+    }
+
+    /**
+     * ランキングの世代を設定
+     *
+     * @param generation ランキングの世代
+     */
+    CategoryModel& withGeneration(StringHolder generation)
+    {
+        setGeneration(std::move(generation));
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
@@ -586,6 +709,14 @@ inline bool operator!=(const CategoryModel& lhs, const CategoryModel& lhr)
         {
             return true;
         }
+        if (lhs.m_pData->calculateFixedTimingHour != lhr.m_pData->calculateFixedTimingHour)
+        {
+            return true;
+        }
+        if (lhs.m_pData->calculateFixedTimingMinute != lhr.m_pData->calculateFixedTimingMinute)
+        {
+            return true;
+        }
         if (lhs.m_pData->calculateIntervalMinutes != lhr.m_pData->calculateIntervalMinutes)
         {
             return true;
@@ -595,6 +726,10 @@ inline bool operator!=(const CategoryModel& lhs, const CategoryModel& lhr)
             return true;
         }
         if (lhs.m_pData->accessPeriodEventId != lhr.m_pData->accessPeriodEventId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->generation != lhr.m_pData->generation)
         {
             return true;
         }

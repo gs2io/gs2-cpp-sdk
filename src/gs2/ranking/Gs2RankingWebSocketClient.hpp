@@ -680,6 +680,16 @@ private:
                 jsonWriter.writePropertyName("uniqueByUserId");
                 jsonWriter.writeBool(*m_Request.getUniqueByUserId());
             }
+            if (m_Request.getCalculateFixedTimingHour())
+            {
+                jsonWriter.writePropertyName("calculateFixedTimingHour");
+                jsonWriter.writeInt32(*m_Request.getCalculateFixedTimingHour());
+            }
+            if (m_Request.getCalculateFixedTimingMinute())
+            {
+                jsonWriter.writePropertyName("calculateFixedTimingMinute");
+                jsonWriter.writeInt32(*m_Request.getCalculateFixedTimingMinute());
+            }
             if (m_Request.getCalculateIntervalMinutes())
             {
                 jsonWriter.writePropertyName("calculateIntervalMinutes");
@@ -694,6 +704,11 @@ private:
             {
                 jsonWriter.writePropertyName("accessPeriodEventId");
                 jsonWriter.writeCharArray(*m_Request.getAccessPeriodEventId());
+            }
+            if (m_Request.getGeneration())
+            {
+                jsonWriter.writePropertyName("generation");
+                jsonWriter.writeCharArray(*m_Request.getGeneration());
             }
             if (m_Request.getRequestId())
             {
@@ -842,6 +857,16 @@ private:
                 jsonWriter.writePropertyName("uniqueByUserId");
                 jsonWriter.writeBool(*m_Request.getUniqueByUserId());
             }
+            if (m_Request.getCalculateFixedTimingHour())
+            {
+                jsonWriter.writePropertyName("calculateFixedTimingHour");
+                jsonWriter.writeInt32(*m_Request.getCalculateFixedTimingHour());
+            }
+            if (m_Request.getCalculateFixedTimingMinute())
+            {
+                jsonWriter.writePropertyName("calculateFixedTimingMinute");
+                jsonWriter.writeInt32(*m_Request.getCalculateFixedTimingMinute());
+            }
             if (m_Request.getCalculateIntervalMinutes())
             {
                 jsonWriter.writePropertyName("calculateIntervalMinutes");
@@ -856,6 +881,11 @@ private:
             {
                 jsonWriter.writePropertyName("accessPeriodEventId");
                 jsonWriter.writeCharArray(*m_Request.getAccessPeriodEventId());
+            }
+            if (m_Request.getGeneration())
+            {
+                jsonWriter.writePropertyName("generation");
+                jsonWriter.writeCharArray(*m_Request.getGeneration());
             }
             if (m_Request.getRequestId())
             {
@@ -2585,11 +2615,6 @@ protected:
             jsonWriter.writePropertyName("logSetting");
             write(jsonWriter, *obj.getLogSetting());
         }
-        if (obj.getStatus())
-        {
-            jsonWriter.writePropertyName("status");
-            jsonWriter.writeCharArray(*obj.getStatus());
-        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -2646,6 +2671,16 @@ protected:
             jsonWriter.writePropertyName("uniqueByUserId");
             jsonWriter.writeBool(*obj.getUniqueByUserId());
         }
+        if (obj.getCalculateFixedTimingHour())
+        {
+            jsonWriter.writePropertyName("calculateFixedTimingHour");
+            jsonWriter.writeInt32(*obj.getCalculateFixedTimingHour());
+        }
+        if (obj.getCalculateFixedTimingMinute())
+        {
+            jsonWriter.writePropertyName("calculateFixedTimingMinute");
+            jsonWriter.writeInt32(*obj.getCalculateFixedTimingMinute());
+        }
         if (obj.getCalculateIntervalMinutes())
         {
             jsonWriter.writePropertyName("calculateIntervalMinutes");
@@ -2660,6 +2695,11 @@ protected:
         {
             jsonWriter.writePropertyName("accessPeriodEventId");
             jsonWriter.writeCharArray(*obj.getAccessPeriodEventId());
+        }
+        if (obj.getGeneration())
+        {
+            jsonWriter.writePropertyName("generation");
+            jsonWriter.writeCharArray(*obj.getGeneration());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -2712,6 +2752,16 @@ protected:
             jsonWriter.writePropertyName("uniqueByUserId");
             jsonWriter.writeBool(*obj.getUniqueByUserId());
         }
+        if (obj.getCalculateFixedTimingHour())
+        {
+            jsonWriter.writePropertyName("calculateFixedTimingHour");
+            jsonWriter.writeInt32(*obj.getCalculateFixedTimingHour());
+        }
+        if (obj.getCalculateFixedTimingMinute())
+        {
+            jsonWriter.writePropertyName("calculateFixedTimingMinute");
+            jsonWriter.writeInt32(*obj.getCalculateFixedTimingMinute());
+        }
         if (obj.getCalculateIntervalMinutes())
         {
             jsonWriter.writePropertyName("calculateIntervalMinutes");
@@ -2726,6 +2776,11 @@ protected:
         {
             jsonWriter.writePropertyName("accessPeriodEventId");
             jsonWriter.writeCharArray(*obj.getAccessPeriodEventId());
+        }
+        if (obj.getGeneration())
+        {
+            jsonWriter.writePropertyName("generation");
+            jsonWriter.writeCharArray(*obj.getGeneration());
         }
         if (obj.getCreatedAt())
         {

@@ -61,12 +61,18 @@ private:
         optional<StringHolder> scope;
         /** ユーザID毎にスコアを1つしか登録されないようにする */
         optional<Bool> uniqueByUserId;
+        /** スコアの固定集計開始時刻(時) */
+        optional<Int32> calculateFixedTimingHour;
+        /** スコアの固定集計開始時刻(分) */
+        optional<Int32> calculateFixedTimingMinute;
         /** スコアの集計間隔(分) */
         optional<Int32> calculateIntervalMinutes;
         /** スコアの登録可能期間とするイベントマスター のGRN */
         optional<StringHolder> entryPeriodEventId;
         /** アクセス可能期間とするイベントマスター のGRN */
         optional<StringHolder> accessPeriodEventId;
+        /** ランキングの世代 */
+        optional<StringHolder> generation;
 
         Data() = default;
 
@@ -81,9 +87,12 @@ private:
             orderDirection(data.orderDirection),
             scope(data.scope),
             uniqueByUserId(data.uniqueByUserId),
+            calculateFixedTimingHour(data.calculateFixedTimingHour),
+            calculateFixedTimingMinute(data.calculateFixedTimingMinute),
             calculateIntervalMinutes(data.calculateIntervalMinutes),
             entryPeriodEventId(data.entryPeriodEventId),
-            accessPeriodEventId(data.accessPeriodEventId)
+            accessPeriodEventId(data.accessPeriodEventId),
+            generation(data.generation)
         {
         }
 
@@ -411,6 +420,68 @@ public:
     }
 
     /**
+     * スコアの固定集計開始時刻(時)を取得
+     *
+     * @return スコアの固定集計開始時刻(時)
+     */
+    const optional<Int32>& getCalculateFixedTimingHour() const
+    {
+        return ensureData().calculateFixedTimingHour;
+    }
+
+    /**
+     * スコアの固定集計開始時刻(時)を設定
+     *
+     * @param calculateFixedTimingHour スコアの固定集計開始時刻(時)
+     */
+    void setCalculateFixedTimingHour(Int32 calculateFixedTimingHour)
+    {
+        ensureData().calculateFixedTimingHour.emplace(calculateFixedTimingHour);
+    }
+
+    /**
+     * スコアの固定集計開始時刻(時)を設定
+     *
+     * @param calculateFixedTimingHour スコアの固定集計開始時刻(時)
+     */
+    CreateCategoryModelMasterRequest& withCalculateFixedTimingHour(Int32 calculateFixedTimingHour)
+    {
+        ensureData().calculateFixedTimingHour.emplace(calculateFixedTimingHour);
+        return *this;
+    }
+
+    /**
+     * スコアの固定集計開始時刻(分)を取得
+     *
+     * @return スコアの固定集計開始時刻(分)
+     */
+    const optional<Int32>& getCalculateFixedTimingMinute() const
+    {
+        return ensureData().calculateFixedTimingMinute;
+    }
+
+    /**
+     * スコアの固定集計開始時刻(分)を設定
+     *
+     * @param calculateFixedTimingMinute スコアの固定集計開始時刻(分)
+     */
+    void setCalculateFixedTimingMinute(Int32 calculateFixedTimingMinute)
+    {
+        ensureData().calculateFixedTimingMinute.emplace(calculateFixedTimingMinute);
+    }
+
+    /**
+     * スコアの固定集計開始時刻(分)を設定
+     *
+     * @param calculateFixedTimingMinute スコアの固定集計開始時刻(分)
+     */
+    CreateCategoryModelMasterRequest& withCalculateFixedTimingMinute(Int32 calculateFixedTimingMinute)
+    {
+        ensureData().calculateFixedTimingMinute.emplace(calculateFixedTimingMinute);
+        return *this;
+    }
+
+    /**
      * スコアの集計間隔(分)を取得
      *
      * @return スコアの集計間隔(分)
@@ -500,6 +571,37 @@ public:
     CreateCategoryModelMasterRequest& withAccessPeriodEventId(StringHolder accessPeriodEventId)
     {
         ensureData().accessPeriodEventId.emplace(std::move(accessPeriodEventId));
+        return *this;
+    }
+
+    /**
+     * ランキングの世代を取得
+     *
+     * @return ランキングの世代
+     */
+    const optional<StringHolder>& getGeneration() const
+    {
+        return ensureData().generation;
+    }
+
+    /**
+     * ランキングの世代を設定
+     *
+     * @param generation ランキングの世代
+     */
+    void setGeneration(StringHolder generation)
+    {
+        ensureData().generation.emplace(std::move(generation));
+    }
+
+    /**
+     * ランキングの世代を設定
+     *
+     * @param generation ランキングの世代
+     */
+    CreateCategoryModelMasterRequest& withGeneration(StringHolder generation)
+    {
+        ensureData().generation.emplace(std::move(generation));
         return *this;
     }
 
