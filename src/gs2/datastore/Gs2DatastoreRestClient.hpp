@@ -49,6 +49,8 @@
 #include "request/PrepareDownloadByUserIdAndDataObjectNameRequest.hpp"
 #include "request/PrepareDownloadOwnDataByGenerationRequest.hpp"
 #include "request/PrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest.hpp"
+#include "request/RestoreDataObjectRequest.hpp"
+#include "request/RestoreDataObjectByUserIdRequest.hpp"
 #include "request/DescribeDataObjectHistoriesRequest.hpp"
 #include "request/DescribeDataObjectHistoriesByUserIdRequest.hpp"
 #include "request/GetDataObjectHistoryRequest.hpp"
@@ -79,6 +81,8 @@
 #include "result/PrepareDownloadByUserIdAndDataObjectNameResult.hpp"
 #include "result/PrepareDownloadOwnDataByGenerationResult.hpp"
 #include "result/PrepareDownloadByUserIdAndDataObjectNameAndGenerationResult.hpp"
+#include "result/RestoreDataObjectResult.hpp"
+#include "result/RestoreDataObjectByUserIdResult.hpp"
 #include "result/DescribeDataObjectHistoriesResult.hpp"
 #include "result/DescribeDataObjectHistoriesByUserIdResult.hpp"
 #include "result/GetDataObjectHistoryResult.hpp"
@@ -1830,6 +1834,132 @@ private:
         ~PrepareDownloadByUserIdAndDataObjectNameAndGenerationTask() GS2_OVERRIDE = default;
     };
 
+    class RestoreDataObjectTask : public detail::Gs2RestSessionTask<RestoreDataObjectResult>
+    {
+    private:
+        RestoreDataObjectRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "datastore";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/data/{dataObjectName}/restore";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getDataObjectName();
+                url.replace("{dataObjectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        RestoreDataObjectTask(
+            RestoreDataObjectRequest request,
+            Gs2RestSessionTask<RestoreDataObjectResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<RestoreDataObjectResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RestoreDataObjectTask() GS2_OVERRIDE = default;
+    };
+
+    class RestoreDataObjectByUserIdTask : public detail::Gs2RestSessionTask<RestoreDataObjectByUserIdResult>
+    {
+    private:
+        RestoreDataObjectByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "datastore";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/data/{dataObjectName}/restore";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getDataObjectName();
+                url.replace("{dataObjectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        RestoreDataObjectByUserIdTask(
+            RestoreDataObjectByUserIdRequest request,
+            Gs2RestSessionTask<RestoreDataObjectByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<RestoreDataObjectByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RestoreDataObjectByUserIdTask() GS2_OVERRIDE = default;
+    };
+
     class DescribeDataObjectHistoriesTask : public detail::Gs2RestSessionTask<DescribeDataObjectHistoriesResult>
     {
     private:
@@ -2650,6 +2780,30 @@ public:
     void prepareDownloadByUserIdAndDataObjectNameAndGeneration(PrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest request, std::function<void(AsyncPrepareDownloadByUserIdAndDataObjectNameAndGenerationResult)> callback)
     {
         PrepareDownloadByUserIdAndDataObjectNameAndGenerationTask& task = *new PrepareDownloadByUserIdAndDataObjectNameAndGenerationTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * データオブジェクトの管理情報を修復する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void restoreDataObject(RestoreDataObjectRequest request, std::function<void(AsyncRestoreDataObjectResult)> callback)
+    {
+        RestoreDataObjectTask& task = *new RestoreDataObjectTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * ユーザIDを指定してデータオブジェクトの管理情報を修復する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void restoreDataObjectByUserId(RestoreDataObjectByUserIdRequest request, std::function<void(AsyncRestoreDataObjectByUserIdResult)> callback)
+    {
+        RestoreDataObjectByUserIdTask& task = *new RestoreDataObjectByUserIdTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 

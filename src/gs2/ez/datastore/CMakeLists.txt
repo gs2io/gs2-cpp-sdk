@@ -35,6 +35,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         result/EzPrepareDownloadOwnDataResult.hpp
         result/EzPrepareDownloadByUserIdAndDataObjectNameResult.hpp
         result/EzDeleteDataObjectResult.hpp
+        result/EzRestoreDataObjectResult.hpp
         result/EzListDataObhectHistoriesResult.hpp
         )
 

@@ -402,6 +402,44 @@ void Client::deleteDataObject(
     );
 }
 
+void Client::restoreDataObject(
+    std::function<void(AsyncEzRestoreDataObjectResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder dataObjectName
+)
+{
+    gs2::datastore::RestoreDataObjectRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setDataObjectName(dataObjectName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->restoreDataObject(
+        request,
+        [callback](gs2::datastore::AsyncRestoreDataObjectResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzRestoreDataObjectResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzRestoreDataObjectResult::isConvertible(*r.getResult()))
+            {
+                EzRestoreDataObjectResult ezResult(*r.getResult());
+                AsyncEzRestoreDataObjectResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzRestoreDataObjectResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
 void Client::listDataObhectHistories(
     std::function<void(AsyncEzListDataObhectHistoriesResult)> callback,
     GameSession& session,
