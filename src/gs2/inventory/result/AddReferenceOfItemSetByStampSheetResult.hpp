@@ -42,8 +42,8 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** この所持品の参照元 */
-        optional<StringHolder> item;
+        /** この所持品の参照元リスト */
+        optional<List<StringHolder>> item;
         /** 参照元追加後の有効期限ごとのアイテム所持数量 */
         optional<ItemSet> itemSet;
         /** アイテムモデル */
@@ -54,9 +54,12 @@ private:
         Data() = default;
 
         Data(const Data& data) :
-            detail::json::IModel(data),
-            item(data.item)
+            detail::json::IModel(data)
         {
+            if (data.item)
+            {
+                item = data.item->deepCopy();
+            }
             if (data.itemSet)
             {
                 itemSet = data.itemSet->deepCopy();
@@ -82,9 +85,15 @@ private:
         {
             if (std::strcmp(name_, "item") == 0)
             {
-                if (jsonValue.IsString())
+                if (jsonValue.IsArray())
                 {
-                    this->item.emplace(jsonValue.GetString());
+                    const auto& array = jsonValue.GetArray();
+                    this->item.emplace();
+                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
+                        auto valueStr = json->GetString();
+                        StringHolder stringHolder(valueStr);
+                        *this->item += std::move(stringHolder);
+                    }
                 }
             }
             else if (std::strcmp(name_, "itemSet") == 0)
@@ -143,21 +152,21 @@ public:
         return this;
     }
     /**
-     * この所持品の参照元を取得
+     * この所持品の参照元リストを取得
      *
-     * @return この所持品の参照元
+     * @return この所持品の参照元リスト
      */
-    const optional<StringHolder>& getItem() const
+    const optional<List<StringHolder>>& getItem() const
     {
         return ensureData().item;
     }
 
     /**
-     * この所持品の参照元を設定
+     * この所持品の参照元リストを設定
      *
-     * @param item この所持品の参照元
+     * @param item この所持品の参照元リスト
      */
-    void setItem(StringHolder item)
+    void setItem(List<StringHolder> item)
     {
         ensureData().item.emplace(std::move(item));
     }
