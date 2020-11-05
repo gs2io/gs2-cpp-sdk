@@ -77,8 +77,6 @@ private:
         optional<Double> balance;
         /** ログの出力設定 */
         optional<LogSetting> logSetting;
-        /** None */
-        optional<StringHolder> status;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -99,7 +97,6 @@ private:
             googleKey(data.googleKey),
             enableFakeReceipt(data.enableFakeReceipt),
             balance(data.balance),
-            status(data.status),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
@@ -241,13 +238,6 @@ private:
                     const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->logSetting.emplace();
                     detail::json::JsonParser::parse(&this->logSetting->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "status") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->status.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -758,37 +748,6 @@ public:
     }
 
     /**
-     * Noneを取得
-     *
-     * @return None
-     */
-    const optional<StringHolder>& getStatus() const
-    {
-        return ensureData().status;
-    }
-
-    /**
-     * Noneを設定
-     *
-     * @param status None
-     */
-    void setStatus(StringHolder status)
-    {
-        ensureData().status.emplace(std::move(status));
-    }
-
-    /**
-     * Noneを設定
-     *
-     * @param status None
-     */
-    Namespace& withStatus(StringHolder status)
-    {
-        setStatus(std::move(status));
-        return *this;
-    }
-
-    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -922,10 +881,6 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
             return true;
         }
         if (lhs.m_pData->logSetting != lhr.m_pData->logSetting)
-        {
-            return true;
-        }
-        if (lhs.m_pData->status != lhr.m_pData->status)
         {
             return true;
         }
