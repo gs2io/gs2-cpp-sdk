@@ -215,6 +215,11 @@ private:
                 jsonWriter.writePropertyName("changeRankCapScript");
                 write(jsonWriter, *m_Request.getChangeRankCapScript());
             }
+            if (m_Request.getOverflowExperienceScript())
+            {
+                jsonWriter.writePropertyName("overflowExperienceScript");
+                write(jsonWriter, *m_Request.getOverflowExperienceScript());
+            }
             if (m_Request.getLogSetting())
             {
                 jsonWriter.writePropertyName("logSetting");
@@ -389,6 +394,11 @@ private:
             {
                 jsonWriter.writePropertyName("changeRankCapScript");
                 write(jsonWriter, *m_Request.getChangeRankCapScript());
+            }
+            if (m_Request.getOverflowExperienceScript())
+            {
+                jsonWriter.writePropertyName("overflowExperienceScript");
+                write(jsonWriter, *m_Request.getOverflowExperienceScript());
             }
             if (m_Request.getLogSetting())
             {
@@ -2364,15 +2374,15 @@ protected:
             jsonWriter.writePropertyName("changeRankCapScript");
             write(jsonWriter, *obj.getChangeRankCapScript());
         }
+        if (obj.getOverflowExperienceScript())
+        {
+            jsonWriter.writePropertyName("overflowExperienceScript");
+            write(jsonWriter, *obj.getOverflowExperienceScript());
+        }
         if (obj.getLogSetting())
         {
             jsonWriter.writePropertyName("logSetting");
             write(jsonWriter, *obj.getLogSetting());
-        }
-        if (obj.getStatus())
-        {
-            jsonWriter.writePropertyName("status");
-            jsonWriter.writeCharArray(*obj.getStatus());
         }
         if (obj.getCreatedAt())
         {
@@ -2534,11 +2544,6 @@ protected:
     static void write(detail::json::JsonWriter& jsonWriter, const Threshold& obj)
     {
         jsonWriter.writeObjectStart();
-        if (obj.getThresholdId())
-        {
-            jsonWriter.writePropertyName("thresholdId");
-            jsonWriter.writeCharArray(*obj.getThresholdId());
-        }
         if (obj.getMetadata())
         {
             jsonWriter.writePropertyName("metadata");

@@ -27,6 +27,7 @@
 #include "ScriptSetting.hpp"
 #include "ScriptSetting.hpp"
 #include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
 #include "LogSetting.hpp"
 #include <memory>
 #include <cstring>
@@ -63,10 +64,10 @@ private:
         optional<ScriptSetting> changeRankScript;
         /** ランクキャップ変化したときに実行するスクリプト */
         optional<ScriptSetting> changeRankCapScript;
+        /** 経験値あふれしたときに実行するスクリプト */
+        optional<ScriptSetting> overflowExperienceScript;
         /** ログの出力設定 */
         optional<LogSetting> logSetting;
-        /** None */
-        optional<StringHolder> status;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -81,7 +82,6 @@ private:
             name(data.name),
             description(data.description),
             experienceCapScriptId(data.experienceCapScriptId),
-            status(data.status),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
@@ -96,6 +96,10 @@ private:
             if (data.changeRankCapScript)
             {
                 changeRankCapScript = data.changeRankCapScript->deepCopy();
+            }
+            if (data.overflowExperienceScript)
+            {
+                overflowExperienceScript = data.overflowExperienceScript->deepCopy();
             }
             if (data.logSetting)
             {
@@ -174,6 +178,15 @@ private:
                     detail::json::JsonParser::parse(&this->changeRankCapScript->getModel(), jsonObject);
                 }
             }
+            else if (std::strcmp(name_, "overflowExperienceScript") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->overflowExperienceScript.emplace();
+                    detail::json::JsonParser::parse(&this->overflowExperienceScript->getModel(), jsonObject);
+                }
+            }
             else if (std::strcmp(name_, "logSetting") == 0)
             {
                 if (jsonValue.IsObject())
@@ -181,13 +194,6 @@ private:
                     const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->logSetting.emplace();
                     detail::json::JsonParser::parse(&this->logSetting->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "status") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->status.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -481,6 +487,37 @@ public:
     }
 
     /**
+     * 経験値あふれしたときに実行するスクリプトを取得
+     *
+     * @return 経験値あふれしたときに実行するスクリプト
+     */
+    const optional<ScriptSetting>& getOverflowExperienceScript() const
+    {
+        return ensureData().overflowExperienceScript;
+    }
+
+    /**
+     * 経験値あふれしたときに実行するスクリプトを設定
+     *
+     * @param overflowExperienceScript 経験値あふれしたときに実行するスクリプト
+     */
+    void setOverflowExperienceScript(ScriptSetting overflowExperienceScript)
+    {
+        ensureData().overflowExperienceScript.emplace(std::move(overflowExperienceScript));
+    }
+
+    /**
+     * 経験値あふれしたときに実行するスクリプトを設定
+     *
+     * @param overflowExperienceScript 経験値あふれしたときに実行するスクリプト
+     */
+    Namespace& withOverflowExperienceScript(ScriptSetting overflowExperienceScript)
+    {
+        setOverflowExperienceScript(std::move(overflowExperienceScript));
+        return *this;
+    }
+
+    /**
      * ログの出力設定を取得
      *
      * @return ログの出力設定
@@ -508,37 +545,6 @@ public:
     Namespace& withLogSetting(LogSetting logSetting)
     {
         setLogSetting(std::move(logSetting));
-        return *this;
-    }
-
-    /**
-     * Noneを取得
-     *
-     * @return None
-     */
-    const optional<StringHolder>& getStatus() const
-    {
-        return ensureData().status;
-    }
-
-    /**
-     * Noneを設定
-     *
-     * @param status None
-     */
-    void setStatus(StringHolder status)
-    {
-        ensureData().status.emplace(std::move(status));
-    }
-
-    /**
-     * Noneを設定
-     *
-     * @param status None
-     */
-    Namespace& withStatus(StringHolder status)
-    {
-        setStatus(std::move(status));
         return *this;
     }
 
@@ -651,11 +657,11 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->logSetting != lhr.m_pData->logSetting)
+        if (lhs.m_pData->overflowExperienceScript != lhr.m_pData->overflowExperienceScript)
         {
             return true;
         }
-        if (lhs.m_pData->status != lhr.m_pData->status)
+        if (lhs.m_pData->logSetting != lhr.m_pData->logSetting)
         {
             return true;
         }

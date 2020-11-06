@@ -43,8 +43,6 @@ private:
     class Data : public detail::json::IModel
     {
     public:
-        /** しきい値ID */
-        optional<StringHolder> thresholdId;
         /** ランクアップ閾値のメタデータ */
         optional<StringHolder> metadata;
         /** ランクアップ経験値閾値リスト */
@@ -54,7 +52,6 @@ private:
 
         Data(const Data& data) :
             detail::json::IModel(data),
-            thresholdId(data.thresholdId),
             metadata(data.metadata)
         {
             if (data.values)
@@ -72,14 +69,7 @@ private:
 
         virtual void set(const Char name_[], const detail::json::JsonConstValue& jsonValue)
         {
-            if (std::strcmp(name_, "thresholdId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->thresholdId.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "metadata") == 0)
+            if (std::strcmp(name_, "metadata") == 0)
             {
                 if (jsonValue.IsString())
                 {
@@ -128,37 +118,6 @@ public:
     {
         return this;
     }
-    /**
-     * しきい値IDを取得
-     *
-     * @return しきい値ID
-     */
-    const optional<StringHolder>& getThresholdId() const
-    {
-        return ensureData().thresholdId;
-    }
-
-    /**
-     * しきい値IDを設定
-     *
-     * @param thresholdId しきい値ID
-     */
-    void setThresholdId(StringHolder thresholdId)
-    {
-        ensureData().thresholdId.emplace(std::move(thresholdId));
-    }
-
-    /**
-     * しきい値IDを設定
-     *
-     * @param thresholdId しきい値ID
-     */
-    Threshold& withThresholdId(StringHolder thresholdId)
-    {
-        setThresholdId(std::move(thresholdId));
-        return *this;
-    }
-
     /**
      * ランクアップ閾値のメタデータを取得
      *
@@ -233,10 +192,6 @@ inline bool operator!=(const Threshold& lhs, const Threshold& lhr)
     if (lhs.m_pData != lhr.m_pData)
     {
         if (!lhs.m_pData || !lhr.m_pData)
-        {
-            return true;
-        }
-        if (lhs.m_pData->thresholdId != lhr.m_pData->thresholdId)
         {
             return true;
         }
