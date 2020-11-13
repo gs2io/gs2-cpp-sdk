@@ -177,6 +177,16 @@ private:
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
             }
+            if (m_Request.getEntryScript())
+            {
+                jsonWriter.writePropertyName("entryScript");
+                write(jsonWriter, *m_Request.getEntryScript());
+            }
+            if (m_Request.getDuplicateEntryScript())
+            {
+                jsonWriter.writePropertyName("duplicateEntryScript");
+                write(jsonWriter, *m_Request.getDuplicateEntryScript());
+            }
             if (m_Request.getLogSetting())
             {
                 jsonWriter.writePropertyName("logSetting");
@@ -331,6 +341,16 @@ private:
             {
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getEntryScript())
+            {
+                jsonWriter.writePropertyName("entryScript");
+                write(jsonWriter, *m_Request.getEntryScript());
+            }
+            if (m_Request.getDuplicateEntryScript())
+            {
+                jsonWriter.writePropertyName("duplicateEntryScript");
+                write(jsonWriter, *m_Request.getDuplicateEntryScript());
             }
             if (m_Request.getLogSetting())
             {
@@ -1618,15 +1638,20 @@ protected:
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
         }
+        if (obj.getEntryScript())
+        {
+            jsonWriter.writePropertyName("entryScript");
+            write(jsonWriter, *obj.getEntryScript());
+        }
+        if (obj.getDuplicateEntryScript())
+        {
+            jsonWriter.writePropertyName("duplicateEntryScript");
+            write(jsonWriter, *obj.getDuplicateEntryScript());
+        }
         if (obj.getLogSetting())
         {
             jsonWriter.writePropertyName("logSetting");
             write(jsonWriter, *obj.getLogSetting());
-        }
-        if (obj.getStatus())
-        {
-            jsonWriter.writePropertyName("status");
-            jsonWriter.writeCharArray(*obj.getStatus());
         }
         if (obj.getCreatedAt())
         {
@@ -1866,6 +1891,32 @@ protected:
         {
             jsonWriter.writePropertyName("tagName");
             jsonWriter.writeCharArray(*obj.getTagName());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const ScriptSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getTriggerScriptId())
+        {
+            jsonWriter.writePropertyName("triggerScriptId");
+            jsonWriter.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerTargetType())
+        {
+            jsonWriter.writePropertyName("doneTriggerTargetType");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
+        }
+        if (obj.getDoneTriggerScriptId())
+        {
+            jsonWriter.writePropertyName("doneTriggerScriptId");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerScriptId());
+        }
+        if (obj.getDoneTriggerQueueNamespaceId())
+        {
+            jsonWriter.writePropertyName("doneTriggerQueueNamespaceId");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }

@@ -29,6 +29,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzResponseCache.hpp
         model/EzConfig.hpp
         model/EzGitHubCheckoutSetting.hpp
+        model/EzScriptSetting.hpp
         model/EzLogSetting.hpp
         result/EzListEntryModelsResult.hpp
         result/EzGetEntryModelResult.hpp
@@ -48,6 +49,7 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         model/EzResponseCache.cpp
         model/EzConfig.cpp
         model/EzGitHubCheckoutSetting.cpp
+        model/EzScriptSetting.cpp
         model/EzLogSetting.cpp
         )
 

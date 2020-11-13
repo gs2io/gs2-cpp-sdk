@@ -47,6 +47,10 @@ private:
         optional<StringHolder> namespaceName;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
+        /** エントリー登録時に実行するスクリプト */
+        optional<ScriptSetting> entryScript;
+        /** 登録済みのエントリーを再度登録しようとした時に実行するスクリプト */
+        optional<ScriptSetting> duplicateEntryScript;
         /** ログの出力設定 */
         optional<LogSetting> logSetting;
 
@@ -57,6 +61,14 @@ private:
             namespaceName(data.namespaceName),
             description(data.description)
         {
+            if (data.entryScript)
+            {
+                entryScript = data.entryScript->deepCopy();
+            }
+            if (data.duplicateEntryScript)
+            {
+                duplicateEntryScript = data.duplicateEntryScript->deepCopy();
+            }
             if (data.logSetting)
             {
                 logSetting = data.logSetting->deepCopy();
@@ -166,6 +178,68 @@ public:
     UpdateNamespaceRequest& withDescription(StringHolder description)
     {
         ensureData().description.emplace(std::move(description));
+        return *this;
+    }
+
+    /**
+     * エントリー登録時に実行するスクリプトを取得
+     *
+     * @return エントリー登録時に実行するスクリプト
+     */
+    const optional<ScriptSetting>& getEntryScript() const
+    {
+        return ensureData().entryScript;
+    }
+
+    /**
+     * エントリー登録時に実行するスクリプトを設定
+     *
+     * @param entryScript エントリー登録時に実行するスクリプト
+     */
+    void setEntryScript(ScriptSetting entryScript)
+    {
+        ensureData().entryScript.emplace(std::move(entryScript));
+    }
+
+    /**
+     * エントリー登録時に実行するスクリプトを設定
+     *
+     * @param entryScript エントリー登録時に実行するスクリプト
+     */
+    UpdateNamespaceRequest& withEntryScript(ScriptSetting entryScript)
+    {
+        ensureData().entryScript.emplace(std::move(entryScript));
+        return *this;
+    }
+
+    /**
+     * 登録済みのエントリーを再度登録しようとした時に実行するスクリプトを取得
+     *
+     * @return 登録済みのエントリーを再度登録しようとした時に実行するスクリプト
+     */
+    const optional<ScriptSetting>& getDuplicateEntryScript() const
+    {
+        return ensureData().duplicateEntryScript;
+    }
+
+    /**
+     * 登録済みのエントリーを再度登録しようとした時に実行するスクリプトを設定
+     *
+     * @param duplicateEntryScript 登録済みのエントリーを再度登録しようとした時に実行するスクリプト
+     */
+    void setDuplicateEntryScript(ScriptSetting duplicateEntryScript)
+    {
+        ensureData().duplicateEntryScript.emplace(std::move(duplicateEntryScript));
+    }
+
+    /**
+     * 登録済みのエントリーを再度登録しようとした時に実行するスクリプトを設定
+     *
+     * @param duplicateEntryScript 登録済みのエントリーを再度登録しようとした時に実行するスクリプト
+     */
+    UpdateNamespaceRequest& withDuplicateEntryScript(ScriptSetting duplicateEntryScript)
+    {
+        ensureData().duplicateEntryScript.emplace(std::move(duplicateEntryScript));
         return *this;
     }
 

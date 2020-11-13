@@ -24,6 +24,8 @@
 #include <gs2/core/util/StringHolder.hpp>
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
+#include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
 #include "LogSetting.hpp"
 #include <memory>
 #include <cstring>
@@ -52,10 +54,12 @@ private:
         optional<StringHolder> name;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
+        /** エントリー登録時に実行するスクリプト */
+        optional<ScriptSetting> entryScript;
+        /** 登録済みのエントリーを再度登録しようとした時に実行するスクリプト */
+        optional<ScriptSetting> duplicateEntryScript;
         /** ログの出力設定 */
         optional<LogSetting> logSetting;
-        /** None */
-        optional<StringHolder> status;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -69,10 +73,17 @@ private:
             ownerId(data.ownerId),
             name(data.name),
             description(data.description),
-            status(data.status),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
+            if (data.entryScript)
+            {
+                entryScript = data.entryScript->deepCopy();
+            }
+            if (data.duplicateEntryScript)
+            {
+                duplicateEntryScript = data.duplicateEntryScript->deepCopy();
+            }
             if (data.logSetting)
             {
                 logSetting = data.logSetting->deepCopy();
@@ -116,6 +127,24 @@ private:
                     this->description.emplace(jsonValue.GetString());
                 }
             }
+            else if (std::strcmp(name_, "entryScript") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->entryScript.emplace();
+                    detail::json::JsonParser::parse(&this->entryScript->getModel(), jsonObject);
+                }
+            }
+            else if (std::strcmp(name_, "duplicateEntryScript") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->duplicateEntryScript.emplace();
+                    detail::json::JsonParser::parse(&this->duplicateEntryScript->getModel(), jsonObject);
+                }
+            }
             else if (std::strcmp(name_, "logSetting") == 0)
             {
                 if (jsonValue.IsObject())
@@ -123,13 +152,6 @@ private:
                     const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->logSetting.emplace();
                     detail::json::JsonParser::parse(&this->logSetting->getModel(), jsonObject);
-                }
-            }
-            else if (std::strcmp(name_, "status") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->status.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -299,6 +321,68 @@ public:
     }
 
     /**
+     * エントリー登録時に実行するスクリプトを取得
+     *
+     * @return エントリー登録時に実行するスクリプト
+     */
+    const optional<ScriptSetting>& getEntryScript() const
+    {
+        return ensureData().entryScript;
+    }
+
+    /**
+     * エントリー登録時に実行するスクリプトを設定
+     *
+     * @param entryScript エントリー登録時に実行するスクリプト
+     */
+    void setEntryScript(ScriptSetting entryScript)
+    {
+        ensureData().entryScript.emplace(std::move(entryScript));
+    }
+
+    /**
+     * エントリー登録時に実行するスクリプトを設定
+     *
+     * @param entryScript エントリー登録時に実行するスクリプト
+     */
+    Namespace& withEntryScript(ScriptSetting entryScript)
+    {
+        setEntryScript(std::move(entryScript));
+        return *this;
+    }
+
+    /**
+     * 登録済みのエントリーを再度登録しようとした時に実行するスクリプトを取得
+     *
+     * @return 登録済みのエントリーを再度登録しようとした時に実行するスクリプト
+     */
+    const optional<ScriptSetting>& getDuplicateEntryScript() const
+    {
+        return ensureData().duplicateEntryScript;
+    }
+
+    /**
+     * 登録済みのエントリーを再度登録しようとした時に実行するスクリプトを設定
+     *
+     * @param duplicateEntryScript 登録済みのエントリーを再度登録しようとした時に実行するスクリプト
+     */
+    void setDuplicateEntryScript(ScriptSetting duplicateEntryScript)
+    {
+        ensureData().duplicateEntryScript.emplace(std::move(duplicateEntryScript));
+    }
+
+    /**
+     * 登録済みのエントリーを再度登録しようとした時に実行するスクリプトを設定
+     *
+     * @param duplicateEntryScript 登録済みのエントリーを再度登録しようとした時に実行するスクリプト
+     */
+    Namespace& withDuplicateEntryScript(ScriptSetting duplicateEntryScript)
+    {
+        setDuplicateEntryScript(std::move(duplicateEntryScript));
+        return *this;
+    }
+
+    /**
      * ログの出力設定を取得
      *
      * @return ログの出力設定
@@ -326,37 +410,6 @@ public:
     Namespace& withLogSetting(LogSetting logSetting)
     {
         setLogSetting(std::move(logSetting));
-        return *this;
-    }
-
-    /**
-     * Noneを取得
-     *
-     * @return None
-     */
-    const optional<StringHolder>& getStatus() const
-    {
-        return ensureData().status;
-    }
-
-    /**
-     * Noneを設定
-     *
-     * @param status None
-     */
-    void setStatus(StringHolder status)
-    {
-        ensureData().status.emplace(std::move(status));
-    }
-
-    /**
-     * Noneを設定
-     *
-     * @param status None
-     */
-    Namespace& withStatus(StringHolder status)
-    {
-        setStatus(std::move(status));
         return *this;
     }
 
@@ -453,11 +506,15 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->logSetting != lhr.m_pData->logSetting)
+        if (lhs.m_pData->entryScript != lhr.m_pData->entryScript)
         {
             return true;
         }
-        if (lhs.m_pData->status != lhr.m_pData->status)
+        if (lhs.m_pData->duplicateEntryScript != lhr.m_pData->duplicateEntryScript)
+        {
+            return true;
+        }
+        if (lhs.m_pData->logSetting != lhr.m_pData->logSetting)
         {
             return true;
         }
