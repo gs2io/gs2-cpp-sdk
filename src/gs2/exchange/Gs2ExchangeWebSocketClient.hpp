@@ -2511,11 +2511,6 @@ protected:
             jsonWriter.writePropertyName("logSetting");
             write(jsonWriter, *obj.getLogSetting());
         }
-        if (obj.getStatus())
-        {
-            jsonWriter.writePropertyName("status");
-            jsonWriter.writeCharArray(*obj.getStatus());
-        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
