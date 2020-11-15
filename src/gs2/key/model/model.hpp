@@ -23,5 +23,6 @@
 #include "Key.hpp"
 #include "GitHubApiKey.hpp"
 #include "LogSetting.hpp"
+#include "ResponseCache.hpp"
 
 #endif //GS2_KEY_MODEL_MODEL_HPP_
