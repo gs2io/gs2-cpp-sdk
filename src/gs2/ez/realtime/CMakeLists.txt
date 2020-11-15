@@ -22,6 +22,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/model.hpp
         model/EzNamespace.hpp
         model/EzRoom.hpp
+        model/EzResponseCache.hpp
         model/EzNotificationSetting.hpp
         model/EzLogSetting.hpp
         result/EzGetRoomResult.hpp
@@ -31,6 +32,7 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
         model/EzNamespace.cpp
         model/EzRoom.cpp
+        model/EzResponseCache.cpp
         model/EzNotificationSetting.cpp
         model/EzLogSetting.cpp
         )
