@@ -23,6 +23,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzNamespace.hpp
         model/EzWebSocketSession.hpp
         model/EzFirebaseToken.hpp
+        model/EzSession.hpp
         model/EzResponseCache.hpp
         model/EzLogSetting.hpp
         result/EzSetUserIdResult.hpp
@@ -33,6 +34,7 @@ file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         model/EzNamespace.cpp
         model/EzWebSocketSession.cpp
         model/EzFirebaseToken.cpp
+        model/EzSession.cpp
         model/EzResponseCache.cpp
         model/EzLogSetting.cpp
         )
