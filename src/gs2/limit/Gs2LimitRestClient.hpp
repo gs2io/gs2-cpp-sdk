@@ -1706,11 +1706,6 @@ protected:
             jsonWriter.writePropertyName("logSetting");
             write(jsonWriter, *obj.getLogSetting());
         }
-        if (obj.getStatus())
-        {
-            jsonWriter.writePropertyName("status");
-            jsonWriter.writeCharArray(*obj.getStatus());
-        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -1864,16 +1859,6 @@ protected:
         {
             jsonWriter.writePropertyName("result");
             jsonWriter.writeCharArray(*obj.getResult());
-        }
-        if (obj.getCreatedAt())
-        {
-            jsonWriter.writePropertyName("createdAt");
-            jsonWriter.writeInt64(*obj.getCreatedAt());
-        }
-        if (obj.getExpiredAt())
-        {
-            jsonWriter.writePropertyName("expiredAt");
-            jsonWriter.writeInt64(*obj.getExpiredAt());
         }
         jsonWriter.writeObjectEnd();
     }

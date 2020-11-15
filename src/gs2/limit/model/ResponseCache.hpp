@@ -53,10 +53,6 @@ private:
         optional<StringHolder> requestHash;
         /** APIの応答内容 */
         optional<StringHolder> result;
-        /** 作成日時 */
-        optional<Int64> createdAt;
-        /** None */
-        optional<Int64> expiredAt;
 
         Data() = default;
 
@@ -66,9 +62,7 @@ private:
             ownerId(data.ownerId),
             responseCacheId(data.responseCacheId),
             requestHash(data.requestHash),
-            result(data.result),
-            createdAt(data.createdAt),
-            expiredAt(data.expiredAt)
+            result(data.result)
         {
         }
 
@@ -114,20 +108,6 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->result.emplace(jsonValue.GetString());
-                }
-            }
-            else if (std::strcmp(name_, "createdAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->createdAt = jsonValue.GetInt64();
-                }
-            }
-            else if (std::strcmp(name_, "expiredAt") == 0)
-            {
-                if (jsonValue.IsInt64())
-                {
-                    this->expiredAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -313,68 +293,6 @@ public:
         return *this;
     }
 
-    /**
-     * 作成日時を取得
-     *
-     * @return 作成日時
-     */
-    const optional<Int64>& getCreatedAt() const
-    {
-        return ensureData().createdAt;
-    }
-
-    /**
-     * 作成日時を設定
-     *
-     * @param createdAt 作成日時
-     */
-    void setCreatedAt(Int64 createdAt)
-    {
-        ensureData().createdAt.emplace(createdAt);
-    }
-
-    /**
-     * 作成日時を設定
-     *
-     * @param createdAt 作成日時
-     */
-    ResponseCache& withCreatedAt(Int64 createdAt)
-    {
-        setCreatedAt(createdAt);
-        return *this;
-    }
-
-    /**
-     * Noneを取得
-     *
-     * @return None
-     */
-    const optional<Int64>& getExpiredAt() const
-    {
-        return ensureData().expiredAt;
-    }
-
-    /**
-     * Noneを設定
-     *
-     * @param expiredAt None
-     */
-    void setExpiredAt(Int64 expiredAt)
-    {
-        ensureData().expiredAt.emplace(expiredAt);
-    }
-
-    /**
-     * Noneを設定
-     *
-     * @param expiredAt None
-     */
-    ResponseCache& withExpiredAt(Int64 expiredAt)
-    {
-        setExpiredAt(expiredAt);
-        return *this;
-    }
-
 
     detail::json::IModel& getModel()
     {
@@ -407,14 +325,6 @@ inline bool operator!=(const ResponseCache& lhs, const ResponseCache& lhr)
             return true;
         }
         if (lhs.m_pData->result != lhr.m_pData->result)
-        {
-            return true;
-        }
-        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
-        {
-            return true;
-        }
-        if (lhs.m_pData->expiredAt != lhr.m_pData->expiredAt)
         {
             return true;
         }
