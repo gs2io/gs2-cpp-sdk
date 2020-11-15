@@ -255,7 +255,7 @@ public:
         StringHolder namespaceName,
         StringHolder ballotBody,
         StringHolder ballotSignature,
-        gs2::optional<List<EzGameResult>> gameResults=gs2::nullopt
+        List<EzGameResult> gameResults
     );
 
     /// <summary>
@@ -274,7 +274,7 @@ public:
         std::function<void(AsyncEzVoteMultipleResult)> callback,
         StringHolder namespaceName,
         List<EzSignedBallot> signedBallots,
-        gs2::optional<List<EzGameResult>> gameResults=gs2::nullopt
+        List<EzGameResult> gameResults
     );
 };
 

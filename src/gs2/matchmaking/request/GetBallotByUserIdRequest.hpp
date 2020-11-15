@@ -51,8 +51,6 @@ private:
         optional<StringHolder> gatheringName;
         /** ユーザーID */
         optional<StringHolder> userId;
-        /** 投票対象となる */
-        optional<StringHolder> gatheringId;
         /** 参加人数 */
         optional<Int32> numberOfPlayer;
         /** 投票用紙の署名計算に使用する暗号鍵 のGRN */
@@ -68,7 +66,6 @@ private:
             ratingName(data.ratingName),
             gatheringName(data.gatheringName),
             userId(data.userId),
-            gatheringId(data.gatheringId),
             numberOfPlayer(data.numberOfPlayer),
             keyId(data.keyId),
             duplicationAvoider(data.duplicationAvoider)
@@ -240,37 +237,6 @@ public:
     GetBallotByUserIdRequest& withUserId(StringHolder userId)
     {
         ensureData().userId.emplace(std::move(userId));
-        return *this;
-    }
-
-    /**
-     * 投票対象となるを取得
-     *
-     * @return 投票対象となる
-     */
-    const optional<StringHolder>& getGatheringId() const
-    {
-        return ensureData().gatheringId;
-    }
-
-    /**
-     * 投票対象となるを設定
-     *
-     * @param gatheringId 投票対象となる
-     */
-    void setGatheringId(StringHolder gatheringId)
-    {
-        ensureData().gatheringId.emplace(std::move(gatheringId));
-    }
-
-    /**
-     * 投票対象となるを設定
-     *
-     * @param gatheringId 投票対象となる
-     */
-    GetBallotByUserIdRequest& withGatheringId(StringHolder gatheringId)
-    {
-        ensureData().gatheringId.emplace(std::move(gatheringId));
         return *this;
     }
 

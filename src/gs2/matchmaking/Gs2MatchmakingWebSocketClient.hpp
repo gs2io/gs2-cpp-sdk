@@ -2430,11 +2430,6 @@ private:
                 jsonWriter.writePropertyName("gatheringName");
                 jsonWriter.writeCharArray(*m_Request.getGatheringName());
             }
-            if (m_Request.getGatheringId())
-            {
-                jsonWriter.writePropertyName("gatheringId");
-                jsonWriter.writeCharArray(*m_Request.getGatheringId());
-            }
             if (m_Request.getNumberOfPlayer())
             {
                 jsonWriter.writePropertyName("numberOfPlayer");
@@ -2520,11 +2515,6 @@ private:
             {
                 jsonWriter.writePropertyName("userId");
                 jsonWriter.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getGatheringId())
-            {
-                jsonWriter.writePropertyName("gatheringId");
-                jsonWriter.writeCharArray(*m_Request.getGatheringId());
             }
             if (m_Request.getNumberOfPlayer())
             {
@@ -2747,6 +2737,16 @@ private:
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
+            if (m_Request.getRatingName())
+            {
+                jsonWriter.writePropertyName("ratingName");
+                jsonWriter.writeCharArray(*m_Request.getRatingName());
+            }
+            if (m_Request.getGatheringName())
+            {
+                jsonWriter.writePropertyName("gatheringName");
+                jsonWriter.writeCharArray(*m_Request.getGatheringName());
+            }
             if (m_Request.getRequestId())
             {
                 jsonWriter.writePropertyName("xGs2RequestId");
@@ -2844,11 +2844,6 @@ protected:
         {
             jsonWriter.writePropertyName("logSetting");
             write(jsonWriter, *obj.getLogSetting());
-        }
-        if (obj.getStatus())
-        {
-            jsonWriter.writePropertyName("status");
-            jsonWriter.writeCharArray(*obj.getStatus());
         }
         if (obj.getCreatedAt())
         {

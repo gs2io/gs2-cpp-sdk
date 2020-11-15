@@ -461,19 +461,18 @@ void Client::vote(
     StringHolder namespaceName,
     StringHolder ballotBody,
     StringHolder ballotSignature,
-    gs2::optional<List<EzGameResult>> gameResults
+    List<EzGameResult> gameResults
 )
 {
     gs2::matchmaking::VoteRequest request;
     request.setNamespaceName(namespaceName);
     request.setBallotBody(ballotBody);
     request.setBallotSignature(ballotSignature);
-    if (gameResults)
     {
         gs2::List<gs2::matchmaking::GameResult> list;
-        for (int i = 0; i < gameResults->getCount(); ++i)
+        for (int i = 0; i < gameResults.getCount(); ++i)
         {
-            list += (*gameResults)[i].ToModel();
+            list += gameResults[i].ToModel();
         }
         request.setGameResults(list);
     }
@@ -508,7 +507,7 @@ void Client::voteMultiple(
     std::function<void(AsyncEzVoteMultipleResult)> callback,
     StringHolder namespaceName,
     List<EzSignedBallot> signedBallots,
-    gs2::optional<List<EzGameResult>> gameResults
+    List<EzGameResult> gameResults
 )
 {
     gs2::matchmaking::VoteMultipleRequest request;
@@ -521,12 +520,11 @@ void Client::voteMultiple(
         }
         request.setSignedBallots(list);
     }
-    if (gameResults)
     {
         gs2::List<gs2::matchmaking::GameResult> list;
-        for (int i = 0; i < gameResults->getCount(); ++i)
+        for (int i = 0; i < gameResults.getCount(); ++i)
         {
-            list += (*gameResults)[i].ToModel();
+            list += gameResults[i].ToModel();
         }
         request.setGameResults(list);
     }

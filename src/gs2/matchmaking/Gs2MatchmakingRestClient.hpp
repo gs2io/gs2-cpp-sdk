@@ -2345,11 +2345,6 @@ private:
                 jsonWriter.writePropertyName("contextStack");
                 jsonWriter.writeCharArray(*m_Request.getContextStack());
             }
-            if (m_Request.getGatheringId())
-            {
-                jsonWriter.writePropertyName("gatheringId");
-                jsonWriter.writeCharArray(*m_Request.getGatheringId());
-            }
             if (m_Request.getNumberOfPlayer())
             {
                 jsonWriter.writePropertyName("numberOfPlayer");
@@ -2430,11 +2425,6 @@ private:
             {
                 jsonWriter.writePropertyName("contextStack");
                 jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getGatheringId())
-            {
-                jsonWriter.writePropertyName("gatheringId");
-                jsonWriter.writeCharArray(*m_Request.getGatheringId());
             }
             if (m_Request.getNumberOfPlayer())
             {
@@ -2643,10 +2633,18 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/action/vote/commit";
+            url += "/{namespaceName}/user/{userId}/vote/{ratingName}/{gatheringName}/action/vote/commit";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getRatingName();
+                url.replace("{ratingName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getGatheringName();
+                url.replace("{gatheringName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
             detail::json::JsonWriter jsonWriter;
 
@@ -2760,11 +2758,6 @@ protected:
         {
             jsonWriter.writePropertyName("logSetting");
             write(jsonWriter, *obj.getLogSetting());
-        }
-        if (obj.getStatus())
-        {
-            jsonWriter.writePropertyName("status");
-            jsonWriter.writeCharArray(*obj.getStatus());
         }
         if (obj.getCreatedAt())
         {
