@@ -28,6 +28,7 @@
 #include "result/EzPrepareDownloadByUserIdAndDataObjectNameResult.hpp"
 #include "result/EzDeleteDataObjectResult.hpp"
 #include "result/EzRestoreDataObjectResult.hpp"
+#include "result/EzRestoreDataObjectByUserIdAndDataObjectNameResult.hpp"
 #include "result/EzListDataObhectHistoriesResult.hpp"
 
 
@@ -216,14 +217,24 @@ public:
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
-    /// <param name="callback">コールバックハンドラ</param>
-    /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
-    /// <param name="dataObjectName">データの名前</param>
     void restoreDataObject(
         std::function<void(AsyncEzRestoreDataObjectResult)> callback,
-        GameSession& session,
+        StringHolder namespaceName
+    );
+
+    /// <summary>
+    ///  データの管理情報を修復<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="userId">ユーザーID</param>
+    /// <param name="dataObjectName">データの名前</param>
+    void restoreDataObjectByUserIdAndDataObjectName(
+        std::function<void(AsyncEzRestoreDataObjectByUserIdAndDataObjectNameResult)> callback,
         StringHolder namespaceName,
+        StringHolder userId,
         StringHolder dataObjectName
     );
 

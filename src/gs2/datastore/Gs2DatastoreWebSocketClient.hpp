@@ -50,7 +50,7 @@
 #include "request/PrepareDownloadOwnDataByGenerationRequest.hpp"
 #include "request/PrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest.hpp"
 #include "request/RestoreDataObjectRequest.hpp"
-#include "request/RestoreDataObjectByUserIdRequest.hpp"
+#include "request/RestoreDataObjectByUserIdAndDataObjectNameRequest.hpp"
 #include "request/DescribeDataObjectHistoriesRequest.hpp"
 #include "request/DescribeDataObjectHistoriesByUserIdRequest.hpp"
 #include "request/GetDataObjectHistoryRequest.hpp"
@@ -82,7 +82,7 @@
 #include "result/PrepareDownloadOwnDataByGenerationResult.hpp"
 #include "result/PrepareDownloadByUserIdAndDataObjectNameAndGenerationResult.hpp"
 #include "result/RestoreDataObjectResult.hpp"
-#include "result/RestoreDataObjectByUserIdResult.hpp"
+#include "result/RestoreDataObjectByUserIdAndDataObjectNameResult.hpp"
 #include "result/DescribeDataObjectHistoriesResult.hpp"
 #include "result/DescribeDataObjectHistoriesByUserIdResult.hpp"
 #include "result/GetDataObjectHistoryResult.hpp"
@@ -1928,25 +1928,15 @@ private:
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
-            if (m_Request.getDataObjectName())
+            if (m_Request.getDataObjectId())
             {
-                jsonWriter.writePropertyName("dataObjectName");
-                jsonWriter.writeCharArray(*m_Request.getDataObjectName());
+                jsonWriter.writePropertyName("dataObjectId");
+                jsonWriter.writeCharArray(*m_Request.getDataObjectId());
             }
             if (m_Request.getRequestId())
             {
                 jsonWriter.writePropertyName("xGs2RequestId");
                 jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                jsonWriter.writePropertyName("xGs2AccessToken");
-                jsonWriter.writeCharArray(*m_Request.getAccessToken());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
             }
         }
 
@@ -1962,10 +1952,10 @@ private:
         ~RestoreDataObjectTask() GS2_OVERRIDE = default;
     };
 
-    class RestoreDataObjectByUserIdTask : public detail::Gs2WebSocketSessionTask<RestoreDataObjectByUserIdResult>
+    class RestoreDataObjectByUserIdAndDataObjectNameTask : public detail::Gs2WebSocketSessionTask<RestoreDataObjectByUserIdAndDataObjectNameResult>
     {
     private:
-        RestoreDataObjectByUserIdRequest m_Request;
+        RestoreDataObjectByUserIdAndDataObjectNameRequest m_Request;
 
         const char* getServiceName() const GS2_OVERRIDE
         {
@@ -1979,7 +1969,7 @@ private:
 
         const char* getFunctionName() const GS2_OVERRIDE
         {
-            return "restoreDataObjectByUserId";
+            return "restoreDataObjectByUserIdAndDataObjectName";
         }
 
         void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
@@ -2017,15 +2007,15 @@ private:
         }
 
     public:
-        RestoreDataObjectByUserIdTask(
-            RestoreDataObjectByUserIdRequest request,
-            Gs2WebSocketSessionTask<RestoreDataObjectByUserIdResult>::CallbackType callback
+        RestoreDataObjectByUserIdAndDataObjectNameTask(
+            RestoreDataObjectByUserIdAndDataObjectNameRequest request,
+            Gs2WebSocketSessionTask<RestoreDataObjectByUserIdAndDataObjectNameResult>::CallbackType callback
         ) :
-            Gs2WebSocketSessionTask<RestoreDataObjectByUserIdResult>(callback),
+            Gs2WebSocketSessionTask<RestoreDataObjectByUserIdAndDataObjectNameResult>(callback),
             m_Request(std::move(request))
         {}
 
-        ~RestoreDataObjectByUserIdTask() GS2_OVERRIDE = default;
+        ~RestoreDataObjectByUserIdAndDataObjectNameTask() GS2_OVERRIDE = default;
     };
 
     class DescribeDataObjectHistoriesTask : public detail::Gs2WebSocketSessionTask<DescribeDataObjectHistoriesResult>
@@ -2877,9 +2867,9 @@ public:
      * @param callback コールバック関数
      * @param request リクエストパラメータ
      */
-    void restoreDataObjectByUserId(RestoreDataObjectByUserIdRequest request, std::function<void(AsyncRestoreDataObjectByUserIdResult)> callback)
+    void restoreDataObjectByUserIdAndDataObjectName(RestoreDataObjectByUserIdAndDataObjectNameRequest request, std::function<void(AsyncRestoreDataObjectByUserIdAndDataObjectNameResult)> callback)
     {
-        RestoreDataObjectByUserIdTask& task = *new RestoreDataObjectByUserIdTask(std::move(request), callback);
+        RestoreDataObjectByUserIdAndDataObjectNameTask& task = *new RestoreDataObjectByUserIdAndDataObjectNameTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

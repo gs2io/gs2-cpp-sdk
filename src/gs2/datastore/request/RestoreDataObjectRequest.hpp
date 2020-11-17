@@ -43,23 +43,17 @@ private:
     class Data : public Gs2BasicRequest::Data
     {
     public:
-        /** アクセストークン */
-        optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
-        /** データの名前 */
-        optional<StringHolder> dataObjectName;
-        /** 重複実行回避機能に使用するID */
-        optional<StringHolder> duplicationAvoider;
+        /** データオブジェクト */
+        optional<StringHolder> dataObjectId;
 
         Data() = default;
 
         Data(const Data& data) :
             Gs2BasicRequest::Data(data),
-            accessToken(data.accessToken),
             namespaceName(data.namespaceName),
-            dataObjectName(data.dataObjectName),
-            duplicationAvoider(data.duplicationAvoider)
+            dataObjectId(data.dataObjectId)
         {
         }
 
@@ -108,38 +102,6 @@ public:
     }
 
     /**
-     * アクセストークンを取得。
-     *
-     * @return アクセストークン
-     */
-    const gs2::optional<StringHolder>& getAccessToken() const
-    {
-        return ensureData().accessToken;
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     */
-    void setAccessToken(StringHolder accessToken)
-    {
-        ensureData().accessToken.emplace(std::move(accessToken));
-    }
-
-    /**
-     * アクセストークンを設定。
-     *
-     * @param accessToken アクセストークン
-     * @return this
-     */
-    RestoreDataObjectRequest& withAccessToken(StringHolder accessToken)
-    {
-        setAccessToken(std::move(accessToken));
-        return *this;
-    }
-
-    /**
      * ネームスペース名を取得
      *
      * @return ネームスペース名
@@ -171,64 +133,33 @@ public:
     }
 
     /**
-     * データの名前を取得
+     * データオブジェクトを取得
      *
-     * @return データの名前
+     * @return データオブジェクト
      */
-    const optional<StringHolder>& getDataObjectName() const
+    const optional<StringHolder>& getDataObjectId() const
     {
-        return ensureData().dataObjectName;
+        return ensureData().dataObjectId;
     }
 
     /**
-     * データの名前を設定
+     * データオブジェクトを設定
      *
-     * @param dataObjectName データの名前
+     * @param dataObjectId データオブジェクト
      */
-    void setDataObjectName(StringHolder dataObjectName)
+    void setDataObjectId(StringHolder dataObjectId)
     {
-        ensureData().dataObjectName.emplace(std::move(dataObjectName));
+        ensureData().dataObjectId.emplace(std::move(dataObjectId));
     }
 
     /**
-     * データの名前を設定
+     * データオブジェクトを設定
      *
-     * @param dataObjectName データの名前
+     * @param dataObjectId データオブジェクト
      */
-    RestoreDataObjectRequest& withDataObjectName(StringHolder dataObjectName)
+    RestoreDataObjectRequest& withDataObjectId(StringHolder dataObjectId)
     {
-        ensureData().dataObjectName.emplace(std::move(dataObjectName));
-        return *this;
-    }
-
-    /**
-     * 重複実行回避機能に使用するIDを取得
-     *
-     * @return 重複実行回避機能に使用するID
-     */
-    const optional<StringHolder>& getDuplicationAvoider() const
-    {
-        return ensureData().duplicationAvoider;
-    }
-
-    /**
-     * 重複実行回避機能に使用するIDを設定
-     *
-     * @param duplicationAvoider 重複実行回避機能に使用するID
-     */
-    void setDuplicationAvoider(StringHolder duplicationAvoider)
-    {
-        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
-    }
-
-    /**
-     * 重複実行回避機能に使用するIDを設定
-     *
-     * @param duplicationAvoider 重複実行回避機能に使用するID
-     */
-    RestoreDataObjectRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
-    {
-        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
+        ensureData().dataObjectId.emplace(std::move(dataObjectId));
         return *this;
     }
 
