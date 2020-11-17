@@ -21,6 +21,7 @@
 #include "notification.hpp"
 #include "Namespace.hpp"
 #include "Script.hpp"
+#include "ResponseCache.hpp"
 #include "GitHubCheckoutSetting.hpp"
 #include "LogSetting.hpp"
 

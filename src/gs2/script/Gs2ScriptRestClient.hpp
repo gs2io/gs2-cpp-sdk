@@ -850,7 +850,7 @@ private:
             if (m_Request.getArgs())
             {
                 jsonWriter.writePropertyName("args");
-                jsonWriter.writeInt32(*m_Request.getArgs());
+                jsonWriter.writeCharArray(*m_Request.getArgs());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -964,11 +964,6 @@ protected:
             jsonWriter.writePropertyName("logSetting");
             write(jsonWriter, *obj.getLogSetting());
         }
-        if (obj.getStatus())
-        {
-            jsonWriter.writePropertyName("status");
-            jsonWriter.writeCharArray(*obj.getStatus());
-        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -1019,6 +1014,37 @@ protected:
         {
             jsonWriter.writePropertyName("updatedAt");
             jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const ResponseCache& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRegion())
+        {
+            jsonWriter.writePropertyName("region");
+            jsonWriter.writeCharArray(*obj.getRegion());
+        }
+        if (obj.getOwnerId())
+        {
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
+        }
+        if (obj.getResponseCacheId())
+        {
+            jsonWriter.writePropertyName("responseCacheId");
+            jsonWriter.writeCharArray(*obj.getResponseCacheId());
+        }
+        if (obj.getRequestHash())
+        {
+            jsonWriter.writePropertyName("requestHash");
+            jsonWriter.writeCharArray(*obj.getRequestHash());
+        }
+        if (obj.getResult())
+        {
+            jsonWriter.writePropertyName("result");
+            jsonWriter.writeCharArray(*obj.getResult());
         }
         jsonWriter.writeObjectEnd();
     }

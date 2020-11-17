@@ -46,7 +46,7 @@ private:
         /** スクリプト */
         optional<StringHolder> scriptId;
         /** None */
-        optional<Int32> args;
+        optional<StringHolder> args;
 
         Data() = default;
 
@@ -137,7 +137,7 @@ public:
      *
      * @return None
      */
-    const optional<Int32>& getArgs() const
+    const optional<StringHolder>& getArgs() const
     {
         return ensureData().args;
     }
@@ -147,7 +147,7 @@ public:
      *
      * @param args None
      */
-    void setArgs(Int32 args)
+    void setArgs(StringHolder args)
     {
         ensureData().args.emplace(std::move(args));
     }
@@ -157,7 +157,7 @@ public:
      *
      * @param args None
      */
-    InvokeScriptRequest& withArgs(Int32 args)
+    InvokeScriptRequest& withArgs(StringHolder args)
     {
         ensureData().args.emplace(std::move(args));
         return *this;
