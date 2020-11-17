@@ -404,11 +404,13 @@ void Client::deleteDataObject(
 
 void Client::restoreDataObject(
     std::function<void(AsyncEzRestoreDataObjectResult)> callback,
-    StringHolder namespaceName
+    StringHolder namespaceName,
+    StringHolder dataObjectId
 )
 {
     gs2::datastore::RestoreDataObjectRequest request;
     request.setNamespaceName(namespaceName);
+    request.setDataObjectId(dataObjectId);
     m_pClient->restoreDataObject(
         request,
         [callback](gs2::datastore::AsyncRestoreDataObjectResult r)
@@ -430,44 +432,6 @@ void Client::restoreDataObject(
                 Gs2ClientException gs2ClientException;
                 gs2ClientException.setType(Gs2ClientException::UnknownException);
                 AsyncEzRestoreDataObjectResult asyncResult(std::move(gs2ClientException));
-                callback(asyncResult);
-            }
-        }
-    );
-}
-
-void Client::restoreDataObjectByUserIdAndDataObjectName(
-    std::function<void(AsyncEzRestoreDataObjectByUserIdAndDataObjectNameResult)> callback,
-    StringHolder namespaceName,
-    StringHolder userId,
-    StringHolder dataObjectName
-)
-{
-    gs2::datastore::RestoreDataObjectByUserIdAndDataObjectNameRequest request;
-    request.setNamespaceName(namespaceName);
-    request.setUserId(userId);
-    request.setDataObjectName(dataObjectName);
-    m_pClient->restoreDataObjectByUserIdAndDataObjectName(
-        request,
-        [callback](gs2::datastore::AsyncRestoreDataObjectByUserIdAndDataObjectNameResult r)
-        {
-            if (r.getError())
-            {
-                auto gs2ClientException = *r.getError();
-                AsyncEzRestoreDataObjectByUserIdAndDataObjectNameResult asyncResult(std::move(gs2ClientException));
-                callback(asyncResult);
-            }
-            else if (r.getResult() && EzRestoreDataObjectByUserIdAndDataObjectNameResult::isConvertible(*r.getResult()))
-            {
-                EzRestoreDataObjectByUserIdAndDataObjectNameResult ezResult(*r.getResult());
-                AsyncEzRestoreDataObjectByUserIdAndDataObjectNameResult asyncResult(std::move(ezResult));
-                callback(asyncResult);
-            }
-            else
-            {
-                Gs2ClientException gs2ClientException;
-                gs2ClientException.setType(Gs2ClientException::UnknownException);
-                AsyncEzRestoreDataObjectByUserIdAndDataObjectNameResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
         }
