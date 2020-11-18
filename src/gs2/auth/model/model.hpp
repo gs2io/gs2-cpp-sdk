@@ -20,5 +20,6 @@
 #include <gs2/core/common.hpp>
 #include "notification.hpp"
 #include "AccessToken.hpp"
+#include "ResponseCache.hpp"
 
 #endif //GS2_AUTH_MODEL_MODEL_HPP_
