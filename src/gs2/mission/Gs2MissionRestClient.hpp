@@ -54,13 +54,13 @@
 #include "request/GetNamespaceRequest.hpp"
 #include "request/UpdateNamespaceRequest.hpp"
 #include "request/DeleteNamespaceRequest.hpp"
-#include "request/DescribeCounterModelsRequest.hpp"
-#include "request/GetCounterModelRequest.hpp"
 #include "request/DescribeCounterModelMastersRequest.hpp"
 #include "request/CreateCounterModelMasterRequest.hpp"
 #include "request/GetCounterModelMasterRequest.hpp"
 #include "request/UpdateCounterModelMasterRequest.hpp"
 #include "request/DeleteCounterModelMasterRequest.hpp"
+#include "request/DescribeCounterModelsRequest.hpp"
+#include "request/GetCounterModelRequest.hpp"
 #include "request/DescribeMissionGroupModelsRequest.hpp"
 #include "request/GetMissionGroupModelRequest.hpp"
 #include "request/DescribeCountersRequest.hpp"
@@ -101,13 +101,13 @@
 #include "result/GetNamespaceResult.hpp"
 #include "result/UpdateNamespaceResult.hpp"
 #include "result/DeleteNamespaceResult.hpp"
-#include "result/DescribeCounterModelsResult.hpp"
-#include "result/GetCounterModelResult.hpp"
 #include "result/DescribeCounterModelMastersResult.hpp"
 #include "result/CreateCounterModelMasterResult.hpp"
 #include "result/GetCounterModelMasterResult.hpp"
 #include "result/UpdateCounterModelMasterResult.hpp"
 #include "result/DeleteCounterModelMasterResult.hpp"
+#include "result/DescribeCounterModelsResult.hpp"
+#include "result/GetCounterModelResult.hpp"
 #include "result/DescribeMissionGroupModelsResult.hpp"
 #include "result/GetMissionGroupModelResult.hpp"
 #include "result/DescribeCountersResult.hpp"
@@ -2159,104 +2159,6 @@ private:
         ~DeleteNamespaceTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeCounterModelsTask : public detail::Gs2RestSessionTask<DescribeCounterModelsResult>
-    {
-    private:
-        DescribeCounterModelsRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "mission";
-        }
-
-        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
-        {
-            url += "/{namespaceName}/counter";
-            {
-                auto& value = m_Request.getNamespaceName();
-                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-            }
-
-            Char joint[] = { '?', '\0' };
-            if (m_Request.getContextStack())
-            {
-                url += joint;
-                url += "contextStack=";
-                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-                joint[0] = '&';
-            }
-
-            if (m_Request.getRequestId())
-            {
-                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
-            }
-
-            return detail::Gs2HttpTask::Verb::Get;
-        }
-
-    public:
-        DescribeCounterModelsTask(
-            DescribeCounterModelsRequest request,
-            Gs2RestSessionTask<DescribeCounterModelsResult>::CallbackType callback
-        ) :
-            Gs2RestSessionTask<DescribeCounterModelsResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeCounterModelsTask() GS2_OVERRIDE = default;
-    };
-
-    class GetCounterModelTask : public detail::Gs2RestSessionTask<GetCounterModelResult>
-    {
-    private:
-        GetCounterModelRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "mission";
-        }
-
-        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
-        {
-            url += "/{namespaceName}/counter/{counterName}";
-            {
-                auto& value = m_Request.getNamespaceName();
-                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-            }
-            {
-                auto& value = m_Request.getCounterName();
-                url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
-            }
-
-            Char joint[] = { '?', '\0' };
-            if (m_Request.getContextStack())
-            {
-                url += joint;
-                url += "contextStack=";
-                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
-                joint[0] = '&';
-            }
-
-            if (m_Request.getRequestId())
-            {
-                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
-            }
-
-            return detail::Gs2HttpTask::Verb::Get;
-        }
-
-    public:
-        GetCounterModelTask(
-            GetCounterModelRequest request,
-            Gs2RestSessionTask<GetCounterModelResult>::CallbackType callback
-        ) :
-            Gs2RestSessionTask<GetCounterModelResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~GetCounterModelTask() GS2_OVERRIDE = default;
-    };
-
     class DescribeCounterModelMastersTask : public detail::Gs2RestSessionTask<DescribeCounterModelMastersResult>
     {
     private:
@@ -2585,6 +2487,104 @@ private:
         {}
 
         ~DeleteCounterModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeCounterModelsTask : public detail::Gs2RestSessionTask<DescribeCounterModelsResult>
+    {
+    private:
+        DescribeCounterModelsRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "mission";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/counter";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeCounterModelsTask(
+            DescribeCounterModelsRequest request,
+            Gs2RestSessionTask<DescribeCounterModelsResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeCounterModelsResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeCounterModelsTask() GS2_OVERRIDE = default;
+    };
+
+    class GetCounterModelTask : public detail::Gs2RestSessionTask<GetCounterModelResult>
+    {
+    private:
+        GetCounterModelRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "mission";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/counter/{counterName}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getCounterName();
+                url.replace("{counterName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetCounterModelTask(
+            GetCounterModelRequest request,
+            Gs2RestSessionTask<GetCounterModelResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetCounterModelResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetCounterModelTask() GS2_OVERRIDE = default;
     };
 
     class DescribeMissionGroupModelsTask : public detail::Gs2RestSessionTask<DescribeMissionGroupModelsResult>
@@ -3134,6 +3134,32 @@ private:
     };
 
 protected:
+    static void write(detail::json::JsonWriter& jsonWriter, const CounterScopeModel& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getResetType())
+        {
+            jsonWriter.writePropertyName("resetType");
+            jsonWriter.writeCharArray(*obj.getResetType());
+        }
+        if (obj.getResetDayOfMonth())
+        {
+            jsonWriter.writePropertyName("resetDayOfMonth");
+            jsonWriter.writeInt32(*obj.getResetDayOfMonth());
+        }
+        if (obj.getResetDayOfWeek())
+        {
+            jsonWriter.writePropertyName("resetDayOfWeek");
+            jsonWriter.writeCharArray(*obj.getResetDayOfWeek());
+        }
+        if (obj.getResetHour())
+        {
+            jsonWriter.writePropertyName("resetHour");
+            jsonWriter.writeInt32(*obj.getResetHour());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const NotificationSetting& obj)
     {
         jsonWriter.writeObjectStart();
@@ -3155,6 +3181,37 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const ResponseCache& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRegion())
+        {
+            jsonWriter.writePropertyName("region");
+            jsonWriter.writeCharArray(*obj.getRegion());
+        }
+        if (obj.getOwnerId())
+        {
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
+        }
+        if (obj.getResponseCacheId())
+        {
+            jsonWriter.writePropertyName("responseCacheId");
+            jsonWriter.writeCharArray(*obj.getResponseCacheId());
+        }
+        if (obj.getRequestHash())
+        {
+            jsonWriter.writePropertyName("requestHash");
+            jsonWriter.writeCharArray(*obj.getRequestHash());
+        }
+        if (obj.getResult())
+        {
+            jsonWriter.writePropertyName("result");
+            jsonWriter.writeCharArray(*obj.getResult());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const AcquireAction& obj)
     {
         jsonWriter.writeObjectStart();
@@ -3167,6 +3224,32 @@ protected:
         {
             jsonWriter.writePropertyName("request");
             jsonWriter.writeCharArray(*obj.getRequest());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const ScriptSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getTriggerScriptId())
+        {
+            jsonWriter.writePropertyName("triggerScriptId");
+            jsonWriter.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerTargetType())
+        {
+            jsonWriter.writePropertyName("doneTriggerTargetType");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
+        }
+        if (obj.getDoneTriggerScriptId())
+        {
+            jsonWriter.writePropertyName("doneTriggerScriptId");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerScriptId());
+        }
+        if (obj.getDoneTriggerQueueNamespaceId())
+        {
+            jsonWriter.writePropertyName("doneTriggerQueueNamespaceId");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -3281,32 +3364,6 @@ protected:
         {
             jsonWriter.writePropertyName("updatedAt");
             jsonWriter.writeInt64(*obj.getUpdatedAt());
-        }
-        jsonWriter.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& jsonWriter, const ScriptSetting& obj)
-    {
-        jsonWriter.writeObjectStart();
-        if (obj.getTriggerScriptId())
-        {
-            jsonWriter.writePropertyName("triggerScriptId");
-            jsonWriter.writeCharArray(*obj.getTriggerScriptId());
-        }
-        if (obj.getDoneTriggerTargetType())
-        {
-            jsonWriter.writePropertyName("doneTriggerTargetType");
-            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
-        }
-        if (obj.getDoneTriggerScriptId())
-        {
-            jsonWriter.writePropertyName("doneTriggerScriptId");
-            jsonWriter.writeCharArray(*obj.getDoneTriggerScriptId());
-        }
-        if (obj.getDoneTriggerQueueNamespaceId())
-        {
-            jsonWriter.writePropertyName("doneTriggerQueueNamespaceId");
-            jsonWriter.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -3467,6 +3524,17 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getLoggingNamespaceId())
+        {
+            jsonWriter.writePropertyName("loggingNamespaceId");
+            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const Namespace& obj)
     {
         jsonWriter.writeObjectStart();
@@ -3538,43 +3606,6 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& jsonWriter, const CounterModel& obj)
-    {
-        jsonWriter.writeObjectStart();
-        if (obj.getCounterId())
-        {
-            jsonWriter.writePropertyName("counterId");
-            jsonWriter.writeCharArray(*obj.getCounterId());
-        }
-        if (obj.getName())
-        {
-            jsonWriter.writePropertyName("name");
-            jsonWriter.writeCharArray(*obj.getName());
-        }
-        if (obj.getMetadata())
-        {
-            jsonWriter.writePropertyName("metadata");
-            jsonWriter.writeCharArray(*obj.getMetadata());
-        }
-        if (obj.getScopes())
-        {
-            jsonWriter.writePropertyName("scopes");
-            jsonWriter.writeArrayStart();
-            auto& list = *obj.getScopes();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(jsonWriter, list[i]);
-            }
-            jsonWriter.writeArrayEnd();
-        }
-        if (obj.getChallengePeriodEventId())
-        {
-            jsonWriter.writePropertyName("challengePeriodEventId");
-            jsonWriter.writeCharArray(*obj.getChallengePeriodEventId());
-        }
-        jsonWriter.writeObjectEnd();
-    }
-
     static void write(detail::json::JsonWriter& jsonWriter, const CounterModelMaster& obj)
     {
         jsonWriter.writeObjectStart();
@@ -3623,6 +3654,43 @@ protected:
         {
             jsonWriter.writePropertyName("updatedAt");
             jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const CounterModel& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getCounterId())
+        {
+            jsonWriter.writePropertyName("counterId");
+            jsonWriter.writeCharArray(*obj.getCounterId());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getScopes())
+        {
+            jsonWriter.writePropertyName("scopes");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getScopes();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(jsonWriter, list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getChallengePeriodEventId())
+        {
+            jsonWriter.writePropertyName("challengePeriodEventId");
+            jsonWriter.writeCharArray(*obj.getChallengePeriodEventId());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -3684,85 +3752,6 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& jsonWriter, const Counter& obj)
-    {
-        jsonWriter.writeObjectStart();
-        if (obj.getCounterId())
-        {
-            jsonWriter.writePropertyName("counterId");
-            jsonWriter.writeCharArray(*obj.getCounterId());
-        }
-        if (obj.getUserId())
-        {
-            jsonWriter.writePropertyName("userId");
-            jsonWriter.writeCharArray(*obj.getUserId());
-        }
-        if (obj.getName())
-        {
-            jsonWriter.writePropertyName("name");
-            jsonWriter.writeCharArray(*obj.getName());
-        }
-        if (obj.getValues())
-        {
-            jsonWriter.writePropertyName("values");
-            jsonWriter.writeArrayStart();
-            auto& list = *obj.getValues();
-            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-            {
-                write(jsonWriter, list[i]);
-            }
-            jsonWriter.writeArrayEnd();
-        }
-        if (obj.getCreatedAt())
-        {
-            jsonWriter.writePropertyName("createdAt");
-            jsonWriter.writeInt64(*obj.getCreatedAt());
-        }
-        if (obj.getUpdatedAt())
-        {
-            jsonWriter.writePropertyName("updatedAt");
-            jsonWriter.writeInt64(*obj.getUpdatedAt());
-        }
-        jsonWriter.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& jsonWriter, const LogSetting& obj)
-    {
-        jsonWriter.writeObjectStart();
-        if (obj.getLoggingNamespaceId())
-        {
-            jsonWriter.writePropertyName("loggingNamespaceId");
-            jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
-        }
-        jsonWriter.writeObjectEnd();
-    }
-
-    static void write(detail::json::JsonWriter& jsonWriter, const CounterScopeModel& obj)
-    {
-        jsonWriter.writeObjectStart();
-        if (obj.getResetType())
-        {
-            jsonWriter.writePropertyName("resetType");
-            jsonWriter.writeCharArray(*obj.getResetType());
-        }
-        if (obj.getResetDayOfMonth())
-        {
-            jsonWriter.writePropertyName("resetDayOfMonth");
-            jsonWriter.writeInt32(*obj.getResetDayOfMonth());
-        }
-        if (obj.getResetDayOfWeek())
-        {
-            jsonWriter.writePropertyName("resetDayOfWeek");
-            jsonWriter.writeCharArray(*obj.getResetDayOfWeek());
-        }
-        if (obj.getResetHour())
-        {
-            jsonWriter.writePropertyName("resetHour");
-            jsonWriter.writeInt32(*obj.getResetHour());
-        }
-        jsonWriter.writeObjectEnd();
-    }
-
     static void write(detail::json::JsonWriter& jsonWriter, const Config& obj)
     {
         jsonWriter.writeObjectStart();
@@ -3820,33 +3809,44 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
-    static void write(detail::json::JsonWriter& jsonWriter, const ResponseCache& obj)
+    static void write(detail::json::JsonWriter& jsonWriter, const Counter& obj)
     {
         jsonWriter.writeObjectStart();
-        if (obj.getRegion())
+        if (obj.getCounterId())
         {
-            jsonWriter.writePropertyName("region");
-            jsonWriter.writeCharArray(*obj.getRegion());
+            jsonWriter.writePropertyName("counterId");
+            jsonWriter.writeCharArray(*obj.getCounterId());
         }
-        if (obj.getOwnerId())
+        if (obj.getUserId())
         {
-            jsonWriter.writePropertyName("ownerId");
-            jsonWriter.writeCharArray(*obj.getOwnerId());
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
         }
-        if (obj.getResponseCacheId())
+        if (obj.getName())
         {
-            jsonWriter.writePropertyName("responseCacheId");
-            jsonWriter.writeCharArray(*obj.getResponseCacheId());
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
         }
-        if (obj.getRequestHash())
+        if (obj.getValues())
         {
-            jsonWriter.writePropertyName("requestHash");
-            jsonWriter.writeCharArray(*obj.getRequestHash());
+            jsonWriter.writePropertyName("values");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getValues();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(jsonWriter, list[i]);
+            }
+            jsonWriter.writeArrayEnd();
         }
-        if (obj.getResult())
+        if (obj.getCreatedAt())
         {
-            jsonWriter.writePropertyName("result");
-            jsonWriter.writeCharArray(*obj.getResult());
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -4237,30 +4237,6 @@ public:
     }
 
 	/**
-	 * カウンターの種類の一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeCounterModels(DescribeCounterModelsRequest request, std::function<void(AsyncDescribeCounterModelsResult)> callback)
-    {
-        DescribeCounterModelsTask& task = *new DescribeCounterModelsTask(std::move(request), callback);
-        getGs2RestSession().execute(task);
-    }
-
-	/**
-	 * カウンターの種類を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getCounterModel(GetCounterModelRequest request, std::function<void(AsyncGetCounterModelResult)> callback)
-    {
-        GetCounterModelTask& task = *new GetCounterModelTask(std::move(request), callback);
-        getGs2RestSession().execute(task);
-    }
-
-	/**
 	 * カウンターの種類マスターの一覧を取得<br>
 	 *
      * @param callback コールバック関数
@@ -4317,6 +4293,30 @@ public:
     void deleteCounterModelMaster(DeleteCounterModelMasterRequest request, std::function<void(AsyncDeleteCounterModelMasterResult)> callback)
     {
         DeleteCounterModelMasterTask& task = *new DeleteCounterModelMasterTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * カウンターの種類の一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeCounterModels(DescribeCounterModelsRequest request, std::function<void(AsyncDescribeCounterModelsResult)> callback)
+    {
+        DescribeCounterModelsTask& task = *new DescribeCounterModelsTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * カウンターの種類を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getCounterModel(GetCounterModelRequest request, std::function<void(AsyncGetCounterModelResult)> callback)
+    {
+        GetCounterModelTask& task = *new GetCounterModelTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 
