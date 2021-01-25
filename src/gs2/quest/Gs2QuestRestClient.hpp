@@ -3265,6 +3265,11 @@ protected:
             }
             jsonWriter.writeArrayEnd();
         }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
