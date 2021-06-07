@@ -41,7 +41,11 @@ public:
     };
 
 private:
+#if ENGINE_MINOR_VERSION < 25
     TSharedRef<IHttpRequest> m_pHttpRequest;
+#else
+    FHttpRequestRef m_pHttpRequest;
+#endif
 
     virtual void callback(FHttpRequestPtr pHttpRequest, FHttpResponsePtr pHttpResponse, bool isSuccessful) = 0;
 
