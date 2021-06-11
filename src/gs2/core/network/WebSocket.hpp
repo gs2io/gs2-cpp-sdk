@@ -19,8 +19,7 @@
 
 #include "../Gs2Object.hpp"
 
-class UWebSocketBase;
-class UWebSocketDelegateAdaptor;
+class IWebSocket;
 class FString;
 
 GS2_START_OF_NAMESPACE
@@ -34,11 +33,10 @@ class Gs2WebSocketResponse;
 class Gs2WebSocket : public Gs2Object
 {
 private:
-    UWebSocketBase* m_pWebSocketBase;
-    UWebSocketDelegateAdaptor* m_pWebSocketDelegateAdaptor;
+    TSharedRef<IWebSocket> m_pWebSocket;
 
     void onConnectError(const FString& error);
-    void onClosed();
+    void onClosed(int32 i, const FString& str, bool b);
     void onConnectComplete();
     void onReceiveData(const FString& data);
 

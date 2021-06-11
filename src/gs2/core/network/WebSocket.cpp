@@ -17,9 +17,8 @@
 #include "../exception/Gs2ClientException.hpp"
 #include "Gs2WebSocketResponse.hpp"
 #include "WebSocket.hpp"
-#include "WebSocketBlueprintLibrary.h"
-#include "WebSocketBase.h"
-#include "WebSocketDelegateAdaptor.h"
+#include "Runtime/Online/WebSockets/Public/WebSocketsModule.h"
+#include "Runtime/Online/WebSockets/Public/IWebSocket.h"
 
 GS2_START_OF_NAMESPACE
 
@@ -34,40 +33,32 @@ bool isConnectFailed;
 namespace detail {
 
 Gs2WebSocket::Gs2WebSocket() :
-    m_pWebSocketBase(UWebSocketBlueprintLibrary::Connect("", isConnectFailed)),
-    m_pWebSocketDelegateAdaptor(NewObject<UWebSocketDelegateAdaptor>())
+    m_pWebSocket(FWebSocketsModule::Get().CreateWebSocket(TEXT("wss://gateway-ws.ap-northeast-1.gen2.gs2io.com/v2")))
 {
-    m_pWebSocketBase->AddToRoot();
-    m_pWebSocketDelegateAdaptor->AddToRoot();
-
-    m_pWebSocketDelegateAdaptor->OnConnectCompleteStatic.AddRaw(this, &Gs2WebSocket::onConnectComplete);
-    m_pWebSocketDelegateAdaptor->OnConnectErrorStatic.AddRaw(this, &Gs2WebSocket::onConnectError);
-    m_pWebSocketDelegateAdaptor->OnReceiveDataStatic.AddRaw(this, &Gs2WebSocket::onReceiveData);
-    m_pWebSocketDelegateAdaptor->OnClosedStatic.AddRaw(this, &Gs2WebSocket::onClosed);
-
-    m_pWebSocketDelegateAdaptor->AddTo(*m_pWebSocketBase);
+    m_pWebSocket->OnConnected().AddRaw(this, &Gs2WebSocket::onConnectComplete);
+    m_pWebSocket->OnConnectionError().AddRaw(this, &Gs2WebSocket::onConnectError);
+    m_pWebSocket->OnMessage().AddRaw(this, &Gs2WebSocket::onReceiveData);
+    m_pWebSocket->OnClosed().AddRaw(this, &Gs2WebSocket::onClosed);
 }
 
 Gs2WebSocket::~Gs2WebSocket()
 {
-    m_pWebSocketDelegateAdaptor->RemoveFrom(*m_pWebSocketBase);
-    m_pWebSocketDelegateAdaptor->RemoveFromRoot();
-    m_pWebSocketBase->RemoveFromRoot();
 }
 
 bool Gs2WebSocket::open()
 {
-    return m_pWebSocketBase->Connect("wss://gateway-ws.ap-northeast-1.gen2.gs2io.com", TMap<FString, FString>());
+    m_pWebSocket->Connect();
+    return true;
 }
 
 void Gs2WebSocket::close()
 {
-    m_pWebSocketBase->Close();
+    m_pWebSocket->Close();
 }
 
 void Gs2WebSocket::send(const gs2::Char message[])
 {
-    m_pWebSocketBase->SendText(message);
+    m_pWebSocket->Send(message);
 }
 
 void Gs2WebSocket::onConnectComplete()
@@ -91,7 +82,7 @@ void Gs2WebSocket::onReceiveData(const FString& data)
     onMessage(gs2WebSocketResponse);
 }
 
-void Gs2WebSocket::onClosed()
+void Gs2WebSocket::onClosed(int32 i, const FString& str, bool b)
 {
     onClose();
 }
