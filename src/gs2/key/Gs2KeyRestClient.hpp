@@ -374,7 +374,7 @@ private:
                 joint[0] = '&';
             }
             {
-                gs2HttpTask.setBody("[]");
+                gs2HttpTask.setBody("{}");
             }
             gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
 
@@ -662,7 +662,7 @@ private:
                 joint[0] = '&';
             }
             {
-                gs2HttpTask.setBody("[]");
+                gs2HttpTask.setBody("{}");
             }
             gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
 
@@ -1090,7 +1090,7 @@ private:
                 joint[0] = '&';
             }
             {
-                gs2HttpTask.setBody("[]");
+                gs2HttpTask.setBody("{}");
             }
             gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
 
