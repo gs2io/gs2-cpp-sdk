@@ -22,31 +22,25 @@
 
 GS2_START_OF_NAMESPACE
 
-namespace {
-
-// Gs2WebSocket::Gs2WebSocket() の初期化子で渡すためのもの。
-// 失敗するのはわかっているので値を参照することはない。
-bool isConnectFailed;
-
-}
-
 namespace detail {
 
-Gs2WebSocket::Gs2WebSocket() :
-    m_pWebSocket(FWebSocketsModule::Get().CreateWebSocket(TEXT("wss://gateway-ws.ap-northeast-1.gen2.gs2io.com/v2")))
+Gs2WebSocket::Gs2WebSocket()
 {
-    m_pWebSocket->OnConnected().AddRaw(this, &Gs2WebSocket::onConnectComplete);
-    m_pWebSocket->OnConnectionError().AddRaw(this, &Gs2WebSocket::onConnectError);
-    m_pWebSocket->OnMessage().AddRaw(this, &Gs2WebSocket::onReceiveData);
-    m_pWebSocket->OnClosed().AddRaw(this, &Gs2WebSocket::onClosed);
 }
 
 Gs2WebSocket::~Gs2WebSocket()
 {
 }
 
-bool Gs2WebSocket::open()
+bool Gs2WebSocket::open(const char url[])
 {
+    m_pWebSocket = FWebSocketsModule::Get().CreateWebSocket(url);
+
+    m_pWebSocket->OnConnected().AddRaw(this, &Gs2WebSocket::onConnectComplete);
+    m_pWebSocket->OnConnectionError().AddRaw(this, &Gs2WebSocket::onConnectError);
+    m_pWebSocket->OnMessage().AddRaw(this, &Gs2WebSocket::onReceiveData);
+    m_pWebSocket->OnClosed().AddRaw(this, &Gs2WebSocket::onClosed);
+
     m_pWebSocket->Connect();
     return true;
 }

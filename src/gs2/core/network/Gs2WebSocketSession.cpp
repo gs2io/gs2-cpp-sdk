@@ -24,6 +24,8 @@
 
 GS2_START_OF_NAMESPACE
 
+const char* Gs2WebSocketSession::EndpointHost = "wss://gateway-ws.ap-northeast-1.gen2.gs2io.com/v2";
+
 void Gs2WebSocketSession::WebSocket::onOpen()
 {
     // TODO: キャンセル対応
@@ -192,7 +194,7 @@ void Gs2WebSocketSession::openImpl()
 
     m_State = State::Opening;   // Idle のあいだにコールバックは来ないので、別スレッドから状態変更できる
 
-    if (!m_WebSocket.open())
+    if (!m_WebSocket.open(EndpointHost))
     {
         Gs2ClientException gs2ClientException;
         gs2ClientException.setType(Gs2ClientException::Type::SessionNotOpenException);  // TODO
