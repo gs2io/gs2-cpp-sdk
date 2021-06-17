@@ -26,7 +26,7 @@ GS2_START_OF_NAMESPACE
 class Gs2RestSession : public Gs2Session
 {
 public:
-    static const char EndpointHost[];
+    static const char* EndpointHost;
 
 private:
     class Gs2LoginTask : public detail::Gs2HttpTask

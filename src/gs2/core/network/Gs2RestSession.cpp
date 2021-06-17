@@ -24,7 +24,7 @@
 
 GS2_START_OF_NAMESPACE
 
-const char Gs2RestSession::EndpointHost[] = "https://{service}.{region}.gen2.gs2io.com";
+const char* Gs2RestSession::EndpointHost = "https://{service}.{region}.gen2.gs2io.com";
 
 Gs2RestSession::Gs2LoginTask::Gs2LoginTask(Gs2RestSession& gs2RestSession) :
     Gs2HttpTask(),

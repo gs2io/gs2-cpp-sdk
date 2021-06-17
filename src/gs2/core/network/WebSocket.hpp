@@ -33,7 +33,7 @@ class Gs2WebSocketResponse;
 class Gs2WebSocket : public Gs2Object
 {
 private:
-    TSharedRef<IWebSocket> m_pWebSocket;
+    TSharedPtr<IWebSocket> m_pWebSocket;
 
     void onConnectError(const FString& error);
     void onClosed(int32 i, const FString& str, bool b);
@@ -50,7 +50,7 @@ public:
     Gs2WebSocket();
     virtual ~Gs2WebSocket();
 
-    bool open();
+    bool open(const char url[]);
 
     void close();
 
