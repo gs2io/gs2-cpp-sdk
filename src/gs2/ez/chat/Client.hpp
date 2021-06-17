@@ -148,12 +148,14 @@ public:
     /// <param name="roomName">ルーム名</param>
     /// <param name="startAt">メッセージの取得を開始する時間</param>
     /// <param name="limit">データの取得件数</param>
+    /// <param name="password">メッセージを投稿するために必要となるパスワード</param>
     void listMessages(
         std::function<void(AsyncEzListMessagesResult)> callback,
         StringHolder namespaceName,
         StringHolder roomName,
         gs2::optional<Int64> startAt=gs2::nullopt,
-        gs2::optional<Int64> limit=gs2::nullopt
+        gs2::optional<Int64> limit=gs2::nullopt,
+        gs2::optional<StringHolder> password=gs2::nullopt
     );
 
     /// <summary>

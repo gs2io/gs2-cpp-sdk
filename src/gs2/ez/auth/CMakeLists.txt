@@ -21,12 +21,14 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
         model/EzAccessToken.hpp
+        model/EzResponseCache.hpp
         result/EzLoginResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
         model/EzAccessToken.cpp
+        model/EzResponseCache.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

@@ -21,6 +21,7 @@
 #include "result/EzListVersionModelsResult.hpp"
 #include "result/EzGetVersionModelResult.hpp"
 #include "result/EzListResult.hpp"
+#include "result/EzAcceptResult.hpp"
 #include "result/EzDeleteResult.hpp"
 #include "result/EzCheckVersionResult.hpp"
 
@@ -90,6 +91,22 @@ public:
         StringHolder namespaceName,
         gs2::optional<StringHolder> pageToken=gs2::nullopt,
         gs2::optional<Int64> limit=gs2::nullopt
+    );
+
+    /// <summary>
+    ///  承認する<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="versionName">承認したバージョン名</param>
+    void accept(
+        std::function<void(AsyncEzAcceptResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder versionName
     );
 
     /// <summary>

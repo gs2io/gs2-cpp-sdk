@@ -45,6 +45,8 @@ private:
         gs2::optional<StringHolder> name;
         /** プロパティID */
         gs2::optional<StringHolder> propertyId;
+        /** メタデータ */
+        gs2::optional<StringHolder> metadata;
 
         Data() = default;
         Data(const Data& data);
@@ -87,6 +89,11 @@ public:
         return *ensureData().propertyId;
     }
 
+    const StringHolder& getMetadata() const
+    {
+        return *ensureData().metadata;
+    }
+
     // ========================================
     //   Setters
     // ========================================
@@ -101,6 +108,11 @@ public:
         ensureData().propertyId = std::move(propertyId);
     }
 
+    void setMetadata(StringHolder metadata)
+    {
+        ensureData().metadata = std::move(metadata);
+    }
+
     EzSlot& withName(StringHolder name)
     {
         setName(std::move(name));
@@ -110,6 +122,12 @@ public:
     EzSlot& withPropertyId(StringHolder propertyId)
     {
         setPropertyId(std::move(propertyId));
+        return *this;
+    }
+
+    EzSlot& withMetadata(StringHolder metadata)
+    {
+        setMetadata(std::move(metadata));
         return *this;
     }
 };

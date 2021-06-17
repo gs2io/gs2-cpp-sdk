@@ -189,6 +189,44 @@ void Client::runStampSheet(
     );
 }
 
+void Client::runStampSheetExpress(
+    std::function<void(AsyncEzRunStampSheetExpressResult)> callback,
+    StringHolder namespaceName,
+    StringHolder stampSheet,
+    StringHolder keyId
+)
+{
+    gs2::distributor::RunStampSheetExpressRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setStampSheet(stampSheet);
+    request.setKeyId(keyId);
+    m_pClient->runStampSheetExpress(
+        request,
+        [callback](gs2::distributor::AsyncRunStampSheetExpressResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzRunStampSheetExpressResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzRunStampSheetExpressResult::isConvertible(*r.getResult()))
+            {
+                EzRunStampSheetExpressResult ezResult(*r.getResult());
+                AsyncEzRunStampSheetExpressResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzRunStampSheetExpressResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
 void Client::runStampTaskWithoutNamespace(
     std::function<void(AsyncEzRunStampTaskWithoutNamespaceResult)> callback,
     StringHolder stampTask,
@@ -265,6 +303,42 @@ void Client::runStampSheetWithoutNamespace(
                 Gs2ClientException gs2ClientException;
                 gs2ClientException.setType(Gs2ClientException::UnknownException);
                 AsyncEzRunStampSheetWithoutNamespaceResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::runStampSheetExpressWithoutNamespace(
+    std::function<void(AsyncEzRunStampSheetExpressWithoutNamespaceResult)> callback,
+    StringHolder stampSheet,
+    StringHolder keyId
+)
+{
+    gs2::distributor::RunStampSheetExpressWithoutNamespaceRequest request;
+    request.setStampSheet(stampSheet);
+    request.setKeyId(keyId);
+    m_pClient->runStampSheetExpressWithoutNamespace(
+        request,
+        [callback](gs2::distributor::AsyncRunStampSheetExpressWithoutNamespaceResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzRunStampSheetExpressWithoutNamespaceResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzRunStampSheetExpressWithoutNamespaceResult::isConvertible(*r.getResult()))
+            {
+                EzRunStampSheetExpressWithoutNamespaceResult ezResult(*r.getResult());
+                AsyncEzRunStampSheetExpressWithoutNamespaceResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzRunStampSheetExpressWithoutNamespaceResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
         }

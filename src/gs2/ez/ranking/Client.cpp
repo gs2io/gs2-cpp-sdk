@@ -221,6 +221,101 @@ void Client::unsubscribe(
     );
 }
 
+void Client::listScores(
+    std::function<void(AsyncEzListScoresResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder categoryName,
+    StringHolder scorerUserId,
+    gs2::optional<StringHolder> pageToken,
+    gs2::optional<Int64> limit
+)
+{
+    gs2::ranking::DescribeScoresRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setCategoryName(categoryName);
+    request.setScorerUserId(scorerUserId);
+    if (pageToken)
+    {
+        request.setPageToken(std::move(*pageToken));
+    }
+    if (limit)
+    {
+        request.setLimit(std::move(*limit));
+    }
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->describeScores(
+        request,
+        [callback](gs2::ranking::AsyncDescribeScoresResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzListScoresResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzListScoresResult::isConvertible(*r.getResult()))
+            {
+                EzListScoresResult ezResult(*r.getResult());
+                AsyncEzListScoresResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzListScoresResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::getScore(
+    std::function<void(AsyncEzGetScoreResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder categoryName,
+    StringHolder scorerUserId,
+    gs2::optional<StringHolder> uniqueId
+)
+{
+    gs2::ranking::GetScoreRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setCategoryName(categoryName);
+    request.setScorerUserId(scorerUserId);
+    if (uniqueId)
+    {
+        request.setUniqueId(std::move(*uniqueId));
+    }
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->getScore(
+        request,
+        [callback](gs2::ranking::AsyncGetScoreResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetScoreResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetScoreResult::isConvertible(*r.getResult()))
+            {
+                EzGetScoreResult ezResult(*r.getResult());
+                AsyncEzGetScoreResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetScoreResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
 void Client::putScore(
     std::function<void(AsyncEzPutScoreResult)> callback,
     GameSession& session,
@@ -351,6 +446,51 @@ void Client::getNearRanking(
                 Gs2ClientException gs2ClientException;
                 gs2ClientException.setType(Gs2ClientException::UnknownException);
                 AsyncEzGetNearRankingResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::getRank(
+    std::function<void(AsyncEzGetRankResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder categoryName,
+    StringHolder scorerUserId,
+    gs2::optional<StringHolder> uniqueId
+)
+{
+    gs2::ranking::GetRankingRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setCategoryName(categoryName);
+    request.setScorerUserId(scorerUserId);
+    if (uniqueId)
+    {
+        request.setUniqueId(std::move(*uniqueId));
+    }
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->getRanking(
+        request,
+        [callback](gs2::ranking::AsyncGetRankingResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetRankResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetRankResult::isConvertible(*r.getResult()))
+            {
+                EzGetRankResult ezResult(*r.getResult());
+                AsyncEzGetRankResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetRankResult asyncResult(std::move(gs2ClientException));
                 callback(asyncResult);
             }
         }

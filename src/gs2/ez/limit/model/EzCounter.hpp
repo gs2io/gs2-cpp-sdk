@@ -43,6 +43,8 @@ private:
     public:
         /** カウンター */
         gs2::optional<StringHolder> counterId;
+        /** 回数制限の種類の名前 */
+        gs2::optional<StringHolder> limitName;
         /** カウンターの名前 */
         gs2::optional<StringHolder> name;
         /** カウント値 */
@@ -88,6 +90,11 @@ public:
         return *ensureData().counterId;
     }
 
+    const StringHolder& getLimitName() const
+    {
+        return *ensureData().limitName;
+    }
+
     const StringHolder& getName() const
     {
         return *ensureData().name;
@@ -117,6 +124,11 @@ public:
         ensureData().counterId = std::move(counterId);
     }
 
+    void setLimitName(StringHolder limitName)
+    {
+        ensureData().limitName = std::move(limitName);
+    }
+
     void setName(StringHolder name)
     {
         ensureData().name = std::move(name);
@@ -140,6 +152,12 @@ public:
     EzCounter& withCounterId(StringHolder counterId)
     {
         setCounterId(std::move(counterId));
+        return *this;
+    }
+
+    EzCounter& withLimitName(StringHolder limitName)
+    {
+        setLimitName(std::move(limitName));
         return *this;
     }
 

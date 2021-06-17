@@ -23,6 +23,7 @@ namespace gs2 { namespace ez { namespace limit {
 EzCounter::Data::Data(const Data& data) :
     Gs2Object(data),
     counterId(data.counterId),
+    limitName(data.limitName),
     name(data.name),
     count(data.count),
     createdAt(data.createdAt),
@@ -32,6 +33,7 @@ EzCounter::Data::Data(const Data& data) :
 
 EzCounter::Data::Data(const gs2::limit::Counter& counter) :
     counterId(counter.getCounterId()),
+    limitName(counter.getLimitName()),
     name(counter.getName()),
     count(counter.getCount() ? *counter.getCount() : 0),
     createdAt(counter.getCreatedAt() ? *counter.getCreatedAt() : 0),
@@ -53,6 +55,7 @@ gs2::limit::Counter EzCounter::ToModel() const
 {
     gs2::limit::Counter counter;
     counter.setCounterId(getCounterId());
+    counter.setLimitName(getLimitName());
     counter.setName(getName());
     counter.setCount(getCount());
     counter.setCreatedAt(getCreatedAt());

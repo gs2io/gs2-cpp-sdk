@@ -61,11 +61,15 @@ public:
     /// <param name="session">ゲームセッション</param>
     /// <param name="namespaceName">ネームスペース名</param>
     /// <param name="limitName">回数制限の種類の名前</param>
+    /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
+    /// <param name="limit">データの取得件数</param>
     void listCounters(
         std::function<void(AsyncEzListCountersResult)> callback,
         GameSession& session,
         StringHolder namespaceName,
-        gs2::optional<StringHolder> limitName=gs2::nullopt
+        gs2::optional<StringHolder> limitName=gs2::nullopt,
+        gs2::optional<StringHolder> pageToken=gs2::nullopt,
+        gs2::optional<Int64> limit=gs2::nullopt
     );
 
     /// <summary>

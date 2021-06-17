@@ -153,4 +153,210 @@ void Client::exchange(
     );
 }
 
+void Client::listAwaits(
+    std::function<void(AsyncEzListAwaitsResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    gs2::optional<StringHolder> rateName,
+    gs2::optional<StringHolder> pageToken
+)
+{
+    gs2::exchange::DescribeAwaitsRequest request;
+    request.setNamespaceName(namespaceName);
+    if (rateName)
+    {
+        request.setRateName(std::move(*rateName));
+    }
+    if (pageToken)
+    {
+        request.setPageToken(std::move(*pageToken));
+    }
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->describeAwaits(
+        request,
+        [callback](gs2::exchange::AsyncDescribeAwaitsResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzListAwaitsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzListAwaitsResult::isConvertible(*r.getResult()))
+            {
+                EzListAwaitsResult ezResult(*r.getResult());
+                AsyncEzListAwaitsResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzListAwaitsResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::getAwait(
+    std::function<void(AsyncEzGetAwaitResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder rateName,
+    StringHolder awaitName
+)
+{
+    gs2::exchange::GetAwaitRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setRateName(rateName);
+    request.setAwaitName(awaitName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->getAwait(
+        request,
+        [callback](gs2::exchange::AsyncGetAwaitResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzGetAwaitResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzGetAwaitResult::isConvertible(*r.getResult()))
+            {
+                EzGetAwaitResult ezResult(*r.getResult());
+                AsyncEzGetAwaitResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzGetAwaitResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::acquire(
+    std::function<void(AsyncEzAcquireResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder rateName,
+    StringHolder awaitName
+)
+{
+    gs2::exchange::AcquireRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setRateName(rateName);
+    request.setAwaitName(awaitName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->acquire(
+        request,
+        [callback](gs2::exchange::AsyncAcquireResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzAcquireResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzAcquireResult::isConvertible(*r.getResult()))
+            {
+                EzAcquireResult ezResult(*r.getResult());
+                AsyncEzAcquireResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzAcquireResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::skip(
+    std::function<void(AsyncEzSkipResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder rateName,
+    StringHolder awaitName
+)
+{
+    gs2::exchange::SkipRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setRateName(rateName);
+    request.setAwaitName(awaitName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->skip(
+        request,
+        [callback](gs2::exchange::AsyncSkipResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzSkipResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzSkipResult::isConvertible(*r.getResult()))
+            {
+                EzSkipResult ezResult(*r.getResult());
+                AsyncEzSkipResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzSkipResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
+void Client::deleteAwait(
+    std::function<void(AsyncEzDeleteAwaitResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder rateName,
+    StringHolder awaitName
+)
+{
+    gs2::exchange::DeleteAwaitRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setRateName(rateName);
+    request.setAwaitName(awaitName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->deleteAwait(
+        request,
+        [callback](gs2::exchange::AsyncDeleteAwaitResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzDeleteAwaitResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzDeleteAwaitResult::isConvertible(*r.getResult()))
+            {
+                EzDeleteAwaitResult ezResult(*r.getResult());
+                AsyncEzDeleteAwaitResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzDeleteAwaitResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
 }}}

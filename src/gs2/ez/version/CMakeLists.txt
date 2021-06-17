@@ -36,6 +36,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         result/EzListVersionModelsResult.hpp
         result/EzGetVersionModelResult.hpp
         result/EzListResult.hpp
+        result/EzAcceptResult.hpp
         result/EzDeleteResult.hpp
         result/EzCheckVersionResult.hpp
         )

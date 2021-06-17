@@ -149,6 +149,44 @@ void Client::list(
     );
 }
 
+void Client::accept(
+    std::function<void(AsyncEzAcceptResult)> callback,
+    GameSession& session,
+    StringHolder namespaceName,
+    StringHolder versionName
+)
+{
+    gs2::version::AcceptRequest request;
+    request.setNamespaceName(namespaceName);
+    request.setVersionName(versionName);
+    request.setAccessToken(*session.getAccessToken()->getToken());
+    m_pClient->accept(
+        request,
+        [callback](gs2::version::AsyncAcceptResult r)
+        {
+            if (r.getError())
+            {
+                auto gs2ClientException = *r.getError();
+                AsyncEzAcceptResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+            else if (r.getResult() && EzAcceptResult::isConvertible(*r.getResult()))
+            {
+                EzAcceptResult ezResult(*r.getResult());
+                AsyncEzAcceptResult asyncResult(std::move(ezResult));
+                callback(asyncResult);
+            }
+            else
+            {
+                Gs2ClientException gs2ClientException;
+                gs2ClientException.setType(Gs2ClientException::UnknownException);
+                AsyncEzAcceptResult asyncResult(std::move(gs2ClientException));
+                callback(asyncResult);
+            }
+        }
+    );
+}
+
 void Client::delete_(
     std::function<void(AsyncEzDeleteResult)> callback,
     GameSession& session,

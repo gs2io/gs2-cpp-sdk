@@ -19,6 +19,7 @@
 
 #include <gs2/core/common.hpp>
 #include "EzRateModel.hpp"
+#include "EzAwait.hpp"
 #include "EzConfig.hpp"
 #include "EzAcquireAction.hpp"
 #include "EzConsumeAction.hpp"

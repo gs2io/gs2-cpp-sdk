@@ -21,6 +21,7 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
         model/EzNamespace.hpp
+        model/EzScriptSetting.hpp
         model/EzDataObject.hpp
         model/EzDataObjectHistory.hpp
         model/EzResponseCache.hpp
@@ -31,13 +32,17 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         result/EzPrepareReUploadResult.hpp
         result/EzDoneUploadResult.hpp
         result/EzPrepareDownloadResult.hpp
+        result/EzPrepareDownloadOwnDataResult.hpp
+        result/EzPrepareDownloadByUserIdAndDataObjectNameResult.hpp
         result/EzDeleteDataObjectResult.hpp
+        result/EzRestoreDataObjectResult.hpp
         result/EzListDataObhectHistoriesResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
         Client.cpp
         model/EzNamespace.cpp
+        model/EzScriptSetting.cpp
         model/EzDataObject.cpp
         model/EzDataObjectHistory.cpp
         model/EzResponseCache.cpp

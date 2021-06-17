@@ -21,6 +21,11 @@
 #include "result/EzListRateModelsResult.hpp"
 #include "result/EzGetRateModelResult.hpp"
 #include "result/EzExchangeResult.hpp"
+#include "result/EzListAwaitsResult.hpp"
+#include "result/EzGetAwaitResult.hpp"
+#include "result/EzAcquireResult.hpp"
+#include "result/EzSkipResult.hpp"
+#include "result/EzDeleteAwaitResult.hpp"
 
 
 namespace gs2 {
@@ -90,6 +95,96 @@ public:
         StringHolder rateName,
         Int32 count,
         gs2::optional<List<EzConfig>> config=gs2::nullopt
+    );
+
+    /// <summary>
+    ///  交換待機情報の一覧を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="rateName">交換レート名</param>
+    /// <param name="pageToken">データの取得を開始する位置を指定するトークン</param>
+    void listAwaits(
+        std::function<void(AsyncEzListAwaitsResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        gs2::optional<StringHolder> rateName=gs2::nullopt,
+        gs2::optional<StringHolder> pageToken=gs2::nullopt
+    );
+
+    /// <summary>
+    ///  交換待機情報を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="rateName">交換レート名</param>
+    /// <param name="awaitName">交換待機の名前</param>
+    void getAwait(
+        std::function<void(AsyncEzGetAwaitResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder rateName,
+        StringHolder awaitName
+    );
+
+    /// <summary>
+    ///  交換待機の報酬を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="rateName">交換レート名</param>
+    /// <param name="awaitName">交換待機の名前</param>
+    void acquire(
+        std::function<void(AsyncEzAcquireResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder rateName,
+        StringHolder awaitName
+    );
+
+    /// <summary>
+    ///  交換待機を対価を払ってスキップ<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="rateName">交換レート名</param>
+    /// <param name="awaitName">交換待機の名前</param>
+    void skip(
+        std::function<void(AsyncEzSkipResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder rateName,
+        StringHolder awaitName
+    );
+
+    /// <summary>
+    ///  交換待機情報を取得<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="rateName">交換レート名</param>
+    /// <param name="awaitName">交換待機の名前</param>
+    void deleteAwait(
+        std::function<void(AsyncEzDeleteAwaitResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder rateName,
+        StringHolder awaitName
     );
 };
 

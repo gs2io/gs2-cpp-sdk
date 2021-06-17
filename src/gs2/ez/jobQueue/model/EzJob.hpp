@@ -43,6 +43,10 @@ private:
     public:
         /** ジョブ */
         gs2::optional<StringHolder> jobId;
+        /** ジョブの実行に使用するスクリプト のGRN */
+        gs2::optional<StringHolder> scriptId;
+        /** 引数 */
+        gs2::optional<StringHolder> args;
         /** 現在のリトライ回数 */
         gs2::optional<Int32> currentRetryCount;
         /** 最大試行回数 */
@@ -84,6 +88,16 @@ public:
         return *ensureData().jobId;
     }
 
+    const StringHolder& getScriptId() const
+    {
+        return *ensureData().scriptId;
+    }
+
+    const StringHolder& getArgs() const
+    {
+        return *ensureData().args;
+    }
+
     Int32 getCurrentRetryCount() const
     {
         return *ensureData().currentRetryCount;
@@ -103,6 +117,16 @@ public:
         ensureData().jobId = std::move(jobId);
     }
 
+    void setScriptId(StringHolder scriptId)
+    {
+        ensureData().scriptId = std::move(scriptId);
+    }
+
+    void setArgs(StringHolder args)
+    {
+        ensureData().args = std::move(args);
+    }
+
     void setCurrentRetryCount(Int32 currentRetryCount)
     {
         ensureData().currentRetryCount = currentRetryCount;
@@ -116,6 +140,18 @@ public:
     EzJob& withJobId(StringHolder jobId)
     {
         setJobId(std::move(jobId));
+        return *this;
+    }
+
+    EzJob& withScriptId(StringHolder scriptId)
+    {
+        setScriptId(std::move(scriptId));
+        return *this;
+    }
+
+    EzJob& withArgs(StringHolder args)
+    {
+        setArgs(std::move(args));
         return *this;
     }
 

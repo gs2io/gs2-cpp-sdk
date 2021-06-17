@@ -41,6 +41,8 @@ private:
     class Data : public gs2::Gs2Object
     {
     public:
+        /** 有効期限ごとのアイテム所持数量 */
+        gs2::optional<StringHolder> itemSetId;
         /** アイテムセットを識別する名前 */
         gs2::optional<StringHolder> name;
         /** インベントリの名前 */
@@ -85,6 +87,11 @@ public:
     //   Getters
     // ========================================
 
+    const StringHolder& getItemSetId() const
+    {
+        return *ensureData().itemSetId;
+    }
+
     const StringHolder& getName() const
     {
         return *ensureData().name;
@@ -119,6 +126,11 @@ public:
     //   Setters
     // ========================================
 
+    void setItemSetId(StringHolder itemSetId)
+    {
+        ensureData().itemSetId = std::move(itemSetId);
+    }
+
     void setName(StringHolder name)
     {
         ensureData().name = std::move(name);
@@ -147,6 +159,12 @@ public:
     void setExpiresAt(Int64 expiresAt)
     {
         ensureData().expiresAt = expiresAt;
+    }
+
+    EzItemSet& withItemSetId(StringHolder itemSetId)
+    {
+        setItemSetId(std::move(itemSetId));
+        return *this;
     }
 
     EzItemSet& withName(StringHolder name)

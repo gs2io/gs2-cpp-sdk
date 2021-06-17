@@ -215,7 +215,8 @@ void Client::listMessages(
     StringHolder namespaceName,
     StringHolder roomName,
     gs2::optional<Int64> startAt,
-    gs2::optional<Int64> limit
+    gs2::optional<Int64> limit,
+    gs2::optional<StringHolder> password
 )
 {
     gs2::chat::DescribeMessagesRequest request;
@@ -228,6 +229,10 @@ void Client::listMessages(
     if (limit)
     {
         request.setLimit(std::move(*limit));
+    }
+    if (password)
+    {
+        request.setPassword(std::move(*password));
     }
     m_pClient->describeMessages(
         request,
