@@ -40,6 +40,28 @@
 #include "request/CancelMatchmakingRequest.hpp"
 #include "request/CancelMatchmakingByUserIdRequest.hpp"
 #include "request/DeleteGatheringRequest.hpp"
+#include "request/DescribeRatingModelMastersRequest.hpp"
+#include "request/CreateRatingModelMasterRequest.hpp"
+#include "request/GetRatingModelMasterRequest.hpp"
+#include "request/UpdateRatingModelMasterRequest.hpp"
+#include "request/DeleteRatingModelMasterRequest.hpp"
+#include "request/DescribeRatingModelsRequest.hpp"
+#include "request/GetRatingModelRequest.hpp"
+#include "request/ExportMasterRequest.hpp"
+#include "request/GetCurrentRatingModelMasterRequest.hpp"
+#include "request/UpdateCurrentRatingModelMasterRequest.hpp"
+#include "request/UpdateCurrentRatingModelMasterFromGitHubRequest.hpp"
+#include "request/DescribeRatingsRequest.hpp"
+#include "request/DescribeRatingsByUserIdRequest.hpp"
+#include "request/GetRatingRequest.hpp"
+#include "request/GetRatingByUserIdRequest.hpp"
+#include "request/PutResultRequest.hpp"
+#include "request/DeleteRatingRequest.hpp"
+#include "request/GetBallotRequest.hpp"
+#include "request/GetBallotByUserIdRequest.hpp"
+#include "request/VoteRequest.hpp"
+#include "request/VoteMultipleRequest.hpp"
+#include "request/CommitVoteRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -57,6 +79,28 @@
 #include "result/CancelMatchmakingResult.hpp"
 #include "result/CancelMatchmakingByUserIdResult.hpp"
 #include "result/DeleteGatheringResult.hpp"
+#include "result/DescribeRatingModelMastersResult.hpp"
+#include "result/CreateRatingModelMasterResult.hpp"
+#include "result/GetRatingModelMasterResult.hpp"
+#include "result/UpdateRatingModelMasterResult.hpp"
+#include "result/DeleteRatingModelMasterResult.hpp"
+#include "result/DescribeRatingModelsResult.hpp"
+#include "result/GetRatingModelResult.hpp"
+#include "result/ExportMasterResult.hpp"
+#include "result/GetCurrentRatingModelMasterResult.hpp"
+#include "result/UpdateCurrentRatingModelMasterResult.hpp"
+#include "result/UpdateCurrentRatingModelMasterFromGitHubResult.hpp"
+#include "result/DescribeRatingsResult.hpp"
+#include "result/DescribeRatingsByUserIdResult.hpp"
+#include "result/GetRatingResult.hpp"
+#include "result/GetRatingByUserIdResult.hpp"
+#include "result/PutResultResult.hpp"
+#include "result/DeleteRatingResult.hpp"
+#include "result/GetBallotResult.hpp"
+#include "result/GetBallotByUserIdResult.hpp"
+#include "result/VoteResult.hpp"
+#include "result/VoteMultipleResult.hpp"
+#include "result/CommitVoteResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace matchmaking {
@@ -163,6 +207,11 @@ private:
             {
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getEnableRating())
+            {
+                jsonWriter.writePropertyName("enableRating");
+                jsonWriter.writeBool(*m_Request.getEnableRating());
             }
             if (m_Request.getCreateGatheringTriggerType())
             {
@@ -371,6 +420,11 @@ private:
             {
                 jsonWriter.writePropertyName("description");
                 jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getEnableRating())
+            {
+                jsonWriter.writePropertyName("enableRating");
+                jsonWriter.writeBool(*m_Request.getEnableRating());
             }
             if (m_Request.getCreateGatheringTriggerType())
             {
@@ -623,6 +677,11 @@ private:
                 }
                 jsonWriter.writeArrayEnd();
             }
+            if (m_Request.getExpiresAt())
+            {
+                jsonWriter.writePropertyName("expiresAt");
+                jsonWriter.writeInt64(*m_Request.getExpiresAt());
+            }
             if (m_Request.getRequestId())
             {
                 jsonWriter.writePropertyName("xGs2RequestId");
@@ -726,6 +785,11 @@ private:
                     jsonWriter.writeCharArray(list[i]);
                 }
                 jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getExpiresAt())
+            {
+                jsonWriter.writePropertyName("expiresAt");
+                jsonWriter.writeInt64(*m_Request.getExpiresAt());
             }
             if (m_Request.getRequestId())
             {
@@ -1281,6 +1345,1427 @@ private:
         ~DeleteGatheringTask() GS2_OVERRIDE = default;
     };
 
+    class DescribeRatingModelMastersTask : public detail::Gs2WebSocketSessionTask<DescribeRatingModelMastersResult>
+    {
+    private:
+        DescribeRatingModelMastersRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "ratingModelMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeRatingModelMasters";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getPageToken())
+            {
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        DescribeRatingModelMastersTask(
+            DescribeRatingModelMastersRequest request,
+            Gs2WebSocketSessionTask<DescribeRatingModelMastersResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeRatingModelMastersResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeRatingModelMastersTask() GS2_OVERRIDE = default;
+    };
+
+    class CreateRatingModelMasterTask : public detail::Gs2WebSocketSessionTask<CreateRatingModelMasterResult>
+    {
+    private:
+        CreateRatingModelMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "ratingModelMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "createRatingModelMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getName())
+            {
+                jsonWriter.writePropertyName("name");
+                jsonWriter.writeCharArray(*m_Request.getName());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getMetadata())
+            {
+                jsonWriter.writePropertyName("metadata");
+                jsonWriter.writeCharArray(*m_Request.getMetadata());
+            }
+            if (m_Request.getVolatility())
+            {
+                jsonWriter.writePropertyName("volatility");
+                jsonWriter.writeInt32(*m_Request.getVolatility());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        CreateRatingModelMasterTask(
+            CreateRatingModelMasterRequest request,
+            Gs2WebSocketSessionTask<CreateRatingModelMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<CreateRatingModelMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreateRatingModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRatingModelMasterTask : public detail::Gs2WebSocketSessionTask<GetRatingModelMasterResult>
+    {
+    private:
+        GetRatingModelMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "ratingModelMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getRatingModelMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRatingName())
+            {
+                jsonWriter.writePropertyName("ratingName");
+                jsonWriter.writeCharArray(*m_Request.getRatingName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        GetRatingModelMasterTask(
+            GetRatingModelMasterRequest request,
+            Gs2WebSocketSessionTask<GetRatingModelMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetRatingModelMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRatingModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateRatingModelMasterTask : public detail::Gs2WebSocketSessionTask<UpdateRatingModelMasterResult>
+    {
+    private:
+        UpdateRatingModelMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "ratingModelMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateRatingModelMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRatingName())
+            {
+                jsonWriter.writePropertyName("ratingName");
+                jsonWriter.writeCharArray(*m_Request.getRatingName());
+            }
+            if (m_Request.getDescription())
+            {
+                jsonWriter.writePropertyName("description");
+                jsonWriter.writeCharArray(*m_Request.getDescription());
+            }
+            if (m_Request.getMetadata())
+            {
+                jsonWriter.writePropertyName("metadata");
+                jsonWriter.writeCharArray(*m_Request.getMetadata());
+            }
+            if (m_Request.getVolatility())
+            {
+                jsonWriter.writePropertyName("volatility");
+                jsonWriter.writeInt32(*m_Request.getVolatility());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        UpdateRatingModelMasterTask(
+            UpdateRatingModelMasterRequest request,
+            Gs2WebSocketSessionTask<UpdateRatingModelMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateRatingModelMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateRatingModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteRatingModelMasterTask : public detail::Gs2WebSocketSessionTask<DeleteRatingModelMasterResult>
+    {
+    private:
+        DeleteRatingModelMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "ratingModelMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteRatingModelMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRatingName())
+            {
+                jsonWriter.writePropertyName("ratingName");
+                jsonWriter.writeCharArray(*m_Request.getRatingName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        DeleteRatingModelMasterTask(
+            DeleteRatingModelMasterRequest request,
+            Gs2WebSocketSessionTask<DeleteRatingModelMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DeleteRatingModelMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteRatingModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeRatingModelsTask : public detail::Gs2WebSocketSessionTask<DescribeRatingModelsResult>
+    {
+    private:
+        DescribeRatingModelsRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "ratingModel";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeRatingModels";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        DescribeRatingModelsTask(
+            DescribeRatingModelsRequest request,
+            Gs2WebSocketSessionTask<DescribeRatingModelsResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeRatingModelsResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeRatingModelsTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRatingModelTask : public detail::Gs2WebSocketSessionTask<GetRatingModelResult>
+    {
+    private:
+        GetRatingModelRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "ratingModel";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getRatingModel";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRatingName())
+            {
+                jsonWriter.writePropertyName("ratingName");
+                jsonWriter.writeCharArray(*m_Request.getRatingName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        GetRatingModelTask(
+            GetRatingModelRequest request,
+            Gs2WebSocketSessionTask<GetRatingModelResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetRatingModelResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRatingModelTask() GS2_OVERRIDE = default;
+    };
+
+    class ExportMasterTask : public detail::Gs2WebSocketSessionTask<ExportMasterResult>
+    {
+    private:
+        ExportMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "currentRatingModelMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "exportMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        ExportMasterTask(
+            ExportMasterRequest request,
+            Gs2WebSocketSessionTask<ExportMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<ExportMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~ExportMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class GetCurrentRatingModelMasterTask : public detail::Gs2WebSocketSessionTask<GetCurrentRatingModelMasterResult>
+    {
+    private:
+        GetCurrentRatingModelMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "currentRatingModelMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getCurrentRatingModelMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        GetCurrentRatingModelMasterTask(
+            GetCurrentRatingModelMasterRequest request,
+            Gs2WebSocketSessionTask<GetCurrentRatingModelMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetCurrentRatingModelMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetCurrentRatingModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateCurrentRatingModelMasterTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentRatingModelMasterResult>
+    {
+    private:
+        UpdateCurrentRatingModelMasterRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "currentRatingModelMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateCurrentRatingModelMaster";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getSettings())
+            {
+                jsonWriter.writePropertyName("settings");
+                jsonWriter.writeCharArray(*m_Request.getSettings());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        UpdateCurrentRatingModelMasterTask(
+            UpdateCurrentRatingModelMasterRequest request,
+            Gs2WebSocketSessionTask<UpdateCurrentRatingModelMasterResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateCurrentRatingModelMasterResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateCurrentRatingModelMasterTask() GS2_OVERRIDE = default;
+    };
+
+    class UpdateCurrentRatingModelMasterFromGitHubTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentRatingModelMasterFromGitHubResult>
+    {
+    private:
+        UpdateCurrentRatingModelMasterFromGitHubRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "currentRatingModelMaster";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "updateCurrentRatingModelMasterFromGitHub";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCheckoutSetting())
+            {
+                jsonWriter.writePropertyName("checkoutSetting");
+                write(jsonWriter, *m_Request.getCheckoutSetting());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        UpdateCurrentRatingModelMasterFromGitHubTask(
+            UpdateCurrentRatingModelMasterFromGitHubRequest request,
+            Gs2WebSocketSessionTask<UpdateCurrentRatingModelMasterFromGitHubResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<UpdateCurrentRatingModelMasterFromGitHubResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~UpdateCurrentRatingModelMasterFromGitHubTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeRatingsTask : public detail::Gs2WebSocketSessionTask<DescribeRatingsResult>
+    {
+    private:
+        DescribeRatingsRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "rating";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeRatings";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getPageToken())
+            {
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DescribeRatingsTask(
+            DescribeRatingsRequest request,
+            Gs2WebSocketSessionTask<DescribeRatingsResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeRatingsResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeRatingsTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeRatingsByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeRatingsByUserIdResult>
+    {
+    private:
+        DescribeRatingsByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "rating";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeRatingsByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getPageToken())
+            {
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DescribeRatingsByUserIdTask(
+            DescribeRatingsByUserIdRequest request,
+            Gs2WebSocketSessionTask<DescribeRatingsByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeRatingsByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeRatingsByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRatingTask : public detail::Gs2WebSocketSessionTask<GetRatingResult>
+    {
+    private:
+        GetRatingRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "rating";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getRating";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRatingName())
+            {
+                jsonWriter.writePropertyName("ratingName");
+                jsonWriter.writeCharArray(*m_Request.getRatingName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetRatingTask(
+            GetRatingRequest request,
+            Gs2WebSocketSessionTask<GetRatingResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetRatingResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRatingTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRatingByUserIdTask : public detail::Gs2WebSocketSessionTask<GetRatingByUserIdResult>
+    {
+    private:
+        GetRatingByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "rating";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getRatingByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRatingName())
+            {
+                jsonWriter.writePropertyName("ratingName");
+                jsonWriter.writeCharArray(*m_Request.getRatingName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetRatingByUserIdTask(
+            GetRatingByUserIdRequest request,
+            Gs2WebSocketSessionTask<GetRatingByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetRatingByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRatingByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class PutResultTask : public detail::Gs2WebSocketSessionTask<PutResultResult>
+    {
+    private:
+        PutResultRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "rating";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "putResult";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRatingName())
+            {
+                jsonWriter.writePropertyName("ratingName");
+                jsonWriter.writeCharArray(*m_Request.getRatingName());
+            }
+            if (m_Request.getGameResults())
+            {
+                jsonWriter.writePropertyName("gameResults");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getGameResults();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        PutResultTask(
+            PutResultRequest request,
+            Gs2WebSocketSessionTask<PutResultResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<PutResultResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~PutResultTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteRatingTask : public detail::Gs2WebSocketSessionTask<DeleteRatingResult>
+    {
+    private:
+        DeleteRatingRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "rating";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteRating";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getRatingName())
+            {
+                jsonWriter.writePropertyName("ratingName");
+                jsonWriter.writeCharArray(*m_Request.getRatingName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DeleteRatingTask(
+            DeleteRatingRequest request,
+            Gs2WebSocketSessionTask<DeleteRatingResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DeleteRatingResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteRatingTask() GS2_OVERRIDE = default;
+    };
+
+    class GetBallotTask : public detail::Gs2WebSocketSessionTask<GetBallotResult>
+    {
+    private:
+        GetBallotRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "vote";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getBallot";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRatingName())
+            {
+                jsonWriter.writePropertyName("ratingName");
+                jsonWriter.writeCharArray(*m_Request.getRatingName());
+            }
+            if (m_Request.getGatheringName())
+            {
+                jsonWriter.writePropertyName("gatheringName");
+                jsonWriter.writeCharArray(*m_Request.getGatheringName());
+            }
+            if (m_Request.getNumberOfPlayer())
+            {
+                jsonWriter.writePropertyName("numberOfPlayer");
+                jsonWriter.writeInt32(*m_Request.getNumberOfPlayer());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetBallotTask(
+            GetBallotRequest request,
+            Gs2WebSocketSessionTask<GetBallotResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetBallotResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetBallotTask() GS2_OVERRIDE = default;
+    };
+
+    class GetBallotByUserIdTask : public detail::Gs2WebSocketSessionTask<GetBallotByUserIdResult>
+    {
+    private:
+        GetBallotByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "vote";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getBallotByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRatingName())
+            {
+                jsonWriter.writePropertyName("ratingName");
+                jsonWriter.writeCharArray(*m_Request.getRatingName());
+            }
+            if (m_Request.getGatheringName())
+            {
+                jsonWriter.writePropertyName("gatheringName");
+                jsonWriter.writeCharArray(*m_Request.getGatheringName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getNumberOfPlayer())
+            {
+                jsonWriter.writePropertyName("numberOfPlayer");
+                jsonWriter.writeInt32(*m_Request.getNumberOfPlayer());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetBallotByUserIdTask(
+            GetBallotByUserIdRequest request,
+            Gs2WebSocketSessionTask<GetBallotByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetBallotByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetBallotByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class VoteTask : public detail::Gs2WebSocketSessionTask<VoteResult>
+    {
+    private:
+        VoteRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "vote";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "vote";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getBallotBody())
+            {
+                jsonWriter.writePropertyName("ballotBody");
+                jsonWriter.writeCharArray(*m_Request.getBallotBody());
+            }
+            if (m_Request.getBallotSignature())
+            {
+                jsonWriter.writePropertyName("ballotSignature");
+                jsonWriter.writeCharArray(*m_Request.getBallotSignature());
+            }
+            if (m_Request.getGameResults())
+            {
+                jsonWriter.writePropertyName("gameResults");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getGameResults();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        VoteTask(
+            VoteRequest request,
+            Gs2WebSocketSessionTask<VoteResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<VoteResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~VoteTask() GS2_OVERRIDE = default;
+    };
+
+    class VoteMultipleTask : public detail::Gs2WebSocketSessionTask<VoteMultipleResult>
+    {
+    private:
+        VoteMultipleRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "vote";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "voteMultiple";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getSignedBallots())
+            {
+                jsonWriter.writePropertyName("signedBallots");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getSignedBallots();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getGameResults())
+            {
+                jsonWriter.writePropertyName("gameResults");
+                jsonWriter.writeArrayStart();
+                auto& list = *m_Request.getGameResults();
+                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+                {
+                    write(jsonWriter, list[i]);
+                }
+                jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        VoteMultipleTask(
+            VoteMultipleRequest request,
+            Gs2WebSocketSessionTask<VoteMultipleResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<VoteMultipleResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~VoteMultipleTask() GS2_OVERRIDE = default;
+    };
+
+    class CommitVoteTask : public detail::Gs2WebSocketSessionTask<void>
+    {
+    private:
+        CommitVoteRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "matchmaking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "vote";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "commitVote";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getRatingName())
+            {
+                jsonWriter.writePropertyName("ratingName");
+                jsonWriter.writeCharArray(*m_Request.getRatingName());
+            }
+            if (m_Request.getGatheringName())
+            {
+                jsonWriter.writePropertyName("gatheringName");
+                jsonWriter.writeCharArray(*m_Request.getGatheringName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        CommitVoteTask(
+            CommitVoteRequest request,
+            Gs2WebSocketSessionTask<void>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<void>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CommitVoteTask() GS2_OVERRIDE = default;
+    };
+
 protected:
     static void write(detail::json::JsonWriter& jsonWriter, const Namespace& obj)
     {
@@ -1304,6 +2789,11 @@ protected:
         {
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
+        }
+        if (obj.getEnableRating())
+        {
+            jsonWriter.writePropertyName("enableRating");
+            jsonWriter.writeBool(*obj.getEnableRating());
         }
         if (obj.getCreateGatheringTriggerType())
         {
@@ -1419,6 +2909,11 @@ protected:
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
         }
+        if (obj.getExpiresAt())
+        {
+            jsonWriter.writePropertyName("expiresAt");
+            jsonWriter.writeInt64(*obj.getExpiresAt());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -1428,6 +2923,89 @@ protected:
         {
             jsonWriter.writePropertyName("updatedAt");
             jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const RatingModelMaster& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRatingModelId())
+        {
+            jsonWriter.writePropertyName("ratingModelId");
+            jsonWriter.writeCharArray(*obj.getRatingModelId());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getDescription())
+        {
+            jsonWriter.writePropertyName("description");
+            jsonWriter.writeCharArray(*obj.getDescription());
+        }
+        if (obj.getVolatility())
+        {
+            jsonWriter.writePropertyName("volatility");
+            jsonWriter.writeInt32(*obj.getVolatility());
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const RatingModel& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRatingModelId())
+        {
+            jsonWriter.writePropertyName("ratingModelId");
+            jsonWriter.writeCharArray(*obj.getRatingModelId());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
+        if (obj.getVolatility())
+        {
+            jsonWriter.writePropertyName("volatility");
+            jsonWriter.writeInt32(*obj.getVolatility());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const CurrentRatingModelMaster& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getNamespaceName())
+        {
+            jsonWriter.writePropertyName("namespaceName");
+            jsonWriter.writeCharArray(*obj.getNamespaceName());
+        }
+        if (obj.getSettings())
+        {
+            jsonWriter.writePropertyName("settings");
+            jsonWriter.writeCharArray(*obj.getSettings());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -1491,6 +3069,47 @@ protected:
         {
             jsonWriter.writePropertyName("loggingNamespaceId");
             jsonWriter.writeCharArray(*obj.getLoggingNamespaceId());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const GitHubCheckoutSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getGitHubApiKeyId())
+        {
+            jsonWriter.writePropertyName("gitHubApiKeyId");
+            jsonWriter.writeCharArray(*obj.getGitHubApiKeyId());
+        }
+        if (obj.getRepositoryName())
+        {
+            jsonWriter.writePropertyName("repositoryName");
+            jsonWriter.writeCharArray(*obj.getRepositoryName());
+        }
+        if (obj.getSourcePath())
+        {
+            jsonWriter.writePropertyName("sourcePath");
+            jsonWriter.writeCharArray(*obj.getSourcePath());
+        }
+        if (obj.getReferenceType())
+        {
+            jsonWriter.writePropertyName("referenceType");
+            jsonWriter.writeCharArray(*obj.getReferenceType());
+        }
+        if (obj.getCommitHash())
+        {
+            jsonWriter.writePropertyName("commitHash");
+            jsonWriter.writeCharArray(*obj.getCommitHash());
+        }
+        if (obj.getBranchName())
+        {
+            jsonWriter.writePropertyName("branchName");
+            jsonWriter.writeCharArray(*obj.getBranchName());
+        }
+        if (obj.getTagName())
+        {
+            jsonWriter.writePropertyName("tagName");
+            jsonWriter.writeCharArray(*obj.getTagName());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -1604,6 +3223,164 @@ protected:
                 jsonWriter.writeCharArray(list[i]);
             }
             jsonWriter.writeArrayEnd();
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const Rating& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRatingId())
+        {
+            jsonWriter.writePropertyName("ratingId");
+            jsonWriter.writeCharArray(*obj.getRatingId());
+        }
+        if (obj.getName())
+        {
+            jsonWriter.writePropertyName("name");
+            jsonWriter.writeCharArray(*obj.getName());
+        }
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getRateValue())
+        {
+            jsonWriter.writePropertyName("rateValue");
+            jsonWriter.writeFloat(*obj.getRateValue());
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const GameResult& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRank())
+        {
+            jsonWriter.writePropertyName("rank");
+            jsonWriter.writeInt32(*obj.getRank());
+        }
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const Ballot& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getRatingName())
+        {
+            jsonWriter.writePropertyName("ratingName");
+            jsonWriter.writeCharArray(*obj.getRatingName());
+        }
+        if (obj.getGatheringName())
+        {
+            jsonWriter.writePropertyName("gatheringName");
+            jsonWriter.writeCharArray(*obj.getGatheringName());
+        }
+        if (obj.getNumberOfPlayer())
+        {
+            jsonWriter.writePropertyName("numberOfPlayer");
+            jsonWriter.writeInt32(*obj.getNumberOfPlayer());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const SignedBallot& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getBody())
+        {
+            jsonWriter.writePropertyName("body");
+            jsonWriter.writeCharArray(*obj.getBody());
+        }
+        if (obj.getSignature())
+        {
+            jsonWriter.writePropertyName("signature");
+            jsonWriter.writeCharArray(*obj.getSignature());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const WrittenBallot& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getBallot())
+        {
+            jsonWriter.writePropertyName("ballot");
+            write(jsonWriter, *obj.getBallot());
+        }
+        if (obj.getGameResults())
+        {
+            jsonWriter.writePropertyName("gameResults");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getGameResults();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(jsonWriter, list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const Vote& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getVoteId())
+        {
+            jsonWriter.writePropertyName("voteId");
+            jsonWriter.writeCharArray(*obj.getVoteId());
+        }
+        if (obj.getRatingName())
+        {
+            jsonWriter.writePropertyName("ratingName");
+            jsonWriter.writeCharArray(*obj.getRatingName());
+        }
+        if (obj.getGatheringName())
+        {
+            jsonWriter.writePropertyName("gatheringName");
+            jsonWriter.writeCharArray(*obj.getGatheringName());
+        }
+        if (obj.getWrittenBallots())
+        {
+            jsonWriter.writePropertyName("writtenBallots");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getWrittenBallots();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                write(jsonWriter, list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -1881,6 +3658,288 @@ public:
     void deleteGathering(DeleteGatheringRequest request, std::function<void(AsyncDeleteGatheringResult)> callback)
     {
         DeleteGatheringTask& task = *new DeleteGatheringTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * レーティングモデルマスターの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeRatingModelMasters(DescribeRatingModelMastersRequest request, std::function<void(AsyncDescribeRatingModelMastersResult)> callback)
+    {
+        DescribeRatingModelMastersTask& task = *new DescribeRatingModelMastersTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * レーティングモデルマスターを新規作成<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createRatingModelMaster(CreateRatingModelMasterRequest request, std::function<void(AsyncCreateRatingModelMasterResult)> callback)
+    {
+        CreateRatingModelMasterTask& task = *new CreateRatingModelMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * レーティングモデルマスターを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRatingModelMaster(GetRatingModelMasterRequest request, std::function<void(AsyncGetRatingModelMasterResult)> callback)
+    {
+        GetRatingModelMasterTask& task = *new GetRatingModelMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * レーティングモデルマスターを更新<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateRatingModelMaster(UpdateRatingModelMasterRequest request, std::function<void(AsyncUpdateRatingModelMasterResult)> callback)
+    {
+        UpdateRatingModelMasterTask& task = *new UpdateRatingModelMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * レーティングモデルマスターを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteRatingModelMaster(DeleteRatingModelMasterRequest request, std::function<void(AsyncDeleteRatingModelMasterResult)> callback)
+    {
+        DeleteRatingModelMasterTask& task = *new DeleteRatingModelMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * レーティングモデルの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeRatingModels(DescribeRatingModelsRequest request, std::function<void(AsyncDescribeRatingModelsResult)> callback)
+    {
+        DescribeRatingModelsTask& task = *new DescribeRatingModelsTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * レーティングモデルを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRatingModel(GetRatingModelRequest request, std::function<void(AsyncGetRatingModelResult)> callback)
+    {
+        GetRatingModelTask& task = *new GetRatingModelTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 現在有効なレーティングマスターのマスターデータをエクスポートします<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void exportMaster(ExportMasterRequest request, std::function<void(AsyncExportMasterResult)> callback)
+    {
+        ExportMasterTask& task = *new ExportMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 現在有効なレーティングマスターを取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getCurrentRatingModelMaster(GetCurrentRatingModelMasterRequest request, std::function<void(AsyncGetCurrentRatingModelMasterResult)> callback)
+    {
+        GetCurrentRatingModelMasterTask& task = *new GetCurrentRatingModelMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 現在有効なレーティングマスターを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentRatingModelMaster(UpdateCurrentRatingModelMasterRequest request, std::function<void(AsyncUpdateCurrentRatingModelMasterResult)> callback)
+    {
+        UpdateCurrentRatingModelMasterTask& task = *new UpdateCurrentRatingModelMasterTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 現在有効なレーティングマスターを更新します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void updateCurrentRatingModelMasterFromGitHub(UpdateCurrentRatingModelMasterFromGitHubRequest request, std::function<void(AsyncUpdateCurrentRatingModelMasterFromGitHubResult)> callback)
+    {
+        UpdateCurrentRatingModelMasterFromGitHubTask& task = *new UpdateCurrentRatingModelMasterFromGitHubTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * レーティングの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeRatings(DescribeRatingsRequest request, std::function<void(AsyncDescribeRatingsResult)> callback)
+    {
+        DescribeRatingsTask& task = *new DescribeRatingsTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ユーザIDを指定してレーティングの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeRatingsByUserId(DescribeRatingsByUserIdRequest request, std::function<void(AsyncDescribeRatingsByUserIdResult)> callback)
+    {
+        DescribeRatingsByUserIdTask& task = *new DescribeRatingsByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * レーティングを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRating(GetRatingRequest request, std::function<void(AsyncGetRatingResult)> callback)
+    {
+        GetRatingTask& task = *new GetRatingTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * レーティングを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRatingByUserId(GetRatingByUserIdRequest request, std::function<void(AsyncGetRatingByUserIdResult)> callback)
+    {
+        GetRatingByUserIdTask& task = *new GetRatingByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * レーティング値の再計算を実行<br>
+	 *   <br>
+	 *   レーティングの計算処理には Glicko-2 rating system をベースとした計算アルゴリズムを採用しています。<br>
+	 *   レーティング値の初期値は1500で、レーティングの値が離れた相手に勝利するほど上昇幅は大きく、同じく負けた側は減少幅は大きくなります。<br>
+	 *   <br>
+	 *   レーティングの計算には参加したユーザIDのリストが必要となります。<br>
+	 *   そのため、クライアントから直接このAPIを呼び出すのは適切ではありません。ゲームの勝敗を判断できるゲームサーバから呼び出すようにしてください。<br>
+	 *   P2P 対戦など、クライアント主導で対戦を実現している場合は、投票機能を利用して勝敗を決定するようにしてください。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void putResult(PutResultRequest request, std::function<void(AsyncPutResultResult)> callback)
+    {
+        PutResultTask& task = *new PutResultTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * レーティングを削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteRating(DeleteRatingRequest request, std::function<void(AsyncDeleteRatingResult)> callback)
+    {
+        DeleteRatingTask& task = *new DeleteRatingTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 投票用紙を取得します。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getBallot(GetBallotRequest request, std::function<void(AsyncGetBallotResult)> callback)
+    {
+        GetBallotTask& task = *new GetBallotTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 投票用紙を取得します。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getBallotByUserId(GetBallotByUserIdRequest request, std::function<void(AsyncGetBallotByUserIdResult)> callback)
+    {
+        GetBallotByUserIdTask& task = *new GetBallotByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 対戦結果を投票します。<br>
+	 *   <br>
+	 *   投票は最初の投票が行われてから5分以内に行う必要があります。<br>
+	 *   つまり、結果は即座に反映されず、投票開始からおよそ5分後または全てのプレイヤーが投票を行った際に結果が反映されます。<br>
+	 *   5分以内に全ての投票用紙を回収できなかった場合はその時点の投票内容で多数決をとって結果を決定します。<br>
+	 *   各結果の投票数が同一だった場合は結果は捨てられます（スクリプトで挙動を変更可）。<br>
+	 *   <br>
+	 *   結果を即座に反映したい場合は、勝利した側の代表プレイヤーが投票用紙を各プレイヤーから集めて voteMultiple を呼び出すことで結果を即座に反映できます。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void vote(VoteRequest request, std::function<void(AsyncVoteResult)> callback)
+    {
+        VoteTask& task = *new VoteTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 対戦結果をまとめて投票します。<br>
+	 *   <br>
+	 *   ゲームに勝利した側が他プレイヤーの投票用紙を集めてまとめて投票するのに使用します。<br>
+	 *   『勝利した側』としているのは、敗北した側が自分たちが勝ったことにして報告することにインセンティブはありますが、その逆はないためです。<br>
+	 *   負けた側が投票用紙を渡してこない可能性がありますが、その場合も過半数の投票用紙があれば結果を通すことができます。<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void voteMultiple(VoteMultipleRequest request, std::function<void(AsyncVoteMultipleResult)> callback)
+    {
+        VoteMultipleTask& task = *new VoteMultipleTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 投票状況を強制確定<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void commitVote(CommitVoteRequest request, std::function<void(AsyncCommitVoteResult)> callback)
+    {
+        CommitVoteTask& task = *new CommitVoteTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

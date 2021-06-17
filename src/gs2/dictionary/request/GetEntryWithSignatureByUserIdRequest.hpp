@@ -1,0 +1,295 @@
+/*
+ * Copyright 2016 Game Server Services, Inc. or its affiliates. All Rights
+ * Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+#ifndef GS2_DICTIONARY_CONTROL_GETENTRYWITHSIGNATUREBYUSERIDREQUEST_HPP_
+#define GS2_DICTIONARY_CONTROL_GETENTRYWITHSIGNATUREBYUSERIDREQUEST_HPP_
+
+#include <gs2/core/control/Gs2BasicRequest.hpp>
+#include <gs2/core/util/List.hpp>
+#include <gs2/core/util/StringHolder.hpp>
+#include <gs2/core/util/StandardAllocator.hpp>
+#include <gs2/core/external/optional/optional.hpp>
+#include <gs2/dictionary/Gs2DictionaryConst.hpp>
+#include <gs2/dictionary/model/model.hpp>
+#include <memory>
+
+namespace gs2 { namespace dictionary
+{
+
+/**
+ * ユーザIDを指定してエントリーを取得 のリクエストモデル
+ *
+ * @author Game Server Services, Inc.
+ */
+class GetEntryWithSignatureByUserIdRequest : public Gs2BasicRequest, public Gs2Dictionary
+{
+public:
+    constexpr static const Char* const FUNCTION = "";
+
+private:
+    class Data : public Gs2BasicRequest::Data
+    {
+    public:
+        /** ネームスペース名 */
+        optional<StringHolder> namespaceName;
+        /** ユーザーID */
+        optional<StringHolder> userId;
+        /** エントリー名 */
+        optional<StringHolder> entryModelName;
+        /** 署名の発行に使用する暗号鍵 のGRN */
+        optional<StringHolder> keyId;
+        /** 重複実行回避機能に使用するID */
+        optional<StringHolder> duplicationAvoider;
+
+        Data() = default;
+
+        Data(const Data& data) :
+            Gs2BasicRequest::Data(data),
+            namespaceName(data.namespaceName),
+            userId(data.userId),
+            entryModelName(data.entryModelName),
+            keyId(data.keyId),
+            duplicationAvoider(data.duplicationAvoider)
+        {
+        }
+
+        Data(Data&& data) = default;
+
+        ~Data() = default;
+
+        Data& operator=(const Data&) = delete;
+        Data& operator=(Data&&) = delete;
+    };
+
+    GS2_CORE_SHARED_DATA_DEFINE_MEMBERS(Data, ensureData)
+
+    Gs2BasicRequest::Data& getData_() GS2_OVERRIDE
+    {
+        return ensureData();
+    }
+
+    const Gs2BasicRequest::Data& getData_() const GS2_OVERRIDE
+    {
+        return ensureData();
+    }
+
+public:
+    GetEntryWithSignatureByUserIdRequest() = default;
+    GetEntryWithSignatureByUserIdRequest(const GetEntryWithSignatureByUserIdRequest& getEntryWithSignatureByUserIdRequest) = default;
+    GetEntryWithSignatureByUserIdRequest(GetEntryWithSignatureByUserIdRequest&& getEntryWithSignatureByUserIdRequest) = default;
+    ~GetEntryWithSignatureByUserIdRequest() GS2_OVERRIDE = default;
+
+    GetEntryWithSignatureByUserIdRequest& operator=(const GetEntryWithSignatureByUserIdRequest& getEntryWithSignatureByUserIdRequest) = default;
+    GetEntryWithSignatureByUserIdRequest& operator=(GetEntryWithSignatureByUserIdRequest&& getEntryWithSignatureByUserIdRequest) = default;
+
+    GetEntryWithSignatureByUserIdRequest deepCopy() const
+    {
+        GS2_CORE_SHARED_DATA_DEEP_COPY_IMPLEMENTATION(GetEntryWithSignatureByUserIdRequest);
+    }
+
+    const GetEntryWithSignatureByUserIdRequest* operator->() const
+    {
+        return this;
+    }
+
+    GetEntryWithSignatureByUserIdRequest* operator->()
+    {
+        return this;
+    }
+
+    /**
+     * ネームスペース名を取得
+     *
+     * @return ネームスペース名
+     */
+    const optional<StringHolder>& getNamespaceName() const
+    {
+        return ensureData().namespaceName;
+    }
+
+    /**
+     * ネームスペース名を設定
+     *
+     * @param namespaceName ネームスペース名
+     */
+    void setNamespaceName(StringHolder namespaceName)
+    {
+        ensureData().namespaceName.emplace(std::move(namespaceName));
+    }
+
+    /**
+     * ネームスペース名を設定
+     *
+     * @param namespaceName ネームスペース名
+     */
+    GetEntryWithSignatureByUserIdRequest& withNamespaceName(StringHolder namespaceName)
+    {
+        ensureData().namespaceName.emplace(std::move(namespaceName));
+        return *this;
+    }
+
+    /**
+     * ユーザーIDを取得
+     *
+     * @return ユーザーID
+     */
+    const optional<StringHolder>& getUserId() const
+    {
+        return ensureData().userId;
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    void setUserId(StringHolder userId)
+    {
+        ensureData().userId.emplace(std::move(userId));
+    }
+
+    /**
+     * ユーザーIDを設定
+     *
+     * @param userId ユーザーID
+     */
+    GetEntryWithSignatureByUserIdRequest& withUserId(StringHolder userId)
+    {
+        ensureData().userId.emplace(std::move(userId));
+        return *this;
+    }
+
+    /**
+     * エントリー名を取得
+     *
+     * @return エントリー名
+     */
+    const optional<StringHolder>& getEntryModelName() const
+    {
+        return ensureData().entryModelName;
+    }
+
+    /**
+     * エントリー名を設定
+     *
+     * @param entryModelName エントリー名
+     */
+    void setEntryModelName(StringHolder entryModelName)
+    {
+        ensureData().entryModelName.emplace(std::move(entryModelName));
+    }
+
+    /**
+     * エントリー名を設定
+     *
+     * @param entryModelName エントリー名
+     */
+    GetEntryWithSignatureByUserIdRequest& withEntryModelName(StringHolder entryModelName)
+    {
+        ensureData().entryModelName.emplace(std::move(entryModelName));
+        return *this;
+    }
+
+    /**
+     * 署名の発行に使用する暗号鍵 のGRNを取得
+     *
+     * @return 署名の発行に使用する暗号鍵 のGRN
+     */
+    const optional<StringHolder>& getKeyId() const
+    {
+        return ensureData().keyId;
+    }
+
+    /**
+     * 署名の発行に使用する暗号鍵 のGRNを設定
+     *
+     * @param keyId 署名の発行に使用する暗号鍵 のGRN
+     */
+    void setKeyId(StringHolder keyId)
+    {
+        ensureData().keyId.emplace(std::move(keyId));
+    }
+
+    /**
+     * 署名の発行に使用する暗号鍵 のGRNを設定
+     *
+     * @param keyId 署名の発行に使用する暗号鍵 のGRN
+     */
+    GetEntryWithSignatureByUserIdRequest& withKeyId(StringHolder keyId)
+    {
+        ensureData().keyId.emplace(std::move(keyId));
+        return *this;
+    }
+
+    /**
+     * 重複実行回避機能に使用するIDを取得
+     *
+     * @return 重複実行回避機能に使用するID
+     */
+    const optional<StringHolder>& getDuplicationAvoider() const
+    {
+        return ensureData().duplicationAvoider;
+    }
+
+    /**
+     * 重複実行回避機能に使用するIDを設定
+     *
+     * @param duplicationAvoider 重複実行回避機能に使用するID
+     */
+    void setDuplicationAvoider(StringHolder duplicationAvoider)
+    {
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
+    }
+
+    /**
+     * 重複実行回避機能に使用するIDを設定
+     *
+     * @param duplicationAvoider 重複実行回避機能に使用するID
+     */
+    GetEntryWithSignatureByUserIdRequest& withDuplicationAvoider(StringHolder duplicationAvoider)
+    {
+        ensureData().duplicationAvoider.emplace(std::move(duplicationAvoider));
+        return *this;
+    }
+
+
+    /**
+     * GS2認証クライアントIDを設定。
+     * 通常は自動的に計算されるため、この値を設定する必要はありません。
+     *
+     * @param gs2ClientId GS2認証クライアントID
+     */
+    GetEntryWithSignatureByUserIdRequest& withGs2ClientId(StringHolder gs2ClientId)
+    {
+        setGs2ClientId(std::move(gs2ClientId));
+        return *this;
+    }
+
+    /**
+     * GS2リクエストIDを設定。
+     *
+     * @param gs2RequestId GS2リクエストID
+     */
+    GetEntryWithSignatureByUserIdRequest& withRequestId(StringHolder gs2RequestId)
+    {
+        setRequestId(std::move(gs2RequestId));
+        return *this;
+    }
+};
+
+} }
+
+#endif //GS2_DICTIONARY_CONTROL_GETENTRYWITHSIGNATUREBYUSERIDREQUEST_HPP_

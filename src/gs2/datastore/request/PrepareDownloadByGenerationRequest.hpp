@@ -47,8 +47,8 @@ private:
         optional<StringHolder> accessToken;
         /** ネームスペース名 */
         optional<StringHolder> namespaceName;
-        /** データの名前 */
-        optional<StringHolder> dataObjectName;
+        /** データオブジェクト */
+        optional<StringHolder> dataObjectId;
         /** 世代 */
         optional<StringHolder> generation;
         /** 重複実行回避機能に使用するID */
@@ -60,7 +60,7 @@ private:
             Gs2BasicRequest::Data(data),
             accessToken(data.accessToken),
             namespaceName(data.namespaceName),
-            dataObjectName(data.dataObjectName),
+            dataObjectId(data.dataObjectId),
             generation(data.generation),
             duplicationAvoider(data.duplicationAvoider)
         {
@@ -174,33 +174,33 @@ public:
     }
 
     /**
-     * データの名前を取得
+     * データオブジェクトを取得
      *
-     * @return データの名前
+     * @return データオブジェクト
      */
-    const optional<StringHolder>& getDataObjectName() const
+    const optional<StringHolder>& getDataObjectId() const
     {
-        return ensureData().dataObjectName;
+        return ensureData().dataObjectId;
     }
 
     /**
-     * データの名前を設定
+     * データオブジェクトを設定
      *
-     * @param dataObjectName データの名前
+     * @param dataObjectId データオブジェクト
      */
-    void setDataObjectName(StringHolder dataObjectName)
+    void setDataObjectId(StringHolder dataObjectId)
     {
-        ensureData().dataObjectName.emplace(std::move(dataObjectName));
+        ensureData().dataObjectId.emplace(std::move(dataObjectId));
     }
 
     /**
-     * データの名前を設定
+     * データオブジェクトを設定
      *
-     * @param dataObjectName データの名前
+     * @param dataObjectId データオブジェクト
      */
-    PrepareDownloadByGenerationRequest& withDataObjectName(StringHolder dataObjectName)
+    PrepareDownloadByGenerationRequest& withDataObjectId(StringHolder dataObjectId)
     {
-        ensureData().dataObjectName.emplace(std::move(dataObjectName));
+        ensureData().dataObjectId.emplace(std::move(dataObjectId));
         return *this;
     }
 

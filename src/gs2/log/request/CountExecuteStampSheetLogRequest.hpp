@@ -43,7 +43,7 @@ private:
     class Data : public Gs2BasicRequest::Data
     {
     public:
-        /** カテゴリー名 */
+        /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** マイクロサービスの種類を集計軸に使用するか */
         optional<Bool> service;
@@ -120,9 +120,9 @@ public:
     }
 
     /**
-     * カテゴリー名を取得
+     * ネームスペース名を取得
      *
-     * @return カテゴリー名
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getNamespaceName() const
     {
@@ -130,9 +130,9 @@ public:
     }
 
     /**
-     * カテゴリー名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName カテゴリー名
+     * @param namespaceName ネームスペース名
      */
     void setNamespaceName(StringHolder namespaceName)
     {
@@ -140,9 +140,9 @@ public:
     }
 
     /**
-     * カテゴリー名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName カテゴリー名
+     * @param namespaceName ネームスペース名
      */
     CountExecuteStampSheetLogRequest& withNamespaceName(StringHolder namespaceName)
     {

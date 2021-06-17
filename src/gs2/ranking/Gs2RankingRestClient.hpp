@@ -44,9 +44,15 @@
 #include "request/GetSubscribeByUserIdRequest.hpp"
 #include "request/UnsubscribeRequest.hpp"
 #include "request/UnsubscribeByUserIdRequest.hpp"
+#include "request/DescribeScoresRequest.hpp"
+#include "request/DescribeScoresByUserIdRequest.hpp"
+#include "request/GetScoreRequest.hpp"
+#include "request/GetScoreByUserIdRequest.hpp"
 #include "request/DescribeRankingsRequest.hpp"
 #include "request/DescribeRankingssByUserIdRequest.hpp"
 #include "request/DescribeNearRankingsRequest.hpp"
+#include "request/GetRankingRequest.hpp"
+#include "request/GetRankingByUserIdRequest.hpp"
 #include "request/PutScoreRequest.hpp"
 #include "request/PutScoreByUserIdRequest.hpp"
 #include "request/ExportMasterRequest.hpp"
@@ -74,9 +80,15 @@
 #include "result/GetSubscribeByUserIdResult.hpp"
 #include "result/UnsubscribeResult.hpp"
 #include "result/UnsubscribeByUserIdResult.hpp"
+#include "result/DescribeScoresResult.hpp"
+#include "result/DescribeScoresByUserIdResult.hpp"
+#include "result/GetScoreResult.hpp"
+#include "result/GetScoreByUserIdResult.hpp"
 #include "result/DescribeRankingsResult.hpp"
 #include "result/DescribeRankingssByUserIdResult.hpp"
 #include "result/DescribeNearRankingsResult.hpp"
+#include "result/GetRankingResult.hpp"
+#include "result/GetRankingByUserIdResult.hpp"
 #include "result/PutScoreResult.hpp"
 #include "result/PutScoreByUserIdResult.hpp"
 #include "result/ExportMasterResult.hpp"
@@ -646,10 +658,35 @@ private:
                 jsonWriter.writePropertyName("uniqueByUserId");
                 jsonWriter.writeBool(*m_Request.getUniqueByUserId());
             }
+            if (m_Request.getCalculateFixedTimingHour())
+            {
+                jsonWriter.writePropertyName("calculateFixedTimingHour");
+                jsonWriter.writeInt32(*m_Request.getCalculateFixedTimingHour());
+            }
+            if (m_Request.getCalculateFixedTimingMinute())
+            {
+                jsonWriter.writePropertyName("calculateFixedTimingMinute");
+                jsonWriter.writeInt32(*m_Request.getCalculateFixedTimingMinute());
+            }
             if (m_Request.getCalculateIntervalMinutes())
             {
                 jsonWriter.writePropertyName("calculateIntervalMinutes");
                 jsonWriter.writeInt32(*m_Request.getCalculateIntervalMinutes());
+            }
+            if (m_Request.getEntryPeriodEventId())
+            {
+                jsonWriter.writePropertyName("entryPeriodEventId");
+                jsonWriter.writeCharArray(*m_Request.getEntryPeriodEventId());
+            }
+            if (m_Request.getAccessPeriodEventId())
+            {
+                jsonWriter.writePropertyName("accessPeriodEventId");
+                jsonWriter.writeCharArray(*m_Request.getAccessPeriodEventId());
+            }
+            if (m_Request.getGeneration())
+            {
+                jsonWriter.writePropertyName("generation");
+                jsonWriter.writeCharArray(*m_Request.getGeneration());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -792,10 +829,35 @@ private:
                 jsonWriter.writePropertyName("uniqueByUserId");
                 jsonWriter.writeBool(*m_Request.getUniqueByUserId());
             }
+            if (m_Request.getCalculateFixedTimingHour())
+            {
+                jsonWriter.writePropertyName("calculateFixedTimingHour");
+                jsonWriter.writeInt32(*m_Request.getCalculateFixedTimingHour());
+            }
+            if (m_Request.getCalculateFixedTimingMinute())
+            {
+                jsonWriter.writePropertyName("calculateFixedTimingMinute");
+                jsonWriter.writeInt32(*m_Request.getCalculateFixedTimingMinute());
+            }
             if (m_Request.getCalculateIntervalMinutes())
             {
                 jsonWriter.writePropertyName("calculateIntervalMinutes");
                 jsonWriter.writeInt32(*m_Request.getCalculateIntervalMinutes());
+            }
+            if (m_Request.getEntryPeriodEventId())
+            {
+                jsonWriter.writePropertyName("entryPeriodEventId");
+                jsonWriter.writeCharArray(*m_Request.getEntryPeriodEventId());
+            }
+            if (m_Request.getAccessPeriodEventId())
+            {
+                jsonWriter.writePropertyName("accessPeriodEventId");
+                jsonWriter.writeCharArray(*m_Request.getAccessPeriodEventId());
+            }
+            if (m_Request.getGeneration())
+            {
+                jsonWriter.writePropertyName("generation");
+                jsonWriter.writeCharArray(*m_Request.getGeneration());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -1390,6 +1452,294 @@ private:
         ~UnsubscribeByUserIdTask() GS2_OVERRIDE = default;
     };
 
+    class DescribeScoresTask : public detail::Gs2RestSessionTask<DescribeScoresResult>
+    {
+    private:
+        DescribeScoresRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "ranking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/category/{categoryName}/scorer/{scorerUserId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getCategoryName();
+                url.replace("{categoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getScorerUserId();
+                url.replace("{scorerUserId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeScoresTask(
+            DescribeScoresRequest request,
+            Gs2RestSessionTask<DescribeScoresResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeScoresResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeScoresTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeScoresByUserIdTask : public detail::Gs2RestSessionTask<DescribeScoresByUserIdResult>
+    {
+    private:
+        DescribeScoresByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "ranking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/category/{categoryName}/scorer/{scorerUserId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getCategoryName();
+                url.replace("{categoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getScorerUserId();
+                url.replace("{scorerUserId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeScoresByUserIdTask(
+            DescribeScoresByUserIdRequest request,
+            Gs2RestSessionTask<DescribeScoresByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeScoresByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeScoresByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class GetScoreTask : public detail::Gs2RestSessionTask<GetScoreResult>
+    {
+    private:
+        GetScoreRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "ranking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/category/{categoryName}/scorer/{scorerUserId}/score/{uniqueId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getCategoryName();
+                url.replace("{categoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getScorerUserId();
+                url.replace("{scorerUserId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUniqueId();
+                url.replace("{uniqueId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetScoreTask(
+            GetScoreRequest request,
+            Gs2RestSessionTask<GetScoreResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetScoreResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetScoreTask() GS2_OVERRIDE = default;
+    };
+
+    class GetScoreByUserIdTask : public detail::Gs2RestSessionTask<GetScoreByUserIdResult>
+    {
+    private:
+        GetScoreByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "ranking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/category/{categoryName}/scorer/{scorerUserId}/score/{uniqueId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getCategoryName();
+                url.replace("{categoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getScorerUserId();
+                url.replace("{scorerUserId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUniqueId();
+                url.replace("{uniqueId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetScoreByUserIdTask(
+            GetScoreByUserIdRequest request,
+            Gs2RestSessionTask<GetScoreByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetScoreByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetScoreByUserIdTask() GS2_OVERRIDE = default;
+    };
+
     class DescribeRankingsTask : public detail::Gs2RestSessionTask<DescribeRankingsResult>
     {
     private:
@@ -1606,6 +1956,140 @@ private:
         {}
 
         ~DescribeNearRankingsTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRankingTask : public detail::Gs2RestSessionTask<GetRankingResult>
+    {
+    private:
+        GetRankingRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "ranking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/category/{categoryName}/ranking/scorer/{scorerUserId}/score/{uniqueId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getCategoryName();
+                url.replace("{categoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getScorerUserId();
+                url.replace("{scorerUserId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUniqueId();
+                url.replace("{uniqueId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetRankingTask(
+            GetRankingRequest request,
+            Gs2RestSessionTask<GetRankingResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetRankingResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRankingTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRankingByUserIdTask : public detail::Gs2RestSessionTask<GetRankingByUserIdResult>
+    {
+    private:
+        GetRankingByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "ranking";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/category/{categoryName}/ranking/scorer/{scorerUserId}/score/{uniqueId}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getCategoryName();
+                url.replace("{categoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getScorerUserId();
+                url.replace("{scorerUserId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUniqueId();
+                url.replace("{uniqueId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetRankingByUserIdTask(
+            GetRankingByUserIdRequest request,
+            Gs2RestSessionTask<GetRankingByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetRankingByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRankingByUserIdTask() GS2_OVERRIDE = default;
     };
 
     class PutScoreTask : public detail::Gs2RestSessionTask<PutScoreResult>
@@ -2056,10 +2540,35 @@ protected:
             jsonWriter.writePropertyName("uniqueByUserId");
             jsonWriter.writeBool(*obj.getUniqueByUserId());
         }
+        if (obj.getCalculateFixedTimingHour())
+        {
+            jsonWriter.writePropertyName("calculateFixedTimingHour");
+            jsonWriter.writeInt32(*obj.getCalculateFixedTimingHour());
+        }
+        if (obj.getCalculateFixedTimingMinute())
+        {
+            jsonWriter.writePropertyName("calculateFixedTimingMinute");
+            jsonWriter.writeInt32(*obj.getCalculateFixedTimingMinute());
+        }
         if (obj.getCalculateIntervalMinutes())
         {
             jsonWriter.writePropertyName("calculateIntervalMinutes");
             jsonWriter.writeInt32(*obj.getCalculateIntervalMinutes());
+        }
+        if (obj.getEntryPeriodEventId())
+        {
+            jsonWriter.writePropertyName("entryPeriodEventId");
+            jsonWriter.writeCharArray(*obj.getEntryPeriodEventId());
+        }
+        if (obj.getAccessPeriodEventId())
+        {
+            jsonWriter.writePropertyName("accessPeriodEventId");
+            jsonWriter.writeCharArray(*obj.getAccessPeriodEventId());
+        }
+        if (obj.getGeneration())
+        {
+            jsonWriter.writePropertyName("generation");
+            jsonWriter.writeCharArray(*obj.getGeneration());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -2112,10 +2621,35 @@ protected:
             jsonWriter.writePropertyName("uniqueByUserId");
             jsonWriter.writeBool(*obj.getUniqueByUserId());
         }
+        if (obj.getCalculateFixedTimingHour())
+        {
+            jsonWriter.writePropertyName("calculateFixedTimingHour");
+            jsonWriter.writeInt32(*obj.getCalculateFixedTimingHour());
+        }
+        if (obj.getCalculateFixedTimingMinute())
+        {
+            jsonWriter.writePropertyName("calculateFixedTimingMinute");
+            jsonWriter.writeInt32(*obj.getCalculateFixedTimingMinute());
+        }
         if (obj.getCalculateIntervalMinutes())
         {
             jsonWriter.writePropertyName("calculateIntervalMinutes");
             jsonWriter.writeInt32(*obj.getCalculateIntervalMinutes());
+        }
+        if (obj.getEntryPeriodEventId())
+        {
+            jsonWriter.writePropertyName("entryPeriodEventId");
+            jsonWriter.writeCharArray(*obj.getEntryPeriodEventId());
+        }
+        if (obj.getAccessPeriodEventId())
+        {
+            jsonWriter.writePropertyName("accessPeriodEventId");
+            jsonWriter.writeCharArray(*obj.getAccessPeriodEventId());
+        }
+        if (obj.getGeneration())
+        {
+            jsonWriter.writePropertyName("generation");
+            jsonWriter.writeCharArray(*obj.getGeneration());
         }
         if (obj.getCreatedAt())
         {
@@ -2651,6 +3185,54 @@ public:
     }
 
 	/**
+	 * スコアの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeScores(DescribeScoresRequest request, std::function<void(AsyncDescribeScoresResult)> callback)
+    {
+        DescribeScoresTask& task = *new DescribeScoresTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * スコアの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeScoresByUserId(DescribeScoresByUserIdRequest request, std::function<void(AsyncDescribeScoresByUserIdResult)> callback)
+    {
+        DescribeScoresByUserIdTask& task = *new DescribeScoresByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * スコアを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getScore(GetScoreRequest request, std::function<void(AsyncGetScoreResult)> callback)
+    {
+        GetScoreTask& task = *new GetScoreTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * スコアを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getScoreByUserId(GetScoreByUserIdRequest request, std::function<void(AsyncGetScoreByUserIdResult)> callback)
+    {
+        GetScoreByUserIdTask& task = *new GetScoreByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
 	 * ランキングを取得<br>
 	 *
      * @param callback コールバック関数
@@ -2685,6 +3267,30 @@ public:
     void describeNearRankings(DescribeNearRankingsRequest request, std::function<void(AsyncDescribeNearRankingsResult)> callback)
     {
         DescribeNearRankingsTask& task = *new DescribeNearRankingsTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * ランキングを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRanking(GetRankingRequest request, std::function<void(AsyncGetRankingResult)> callback)
+    {
+        GetRankingTask& task = *new GetRankingTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * ランキングを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRankingByUserId(GetRankingByUserIdRequest request, std::function<void(AsyncGetRankingByUserIdResult)> callback)
+    {
+        GetRankingByUserIdTask& task = *new GetRankingByUserIdTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 

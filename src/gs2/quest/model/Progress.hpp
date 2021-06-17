@@ -56,6 +56,8 @@ private:
         optional<Int64> randomSeed;
         /** クエストで得られる報酬の上限 */
         optional<List<Reward>> rewards;
+        /** クエストモデルのメタデータ */
+        optional<StringHolder> metadata;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -70,6 +72,7 @@ private:
             transactionId(data.transactionId),
             questModelId(data.questModelId),
             randomSeed(data.randomSeed),
+            metadata(data.metadata),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
@@ -130,10 +133,17 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->rewards.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        Reward item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->rewards += std::move(item);
+                        Reward item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->rewards += std::move(item_);
                     }
+                }
+            }
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->metadata.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -365,6 +375,37 @@ public:
     }
 
     /**
+     * クエストモデルのメタデータを取得
+     *
+     * @return クエストモデルのメタデータ
+     */
+    const optional<StringHolder>& getMetadata() const
+    {
+        return ensureData().metadata;
+    }
+
+    /**
+     * クエストモデルのメタデータを設定
+     *
+     * @param metadata クエストモデルのメタデータ
+     */
+    void setMetadata(StringHolder metadata)
+    {
+        ensureData().metadata.emplace(std::move(metadata));
+    }
+
+    /**
+     * クエストモデルのメタデータを設定
+     *
+     * @param metadata クエストモデルのメタデータ
+     */
+    Progress& withMetadata(StringHolder metadata)
+    {
+        setMetadata(std::move(metadata));
+        return *this;
+    }
+
+    /**
      * 作成日時を取得
      *
      * @return 作成日時
@@ -462,6 +503,10 @@ inline bool operator!=(const Progress& lhs, const Progress& lhr)
             return true;
         }
         if (lhs.m_pData->rewards != lhr.m_pData->rewards)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
         {
             return true;
         }

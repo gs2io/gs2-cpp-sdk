@@ -36,6 +36,7 @@
 #include "request/UpdateScriptRequest.hpp"
 #include "request/UpdateScriptFromGitHubRequest.hpp"
 #include "request/DeleteScriptRequest.hpp"
+#include "request/InvokeScriptRequest.hpp"
 #include "request/DebugInvokeRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
@@ -50,6 +51,7 @@
 #include "result/UpdateScriptResult.hpp"
 #include "result/UpdateScriptFromGitHubResult.hpp"
 #include "result/DeleteScriptResult.hpp"
+#include "result/InvokeScriptResult.hpp"
 #include "result/DebugInvokeResult.hpp"
 #include <cstring>
 
@@ -833,6 +835,62 @@ private:
         ~DeleteScriptTask() GS2_OVERRIDE = default;
     };
 
+    class InvokeScriptTask : public detail::Gs2WebSocketSessionTask<InvokeScriptResult>
+    {
+    private:
+        InvokeScriptRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "script";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "script";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "invokeScript";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getScriptId())
+            {
+                jsonWriter.writePropertyName("scriptId");
+                jsonWriter.writeCharArray(*m_Request.getScriptId());
+            }
+            if (m_Request.getArgs())
+            {
+                jsonWriter.writePropertyName("args");
+                jsonWriter.writeCharArray(*m_Request.getArgs());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        InvokeScriptTask(
+            InvokeScriptRequest request,
+            Gs2WebSocketSessionTask<InvokeScriptResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<InvokeScriptResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~InvokeScriptTask() GS2_OVERRIDE = default;
+    };
+
     class DebugInvokeTask : public detail::Gs2WebSocketSessionTask<DebugInvokeResult>
     {
     private:
@@ -968,6 +1026,37 @@ protected:
         {
             jsonWriter.writePropertyName("updatedAt");
             jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const ResponseCache& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRegion())
+        {
+            jsonWriter.writePropertyName("region");
+            jsonWriter.writeCharArray(*obj.getRegion());
+        }
+        if (obj.getOwnerId())
+        {
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
+        }
+        if (obj.getResponseCacheId())
+        {
+            jsonWriter.writePropertyName("responseCacheId");
+            jsonWriter.writeCharArray(*obj.getResponseCacheId());
+        }
+        if (obj.getRequestHash())
+        {
+            jsonWriter.writePropertyName("requestHash");
+            jsonWriter.writeCharArray(*obj.getRequestHash());
+        }
+        if (obj.getResult())
+        {
+            jsonWriter.writePropertyName("result");
+            jsonWriter.writeCharArray(*obj.getResult());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -1189,6 +1278,18 @@ public:
     void deleteScript(DeleteScriptRequest request, std::function<void(AsyncDeleteScriptResult)> callback)
     {
         DeleteScriptTask& task = *new DeleteScriptTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スクリプトを実行します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void invokeScript(InvokeScriptRequest request, std::function<void(AsyncInvokeScriptResult)> callback)
+    {
+        InvokeScriptTask& task = *new InvokeScriptTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

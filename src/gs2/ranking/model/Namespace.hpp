@@ -127,9 +127,9 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->lastCalculatedAts.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        CalculatedAt item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->lastCalculatedAts += std::move(item);
+                        CalculatedAt item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->lastCalculatedAts += std::move(item_);
                     }
                 }
             }

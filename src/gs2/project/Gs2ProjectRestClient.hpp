@@ -35,6 +35,7 @@
 #include "request/CreateProjectRequest.hpp"
 #include "request/GetProjectRequest.hpp"
 #include "request/GetProjectTokenRequest.hpp"
+#include "request/GetProjectTokenByIdentifierRequest.hpp"
 #include "request/UpdateProjectRequest.hpp"
 #include "request/DeleteProjectRequest.hpp"
 #include "request/DescribeBillingMethodsRequest.hpp"
@@ -56,6 +57,7 @@
 #include "result/CreateProjectResult.hpp"
 #include "result/GetProjectResult.hpp"
 #include "result/GetProjectTokenResult.hpp"
+#include "result/GetProjectTokenByIdentifierResult.hpp"
 #include "result/UpdateProjectResult.hpp"
 #include "result/DeleteProjectResult.hpp"
 #include "result/DescribeBillingMethodsResult.hpp"
@@ -789,6 +791,70 @@ private:
         {}
 
         ~GetProjectTokenTask() GS2_OVERRIDE = default;
+    };
+
+    class GetProjectTokenByIdentifierTask : public detail::Gs2RestSessionTask<GetProjectTokenByIdentifierResult>
+    {
+    private:
+        GetProjectTokenByIdentifierRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/account/{accountName}/project/{projectName}/user/{userName}/projectToken";
+            {
+                auto& value = m_Request.getAccountName();
+                url.replace("{accountName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getProjectName();
+                url.replace("{projectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserName();
+                url.replace("{userName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getPassword())
+            {
+                jsonWriter.writePropertyName("password");
+                jsonWriter.writeCharArray(*m_Request.getPassword());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        GetProjectTokenByIdentifierTask(
+            GetProjectTokenByIdentifierRequest request,
+            Gs2RestSessionTask<GetProjectTokenByIdentifierResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetProjectTokenByIdentifierResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetProjectTokenByIdentifierTask() GS2_OVERRIDE = default;
     };
 
     class UpdateProjectTask : public detail::Gs2RestSessionTask<UpdateProjectResult>
@@ -1855,6 +1921,18 @@ public:
     void getProjectToken(GetProjectTokenRequest request, std::function<void(AsyncGetProjectTokenResult)> callback)
     {
         GetProjectTokenTask& task = *new GetProjectTokenTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * プロジェクトトークンを発行します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getProjectTokenByIdentifier(GetProjectTokenByIdentifierRequest request, std::function<void(AsyncGetProjectTokenByIdentifierResult)> callback)
+    {
+        GetProjectTokenByIdentifierTask& task = *new GetProjectTokenByIdentifierTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 

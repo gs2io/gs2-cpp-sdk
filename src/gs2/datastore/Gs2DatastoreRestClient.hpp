@@ -45,6 +45,11 @@
 #include "request/PrepareDownloadByUserIdRequest.hpp"
 #include "request/PrepareDownloadByGenerationRequest.hpp"
 #include "request/PrepareDownloadByGenerationAndUserIdRequest.hpp"
+#include "request/PrepareDownloadOwnDataRequest.hpp"
+#include "request/PrepareDownloadByUserIdAndDataObjectNameRequest.hpp"
+#include "request/PrepareDownloadOwnDataByGenerationRequest.hpp"
+#include "request/PrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest.hpp"
+#include "request/RestoreDataObjectRequest.hpp"
 #include "request/DescribeDataObjectHistoriesRequest.hpp"
 #include "request/DescribeDataObjectHistoriesByUserIdRequest.hpp"
 #include "request/GetDataObjectHistoryRequest.hpp"
@@ -71,6 +76,11 @@
 #include "result/PrepareDownloadByUserIdResult.hpp"
 #include "result/PrepareDownloadByGenerationResult.hpp"
 #include "result/PrepareDownloadByGenerationAndUserIdResult.hpp"
+#include "result/PrepareDownloadOwnDataResult.hpp"
+#include "result/PrepareDownloadByUserIdAndDataObjectNameResult.hpp"
+#include "result/PrepareDownloadOwnDataByGenerationResult.hpp"
+#include "result/PrepareDownloadByUserIdAndDataObjectNameAndGenerationResult.hpp"
+#include "result/RestoreDataObjectResult.hpp"
 #include "result/DescribeDataObjectHistoriesResult.hpp"
 #include "result/DescribeDataObjectHistoriesByUserIdResult.hpp"
 #include "result/GetDataObjectHistoryResult.hpp"
@@ -181,6 +191,11 @@ private:
             {
                 jsonWriter.writePropertyName("logSetting");
                 write(jsonWriter, *m_Request.getLogSetting());
+            }
+            if (m_Request.getDoneUploadScript())
+            {
+                jsonWriter.writePropertyName("doneUploadScript");
+                write(jsonWriter, *m_Request.getDoneUploadScript());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -336,6 +351,11 @@ private:
             {
                 jsonWriter.writePropertyName("logSetting");
                 write(jsonWriter, *m_Request.getLogSetting());
+            }
+            if (m_Request.getDoneUploadScript())
+            {
+                jsonWriter.writePropertyName("doneUploadScript");
+                write(jsonWriter, *m_Request.getDoneUploadScript());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -617,6 +637,11 @@ private:
                 }
                 jsonWriter.writeArrayEnd();
             }
+            if (m_Request.getUpdateIfExists())
+            {
+                jsonWriter.writePropertyName("updateIfExists");
+                jsonWriter.writeBool(*m_Request.getUpdateIfExists());
+            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -705,6 +730,11 @@ private:
                     jsonWriter.writeCharArray(list[i]);
                 }
                 jsonWriter.writeArrayEnd();
+            }
+            if (m_Request.getUpdateIfExists())
+            {
+                jsonWriter.writePropertyName("updateIfExists");
+                jsonWriter.writeBool(*m_Request.getUpdateIfExists());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -1422,6 +1452,264 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
+            url += "/{namespaceName}/file/generation/{generation}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getGeneration();
+                url.replace("{generation}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getDataObjectId())
+            {
+                jsonWriter.writePropertyName("dataObjectId");
+                jsonWriter.writeCharArray(*m_Request.getDataObjectId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        PrepareDownloadByGenerationTask(
+            PrepareDownloadByGenerationRequest request,
+            Gs2RestSessionTask<PrepareDownloadByGenerationResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<PrepareDownloadByGenerationResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~PrepareDownloadByGenerationTask() GS2_OVERRIDE = default;
+    };
+
+    class PrepareDownloadByGenerationAndUserIdTask : public detail::Gs2RestSessionTask<PrepareDownloadByGenerationAndUserIdResult>
+    {
+    private:
+        PrepareDownloadByGenerationAndUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "datastore";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/file/generation/{generation}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getGeneration();
+                url.replace("{generation}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getDataObjectId())
+            {
+                jsonWriter.writePropertyName("dataObjectId");
+                jsonWriter.writeCharArray(*m_Request.getDataObjectId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        PrepareDownloadByGenerationAndUserIdTask(
+            PrepareDownloadByGenerationAndUserIdRequest request,
+            Gs2RestSessionTask<PrepareDownloadByGenerationAndUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<PrepareDownloadByGenerationAndUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~PrepareDownloadByGenerationAndUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class PrepareDownloadOwnDataTask : public detail::Gs2RestSessionTask<PrepareDownloadOwnDataResult>
+    {
+    private:
+        PrepareDownloadOwnDataRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "datastore";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/file";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getDataObjectName();
+                url.replace("{dataObjectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        PrepareDownloadOwnDataTask(
+            PrepareDownloadOwnDataRequest request,
+            Gs2RestSessionTask<PrepareDownloadOwnDataResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<PrepareDownloadOwnDataResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~PrepareDownloadOwnDataTask() GS2_OVERRIDE = default;
+    };
+
+    class PrepareDownloadByUserIdAndDataObjectNameTask : public detail::Gs2RestSessionTask<PrepareDownloadByUserIdAndDataObjectNameResult>
+    {
+    private:
+        PrepareDownloadByUserIdAndDataObjectNameRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "datastore";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/data/{dataObjectName}/file";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getDataObjectName();
+                url.replace("{dataObjectName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        PrepareDownloadByUserIdAndDataObjectNameTask(
+            PrepareDownloadByUserIdAndDataObjectNameRequest request,
+            Gs2RestSessionTask<PrepareDownloadByUserIdAndDataObjectNameResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<PrepareDownloadByUserIdAndDataObjectNameResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~PrepareDownloadByUserIdAndDataObjectNameTask() GS2_OVERRIDE = default;
+    };
+
+    class PrepareDownloadOwnDataByGenerationTask : public detail::Gs2RestSessionTask<PrepareDownloadOwnDataByGenerationResult>
+    {
+    private:
+        PrepareDownloadOwnDataByGenerationRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "datastore";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
             url += "/{namespaceName}/user/me/data/{dataObjectName}/generation/{generation}";
             {
                 auto& value = m_Request.getNamespaceName();
@@ -1466,21 +1754,21 @@ private:
         }
 
     public:
-        PrepareDownloadByGenerationTask(
-            PrepareDownloadByGenerationRequest request,
-            Gs2RestSessionTask<PrepareDownloadByGenerationResult>::CallbackType callback
+        PrepareDownloadOwnDataByGenerationTask(
+            PrepareDownloadOwnDataByGenerationRequest request,
+            Gs2RestSessionTask<PrepareDownloadOwnDataByGenerationResult>::CallbackType callback
         ) :
-            Gs2RestSessionTask<PrepareDownloadByGenerationResult>(callback),
+            Gs2RestSessionTask<PrepareDownloadOwnDataByGenerationResult>(callback),
             m_Request(std::move(request))
         {}
 
-        ~PrepareDownloadByGenerationTask() GS2_OVERRIDE = default;
+        ~PrepareDownloadOwnDataByGenerationTask() GS2_OVERRIDE = default;
     };
 
-    class PrepareDownloadByGenerationAndUserIdTask : public detail::Gs2RestSessionTask<PrepareDownloadByGenerationAndUserIdResult>
+    class PrepareDownloadByUserIdAndDataObjectNameAndGenerationTask : public detail::Gs2RestSessionTask<PrepareDownloadByUserIdAndDataObjectNameAndGenerationResult>
     {
     private:
-        PrepareDownloadByGenerationAndUserIdRequest m_Request;
+        PrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest m_Request;
 
         const char* getServiceName() const GS2_OVERRIDE
         {
@@ -1533,15 +1821,71 @@ private:
         }
 
     public:
-        PrepareDownloadByGenerationAndUserIdTask(
-            PrepareDownloadByGenerationAndUserIdRequest request,
-            Gs2RestSessionTask<PrepareDownloadByGenerationAndUserIdResult>::CallbackType callback
+        PrepareDownloadByUserIdAndDataObjectNameAndGenerationTask(
+            PrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest request,
+            Gs2RestSessionTask<PrepareDownloadByUserIdAndDataObjectNameAndGenerationResult>::CallbackType callback
         ) :
-            Gs2RestSessionTask<PrepareDownloadByGenerationAndUserIdResult>(callback),
+            Gs2RestSessionTask<PrepareDownloadByUserIdAndDataObjectNameAndGenerationResult>(callback),
             m_Request(std::move(request))
         {}
 
-        ~PrepareDownloadByGenerationAndUserIdTask() GS2_OVERRIDE = default;
+        ~PrepareDownloadByUserIdAndDataObjectNameAndGenerationTask() GS2_OVERRIDE = default;
+    };
+
+    class RestoreDataObjectTask : public detail::Gs2RestSessionTask<RestoreDataObjectResult>
+    {
+    private:
+        RestoreDataObjectRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "datastore";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/file/restore";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getDataObjectId())
+            {
+                jsonWriter.writePropertyName("dataObjectId");
+                jsonWriter.writeCharArray(*m_Request.getDataObjectId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        RestoreDataObjectTask(
+            RestoreDataObjectRequest request,
+            Gs2RestSessionTask<RestoreDataObjectResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<RestoreDataObjectResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~RestoreDataObjectTask() GS2_OVERRIDE = default;
     };
 
     class DescribeDataObjectHistoriesTask : public detail::Gs2RestSessionTask<DescribeDataObjectHistoriesResult>
@@ -1848,6 +2192,11 @@ protected:
             jsonWriter.writePropertyName("description");
             jsonWriter.writeCharArray(*obj.getDescription());
         }
+        if (obj.getDoneUploadScript())
+        {
+            jsonWriter.writePropertyName("doneUploadScript");
+            write(jsonWriter, *obj.getDoneUploadScript());
+        }
         if (obj.getLogSetting())
         {
             jsonWriter.writePropertyName("logSetting");
@@ -1862,6 +2211,32 @@ protected:
         {
             jsonWriter.writePropertyName("updatedAt");
             jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const ScriptSetting& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getTriggerScriptId())
+        {
+            jsonWriter.writePropertyName("triggerScriptId");
+            jsonWriter.writeCharArray(*obj.getTriggerScriptId());
+        }
+        if (obj.getDoneTriggerTargetType())
+        {
+            jsonWriter.writePropertyName("doneTriggerTargetType");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerTargetType());
+        }
+        if (obj.getDoneTriggerScriptId())
+        {
+            jsonWriter.writePropertyName("doneTriggerScriptId");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerScriptId());
+        }
+        if (obj.getDoneTriggerQueueNamespaceId())
+        {
+            jsonWriter.writePropertyName("doneTriggerQueueNamespaceId");
+            jsonWriter.writeCharArray(*obj.getDoneTriggerQueueNamespaceId());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -2280,6 +2655,66 @@ public:
     void prepareDownloadByGenerationAndUserId(PrepareDownloadByGenerationAndUserIdRequest request, std::function<void(AsyncPrepareDownloadByGenerationAndUserIdResult)> callback)
     {
         PrepareDownloadByGenerationAndUserIdTask& task = *new PrepareDownloadByGenerationAndUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * データオブジェクトをダウンロード準備する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void prepareDownloadOwnData(PrepareDownloadOwnDataRequest request, std::function<void(AsyncPrepareDownloadOwnDataResult)> callback)
+    {
+        PrepareDownloadOwnDataTask& task = *new PrepareDownloadOwnDataTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * ユーザIDとオブジェクト名を指定してデータオブジェクトをダウンロード準備する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void prepareDownloadByUserIdAndDataObjectName(PrepareDownloadByUserIdAndDataObjectNameRequest request, std::function<void(AsyncPrepareDownloadByUserIdAndDataObjectNameResult)> callback)
+    {
+        PrepareDownloadByUserIdAndDataObjectNameTask& task = *new PrepareDownloadByUserIdAndDataObjectNameTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * データオブジェクトを世代を指定してダウンロード準備する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void prepareDownloadOwnDataByGeneration(PrepareDownloadOwnDataByGenerationRequest request, std::function<void(AsyncPrepareDownloadOwnDataByGenerationResult)> callback)
+    {
+        PrepareDownloadOwnDataByGenerationTask& task = *new PrepareDownloadOwnDataByGenerationTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * ユーザIDを指定してデータオブジェクトを世代を指定してダウンロード準備する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void prepareDownloadByUserIdAndDataObjectNameAndGeneration(PrepareDownloadByUserIdAndDataObjectNameAndGenerationRequest request, std::function<void(AsyncPrepareDownloadByUserIdAndDataObjectNameAndGenerationResult)> callback)
+    {
+        PrepareDownloadByUserIdAndDataObjectNameAndGenerationTask& task = *new PrepareDownloadByUserIdAndDataObjectNameAndGenerationTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * データオブジェクトの管理情報を修復する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void restoreDataObject(RestoreDataObjectRequest request, std::function<void(AsyncRestoreDataObjectResult)> callback)
+    {
+        RestoreDataObjectTask& task = *new RestoreDataObjectTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 

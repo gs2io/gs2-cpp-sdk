@@ -65,9 +65,22 @@
 #include "request/AcquireItemSetByUserIdRequest.hpp"
 #include "request/ConsumeItemSetRequest.hpp"
 #include "request/ConsumeItemSetByUserIdRequest.hpp"
+#include "request/DescribeReferenceOfRequest.hpp"
+#include "request/DescribeReferenceOfByUserIdRequest.hpp"
+#include "request/GetReferenceOfRequest.hpp"
+#include "request/GetReferenceOfByUserIdRequest.hpp"
+#include "request/VerifyReferenceOfRequest.hpp"
+#include "request/VerifyReferenceOfByUserIdRequest.hpp"
+#include "request/AddReferenceOfRequest.hpp"
+#include "request/AddReferenceOfByUserIdRequest.hpp"
+#include "request/DeleteReferenceOfRequest.hpp"
+#include "request/DeleteReferenceOfByUserIdRequest.hpp"
 #include "request/DeleteItemSetByUserIdRequest.hpp"
 #include "request/AcquireItemSetByStampSheetRequest.hpp"
+#include "request/AddReferenceOfItemSetByStampSheetRequest.hpp"
+#include "request/DeleteReferenceOfItemSetByStampSheetRequest.hpp"
 #include "request/ConsumeItemSetByStampTaskRequest.hpp"
+#include "request/VerifyReferenceOfByStampTaskRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -110,9 +123,22 @@
 #include "result/AcquireItemSetByUserIdResult.hpp"
 #include "result/ConsumeItemSetResult.hpp"
 #include "result/ConsumeItemSetByUserIdResult.hpp"
+#include "result/DescribeReferenceOfResult.hpp"
+#include "result/DescribeReferenceOfByUserIdResult.hpp"
+#include "result/GetReferenceOfResult.hpp"
+#include "result/GetReferenceOfByUserIdResult.hpp"
+#include "result/VerifyReferenceOfResult.hpp"
+#include "result/VerifyReferenceOfByUserIdResult.hpp"
+#include "result/AddReferenceOfResult.hpp"
+#include "result/AddReferenceOfByUserIdResult.hpp"
+#include "result/DeleteReferenceOfResult.hpp"
+#include "result/DeleteReferenceOfByUserIdResult.hpp"
 #include "result/DeleteItemSetByUserIdResult.hpp"
 #include "result/AcquireItemSetByStampSheetResult.hpp"
+#include "result/AddReferenceOfItemSetByStampSheetResult.hpp"
+#include "result/DeleteReferenceOfItemSetByStampSheetResult.hpp"
 #include "result/ConsumeItemSetByStampTaskResult.hpp"
+#include "result/VerifyReferenceOfByStampTaskResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace inventory {
@@ -606,6 +632,11 @@ private:
                 jsonWriter.writePropertyName("maxCapacity");
                 jsonWriter.writeInt32(*m_Request.getMaxCapacity());
             }
+            if (m_Request.getProtectReferencedItem())
+            {
+                jsonWriter.writePropertyName("protectReferencedItem");
+                jsonWriter.writeBool(*m_Request.getProtectReferencedItem());
+            }
             if (m_Request.getRequestId())
             {
                 jsonWriter.writePropertyName("xGs2RequestId");
@@ -737,6 +768,11 @@ private:
             {
                 jsonWriter.writePropertyName("maxCapacity");
                 jsonWriter.writeInt32(*m_Request.getMaxCapacity());
+            }
+            if (m_Request.getProtectReferencedItem())
+            {
+                jsonWriter.writePropertyName("protectReferencedItem");
+                jsonWriter.writeBool(*m_Request.getProtectReferencedItem());
             }
             if (m_Request.getRequestId())
             {
@@ -2934,6 +2970,816 @@ private:
         ~ConsumeItemSetByUserIdTask() GS2_OVERRIDE = default;
     };
 
+    class DescribeReferenceOfTask : public detail::Gs2WebSocketSessionTask<DescribeReferenceOfResult>
+    {
+    private:
+        DescribeReferenceOfRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeReferenceOf";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getInventoryName())
+            {
+                jsonWriter.writePropertyName("inventoryName");
+                jsonWriter.writeCharArray(*m_Request.getInventoryName());
+            }
+            if (m_Request.getItemName())
+            {
+                jsonWriter.writePropertyName("itemName");
+                jsonWriter.writeCharArray(*m_Request.getItemName());
+            }
+            if (m_Request.getItemSetName())
+            {
+                jsonWriter.writePropertyName("itemSetName");
+                jsonWriter.writeCharArray(*m_Request.getItemSetName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DescribeReferenceOfTask(
+            DescribeReferenceOfRequest request,
+            Gs2WebSocketSessionTask<DescribeReferenceOfResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeReferenceOfResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeReferenceOfTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeReferenceOfByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeReferenceOfByUserIdResult>
+    {
+    private:
+        DescribeReferenceOfByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeReferenceOfByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getInventoryName())
+            {
+                jsonWriter.writePropertyName("inventoryName");
+                jsonWriter.writeCharArray(*m_Request.getInventoryName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getItemName())
+            {
+                jsonWriter.writePropertyName("itemName");
+                jsonWriter.writeCharArray(*m_Request.getItemName());
+            }
+            if (m_Request.getItemSetName())
+            {
+                jsonWriter.writePropertyName("itemSetName");
+                jsonWriter.writeCharArray(*m_Request.getItemSetName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DescribeReferenceOfByUserIdTask(
+            DescribeReferenceOfByUserIdRequest request,
+            Gs2WebSocketSessionTask<DescribeReferenceOfByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeReferenceOfByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeReferenceOfByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class GetReferenceOfTask : public detail::Gs2WebSocketSessionTask<GetReferenceOfResult>
+    {
+    private:
+        GetReferenceOfRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getReferenceOf";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getInventoryName())
+            {
+                jsonWriter.writePropertyName("inventoryName");
+                jsonWriter.writeCharArray(*m_Request.getInventoryName());
+            }
+            if (m_Request.getItemName())
+            {
+                jsonWriter.writePropertyName("itemName");
+                jsonWriter.writeCharArray(*m_Request.getItemName());
+            }
+            if (m_Request.getItemSetName())
+            {
+                jsonWriter.writePropertyName("itemSetName");
+                jsonWriter.writeCharArray(*m_Request.getItemSetName());
+            }
+            if (m_Request.getReferenceOf())
+            {
+                jsonWriter.writePropertyName("referenceOf");
+                jsonWriter.writeCharArray(*m_Request.getReferenceOf());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetReferenceOfTask(
+            GetReferenceOfRequest request,
+            Gs2WebSocketSessionTask<GetReferenceOfResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetReferenceOfResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetReferenceOfTask() GS2_OVERRIDE = default;
+    };
+
+    class GetReferenceOfByUserIdTask : public detail::Gs2WebSocketSessionTask<GetReferenceOfByUserIdResult>
+    {
+    private:
+        GetReferenceOfByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getReferenceOfByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getInventoryName())
+            {
+                jsonWriter.writePropertyName("inventoryName");
+                jsonWriter.writeCharArray(*m_Request.getInventoryName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getItemName())
+            {
+                jsonWriter.writePropertyName("itemName");
+                jsonWriter.writeCharArray(*m_Request.getItemName());
+            }
+            if (m_Request.getItemSetName())
+            {
+                jsonWriter.writePropertyName("itemSetName");
+                jsonWriter.writeCharArray(*m_Request.getItemSetName());
+            }
+            if (m_Request.getReferenceOf())
+            {
+                jsonWriter.writePropertyName("referenceOf");
+                jsonWriter.writeCharArray(*m_Request.getReferenceOf());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetReferenceOfByUserIdTask(
+            GetReferenceOfByUserIdRequest request,
+            Gs2WebSocketSessionTask<GetReferenceOfByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetReferenceOfByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetReferenceOfByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class VerifyReferenceOfTask : public detail::Gs2WebSocketSessionTask<VerifyReferenceOfResult>
+    {
+    private:
+        VerifyReferenceOfRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "verifyReferenceOf";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getInventoryName())
+            {
+                jsonWriter.writePropertyName("inventoryName");
+                jsonWriter.writeCharArray(*m_Request.getInventoryName());
+            }
+            if (m_Request.getItemName())
+            {
+                jsonWriter.writePropertyName("itemName");
+                jsonWriter.writeCharArray(*m_Request.getItemName());
+            }
+            if (m_Request.getItemSetName())
+            {
+                jsonWriter.writePropertyName("itemSetName");
+                jsonWriter.writeCharArray(*m_Request.getItemSetName());
+            }
+            if (m_Request.getReferenceOf())
+            {
+                jsonWriter.writePropertyName("referenceOf");
+                jsonWriter.writeCharArray(*m_Request.getReferenceOf());
+            }
+            if (m_Request.getVerifyType())
+            {
+                jsonWriter.writePropertyName("verifyType");
+                jsonWriter.writeCharArray(*m_Request.getVerifyType());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        VerifyReferenceOfTask(
+            VerifyReferenceOfRequest request,
+            Gs2WebSocketSessionTask<VerifyReferenceOfResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<VerifyReferenceOfResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~VerifyReferenceOfTask() GS2_OVERRIDE = default;
+    };
+
+    class VerifyReferenceOfByUserIdTask : public detail::Gs2WebSocketSessionTask<VerifyReferenceOfByUserIdResult>
+    {
+    private:
+        VerifyReferenceOfByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "verifyReferenceOfByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getInventoryName())
+            {
+                jsonWriter.writePropertyName("inventoryName");
+                jsonWriter.writeCharArray(*m_Request.getInventoryName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getItemName())
+            {
+                jsonWriter.writePropertyName("itemName");
+                jsonWriter.writeCharArray(*m_Request.getItemName());
+            }
+            if (m_Request.getItemSetName())
+            {
+                jsonWriter.writePropertyName("itemSetName");
+                jsonWriter.writeCharArray(*m_Request.getItemSetName());
+            }
+            if (m_Request.getReferenceOf())
+            {
+                jsonWriter.writePropertyName("referenceOf");
+                jsonWriter.writeCharArray(*m_Request.getReferenceOf());
+            }
+            if (m_Request.getVerifyType())
+            {
+                jsonWriter.writePropertyName("verifyType");
+                jsonWriter.writeCharArray(*m_Request.getVerifyType());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        VerifyReferenceOfByUserIdTask(
+            VerifyReferenceOfByUserIdRequest request,
+            Gs2WebSocketSessionTask<VerifyReferenceOfByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<VerifyReferenceOfByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~VerifyReferenceOfByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class AddReferenceOfTask : public detail::Gs2WebSocketSessionTask<AddReferenceOfResult>
+    {
+    private:
+        AddReferenceOfRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "addReferenceOf";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getInventoryName())
+            {
+                jsonWriter.writePropertyName("inventoryName");
+                jsonWriter.writeCharArray(*m_Request.getInventoryName());
+            }
+            if (m_Request.getItemName())
+            {
+                jsonWriter.writePropertyName("itemName");
+                jsonWriter.writeCharArray(*m_Request.getItemName());
+            }
+            if (m_Request.getItemSetName())
+            {
+                jsonWriter.writePropertyName("itemSetName");
+                jsonWriter.writeCharArray(*m_Request.getItemSetName());
+            }
+            if (m_Request.getReferenceOf())
+            {
+                jsonWriter.writePropertyName("referenceOf");
+                jsonWriter.writeCharArray(*m_Request.getReferenceOf());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        AddReferenceOfTask(
+            AddReferenceOfRequest request,
+            Gs2WebSocketSessionTask<AddReferenceOfResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<AddReferenceOfResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~AddReferenceOfTask() GS2_OVERRIDE = default;
+    };
+
+    class AddReferenceOfByUserIdTask : public detail::Gs2WebSocketSessionTask<AddReferenceOfByUserIdResult>
+    {
+    private:
+        AddReferenceOfByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "addReferenceOfByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getInventoryName())
+            {
+                jsonWriter.writePropertyName("inventoryName");
+                jsonWriter.writeCharArray(*m_Request.getInventoryName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getItemName())
+            {
+                jsonWriter.writePropertyName("itemName");
+                jsonWriter.writeCharArray(*m_Request.getItemName());
+            }
+            if (m_Request.getItemSetName())
+            {
+                jsonWriter.writePropertyName("itemSetName");
+                jsonWriter.writeCharArray(*m_Request.getItemSetName());
+            }
+            if (m_Request.getReferenceOf())
+            {
+                jsonWriter.writePropertyName("referenceOf");
+                jsonWriter.writeCharArray(*m_Request.getReferenceOf());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        AddReferenceOfByUserIdTask(
+            AddReferenceOfByUserIdRequest request,
+            Gs2WebSocketSessionTask<AddReferenceOfByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<AddReferenceOfByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~AddReferenceOfByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteReferenceOfTask : public detail::Gs2WebSocketSessionTask<DeleteReferenceOfResult>
+    {
+    private:
+        DeleteReferenceOfRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteReferenceOf";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getInventoryName())
+            {
+                jsonWriter.writePropertyName("inventoryName");
+                jsonWriter.writeCharArray(*m_Request.getInventoryName());
+            }
+            if (m_Request.getItemName())
+            {
+                jsonWriter.writePropertyName("itemName");
+                jsonWriter.writeCharArray(*m_Request.getItemName());
+            }
+            if (m_Request.getItemSetName())
+            {
+                jsonWriter.writePropertyName("itemSetName");
+                jsonWriter.writeCharArray(*m_Request.getItemSetName());
+            }
+            if (m_Request.getReferenceOf())
+            {
+                jsonWriter.writePropertyName("referenceOf");
+                jsonWriter.writeCharArray(*m_Request.getReferenceOf());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DeleteReferenceOfTask(
+            DeleteReferenceOfRequest request,
+            Gs2WebSocketSessionTask<DeleteReferenceOfResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DeleteReferenceOfResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteReferenceOfTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteReferenceOfByUserIdTask : public detail::Gs2WebSocketSessionTask<DeleteReferenceOfByUserIdResult>
+    {
+    private:
+        DeleteReferenceOfByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteReferenceOfByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getInventoryName())
+            {
+                jsonWriter.writePropertyName("inventoryName");
+                jsonWriter.writeCharArray(*m_Request.getInventoryName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getItemName())
+            {
+                jsonWriter.writePropertyName("itemName");
+                jsonWriter.writeCharArray(*m_Request.getItemName());
+            }
+            if (m_Request.getItemSetName())
+            {
+                jsonWriter.writePropertyName("itemSetName");
+                jsonWriter.writeCharArray(*m_Request.getItemSetName());
+            }
+            if (m_Request.getReferenceOf())
+            {
+                jsonWriter.writePropertyName("referenceOf");
+                jsonWriter.writeCharArray(*m_Request.getReferenceOf());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DeleteReferenceOfByUserIdTask(
+            DeleteReferenceOfByUserIdRequest request,
+            Gs2WebSocketSessionTask<DeleteReferenceOfByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DeleteReferenceOfByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteReferenceOfByUserIdTask() GS2_OVERRIDE = default;
+    };
+
     class DeleteItemSetByUserIdTask : public detail::Gs2WebSocketSessionTask<DeleteItemSetByUserIdResult>
     {
     private:
@@ -3071,6 +3917,128 @@ private:
         ~AcquireItemSetByStampSheetTask() GS2_OVERRIDE = default;
     };
 
+    class AddReferenceOfItemSetByStampSheetTask : public detail::Gs2WebSocketSessionTask<AddReferenceOfItemSetByStampSheetResult>
+    {
+    private:
+        AddReferenceOfItemSetByStampSheetRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "addReferenceOfItemSetByStampSheet";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        AddReferenceOfItemSetByStampSheetTask(
+            AddReferenceOfItemSetByStampSheetRequest request,
+            Gs2WebSocketSessionTask<AddReferenceOfItemSetByStampSheetResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<AddReferenceOfItemSetByStampSheetResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~AddReferenceOfItemSetByStampSheetTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteReferenceOfItemSetByStampSheetTask : public detail::Gs2WebSocketSessionTask<DeleteReferenceOfItemSetByStampSheetResult>
+    {
+    private:
+        DeleteReferenceOfItemSetByStampSheetRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "deleteReferenceOfItemSetByStampSheet";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DeleteReferenceOfItemSetByStampSheetTask(
+            DeleteReferenceOfItemSetByStampSheetRequest request,
+            Gs2WebSocketSessionTask<DeleteReferenceOfItemSetByStampSheetResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DeleteReferenceOfItemSetByStampSheetResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteReferenceOfItemSetByStampSheetTask() GS2_OVERRIDE = default;
+    };
+
     class ConsumeItemSetByStampTaskTask : public detail::Gs2WebSocketSessionTask<ConsumeItemSetByStampTaskResult>
     {
     private:
@@ -3130,6 +4098,67 @@ private:
         {}
 
         ~ConsumeItemSetByStampTaskTask() GS2_OVERRIDE = default;
+    };
+
+    class VerifyReferenceOfByStampTaskTask : public detail::Gs2WebSocketSessionTask<VerifyReferenceOfByStampTaskResult>
+    {
+    private:
+        VerifyReferenceOfByStampTaskRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "itemSet";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "verifyReferenceOfByStampTask";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampTask())
+            {
+                jsonWriter.writePropertyName("stampTask");
+                jsonWriter.writeCharArray(*m_Request.getStampTask());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        VerifyReferenceOfByStampTaskTask(
+            VerifyReferenceOfByStampTaskRequest request,
+            Gs2WebSocketSessionTask<VerifyReferenceOfByStampTaskResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<VerifyReferenceOfByStampTaskResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~VerifyReferenceOfByStampTaskTask() GS2_OVERRIDE = default;
     };
 
 protected:
@@ -3222,6 +4251,11 @@ protected:
             jsonWriter.writePropertyName("maxCapacity");
             jsonWriter.writeInt32(*obj.getMaxCapacity());
         }
+        if (obj.getProtectReferencedItem())
+        {
+            jsonWriter.writePropertyName("protectReferencedItem");
+            jsonWriter.writeBool(*obj.getProtectReferencedItem());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -3262,6 +4296,11 @@ protected:
         {
             jsonWriter.writePropertyName("maxCapacity");
             jsonWriter.writeInt32(*obj.getMaxCapacity());
+        }
+        if (obj.getProtectReferencedItem())
+        {
+            jsonWriter.writePropertyName("protectReferencedItem");
+            jsonWriter.writeBool(*obj.getProtectReferencedItem());
         }
         if (obj.getItemModels())
         {
@@ -3459,6 +4498,17 @@ protected:
             jsonWriter.writePropertyName("count");
             jsonWriter.writeInt64(*obj.getCount());
         }
+        if (obj.getReferenceOf())
+        {
+            jsonWriter.writePropertyName("referenceOf");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getReferenceOf();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeCharArray(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
         if (obj.getSortValue())
         {
             jsonWriter.writePropertyName("sortValue");
@@ -3540,6 +4590,17 @@ protected:
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
                 jsonWriter.writeInt64(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetReferenceOfList())
+        {
+            jsonWriter.writePropertyName("itemSetReferenceOfList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetReferenceOfList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt32(list[i]);
             }
             jsonWriter.writeArrayEnd();
         }
@@ -4215,6 +5276,126 @@ public:
     }
 
 	/**
+	 * 参照元の一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeReferenceOf(DescribeReferenceOfRequest request, std::function<void(AsyncDescribeReferenceOfResult)> callback)
+    {
+        DescribeReferenceOfTask& task = *new DescribeReferenceOfTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 参照元の一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeReferenceOfByUserId(DescribeReferenceOfByUserIdRequest request, std::function<void(AsyncDescribeReferenceOfByUserIdResult)> callback)
+    {
+        DescribeReferenceOfByUserIdTask& task = *new DescribeReferenceOfByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 参照元を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getReferenceOf(GetReferenceOfRequest request, std::function<void(AsyncGetReferenceOfResult)> callback)
+    {
+        GetReferenceOfTask& task = *new GetReferenceOfTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 参照元を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getReferenceOfByUserId(GetReferenceOfByUserIdRequest request, std::function<void(AsyncGetReferenceOfByUserIdResult)> callback)
+    {
+        GetReferenceOfByUserIdTask& task = *new GetReferenceOfByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 参照元に関する検証<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void verifyReferenceOf(VerifyReferenceOfRequest request, std::function<void(AsyncVerifyReferenceOfResult)> callback)
+    {
+        VerifyReferenceOfTask& task = *new VerifyReferenceOfTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 参照元に関する検証<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void verifyReferenceOfByUserId(VerifyReferenceOfByUserIdRequest request, std::function<void(AsyncVerifyReferenceOfByUserIdResult)> callback)
+    {
+        VerifyReferenceOfByUserIdTask& task = *new VerifyReferenceOfByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 参照元を追加<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void addReferenceOf(AddReferenceOfRequest request, std::function<void(AsyncAddReferenceOfResult)> callback)
+    {
+        AddReferenceOfTask& task = *new AddReferenceOfTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 参照元を追加<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void addReferenceOfByUserId(AddReferenceOfByUserIdRequest request, std::function<void(AsyncAddReferenceOfByUserIdResult)> callback)
+    {
+        AddReferenceOfByUserIdTask& task = *new AddReferenceOfByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 参照元を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteReferenceOf(DeleteReferenceOfRequest request, std::function<void(AsyncDeleteReferenceOfResult)> callback)
+    {
+        DeleteReferenceOfTask& task = *new DeleteReferenceOfTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 参照元を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteReferenceOfByUserId(DeleteReferenceOfByUserIdRequest request, std::function<void(AsyncDeleteReferenceOfByUserIdResult)> callback)
+    {
+        DeleteReferenceOfByUserIdTask& task = *new DeleteReferenceOfByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
 	 * 有効期限ごとのアイテム所持数量を削除<br>
 	 *
      * @param callback コールバック関数
@@ -4239,6 +5420,30 @@ public:
     }
 
 	/**
+	 * スタンプシートでアイテムに参照元を追加<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void addReferenceOfItemSetByStampSheet(AddReferenceOfItemSetByStampSheetRequest request, std::function<void(AsyncAddReferenceOfItemSetByStampSheetResult)> callback)
+    {
+        AddReferenceOfItemSetByStampSheetTask& task = *new AddReferenceOfItemSetByStampSheetTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタンプシートでアイテムの参照元を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteReferenceOfItemSetByStampSheet(DeleteReferenceOfItemSetByStampSheetRequest request, std::function<void(AsyncDeleteReferenceOfItemSetByStampSheetResult)> callback)
+    {
+        DeleteReferenceOfItemSetByStampSheetTask& task = *new DeleteReferenceOfItemSetByStampSheetTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
 	 * スタンプシートでインベントリのアイテムを消費<br>
 	 *
      * @param callback コールバック関数
@@ -4247,6 +5452,18 @@ public:
     void consumeItemSetByStampTask(ConsumeItemSetByStampTaskRequest request, std::function<void(AsyncConsumeItemSetByStampTaskResult)> callback)
     {
         ConsumeItemSetByStampTaskTask& task = *new ConsumeItemSetByStampTaskTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スタンプシートでインベントリのアイテムを検証<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void verifyReferenceOfByStampTask(VerifyReferenceOfByStampTaskRequest request, std::function<void(AsyncVerifyReferenceOfByStampTaskResult)> callback)
+    {
+        VerifyReferenceOfByStampTaskTask& task = *new VerifyReferenceOfByStampTaskTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

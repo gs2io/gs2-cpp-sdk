@@ -22,6 +22,7 @@
 #include "Namespace.hpp"
 #include "WebSocketSession.hpp"
 #include "FirebaseToken.hpp"
+#include "Session.hpp"
 #include "ResponseCache.hpp"
 #include "LogSetting.hpp"
 

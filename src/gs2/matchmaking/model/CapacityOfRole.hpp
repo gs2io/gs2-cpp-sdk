@@ -116,9 +116,9 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->participants.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        Player item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->participants += std::move(item);
+                        Player item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->participants += std::move(item_);
                     }
                 }
             }

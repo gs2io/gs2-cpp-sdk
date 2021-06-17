@@ -44,6 +44,8 @@ private:
     public:
         /** スタミナ */
         optional<Stamina> item;
+        /** スタミナモデル */
+        optional<StaminaModel> staminaModel;
         /** スタミナ値の上限を超えて受け取れずに GS2-Inbox に転送したスタミナ値 */
         optional<Int64> overflowValue;
 
@@ -56,6 +58,10 @@ private:
             if (data.item)
             {
                 item = data.item->deepCopy();
+            }
+            if (data.staminaModel)
+            {
+                staminaModel = data.staminaModel->deepCopy();
             }
         }
 
@@ -75,6 +81,15 @@ private:
                     const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->item.emplace();
                     detail::json::JsonParser::parse(&this->item->getModel(), jsonObject);
+                }
+            }
+            else if (std::strcmp(name_, "staminaModel") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->staminaModel.emplace();
+                    detail::json::JsonParser::parse(&this->staminaModel->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name_, "overflowValue") == 0)
@@ -130,6 +145,26 @@ public:
     void setItem(Stamina item)
     {
         ensureData().item.emplace(std::move(item));
+    }
+
+    /**
+     * スタミナモデルを取得
+     *
+     * @return スタミナモデル
+     */
+    const optional<StaminaModel>& getStaminaModel() const
+    {
+        return ensureData().staminaModel;
+    }
+
+    /**
+     * スタミナモデルを設定
+     *
+     * @param staminaModel スタミナモデル
+     */
+    void setStaminaModel(StaminaModel staminaModel)
+    {
+        ensureData().staminaModel.emplace(std::move(staminaModel));
     }
 
     /**

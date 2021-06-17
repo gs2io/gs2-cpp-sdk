@@ -1387,6 +1387,11 @@ protected:
             jsonWriter.writePropertyName("connectionId");
             jsonWriter.writeCharArray(*obj.getConnectionId());
         }
+        if (obj.getApiId())
+        {
+            jsonWriter.writePropertyName("apiId");
+            jsonWriter.writeCharArray(*obj.getApiId());
+        }
         if (obj.getOwnerId())
         {
             jsonWriter.writePropertyName("ownerId");
@@ -1437,6 +1442,47 @@ protected:
         {
             jsonWriter.writePropertyName("token");
             jsonWriter.writeCharArray(*obj.getToken());
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const Session& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getSessionId())
+        {
+            jsonWriter.writePropertyName("sessionId");
+            jsonWriter.writeCharArray(*obj.getSessionId());
+        }
+        if (obj.getOwnerId())
+        {
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
+        }
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getSessionName())
+        {
+            jsonWriter.writePropertyName("sessionName");
+            jsonWriter.writeCharArray(*obj.getSessionName());
+        }
+        if (obj.getApiId())
+        {
+            jsonWriter.writePropertyName("apiId");
+            jsonWriter.writeCharArray(*obj.getApiId());
         }
         if (obj.getCreatedAt())
         {

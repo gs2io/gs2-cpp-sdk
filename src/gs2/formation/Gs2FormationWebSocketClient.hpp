@@ -59,6 +59,8 @@
 #include "request/DescribeFormsByUserIdRequest.hpp"
 #include "request/GetFormRequest.hpp"
 #include "request/GetFormByUserIdRequest.hpp"
+#include "request/GetFormWithSignatureRequest.hpp"
+#include "request/GetFormWithSignatureByUserIdRequest.hpp"
 #include "request/SetFormByUserIdRequest.hpp"
 #include "request/SetFormWithSignatureRequest.hpp"
 #include "request/AcquireActionsToFormPropertiesRequest.hpp"
@@ -101,6 +103,8 @@
 #include "result/DescribeFormsByUserIdResult.hpp"
 #include "result/GetFormResult.hpp"
 #include "result/GetFormByUserIdResult.hpp"
+#include "result/GetFormWithSignatureResult.hpp"
+#include "result/GetFormWithSignatureByUserIdResult.hpp"
 #include "result/SetFormByUserIdResult.hpp"
 #include "result/SetFormWithSignatureResult.hpp"
 #include "result/AcquireActionsToFormPropertiesResult.hpp"
@@ -2419,6 +2423,158 @@ private:
         ~GetFormByUserIdTask() GS2_OVERRIDE = default;
     };
 
+    class GetFormWithSignatureTask : public detail::Gs2WebSocketSessionTask<GetFormWithSignatureResult>
+    {
+    private:
+        GetFormWithSignatureRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "formation";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "form";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getFormWithSignature";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getMoldName())
+            {
+                jsonWriter.writePropertyName("moldName");
+                jsonWriter.writeCharArray(*m_Request.getMoldName());
+            }
+            if (m_Request.getIndex())
+            {
+                jsonWriter.writePropertyName("index");
+                jsonWriter.writeInt32(*m_Request.getIndex());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetFormWithSignatureTask(
+            GetFormWithSignatureRequest request,
+            Gs2WebSocketSessionTask<GetFormWithSignatureResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetFormWithSignatureResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetFormWithSignatureTask() GS2_OVERRIDE = default;
+    };
+
+    class GetFormWithSignatureByUserIdTask : public detail::Gs2WebSocketSessionTask<GetFormWithSignatureByUserIdResult>
+    {
+    private:
+        GetFormWithSignatureByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "formation";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "form";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getFormWithSignatureByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getMoldName())
+            {
+                jsonWriter.writePropertyName("moldName");
+                jsonWriter.writeCharArray(*m_Request.getMoldName());
+            }
+            if (m_Request.getIndex())
+            {
+                jsonWriter.writePropertyName("index");
+                jsonWriter.writeInt32(*m_Request.getIndex());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetFormWithSignatureByUserIdTask(
+            GetFormWithSignatureByUserIdRequest request,
+            Gs2WebSocketSessionTask<GetFormWithSignatureByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetFormWithSignatureByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetFormWithSignatureByUserIdTask() GS2_OVERRIDE = default;
+    };
+
     class SetFormByUserIdTask : public detail::Gs2WebSocketSessionTask<SetFormByUserIdResult>
     {
     private:
@@ -3037,11 +3193,6 @@ protected:
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
         }
-        if (obj.getFormModel())
-        {
-            jsonWriter.writePropertyName("formModel");
-            write(jsonWriter, *obj.getFormModel());
-        }
         if (obj.getInitialMaxCapacity())
         {
             jsonWriter.writePropertyName("initialMaxCapacity");
@@ -3051,6 +3202,11 @@ protected:
         {
             jsonWriter.writePropertyName("maxCapacity");
             jsonWriter.writeInt32(*obj.getMaxCapacity());
+        }
+        if (obj.getFormModel())
+        {
+            jsonWriter.writePropertyName("formModel");
+            write(jsonWriter, *obj.getFormModel());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -3078,11 +3234,6 @@ protected:
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
         }
-        if (obj.getFormModelName())
-        {
-            jsonWriter.writePropertyName("formModelName");
-            jsonWriter.writeCharArray(*obj.getFormModelName());
-        }
         if (obj.getInitialMaxCapacity())
         {
             jsonWriter.writePropertyName("initialMaxCapacity");
@@ -3092,6 +3243,11 @@ protected:
         {
             jsonWriter.writePropertyName("maxCapacity");
             jsonWriter.writeInt32(*obj.getMaxCapacity());
+        }
+        if (obj.getFormModelName())
+        {
+            jsonWriter.writePropertyName("formModelName");
+            jsonWriter.writeCharArray(*obj.getFormModelName());
         }
         if (obj.getCreatedAt())
         {
@@ -3213,6 +3369,11 @@ protected:
             jsonWriter.writePropertyName("propertyId");
             jsonWriter.writeCharArray(*obj.getPropertyId());
         }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
         jsonWriter.writeObjectEnd();
     }
 
@@ -3290,6 +3451,11 @@ protected:
         {
             jsonWriter.writePropertyName("signature");
             jsonWriter.writeCharArray(*obj.getSignature());
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -3867,6 +4033,30 @@ public:
     void getFormByUserId(GetFormByUserIdRequest request, std::function<void(AsyncGetFormByUserIdResult)> callback)
     {
         GetFormByUserIdTask& task = *new GetFormByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * 署名付きフォームを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getFormWithSignature(GetFormWithSignatureRequest request, std::function<void(AsyncGetFormWithSignatureResult)> callback)
+    {
+        GetFormWithSignatureTask& task = *new GetFormWithSignatureTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ユーザIDを指定して署名付きフォームを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getFormWithSignatureByUserId(GetFormWithSignatureByUserIdRequest request, std::function<void(AsyncGetFormWithSignatureByUserIdResult)> callback)
+    {
+        GetFormWithSignatureByUserIdTask& task = *new GetFormWithSignatureByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

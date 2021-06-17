@@ -88,9 +88,9 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->warnings.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        Status item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->warnings += std::move(item);
+                        Status item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->warnings += std::move(item_);
                     }
                 }
             }
@@ -101,9 +101,9 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->errors.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        Status item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->errors += std::move(item);
+                        Status item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->errors += std::move(item_);
                     }
                 }
             }

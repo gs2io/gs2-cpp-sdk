@@ -755,6 +755,37 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const ResponseCache& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getRegion())
+        {
+            jsonWriter.writePropertyName("region");
+            jsonWriter.writeCharArray(*obj.getRegion());
+        }
+        if (obj.getOwnerId())
+        {
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
+        }
+        if (obj.getResponseCacheId())
+        {
+            jsonWriter.writePropertyName("responseCacheId");
+            jsonWriter.writeCharArray(*obj.getResponseCacheId());
+        }
+        if (obj.getRequestHash())
+        {
+            jsonWriter.writePropertyName("requestHash");
+            jsonWriter.writeCharArray(*obj.getRequestHash());
+        }
+        if (obj.getResult())
+        {
+            jsonWriter.writePropertyName("result");
+            jsonWriter.writeCharArray(*obj.getResult());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const NotificationSetting& obj)
     {
         jsonWriter.writeObjectStart();

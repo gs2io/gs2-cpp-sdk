@@ -133,9 +133,9 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->readAcquireActions.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        AcquireAction item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->readAcquireActions += std::move(item);
+                        AcquireAction item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->readAcquireActions += std::move(item_);
                     }
                 }
             }

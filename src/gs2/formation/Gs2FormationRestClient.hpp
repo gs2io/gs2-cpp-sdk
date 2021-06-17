@@ -59,6 +59,8 @@
 #include "request/DescribeFormsByUserIdRequest.hpp"
 #include "request/GetFormRequest.hpp"
 #include "request/GetFormByUserIdRequest.hpp"
+#include "request/GetFormWithSignatureRequest.hpp"
+#include "request/GetFormWithSignatureByUserIdRequest.hpp"
 #include "request/SetFormByUserIdRequest.hpp"
 #include "request/SetFormWithSignatureRequest.hpp"
 #include "request/AcquireActionsToFormPropertiesRequest.hpp"
@@ -101,6 +103,8 @@
 #include "result/DescribeFormsByUserIdResult.hpp"
 #include "result/GetFormResult.hpp"
 #include "result/GetFormByUserIdResult.hpp"
+#include "result/GetFormWithSignatureResult.hpp"
+#include "result/GetFormWithSignatureByUserIdResult.hpp"
 #include "result/SetFormByUserIdResult.hpp"
 #include "result/SetFormWithSignatureResult.hpp"
 #include "result/AcquireActionsToFormPropertiesResult.hpp"
@@ -2346,6 +2350,162 @@ private:
         ~GetFormByUserIdTask() GS2_OVERRIDE = default;
     };
 
+    class GetFormWithSignatureTask : public detail::Gs2RestSessionTask<GetFormWithSignatureResult>
+    {
+    private:
+        GetFormWithSignatureRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "formation";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/mold/{moldName}/form/{index}/signature";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getMoldName();
+                url.replace("{moldName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getIndex();
+                if (value.has_value())
+                {
+                    detail::StringVariable urlSafeValue(*value);
+                    url.replace("{index}", urlSafeValue.c_str());
+                }
+                else
+                {
+                    url.replace("{index}", "null");
+                }
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getKeyId())
+            {
+                url += joint;
+                url += "keyId=";
+                url += detail::StringVariable(*m_Request.getKeyId(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetFormWithSignatureTask(
+            GetFormWithSignatureRequest request,
+            Gs2RestSessionTask<GetFormWithSignatureResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetFormWithSignatureResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetFormWithSignatureTask() GS2_OVERRIDE = default;
+    };
+
+    class GetFormWithSignatureByUserIdTask : public detail::Gs2RestSessionTask<GetFormWithSignatureByUserIdResult>
+    {
+    private:
+        GetFormWithSignatureByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "formation";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/mold/{moldName}/form/{index}/signature";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getMoldName();
+                url.replace("{moldName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getIndex();
+                if (value.has_value())
+                {
+                    detail::StringVariable urlSafeValue(*value);
+                    url.replace("{index}", urlSafeValue.c_str());
+                }
+                else
+                {
+                    url.replace("{index}", "null");
+                }
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getKeyId())
+            {
+                url += joint;
+                url += "keyId=";
+                url += detail::StringVariable(*m_Request.getKeyId(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetFormWithSignatureByUserIdTask(
+            GetFormWithSignatureByUserIdRequest request,
+            Gs2RestSessionTask<GetFormWithSignatureByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetFormWithSignatureByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetFormWithSignatureByUserIdTask() GS2_OVERRIDE = default;
+    };
+
     class SetFormByUserIdTask : public detail::Gs2RestSessionTask<SetFormByUserIdResult>
     {
     private:
@@ -2984,11 +3144,6 @@ protected:
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
         }
-        if (obj.getFormModel())
-        {
-            jsonWriter.writePropertyName("formModel");
-            write(jsonWriter, *obj.getFormModel());
-        }
         if (obj.getInitialMaxCapacity())
         {
             jsonWriter.writePropertyName("initialMaxCapacity");
@@ -2998,6 +3153,11 @@ protected:
         {
             jsonWriter.writePropertyName("maxCapacity");
             jsonWriter.writeInt32(*obj.getMaxCapacity());
+        }
+        if (obj.getFormModel())
+        {
+            jsonWriter.writePropertyName("formModel");
+            write(jsonWriter, *obj.getFormModel());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -3025,11 +3185,6 @@ protected:
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
         }
-        if (obj.getFormModelName())
-        {
-            jsonWriter.writePropertyName("formModelName");
-            jsonWriter.writeCharArray(*obj.getFormModelName());
-        }
         if (obj.getInitialMaxCapacity())
         {
             jsonWriter.writePropertyName("initialMaxCapacity");
@@ -3039,6 +3194,11 @@ protected:
         {
             jsonWriter.writePropertyName("maxCapacity");
             jsonWriter.writeInt32(*obj.getMaxCapacity());
+        }
+        if (obj.getFormModelName())
+        {
+            jsonWriter.writePropertyName("formModelName");
+            jsonWriter.writeCharArray(*obj.getFormModelName());
         }
         if (obj.getCreatedAt())
         {
@@ -3160,6 +3320,11 @@ protected:
             jsonWriter.writePropertyName("propertyId");
             jsonWriter.writeCharArray(*obj.getPropertyId());
         }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
+        }
         jsonWriter.writeObjectEnd();
     }
 
@@ -3237,6 +3402,11 @@ protected:
         {
             jsonWriter.writePropertyName("signature");
             jsonWriter.writeCharArray(*obj.getSignature());
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -3815,6 +3985,30 @@ public:
     void getFormByUserId(GetFormByUserIdRequest request, std::function<void(AsyncGetFormByUserIdResult)> callback)
     {
         GetFormByUserIdTask& task = *new GetFormByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 署名付きフォームを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getFormWithSignature(GetFormWithSignatureRequest request, std::function<void(AsyncGetFormWithSignatureResult)> callback)
+    {
+        GetFormWithSignatureTask& task = *new GetFormWithSignatureTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * ユーザIDを指定して署名付きフォームを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getFormWithSignatureByUserId(GetFormWithSignatureByUserIdRequest request, std::function<void(AsyncGetFormWithSignatureByUserIdResult)> callback)
+    {
+        GetFormWithSignatureByUserIdTask& task = *new GetFormWithSignatureByUserIdTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 

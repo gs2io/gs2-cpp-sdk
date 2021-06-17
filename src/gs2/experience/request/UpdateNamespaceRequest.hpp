@@ -55,6 +55,8 @@ private:
         optional<ScriptSetting> changeRankScript;
         /** ランクキャップ変化したときに実行するスクリプト */
         optional<ScriptSetting> changeRankCapScript;
+        /** 経験値あふれしたときに実行するスクリプト */
+        optional<ScriptSetting> overflowExperienceScript;
         /** ログの出力設定 */
         optional<LogSetting> logSetting;
 
@@ -77,6 +79,10 @@ private:
             if (data.changeRankCapScript)
             {
                 changeRankCapScript = data.changeRankCapScript->deepCopy();
+            }
+            if (data.overflowExperienceScript)
+            {
+                overflowExperienceScript = data.overflowExperienceScript->deepCopy();
             }
             if (data.logSetting)
             {
@@ -311,6 +317,37 @@ public:
     UpdateNamespaceRequest& withChangeRankCapScript(ScriptSetting changeRankCapScript)
     {
         ensureData().changeRankCapScript.emplace(std::move(changeRankCapScript));
+        return *this;
+    }
+
+    /**
+     * 経験値あふれしたときに実行するスクリプトを取得
+     *
+     * @return 経験値あふれしたときに実行するスクリプト
+     */
+    const optional<ScriptSetting>& getOverflowExperienceScript() const
+    {
+        return ensureData().overflowExperienceScript;
+    }
+
+    /**
+     * 経験値あふれしたときに実行するスクリプトを設定
+     *
+     * @param overflowExperienceScript 経験値あふれしたときに実行するスクリプト
+     */
+    void setOverflowExperienceScript(ScriptSetting overflowExperienceScript)
+    {
+        ensureData().overflowExperienceScript.emplace(std::move(overflowExperienceScript));
+    }
+
+    /**
+     * 経験値あふれしたときに実行するスクリプトを設定
+     *
+     * @param overflowExperienceScript 経験値あふれしたときに実行するスクリプト
+     */
+    UpdateNamespaceRequest& withOverflowExperienceScript(ScriptSetting overflowExperienceScript)
+    {
+        ensureData().overflowExperienceScript.emplace(std::move(overflowExperienceScript));
         return *this;
     }
 

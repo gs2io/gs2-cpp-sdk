@@ -47,13 +47,16 @@ private:
         optional<StringHolder> name;
         /** プロパティID */
         optional<StringHolder> propertyId;
+        /** メタデータ */
+        optional<StringHolder> metadata;
 
         Data() = default;
 
         Data(const Data& data) :
             detail::json::IModel(data),
             name(data.name),
-            propertyId(data.propertyId)
+            propertyId(data.propertyId),
+            metadata(data.metadata)
         {
         }
 
@@ -78,6 +81,13 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->propertyId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "metadata") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->metadata.emplace(jsonValue.GetString());
                 }
             }
         }
@@ -170,6 +180,37 @@ public:
         return *this;
     }
 
+    /**
+     * メタデータを取得
+     *
+     * @return メタデータ
+     */
+    const optional<StringHolder>& getMetadata() const
+    {
+        return ensureData().metadata;
+    }
+
+    /**
+     * メタデータを設定
+     *
+     * @param metadata メタデータ
+     */
+    void setMetadata(StringHolder metadata)
+    {
+        ensureData().metadata.emplace(std::move(metadata));
+    }
+
+    /**
+     * メタデータを設定
+     *
+     * @param metadata メタデータ
+     */
+    Slot& withMetadata(StringHolder metadata)
+    {
+        setMetadata(std::move(metadata));
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
@@ -190,6 +231,10 @@ inline bool operator!=(const Slot& lhs, const Slot& lhr)
             return true;
         }
         if (lhs.m_pData->propertyId != lhr.m_pData->propertyId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->metadata != lhr.m_pData->metadata)
         {
             return true;
         }

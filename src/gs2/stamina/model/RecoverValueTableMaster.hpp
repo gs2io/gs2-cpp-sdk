@@ -55,6 +55,10 @@ private:
         optional<StringHolder> experienceModelId;
         /** ランク毎のスタミナ回復量テーブル */
         optional<List<Int32>> values;
+        /** 作成日時 */
+        optional<Int64> createdAt;
+        /** 最終更新日時 */
+        optional<Int64> updatedAt;
 
         Data() = default;
 
@@ -64,7 +68,9 @@ private:
             name(data.name),
             metadata(data.metadata),
             description(data.description),
-            experienceModelId(data.experienceModelId)
+            experienceModelId(data.experienceModelId),
+            createdAt(data.createdAt),
+            updatedAt(data.updatedAt)
         {
             if (data.values)
             {
@@ -128,6 +134,20 @@ private:
                             *this->values += json->GetInt();
                         }
                     }
+                }
+            }
+            else if (std::strcmp(name_, "createdAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->createdAt = jsonValue.GetInt64();
+                }
+            }
+            else if (std::strcmp(name_, "updatedAt") == 0)
+            {
+                if (jsonValue.IsInt64())
+                {
+                    this->updatedAt = jsonValue.GetInt64();
                 }
             }
         }
@@ -344,6 +364,68 @@ public:
         return *this;
     }
 
+    /**
+     * 作成日時を取得
+     *
+     * @return 作成日時
+     */
+    const optional<Int64>& getCreatedAt() const
+    {
+        return ensureData().createdAt;
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    void setCreatedAt(Int64 createdAt)
+    {
+        ensureData().createdAt.emplace(createdAt);
+    }
+
+    /**
+     * 作成日時を設定
+     *
+     * @param createdAt 作成日時
+     */
+    RecoverValueTableMaster& withCreatedAt(Int64 createdAt)
+    {
+        setCreatedAt(createdAt);
+        return *this;
+    }
+
+    /**
+     * 最終更新日時を取得
+     *
+     * @return 最終更新日時
+     */
+    const optional<Int64>& getUpdatedAt() const
+    {
+        return ensureData().updatedAt;
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    void setUpdatedAt(Int64 updatedAt)
+    {
+        ensureData().updatedAt.emplace(updatedAt);
+    }
+
+    /**
+     * 最終更新日時を設定
+     *
+     * @param updatedAt 最終更新日時
+     */
+    RecoverValueTableMaster& withUpdatedAt(Int64 updatedAt)
+    {
+        setUpdatedAt(updatedAt);
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
@@ -380,6 +462,14 @@ inline bool operator!=(const RecoverValueTableMaster& lhs, const RecoverValueTab
             return true;
         }
         if (lhs.m_pData->values != lhr.m_pData->values)
+        {
+            return true;
+        }
+        if (lhs.m_pData->createdAt != lhr.m_pData->createdAt)
+        {
+            return true;
+        }
+        if (lhs.m_pData->updatedAt != lhr.m_pData->updatedAt)
         {
             return true;
         }

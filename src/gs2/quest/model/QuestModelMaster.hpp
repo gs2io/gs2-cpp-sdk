@@ -153,9 +153,9 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->contents.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        Contents item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->contents += std::move(item);
+                        Contents item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->contents += std::move(item_);
                     }
                 }
             }
@@ -173,9 +173,9 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->consumeActions.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        ConsumeAction item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->consumeActions += std::move(item);
+                        ConsumeAction item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->consumeActions += std::move(item_);
                     }
                 }
             }
@@ -186,9 +186,9 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->failedAcquireActions.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        AcquireAction item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->failedAcquireActions += std::move(item);
+                        AcquireAction item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->failedAcquireActions += std::move(item_);
                     }
                 }
             }

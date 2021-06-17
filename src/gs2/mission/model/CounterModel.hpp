@@ -107,9 +107,9 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->scopes.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        CounterScopeModel item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->scopes += std::move(item);
+                        CounterScopeModel item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->scopes += std::move(item_);
                     }
                 }
             }

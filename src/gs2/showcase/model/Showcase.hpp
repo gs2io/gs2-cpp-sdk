@@ -50,10 +50,10 @@ private:
         optional<StringHolder> name;
         /** 商品のメタデータ */
         optional<StringHolder> metadata;
-        /** インベントリに格納可能なアイテムモデル一覧 */
-        optional<List<DisplayItem>> displayItems;
         /** 販売期間とするイベントマスター のGRN */
         optional<StringHolder> salesPeriodEventId;
+        /** インベントリに格納可能なアイテムモデル一覧 */
+        optional<List<DisplayItem>> displayItems;
 
         Data() = default;
 
@@ -100,6 +100,13 @@ private:
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
+            else if (std::strcmp(name_, "salesPeriodEventId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->salesPeriodEventId.emplace(jsonValue.GetString());
+                }
+            }
             else if (std::strcmp(name_, "displayItems") == 0)
             {
                 if (jsonValue.IsArray())
@@ -107,17 +114,10 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->displayItems.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        DisplayItem item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->displayItems += std::move(item);
+                        DisplayItem item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->displayItems += std::move(item_);
                     }
-                }
-            }
-            else if (std::strcmp(name_, "salesPeriodEventId") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->salesPeriodEventId.emplace(jsonValue.GetString());
                 }
             }
         }
@@ -242,37 +242,6 @@ public:
     }
 
     /**
-     * インベントリに格納可能なアイテムモデル一覧を取得
-     *
-     * @return インベントリに格納可能なアイテムモデル一覧
-     */
-    const optional<List<DisplayItem>>& getDisplayItems() const
-    {
-        return ensureData().displayItems;
-    }
-
-    /**
-     * インベントリに格納可能なアイテムモデル一覧を設定
-     *
-     * @param displayItems インベントリに格納可能なアイテムモデル一覧
-     */
-    void setDisplayItems(List<DisplayItem> displayItems)
-    {
-        ensureData().displayItems.emplace(std::move(displayItems));
-    }
-
-    /**
-     * インベントリに格納可能なアイテムモデル一覧を設定
-     *
-     * @param displayItems インベントリに格納可能なアイテムモデル一覧
-     */
-    Showcase& withDisplayItems(List<DisplayItem> displayItems)
-    {
-        setDisplayItems(std::move(displayItems));
-        return *this;
-    }
-
-    /**
      * 販売期間とするイベントマスター のGRNを取得
      *
      * @return 販売期間とするイベントマスター のGRN
@@ -303,6 +272,37 @@ public:
         return *this;
     }
 
+    /**
+     * インベントリに格納可能なアイテムモデル一覧を取得
+     *
+     * @return インベントリに格納可能なアイテムモデル一覧
+     */
+    const optional<List<DisplayItem>>& getDisplayItems() const
+    {
+        return ensureData().displayItems;
+    }
+
+    /**
+     * インベントリに格納可能なアイテムモデル一覧を設定
+     *
+     * @param displayItems インベントリに格納可能なアイテムモデル一覧
+     */
+    void setDisplayItems(List<DisplayItem> displayItems)
+    {
+        ensureData().displayItems.emplace(std::move(displayItems));
+    }
+
+    /**
+     * インベントリに格納可能なアイテムモデル一覧を設定
+     *
+     * @param displayItems インベントリに格納可能なアイテムモデル一覧
+     */
+    Showcase& withDisplayItems(List<DisplayItem> displayItems)
+    {
+        setDisplayItems(std::move(displayItems));
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
@@ -330,11 +330,11 @@ inline bool operator!=(const Showcase& lhs, const Showcase& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->displayItems != lhr.m_pData->displayItems)
+        if (lhs.m_pData->salesPeriodEventId != lhr.m_pData->salesPeriodEventId)
         {
             return true;
         }
-        if (lhs.m_pData->salesPeriodEventId != lhr.m_pData->salesPeriodEventId)
+        if (lhs.m_pData->displayItems != lhr.m_pData->displayItems)
         {
             return true;
         }

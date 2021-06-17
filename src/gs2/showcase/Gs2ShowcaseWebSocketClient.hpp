@@ -2275,6 +2275,11 @@ protected:
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
         }
+        if (obj.getSalesPeriodEventId())
+        {
+            jsonWriter.writePropertyName("salesPeriodEventId");
+            jsonWriter.writeCharArray(*obj.getSalesPeriodEventId());
+        }
         if (obj.getDisplayItems())
         {
             jsonWriter.writePropertyName("displayItems");
@@ -2285,11 +2290,6 @@ protected:
                 write(jsonWriter, list[i]);
             }
             jsonWriter.writeArrayEnd();
-        }
-        if (obj.getSalesPeriodEventId())
-        {
-            jsonWriter.writePropertyName("salesPeriodEventId");
-            jsonWriter.writeCharArray(*obj.getSalesPeriodEventId());
         }
         if (obj.getCreatedAt())
         {
@@ -2486,6 +2486,11 @@ protected:
             jsonWriter.writePropertyName("metadata");
             jsonWriter.writeCharArray(*obj.getMetadata());
         }
+        if (obj.getSalesPeriodEventId())
+        {
+            jsonWriter.writePropertyName("salesPeriodEventId");
+            jsonWriter.writeCharArray(*obj.getSalesPeriodEventId());
+        }
         if (obj.getDisplayItems())
         {
             jsonWriter.writePropertyName("displayItems");
@@ -2496,11 +2501,6 @@ protected:
                 write(jsonWriter, list[i]);
             }
             jsonWriter.writeArrayEnd();
-        }
-        if (obj.getSalesPeriodEventId())
-        {
-            jsonWriter.writePropertyName("salesPeriodEventId");
-            jsonWriter.writeCharArray(*obj.getSalesPeriodEventId());
         }
         jsonWriter.writeObjectEnd();
     }

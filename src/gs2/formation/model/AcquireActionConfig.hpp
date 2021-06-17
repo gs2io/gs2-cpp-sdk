@@ -84,9 +84,9 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->config.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        Config item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->config += std::move(item);
+                        Config item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->config += std::move(item_);
                     }
                 }
             }

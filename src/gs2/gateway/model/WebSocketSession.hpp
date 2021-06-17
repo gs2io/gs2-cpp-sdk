@@ -45,6 +45,8 @@ private:
     public:
         /** コネクションID */
         optional<StringHolder> connectionId;
+        /** API ID */
+        optional<StringHolder> apiId;
         /** オーナーID */
         optional<StringHolder> ownerId;
         /** ネームスペース名 */
@@ -61,6 +63,7 @@ private:
         Data(const Data& data) :
             detail::json::IModel(data),
             connectionId(data.connectionId),
+            apiId(data.apiId),
             ownerId(data.ownerId),
             namespaceName(data.namespaceName),
             userId(data.userId),
@@ -83,6 +86,13 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->connectionId.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "apiId") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->apiId.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "ownerId") == 0)
@@ -176,6 +186,37 @@ public:
     WebSocketSession& withConnectionId(StringHolder connectionId)
     {
         setConnectionId(std::move(connectionId));
+        return *this;
+    }
+
+    /**
+     * API IDを取得
+     *
+     * @return API ID
+     */
+    const optional<StringHolder>& getApiId() const
+    {
+        return ensureData().apiId;
+    }
+
+    /**
+     * API IDを設定
+     *
+     * @param apiId API ID
+     */
+    void setApiId(StringHolder apiId)
+    {
+        ensureData().apiId.emplace(std::move(apiId));
+    }
+
+    /**
+     * API IDを設定
+     *
+     * @param apiId API ID
+     */
+    WebSocketSession& withApiId(StringHolder apiId)
+    {
+        setApiId(std::move(apiId));
         return *this;
     }
 
@@ -350,6 +391,10 @@ inline bool operator!=(const WebSocketSession& lhs, const WebSocketSession& lhr)
             return true;
         }
         if (lhs.m_pData->connectionId != lhr.m_pData->connectionId)
+        {
+            return true;
+        }
+        if (lhs.m_pData->apiId != lhr.m_pData->apiId)
         {
             return true;
         }

@@ -50,12 +50,12 @@ private:
         optional<StringHolder> name;
         /** メタデータ */
         optional<StringHolder> metadata;
-        /** None */
-        optional<FormModel> formModel;
         /** フォームを保存できる初期キャパシティ */
         optional<Int32> initialMaxCapacity;
         /** フォームを保存できるキャパシティ */
         optional<Int32> maxCapacity;
+        /** None */
+        optional<FormModel> formModel;
 
         Data() = default;
 
@@ -103,15 +103,6 @@ private:
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "formModel") == 0)
-            {
-                if (jsonValue.IsObject())
-                {
-                    const auto& jsonObject = detail::json::getObject(jsonValue);
-                    this->formModel.emplace();
-                    detail::json::JsonParser::parse(&this->formModel->getModel(), jsonObject);
-                }
-            }
             else if (std::strcmp(name_, "initialMaxCapacity") == 0)
             {
                 if (jsonValue.IsInt())
@@ -124,6 +115,15 @@ private:
                 if (jsonValue.IsInt())
                 {
                     this->maxCapacity = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "formModel") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->formModel.emplace();
+                    detail::json::JsonParser::parse(&this->formModel->getModel(), jsonObject);
                 }
             }
         }
@@ -248,37 +248,6 @@ public:
     }
 
     /**
-     * Noneを取得
-     *
-     * @return None
-     */
-    const optional<FormModel>& getFormModel() const
-    {
-        return ensureData().formModel;
-    }
-
-    /**
-     * Noneを設定
-     *
-     * @param formModel None
-     */
-    void setFormModel(FormModel formModel)
-    {
-        ensureData().formModel.emplace(std::move(formModel));
-    }
-
-    /**
-     * Noneを設定
-     *
-     * @param formModel None
-     */
-    MoldModel& withFormModel(FormModel formModel)
-    {
-        setFormModel(std::move(formModel));
-        return *this;
-    }
-
-    /**
      * フォームを保存できる初期キャパシティを取得
      *
      * @return フォームを保存できる初期キャパシティ
@@ -340,6 +309,37 @@ public:
         return *this;
     }
 
+    /**
+     * Noneを取得
+     *
+     * @return None
+     */
+    const optional<FormModel>& getFormModel() const
+    {
+        return ensureData().formModel;
+    }
+
+    /**
+     * Noneを設定
+     *
+     * @param formModel None
+     */
+    void setFormModel(FormModel formModel)
+    {
+        ensureData().formModel.emplace(std::move(formModel));
+    }
+
+    /**
+     * Noneを設定
+     *
+     * @param formModel None
+     */
+    MoldModel& withFormModel(FormModel formModel)
+    {
+        setFormModel(std::move(formModel));
+        return *this;
+    }
+
 
     detail::json::IModel& getModel()
     {
@@ -367,15 +367,15 @@ inline bool operator!=(const MoldModel& lhs, const MoldModel& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->formModel != lhr.m_pData->formModel)
-        {
-            return true;
-        }
         if (lhs.m_pData->initialMaxCapacity != lhr.m_pData->initialMaxCapacity)
         {
             return true;
         }
         if (lhs.m_pData->maxCapacity != lhr.m_pData->maxCapacity)
+        {
+            return true;
+        }
+        if (lhs.m_pData->formModel != lhr.m_pData->formModel)
         {
             return true;
         }

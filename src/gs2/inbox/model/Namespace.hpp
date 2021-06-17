@@ -52,7 +52,7 @@ private:
         optional<StringHolder> namespaceId;
         /** オーナーID */
         optional<StringHolder> ownerId;
-        /** プレゼントボックス名 */
+        /** ネームスペース名 */
         optional<StringHolder> name;
         /** 説明文 */
         optional<StringHolder> description;
@@ -321,9 +321,9 @@ public:
     }
 
     /**
-     * プレゼントボックス名を取得
+     * ネームスペース名を取得
      *
-     * @return プレゼントボックス名
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getName() const
     {
@@ -331,9 +331,9 @@ public:
     }
 
     /**
-     * プレゼントボックス名を設定
+     * ネームスペース名を設定
      *
-     * @param name プレゼントボックス名
+     * @param name ネームスペース名
      */
     void setName(StringHolder name)
     {
@@ -341,9 +341,9 @@ public:
     }
 
     /**
-     * プレゼントボックス名を設定
+     * ネームスペース名を設定
      *
-     * @param name プレゼントボックス名
+     * @param name ネームスペース名
      */
     Namespace& withName(StringHolder name)
     {

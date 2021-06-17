@@ -2954,6 +2954,11 @@ protected:
             jsonWriter.writePropertyName("logSetting");
             write(jsonWriter, *obj.getLogSetting());
         }
+        if (obj.getStatus())
+        {
+            jsonWriter.writePropertyName("status");
+            jsonWriter.writeCharArray(*obj.getStatus());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -3362,6 +3367,11 @@ protected:
                 write(jsonWriter, list[i]);
             }
             jsonWriter.writeArrayEnd();
+        }
+        if (obj.getMetadata())
+        {
+            jsonWriter.writePropertyName("metadata");
+            jsonWriter.writeCharArray(*obj.getMetadata());
         }
         if (obj.getCreatedAt())
         {

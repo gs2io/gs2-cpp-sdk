@@ -22,6 +22,7 @@
 #include "User.hpp"
 #include "SecurityPolicy.hpp"
 #include "Identifier.hpp"
+#include "Password.hpp"
 #include "AttachSecurityPolicy.hpp"
 #include "ProjectToken.hpp"
 

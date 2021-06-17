@@ -30,7 +30,7 @@
 namespace gs2 { namespace chat {
 
 /**
- * フォローしているユーザー
+ * 購読
  *
  * @author Game Server Services, Inc.
  *

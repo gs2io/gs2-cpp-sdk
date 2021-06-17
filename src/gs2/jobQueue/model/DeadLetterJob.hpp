@@ -130,9 +130,9 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->result.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        JobResultBody item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->result += std::move(item);
+                        JobResultBody item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->result += std::move(item_);
                     }
                 }
             }

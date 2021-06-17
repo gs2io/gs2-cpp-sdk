@@ -51,12 +51,12 @@ private:
         optional<StringHolder> description;
         /** フォームの保存領域のメタデータ */
         optional<StringHolder> metadata;
-        /** フォーム名 */
-        optional<StringHolder> formModelName;
         /** フォームを保存できる初期キャパシティ */
         optional<Int32> initialMaxCapacity;
         /** フォームを保存できるキャパシティ */
         optional<Int32> maxCapacity;
+        /** フォーム名 */
+        optional<StringHolder> formModelName;
         /** 作成日時 */
         optional<Int64> createdAt;
         /** 最終更新日時 */
@@ -70,9 +70,9 @@ private:
             name(data.name),
             description(data.description),
             metadata(data.metadata),
-            formModelName(data.formModelName),
             initialMaxCapacity(data.initialMaxCapacity),
             maxCapacity(data.maxCapacity),
+            formModelName(data.formModelName),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
@@ -115,13 +115,6 @@ private:
                     this->metadata.emplace(jsonValue.GetString());
                 }
             }
-            else if (std::strcmp(name_, "formModelName") == 0)
-            {
-                if (jsonValue.IsString())
-                {
-                    this->formModelName.emplace(jsonValue.GetString());
-                }
-            }
             else if (std::strcmp(name_, "initialMaxCapacity") == 0)
             {
                 if (jsonValue.IsInt())
@@ -134,6 +127,13 @@ private:
                 if (jsonValue.IsInt())
                 {
                     this->maxCapacity = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "formModelName") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->formModelName.emplace(jsonValue.GetString());
                 }
             }
             else if (std::strcmp(name_, "createdAt") == 0)
@@ -303,37 +303,6 @@ public:
     }
 
     /**
-     * フォーム名を取得
-     *
-     * @return フォーム名
-     */
-    const optional<StringHolder>& getFormModelName() const
-    {
-        return ensureData().formModelName;
-    }
-
-    /**
-     * フォーム名を設定
-     *
-     * @param formModelName フォーム名
-     */
-    void setFormModelName(StringHolder formModelName)
-    {
-        ensureData().formModelName.emplace(std::move(formModelName));
-    }
-
-    /**
-     * フォーム名を設定
-     *
-     * @param formModelName フォーム名
-     */
-    MoldModelMaster& withFormModelName(StringHolder formModelName)
-    {
-        setFormModelName(std::move(formModelName));
-        return *this;
-    }
-
-    /**
      * フォームを保存できる初期キャパシティを取得
      *
      * @return フォームを保存できる初期キャパシティ
@@ -392,6 +361,37 @@ public:
     MoldModelMaster& withMaxCapacity(Int32 maxCapacity)
     {
         setMaxCapacity(maxCapacity);
+        return *this;
+    }
+
+    /**
+     * フォーム名を取得
+     *
+     * @return フォーム名
+     */
+    const optional<StringHolder>& getFormModelName() const
+    {
+        return ensureData().formModelName;
+    }
+
+    /**
+     * フォーム名を設定
+     *
+     * @param formModelName フォーム名
+     */
+    void setFormModelName(StringHolder formModelName)
+    {
+        ensureData().formModelName.emplace(std::move(formModelName));
+    }
+
+    /**
+     * フォーム名を設定
+     *
+     * @param formModelName フォーム名
+     */
+    MoldModelMaster& withFormModelName(StringHolder formModelName)
+    {
+        setFormModelName(std::move(formModelName));
         return *this;
     }
 
@@ -488,15 +488,15 @@ inline bool operator!=(const MoldModelMaster& lhs, const MoldModelMaster& lhr)
         {
             return true;
         }
-        if (lhs.m_pData->formModelName != lhr.m_pData->formModelName)
-        {
-            return true;
-        }
         if (lhs.m_pData->initialMaxCapacity != lhr.m_pData->initialMaxCapacity)
         {
             return true;
         }
         if (lhs.m_pData->maxCapacity != lhr.m_pData->maxCapacity)
+        {
+            return true;
+        }
+        if (lhs.m_pData->formModelName != lhr.m_pData->formModelName)
         {
             return true;
         }

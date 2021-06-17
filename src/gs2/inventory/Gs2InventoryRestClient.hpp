@@ -65,9 +65,22 @@
 #include "request/AcquireItemSetByUserIdRequest.hpp"
 #include "request/ConsumeItemSetRequest.hpp"
 #include "request/ConsumeItemSetByUserIdRequest.hpp"
+#include "request/DescribeReferenceOfRequest.hpp"
+#include "request/DescribeReferenceOfByUserIdRequest.hpp"
+#include "request/GetReferenceOfRequest.hpp"
+#include "request/GetReferenceOfByUserIdRequest.hpp"
+#include "request/VerifyReferenceOfRequest.hpp"
+#include "request/VerifyReferenceOfByUserIdRequest.hpp"
+#include "request/AddReferenceOfRequest.hpp"
+#include "request/AddReferenceOfByUserIdRequest.hpp"
+#include "request/DeleteReferenceOfRequest.hpp"
+#include "request/DeleteReferenceOfByUserIdRequest.hpp"
 #include "request/DeleteItemSetByUserIdRequest.hpp"
 #include "request/AcquireItemSetByStampSheetRequest.hpp"
+#include "request/AddReferenceOfItemSetByStampSheetRequest.hpp"
+#include "request/DeleteReferenceOfItemSetByStampSheetRequest.hpp"
 #include "request/ConsumeItemSetByStampTaskRequest.hpp"
+#include "request/VerifyReferenceOfByStampTaskRequest.hpp"
 #include "result/DescribeNamespacesResult.hpp"
 #include "result/CreateNamespaceResult.hpp"
 #include "result/GetNamespaceStatusResult.hpp"
@@ -110,9 +123,22 @@
 #include "result/AcquireItemSetByUserIdResult.hpp"
 #include "result/ConsumeItemSetResult.hpp"
 #include "result/ConsumeItemSetByUserIdResult.hpp"
+#include "result/DescribeReferenceOfResult.hpp"
+#include "result/DescribeReferenceOfByUserIdResult.hpp"
+#include "result/GetReferenceOfResult.hpp"
+#include "result/GetReferenceOfByUserIdResult.hpp"
+#include "result/VerifyReferenceOfResult.hpp"
+#include "result/VerifyReferenceOfByUserIdResult.hpp"
+#include "result/AddReferenceOfResult.hpp"
+#include "result/AddReferenceOfByUserIdResult.hpp"
+#include "result/DeleteReferenceOfResult.hpp"
+#include "result/DeleteReferenceOfByUserIdResult.hpp"
 #include "result/DeleteItemSetByUserIdResult.hpp"
 #include "result/AcquireItemSetByStampSheetResult.hpp"
+#include "result/AddReferenceOfItemSetByStampSheetResult.hpp"
+#include "result/DeleteReferenceOfItemSetByStampSheetResult.hpp"
 #include "result/ConsumeItemSetByStampTaskResult.hpp"
+#include "result/VerifyReferenceOfByStampTaskResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace inventory {
@@ -593,6 +619,11 @@ private:
                 jsonWriter.writePropertyName("maxCapacity");
                 jsonWriter.writeInt32(*m_Request.getMaxCapacity());
             }
+            if (m_Request.getProtectReferencedItem())
+            {
+                jsonWriter.writePropertyName("protectReferencedItem");
+                jsonWriter.writeBool(*m_Request.getProtectReferencedItem());
+            }
             jsonWriter.writeObjectEnd();
             {
                 gs2HttpTask.setBody(jsonWriter.toString());
@@ -718,6 +749,11 @@ private:
             {
                 jsonWriter.writePropertyName("maxCapacity");
                 jsonWriter.writeInt32(*m_Request.getMaxCapacity());
+            }
+            if (m_Request.getProtectReferencedItem())
+            {
+                jsonWriter.writePropertyName("protectReferencedItem");
+                jsonWriter.writeBool(*m_Request.getProtectReferencedItem());
             }
             jsonWriter.writeObjectEnd();
             {
@@ -2816,6 +2852,734 @@ private:
         ~ConsumeItemSetByUserIdTask() GS2_OVERRIDE = default;
     };
 
+    class DescribeReferenceOfTask : public detail::Gs2RestSessionTask<DescribeReferenceOfResult>
+    {
+    private:
+        DescribeReferenceOfRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/inventory/{inventoryName}/item/{itemName}/{itemSetName}/reference";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getInventoryName();
+                url.replace("{inventoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemName();
+                url.replace("{itemName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemSetName();
+                url.replace("{itemSetName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeReferenceOfTask(
+            DescribeReferenceOfRequest request,
+            Gs2RestSessionTask<DescribeReferenceOfResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeReferenceOfResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeReferenceOfTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeReferenceOfByUserIdTask : public detail::Gs2RestSessionTask<DescribeReferenceOfByUserIdResult>
+    {
+    private:
+        DescribeReferenceOfByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/inventory/{inventoryName}/item/{itemName}/{itemSetName}/reference";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getInventoryName();
+                url.replace("{inventoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemName();
+                url.replace("{itemName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemSetName();
+                url.replace("{itemSetName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribeReferenceOfByUserIdTask(
+            DescribeReferenceOfByUserIdRequest request,
+            Gs2RestSessionTask<DescribeReferenceOfByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribeReferenceOfByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeReferenceOfByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class GetReferenceOfTask : public detail::Gs2RestSessionTask<GetReferenceOfResult>
+    {
+    private:
+        GetReferenceOfRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/inventory/{inventoryName}/item/{itemName}/{itemSetName}/reference/{referenceOf}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getInventoryName();
+                url.replace("{inventoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemName();
+                url.replace("{itemName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemSetName();
+                url.replace("{itemSetName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getReferenceOf();
+                url.replace("{referenceOf}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetReferenceOfTask(
+            GetReferenceOfRequest request,
+            Gs2RestSessionTask<GetReferenceOfResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetReferenceOfResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetReferenceOfTask() GS2_OVERRIDE = default;
+    };
+
+    class GetReferenceOfByUserIdTask : public detail::Gs2RestSessionTask<GetReferenceOfByUserIdResult>
+    {
+    private:
+        GetReferenceOfByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/inventory/{inventoryName}/item/{itemName}/{itemSetName}/reference/{referenceOf}";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getInventoryName();
+                url.replace("{inventoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemName();
+                url.replace("{itemName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemSetName();
+                url.replace("{itemSetName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getReferenceOf();
+                url.replace("{referenceOf}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetReferenceOfByUserIdTask(
+            GetReferenceOfByUserIdRequest request,
+            Gs2RestSessionTask<GetReferenceOfByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetReferenceOfByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetReferenceOfByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class VerifyReferenceOfTask : public detail::Gs2RestSessionTask<VerifyReferenceOfResult>
+    {
+    private:
+        VerifyReferenceOfRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/inventory/{inventoryName}/item/{itemName}/{itemSetName}/reference/verify";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getInventoryName();
+                url.replace("{inventoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemName();
+                url.replace("{itemName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemSetName();
+                url.replace("{itemSetName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getReferenceOf();
+                url.replace("{referenceOf}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getVerifyType();
+                url.replace("{verifyType}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        VerifyReferenceOfTask(
+            VerifyReferenceOfRequest request,
+            Gs2RestSessionTask<VerifyReferenceOfResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<VerifyReferenceOfResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~VerifyReferenceOfTask() GS2_OVERRIDE = default;
+    };
+
+    class VerifyReferenceOfByUserIdTask : public detail::Gs2RestSessionTask<VerifyReferenceOfByUserIdResult>
+    {
+    private:
+        VerifyReferenceOfByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/inventory/{inventoryName}/item/{itemName}/{itemSetName}/reference/verify";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getInventoryName();
+                url.replace("{inventoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemName();
+                url.replace("{itemName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemSetName();
+                url.replace("{itemSetName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getReferenceOf();
+                url.replace("{referenceOf}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getVerifyType();
+                url.replace("{verifyType}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        VerifyReferenceOfByUserIdTask(
+            VerifyReferenceOfByUserIdRequest request,
+            Gs2RestSessionTask<VerifyReferenceOfByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<VerifyReferenceOfByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~VerifyReferenceOfByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class AddReferenceOfTask : public detail::Gs2RestSessionTask<AddReferenceOfResult>
+    {
+    private:
+        AddReferenceOfRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/inventory/{inventoryName}/item/{itemName}/{itemSetName}/reference";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getInventoryName();
+                url.replace("{inventoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemName();
+                url.replace("{itemName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemSetName();
+                url.replace("{itemSetName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getReferenceOf())
+            {
+                jsonWriter.writePropertyName("referenceOf");
+                jsonWriter.writeCharArray(*m_Request.getReferenceOf());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        AddReferenceOfTask(
+            AddReferenceOfRequest request,
+            Gs2RestSessionTask<AddReferenceOfResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<AddReferenceOfResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~AddReferenceOfTask() GS2_OVERRIDE = default;
+    };
+
+    class AddReferenceOfByUserIdTask : public detail::Gs2RestSessionTask<AddReferenceOfByUserIdResult>
+    {
+    private:
+        AddReferenceOfByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/inventory/{inventoryName}/item/{itemName}/{itemSetName}/reference";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getInventoryName();
+                url.replace("{inventoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemName();
+                url.replace("{itemName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemSetName();
+                url.replace("{itemSetName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getReferenceOf())
+            {
+                jsonWriter.writePropertyName("referenceOf");
+                jsonWriter.writeCharArray(*m_Request.getReferenceOf());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        AddReferenceOfByUserIdTask(
+            AddReferenceOfByUserIdRequest request,
+            Gs2RestSessionTask<AddReferenceOfByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<AddReferenceOfByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~AddReferenceOfByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteReferenceOfTask : public detail::Gs2RestSessionTask<DeleteReferenceOfResult>
+    {
+    private:
+        DeleteReferenceOfRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/me/inventory/{inventoryName}/item/{itemName}/{itemSetName}/reference";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getInventoryName();
+                url.replace("{inventoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemName();
+                url.replace("{itemName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemSetName();
+                url.replace("{itemSetName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("{}");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-ACCESS-TOKEN", *m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        DeleteReferenceOfTask(
+            DeleteReferenceOfRequest request,
+            Gs2RestSessionTask<DeleteReferenceOfResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DeleteReferenceOfResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteReferenceOfTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteReferenceOfByUserIdTask : public detail::Gs2RestSessionTask<DeleteReferenceOfByUserIdResult>
+    {
+    private:
+        DeleteReferenceOfByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/{namespaceName}/user/{userId}/inventory/{inventoryName}/item/{itemName}/{itemSetName}/reference";
+            {
+                auto& value = m_Request.getNamespaceName();
+                url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getInventoryName();
+                url.replace("{inventoryName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getUserId();
+                url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemName();
+                url.replace("{itemName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            {
+                auto& value = m_Request.getItemSetName();
+                url.replace("{itemSetName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("{}");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        DeleteReferenceOfByUserIdTask(
+            DeleteReferenceOfByUserIdRequest request,
+            Gs2RestSessionTask<DeleteReferenceOfByUserIdResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DeleteReferenceOfByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteReferenceOfByUserIdTask() GS2_OVERRIDE = default;
+    };
+
     class DeleteItemSetByUserIdTask : public detail::Gs2RestSessionTask<DeleteItemSetByUserIdResult>
     {
     private:
@@ -2951,6 +3715,128 @@ private:
         ~AcquireItemSetByStampSheetTask() GS2_OVERRIDE = default;
     };
 
+    class AddReferenceOfItemSetByStampSheetTask : public detail::Gs2RestSessionTask<AddReferenceOfItemSetByStampSheetResult>
+    {
+    private:
+        AddReferenceOfItemSetByStampSheetRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stamp/item/reference/add";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        AddReferenceOfItemSetByStampSheetTask(
+            AddReferenceOfItemSetByStampSheetRequest request,
+            Gs2RestSessionTask<AddReferenceOfItemSetByStampSheetResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<AddReferenceOfItemSetByStampSheetResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~AddReferenceOfItemSetByStampSheetTask() GS2_OVERRIDE = default;
+    };
+
+    class DeleteReferenceOfItemSetByStampSheetTask : public detail::Gs2RestSessionTask<DeleteReferenceOfItemSetByStampSheetResult>
+    {
+    private:
+        DeleteReferenceOfItemSetByStampSheetRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stamp/item/reference/delete";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampSheet())
+            {
+                jsonWriter.writePropertyName("stampSheet");
+                jsonWriter.writeCharArray(*m_Request.getStampSheet());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        DeleteReferenceOfItemSetByStampSheetTask(
+            DeleteReferenceOfItemSetByStampSheetRequest request,
+            Gs2RestSessionTask<DeleteReferenceOfItemSetByStampSheetResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DeleteReferenceOfItemSetByStampSheetResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeleteReferenceOfItemSetByStampSheetTask() GS2_OVERRIDE = default;
+    };
+
     class ConsumeItemSetByStampTaskTask : public detail::Gs2RestSessionTask<ConsumeItemSetByStampTaskResult>
     {
     private:
@@ -3010,6 +3896,67 @@ private:
         {}
 
         ~ConsumeItemSetByStampTaskTask() GS2_OVERRIDE = default;
+    };
+
+    class VerifyReferenceOfByStampTaskTask : public detail::Gs2RestSessionTask<VerifyReferenceOfByStampTaskResult>
+    {
+    private:
+        VerifyReferenceOfByStampTaskRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "inventory";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/stamp/item/verify";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getStampTask())
+            {
+                jsonWriter.writePropertyName("stampTask");
+                jsonWriter.writeCharArray(*m_Request.getStampTask());
+            }
+            if (m_Request.getKeyId())
+            {
+                jsonWriter.writePropertyName("keyId");
+                jsonWriter.writeCharArray(*m_Request.getKeyId());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        VerifyReferenceOfByStampTaskTask(
+            VerifyReferenceOfByStampTaskRequest request,
+            Gs2RestSessionTask<VerifyReferenceOfByStampTaskResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<VerifyReferenceOfByStampTaskResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~VerifyReferenceOfByStampTaskTask() GS2_OVERRIDE = default;
     };
 
 protected:
@@ -3102,6 +4049,11 @@ protected:
             jsonWriter.writePropertyName("maxCapacity");
             jsonWriter.writeInt32(*obj.getMaxCapacity());
         }
+        if (obj.getProtectReferencedItem())
+        {
+            jsonWriter.writePropertyName("protectReferencedItem");
+            jsonWriter.writeBool(*obj.getProtectReferencedItem());
+        }
         if (obj.getCreatedAt())
         {
             jsonWriter.writePropertyName("createdAt");
@@ -3142,6 +4094,11 @@ protected:
         {
             jsonWriter.writePropertyName("maxCapacity");
             jsonWriter.writeInt32(*obj.getMaxCapacity());
+        }
+        if (obj.getProtectReferencedItem())
+        {
+            jsonWriter.writePropertyName("protectReferencedItem");
+            jsonWriter.writeBool(*obj.getProtectReferencedItem());
         }
         if (obj.getItemModels())
         {
@@ -3339,6 +4296,17 @@ protected:
             jsonWriter.writePropertyName("count");
             jsonWriter.writeInt64(*obj.getCount());
         }
+        if (obj.getReferenceOf())
+        {
+            jsonWriter.writePropertyName("referenceOf");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getReferenceOf();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeCharArray(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
         if (obj.getSortValue())
         {
             jsonWriter.writePropertyName("sortValue");
@@ -3420,6 +4388,17 @@ protected:
             for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
             {
                 jsonWriter.writeInt64(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetReferenceOfList())
+        {
+            jsonWriter.writePropertyName("itemSetReferenceOfList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetReferenceOfList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt32(list[i]);
             }
             jsonWriter.writeArrayEnd();
         }
@@ -4096,6 +5075,126 @@ public:
     }
 
 	/**
+	 * 参照元の一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeReferenceOf(DescribeReferenceOfRequest request, std::function<void(AsyncDescribeReferenceOfResult)> callback)
+    {
+        DescribeReferenceOfTask& task = *new DescribeReferenceOfTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 参照元の一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeReferenceOfByUserId(DescribeReferenceOfByUserIdRequest request, std::function<void(AsyncDescribeReferenceOfByUserIdResult)> callback)
+    {
+        DescribeReferenceOfByUserIdTask& task = *new DescribeReferenceOfByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 参照元を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getReferenceOf(GetReferenceOfRequest request, std::function<void(AsyncGetReferenceOfResult)> callback)
+    {
+        GetReferenceOfTask& task = *new GetReferenceOfTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 参照元を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getReferenceOfByUserId(GetReferenceOfByUserIdRequest request, std::function<void(AsyncGetReferenceOfByUserIdResult)> callback)
+    {
+        GetReferenceOfByUserIdTask& task = *new GetReferenceOfByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 参照元に関する検証<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void verifyReferenceOf(VerifyReferenceOfRequest request, std::function<void(AsyncVerifyReferenceOfResult)> callback)
+    {
+        VerifyReferenceOfTask& task = *new VerifyReferenceOfTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 参照元に関する検証<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void verifyReferenceOfByUserId(VerifyReferenceOfByUserIdRequest request, std::function<void(AsyncVerifyReferenceOfByUserIdResult)> callback)
+    {
+        VerifyReferenceOfByUserIdTask& task = *new VerifyReferenceOfByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 参照元を追加<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void addReferenceOf(AddReferenceOfRequest request, std::function<void(AsyncAddReferenceOfResult)> callback)
+    {
+        AddReferenceOfTask& task = *new AddReferenceOfTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 参照元を追加<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void addReferenceOfByUserId(AddReferenceOfByUserIdRequest request, std::function<void(AsyncAddReferenceOfByUserIdResult)> callback)
+    {
+        AddReferenceOfByUserIdTask& task = *new AddReferenceOfByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 参照元を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteReferenceOf(DeleteReferenceOfRequest request, std::function<void(AsyncDeleteReferenceOfResult)> callback)
+    {
+        DeleteReferenceOfTask& task = *new DeleteReferenceOfTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * 参照元を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteReferenceOfByUserId(DeleteReferenceOfByUserIdRequest request, std::function<void(AsyncDeleteReferenceOfByUserIdResult)> callback)
+    {
+        DeleteReferenceOfByUserIdTask& task = *new DeleteReferenceOfByUserIdTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
 	 * 有効期限ごとのアイテム所持数量を削除<br>
 	 *
      * @param callback コールバック関数
@@ -4120,6 +5219,30 @@ public:
     }
 
 	/**
+	 * スタンプシートでアイテムに参照元を追加<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void addReferenceOfItemSetByStampSheet(AddReferenceOfItemSetByStampSheetRequest request, std::function<void(AsyncAddReferenceOfItemSetByStampSheetResult)> callback)
+    {
+        AddReferenceOfItemSetByStampSheetTask& task = *new AddReferenceOfItemSetByStampSheetTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * スタンプシートでアイテムの参照元を削除<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deleteReferenceOfItemSetByStampSheet(DeleteReferenceOfItemSetByStampSheetRequest request, std::function<void(AsyncDeleteReferenceOfItemSetByStampSheetResult)> callback)
+    {
+        DeleteReferenceOfItemSetByStampSheetTask& task = *new DeleteReferenceOfItemSetByStampSheetTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
 	 * スタンプシートでインベントリのアイテムを消費<br>
 	 *
      * @param callback コールバック関数
@@ -4128,6 +5251,18 @@ public:
     void consumeItemSetByStampTask(ConsumeItemSetByStampTaskRequest request, std::function<void(AsyncConsumeItemSetByStampTaskResult)> callback)
     {
         ConsumeItemSetByStampTaskTask& task = *new ConsumeItemSetByStampTaskTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * スタンプシートでインベントリのアイテムを検証<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void verifyReferenceOfByStampTask(VerifyReferenceOfByStampTaskRequest request, std::function<void(AsyncVerifyReferenceOfByStampTaskResult)> callback)
+    {
+        VerifyReferenceOfByStampTaskTask& task = *new VerifyReferenceOfByStampTaskTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 

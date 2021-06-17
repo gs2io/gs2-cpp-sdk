@@ -3912,6 +3912,16 @@ protected:
             }
             jsonWriter.writeArrayEnd();
         }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
         jsonWriter.writeObjectEnd();
     }
 
@@ -3954,6 +3964,16 @@ protected:
             }
             jsonWriter.writeArrayEnd();
         }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
         jsonWriter.writeObjectEnd();
     }
 
@@ -3995,6 +4015,16 @@ protected:
                 jsonWriter.writeInt32(list[i]);
             }
             jsonWriter.writeArrayEnd();
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
         }
         jsonWriter.writeObjectEnd();
     }

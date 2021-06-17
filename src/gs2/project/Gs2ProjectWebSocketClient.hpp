@@ -35,6 +35,7 @@
 #include "request/CreateProjectRequest.hpp"
 #include "request/GetProjectRequest.hpp"
 #include "request/GetProjectTokenRequest.hpp"
+#include "request/GetProjectTokenByIdentifierRequest.hpp"
 #include "request/UpdateProjectRequest.hpp"
 #include "request/DeleteProjectRequest.hpp"
 #include "request/DescribeBillingMethodsRequest.hpp"
@@ -56,6 +57,7 @@
 #include "result/CreateProjectResult.hpp"
 #include "result/GetProjectResult.hpp"
 #include "result/GetProjectTokenResult.hpp"
+#include "result/GetProjectTokenByIdentifierResult.hpp"
 #include "result/UpdateProjectResult.hpp"
 #include "result/DeleteProjectResult.hpp"
 #include "result/DescribeBillingMethodsResult.hpp"
@@ -779,6 +781,72 @@ private:
         {}
 
         ~GetProjectTokenTask() GS2_OVERRIDE = default;
+    };
+
+    class GetProjectTokenByIdentifierTask : public detail::Gs2WebSocketSessionTask<GetProjectTokenByIdentifierResult>
+    {
+    private:
+        GetProjectTokenByIdentifierRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "project";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getProjectTokenByIdentifier";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getAccountName())
+            {
+                jsonWriter.writePropertyName("accountName");
+                jsonWriter.writeCharArray(*m_Request.getAccountName());
+            }
+            if (m_Request.getProjectName())
+            {
+                jsonWriter.writePropertyName("projectName");
+                jsonWriter.writeCharArray(*m_Request.getProjectName());
+            }
+            if (m_Request.getUserName())
+            {
+                jsonWriter.writePropertyName("userName");
+                jsonWriter.writeCharArray(*m_Request.getUserName());
+            }
+            if (m_Request.getPassword())
+            {
+                jsonWriter.writePropertyName("password");
+                jsonWriter.writeCharArray(*m_Request.getPassword());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+        }
+
+    public:
+        GetProjectTokenByIdentifierTask(
+            GetProjectTokenByIdentifierRequest request,
+            Gs2WebSocketSessionTask<GetProjectTokenByIdentifierResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetProjectTokenByIdentifierResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetProjectTokenByIdentifierTask() GS2_OVERRIDE = default;
     };
 
     class UpdateProjectTask : public detail::Gs2WebSocketSessionTask<UpdateProjectResult>
@@ -1819,6 +1887,18 @@ public:
     void getProjectToken(GetProjectTokenRequest request, std::function<void(AsyncGetProjectTokenResult)> callback)
     {
         GetProjectTokenTask& task = *new GetProjectTokenTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * プロジェクトトークンを発行します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getProjectTokenByIdentifier(GetProjectTokenByIdentifierRequest request, std::function<void(AsyncGetProjectTokenByIdentifierResult)> callback)
+    {
+        GetProjectTokenByIdentifierTask& task = *new GetProjectTokenByIdentifierTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

@@ -44,9 +44,15 @@
 #include "request/GetSubscribeByUserIdRequest.hpp"
 #include "request/UnsubscribeRequest.hpp"
 #include "request/UnsubscribeByUserIdRequest.hpp"
+#include "request/DescribeScoresRequest.hpp"
+#include "request/DescribeScoresByUserIdRequest.hpp"
+#include "request/GetScoreRequest.hpp"
+#include "request/GetScoreByUserIdRequest.hpp"
 #include "request/DescribeRankingsRequest.hpp"
 #include "request/DescribeRankingssByUserIdRequest.hpp"
 #include "request/DescribeNearRankingsRequest.hpp"
+#include "request/GetRankingRequest.hpp"
+#include "request/GetRankingByUserIdRequest.hpp"
 #include "request/PutScoreRequest.hpp"
 #include "request/PutScoreByUserIdRequest.hpp"
 #include "request/ExportMasterRequest.hpp"
@@ -74,9 +80,15 @@
 #include "result/GetSubscribeByUserIdResult.hpp"
 #include "result/UnsubscribeResult.hpp"
 #include "result/UnsubscribeByUserIdResult.hpp"
+#include "result/DescribeScoresResult.hpp"
+#include "result/DescribeScoresByUserIdResult.hpp"
+#include "result/GetScoreResult.hpp"
+#include "result/GetScoreByUserIdResult.hpp"
 #include "result/DescribeRankingsResult.hpp"
 #include "result/DescribeRankingssByUserIdResult.hpp"
 #include "result/DescribeNearRankingsResult.hpp"
+#include "result/GetRankingResult.hpp"
+#include "result/GetRankingByUserIdResult.hpp"
 #include "result/PutScoreResult.hpp"
 #include "result/PutScoreByUserIdResult.hpp"
 #include "result/ExportMasterResult.hpp"
@@ -668,10 +680,35 @@ private:
                 jsonWriter.writePropertyName("uniqueByUserId");
                 jsonWriter.writeBool(*m_Request.getUniqueByUserId());
             }
+            if (m_Request.getCalculateFixedTimingHour())
+            {
+                jsonWriter.writePropertyName("calculateFixedTimingHour");
+                jsonWriter.writeInt32(*m_Request.getCalculateFixedTimingHour());
+            }
+            if (m_Request.getCalculateFixedTimingMinute())
+            {
+                jsonWriter.writePropertyName("calculateFixedTimingMinute");
+                jsonWriter.writeInt32(*m_Request.getCalculateFixedTimingMinute());
+            }
             if (m_Request.getCalculateIntervalMinutes())
             {
                 jsonWriter.writePropertyName("calculateIntervalMinutes");
                 jsonWriter.writeInt32(*m_Request.getCalculateIntervalMinutes());
+            }
+            if (m_Request.getEntryPeriodEventId())
+            {
+                jsonWriter.writePropertyName("entryPeriodEventId");
+                jsonWriter.writeCharArray(*m_Request.getEntryPeriodEventId());
+            }
+            if (m_Request.getAccessPeriodEventId())
+            {
+                jsonWriter.writePropertyName("accessPeriodEventId");
+                jsonWriter.writeCharArray(*m_Request.getAccessPeriodEventId());
+            }
+            if (m_Request.getGeneration())
+            {
+                jsonWriter.writePropertyName("generation");
+                jsonWriter.writeCharArray(*m_Request.getGeneration());
             }
             if (m_Request.getRequestId())
             {
@@ -820,10 +857,35 @@ private:
                 jsonWriter.writePropertyName("uniqueByUserId");
                 jsonWriter.writeBool(*m_Request.getUniqueByUserId());
             }
+            if (m_Request.getCalculateFixedTimingHour())
+            {
+                jsonWriter.writePropertyName("calculateFixedTimingHour");
+                jsonWriter.writeInt32(*m_Request.getCalculateFixedTimingHour());
+            }
+            if (m_Request.getCalculateFixedTimingMinute())
+            {
+                jsonWriter.writePropertyName("calculateFixedTimingMinute");
+                jsonWriter.writeInt32(*m_Request.getCalculateFixedTimingMinute());
+            }
             if (m_Request.getCalculateIntervalMinutes())
             {
                 jsonWriter.writePropertyName("calculateIntervalMinutes");
                 jsonWriter.writeInt32(*m_Request.getCalculateIntervalMinutes());
+            }
+            if (m_Request.getEntryPeriodEventId())
+            {
+                jsonWriter.writePropertyName("entryPeriodEventId");
+                jsonWriter.writeCharArray(*m_Request.getEntryPeriodEventId());
+            }
+            if (m_Request.getAccessPeriodEventId())
+            {
+                jsonWriter.writePropertyName("accessPeriodEventId");
+                jsonWriter.writeCharArray(*m_Request.getAccessPeriodEventId());
+            }
+            if (m_Request.getGeneration())
+            {
+                jsonWriter.writePropertyName("generation");
+                jsonWriter.writeCharArray(*m_Request.getGeneration());
             }
             if (m_Request.getRequestId())
             {
@@ -1458,6 +1520,320 @@ private:
         ~UnsubscribeByUserIdTask() GS2_OVERRIDE = default;
     };
 
+    class DescribeScoresTask : public detail::Gs2WebSocketSessionTask<DescribeScoresResult>
+    {
+    private:
+        DescribeScoresRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "ranking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "score";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeScores";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCategoryName())
+            {
+                jsonWriter.writePropertyName("categoryName");
+                jsonWriter.writeCharArray(*m_Request.getCategoryName());
+            }
+            if (m_Request.getScorerUserId())
+            {
+                jsonWriter.writePropertyName("scorerUserId");
+                jsonWriter.writeCharArray(*m_Request.getScorerUserId());
+            }
+            if (m_Request.getPageToken())
+            {
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DescribeScoresTask(
+            DescribeScoresRequest request,
+            Gs2WebSocketSessionTask<DescribeScoresResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeScoresResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeScoresTask() GS2_OVERRIDE = default;
+    };
+
+    class DescribeScoresByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeScoresByUserIdResult>
+    {
+    private:
+        DescribeScoresByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "ranking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "score";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "describeScoresByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCategoryName())
+            {
+                jsonWriter.writePropertyName("categoryName");
+                jsonWriter.writeCharArray(*m_Request.getCategoryName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getScorerUserId())
+            {
+                jsonWriter.writePropertyName("scorerUserId");
+                jsonWriter.writeCharArray(*m_Request.getScorerUserId());
+            }
+            if (m_Request.getPageToken())
+            {
+                jsonWriter.writePropertyName("pageToken");
+                jsonWriter.writeCharArray(*m_Request.getPageToken());
+            }
+            if (m_Request.getLimit())
+            {
+                jsonWriter.writePropertyName("limit");
+                jsonWriter.writeInt64(*m_Request.getLimit());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        DescribeScoresByUserIdTask(
+            DescribeScoresByUserIdRequest request,
+            Gs2WebSocketSessionTask<DescribeScoresByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<DescribeScoresByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribeScoresByUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class GetScoreTask : public detail::Gs2WebSocketSessionTask<GetScoreResult>
+    {
+    private:
+        GetScoreRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "ranking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "score";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getScore";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCategoryName())
+            {
+                jsonWriter.writePropertyName("categoryName");
+                jsonWriter.writeCharArray(*m_Request.getCategoryName());
+            }
+            if (m_Request.getScorerUserId())
+            {
+                jsonWriter.writePropertyName("scorerUserId");
+                jsonWriter.writeCharArray(*m_Request.getScorerUserId());
+            }
+            if (m_Request.getUniqueId())
+            {
+                jsonWriter.writePropertyName("uniqueId");
+                jsonWriter.writeCharArray(*m_Request.getUniqueId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetScoreTask(
+            GetScoreRequest request,
+            Gs2WebSocketSessionTask<GetScoreResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetScoreResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetScoreTask() GS2_OVERRIDE = default;
+    };
+
+    class GetScoreByUserIdTask : public detail::Gs2WebSocketSessionTask<GetScoreByUserIdResult>
+    {
+    private:
+        GetScoreByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "ranking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "score";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getScoreByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCategoryName())
+            {
+                jsonWriter.writePropertyName("categoryName");
+                jsonWriter.writeCharArray(*m_Request.getCategoryName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getScorerUserId())
+            {
+                jsonWriter.writePropertyName("scorerUserId");
+                jsonWriter.writeCharArray(*m_Request.getScorerUserId());
+            }
+            if (m_Request.getUniqueId())
+            {
+                jsonWriter.writePropertyName("uniqueId");
+                jsonWriter.writeCharArray(*m_Request.getUniqueId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetScoreByUserIdTask(
+            GetScoreByUserIdRequest request,
+            Gs2WebSocketSessionTask<GetScoreByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetScoreByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetScoreByUserIdTask() GS2_OVERRIDE = default;
+    };
+
     class DescribeRankingsTask : public detail::Gs2WebSocketSessionTask<DescribeRankingsResult>
     {
     private:
@@ -1679,6 +2055,158 @@ private:
         {}
 
         ~DescribeNearRankingsTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRankingTask : public detail::Gs2WebSocketSessionTask<GetRankingResult>
+    {
+    private:
+        GetRankingRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "ranking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "ranking";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getRanking";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCategoryName())
+            {
+                jsonWriter.writePropertyName("categoryName");
+                jsonWriter.writeCharArray(*m_Request.getCategoryName());
+            }
+            if (m_Request.getScorerUserId())
+            {
+                jsonWriter.writePropertyName("scorerUserId");
+                jsonWriter.writeCharArray(*m_Request.getScorerUserId());
+            }
+            if (m_Request.getUniqueId())
+            {
+                jsonWriter.writePropertyName("uniqueId");
+                jsonWriter.writeCharArray(*m_Request.getUniqueId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetRankingTask(
+            GetRankingRequest request,
+            Gs2WebSocketSessionTask<GetRankingResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetRankingResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRankingTask() GS2_OVERRIDE = default;
+    };
+
+    class GetRankingByUserIdTask : public detail::Gs2WebSocketSessionTask<GetRankingByUserIdResult>
+    {
+    private:
+        GetRankingByUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "ranking";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "ranking";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "getRankingByUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getCategoryName())
+            {
+                jsonWriter.writePropertyName("categoryName");
+                jsonWriter.writeCharArray(*m_Request.getCategoryName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getScorerUserId())
+            {
+                jsonWriter.writePropertyName("scorerUserId");
+                jsonWriter.writeCharArray(*m_Request.getScorerUserId());
+            }
+            if (m_Request.getUniqueId())
+            {
+                jsonWriter.writePropertyName("uniqueId");
+                jsonWriter.writeCharArray(*m_Request.getUniqueId());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        GetRankingByUserIdTask(
+            GetRankingByUserIdRequest request,
+            Gs2WebSocketSessionTask<GetRankingByUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<GetRankingByUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetRankingByUserIdTask() GS2_OVERRIDE = default;
     };
 
     class PutScoreTask : public detail::Gs2WebSocketSessionTask<PutScoreResult>
@@ -2143,10 +2671,35 @@ protected:
             jsonWriter.writePropertyName("uniqueByUserId");
             jsonWriter.writeBool(*obj.getUniqueByUserId());
         }
+        if (obj.getCalculateFixedTimingHour())
+        {
+            jsonWriter.writePropertyName("calculateFixedTimingHour");
+            jsonWriter.writeInt32(*obj.getCalculateFixedTimingHour());
+        }
+        if (obj.getCalculateFixedTimingMinute())
+        {
+            jsonWriter.writePropertyName("calculateFixedTimingMinute");
+            jsonWriter.writeInt32(*obj.getCalculateFixedTimingMinute());
+        }
         if (obj.getCalculateIntervalMinutes())
         {
             jsonWriter.writePropertyName("calculateIntervalMinutes");
             jsonWriter.writeInt32(*obj.getCalculateIntervalMinutes());
+        }
+        if (obj.getEntryPeriodEventId())
+        {
+            jsonWriter.writePropertyName("entryPeriodEventId");
+            jsonWriter.writeCharArray(*obj.getEntryPeriodEventId());
+        }
+        if (obj.getAccessPeriodEventId())
+        {
+            jsonWriter.writePropertyName("accessPeriodEventId");
+            jsonWriter.writeCharArray(*obj.getAccessPeriodEventId());
+        }
+        if (obj.getGeneration())
+        {
+            jsonWriter.writePropertyName("generation");
+            jsonWriter.writeCharArray(*obj.getGeneration());
         }
         jsonWriter.writeObjectEnd();
     }
@@ -2199,10 +2752,35 @@ protected:
             jsonWriter.writePropertyName("uniqueByUserId");
             jsonWriter.writeBool(*obj.getUniqueByUserId());
         }
+        if (obj.getCalculateFixedTimingHour())
+        {
+            jsonWriter.writePropertyName("calculateFixedTimingHour");
+            jsonWriter.writeInt32(*obj.getCalculateFixedTimingHour());
+        }
+        if (obj.getCalculateFixedTimingMinute())
+        {
+            jsonWriter.writePropertyName("calculateFixedTimingMinute");
+            jsonWriter.writeInt32(*obj.getCalculateFixedTimingMinute());
+        }
         if (obj.getCalculateIntervalMinutes())
         {
             jsonWriter.writePropertyName("calculateIntervalMinutes");
             jsonWriter.writeInt32(*obj.getCalculateIntervalMinutes());
+        }
+        if (obj.getEntryPeriodEventId())
+        {
+            jsonWriter.writePropertyName("entryPeriodEventId");
+            jsonWriter.writeCharArray(*obj.getEntryPeriodEventId());
+        }
+        if (obj.getAccessPeriodEventId())
+        {
+            jsonWriter.writePropertyName("accessPeriodEventId");
+            jsonWriter.writeCharArray(*obj.getAccessPeriodEventId());
+        }
+        if (obj.getGeneration())
+        {
+            jsonWriter.writePropertyName("generation");
+            jsonWriter.writeCharArray(*obj.getGeneration());
         }
         if (obj.getCreatedAt())
         {
@@ -2737,6 +3315,54 @@ public:
     }
 
 	/**
+	 * スコアの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeScores(DescribeScoresRequest request, std::function<void(AsyncDescribeScoresResult)> callback)
+    {
+        DescribeScoresTask& task = *new DescribeScoresTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スコアの一覧を取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describeScoresByUserId(DescribeScoresByUserIdRequest request, std::function<void(AsyncDescribeScoresByUserIdResult)> callback)
+    {
+        DescribeScoresByUserIdTask& task = *new DescribeScoresByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スコアを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getScore(GetScoreRequest request, std::function<void(AsyncGetScoreResult)> callback)
+    {
+        GetScoreTask& task = *new GetScoreTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * スコアを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getScoreByUserId(GetScoreByUserIdRequest request, std::function<void(AsyncGetScoreByUserIdResult)> callback)
+    {
+        GetScoreByUserIdTask& task = *new GetScoreByUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
 	 * ランキングを取得<br>
 	 *
      * @param callback コールバック関数
@@ -2771,6 +3397,30 @@ public:
     void describeNearRankings(DescribeNearRankingsRequest request, std::function<void(AsyncDescribeNearRankingsResult)> callback)
     {
         DescribeNearRankingsTask& task = *new DescribeNearRankingsTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ランキングを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRanking(GetRankingRequest request, std::function<void(AsyncGetRankingResult)> callback)
+    {
+        GetRankingTask& task = *new GetRankingTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ランキングを取得<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getRankingByUserId(GetRankingByUserIdRequest request, std::function<void(AsyncGetRankingByUserIdResult)> callback)
+    {
+        GetRankingByUserIdTask& task = *new GetRankingByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

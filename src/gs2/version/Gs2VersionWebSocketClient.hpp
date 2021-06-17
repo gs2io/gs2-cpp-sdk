@@ -191,6 +191,16 @@ private:
                 jsonWriter.writePropertyName("assumeUserId");
                 jsonWriter.writeCharArray(*m_Request.getAssumeUserId());
             }
+            if (m_Request.getAcceptVersionScript())
+            {
+                jsonWriter.writePropertyName("acceptVersionScript");
+                write(jsonWriter, *m_Request.getAcceptVersionScript());
+            }
+            if (m_Request.getCheckVersionTriggerScriptId())
+            {
+                jsonWriter.writePropertyName("checkVersionTriggerScriptId");
+                jsonWriter.writeCharArray(*m_Request.getCheckVersionTriggerScriptId());
+            }
             if (m_Request.getLogSetting())
             {
                 jsonWriter.writePropertyName("logSetting");
@@ -358,6 +368,16 @@ private:
             {
                 jsonWriter.writePropertyName("assumeUserId");
                 jsonWriter.writeCharArray(*m_Request.getAssumeUserId());
+            }
+            if (m_Request.getAcceptVersionScript())
+            {
+                jsonWriter.writePropertyName("acceptVersionScript");
+                write(jsonWriter, *m_Request.getAcceptVersionScript());
+            }
+            if (m_Request.getCheckVersionTriggerScriptId())
+            {
+                jsonWriter.writePropertyName("checkVersionTriggerScriptId");
+                jsonWriter.writeCharArray(*m_Request.getCheckVersionTriggerScriptId());
             }
             if (m_Request.getLogSetting())
             {
@@ -1906,6 +1926,11 @@ protected:
         {
             jsonWriter.writePropertyName("logSetting");
             write(jsonWriter, *obj.getLogSetting());
+        }
+        if (obj.getStatus())
+        {
+            jsonWriter.writePropertyName("status");
+            jsonWriter.writeCharArray(*obj.getStatus());
         }
         if (obj.getCreatedAt())
         {

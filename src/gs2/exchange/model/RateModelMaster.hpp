@@ -25,6 +25,7 @@
 #include <gs2/core/util/StandardAllocator.hpp>
 #include <gs2/core/external/optional/optional.hpp>
 #include "ConsumeAction.hpp"
+#include "ConsumeAction.hpp"
 #include "AcquireAction.hpp"
 #include <memory>
 #include <cstring>
@@ -55,6 +56,14 @@ private:
         optional<StringHolder> metadata;
         /** 消費アクションリスト */
         optional<List<ConsumeAction>> consumeActions;
+        /** 交換の種類 */
+        optional<StringHolder> timingType;
+        /** 交換実行から実際に報酬を受け取れるようになるまでの待ち時間（分） */
+        optional<Int32> lockTime;
+        /** スキップをすることができるか */
+        optional<Bool> enableSkip;
+        /** 時短消費アクションリスト */
+        optional<List<ConsumeAction>> skipConsumeActions;
         /** 入手アクションリスト */
         optional<List<AcquireAction>> acquireActions;
         /** 作成日時 */
@@ -70,12 +79,19 @@ private:
             name(data.name),
             description(data.description),
             metadata(data.metadata),
+            timingType(data.timingType),
+            lockTime(data.lockTime),
+            enableSkip(data.enableSkip),
             createdAt(data.createdAt),
             updatedAt(data.updatedAt)
         {
             if (data.consumeActions)
             {
                 consumeActions = data.consumeActions->deepCopy();
+            }
+            if (data.skipConsumeActions)
+            {
+                skipConsumeActions = data.skipConsumeActions->deepCopy();
             }
             if (data.acquireActions)
             {
@@ -127,9 +143,43 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->consumeActions.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        ConsumeAction item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->consumeActions += std::move(item);
+                        ConsumeAction item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->consumeActions += std::move(item_);
+                    }
+                }
+            }
+            else if (std::strcmp(name_, "timingType") == 0)
+            {
+                if (jsonValue.IsString())
+                {
+                    this->timingType.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "lockTime") == 0)
+            {
+                if (jsonValue.IsInt())
+                {
+                    this->lockTime = jsonValue.GetInt();
+                }
+            }
+            else if (std::strcmp(name_, "enableSkip") == 0)
+            {
+                if (jsonValue.IsBool())
+                {
+                    this->enableSkip = jsonValue.GetBool();
+                }
+            }
+            else if (std::strcmp(name_, "skipConsumeActions") == 0)
+            {
+                if (jsonValue.IsArray())
+                {
+                    const auto& array = jsonValue.GetArray();
+                    this->skipConsumeActions.emplace();
+                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
+                        ConsumeAction item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->skipConsumeActions += std::move(item_);
                     }
                 }
             }
@@ -140,9 +190,9 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->acquireActions.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        AcquireAction item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->acquireActions += std::move(item);
+                        AcquireAction item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->acquireActions += std::move(item_);
                     }
                 }
             }
@@ -344,6 +394,130 @@ public:
     }
 
     /**
+     * 交換の種類を取得
+     *
+     * @return 交換の種類
+     */
+    const optional<StringHolder>& getTimingType() const
+    {
+        return ensureData().timingType;
+    }
+
+    /**
+     * 交換の種類を設定
+     *
+     * @param timingType 交換の種類
+     */
+    void setTimingType(StringHolder timingType)
+    {
+        ensureData().timingType.emplace(std::move(timingType));
+    }
+
+    /**
+     * 交換の種類を設定
+     *
+     * @param timingType 交換の種類
+     */
+    RateModelMaster& withTimingType(StringHolder timingType)
+    {
+        setTimingType(std::move(timingType));
+        return *this;
+    }
+
+    /**
+     * 交換実行から実際に報酬を受け取れるようになるまでの待ち時間（分）を取得
+     *
+     * @return 交換実行から実際に報酬を受け取れるようになるまでの待ち時間（分）
+     */
+    const optional<Int32>& getLockTime() const
+    {
+        return ensureData().lockTime;
+    }
+
+    /**
+     * 交換実行から実際に報酬を受け取れるようになるまでの待ち時間（分）を設定
+     *
+     * @param lockTime 交換実行から実際に報酬を受け取れるようになるまでの待ち時間（分）
+     */
+    void setLockTime(Int32 lockTime)
+    {
+        ensureData().lockTime.emplace(lockTime);
+    }
+
+    /**
+     * 交換実行から実際に報酬を受け取れるようになるまでの待ち時間（分）を設定
+     *
+     * @param lockTime 交換実行から実際に報酬を受け取れるようになるまでの待ち時間（分）
+     */
+    RateModelMaster& withLockTime(Int32 lockTime)
+    {
+        setLockTime(lockTime);
+        return *this;
+    }
+
+    /**
+     * スキップをすることができるかを取得
+     *
+     * @return スキップをすることができるか
+     */
+    const optional<Bool>& getEnableSkip() const
+    {
+        return ensureData().enableSkip;
+    }
+
+    /**
+     * スキップをすることができるかを設定
+     *
+     * @param enableSkip スキップをすることができるか
+     */
+    void setEnableSkip(Bool enableSkip)
+    {
+        ensureData().enableSkip.emplace(enableSkip);
+    }
+
+    /**
+     * スキップをすることができるかを設定
+     *
+     * @param enableSkip スキップをすることができるか
+     */
+    RateModelMaster& withEnableSkip(Bool enableSkip)
+    {
+        setEnableSkip(enableSkip);
+        return *this;
+    }
+
+    /**
+     * 時短消費アクションリストを取得
+     *
+     * @return 時短消費アクションリスト
+     */
+    const optional<List<ConsumeAction>>& getSkipConsumeActions() const
+    {
+        return ensureData().skipConsumeActions;
+    }
+
+    /**
+     * 時短消費アクションリストを設定
+     *
+     * @param skipConsumeActions 時短消費アクションリスト
+     */
+    void setSkipConsumeActions(List<ConsumeAction> skipConsumeActions)
+    {
+        ensureData().skipConsumeActions.emplace(std::move(skipConsumeActions));
+    }
+
+    /**
+     * 時短消費アクションリストを設定
+     *
+     * @param skipConsumeActions 時短消費アクションリスト
+     */
+    RateModelMaster& withSkipConsumeActions(List<ConsumeAction> skipConsumeActions)
+    {
+        setSkipConsumeActions(std::move(skipConsumeActions));
+        return *this;
+    }
+
+    /**
      * 入手アクションリストを取得
      *
      * @return 入手アクションリスト
@@ -468,6 +642,22 @@ inline bool operator!=(const RateModelMaster& lhs, const RateModelMaster& lhr)
             return true;
         }
         if (lhs.m_pData->consumeActions != lhr.m_pData->consumeActions)
+        {
+            return true;
+        }
+        if (lhs.m_pData->timingType != lhr.m_pData->timingType)
+        {
+            return true;
+        }
+        if (lhs.m_pData->lockTime != lhr.m_pData->lockTime)
+        {
+            return true;
+        }
+        if (lhs.m_pData->enableSkip != lhr.m_pData->enableSkip)
+        {
+            return true;
+        }
+        if (lhs.m_pData->skipConsumeActions != lhr.m_pData->skipConsumeActions)
         {
             return true;
         }

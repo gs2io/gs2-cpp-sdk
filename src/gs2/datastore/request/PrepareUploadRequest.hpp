@@ -55,6 +55,8 @@ private:
         optional<StringHolder> scope;
         /** 公開するユーザIDリスト */
         optional<List<StringHolder>> allowUserIds;
+        /** 既にデータが存在する場合にエラーとするか、データを更新するか */
+        optional<Bool> updateIfExists;
         /** 重複実行回避機能に使用するID */
         optional<StringHolder> duplicationAvoider;
 
@@ -67,6 +69,7 @@ private:
             name(data.name),
             contentType(data.contentType),
             scope(data.scope),
+            updateIfExists(data.updateIfExists),
             duplicationAvoider(data.duplicationAvoider)
         {
             if (data.allowUserIds)
@@ -303,6 +306,37 @@ public:
     PrepareUploadRequest& withAllowUserIds(List<StringHolder> allowUserIds)
     {
         ensureData().allowUserIds.emplace(std::move(allowUserIds));
+        return *this;
+    }
+
+    /**
+     * 既にデータが存在する場合にエラーとするか、データを更新するかを取得
+     *
+     * @return 既にデータが存在する場合にエラーとするか、データを更新するか
+     */
+    const optional<Bool>& getUpdateIfExists() const
+    {
+        return ensureData().updateIfExists;
+    }
+
+    /**
+     * 既にデータが存在する場合にエラーとするか、データを更新するかを設定
+     *
+     * @param updateIfExists 既にデータが存在する場合にエラーとするか、データを更新するか
+     */
+    void setUpdateIfExists(Bool updateIfExists)
+    {
+        ensureData().updateIfExists.emplace(updateIfExists);
+    }
+
+    /**
+     * 既にデータが存在する場合にエラーとするか、データを更新するかを設定
+     *
+     * @param updateIfExists 既にデータが存在する場合にエラーとするか、データを更新するか
+     */
+    PrepareUploadRequest& withUpdateIfExists(Bool updateIfExists)
+    {
+        ensureData().updateIfExists.emplace(updateIfExists);
         return *this;
     }
 

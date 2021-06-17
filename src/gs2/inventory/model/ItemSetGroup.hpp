@@ -59,6 +59,8 @@ private:
         optional<List<StringHolder>> itemSetNameList;
         /** 所持数量のリスト */
         optional<List<Int64>> itemSetCountList;
+        /** 参照元のリストのリスト */
+        optional<List<List<StringHolder>>> itemSetReferenceOfList;
         /** 有効期限のリスト */
         optional<List<Int64>> itemSetExpiresAtList;
         /** 作成日時のリスト */
@@ -93,6 +95,10 @@ private:
             if (data.itemSetCountList)
             {
                 itemSetCountList = data.itemSetCountList->deepCopy();
+            }
+            if (data.itemSetReferenceOfList)
+            {
+                itemSetReferenceOfList = data.itemSetReferenceOfList->deepCopy();
             }
             if (data.itemSetExpiresAtList)
             {
@@ -195,6 +201,19 @@ private:
                         {
                             *this->itemSetCountList += json->GetInt64();
                         }
+                    }
+                }
+            }
+            else if (std::strcmp(name_, "itemSetReferenceOfList") == 0)
+            {
+                if (jsonValue.IsArray())
+                {
+                    const auto& array = jsonValue.GetArray();
+                    this->itemSetReferenceOfList.emplace();
+                    for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
+                        List<StringHolder> item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->itemSetReferenceOfList += std::move(item_);
                     }
                 }
             }
@@ -531,6 +550,37 @@ public:
     }
 
     /**
+     * 参照元のリストのリストを取得
+     *
+     * @return 参照元のリストのリスト
+     */
+    const optional<List<List<StringHolder>>>& getItemSetReferenceOfList() const
+    {
+        return ensureData().itemSetReferenceOfList;
+    }
+
+    /**
+     * 参照元のリストのリストを設定
+     *
+     * @param itemSetReferenceOfList 参照元のリストのリスト
+     */
+    void setItemSetReferenceOfList(List<List<StringHolder>> itemSetReferenceOfList)
+    {
+        ensureData().itemSetReferenceOfList.emplace(std::move(itemSetReferenceOfList));
+    }
+
+    /**
+     * 参照元のリストのリストを設定
+     *
+     * @param itemSetReferenceOfList 参照元のリストのリスト
+     */
+    ItemSetGroup& withItemSetReferenceOfList(List<List<StringHolder>> itemSetReferenceOfList)
+    {
+        setItemSetReferenceOfList(std::move(itemSetReferenceOfList));
+        return *this;
+    }
+
+    /**
      * 有効期限のリストを取得
      *
      * @return 有効期限のリスト
@@ -729,6 +779,10 @@ inline bool operator!=(const ItemSetGroup& lhs, const ItemSetGroup& lhr)
             return true;
         }
         if (lhs.m_pData->itemSetCountList != lhr.m_pData->itemSetCountList)
+        {
+            return true;
+        }
+        if (lhs.m_pData->itemSetReferenceOfList != lhr.m_pData->itemSetReferenceOfList)
         {
             return true;
         }

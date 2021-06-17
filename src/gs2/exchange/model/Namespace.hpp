@@ -52,6 +52,10 @@ private:
         optional<StringHolder> name;
         /** ネームスペースの説明 */
         optional<StringHolder> description;
+        /** 直接交換APIの呼び出しを許可する。許可しない場合はスタンプシート経由でしか交換できない */
+        optional<Bool> enableDirectExchange;
+        /** 交換結果の受け取りに待ち時間の発生する交換機能を利用するか */
+        optional<Bool> enableAwaitExchange;
         /** 交換処理をジョブとして追加するキューのネームスペース のGRN */
         optional<StringHolder> queueNamespaceId;
         /** 交換処理のスタンプシートで使用する暗号鍵GRN */
@@ -71,6 +75,8 @@ private:
             ownerId(data.ownerId),
             name(data.name),
             description(data.description),
+            enableDirectExchange(data.enableDirectExchange),
+            enableAwaitExchange(data.enableAwaitExchange),
             queueNamespaceId(data.queueNamespaceId),
             keyId(data.keyId),
             createdAt(data.createdAt),
@@ -117,6 +123,20 @@ private:
                 if (jsonValue.IsString())
                 {
                     this->description.emplace(jsonValue.GetString());
+                }
+            }
+            else if (std::strcmp(name_, "enableDirectExchange") == 0)
+            {
+                if (jsonValue.IsBool())
+                {
+                    this->enableDirectExchange = jsonValue.GetBool();
+                }
+            }
+            else if (std::strcmp(name_, "enableAwaitExchange") == 0)
+            {
+                if (jsonValue.IsBool())
+                {
+                    this->enableAwaitExchange = jsonValue.GetBool();
                 }
             }
             else if (std::strcmp(name_, "queueNamespaceId") == 0)
@@ -309,6 +329,68 @@ public:
     }
 
     /**
+     * 直接交換APIの呼び出しを許可する。許可しない場合はスタンプシート経由でしか交換できないを取得
+     *
+     * @return 直接交換APIの呼び出しを許可する。許可しない場合はスタンプシート経由でしか交換できない
+     */
+    const optional<Bool>& getEnableDirectExchange() const
+    {
+        return ensureData().enableDirectExchange;
+    }
+
+    /**
+     * 直接交換APIの呼び出しを許可する。許可しない場合はスタンプシート経由でしか交換できないを設定
+     *
+     * @param enableDirectExchange 直接交換APIの呼び出しを許可する。許可しない場合はスタンプシート経由でしか交換できない
+     */
+    void setEnableDirectExchange(Bool enableDirectExchange)
+    {
+        ensureData().enableDirectExchange.emplace(enableDirectExchange);
+    }
+
+    /**
+     * 直接交換APIの呼び出しを許可する。許可しない場合はスタンプシート経由でしか交換できないを設定
+     *
+     * @param enableDirectExchange 直接交換APIの呼び出しを許可する。許可しない場合はスタンプシート経由でしか交換できない
+     */
+    Namespace& withEnableDirectExchange(Bool enableDirectExchange)
+    {
+        setEnableDirectExchange(enableDirectExchange);
+        return *this;
+    }
+
+    /**
+     * 交換結果の受け取りに待ち時間の発生する交換機能を利用するかを取得
+     *
+     * @return 交換結果の受け取りに待ち時間の発生する交換機能を利用するか
+     */
+    const optional<Bool>& getEnableAwaitExchange() const
+    {
+        return ensureData().enableAwaitExchange;
+    }
+
+    /**
+     * 交換結果の受け取りに待ち時間の発生する交換機能を利用するかを設定
+     *
+     * @param enableAwaitExchange 交換結果の受け取りに待ち時間の発生する交換機能を利用するか
+     */
+    void setEnableAwaitExchange(Bool enableAwaitExchange)
+    {
+        ensureData().enableAwaitExchange.emplace(enableAwaitExchange);
+    }
+
+    /**
+     * 交換結果の受け取りに待ち時間の発生する交換機能を利用するかを設定
+     *
+     * @param enableAwaitExchange 交換結果の受け取りに待ち時間の発生する交換機能を利用するか
+     */
+    Namespace& withEnableAwaitExchange(Bool enableAwaitExchange)
+    {
+        setEnableAwaitExchange(enableAwaitExchange);
+        return *this;
+    }
+
+    /**
      * 交換処理をジョブとして追加するキューのネームスペース のGRNを取得
      *
      * @return 交換処理をジョブとして追加するキューのネームスペース のGRN
@@ -491,6 +573,14 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
             return true;
         }
         if (lhs.m_pData->description != lhr.m_pData->description)
+        {
+            return true;
+        }
+        if (lhs.m_pData->enableDirectExchange != lhr.m_pData->enableDirectExchange)
+        {
+            return true;
+        }
+        if (lhs.m_pData->enableAwaitExchange != lhr.m_pData->enableAwaitExchange)
         {
             return true;
         }

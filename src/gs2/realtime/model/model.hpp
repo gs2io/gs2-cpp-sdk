@@ -21,6 +21,7 @@
 #include "notification.hpp"
 #include "Namespace.hpp"
 #include "Room.hpp"
+#include "ResponseCache.hpp"
 #include "NotificationSetting.hpp"
 #include "LogSetting.hpp"
 

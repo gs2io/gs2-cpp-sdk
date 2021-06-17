@@ -27,6 +27,7 @@
 #include "ScriptSetting.hpp"
 #include "ScriptSetting.hpp"
 #include "ScriptSetting.hpp"
+#include "ScriptSetting.hpp"
 #include "LogSetting.hpp"
 #include <memory>
 #include <cstring>
@@ -63,6 +64,8 @@ private:
         optional<ScriptSetting> changeRankScript;
         /** ランクキャップ変化したときに実行するスクリプト */
         optional<ScriptSetting> changeRankCapScript;
+        /** 経験値あふれしたときに実行するスクリプト */
+        optional<ScriptSetting> overflowExperienceScript;
         /** ログの出力設定 */
         optional<LogSetting> logSetting;
         /** 作成日時 */
@@ -93,6 +96,10 @@ private:
             if (data.changeRankCapScript)
             {
                 changeRankCapScript = data.changeRankCapScript->deepCopy();
+            }
+            if (data.overflowExperienceScript)
+            {
+                overflowExperienceScript = data.overflowExperienceScript->deepCopy();
             }
             if (data.logSetting)
             {
@@ -169,6 +176,15 @@ private:
                     const auto& jsonObject = detail::json::getObject(jsonValue);
                     this->changeRankCapScript.emplace();
                     detail::json::JsonParser::parse(&this->changeRankCapScript->getModel(), jsonObject);
+                }
+            }
+            else if (std::strcmp(name_, "overflowExperienceScript") == 0)
+            {
+                if (jsonValue.IsObject())
+                {
+                    const auto& jsonObject = detail::json::getObject(jsonValue);
+                    this->overflowExperienceScript.emplace();
+                    detail::json::JsonParser::parse(&this->overflowExperienceScript->getModel(), jsonObject);
                 }
             }
             else if (std::strcmp(name_, "logSetting") == 0)
@@ -471,6 +487,37 @@ public:
     }
 
     /**
+     * 経験値あふれしたときに実行するスクリプトを取得
+     *
+     * @return 経験値あふれしたときに実行するスクリプト
+     */
+    const optional<ScriptSetting>& getOverflowExperienceScript() const
+    {
+        return ensureData().overflowExperienceScript;
+    }
+
+    /**
+     * 経験値あふれしたときに実行するスクリプトを設定
+     *
+     * @param overflowExperienceScript 経験値あふれしたときに実行するスクリプト
+     */
+    void setOverflowExperienceScript(ScriptSetting overflowExperienceScript)
+    {
+        ensureData().overflowExperienceScript.emplace(std::move(overflowExperienceScript));
+    }
+
+    /**
+     * 経験値あふれしたときに実行するスクリプトを設定
+     *
+     * @param overflowExperienceScript 経験値あふれしたときに実行するスクリプト
+     */
+    Namespace& withOverflowExperienceScript(ScriptSetting overflowExperienceScript)
+    {
+        setOverflowExperienceScript(std::move(overflowExperienceScript));
+        return *this;
+    }
+
+    /**
      * ログの出力設定を取得
      *
      * @return ログの出力設定
@@ -607,6 +654,10 @@ inline bool operator!=(const Namespace& lhs, const Namespace& lhr)
             return true;
         }
         if (lhs.m_pData->changeRankCapScript != lhr.m_pData->changeRankCapScript)
+        {
+            return true;
+        }
+        if (lhs.m_pData->overflowExperienceScript != lhr.m_pData->overflowExperienceScript)
         {
             return true;
         }

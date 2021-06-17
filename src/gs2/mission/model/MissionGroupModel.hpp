@@ -119,9 +119,9 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->tasks.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        MissionTaskModel item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->tasks += std::move(item);
+                        MissionTaskModel item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->tasks += std::move(item_);
                     }
                 }
             }

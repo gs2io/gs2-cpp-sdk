@@ -429,19 +429,29 @@ private:
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
-            detail::json::JsonWriter jsonWriter;
 
-            jsonWriter.writeObjectStart();
+            Char joint[] = { '?', '\0' };
             if (m_Request.getContextStack())
             {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
             }
-            jsonWriter.writeObjectEnd();
+            if (m_Request.getPageToken())
             {
-                gs2HttpTask.setBody(jsonWriter.toString());
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
             }
-            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
 
             if (m_Request.getRequestId())
             {
@@ -456,7 +466,7 @@ private:
                 gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
             }
 
-            return detail::Gs2HttpTask::Verb::Post;
+            return detail::Gs2HttpTask::Verb::Get;
         }
 
     public:
@@ -492,19 +502,29 @@ private:
                 auto& value = m_Request.getUserId();
                 url.replace("{userId}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
             }
-            detail::json::JsonWriter jsonWriter;
 
-            jsonWriter.writeObjectStart();
+            Char joint[] = { '?', '\0' };
             if (m_Request.getContextStack())
             {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
             }
-            jsonWriter.writeObjectEnd();
+            if (m_Request.getPageToken())
             {
-                gs2HttpTask.setBody(jsonWriter.toString());
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
             }
-            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
 
             if (m_Request.getRequestId())
             {
@@ -515,7 +535,7 @@ private:
                 gs2HttpTask.addHeaderEntry("X-GS2-DUPLICATION-AVOIDER", *m_Request.getDuplicationAvoider());
             }
 
-            return detail::Gs2HttpTask::Verb::Post;
+            return detail::Gs2HttpTask::Verb::Get;
         }
 
     public:
@@ -1320,6 +1340,11 @@ protected:
             jsonWriter.writePropertyName("connectionId");
             jsonWriter.writeCharArray(*obj.getConnectionId());
         }
+        if (obj.getApiId())
+        {
+            jsonWriter.writePropertyName("apiId");
+            jsonWriter.writeCharArray(*obj.getApiId());
+        }
         if (obj.getOwnerId())
         {
             jsonWriter.writePropertyName("ownerId");
@@ -1370,6 +1395,47 @@ protected:
         {
             jsonWriter.writePropertyName("token");
             jsonWriter.writeCharArray(*obj.getToken());
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const Session& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getSessionId())
+        {
+            jsonWriter.writePropertyName("sessionId");
+            jsonWriter.writeCharArray(*obj.getSessionId());
+        }
+        if (obj.getOwnerId())
+        {
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
+        }
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getSessionName())
+        {
+            jsonWriter.writePropertyName("sessionName");
+            jsonWriter.writeCharArray(*obj.getSessionName());
+        }
+        if (obj.getApiId())
+        {
+            jsonWriter.writePropertyName("apiId");
+            jsonWriter.writeCharArray(*obj.getApiId());
         }
         if (obj.getCreatedAt())
         {

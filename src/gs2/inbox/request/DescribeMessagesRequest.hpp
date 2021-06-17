@@ -45,7 +45,7 @@ private:
     public:
         /** アクセストークン */
         optional<StringHolder> accessToken;
-        /** プレゼントボックス名 */
+        /** ネームスペース名 */
         optional<StringHolder> namespaceName;
         /** データの取得を開始する位置を指定するトークン */
         optional<StringHolder> pageToken;
@@ -143,9 +143,9 @@ public:
     }
 
     /**
-     * プレゼントボックス名を取得
+     * ネームスペース名を取得
      *
-     * @return プレゼントボックス名
+     * @return ネームスペース名
      */
     const optional<StringHolder>& getNamespaceName() const
     {
@@ -153,9 +153,9 @@ public:
     }
 
     /**
-     * プレゼントボックス名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName プレゼントボックス名
+     * @param namespaceName ネームスペース名
      */
     void setNamespaceName(StringHolder namespaceName)
     {
@@ -163,9 +163,9 @@ public:
     }
 
     /**
-     * プレゼントボックス名を設定
+     * ネームスペース名を設定
      *
-     * @param namespaceName プレゼントボックス名
+     * @param namespaceName ネームスペース名
      */
     DescribeMessagesRequest& withNamespaceName(StringHolder namespaceName)
     {

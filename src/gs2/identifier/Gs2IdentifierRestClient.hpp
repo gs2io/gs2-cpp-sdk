@@ -38,10 +38,15 @@
 #include "request/CreateIdentifierRequest.hpp"
 #include "request/GetIdentifierRequest.hpp"
 #include "request/DeleteIdentifierRequest.hpp"
+#include "request/DescribePasswordsRequest.hpp"
+#include "request/CreatePasswordRequest.hpp"
+#include "request/GetPasswordRequest.hpp"
+#include "request/DeletePasswordRequest.hpp"
 #include "request/GetHasSecurityPolicyRequest.hpp"
 #include "request/AttachSecurityPolicyRequest.hpp"
 #include "request/DetachSecurityPolicyRequest.hpp"
 #include "request/LoginRequest.hpp"
+#include "request/LoginByUserRequest.hpp"
 #include "result/DescribeUsersResult.hpp"
 #include "result/CreateUserResult.hpp"
 #include "result/UpdateUserResult.hpp"
@@ -57,10 +62,15 @@
 #include "result/CreateIdentifierResult.hpp"
 #include "result/GetIdentifierResult.hpp"
 #include "result/DeleteIdentifierResult.hpp"
+#include "result/DescribePasswordsResult.hpp"
+#include "result/CreatePasswordResult.hpp"
+#include "result/GetPasswordResult.hpp"
+#include "result/DeletePasswordResult.hpp"
 #include "result/GetHasSecurityPolicyResult.hpp"
 #include "result/AttachSecurityPolicyResult.hpp"
 #include "result/DetachSecurityPolicyResult.hpp"
 #include "result/LoginResult.hpp"
+#include "result/LoginByUserResult.hpp"
 #include <cstring>
 
 namespace gs2 { namespace identifier {
@@ -896,6 +906,221 @@ private:
         ~DeleteIdentifierTask() GS2_OVERRIDE = default;
     };
 
+    class DescribePasswordsTask : public detail::Gs2RestSessionTask<DescribePasswordsResult>
+    {
+    private:
+        DescribePasswordsRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "identifier";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/user/{userName}/password";
+            {
+                auto& value = m_Request.getUserName();
+                url.replace("{userName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getPageToken())
+            {
+                url += joint;
+                url += "pageToken=";
+                url += detail::StringVariable(*m_Request.getPageToken(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            if (m_Request.getLimit())
+            {
+                url += joint;
+                url += "limit=";
+                url += detail::StringVariable(*m_Request.getLimit()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        DescribePasswordsTask(
+            DescribePasswordsRequest request,
+            Gs2RestSessionTask<DescribePasswordsResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<DescribePasswordsResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DescribePasswordsTask() GS2_OVERRIDE = default;
+    };
+
+    class CreatePasswordTask : public detail::Gs2RestSessionTask<CreatePasswordResult>
+    {
+    private:
+        CreatePasswordRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "identifier";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/user/{userName}/password";
+            {
+                auto& value = m_Request.getUserName();
+                url.replace("{userName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getPassword())
+            {
+                jsonWriter.writePropertyName("password");
+                jsonWriter.writeCharArray(*m_Request.getPassword());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        CreatePasswordTask(
+            CreatePasswordRequest request,
+            Gs2RestSessionTask<CreatePasswordResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<CreatePasswordResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~CreatePasswordTask() GS2_OVERRIDE = default;
+    };
+
+    class GetPasswordTask : public detail::Gs2RestSessionTask<GetPasswordResult>
+    {
+    private:
+        GetPasswordRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "identifier";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/user/{userName}/password/entity";
+            {
+                auto& value = m_Request.getUserName();
+                url.replace("{userName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Get;
+        }
+
+    public:
+        GetPasswordTask(
+            GetPasswordRequest request,
+            Gs2RestSessionTask<GetPasswordResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<GetPasswordResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~GetPasswordTask() GS2_OVERRIDE = default;
+    };
+
+    class DeletePasswordTask : public detail::Gs2RestSessionTask<void>
+    {
+    private:
+        DeletePasswordRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "identifier";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/user/{userName}/password/entity";
+            {
+                auto& value = m_Request.getUserName();
+                url.replace("{userName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
+            }
+
+            Char joint[] = { '?', '\0' };
+            if (m_Request.getContextStack())
+            {
+                url += joint;
+                url += "contextStack=";
+                url += detail::StringVariable(*m_Request.getContextStack(), detail::StringVariable::UrlSafeEncode()).c_str();
+                joint[0] = '&';
+            }
+            {
+                gs2HttpTask.setBody("{}");
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Delete;
+        }
+
+    public:
+        DeletePasswordTask(
+            DeletePasswordRequest request,
+            Gs2RestSessionTask<void>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<void>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~DeletePasswordTask() GS2_OVERRIDE = default;
+    };
+
     class GetHasSecurityPolicyTask : public detail::Gs2RestSessionTask<GetHasSecurityPolicyResult>
     {
     private:
@@ -1111,6 +1336,63 @@ private:
         ~LoginTask() GS2_OVERRIDE = default;
     };
 
+    class LoginByUserTask : public detail::Gs2RestSessionTask<LoginByUserResult>
+    {
+    private:
+        LoginByUserRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "identifier";
+        }
+
+        detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
+        {
+            url += "/projectToken/login/user";
+            detail::json::JsonWriter jsonWriter;
+
+            jsonWriter.writeObjectStart();
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getUserName())
+            {
+                jsonWriter.writePropertyName("userName");
+                jsonWriter.writeCharArray(*m_Request.getUserName());
+            }
+            if (m_Request.getPassword())
+            {
+                jsonWriter.writePropertyName("password");
+                jsonWriter.writeCharArray(*m_Request.getPassword());
+            }
+            jsonWriter.writeObjectEnd();
+            {
+                gs2HttpTask.setBody(jsonWriter.toString());
+            }
+            gs2HttpTask.addHeaderEntry("Content-Type", "application/json");
+
+            if (m_Request.getRequestId())
+            {
+                gs2HttpTask.addHeaderEntry("X-GS2-REQUEST-ID", *m_Request.getRequestId());
+            }
+
+            return detail::Gs2HttpTask::Verb::Post;
+        }
+
+    public:
+        LoginByUserTask(
+            LoginByUserRequest request,
+            Gs2RestSessionTask<LoginByUserResult>::CallbackType callback
+        ) :
+            Gs2RestSessionTask<LoginByUserResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~LoginByUserTask() GS2_OVERRIDE = default;
+    };
+
 protected:
     static void write(detail::json::JsonWriter& jsonWriter, const User& obj)
     {
@@ -1211,6 +1493,37 @@ protected:
         {
             jsonWriter.writePropertyName("clientSecret");
             jsonWriter.writeCharArray(*obj.getClientSecret());
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
+    static void write(detail::json::JsonWriter& jsonWriter, const Password& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getOwnerId())
+        {
+            jsonWriter.writePropertyName("ownerId");
+            jsonWriter.writeCharArray(*obj.getOwnerId());
+        }
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getUserName())
+        {
+            jsonWriter.writePropertyName("userName");
+            jsonWriter.writeCharArray(*obj.getUserName());
+        }
+        if (obj.getPassword())
+        {
+            jsonWriter.writePropertyName("password");
+            jsonWriter.writeCharArray(*obj.getPassword());
         }
         if (obj.getCreatedAt())
         {
@@ -1452,6 +1765,54 @@ public:
     }
 
 	/**
+	 * パスワードの一覧を取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void describePasswords(DescribePasswordsRequest request, std::function<void(AsyncDescribePasswordsResult)> callback)
+    {
+        DescribePasswordsTask& task = *new DescribePasswordsTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * パスワードを新規作成します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void createPassword(CreatePasswordRequest request, std::function<void(AsyncCreatePasswordResult)> callback)
+    {
+        CreatePasswordTask& task = *new CreatePasswordTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * パスワードを取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void getPassword(GetPasswordRequest request, std::function<void(AsyncGetPasswordResult)> callback)
+    {
+        GetPasswordTask& task = *new GetPasswordTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * パスワードを削除します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void deletePassword(DeletePasswordRequest request, std::function<void(AsyncDeletePasswordResult)> callback)
+    {
+        DeletePasswordTask& task = *new DeletePasswordTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
 	 * 割り当てられたセキュリティポリシーの一覧を取得します<br>
 	 *
      * @param callback コールバック関数
@@ -1496,6 +1857,18 @@ public:
     void login(LoginRequest request, std::function<void(AsyncLoginResult)> callback)
     {
         LoginTask& task = *new LoginTask(std::move(request), callback);
+        getGs2RestSession().execute(task);
+    }
+
+	/**
+	 * プロジェクトトークン を取得します<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void loginByUser(LoginByUserRequest request, std::function<void(AsyncLoginByUserResult)> callback)
+    {
+        LoginByUserTask& task = *new LoginByUserTask(std::move(request), callback);
         getGs2RestSession().execute(task);
     }
 

@@ -186,6 +186,16 @@ private:
                 jsonWriter.writePropertyName("assumeUserId");
                 jsonWriter.writeCharArray(*m_Request.getAssumeUserId());
             }
+            if (m_Request.getAcceptVersionScript())
+            {
+                jsonWriter.writePropertyName("acceptVersionScript");
+                write(jsonWriter, *m_Request.getAcceptVersionScript());
+            }
+            if (m_Request.getCheckVersionTriggerScriptId())
+            {
+                jsonWriter.writePropertyName("checkVersionTriggerScriptId");
+                jsonWriter.writeCharArray(*m_Request.getCheckVersionTriggerScriptId());
+            }
             if (m_Request.getLogSetting())
             {
                 jsonWriter.writePropertyName("logSetting");
@@ -345,6 +355,16 @@ private:
             {
                 jsonWriter.writePropertyName("assumeUserId");
                 jsonWriter.writeCharArray(*m_Request.getAssumeUserId());
+            }
+            if (m_Request.getAcceptVersionScript())
+            {
+                jsonWriter.writePropertyName("acceptVersionScript");
+                write(jsonWriter, *m_Request.getAcceptVersionScript());
+            }
+            if (m_Request.getCheckVersionTriggerScriptId())
+            {
+                jsonWriter.writePropertyName("checkVersionTriggerScriptId");
+                jsonWriter.writeCharArray(*m_Request.getCheckVersionTriggerScriptId());
             }
             if (m_Request.getLogSetting())
             {
@@ -1550,7 +1570,7 @@ private:
 
         detail::Gs2HttpTask::Verb constructRequestImpl(detail::StringVariable& url, detail::Gs2HttpTask& gs2HttpTask) GS2_OVERRIDE
         {
-            url += "/{namespaceName}/calculate/signature";
+            url += "/{namespaceName}/version/{versionName}/calculate/signature";
             {
                 auto& value = m_Request.getNamespaceName();
                 url.replace("{namespaceName}", value.has_value() && (*value)[0] != '\0' ? *value : "null");
@@ -1847,6 +1867,11 @@ protected:
         {
             jsonWriter.writePropertyName("logSetting");
             write(jsonWriter, *obj.getLogSetting());
+        }
+        if (obj.getStatus())
+        {
+            jsonWriter.writePropertyName("status");
+            jsonWriter.writeCharArray(*obj.getStatus());
         }
         if (obj.getCreatedAt())
         {

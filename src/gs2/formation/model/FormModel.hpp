@@ -104,9 +104,9 @@ private:
                     const auto& array = jsonValue.GetArray();
                     this->slots.emplace();
                     for (const detail::json::JsonConstValue* json = array.Begin(); json != array.End(); ++json) {
-                        SlotModel item;
-                        detail::json::JsonParser::parse(&item.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
-                        *this->slots += std::move(item);
+                        SlotModel item_;
+                        detail::json::JsonParser::parse(&item_.getModel(), static_cast<detail::json::JsonConstObject>(detail::json::getObject(*json)));
+                        *this->slots += std::move(item_);
                     }
                 }
             }

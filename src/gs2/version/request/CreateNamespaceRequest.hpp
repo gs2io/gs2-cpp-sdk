@@ -49,6 +49,10 @@ private:
         optional<StringHolder> description;
         /** バージョンチェック通過後に改めて発行するプロジェクトトークンの権限判定に使用する ユーザ のGRN */
         optional<StringHolder> assumeUserId;
+        /** バージョンを承認したときに実行するスクリプト */
+        optional<ScriptSetting> acceptVersionScript;
+        /** バージョンチェック時 に実行されるスクリプト のGRN */
+        optional<StringHolder> checkVersionTriggerScriptId;
         /** ログの出力設定 */
         optional<LogSetting> logSetting;
 
@@ -58,8 +62,13 @@ private:
             Gs2BasicRequest::Data(data),
             name(data.name),
             description(data.description),
-            assumeUserId(data.assumeUserId)
+            assumeUserId(data.assumeUserId),
+            checkVersionTriggerScriptId(data.checkVersionTriggerScriptId)
         {
+            if (data.acceptVersionScript)
+            {
+                acceptVersionScript = data.acceptVersionScript->deepCopy();
+            }
             if (data.logSetting)
             {
                 logSetting = data.logSetting->deepCopy();
@@ -200,6 +209,68 @@ public:
     CreateNamespaceRequest& withAssumeUserId(StringHolder assumeUserId)
     {
         ensureData().assumeUserId.emplace(std::move(assumeUserId));
+        return *this;
+    }
+
+    /**
+     * バージョンを承認したときに実行するスクリプトを取得
+     *
+     * @return バージョンを承認したときに実行するスクリプト
+     */
+    const optional<ScriptSetting>& getAcceptVersionScript() const
+    {
+        return ensureData().acceptVersionScript;
+    }
+
+    /**
+     * バージョンを承認したときに実行するスクリプトを設定
+     *
+     * @param acceptVersionScript バージョンを承認したときに実行するスクリプト
+     */
+    void setAcceptVersionScript(ScriptSetting acceptVersionScript)
+    {
+        ensureData().acceptVersionScript.emplace(std::move(acceptVersionScript));
+    }
+
+    /**
+     * バージョンを承認したときに実行するスクリプトを設定
+     *
+     * @param acceptVersionScript バージョンを承認したときに実行するスクリプト
+     */
+    CreateNamespaceRequest& withAcceptVersionScript(ScriptSetting acceptVersionScript)
+    {
+        ensureData().acceptVersionScript.emplace(std::move(acceptVersionScript));
+        return *this;
+    }
+
+    /**
+     * バージョンチェック時 に実行されるスクリプト のGRNを取得
+     *
+     * @return バージョンチェック時 に実行されるスクリプト のGRN
+     */
+    const optional<StringHolder>& getCheckVersionTriggerScriptId() const
+    {
+        return ensureData().checkVersionTriggerScriptId;
+    }
+
+    /**
+     * バージョンチェック時 に実行されるスクリプト のGRNを設定
+     *
+     * @param checkVersionTriggerScriptId バージョンチェック時 に実行されるスクリプト のGRN
+     */
+    void setCheckVersionTriggerScriptId(StringHolder checkVersionTriggerScriptId)
+    {
+        ensureData().checkVersionTriggerScriptId.emplace(std::move(checkVersionTriggerScriptId));
+    }
+
+    /**
+     * バージョンチェック時 に実行されるスクリプト のGRNを設定
+     *
+     * @param checkVersionTriggerScriptId バージョンチェック時 に実行されるスクリプト のGRN
+     */
+    CreateNamespaceRequest& withCheckVersionTriggerScriptId(StringHolder checkVersionTriggerScriptId)
+    {
+        ensureData().checkVersionTriggerScriptId.emplace(std::move(checkVersionTriggerScriptId));
         return *this;
     }
 
