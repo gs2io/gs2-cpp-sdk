@@ -27,7 +27,7 @@ class Gs2BasicReopener : public IReopener, public gs2::Gs2Object
 public:
     ~Gs2BasicReopener() GS2_OVERRIDE = default;
 
-    void reopen(gs2::Gs2Session::OpenCallbackType callback, gs2::Gs2WebSocketSession& gs2Session) GS2_OVERRIDE;
+    void reopen(gs2::Gs2Session::OpenCallbackType callback, gs2::Gs2WebSocketSession& gs2WebSocketSession, gs2::Gs2RestSession& gs2RestSession) GS2_OVERRIDE;
 };
 
 }}

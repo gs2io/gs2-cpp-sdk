@@ -21,6 +21,7 @@
 #include "../core/AsyncResult.hpp"
 #include "../core/model/BasicGs2Credential.hpp"
 #include "../core/network/Gs2WebSocketSession.hpp"
+#include "../core/network/Gs2RestSession.hpp"
 #include "GameSession.hpp"
 #include <memory>
 
@@ -33,7 +34,8 @@ class Profile : public gs2::Gs2Object
 {
 private:
     std::unique_ptr<IReopener> m_pReopener;
-    Gs2WebSocketSession m_Gs2Session;
+    Gs2WebSocketSession m_Gs2WebSocketSession;
+    Gs2RestSession m_Gs2RestSession;
 
 public:
     typedef gs2::AsyncResult<void> AsyncInitializeResult;
@@ -66,12 +68,32 @@ public:
 
     const Gs2WebSocketSession& getGs2Session() const
     {
-        return m_Gs2Session;
+        return m_Gs2WebSocketSession;
     }
 
     Gs2WebSocketSession& getGs2Session()
     {
-        return m_Gs2Session;
+        return m_Gs2WebSocketSession;
+    }
+
+    const Gs2WebSocketSession& getGs2WebSocketSession() const
+    {
+        return m_Gs2WebSocketSession;
+    }
+
+    Gs2WebSocketSession& getGs2WebSocketSession()
+    {
+        return m_Gs2WebSocketSession;
+    }
+
+    const Gs2RestSession& getGs2RestSession() const
+    {
+        return m_Gs2RestSession;
+    }
+
+    Gs2RestSession& getGs2RestSession()
+    {
+        return m_Gs2RestSession;
     }
 };
 

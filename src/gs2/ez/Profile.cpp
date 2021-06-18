@@ -22,18 +22,24 @@ namespace gs2 { namespace ez {
 
 Profile::Profile(IReopener* pReopener, StringHolder&& clientId, StringHolder&& clientSecret) :
     m_pReopener(pReopener),
-    m_Gs2Session(BasicGs2Credential(std::move(clientId), std::move(clientSecret)))
+    m_Gs2WebSocketSession(BasicGs2Credential(clientId, clientSecret)),
+    m_Gs2RestSession(BasicGs2Credential(std::move(clientId), std::move(clientSecret)))
 {
 }
 
 void Profile::initialize(InitializeCallbackType callback)
 {
-    m_pReopener->reopen(callback, m_Gs2Session);
+    m_pReopener->reopen(callback, m_Gs2WebSocketSession, m_Gs2RestSession);
 }
 
 void Profile::finalize(FinalizeCallbackType callback)
 {
-    m_Gs2Session.close(callback);
+    m_Gs2WebSocketSession.close(
+        [this, callback]()
+        {
+            m_Gs2RestSession.close(callback);
+        }
+    );
 }
 
 void Profile::login(IAuthenticator& authenticator, LoginCallbackType callback)

@@ -24,6 +24,7 @@
 namespace gs2 {
 
 class Gs2WebSocketSession;
+class Gs2RestSession;
 
 namespace ez {
 
@@ -31,7 +32,7 @@ class IReopener
 {
 public:
     virtual ~IReopener() = default;
-    virtual void reopen(gs2::Gs2Session::OpenCallbackType callback, gs2::Gs2WebSocketSession& session) = 0;
+    virtual void reopen(gs2::Gs2Session::OpenCallbackType callback, gs2::Gs2WebSocketSession& gs2WebSocketSession, gs2::Gs2RestSession& gs2RestSession) = 0;
 };
 
 }
