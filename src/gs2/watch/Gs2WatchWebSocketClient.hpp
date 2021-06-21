@@ -203,77 +203,6 @@ private:
         ~GetCumulativeTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeBillingActivitiesTask : public detail::Gs2WebSocketSessionTask<DescribeBillingActivitiesResult>
-    {
-    private:
-        DescribeBillingActivitiesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "watch";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "billingActivity";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeBillingActivities";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getYear())
-            {
-                jsonWriter.writePropertyName("year");
-                jsonWriter.writeInt32(*m_Request.getYear());
-            }
-            if (m_Request.getMonth())
-            {
-                jsonWriter.writePropertyName("month");
-                jsonWriter.writeInt32(*m_Request.getMonth());
-            }
-            if (m_Request.getService())
-            {
-                jsonWriter.writePropertyName("service");
-                jsonWriter.writeCharArray(*m_Request.getService());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeBillingActivitiesTask(
-            DescribeBillingActivitiesRequest request,
-            Gs2WebSocketSessionTask<DescribeBillingActivitiesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeBillingActivitiesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeBillingActivitiesTask() GS2_OVERRIDE = default;
-    };
-
     class GetBillingActivityTask : public detail::Gs2WebSocketSessionTask<GetBillingActivityResult>
     {
     private:
@@ -477,18 +406,6 @@ public:
     void getCumulative(GetCumulativeRequest request, std::function<void(AsyncGetCumulativeResult)> callback)
     {
         GetCumulativeTask& task = *new GetCumulativeTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 請求にまつわるアクティビティの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeBillingActivities(DescribeBillingActivitiesRequest request, std::function<void(AsyncDescribeBillingActivitiesResult)> callback)
-    {
-        DescribeBillingActivitiesTask& task = *new DescribeBillingActivitiesTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

@@ -69,62 +69,6 @@ class Gs2JobQueueWebSocketClient : public AbstractGs2ClientBase
 {
 private:
 
-    class DescribeNamespacesTask : public detail::Gs2WebSocketSessionTask<DescribeNamespacesResult>
-    {
-    private:
-        DescribeNamespacesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "jobQueue";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "namespace";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeNamespaces";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeNamespacesTask(
-            DescribeNamespacesRequest request,
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeNamespacesTask() GS2_OVERRIDE = default;
-    };
-
     class CreateNamespaceTask : public detail::Gs2WebSocketSessionTask<CreateNamespaceResult>
     {
     private:
@@ -408,77 +352,6 @@ private:
         {}
 
         ~DeleteNamespaceTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeJobsByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeJobsByUserIdResult>
-    {
-    private:
-        DescribeJobsByUserIdRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "jobQueue";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "job";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeJobsByUserId";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getUserId())
-            {
-                jsonWriter.writePropertyName("userId");
-                jsonWriter.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DescribeJobsByUserIdTask(
-            DescribeJobsByUserIdRequest request,
-            Gs2WebSocketSessionTask<DescribeJobsByUserIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeJobsByUserIdResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeJobsByUserIdTask() GS2_OVERRIDE = default;
     };
 
     class GetJobByUserIdTask : public detail::Gs2WebSocketSessionTask<GetJobByUserIdResult>
@@ -866,77 +739,6 @@ private:
         {}
 
         ~PushByStampSheetTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeDeadLetterJobsByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeDeadLetterJobsByUserIdResult>
-    {
-    private:
-        DescribeDeadLetterJobsByUserIdRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "jobQueue";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "deadLetterJob";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeDeadLetterJobsByUserId";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getUserId())
-            {
-                jsonWriter.writePropertyName("userId");
-                jsonWriter.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DescribeDeadLetterJobsByUserIdTask(
-            DescribeDeadLetterJobsByUserIdRequest request,
-            Gs2WebSocketSessionTask<DescribeDeadLetterJobsByUserIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeDeadLetterJobsByUserIdResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeDeadLetterJobsByUserIdTask() GS2_OVERRIDE = default;
     };
 
     class GetDeadLetterJobByUserIdTask : public detail::Gs2WebSocketSessionTask<GetDeadLetterJobByUserIdResult>
@@ -1385,18 +1187,6 @@ public:
     }
 
 	/**
-	 * ネームスペースの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeNamespaces(DescribeNamespacesRequest request, std::function<void(AsyncDescribeNamespacesResult)> callback)
-    {
-        DescribeNamespacesTask& task = *new DescribeNamespacesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * ネームスペースを新規作成<br>
 	 *
      * @param callback コールバック関数
@@ -1453,18 +1243,6 @@ public:
     void deleteNamespace(DeleteNamespaceRequest request, std::function<void(AsyncDeleteNamespaceResult)> callback)
     {
         DeleteNamespaceTask& task = *new DeleteNamespaceTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ジョブの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeJobsByUserId(DescribeJobsByUserIdRequest request, std::function<void(AsyncDescribeJobsByUserIdResult)> callback)
-    {
-        DescribeJobsByUserIdTask& task = *new DescribeJobsByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
@@ -1537,18 +1315,6 @@ public:
     void pushByStampSheet(PushByStampSheetRequest request, std::function<void(AsyncPushByStampSheetResult)> callback)
     {
         PushByStampSheetTask& task = *new PushByStampSheetTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * デッドレタージョブの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeDeadLetterJobsByUserId(DescribeDeadLetterJobsByUserIdRequest request, std::function<void(AsyncDescribeDeadLetterJobsByUserIdResult)> callback)
-    {
-        DescribeDeadLetterJobsByUserIdTask& task = *new DescribeDeadLetterJobsByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

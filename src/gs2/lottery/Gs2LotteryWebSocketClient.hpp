@@ -107,62 +107,6 @@ class Gs2LotteryWebSocketClient : public AbstractGs2ClientBase
 {
 private:
 
-    class DescribeNamespacesTask : public detail::Gs2WebSocketSessionTask<DescribeNamespacesResult>
-    {
-    private:
-        DescribeNamespacesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "namespace";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeNamespaces";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeNamespacesTask(
-            DescribeNamespacesRequest request,
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeNamespacesTask() GS2_OVERRIDE = default;
-    };
-
     class CreateNamespaceTask : public detail::Gs2WebSocketSessionTask<CreateNamespaceResult>
     {
     private:
@@ -478,67 +422,6 @@ private:
         ~DeleteNamespaceTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeLotteryModelMastersTask : public detail::Gs2WebSocketSessionTask<DescribeLotteryModelMastersResult>
-    {
-    private:
-        DescribeLotteryModelMastersRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "lotteryModelMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeLotteryModelMasters";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeLotteryModelMastersTask(
-            DescribeLotteryModelMastersRequest request,
-            Gs2WebSocketSessionTask<DescribeLotteryModelMastersResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeLotteryModelMastersResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeLotteryModelMastersTask() GS2_OVERRIDE = default;
-    };
-
     class CreateLotteryModelMasterTask : public detail::Gs2WebSocketSessionTask<CreateLotteryModelMasterResult>
     {
     private:
@@ -823,67 +706,6 @@ private:
         ~DeleteLotteryModelMasterTask() GS2_OVERRIDE = default;
     };
 
-    class DescribePrizeTableMastersTask : public detail::Gs2WebSocketSessionTask<DescribePrizeTableMastersResult>
-    {
-    private:
-        DescribePrizeTableMastersRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "prizeTableMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describePrizeTableMasters";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribePrizeTableMastersTask(
-            DescribePrizeTableMastersRequest request,
-            Gs2WebSocketSessionTask<DescribePrizeTableMastersResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribePrizeTableMastersResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribePrizeTableMastersTask() GS2_OVERRIDE = default;
-    };
-
     class CreatePrizeTableMasterTask : public detail::Gs2WebSocketSessionTask<CreatePrizeTableMasterResult>
     {
     private:
@@ -1148,148 +970,6 @@ private:
         {}
 
         ~DeletePrizeTableMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeBoxesTask : public detail::Gs2WebSocketSessionTask<DescribeBoxesResult>
-    {
-    private:
-        DescribeBoxesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "box";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeBoxes";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                jsonWriter.writePropertyName("xGs2AccessToken");
-                jsonWriter.writeCharArray(*m_Request.getAccessToken());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DescribeBoxesTask(
-            DescribeBoxesRequest request,
-            Gs2WebSocketSessionTask<DescribeBoxesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeBoxesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeBoxesTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeBoxesByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeBoxesByUserIdResult>
-    {
-    private:
-        DescribeBoxesByUserIdRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "box";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeBoxesByUserId";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getUserId())
-            {
-                jsonWriter.writePropertyName("userId");
-                jsonWriter.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DescribeBoxesByUserIdTask(
-            DescribeBoxesByUserIdRequest request,
-            Gs2WebSocketSessionTask<DescribeBoxesByUserIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeBoxesByUserIdResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeBoxesByUserIdTask() GS2_OVERRIDE = default;
     };
 
     class GetBoxTask : public detail::Gs2WebSocketSessionTask<GetBoxResult>
@@ -1622,57 +1302,6 @@ private:
         ~ResetBoxByUserIdTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeLotteryModelsTask : public detail::Gs2WebSocketSessionTask<DescribeLotteryModelsResult>
-    {
-    private:
-        DescribeLotteryModelsRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "lotteryModel";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeLotteryModels";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeLotteryModelsTask(
-            DescribeLotteryModelsRequest request,
-            Gs2WebSocketSessionTask<DescribeLotteryModelsResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeLotteryModelsResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeLotteryModelsTask() GS2_OVERRIDE = default;
-    };
-
     class GetLotteryModelTask : public detail::Gs2WebSocketSessionTask<GetLotteryModelResult>
     {
     private:
@@ -1729,57 +1358,6 @@ private:
         ~GetLotteryModelTask() GS2_OVERRIDE = default;
     };
 
-    class DescribePrizeTablesTask : public detail::Gs2WebSocketSessionTask<DescribePrizeTablesResult>
-    {
-    private:
-        DescribePrizeTablesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "prizeTable";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describePrizeTables";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribePrizeTablesTask(
-            DescribePrizeTablesRequest request,
-            Gs2WebSocketSessionTask<DescribePrizeTablesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribePrizeTablesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribePrizeTablesTask() GS2_OVERRIDE = default;
-    };
-
     class GetPrizeTableTask : public detail::Gs2WebSocketSessionTask<GetPrizeTableResult>
     {
     private:
@@ -1834,88 +1412,6 @@ private:
         {}
 
         ~GetPrizeTableTask() GS2_OVERRIDE = default;
-    };
-
-    class DrawByUserIdTask : public detail::Gs2WebSocketSessionTask<DrawByUserIdResult>
-    {
-    private:
-        DrawByUserIdRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "drawByUserId";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getLotteryName())
-            {
-                jsonWriter.writePropertyName("lotteryName");
-                jsonWriter.writeCharArray(*m_Request.getLotteryName());
-            }
-            if (m_Request.getUserId())
-            {
-                jsonWriter.writePropertyName("userId");
-                jsonWriter.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getCount())
-            {
-                jsonWriter.writePropertyName("count");
-                jsonWriter.writeInt32(*m_Request.getCount());
-            }
-            if (m_Request.getConfig())
-            {
-                jsonWriter.writePropertyName("config");
-                jsonWriter.writeArrayStart();
-                auto& list = *m_Request.getConfig();
-                for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
-                {
-                    write(jsonWriter, list[i]);
-                }
-                jsonWriter.writeArrayEnd();
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DrawByUserIdTask(
-            DrawByUserIdRequest request,
-            Gs2WebSocketSessionTask<DrawByUserIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DrawByUserIdResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DrawByUserIdTask() GS2_OVERRIDE = default;
     };
 
     class DescribeProbabilitiesTask : public detail::Gs2WebSocketSessionTask<DescribeProbabilitiesResult>
@@ -2048,281 +1544,6 @@ private:
         {}
 
         ~DescribeProbabilitiesByUserIdTask() GS2_OVERRIDE = default;
-    };
-
-    class DrawByStampSheetTask : public detail::Gs2WebSocketSessionTask<DrawByStampSheetResult>
-    {
-    private:
-        DrawByStampSheetRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "drawByStampSheet";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getStampSheet())
-            {
-                jsonWriter.writePropertyName("stampSheet");
-                jsonWriter.writeCharArray(*m_Request.getStampSheet());
-            }
-            if (m_Request.getKeyId())
-            {
-                jsonWriter.writePropertyName("keyId");
-                jsonWriter.writeCharArray(*m_Request.getKeyId());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DrawByStampSheetTask(
-            DrawByStampSheetRequest request,
-            Gs2WebSocketSessionTask<DrawByStampSheetResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DrawByStampSheetResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DrawByStampSheetTask() GS2_OVERRIDE = default;
-    };
-
-    class ExportMasterTask : public detail::Gs2WebSocketSessionTask<ExportMasterResult>
-    {
-    private:
-        ExportMasterRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "currentLotteryMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "exportMaster";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        ExportMasterTask(
-            ExportMasterRequest request,
-            Gs2WebSocketSessionTask<ExportMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<ExportMasterResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~ExportMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class GetCurrentLotteryMasterTask : public detail::Gs2WebSocketSessionTask<GetCurrentLotteryMasterResult>
-    {
-    private:
-        GetCurrentLotteryMasterRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "currentLotteryMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "getCurrentLotteryMaster";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        GetCurrentLotteryMasterTask(
-            GetCurrentLotteryMasterRequest request,
-            Gs2WebSocketSessionTask<GetCurrentLotteryMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<GetCurrentLotteryMasterResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~GetCurrentLotteryMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class UpdateCurrentLotteryMasterTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentLotteryMasterResult>
-    {
-    private:
-        UpdateCurrentLotteryMasterRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "currentLotteryMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "updateCurrentLotteryMaster";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getSettings())
-            {
-                jsonWriter.writePropertyName("settings");
-                jsonWriter.writeCharArray(*m_Request.getSettings());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        UpdateCurrentLotteryMasterTask(
-            UpdateCurrentLotteryMasterRequest request,
-            Gs2WebSocketSessionTask<UpdateCurrentLotteryMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<UpdateCurrentLotteryMasterResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~UpdateCurrentLotteryMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class UpdateCurrentLotteryMasterFromGitHubTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentLotteryMasterFromGitHubResult>
-    {
-    private:
-        UpdateCurrentLotteryMasterFromGitHubRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "lottery";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "currentLotteryMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "updateCurrentLotteryMasterFromGitHub";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getCheckoutSetting())
-            {
-                jsonWriter.writePropertyName("checkoutSetting");
-                write(jsonWriter, *m_Request.getCheckoutSetting());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        UpdateCurrentLotteryMasterFromGitHubTask(
-            UpdateCurrentLotteryMasterFromGitHubRequest request,
-            Gs2WebSocketSessionTask<UpdateCurrentLotteryMasterFromGitHubResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<UpdateCurrentLotteryMasterFromGitHubResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~UpdateCurrentLotteryMasterFromGitHubTask() GS2_OVERRIDE = default;
     };
 
 protected:
@@ -2878,18 +2099,6 @@ public:
     }
 
 	/**
-	 * ネームスペースの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeNamespaces(DescribeNamespacesRequest request, std::function<void(AsyncDescribeNamespacesResult)> callback)
-    {
-        DescribeNamespacesTask& task = *new DescribeNamespacesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * ネームスペースを新規作成<br>
 	 *
      * @param callback コールバック関数
@@ -2950,18 +2159,6 @@ public:
     }
 
 	/**
-	 * 抽選の種類マスターの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeLotteryModelMasters(DescribeLotteryModelMastersRequest request, std::function<void(AsyncDescribeLotteryModelMastersResult)> callback)
-    {
-        DescribeLotteryModelMastersTask& task = *new DescribeLotteryModelMastersTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * 抽選の種類マスターを新規作成<br>
 	 *
      * @param callback コールバック関数
@@ -3010,18 +2207,6 @@ public:
     }
 
 	/**
-	 * 排出確率テーブルマスターの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describePrizeTableMasters(DescribePrizeTableMastersRequest request, std::function<void(AsyncDescribePrizeTableMastersResult)> callback)
-    {
-        DescribePrizeTableMastersTask& task = *new DescribePrizeTableMastersTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * 排出確率テーブルマスターを新規作成<br>
 	 *
      * @param callback コールバック関数
@@ -3066,30 +2251,6 @@ public:
     void deletePrizeTableMaster(DeletePrizeTableMasterRequest request, std::function<void(AsyncDeletePrizeTableMasterResult)> callback)
     {
         DeletePrizeTableMasterTask& task = *new DeletePrizeTableMasterTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ボックスの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeBoxes(DescribeBoxesRequest request, std::function<void(AsyncDescribeBoxesResult)> callback)
-    {
-        DescribeBoxesTask& task = *new DescribeBoxesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ユーザIDを指定してボックスの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeBoxesByUserId(DescribeBoxesByUserIdRequest request, std::function<void(AsyncDescribeBoxesByUserIdResult)> callback)
-    {
-        DescribeBoxesByUserIdTask& task = *new DescribeBoxesByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
@@ -3154,18 +2315,6 @@ public:
     }
 
 	/**
-	 * 抽選の種類の一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeLotteryModels(DescribeLotteryModelsRequest request, std::function<void(AsyncDescribeLotteryModelsResult)> callback)
-    {
-        DescribeLotteryModelsTask& task = *new DescribeLotteryModelsTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * 抽選の種類を取得<br>
 	 *
      * @param callback コールバック関数
@@ -3178,18 +2327,6 @@ public:
     }
 
 	/**
-	 * 排出確率テーブルの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describePrizeTables(DescribePrizeTablesRequest request, std::function<void(AsyncDescribePrizeTablesResult)> callback)
-    {
-        DescribePrizeTablesTask& task = *new DescribePrizeTablesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * 排出確率テーブルを取得<br>
 	 *
      * @param callback コールバック関数
@@ -3198,18 +2335,6 @@ public:
     void getPrizeTable(GetPrizeTableRequest request, std::function<void(AsyncGetPrizeTableResult)> callback)
     {
         GetPrizeTableTask& task = *new GetPrizeTableTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ユーザIDを指定して抽選を実行<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void drawByUserId(DrawByUserIdRequest request, std::function<void(AsyncDrawByUserIdResult)> callback)
-    {
-        DrawByUserIdTask& task = *new DrawByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
@@ -3240,66 +2365,6 @@ public:
     void describeProbabilitiesByUserId(DescribeProbabilitiesByUserIdRequest request, std::function<void(AsyncDescribeProbabilitiesByUserIdResult)> callback)
     {
         DescribeProbabilitiesByUserIdTask& task = *new DescribeProbabilitiesByUserIdTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * スタンプシートを使用して抽選処理を実行<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void drawByStampSheet(DrawByStampSheetRequest request, std::function<void(AsyncDrawByStampSheetResult)> callback)
-    {
-        DrawByStampSheetTask& task = *new DrawByStampSheetTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 現在有効な抽選設定のマスターデータをエクスポートします<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void exportMaster(ExportMasterRequest request, std::function<void(AsyncExportMasterResult)> callback)
-    {
-        ExportMasterTask& task = *new ExportMasterTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 現在有効な抽選設定を取得します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getCurrentLotteryMaster(GetCurrentLotteryMasterRequest request, std::function<void(AsyncGetCurrentLotteryMasterResult)> callback)
-    {
-        GetCurrentLotteryMasterTask& task = *new GetCurrentLotteryMasterTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 現在有効な抽選設定を更新します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateCurrentLotteryMaster(UpdateCurrentLotteryMasterRequest request, std::function<void(AsyncUpdateCurrentLotteryMasterResult)> callback)
-    {
-        UpdateCurrentLotteryMasterTask& task = *new UpdateCurrentLotteryMasterTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 現在有効な抽選設定を更新します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateCurrentLotteryMasterFromGitHub(UpdateCurrentLotteryMasterFromGitHubRequest request, std::function<void(AsyncUpdateCurrentLotteryMasterFromGitHubResult)> callback)
-    {
-        UpdateCurrentLotteryMasterFromGitHubTask& task = *new UpdateCurrentLotteryMasterFromGitHubTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

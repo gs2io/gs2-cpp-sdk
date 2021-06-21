@@ -63,62 +63,6 @@ class Gs2NewsWebSocketClient : public AbstractGs2ClientBase
 {
 private:
 
-    class DescribeNamespacesTask : public detail::Gs2WebSocketSessionTask<DescribeNamespacesResult>
-    {
-    private:
-        DescribeNamespacesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "news";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "namespace";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeNamespaces";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeNamespacesTask(
-            DescribeNamespacesRequest request,
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeNamespacesTask() GS2_OVERRIDE = default;
-    };
-
     class CreateNamespaceTask : public detail::Gs2WebSocketSessionTask<CreateNamespaceResult>
     {
     private:
@@ -557,128 +501,6 @@ private:
         ~PrepareUpdateCurrentNewsMasterFromGitHubTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeNewsTask : public detail::Gs2WebSocketSessionTask<DescribeNewsResult>
-    {
-    private:
-        DescribeNewsRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "news";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "news";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeNews";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                jsonWriter.writePropertyName("xGs2AccessToken");
-                jsonWriter.writeCharArray(*m_Request.getAccessToken());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DescribeNewsTask(
-            DescribeNewsRequest request,
-            Gs2WebSocketSessionTask<DescribeNewsResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeNewsResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeNewsTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeNewsByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeNewsByUserIdResult>
-    {
-    private:
-        DescribeNewsByUserIdRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "news";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "news";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeNewsByUserId";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getUserId())
-            {
-                jsonWriter.writePropertyName("userId");
-                jsonWriter.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DescribeNewsByUserIdTask(
-            DescribeNewsByUserIdRequest request,
-            Gs2WebSocketSessionTask<DescribeNewsByUserIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeNewsByUserIdResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeNewsByUserIdTask() GS2_OVERRIDE = default;
-    };
-
     class WantGrantTask : public detail::Gs2WebSocketSessionTask<WantGrantResult>
     {
     private:
@@ -1001,18 +823,6 @@ public:
     }
 
 	/**
-	 * ネームスペースの一覧を取得します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeNamespaces(DescribeNamespacesRequest request, std::function<void(AsyncDescribeNamespacesResult)> callback)
-    {
-        DescribeNamespacesTask& task = *new DescribeNamespacesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * ネームスペースを新規作成します<br>
 	 *
      * @param callback コールバック関数
@@ -1110,30 +920,6 @@ public:
     void prepareUpdateCurrentNewsMasterFromGitHub(PrepareUpdateCurrentNewsMasterFromGitHubRequest request, std::function<void(AsyncPrepareUpdateCurrentNewsMasterFromGitHubResult)> callback)
     {
         PrepareUpdateCurrentNewsMasterFromGitHubTask& task = *new PrepareUpdateCurrentNewsMasterFromGitHubTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * お知らせ記事の一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeNews(DescribeNewsRequest request, std::function<void(AsyncDescribeNewsResult)> callback)
-    {
-        DescribeNewsTask& task = *new DescribeNewsTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ユーザIDを指定してお知らせ記事の一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeNewsByUserId(DescribeNewsByUserIdRequest request, std::function<void(AsyncDescribeNewsByUserIdResult)> callback)
-    {
-        DescribeNewsByUserIdTask& task = *new DescribeNewsByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

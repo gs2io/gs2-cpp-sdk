@@ -85,62 +85,6 @@ class Gs2IdentifierWebSocketClient : public AbstractGs2ClientBase
 {
 private:
 
-    class DescribeUsersTask : public detail::Gs2WebSocketSessionTask<DescribeUsersResult>
-    {
-    private:
-        DescribeUsersRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "identifier";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "user";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeUsers";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeUsersTask(
-            DescribeUsersRequest request,
-            Gs2WebSocketSessionTask<DescribeUsersResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeUsersResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeUsersTask() GS2_OVERRIDE = default;
-    };
-
     class CreateUserTask : public detail::Gs2WebSocketSessionTask<CreateUserResult>
     {
     private:
@@ -353,118 +297,6 @@ private:
         {}
 
         ~DeleteUserTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeSecurityPoliciesTask : public detail::Gs2WebSocketSessionTask<DescribeSecurityPoliciesResult>
-    {
-    private:
-        DescribeSecurityPoliciesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "identifier";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "securityPolicy";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeSecurityPolicies";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeSecurityPoliciesTask(
-            DescribeSecurityPoliciesRequest request,
-            Gs2WebSocketSessionTask<DescribeSecurityPoliciesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeSecurityPoliciesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeSecurityPoliciesTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeCommonSecurityPoliciesTask : public detail::Gs2WebSocketSessionTask<DescribeCommonSecurityPoliciesResult>
-    {
-    private:
-        DescribeCommonSecurityPoliciesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "identifier";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "securityPolicy";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeCommonSecurityPolicies";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeCommonSecurityPoliciesTask(
-            DescribeCommonSecurityPoliciesRequest request,
-            Gs2WebSocketSessionTask<DescribeCommonSecurityPoliciesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeCommonSecurityPoliciesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeCommonSecurityPoliciesTask() GS2_OVERRIDE = default;
     };
 
     class CreateSecurityPolicyTask : public detail::Gs2WebSocketSessionTask<CreateSecurityPolicyResult>
@@ -691,67 +523,6 @@ private:
         ~DeleteSecurityPolicyTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeIdentifiersTask : public detail::Gs2WebSocketSessionTask<DescribeIdentifiersResult>
-    {
-    private:
-        DescribeIdentifiersRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "identifier";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "identifier";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeIdentifiers";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getUserName())
-            {
-                jsonWriter.writePropertyName("userName");
-                jsonWriter.writeCharArray(*m_Request.getUserName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeIdentifiersTask(
-            DescribeIdentifiersRequest request,
-            Gs2WebSocketSessionTask<DescribeIdentifiersResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeIdentifiersResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeIdentifiersTask() GS2_OVERRIDE = default;
-    };
-
     class CreateIdentifierTask : public detail::Gs2WebSocketSessionTask<CreateIdentifierResult>
     {
     private:
@@ -913,67 +684,6 @@ private:
         {}
 
         ~DeleteIdentifierTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribePasswordsTask : public detail::Gs2WebSocketSessionTask<DescribePasswordsResult>
-    {
-    private:
-        DescribePasswordsRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "identifier";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "password";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describePasswords";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getUserName())
-            {
-                jsonWriter.writePropertyName("userName");
-                jsonWriter.writeCharArray(*m_Request.getUserName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribePasswordsTask(
-            DescribePasswordsRequest request,
-            Gs2WebSocketSessionTask<DescribePasswordsResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribePasswordsResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribePasswordsTask() GS2_OVERRIDE = default;
     };
 
     class CreatePasswordTask : public detail::Gs2WebSocketSessionTask<CreatePasswordResult>
@@ -1600,18 +1310,6 @@ public:
     }
 
 	/**
-	 * ユーザの一覧を取得します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeUsers(DescribeUsersRequest request, std::function<void(AsyncDescribeUsersResult)> callback)
-    {
-        DescribeUsersTask& task = *new DescribeUsersTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * ユーザを新規作成します<br>
 	 *
      * @param callback コールバック関数
@@ -1656,30 +1354,6 @@ public:
     void deleteUser(DeleteUserRequest request, std::function<void(AsyncDeleteUserResult)> callback)
     {
         DeleteUserTask& task = *new DeleteUserTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * セキュリティポリシーの一覧を取得します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeSecurityPolicies(DescribeSecurityPoliciesRequest request, std::function<void(AsyncDescribeSecurityPoliciesResult)> callback)
-    {
-        DescribeSecurityPoliciesTask& task = *new DescribeSecurityPoliciesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * オーナーIDを指定してセキュリティポリシーの一覧を取得します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeCommonSecurityPolicies(DescribeCommonSecurityPoliciesRequest request, std::function<void(AsyncDescribeCommonSecurityPoliciesResult)> callback)
-    {
-        DescribeCommonSecurityPoliciesTask& task = *new DescribeCommonSecurityPoliciesTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
@@ -1732,18 +1406,6 @@ public:
     }
 
 	/**
-	 * クレデンシャルの一覧を取得します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeIdentifiers(DescribeIdentifiersRequest request, std::function<void(AsyncDescribeIdentifiersResult)> callback)
-    {
-        DescribeIdentifiersTask& task = *new DescribeIdentifiersTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * クレデンシャルを新規作成します<br>
 	 *
      * @param callback コールバック関数
@@ -1776,18 +1438,6 @@ public:
     void deleteIdentifier(DeleteIdentifierRequest request, std::function<void(AsyncDeleteIdentifierResult)> callback)
     {
         DeleteIdentifierTask& task = *new DeleteIdentifierTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * パスワードの一覧を取得します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describePasswords(DescribePasswordsRequest request, std::function<void(AsyncDescribePasswordsResult)> callback)
-    {
-        DescribePasswordsTask& task = *new DescribePasswordsTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

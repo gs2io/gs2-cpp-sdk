@@ -4330,6 +4330,124 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const ItemSetGroup& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getItemSetGroupId())
+        {
+            jsonWriter.writePropertyName("itemSetGroupId");
+            jsonWriter.writeCharArray(*obj.getItemSetGroupId());
+        }
+        if (obj.getInventoryName())
+        {
+            jsonWriter.writePropertyName("inventoryName");
+            jsonWriter.writeCharArray(*obj.getInventoryName());
+        }
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getItemName())
+        {
+            jsonWriter.writePropertyName("itemName");
+            jsonWriter.writeCharArray(*obj.getItemName());
+        }
+        if (obj.getSortValue())
+        {
+            jsonWriter.writePropertyName("sortValue");
+            jsonWriter.writeInt32(*obj.getSortValue());
+        }
+        if (obj.getItemSetItemSetIdList())
+        {
+            jsonWriter.writePropertyName("itemSetItemSetIdList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetItemSetIdList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeCharArray(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetNameList())
+        {
+            jsonWriter.writePropertyName("itemSetNameList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetNameList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeCharArray(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetCountList())
+        {
+            jsonWriter.writePropertyName("itemSetCountList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetCountList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt64(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetReferenceOfList())
+        {
+            jsonWriter.writePropertyName("itemSetReferenceOfList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetReferenceOfList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt32(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetExpiresAtList())
+        {
+            jsonWriter.writePropertyName("itemSetExpiresAtList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetExpiresAtList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt64(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetCreatedAtList())
+        {
+            jsonWriter.writePropertyName("itemSetCreatedAtList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetCreatedAtList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt64(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetUpdatedAtList())
+        {
+            jsonWriter.writePropertyName("itemSetUpdatedAtList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetUpdatedAtList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt64(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const ResponseCache& obj)
     {
         jsonWriter.writeObjectStart();

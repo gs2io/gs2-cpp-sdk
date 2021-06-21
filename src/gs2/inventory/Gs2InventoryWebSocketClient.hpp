@@ -153,62 +153,6 @@ class Gs2InventoryWebSocketClient : public AbstractGs2ClientBase
 {
 private:
 
-    class DescribeNamespacesTask : public detail::Gs2WebSocketSessionTask<DescribeNamespacesResult>
-    {
-    private:
-        DescribeNamespacesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "namespace";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeNamespaces";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeNamespacesTask(
-            DescribeNamespacesRequest request,
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeNamespacesTask() GS2_OVERRIDE = default;
-    };
-
     class CreateNamespaceTask : public detail::Gs2WebSocketSessionTask<CreateNamespaceResult>
     {
     private:
@@ -514,67 +458,6 @@ private:
         ~DeleteNamespaceTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeInventoryModelMastersTask : public detail::Gs2WebSocketSessionTask<DescribeInventoryModelMastersResult>
-    {
-    private:
-        DescribeInventoryModelMastersRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "inventoryModelMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeInventoryModelMasters";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeInventoryModelMastersTask(
-            DescribeInventoryModelMastersRequest request,
-            Gs2WebSocketSessionTask<DescribeInventoryModelMastersResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeInventoryModelMastersResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeInventoryModelMastersTask() GS2_OVERRIDE = default;
-    };
-
     class CreateInventoryModelMasterTask : public detail::Gs2WebSocketSessionTask<CreateInventoryModelMasterResult>
     {
     private:
@@ -849,57 +732,6 @@ private:
         ~DeleteInventoryModelMasterTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeInventoryModelsTask : public detail::Gs2WebSocketSessionTask<DescribeInventoryModelsResult>
-    {
-    private:
-        DescribeInventoryModelsRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "inventoryModel";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeInventoryModels";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeInventoryModelsTask(
-            DescribeInventoryModelsRequest request,
-            Gs2WebSocketSessionTask<DescribeInventoryModelsResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeInventoryModelsResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeInventoryModelsTask() GS2_OVERRIDE = default;
-    };
-
     class GetInventoryModelTask : public detail::Gs2WebSocketSessionTask<GetInventoryModelResult>
     {
     private:
@@ -954,72 +786,6 @@ private:
         {}
 
         ~GetInventoryModelTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeItemModelMastersTask : public detail::Gs2WebSocketSessionTask<DescribeItemModelMastersResult>
-    {
-    private:
-        DescribeItemModelMastersRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "itemModelMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeItemModelMasters";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getInventoryName())
-            {
-                jsonWriter.writePropertyName("inventoryName");
-                jsonWriter.writeCharArray(*m_Request.getInventoryName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeItemModelMastersTask(
-            DescribeItemModelMastersRequest request,
-            Gs2WebSocketSessionTask<DescribeItemModelMastersResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeItemModelMastersResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeItemModelMastersTask() GS2_OVERRIDE = default;
     };
 
     class CreateItemModelMasterTask : public detail::Gs2WebSocketSessionTask<CreateItemModelMasterResult>
@@ -1316,62 +1082,6 @@ private:
         ~DeleteItemModelMasterTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeItemModelsTask : public detail::Gs2WebSocketSessionTask<DescribeItemModelsResult>
-    {
-    private:
-        DescribeItemModelsRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "itemModel";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeItemModels";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getInventoryName())
-            {
-                jsonWriter.writePropertyName("inventoryName");
-                jsonWriter.writeCharArray(*m_Request.getInventoryName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeItemModelsTask(
-            DescribeItemModelsRequest request,
-            Gs2WebSocketSessionTask<DescribeItemModelsResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeItemModelsResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeItemModelsTask() GS2_OVERRIDE = default;
-    };
-
     class GetItemModelTask : public detail::Gs2WebSocketSessionTask<GetItemModelResult>
     {
     private:
@@ -1431,362 +1141,6 @@ private:
         {}
 
         ~GetItemModelTask() GS2_OVERRIDE = default;
-    };
-
-    class ExportMasterTask : public detail::Gs2WebSocketSessionTask<ExportMasterResult>
-    {
-    private:
-        ExportMasterRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "currentItemModelMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "exportMaster";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        ExportMasterTask(
-            ExportMasterRequest request,
-            Gs2WebSocketSessionTask<ExportMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<ExportMasterResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~ExportMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class GetCurrentItemModelMasterTask : public detail::Gs2WebSocketSessionTask<GetCurrentItemModelMasterResult>
-    {
-    private:
-        GetCurrentItemModelMasterRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "currentItemModelMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "getCurrentItemModelMaster";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        GetCurrentItemModelMasterTask(
-            GetCurrentItemModelMasterRequest request,
-            Gs2WebSocketSessionTask<GetCurrentItemModelMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<GetCurrentItemModelMasterResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~GetCurrentItemModelMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class UpdateCurrentItemModelMasterTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentItemModelMasterResult>
-    {
-    private:
-        UpdateCurrentItemModelMasterRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "currentItemModelMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "updateCurrentItemModelMaster";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getSettings())
-            {
-                jsonWriter.writePropertyName("settings");
-                jsonWriter.writeCharArray(*m_Request.getSettings());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        UpdateCurrentItemModelMasterTask(
-            UpdateCurrentItemModelMasterRequest request,
-            Gs2WebSocketSessionTask<UpdateCurrentItemModelMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<UpdateCurrentItemModelMasterResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~UpdateCurrentItemModelMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class UpdateCurrentItemModelMasterFromGitHubTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentItemModelMasterFromGitHubResult>
-    {
-    private:
-        UpdateCurrentItemModelMasterFromGitHubRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "currentItemModelMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "updateCurrentItemModelMasterFromGitHub";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getCheckoutSetting())
-            {
-                jsonWriter.writePropertyName("checkoutSetting");
-                write(jsonWriter, *m_Request.getCheckoutSetting());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        UpdateCurrentItemModelMasterFromGitHubTask(
-            UpdateCurrentItemModelMasterFromGitHubRequest request,
-            Gs2WebSocketSessionTask<UpdateCurrentItemModelMasterFromGitHubResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<UpdateCurrentItemModelMasterFromGitHubResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~UpdateCurrentItemModelMasterFromGitHubTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeInventoriesTask : public detail::Gs2WebSocketSessionTask<DescribeInventoriesResult>
-    {
-    private:
-        DescribeInventoriesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeInventories";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                jsonWriter.writePropertyName("xGs2AccessToken");
-                jsonWriter.writeCharArray(*m_Request.getAccessToken());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DescribeInventoriesTask(
-            DescribeInventoriesRequest request,
-            Gs2WebSocketSessionTask<DescribeInventoriesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeInventoriesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeInventoriesTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeInventoriesByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeInventoriesByUserIdResult>
-    {
-    private:
-        DescribeInventoriesByUserIdRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeInventoriesByUserId";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getUserId())
-            {
-                jsonWriter.writePropertyName("userId");
-                jsonWriter.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DescribeInventoriesByUserIdTask(
-            DescribeInventoriesByUserIdRequest request,
-            Gs2WebSocketSessionTask<DescribeInventoriesByUserIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeInventoriesByUserIdResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeInventoriesByUserIdTask() GS2_OVERRIDE = default;
     };
 
     class GetInventoryTask : public detail::Gs2WebSocketSessionTask<GetInventoryResult>
@@ -2249,158 +1603,6 @@ private:
         {}
 
         ~SetCapacityByStampSheetTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeItemSetsTask : public detail::Gs2WebSocketSessionTask<DescribeItemSetsResult>
-    {
-    private:
-        DescribeItemSetsRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "itemSet";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeItemSets";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getInventoryName())
-            {
-                jsonWriter.writePropertyName("inventoryName");
-                jsonWriter.writeCharArray(*m_Request.getInventoryName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                jsonWriter.writePropertyName("xGs2AccessToken");
-                jsonWriter.writeCharArray(*m_Request.getAccessToken());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DescribeItemSetsTask(
-            DescribeItemSetsRequest request,
-            Gs2WebSocketSessionTask<DescribeItemSetsResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeItemSetsResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeItemSetsTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeItemSetsByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeItemSetsByUserIdResult>
-    {
-    private:
-        DescribeItemSetsByUserIdRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "inventory";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "itemSet";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeItemSetsByUserId";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getInventoryName())
-            {
-                jsonWriter.writePropertyName("inventoryName");
-                jsonWriter.writeCharArray(*m_Request.getInventoryName());
-            }
-            if (m_Request.getUserId())
-            {
-                jsonWriter.writePropertyName("userId");
-                jsonWriter.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DescribeItemSetsByUserIdTask(
-            DescribeItemSetsByUserIdRequest request,
-            Gs2WebSocketSessionTask<DescribeItemSetsByUserIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeItemSetsByUserIdResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeItemSetsByUserIdTask() GS2_OVERRIDE = default;
     };
 
     class GetItemSetTask : public detail::Gs2WebSocketSessionTask<GetItemSetResult>
@@ -4532,6 +3734,124 @@ protected:
         jsonWriter.writeObjectEnd();
     }
 
+    static void write(detail::json::JsonWriter& jsonWriter, const ItemSetGroup& obj)
+    {
+        jsonWriter.writeObjectStart();
+        if (obj.getItemSetGroupId())
+        {
+            jsonWriter.writePropertyName("itemSetGroupId");
+            jsonWriter.writeCharArray(*obj.getItemSetGroupId());
+        }
+        if (obj.getInventoryName())
+        {
+            jsonWriter.writePropertyName("inventoryName");
+            jsonWriter.writeCharArray(*obj.getInventoryName());
+        }
+        if (obj.getUserId())
+        {
+            jsonWriter.writePropertyName("userId");
+            jsonWriter.writeCharArray(*obj.getUserId());
+        }
+        if (obj.getItemName())
+        {
+            jsonWriter.writePropertyName("itemName");
+            jsonWriter.writeCharArray(*obj.getItemName());
+        }
+        if (obj.getSortValue())
+        {
+            jsonWriter.writePropertyName("sortValue");
+            jsonWriter.writeInt32(*obj.getSortValue());
+        }
+        if (obj.getItemSetItemSetIdList())
+        {
+            jsonWriter.writePropertyName("itemSetItemSetIdList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetItemSetIdList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeCharArray(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetNameList())
+        {
+            jsonWriter.writePropertyName("itemSetNameList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetNameList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeCharArray(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetCountList())
+        {
+            jsonWriter.writePropertyName("itemSetCountList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetCountList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt64(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetReferenceOfList())
+        {
+            jsonWriter.writePropertyName("itemSetReferenceOfList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetReferenceOfList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt32(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetExpiresAtList())
+        {
+            jsonWriter.writePropertyName("itemSetExpiresAtList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetExpiresAtList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt64(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetCreatedAtList())
+        {
+            jsonWriter.writePropertyName("itemSetCreatedAtList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetCreatedAtList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt64(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getItemSetUpdatedAtList())
+        {
+            jsonWriter.writePropertyName("itemSetUpdatedAtList");
+            jsonWriter.writeArrayStart();
+            auto& list = *obj.getItemSetUpdatedAtList();
+            for (Int32 i = 0; i < detail::getCountOfListElements(list); ++i)
+            {
+                jsonWriter.writeInt64(list[i]);
+            }
+            jsonWriter.writeArrayEnd();
+        }
+        if (obj.getCreatedAt())
+        {
+            jsonWriter.writePropertyName("createdAt");
+            jsonWriter.writeInt64(*obj.getCreatedAt());
+        }
+        if (obj.getUpdatedAt())
+        {
+            jsonWriter.writePropertyName("updatedAt");
+            jsonWriter.writeInt64(*obj.getUpdatedAt());
+        }
+        jsonWriter.writeObjectEnd();
+    }
+
     static void write(detail::json::JsonWriter& jsonWriter, const ResponseCache& obj)
     {
         jsonWriter.writeObjectStart();
@@ -4654,18 +3974,6 @@ public:
     }
 
 	/**
-	 * ネームスペースの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeNamespaces(DescribeNamespacesRequest request, std::function<void(AsyncDescribeNamespacesResult)> callback)
-    {
-        DescribeNamespacesTask& task = *new DescribeNamespacesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * ネームスペースを新規作成<br>
 	 *
      * @param callback コールバック関数
@@ -4726,18 +4034,6 @@ public:
     }
 
 	/**
-	 * インベントリモデルマスターの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeInventoryModelMasters(DescribeInventoryModelMastersRequest request, std::function<void(AsyncDescribeInventoryModelMastersResult)> callback)
-    {
-        DescribeInventoryModelMastersTask& task = *new DescribeInventoryModelMastersTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * インベントリモデルマスターを新規作成<br>
 	 *
      * @param callback コールバック関数
@@ -4786,18 +4082,6 @@ public:
     }
 
 	/**
-	 * インベントリモデルの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeInventoryModels(DescribeInventoryModelsRequest request, std::function<void(AsyncDescribeInventoryModelsResult)> callback)
-    {
-        DescribeInventoryModelsTask& task = *new DescribeInventoryModelsTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * インベントリモデルを取得<br>
 	 *
      * @param callback コールバック関数
@@ -4806,18 +4090,6 @@ public:
     void getInventoryModel(GetInventoryModelRequest request, std::function<void(AsyncGetInventoryModelResult)> callback)
     {
         GetInventoryModelTask& task = *new GetInventoryModelTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * アイテムモデルマスターの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeItemModelMasters(DescribeItemModelMastersRequest request, std::function<void(AsyncDescribeItemModelMastersResult)> callback)
-    {
-        DescribeItemModelMastersTask& task = *new DescribeItemModelMastersTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
@@ -4870,18 +4142,6 @@ public:
     }
 
 	/**
-	 * Noneの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeItemModels(DescribeItemModelsRequest request, std::function<void(AsyncDescribeItemModelsResult)> callback)
-    {
-        DescribeItemModelsTask& task = *new DescribeItemModelsTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * Noneを取得<br>
 	 *
      * @param callback コールバック関数
@@ -4890,78 +4150,6 @@ public:
     void getItemModel(GetItemModelRequest request, std::function<void(AsyncGetItemModelResult)> callback)
     {
         GetItemModelTask& task = *new GetItemModelTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 現在有効な所持品マスターのマスターデータをエクスポートします<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void exportMaster(ExportMasterRequest request, std::function<void(AsyncExportMasterResult)> callback)
-    {
-        ExportMasterTask& task = *new ExportMasterTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 現在有効な所持品マスターを取得します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getCurrentItemModelMaster(GetCurrentItemModelMasterRequest request, std::function<void(AsyncGetCurrentItemModelMasterResult)> callback)
-    {
-        GetCurrentItemModelMasterTask& task = *new GetCurrentItemModelMasterTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 現在有効な所持品マスターを更新します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateCurrentItemModelMaster(UpdateCurrentItemModelMasterRequest request, std::function<void(AsyncUpdateCurrentItemModelMasterResult)> callback)
-    {
-        UpdateCurrentItemModelMasterTask& task = *new UpdateCurrentItemModelMasterTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 現在有効な所持品マスターを更新します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateCurrentItemModelMasterFromGitHub(UpdateCurrentItemModelMasterFromGitHubRequest request, std::function<void(AsyncUpdateCurrentItemModelMasterFromGitHubResult)> callback)
-    {
-        UpdateCurrentItemModelMasterFromGitHubTask& task = *new UpdateCurrentItemModelMasterFromGitHubTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * インベントリの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeInventories(DescribeInventoriesRequest request, std::function<void(AsyncDescribeInventoriesResult)> callback)
-    {
-        DescribeInventoriesTask& task = *new DescribeInventoriesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * インベントリの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeInventoriesByUserId(DescribeInventoriesByUserIdRequest request, std::function<void(AsyncDescribeInventoriesByUserIdResult)> callback)
-    {
-        DescribeInventoriesByUserIdTask& task = *new DescribeInventoriesByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
@@ -5046,30 +4234,6 @@ public:
     void setCapacityByStampSheet(SetCapacityByStampSheetRequest request, std::function<void(AsyncSetCapacityByStampSheetResult)> callback)
     {
         SetCapacityByStampSheetTask& task = *new SetCapacityByStampSheetTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 有効期限ごとのアイテム所持数量の一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeItemSets(DescribeItemSetsRequest request, std::function<void(AsyncDescribeItemSetsResult)> callback)
-    {
-        DescribeItemSetsTask& task = *new DescribeItemSetsTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 有効期限ごとのアイテム所持数量の一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeItemSetsByUserId(DescribeItemSetsByUserIdRequest request, std::function<void(AsyncDescribeItemSetsByUserIdResult)> callback)
-    {
-        DescribeItemSetsByUserIdTask& task = *new DescribeItemSetsByUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

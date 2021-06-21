@@ -95,62 +95,6 @@ class Gs2ChatWebSocketClient : public AbstractGs2ClientBase
 {
 private:
 
-    class DescribeNamespacesTask : public detail::Gs2WebSocketSessionTask<DescribeNamespacesResult>
-    {
-    private:
-        DescribeNamespacesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "chat";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "namespace";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeNamespaces";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeNamespacesTask(
-            DescribeNamespacesRequest request,
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeNamespacesTask() GS2_OVERRIDE = default;
-    };
-
     class CreateNamespaceTask : public detail::Gs2WebSocketSessionTask<CreateNamespaceResult>
     {
     private:
@@ -494,67 +438,6 @@ private:
         {}
 
         ~DeleteNamespaceTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeRoomsTask : public detail::Gs2WebSocketSessionTask<DescribeRoomsResult>
-    {
-    private:
-        DescribeRoomsRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "chat";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "room";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeRooms";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeRoomsTask(
-            DescribeRoomsRequest request,
-            Gs2WebSocketSessionTask<DescribeRoomsResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeRoomsResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeRoomsTask() GS2_OVERRIDE = default;
     };
 
     class CreateRoomTask : public detail::Gs2WebSocketSessionTask<CreateRoomResult>
@@ -996,77 +879,6 @@ private:
         ~DeleteRoomFromBackendTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeMessagesTask : public detail::Gs2WebSocketSessionTask<DescribeMessagesResult>
-    {
-    private:
-        DescribeMessagesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "chat";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "message";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeMessages";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRoomName())
-            {
-                jsonWriter.writePropertyName("roomName");
-                jsonWriter.writeCharArray(*m_Request.getRoomName());
-            }
-            if (m_Request.getPassword())
-            {
-                jsonWriter.writePropertyName("password");
-                jsonWriter.writeCharArray(*m_Request.getPassword());
-            }
-            if (m_Request.getStartAt())
-            {
-                jsonWriter.writePropertyName("startAt");
-                jsonWriter.writeInt64(*m_Request.getStartAt());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeMessagesTask(
-            DescribeMessagesRequest request,
-            Gs2WebSocketSessionTask<DescribeMessagesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeMessagesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeMessagesTask() GS2_OVERRIDE = default;
-    };
-
     class PostTask : public detail::Gs2WebSocketSessionTask<PostResult>
     {
     private:
@@ -1349,214 +1161,6 @@ private:
         {}
 
         ~DeleteMessageTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeSubscribesTask : public detail::Gs2WebSocketSessionTask<DescribeSubscribesResult>
-    {
-    private:
-        DescribeSubscribesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "chat";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "subscribe";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeSubscribes";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getAccessToken())
-            {
-                jsonWriter.writePropertyName("xGs2AccessToken");
-                jsonWriter.writeCharArray(*m_Request.getAccessToken());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DescribeSubscribesTask(
-            DescribeSubscribesRequest request,
-            Gs2WebSocketSessionTask<DescribeSubscribesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeSubscribesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeSubscribesTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeSubscribesByUserIdTask : public detail::Gs2WebSocketSessionTask<DescribeSubscribesByUserIdResult>
-    {
-    private:
-        DescribeSubscribesByUserIdRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "chat";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "subscribe";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeSubscribesByUserId";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getUserId())
-            {
-                jsonWriter.writePropertyName("userId");
-                jsonWriter.writeCharArray(*m_Request.getUserId());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-            if (m_Request.getDuplicationAvoider())
-            {
-                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
-                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
-            }
-        }
-
-    public:
-        DescribeSubscribesByUserIdTask(
-            DescribeSubscribesByUserIdRequest request,
-            Gs2WebSocketSessionTask<DescribeSubscribesByUserIdResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeSubscribesByUserIdResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeSubscribesByUserIdTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeSubscribesByRoomNameTask : public detail::Gs2WebSocketSessionTask<DescribeSubscribesByRoomNameResult>
-    {
-    private:
-        DescribeSubscribesByRoomNameRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "chat";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "subscribe";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeSubscribesByRoomName";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRoomName())
-            {
-                jsonWriter.writePropertyName("roomName");
-                jsonWriter.writeCharArray(*m_Request.getRoomName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeSubscribesByRoomNameTask(
-            DescribeSubscribesByRoomNameRequest request,
-            Gs2WebSocketSessionTask<DescribeSubscribesByRoomNameResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeSubscribesByRoomNameResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeSubscribesByRoomNameTask() GS2_OVERRIDE = default;
     };
 
     class SubscribeTask : public detail::Gs2WebSocketSessionTask<SubscribeResult>
@@ -2461,18 +2065,6 @@ public:
     }
 
 	/**
-	 * ネームスペースの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeNamespaces(DescribeNamespacesRequest request, std::function<void(AsyncDescribeNamespacesResult)> callback)
-    {
-        DescribeNamespacesTask& task = *new DescribeNamespacesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * ネームスペースを新規作成<br>
 	 *
      * @param callback コールバック関数
@@ -2529,18 +2121,6 @@ public:
     void deleteNamespace(DeleteNamespaceRequest request, std::function<void(AsyncDeleteNamespaceResult)> callback)
     {
         DeleteNamespaceTask& task = *new DeleteNamespaceTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ルームの一覧取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeRooms(DescribeRoomsRequest request, std::function<void(AsyncDescribeRoomsResult)> callback)
-    {
-        DescribeRoomsTask& task = *new DescribeRoomsTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
@@ -2617,18 +2197,6 @@ public:
     }
 
 	/**
-	 * メッセージの一覧取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeMessages(DescribeMessagesRequest request, std::function<void(AsyncDescribeMessagesResult)> callback)
-    {
-        DescribeMessagesTask& task = *new DescribeMessagesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * メッセージを投稿<br>
 	 *
      * @param callback コールバック関数
@@ -2673,42 +2241,6 @@ public:
     void deleteMessage(DeleteMessageRequest request, std::function<void(AsyncDeleteMessageResult)> callback)
     {
         DeleteMessageTask& task = *new DeleteMessageTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 購読しているルームの一覧取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeSubscribes(DescribeSubscribesRequest request, std::function<void(AsyncDescribeSubscribesResult)> callback)
-    {
-        DescribeSubscribesTask& task = *new DescribeSubscribesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ユーザIDを指定して購読しているルームの一覧取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeSubscribesByUserId(DescribeSubscribesByUserIdRequest request, std::function<void(AsyncDescribeSubscribesByUserIdResult)> callback)
-    {
-        DescribeSubscribesByUserIdTask& task = *new DescribeSubscribesByUserIdTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * ルーム名を指定して購読しているユーザの一覧取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeSubscribesByRoomName(DescribeSubscribesByRoomNameRequest request, std::function<void(AsyncDescribeSubscribesByRoomNameResult)> callback)
-    {
-        DescribeSubscribesByRoomNameTask& task = *new DescribeSubscribesByRoomNameTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

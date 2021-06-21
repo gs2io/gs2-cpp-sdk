@@ -73,62 +73,6 @@ class Gs2DeployWebSocketClient : public AbstractGs2ClientBase
 {
 private:
 
-    class DescribeStacksTask : public detail::Gs2WebSocketSessionTask<DescribeStacksResult>
-    {
-    private:
-        DescribeStacksRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "deploy";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "stack";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeStacks";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeStacksTask(
-            DescribeStacksRequest request,
-            Gs2WebSocketSessionTask<DescribeStacksResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeStacksResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeStacksTask() GS2_OVERRIDE = default;
-    };
-
     class CreateStackTask : public detail::Gs2WebSocketSessionTask<CreateStackResult>
     {
     private:
@@ -730,67 +674,6 @@ private:
         ~DeleteStackEntityTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeResourcesTask : public detail::Gs2WebSocketSessionTask<DescribeResourcesResult>
-    {
-    private:
-        DescribeResourcesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "deploy";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "resource";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeResources";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getStackName())
-            {
-                jsonWriter.writePropertyName("stackName");
-                jsonWriter.writeCharArray(*m_Request.getStackName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeResourcesTask(
-            DescribeResourcesRequest request,
-            Gs2WebSocketSessionTask<DescribeResourcesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeResourcesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeResourcesTask() GS2_OVERRIDE = default;
-    };
-
     class GetResourceTask : public detail::Gs2WebSocketSessionTask<GetResourceResult>
     {
     private:
@@ -847,67 +730,6 @@ private:
         ~GetResourceTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeEventsTask : public detail::Gs2WebSocketSessionTask<DescribeEventsResult>
-    {
-    private:
-        DescribeEventsRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "deploy";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "event";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeEvents";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getStackName())
-            {
-                jsonWriter.writePropertyName("stackName");
-                jsonWriter.writeCharArray(*m_Request.getStackName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeEventsTask(
-            DescribeEventsRequest request,
-            Gs2WebSocketSessionTask<DescribeEventsResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeEventsResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeEventsTask() GS2_OVERRIDE = default;
-    };
-
     class GetEventTask : public detail::Gs2WebSocketSessionTask<GetEventResult>
     {
     private:
@@ -962,67 +784,6 @@ private:
         {}
 
         ~GetEventTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeOutputsTask : public detail::Gs2WebSocketSessionTask<DescribeOutputsResult>
-    {
-    private:
-        DescribeOutputsRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "deploy";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "output";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeOutputs";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getStackName())
-            {
-                jsonWriter.writePropertyName("stackName");
-                jsonWriter.writeCharArray(*m_Request.getStackName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeOutputsTask(
-            DescribeOutputsRequest request,
-            Gs2WebSocketSessionTask<DescribeOutputsResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeOutputsResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeOutputsTask() GS2_OVERRIDE = default;
     };
 
     class GetOutputTask : public detail::Gs2WebSocketSessionTask<GetOutputResult>
@@ -1458,18 +1219,6 @@ public:
     }
 
 	/**
-	 * スタックの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeStacks(DescribeStacksRequest request, std::function<void(AsyncDescribeStacksResult)> callback)
-    {
-        DescribeStacksTask& task = *new DescribeStacksTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * スタックを新規作成<br>
 	 *
      * @param callback コールバック関数
@@ -1617,18 +1366,6 @@ public:
     }
 
 	/**
-	 * 作成されたのリソースの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeResources(DescribeResourcesRequest request, std::function<void(AsyncDescribeResourcesResult)> callback)
-    {
-        DescribeResourcesTask& task = *new DescribeResourcesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * 作成されたのリソースを取得<br>
 	 *
      * @param callback コールバック関数
@@ -1641,18 +1378,6 @@ public:
     }
 
 	/**
-	 * 発生したイベントの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeEvents(DescribeEventsRequest request, std::function<void(AsyncDescribeEventsResult)> callback)
-    {
-        DescribeEventsTask& task = *new DescribeEventsTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * 発生したイベントを取得<br>
 	 *
      * @param callback コールバック関数
@@ -1661,18 +1386,6 @@ public:
     void getEvent(GetEventRequest request, std::function<void(AsyncGetEventResult)> callback)
     {
         GetEventTask& task = *new GetEventTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * アウトプットの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeOutputs(DescribeOutputsRequest request, std::function<void(AsyncDescribeOutputsResult)> callback)
-    {
-        DescribeOutputsTask& task = *new DescribeOutputsTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

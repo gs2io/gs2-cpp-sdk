@@ -73,62 +73,6 @@ class Gs2KeyWebSocketClient : public AbstractGs2ClientBase
 {
 private:
 
-    class DescribeNamespacesTask : public detail::Gs2WebSocketSessionTask<DescribeNamespacesResult>
-    {
-    private:
-        DescribeNamespacesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "key";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "namespace";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeNamespaces";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeNamespacesTask(
-            DescribeNamespacesRequest request,
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeNamespacesTask() GS2_OVERRIDE = default;
-    };
-
     class CreateNamespaceTask : public detail::Gs2WebSocketSessionTask<CreateNamespaceResult>
     {
     private:
@@ -402,67 +346,6 @@ private:
         {}
 
         ~DeleteNamespaceTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeKeysTask : public detail::Gs2WebSocketSessionTask<DescribeKeysResult>
-    {
-    private:
-        DescribeKeysRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "key";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "key";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeKeys";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeKeysTask(
-            DescribeKeysRequest request,
-            Gs2WebSocketSessionTask<DescribeKeysResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeKeysResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeKeysTask() GS2_OVERRIDE = default;
     };
 
     class CreateKeyTask : public detail::Gs2WebSocketSessionTask<CreateKeyResult>
@@ -819,67 +702,6 @@ private:
         {}
 
         ~DecryptTask() GS2_OVERRIDE = default;
-    };
-
-    class DescribeGitHubApiKeysTask : public detail::Gs2WebSocketSessionTask<DescribeGitHubApiKeysResult>
-    {
-    private:
-        DescribeGitHubApiKeysRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "key";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "gitHubApiKey";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeGitHubApiKeys";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeGitHubApiKeysTask(
-            DescribeGitHubApiKeysRequest request,
-            Gs2WebSocketSessionTask<DescribeGitHubApiKeysResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeGitHubApiKeysResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeGitHubApiKeysTask() GS2_OVERRIDE = default;
     };
 
     class CreateGitHubApiKeyTask : public detail::Gs2WebSocketSessionTask<CreateGitHubApiKeyResult>
@@ -1310,18 +1132,6 @@ public:
     }
 
 	/**
-	 * ネームスペースの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeNamespaces(DescribeNamespacesRequest request, std::function<void(AsyncDescribeNamespacesResult)> callback)
-    {
-        DescribeNamespacesTask& task = *new DescribeNamespacesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * ネームスペースを新規作成<br>
 	 *
      * @param callback コールバック関数
@@ -1378,18 +1188,6 @@ public:
     void deleteNamespace(DeleteNamespaceRequest request, std::function<void(AsyncDeleteNamespaceResult)> callback)
     {
         DeleteNamespaceTask& task = *new DeleteNamespaceTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 暗号鍵の一覧を取得します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeKeys(DescribeKeysRequest request, std::function<void(AsyncDescribeKeysResult)> callback)
-    {
-        DescribeKeysTask& task = *new DescribeKeysTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
@@ -1462,18 +1260,6 @@ public:
     void decrypt(DecryptRequest request, std::function<void(AsyncDecryptResult)> callback)
     {
         DecryptTask& task = *new DecryptTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * GitHub のAPIキーの一覧を取得します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeGitHubApiKeys(DescribeGitHubApiKeysRequest request, std::function<void(AsyncDescribeGitHubApiKeysResult)> callback)
-    {
-        DescribeGitHubApiKeysTask& task = *new DescribeGitHubApiKeysTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 

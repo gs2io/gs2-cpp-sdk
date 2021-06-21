@@ -87,62 +87,6 @@ class Gs2DistributorWebSocketClient : public AbstractGs2ClientBase
 {
 private:
 
-    class DescribeNamespacesTask : public detail::Gs2WebSocketSessionTask<DescribeNamespacesResult>
-    {
-    private:
-        DescribeNamespacesRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "distributor";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "namespace";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeNamespaces";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeNamespacesTask(
-            DescribeNamespacesRequest request,
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeNamespacesResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeNamespacesTask() GS2_OVERRIDE = default;
-    };
-
     class CreateNamespaceTask : public detail::Gs2WebSocketSessionTask<CreateNamespaceResult>
     {
     private:
@@ -428,67 +372,6 @@ private:
         ~DeleteNamespaceTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeDistributorModelMastersTask : public detail::Gs2WebSocketSessionTask<DescribeDistributorModelMastersResult>
-    {
-    private:
-        DescribeDistributorModelMastersRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "distributor";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "distributorModelMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeDistributorModelMasters";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getPageToken())
-            {
-                jsonWriter.writePropertyName("pageToken");
-                jsonWriter.writeCharArray(*m_Request.getPageToken());
-            }
-            if (m_Request.getLimit())
-            {
-                jsonWriter.writePropertyName("limit");
-                jsonWriter.writeInt64(*m_Request.getLimit());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeDistributorModelMastersTask(
-            DescribeDistributorModelMastersRequest request,
-            Gs2WebSocketSessionTask<DescribeDistributorModelMastersResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeDistributorModelMastersResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeDistributorModelMastersTask() GS2_OVERRIDE = default;
-    };
-
     class CreateDistributorModelMasterTask : public detail::Gs2WebSocketSessionTask<CreateDistributorModelMasterResult>
     {
     private:
@@ -765,57 +648,6 @@ private:
         ~DeleteDistributorModelMasterTask() GS2_OVERRIDE = default;
     };
 
-    class DescribeDistributorModelsTask : public detail::Gs2WebSocketSessionTask<DescribeDistributorModelsResult>
-    {
-    private:
-        DescribeDistributorModelsRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "distributor";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "distributorModel";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "describeDistributorModels";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        DescribeDistributorModelsTask(
-            DescribeDistributorModelsRequest request,
-            Gs2WebSocketSessionTask<DescribeDistributorModelsResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<DescribeDistributorModelsResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~DescribeDistributorModelsTask() GS2_OVERRIDE = default;
-    };
-
     class GetDistributorModelTask : public detail::Gs2WebSocketSessionTask<GetDistributorModelResult>
     {
     private:
@@ -870,220 +702,6 @@ private:
         {}
 
         ~GetDistributorModelTask() GS2_OVERRIDE = default;
-    };
-
-    class ExportMasterTask : public detail::Gs2WebSocketSessionTask<ExportMasterResult>
-    {
-    private:
-        ExportMasterRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "distributor";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "currentDistributorMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "exportMaster";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        ExportMasterTask(
-            ExportMasterRequest request,
-            Gs2WebSocketSessionTask<ExportMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<ExportMasterResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~ExportMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class GetCurrentDistributorMasterTask : public detail::Gs2WebSocketSessionTask<GetCurrentDistributorMasterResult>
-    {
-    private:
-        GetCurrentDistributorMasterRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "distributor";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "currentDistributorMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "getCurrentDistributorMaster";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        GetCurrentDistributorMasterTask(
-            GetCurrentDistributorMasterRequest request,
-            Gs2WebSocketSessionTask<GetCurrentDistributorMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<GetCurrentDistributorMasterResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~GetCurrentDistributorMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class UpdateCurrentDistributorMasterTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentDistributorMasterResult>
-    {
-    private:
-        UpdateCurrentDistributorMasterRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "distributor";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "currentDistributorMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "updateCurrentDistributorMaster";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getSettings())
-            {
-                jsonWriter.writePropertyName("settings");
-                jsonWriter.writeCharArray(*m_Request.getSettings());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        UpdateCurrentDistributorMasterTask(
-            UpdateCurrentDistributorMasterRequest request,
-            Gs2WebSocketSessionTask<UpdateCurrentDistributorMasterResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<UpdateCurrentDistributorMasterResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~UpdateCurrentDistributorMasterTask() GS2_OVERRIDE = default;
-    };
-
-    class UpdateCurrentDistributorMasterFromGitHubTask : public detail::Gs2WebSocketSessionTask<UpdateCurrentDistributorMasterFromGitHubResult>
-    {
-    private:
-        UpdateCurrentDistributorMasterFromGitHubRequest m_Request;
-
-        const char* getServiceName() const GS2_OVERRIDE
-        {
-            return "distributor";
-        }
-
-        const char* getComponentName() const GS2_OVERRIDE
-        {
-            return "currentDistributorMaster";
-        }
-
-        const char* getFunctionName() const GS2_OVERRIDE
-        {
-            return "updateCurrentDistributorMasterFromGitHub";
-        }
-
-        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
-        {
-            if (m_Request.getContextStack())
-            {
-                jsonWriter.writePropertyName("contextStack");
-                jsonWriter.writeCharArray(*m_Request.getContextStack());
-            }
-            if (m_Request.getNamespaceName())
-            {
-                jsonWriter.writePropertyName("namespaceName");
-                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
-            }
-            if (m_Request.getCheckoutSetting())
-            {
-                jsonWriter.writePropertyName("checkoutSetting");
-                write(jsonWriter, *m_Request.getCheckoutSetting());
-            }
-            if (m_Request.getRequestId())
-            {
-                jsonWriter.writePropertyName("xGs2RequestId");
-                jsonWriter.writeCharArray(*m_Request.getRequestId());
-            }
-        }
-
-    public:
-        UpdateCurrentDistributorMasterFromGitHubTask(
-            UpdateCurrentDistributorMasterFromGitHubRequest request,
-            Gs2WebSocketSessionTask<UpdateCurrentDistributorMasterFromGitHubResult>::CallbackType callback
-        ) :
-            Gs2WebSocketSessionTask<UpdateCurrentDistributorMasterFromGitHubResult>(callback),
-            m_Request(std::move(request))
-        {}
-
-        ~UpdateCurrentDistributorMasterFromGitHubTask() GS2_OVERRIDE = default;
     };
 
     class DistributeTask : public detail::Gs2WebSocketSessionTask<DistributeResult>
@@ -1863,18 +1481,6 @@ public:
     }
 
 	/**
-	 * ネームスペースの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeNamespaces(DescribeNamespacesRequest request, std::function<void(AsyncDescribeNamespacesResult)> callback)
-    {
-        DescribeNamespacesTask& task = *new DescribeNamespacesTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * ネームスペースを新規作成<br>
 	 *
      * @param callback コールバック関数
@@ -1935,18 +1541,6 @@ public:
     }
 
 	/**
-	 * 配信設定マスターの一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeDistributorModelMasters(DescribeDistributorModelMastersRequest request, std::function<void(AsyncDescribeDistributorModelMastersResult)> callback)
-    {
-        DescribeDistributorModelMastersTask& task = *new DescribeDistributorModelMastersTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * 配信設定マスターを新規作成<br>
 	 *
      * @param callback コールバック関数
@@ -1995,18 +1589,6 @@ public:
     }
 
 	/**
-	 * 配信設定の一覧を取得<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void describeDistributorModels(DescribeDistributorModelsRequest request, std::function<void(AsyncDescribeDistributorModelsResult)> callback)
-    {
-        DescribeDistributorModelsTask& task = *new DescribeDistributorModelsTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
 	 * 配信設定を取得<br>
 	 *
      * @param callback コールバック関数
@@ -2015,54 +1597,6 @@ public:
     void getDistributorModel(GetDistributorModelRequest request, std::function<void(AsyncGetDistributorModelResult)> callback)
     {
         GetDistributorModelTask& task = *new GetDistributorModelTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 現在有効な配信設定のマスターデータをエクスポートします<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void exportMaster(ExportMasterRequest request, std::function<void(AsyncExportMasterResult)> callback)
-    {
-        ExportMasterTask& task = *new ExportMasterTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 現在有効な配信設定を取得します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void getCurrentDistributorMaster(GetCurrentDistributorMasterRequest request, std::function<void(AsyncGetCurrentDistributorMasterResult)> callback)
-    {
-        GetCurrentDistributorMasterTask& task = *new GetCurrentDistributorMasterTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 現在有効な配信設定を更新します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateCurrentDistributorMaster(UpdateCurrentDistributorMasterRequest request, std::function<void(AsyncUpdateCurrentDistributorMasterResult)> callback)
-    {
-        UpdateCurrentDistributorMasterTask& task = *new UpdateCurrentDistributorMasterTask(std::move(request), callback);
-        getGs2WebSocketSession().execute(task);
-    }
-
-	/**
-	 * 現在有効な配信設定を更新します<br>
-	 *
-     * @param callback コールバック関数
-     * @param request リクエストパラメータ
-     */
-    void updateCurrentDistributorMasterFromGitHub(UpdateCurrentDistributorMasterFromGitHubRequest request, std::function<void(AsyncUpdateCurrentDistributorMasterFromGitHubResult)> callback)
-    {
-        UpdateCurrentDistributorMasterFromGitHubTask& task = *new UpdateCurrentDistributorMasterFromGitHubTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
