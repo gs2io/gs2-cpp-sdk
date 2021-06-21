@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/lock/Gs2LockWebSocketClient.hpp>
+#include <gs2/lock/Gs2LockRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace lock {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::lock::Gs2LockWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::lock::Gs2LockWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::lock::Gs2LockRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::lock(
@@ -48,7 +51,7 @@ void Client::lock(
     request.setTransactionId(transactionId);
     request.setTtl(ttl);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->lock(
+    m_pWebSocketClient->lock(
         request,
         [callback](gs2::lock::AsyncLockResult r)
         {
@@ -88,7 +91,7 @@ void Client::unlock(
     request.setPropertyId(propertyId);
     request.setTransactionId(transactionId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->unlock(
+    m_pWebSocketClient->unlock(
         request,
         [callback](gs2::lock::AsyncUnlockResult r)
         {

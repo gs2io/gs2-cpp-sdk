@@ -34,6 +34,7 @@ namespace gs2 {
 namespace chat {
 
 class Gs2ChatWebSocketClient;
+class Gs2ChatRestClient;
 
 }
 
@@ -48,7 +49,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::chat::Gs2ChatWebSocketClient* m_pClient;
+    gs2::chat::Gs2ChatWebSocketClient* m_pWebSocketClient;
+    gs2::chat::Gs2ChatRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

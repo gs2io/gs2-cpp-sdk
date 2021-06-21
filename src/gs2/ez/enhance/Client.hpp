@@ -32,6 +32,7 @@ namespace gs2 {
 namespace enhance {
 
 class Gs2EnhanceWebSocketClient;
+class Gs2EnhanceRestClient;
 
 }
 
@@ -46,7 +47,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::enhance::Gs2EnhanceWebSocketClient* m_pClient;
+    gs2::enhance::Gs2EnhanceWebSocketClient* m_pWebSocketClient;
+    gs2::enhance::Gs2EnhanceRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

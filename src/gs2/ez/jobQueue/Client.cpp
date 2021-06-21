@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/jobQueue/Gs2JobQueueWebSocketClient.hpp>
+#include <gs2/jobQueue/Gs2JobQueueRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace jobQueue {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::jobQueue::Gs2JobQueueWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::jobQueue::Gs2JobQueueWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::jobQueue::Gs2JobQueueRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::run(
@@ -42,7 +45,7 @@ void Client::run(
     gs2::jobQueue::RunRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->run(
+    m_pWebSocketClient->run(
         request,
         [callback](gs2::jobQueue::AsyncRunResult r)
         {

@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/matchmaking/Gs2MatchmakingWebSocketClient.hpp>
+#include <gs2/matchmaking/Gs2MatchmakingRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace matchmaking {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::matchmaking::Gs2MatchmakingWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::matchmaking::Gs2MatchmakingWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::matchmaking::Gs2MatchmakingRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::createGathering(
@@ -70,7 +73,7 @@ void Client::createGathering(
         request.setExpiresAt(std::move(*expiresAt));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->createGathering(
+    m_pWebSocketClient->createGathering(
         request,
         [callback](gs2::matchmaking::AsyncCreateGatheringResult r)
         {
@@ -118,7 +121,7 @@ void Client::updateGathering(
         request.setAttributeRanges(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->updateGathering(
+    m_pWebSocketClient->updateGathering(
         request,
         [callback](gs2::matchmaking::AsyncUpdateGatheringResult r)
         {
@@ -161,7 +164,7 @@ void Client::doMatchmaking(
         request.setMatchmakingContextToken(std::move(*matchmakingContextToken));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->doMatchmaking(
+    m_pWebSocketClient->doMatchmaking(
         request,
         [callback](gs2::matchmaking::AsyncDoMatchmakingResult r)
         {
@@ -197,7 +200,7 @@ void Client::getGathering(
     gs2::matchmaking::GetGatheringRequest request;
     request.setNamespaceName(namespaceName);
     request.setGatheringName(gatheringName);
-    m_pClient->getGathering(
+    m_pWebSocketClient->getGathering(
         request,
         [callback](gs2::matchmaking::AsyncGetGatheringResult r)
         {
@@ -235,7 +238,7 @@ void Client::cancelMatchmaking(
     request.setNamespaceName(namespaceName);
     request.setGatheringName(gatheringName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->cancelMatchmaking(
+    m_pWebSocketClient->cancelMatchmaking(
         request,
         [callback](gs2::matchmaking::AsyncCancelMatchmakingResult r)
         {
@@ -269,7 +272,7 @@ void Client::listRatingModels(
 {
     gs2::matchmaking::DescribeRatingModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->describeRatingModels(
+    m_pRestClient->describeRatingModels(
         request,
         [callback](gs2::matchmaking::AsyncDescribeRatingModelsResult r)
         {
@@ -305,7 +308,7 @@ void Client::getRatingModel(
     gs2::matchmaking::GetRatingModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setRatingName(ratingName);
-    m_pClient->getRatingModel(
+    m_pWebSocketClient->getRatingModel(
         request,
         [callback](gs2::matchmaking::AsyncGetRatingModelResult r)
         {
@@ -351,7 +354,7 @@ void Client::listRatings(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeRatings(
+    m_pRestClient->describeRatings(
         request,
         [callback](gs2::matchmaking::AsyncDescribeRatingsResult r)
         {
@@ -389,7 +392,7 @@ void Client::getRating(
     request.setNamespaceName(namespaceName);
     request.setRatingName(ratingName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getRating(
+    m_pWebSocketClient->getRating(
         request,
         [callback](gs2::matchmaking::AsyncGetRatingResult r)
         {
@@ -429,7 +432,7 @@ void Client::createVote(
     request.setRatingName(ratingName);
     request.setGatheringName(gatheringName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getBallot(
+    m_pWebSocketClient->getBallot(
         request,
         [callback](gs2::matchmaking::AsyncGetBallotResult r)
         {
@@ -476,7 +479,7 @@ void Client::vote(
         }
         request.setGameResults(list);
     }
-    m_pClient->vote(
+    m_pWebSocketClient->vote(
         request,
         [callback](gs2::matchmaking::AsyncVoteResult r)
         {
@@ -528,7 +531,7 @@ void Client::voteMultiple(
         }
         request.setGameResults(list);
     }
-    m_pClient->voteMultiple(
+    m_pWebSocketClient->voteMultiple(
         request,
         [callback](gs2::matchmaking::AsyncVoteMultipleResult r)
         {

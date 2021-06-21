@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/realtime/Gs2RealtimeWebSocketClient.hpp>
+#include <gs2/realtime/Gs2RealtimeRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace realtime {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::realtime::Gs2RealtimeWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::realtime::Gs2RealtimeWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::realtime::Gs2RealtimeRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::getRoom(
@@ -42,7 +45,7 @@ void Client::getRoom(
     gs2::realtime::GetRoomRequest request;
     request.setNamespaceName(namespaceName);
     request.setRoomName(roomName);
-    m_pClient->getRoom(
+    m_pWebSocketClient->getRoom(
         request,
         [callback](gs2::realtime::AsyncGetRoomResult r)
         {

@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/inbox/Gs2InboxWebSocketClient.hpp>
+#include <gs2/inbox/Gs2InboxRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace inbox {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::inbox::Gs2InboxWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::inbox::Gs2InboxWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::inbox::Gs2InboxRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::list(
@@ -52,7 +55,7 @@ void Client::list(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeMessages(
+    m_pRestClient->describeMessages(
         request,
         [callback](gs2::inbox::AsyncDescribeMessagesResult r)
         {
@@ -88,7 +91,7 @@ void Client::receiveGlobalMessage(
     gs2::inbox::ReceiveGlobalMessageRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->receiveGlobalMessage(
+    m_pWebSocketClient->receiveGlobalMessage(
         request,
         [callback](gs2::inbox::AsyncReceiveGlobalMessageResult r)
         {
@@ -129,7 +132,7 @@ void Client::read(
         request.setMessageName(std::move(*messageName));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->readMessage(
+    m_pRestClient->readMessage(
         request,
         [callback](gs2::inbox::AsyncReadMessageResult r)
         {
@@ -167,7 +170,7 @@ void Client::delete_(
     request.setNamespaceName(namespaceName);
     request.setMessageName(messageName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->deleteMessage(
+    m_pWebSocketClient->deleteMessage(
         request,
         [callback](gs2::inbox::AsyncDeleteMessageResult r)
         {

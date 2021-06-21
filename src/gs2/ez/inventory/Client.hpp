@@ -35,6 +35,7 @@ namespace gs2 {
 namespace inventory {
 
 class Gs2InventoryWebSocketClient;
+class Gs2InventoryRestClient;
 
 }
 
@@ -49,7 +50,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::inventory::Gs2InventoryWebSocketClient* m_pClient;
+    gs2::inventory::Gs2InventoryWebSocketClient* m_pWebSocketClient;
+    gs2::inventory::Gs2InventoryRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

@@ -43,6 +43,7 @@ namespace gs2 {
 namespace friend_ {
 
 class Gs2FriendWebSocketClient;
+class Gs2FriendRestClient;
 
 }
 
@@ -57,7 +58,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::friend_::Gs2FriendWebSocketClient* m_pClient;
+    gs2::friend_::Gs2FriendWebSocketClient* m_pWebSocketClient;
+    gs2::friend_::Gs2FriendRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

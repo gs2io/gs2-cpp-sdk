@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/schedule/Gs2ScheduleWebSocketClient.hpp>
+#include <gs2/schedule/Gs2ScheduleRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace schedule {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::schedule::Gs2ScheduleWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::schedule::Gs2ScheduleWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::schedule::Gs2ScheduleRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::listTriggers(
@@ -42,7 +45,7 @@ void Client::listTriggers(
     gs2::schedule::DescribeTriggersRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeTriggers(
+    m_pRestClient->describeTriggers(
         request,
         [callback](gs2::schedule::AsyncDescribeTriggersResult r)
         {
@@ -80,7 +83,7 @@ void Client::getTrigger(
     request.setNamespaceName(namespaceName);
     request.setTriggerName(triggerName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getTrigger(
+    m_pWebSocketClient->getTrigger(
         request,
         [callback](gs2::schedule::AsyncGetTriggerResult r)
         {
@@ -116,7 +119,7 @@ void Client::listEvents(
     gs2::schedule::DescribeEventsRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeEvents(
+    m_pRestClient->describeEvents(
         request,
         [callback](gs2::schedule::AsyncDescribeEventsResult r)
         {
@@ -154,7 +157,7 @@ void Client::getEvent(
     request.setNamespaceName(namespaceName);
     request.setEventName(eventName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getEvent(
+    m_pWebSocketClient->getEvent(
         request,
         [callback](gs2::schedule::AsyncGetEventResult r)
         {

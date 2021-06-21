@@ -29,6 +29,7 @@ namespace gs2 {
 namespace experience {
 
 class Gs2ExperienceWebSocketClient;
+class Gs2ExperienceRestClient;
 
 }
 
@@ -43,7 +44,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::experience::Gs2ExperienceWebSocketClient* m_pClient;
+    gs2::experience::Gs2ExperienceWebSocketClient* m_pWebSocketClient;
+    gs2::experience::Gs2ExperienceRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

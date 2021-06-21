@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/version/Gs2VersionWebSocketClient.hpp>
+#include <gs2/version/Gs2VersionRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace version {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::version::Gs2VersionWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::version::Gs2VersionWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::version::Gs2VersionRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::listVersionModels(
@@ -40,7 +43,7 @@ void Client::listVersionModels(
 {
     gs2::version::DescribeVersionModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->describeVersionModels(
+    m_pRestClient->describeVersionModels(
         request,
         [callback](gs2::version::AsyncDescribeVersionModelsResult r)
         {
@@ -76,7 +79,7 @@ void Client::getVersionModel(
     gs2::version::GetVersionModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setVersionName(versionName);
-    m_pClient->getVersionModel(
+    m_pWebSocketClient->getVersionModel(
         request,
         [callback](gs2::version::AsyncGetVersionModelResult r)
         {
@@ -122,7 +125,7 @@ void Client::list(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeAcceptVersions(
+    m_pRestClient->describeAcceptVersions(
         request,
         [callback](gs2::version::AsyncDescribeAcceptVersionsResult r)
         {
@@ -160,7 +163,7 @@ void Client::accept(
     request.setNamespaceName(namespaceName);
     request.setVersionName(versionName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->accept(
+    m_pWebSocketClient->accept(
         request,
         [callback](gs2::version::AsyncAcceptResult r)
         {
@@ -198,7 +201,7 @@ void Client::delete_(
     request.setNamespaceName(namespaceName);
     request.setVersionName(versionName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->deleteAcceptVersion(
+    m_pWebSocketClient->deleteAcceptVersion(
         request,
         [callback](gs2::version::AsyncDeleteAcceptVersionResult r)
         {
@@ -236,7 +239,7 @@ void Client::checkVersion(
         request.setTargetVersions(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->checkVersion(
+    m_pWebSocketClient->checkVersion(
         request,
         [callback](gs2::version::AsyncCheckVersionResult r)
         {

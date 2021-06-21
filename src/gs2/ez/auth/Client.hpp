@@ -26,6 +26,7 @@ namespace gs2 {
 namespace auth {
 
 class Gs2AuthWebSocketClient;
+class Gs2AuthRestClient;
 
 }
 
@@ -40,7 +41,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::auth::Gs2AuthWebSocketClient* m_pClient;
+    gs2::auth::Gs2AuthWebSocketClient* m_pWebSocketClient;
+    gs2::auth::Gs2AuthRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

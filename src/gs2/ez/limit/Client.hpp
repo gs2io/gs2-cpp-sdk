@@ -30,6 +30,7 @@ namespace gs2 {
 namespace limit {
 
 class Gs2LimitWebSocketClient;
+class Gs2LimitRestClient;
 
 }
 
@@ -44,7 +45,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::limit::Gs2LimitWebSocketClient* m_pClient;
+    gs2::limit::Gs2LimitWebSocketClient* m_pWebSocketClient;
+    gs2::limit::Gs2LimitRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

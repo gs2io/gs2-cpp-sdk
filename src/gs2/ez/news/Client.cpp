@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/news/Gs2NewsWebSocketClient.hpp>
+#include <gs2/news/Gs2NewsRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace news {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::news::Gs2NewsWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::news::Gs2NewsWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::news::Gs2NewsRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::listNewses(
@@ -42,7 +45,7 @@ void Client::listNewses(
     gs2::news::DescribeNewsRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeNews(
+    m_pRestClient->describeNews(
         request,
         [callback](gs2::news::AsyncDescribeNewsResult r)
         {
@@ -78,7 +81,7 @@ void Client::getContentsUrl(
     gs2::news::WantGrantRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->wantGrant(
+    m_pWebSocketClient->wantGrant(
         request,
         [callback](gs2::news::AsyncWantGrantResult r)
         {

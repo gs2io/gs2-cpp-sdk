@@ -33,6 +33,7 @@ namespace gs2 {
 namespace formation {
 
 class Gs2FormationWebSocketClient;
+class Gs2FormationRestClient;
 
 }
 
@@ -47,7 +48,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::formation::Gs2FormationWebSocketClient* m_pClient;
+    gs2::formation::Gs2FormationWebSocketClient* m_pWebSocketClient;
+    gs2::formation::Gs2FormationRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

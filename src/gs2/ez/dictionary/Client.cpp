@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/dictionary/Gs2DictionaryWebSocketClient.hpp>
+#include <gs2/dictionary/Gs2DictionaryRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace dictionary {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::dictionary::Gs2DictionaryWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::dictionary::Gs2DictionaryWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::dictionary::Gs2DictionaryRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::listEntryModels(
@@ -40,7 +43,7 @@ void Client::listEntryModels(
 {
     gs2::dictionary::DescribeEntryModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->describeEntryModels(
+    m_pRestClient->describeEntryModels(
         request,
         [callback](gs2::dictionary::AsyncDescribeEntryModelsResult r)
         {
@@ -76,7 +79,7 @@ void Client::getEntryModel(
     gs2::dictionary::GetEntryModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setEntryName(entryName);
-    m_pClient->getEntryModel(
+    m_pWebSocketClient->getEntryModel(
         request,
         [callback](gs2::dictionary::AsyncGetEntryModelResult r)
         {
@@ -122,7 +125,7 @@ void Client::listEntries(
         request.setPageToken(std::move(*pageToken));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeEntries(
+    m_pRestClient->describeEntries(
         request,
         [callback](gs2::dictionary::AsyncDescribeEntriesResult r)
         {
@@ -160,7 +163,7 @@ void Client::getEntry(
     request.setNamespaceName(namespaceName);
     request.setEntryModelName(entryModelName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getEntry(
+    m_pWebSocketClient->getEntry(
         request,
         [callback](gs2::dictionary::AsyncGetEntryResult r)
         {
@@ -200,7 +203,7 @@ void Client::getEntryWithSignature(
     request.setEntryModelName(entryModelName);
     request.setKeyId(keyId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getEntryWithSignature(
+    m_pWebSocketClient->getEntryWithSignature(
         request,
         [callback](gs2::dictionary::AsyncGetEntryWithSignatureResult r)
         {

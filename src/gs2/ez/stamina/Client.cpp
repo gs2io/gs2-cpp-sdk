@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/stamina/Gs2StaminaWebSocketClient.hpp>
+#include <gs2/stamina/Gs2StaminaRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace stamina {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::stamina::Gs2StaminaWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::stamina::Gs2StaminaWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::stamina::Gs2StaminaRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::listStaminaModels(
@@ -40,7 +43,7 @@ void Client::listStaminaModels(
 {
     gs2::stamina::DescribeStaminaModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->describeStaminaModels(
+    m_pRestClient->describeStaminaModels(
         request,
         [callback](gs2::stamina::AsyncDescribeStaminaModelsResult r)
         {
@@ -76,7 +79,7 @@ void Client::getStaminaModel(
     gs2::stamina::GetStaminaModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setStaminaName(staminaName);
-    m_pClient->getStaminaModel(
+    m_pWebSocketClient->getStaminaModel(
         request,
         [callback](gs2::stamina::AsyncGetStaminaModelResult r)
         {
@@ -114,7 +117,7 @@ void Client::getStamina(
     request.setNamespaceName(namespaceName);
     request.setStaminaName(staminaName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getStamina(
+    m_pWebSocketClient->getStamina(
         request,
         [callback](gs2::stamina::AsyncGetStaminaResult r)
         {
@@ -154,7 +157,7 @@ void Client::consume(
     request.setStaminaName(staminaName);
     request.setConsumeValue(consumeValue);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->consumeStamina(
+    m_pWebSocketClient->consumeStamina(
         request,
         [callback](gs2::stamina::AsyncConsumeStaminaResult r)
         {

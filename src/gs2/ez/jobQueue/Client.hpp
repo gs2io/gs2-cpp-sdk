@@ -26,6 +26,7 @@ namespace gs2 {
 namespace jobQueue {
 
 class Gs2JobQueueWebSocketClient;
+class Gs2JobQueueRestClient;
 
 }
 
@@ -40,7 +41,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::jobQueue::Gs2JobQueueWebSocketClient* m_pClient;
+    gs2::jobQueue::Gs2JobQueueWebSocketClient* m_pWebSocketClient;
+    gs2::jobQueue::Gs2JobQueueRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

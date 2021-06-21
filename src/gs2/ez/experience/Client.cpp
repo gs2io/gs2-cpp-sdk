@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/experience/Gs2ExperienceWebSocketClient.hpp>
+#include <gs2/experience/Gs2ExperienceRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace experience {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::experience::Gs2ExperienceWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::experience::Gs2ExperienceWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::experience::Gs2ExperienceRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::listExperienceModels(
@@ -40,7 +43,7 @@ void Client::listExperienceModels(
 {
     gs2::experience::DescribeExperienceModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->describeExperienceModels(
+    m_pRestClient->describeExperienceModels(
         request,
         [callback](gs2::experience::AsyncDescribeExperienceModelsResult r)
         {
@@ -76,7 +79,7 @@ void Client::getExperienceModel(
     gs2::experience::GetExperienceModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setExperienceName(experienceName);
-    m_pClient->getExperienceModel(
+    m_pWebSocketClient->getExperienceModel(
         request,
         [callback](gs2::experience::AsyncGetExperienceModelResult r)
         {
@@ -127,7 +130,7 @@ void Client::listStatuses(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeStatuses(
+    m_pRestClient->describeStatuses(
         request,
         [callback](gs2::experience::AsyncDescribeStatusesResult r)
         {
@@ -167,7 +170,7 @@ void Client::getStatus(
     request.setExperienceName(experienceName);
     request.setPropertyId(propertyId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getStatus(
+    m_pWebSocketClient->getStatus(
         request,
         [callback](gs2::experience::AsyncGetStatusResult r)
         {

@@ -29,6 +29,7 @@ namespace gs2 {
 namespace lottery {
 
 class Gs2LotteryWebSocketClient;
+class Gs2LotteryRestClient;
 
 }
 
@@ -43,7 +44,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::lottery::Gs2LotteryWebSocketClient* m_pClient;
+    gs2::lottery::Gs2LotteryWebSocketClient* m_pWebSocketClient;
+    gs2::lottery::Gs2LotteryRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

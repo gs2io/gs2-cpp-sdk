@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/formation/Gs2FormationWebSocketClient.hpp>
+#include <gs2/formation/Gs2FormationRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace formation {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::formation::Gs2FormationWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::formation::Gs2FormationWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::formation::Gs2FormationRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::listMoldModels(
@@ -40,7 +43,7 @@ void Client::listMoldModels(
 {
     gs2::formation::DescribeMoldModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->describeMoldModels(
+    m_pRestClient->describeMoldModels(
         request,
         [callback](gs2::formation::AsyncDescribeMoldModelsResult r)
         {
@@ -76,7 +79,7 @@ void Client::getMoldModel(
     gs2::formation::GetMoldModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setMoldName(moldName);
-    m_pClient->getMoldModel(
+    m_pWebSocketClient->getMoldModel(
         request,
         [callback](gs2::formation::AsyncGetMoldModelResult r)
         {
@@ -122,7 +125,7 @@ void Client::listMolds(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeMolds(
+    m_pRestClient->describeMolds(
         request,
         [callback](gs2::formation::AsyncDescribeMoldsResult r)
         {
@@ -160,7 +163,7 @@ void Client::getMold(
     request.setNamespaceName(namespaceName);
     request.setMoldName(moldName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getMold(
+    m_pWebSocketClient->getMold(
         request,
         [callback](gs2::formation::AsyncGetMoldResult r)
         {
@@ -211,7 +214,7 @@ void Client::listForms(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeForms(
+    m_pRestClient->describeForms(
         request,
         [callback](gs2::formation::AsyncDescribeFormsResult r)
         {
@@ -251,7 +254,7 @@ void Client::getForm(
     request.setMoldName(moldName);
     request.setIndex(index);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getForm(
+    m_pWebSocketClient->getForm(
         request,
         [callback](gs2::formation::AsyncGetFormResult r)
         {
@@ -293,7 +296,7 @@ void Client::getFormWithSignature(
     request.setIndex(index);
     request.setKeyId(keyId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getFormWithSignature(
+    m_pWebSocketClient->getFormWithSignature(
         request,
         [callback](gs2::formation::AsyncGetFormWithSignatureResult r)
         {
@@ -344,7 +347,7 @@ void Client::setForm(
     }
     request.setKeyId(keyId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->setFormWithSignature(
+    m_pWebSocketClient->setFormWithSignature(
         request,
         [callback](gs2::formation::AsyncSetFormWithSignatureResult r)
         {

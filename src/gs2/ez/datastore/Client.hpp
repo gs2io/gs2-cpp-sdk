@@ -36,6 +36,7 @@ namespace gs2 {
 namespace datastore {
 
 class Gs2DatastoreWebSocketClient;
+class Gs2DatastoreRestClient;
 
 }
 
@@ -50,7 +51,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::datastore::Gs2DatastoreWebSocketClient* m_pClient;
+    gs2::datastore::Gs2DatastoreWebSocketClient* m_pWebSocketClient;
+    gs2::datastore::Gs2DatastoreRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

@@ -30,6 +30,7 @@ namespace gs2 {
 namespace dictionary {
 
 class Gs2DictionaryWebSocketClient;
+class Gs2DictionaryRestClient;
 
 }
 
@@ -44,7 +45,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::dictionary::Gs2DictionaryWebSocketClient* m_pClient;
+    gs2::dictionary::Gs2DictionaryWebSocketClient* m_pWebSocketClient;
+    gs2::dictionary::Gs2DictionaryRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

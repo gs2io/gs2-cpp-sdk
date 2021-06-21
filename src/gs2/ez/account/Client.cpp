@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/account/Gs2AccountWebSocketClient.hpp>
+#include <gs2/account/Gs2AccountRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace account {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::account::Gs2AccountWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::account::Gs2AccountWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::account::Gs2AccountRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::create(
@@ -40,7 +43,7 @@ void Client::create(
 {
     gs2::account::CreateAccountRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->createAccount(
+    m_pWebSocketClient->createAccount(
         request,
         [callback](gs2::account::AsyncCreateAccountResult r)
         {
@@ -80,7 +83,7 @@ void Client::authentication(
     request.setUserId(userId);
     request.setKeyId(keyId);
     request.setPassword(password);
-    m_pClient->authentication(
+    m_pWebSocketClient->authentication(
         request,
         [callback](gs2::account::AsyncAuthenticationResult r)
         {
@@ -122,7 +125,7 @@ void Client::addTakeOverSetting(
     request.setUserIdentifier(userIdentifier);
     request.setPassword(password);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->createTakeOver(
+    m_pWebSocketClient->createTakeOver(
         request,
         [callback](gs2::account::AsyncCreateTakeOverResult r)
         {
@@ -168,7 +171,7 @@ void Client::listTakeOverSettings(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeTakeOvers(
+    m_pRestClient->describeTakeOvers(
         request,
         [callback](gs2::account::AsyncDescribeTakeOversResult r)
         {
@@ -210,7 +213,7 @@ void Client::updateTakeOverSetting(
     request.setOldPassword(oldPassword);
     request.setPassword(password);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->updateTakeOver(
+    m_pWebSocketClient->updateTakeOver(
         request,
         [callback](gs2::account::AsyncUpdateTakeOverResult r)
         {
@@ -248,7 +251,7 @@ void Client::deleteTakeOverSetting(
     request.setNamespaceName(namespaceName);
     request.setType(type);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->deleteTakeOver(
+    m_pWebSocketClient->deleteTakeOver(
         request,
         [callback](gs2::account::AsyncDeleteTakeOverResult r)
         {
@@ -280,7 +283,7 @@ void Client::doTakeOver(
     request.setType(type);
     request.setUserIdentifier(userIdentifier);
     request.setPassword(password);
-    m_pClient->doTakeOver(
+    m_pWebSocketClient->doTakeOver(
         request,
         [callback](gs2::account::AsyncDoTakeOverResult r)
         {

@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/mission/Gs2MissionWebSocketClient.hpp>
+#include <gs2/mission/Gs2MissionRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace mission {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::mission::Gs2MissionWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::mission::Gs2MissionWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::mission::Gs2MissionRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::listMissionTaskModels(
@@ -42,7 +45,7 @@ void Client::listMissionTaskModels(
     gs2::mission::DescribeMissionTaskModelsRequest request;
     request.setNamespaceName(namespaceName);
     request.setMissionGroupName(missionGroupName);
-    m_pClient->describeMissionTaskModels(
+    m_pRestClient->describeMissionTaskModels(
         request,
         [callback](gs2::mission::AsyncDescribeMissionTaskModelsResult r)
         {
@@ -80,7 +83,7 @@ void Client::getMissionTaskModel(
     request.setNamespaceName(namespaceName);
     request.setMissionGroupName(missionGroupName);
     request.setMissionTaskName(missionTaskName);
-    m_pClient->getMissionTaskModel(
+    m_pWebSocketClient->getMissionTaskModel(
         request,
         [callback](gs2::mission::AsyncGetMissionTaskModelResult r)
         {
@@ -114,7 +117,7 @@ void Client::listMissionGroupModels(
 {
     gs2::mission::DescribeMissionGroupModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->describeMissionGroupModels(
+    m_pRestClient->describeMissionGroupModels(
         request,
         [callback](gs2::mission::AsyncDescribeMissionGroupModelsResult r)
         {
@@ -150,7 +153,7 @@ void Client::getMissionGroupModel(
     gs2::mission::GetMissionGroupModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setMissionGroupName(missionGroupName);
-    m_pClient->getMissionGroupModel(
+    m_pWebSocketClient->getMissionGroupModel(
         request,
         [callback](gs2::mission::AsyncGetMissionGroupModelResult r)
         {
@@ -196,7 +199,7 @@ void Client::listCounters(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeCounters(
+    m_pRestClient->describeCounters(
         request,
         [callback](gs2::mission::AsyncDescribeCountersResult r)
         {
@@ -234,7 +237,7 @@ void Client::getCounter(
     request.setNamespaceName(namespaceName);
     request.setCounterName(counterName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getCounter(
+    m_pWebSocketClient->getCounter(
         request,
         [callback](gs2::mission::AsyncGetCounterResult r)
         {
@@ -268,7 +271,7 @@ void Client::listCounterModels(
 {
     gs2::mission::DescribeCounterModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->describeCounterModels(
+    m_pRestClient->describeCounterModels(
         request,
         [callback](gs2::mission::AsyncDescribeCounterModelsResult r)
         {
@@ -304,7 +307,7 @@ void Client::getCounterModel(
     gs2::mission::GetCounterModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setCounterName(counterName);
-    m_pClient->getCounterModel(
+    m_pWebSocketClient->getCounterModel(
         request,
         [callback](gs2::mission::AsyncGetCounterModelResult r)
         {
@@ -350,7 +353,7 @@ void Client::listCompletes(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeCompletes(
+    m_pRestClient->describeCompletes(
         request,
         [callback](gs2::mission::AsyncDescribeCompletesResult r)
         {
@@ -388,7 +391,7 @@ void Client::getComplete(
     request.setNamespaceName(namespaceName);
     request.setMissionGroupName(missionGroupName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getComplete(
+    m_pWebSocketClient->getComplete(
         request,
         [callback](gs2::mission::AsyncGetCompleteResult r)
         {
@@ -428,7 +431,7 @@ void Client::receiveRewards(
     request.setMissionGroupName(missionGroupName);
     request.setMissionTaskName(missionTaskName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->complete(
+    m_pRestClient->complete(
         request,
         [callback](gs2::mission::AsyncCompleteResult r)
         {

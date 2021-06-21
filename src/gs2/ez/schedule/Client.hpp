@@ -29,6 +29,7 @@ namespace gs2 {
 namespace schedule {
 
 class Gs2ScheduleWebSocketClient;
+class Gs2ScheduleRestClient;
 
 }
 
@@ -43,7 +44,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::schedule::Gs2ScheduleWebSocketClient* m_pClient;
+    gs2::schedule::Gs2ScheduleWebSocketClient* m_pWebSocketClient;
+    gs2::schedule::Gs2ScheduleRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

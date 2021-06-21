@@ -27,6 +27,7 @@ namespace gs2 {
 namespace news {
 
 class Gs2NewsWebSocketClient;
+class Gs2NewsRestClient;
 
 }
 
@@ -41,7 +42,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::news::Gs2NewsWebSocketClient* m_pClient;
+    gs2::news::Gs2NewsWebSocketClient* m_pWebSocketClient;
+    gs2::news::Gs2NewsRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

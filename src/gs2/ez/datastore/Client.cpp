@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/datastore/Gs2DatastoreWebSocketClient.hpp>
+#include <gs2/datastore/Gs2DatastoreRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace datastore {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::datastore::Gs2DatastoreWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::datastore::Gs2DatastoreWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::datastore::Gs2DatastoreRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::listMyDataObjects(
@@ -57,7 +60,7 @@ void Client::listMyDataObjects(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeDataObjects(
+    m_pRestClient->describeDataObjects(
         request,
         [callback](gs2::datastore::AsyncDescribeDataObjectsResult r)
         {
@@ -97,7 +100,7 @@ void Client::updateDataObject(
     request.setScope(scope);
     request.setAllowUserIds(allowUserIds);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->updateDataObject(
+    m_pWebSocketClient->updateDataObject(
         request,
         [callback](gs2::datastore::AsyncUpdateDataObjectResult r)
         {
@@ -147,7 +150,7 @@ void Client::prepareUpload(
         request.setUpdateIfExists(std::move(*updateIfExists));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->prepareUpload(
+    m_pWebSocketClient->prepareUpload(
         request,
         [callback](gs2::datastore::AsyncPrepareUploadResult r)
         {
@@ -185,7 +188,7 @@ void Client::prepareReUpload(
     request.setNamespaceName(namespaceName);
     request.setDataObjectName(dataObjectName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->prepareReUpload(
+    m_pWebSocketClient->prepareReUpload(
         request,
         [callback](gs2::datastore::AsyncPrepareReUploadResult r)
         {
@@ -223,7 +226,7 @@ void Client::doneUpload(
     request.setNamespaceName(namespaceName);
     request.setDataObjectName(dataObjectName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->doneUpload(
+    m_pWebSocketClient->doneUpload(
         request,
         [callback](gs2::datastore::AsyncDoneUploadResult r)
         {
@@ -261,7 +264,7 @@ void Client::prepareDownload(
     request.setNamespaceName(namespaceName);
     request.setDataObjectId(dataObjectId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->prepareDownload(
+    m_pWebSocketClient->prepareDownload(
         request,
         [callback](gs2::datastore::AsyncPrepareDownloadResult r)
         {
@@ -299,7 +302,7 @@ void Client::prepareDownloadOwnData(
     request.setNamespaceName(namespaceName);
     request.setDataObjectName(dataObjectName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->prepareDownloadOwnData(
+    m_pWebSocketClient->prepareDownloadOwnData(
         request,
         [callback](gs2::datastore::AsyncPrepareDownloadOwnDataResult r)
         {
@@ -337,7 +340,7 @@ void Client::prepareDownloadByUserIdAndDataObjectName(
     request.setNamespaceName(namespaceName);
     request.setUserId(userId);
     request.setDataObjectName(dataObjectName);
-    m_pClient->prepareDownloadByUserIdAndDataObjectName(
+    m_pWebSocketClient->prepareDownloadByUserIdAndDataObjectName(
         request,
         [callback](gs2::datastore::AsyncPrepareDownloadByUserIdAndDataObjectNameResult r)
         {
@@ -375,7 +378,7 @@ void Client::deleteDataObject(
     request.setNamespaceName(namespaceName);
     request.setDataObjectName(dataObjectName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->deleteDataObject(
+    m_pWebSocketClient->deleteDataObject(
         request,
         [callback](gs2::datastore::AsyncDeleteDataObjectResult r)
         {
@@ -411,7 +414,7 @@ void Client::restoreDataObject(
     gs2::datastore::RestoreDataObjectRequest request;
     request.setNamespaceName(namespaceName);
     request.setDataObjectId(dataObjectId);
-    m_pClient->restoreDataObject(
+    m_pWebSocketClient->restoreDataObject(
         request,
         [callback](gs2::datastore::AsyncRestoreDataObjectResult r)
         {
@@ -459,7 +462,7 @@ void Client::listDataObhectHistories(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeDataObjectHistories(
+    m_pRestClient->describeDataObjectHistories(
         request,
         [callback](gs2::datastore::AsyncDescribeDataObjectHistoriesResult r)
         {

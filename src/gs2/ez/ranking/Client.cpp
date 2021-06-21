@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/ranking/Gs2RankingWebSocketClient.hpp>
+#include <gs2/ranking/Gs2RankingRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace ranking {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::ranking::Gs2RankingWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::ranking::Gs2RankingWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::ranking::Gs2RankingRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::listCategories(
@@ -40,7 +43,7 @@ void Client::listCategories(
 {
     gs2::ranking::DescribeCategoryModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->describeCategoryModels(
+    m_pRestClient->describeCategoryModels(
         request,
         [callback](gs2::ranking::AsyncDescribeCategoryModelsResult r)
         {
@@ -76,7 +79,7 @@ void Client::getCategory(
     gs2::ranking::GetCategoryModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setCategoryName(categoryName);
-    m_pClient->getCategoryModel(
+    m_pWebSocketClient->getCategoryModel(
         request,
         [callback](gs2::ranking::AsyncGetCategoryModelResult r)
         {
@@ -114,7 +117,7 @@ void Client::listSubscribes(
     request.setNamespaceName(namespaceName);
     request.setCategoryName(categoryName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeSubscribesByCategoryName(
+    m_pRestClient->describeSubscribesByCategoryName(
         request,
         [callback](gs2::ranking::AsyncDescribeSubscribesByCategoryNameResult r)
         {
@@ -154,7 +157,7 @@ void Client::subscribe(
     request.setCategoryName(categoryName);
     request.setTargetUserId(targetUserId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->subscribe(
+    m_pWebSocketClient->subscribe(
         request,
         [callback](gs2::ranking::AsyncSubscribeResult r)
         {
@@ -194,7 +197,7 @@ void Client::unsubscribe(
     request.setCategoryName(categoryName);
     request.setTargetUserId(targetUserId);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->unsubscribe(
+    m_pWebSocketClient->unsubscribe(
         request,
         [callback](gs2::ranking::AsyncUnsubscribeResult r)
         {
@@ -244,7 +247,7 @@ void Client::listScores(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeScores(
+    m_pRestClient->describeScores(
         request,
         [callback](gs2::ranking::AsyncDescribeScoresResult r)
         {
@@ -289,7 +292,7 @@ void Client::getScore(
         request.setUniqueId(std::move(*uniqueId));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getScore(
+    m_pWebSocketClient->getScore(
         request,
         [callback](gs2::ranking::AsyncGetScoreResult r)
         {
@@ -334,7 +337,7 @@ void Client::putScore(
         request.setMetadata(std::move(*metadata));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->putScore(
+    m_pWebSocketClient->putScore(
         request,
         [callback](gs2::ranking::AsyncPutScoreResult r)
         {
@@ -387,7 +390,7 @@ void Client::getRanking(
         request.setStartIndex(std::move(*startIndex));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeRankings(
+    m_pRestClient->describeRankings(
         request,
         [callback](gs2::ranking::AsyncDescribeRankingsResult r)
         {
@@ -425,7 +428,7 @@ void Client::getNearRanking(
     request.setNamespaceName(namespaceName);
     request.setCategoryName(categoryName);
     request.setScore(score);
-    m_pClient->describeNearRankings(
+    m_pRestClient->describeNearRankings(
         request,
         [callback](gs2::ranking::AsyncDescribeNearRankingsResult r)
         {
@@ -470,7 +473,7 @@ void Client::getRank(
         request.setUniqueId(std::move(*uniqueId));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getRanking(
+    m_pWebSocketClient->getRanking(
         request,
         [callback](gs2::ranking::AsyncGetRankingResult r)
         {

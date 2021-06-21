@@ -36,6 +36,7 @@ namespace gs2 {
 namespace ranking {
 
 class Gs2RankingWebSocketClient;
+class Gs2RankingRestClient;
 
 }
 
@@ -50,7 +51,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::ranking::Gs2RankingWebSocketClient* m_pClient;
+    gs2::ranking::Gs2RankingWebSocketClient* m_pWebSocketClient;
+    gs2::ranking::Gs2RankingRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

@@ -31,6 +31,7 @@ namespace gs2 {
 namespace version {
 
 class Gs2VersionWebSocketClient;
+class Gs2VersionRestClient;
 
 }
 
@@ -45,7 +46,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::version::Gs2VersionWebSocketClient* m_pClient;
+    gs2::version::Gs2VersionWebSocketClient* m_pWebSocketClient;
+    gs2::version::Gs2VersionRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/quest/Gs2QuestWebSocketClient.hpp>
+#include <gs2/quest/Gs2QuestRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace quest {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::quest::Gs2QuestWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::quest::Gs2QuestWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::quest::Gs2QuestRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::start(
@@ -61,7 +64,7 @@ void Client::start(
         request.setConfig(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->start(
+    m_pRestClient->start(
         request,
         [callback](gs2::quest::AsyncStartResult r)
         {
@@ -124,7 +127,7 @@ void Client::end(
         request.setConfig(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->end(
+    m_pRestClient->end(
         request,
         [callback](gs2::quest::AsyncEndResult r)
         {
@@ -160,7 +163,7 @@ void Client::getProgress(
     gs2::quest::GetProgressRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getProgress(
+    m_pWebSocketClient->getProgress(
         request,
         [callback](gs2::quest::AsyncGetProgressResult r)
         {
@@ -196,7 +199,7 @@ void Client::deleteProgress(
     gs2::quest::DeleteProgressRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->deleteProgress(
+    m_pWebSocketClient->deleteProgress(
         request,
         [callback](gs2::quest::AsyncDeleteProgressResult r)
         {
@@ -242,7 +245,7 @@ void Client::describeCompletedQuestLists(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeCompletedQuestLists(
+    m_pRestClient->describeCompletedQuestLists(
         request,
         [callback](gs2::quest::AsyncDescribeCompletedQuestListsResult r)
         {
@@ -280,7 +283,7 @@ void Client::getCompletedQuestList(
     request.setNamespaceName(namespaceName);
     request.setQuestGroupName(questGroupName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getCompletedQuestList(
+    m_pWebSocketClient->getCompletedQuestList(
         request,
         [callback](gs2::quest::AsyncGetCompletedQuestListResult r)
         {
@@ -314,7 +317,7 @@ void Client::listQuestGroups(
 {
     gs2::quest::DescribeQuestGroupModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->describeQuestGroupModels(
+    m_pRestClient->describeQuestGroupModels(
         request,
         [callback](gs2::quest::AsyncDescribeQuestGroupModelsResult r)
         {
@@ -350,7 +353,7 @@ void Client::getQuestGroup(
     gs2::quest::GetQuestGroupModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setQuestGroupName(questGroupName);
-    m_pClient->getQuestGroupModel(
+    m_pWebSocketClient->getQuestGroupModel(
         request,
         [callback](gs2::quest::AsyncGetQuestGroupModelResult r)
         {
@@ -386,7 +389,7 @@ void Client::listQuests(
     gs2::quest::DescribeQuestModelsRequest request;
     request.setNamespaceName(namespaceName);
     request.setQuestGroupName(questGroupName);
-    m_pClient->describeQuestModels(
+    m_pRestClient->describeQuestModels(
         request,
         [callback](gs2::quest::AsyncDescribeQuestModelsResult r)
         {
@@ -424,7 +427,7 @@ void Client::getQuest(
     request.setNamespaceName(namespaceName);
     request.setQuestGroupName(questGroupName);
     request.setQuestName(questName);
-    m_pClient->getQuestModel(
+    m_pWebSocketClient->getQuestModel(
         request,
         [callback](gs2::quest::AsyncGetQuestModelResult r)
         {

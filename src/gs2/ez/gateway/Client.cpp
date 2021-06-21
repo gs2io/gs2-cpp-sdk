@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/gateway/Gs2GatewayWebSocketClient.hpp>
+#include <gs2/gateway/Gs2GatewayRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace gateway {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::gateway::Gs2GatewayWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::gateway::Gs2GatewayWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::gateway::Gs2GatewayRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::setUserId(
@@ -44,7 +47,7 @@ void Client::setUserId(
     request.setNamespaceName(namespaceName);
     request.setAllowConcurrentAccess(allowConcurrentAccess);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->setUserId(
+    m_pWebSocketClient->setUserId(
         request,
         [callback](gs2::gateway::AsyncSetUserIdResult r)
         {

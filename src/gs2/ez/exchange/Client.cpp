@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/exchange/Gs2ExchangeWebSocketClient.hpp>
+#include <gs2/exchange/Gs2ExchangeRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace exchange {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::exchange::Gs2ExchangeWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::exchange::Gs2ExchangeWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::exchange::Gs2ExchangeRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::listRateModels(
@@ -40,7 +43,7 @@ void Client::listRateModels(
 {
     gs2::exchange::DescribeRateModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->describeRateModels(
+    m_pRestClient->describeRateModels(
         request,
         [callback](gs2::exchange::AsyncDescribeRateModelsResult r)
         {
@@ -76,7 +79,7 @@ void Client::getRateModel(
     gs2::exchange::GetRateModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setRateName(rateName);
-    m_pClient->getRateModel(
+    m_pWebSocketClient->getRateModel(
         request,
         [callback](gs2::exchange::AsyncGetRateModelResult r)
         {
@@ -126,7 +129,7 @@ void Client::exchange(
         request.setConfig(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->exchange(
+    m_pRestClient->exchange(
         request,
         [callback](gs2::exchange::AsyncExchangeResult r)
         {
@@ -172,7 +175,7 @@ void Client::listAwaits(
         request.setPageToken(std::move(*pageToken));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeAwaits(
+    m_pRestClient->describeAwaits(
         request,
         [callback](gs2::exchange::AsyncDescribeAwaitsResult r)
         {
@@ -212,7 +215,7 @@ void Client::getAwait(
     request.setRateName(rateName);
     request.setAwaitName(awaitName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getAwait(
+    m_pWebSocketClient->getAwait(
         request,
         [callback](gs2::exchange::AsyncGetAwaitResult r)
         {
@@ -252,7 +255,7 @@ void Client::acquire(
     request.setRateName(rateName);
     request.setAwaitName(awaitName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->acquire(
+    m_pWebSocketClient->acquire(
         request,
         [callback](gs2::exchange::AsyncAcquireResult r)
         {
@@ -292,7 +295,7 @@ void Client::skip(
     request.setRateName(rateName);
     request.setAwaitName(awaitName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->skip(
+    m_pWebSocketClient->skip(
         request,
         [callback](gs2::exchange::AsyncSkipResult r)
         {
@@ -332,7 +335,7 @@ void Client::deleteAwait(
     request.setRateName(rateName);
     request.setAwaitName(awaitName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->deleteAwait(
+    m_pWebSocketClient->deleteAwait(
         request,
         [callback](gs2::exchange::AsyncDeleteAwaitResult r)
         {

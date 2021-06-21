@@ -26,6 +26,7 @@ namespace gs2 {
 namespace gateway {
 
 class Gs2GatewayWebSocketClient;
+class Gs2GatewayRestClient;
 
 }
 
@@ -40,7 +41,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::gateway::Gs2GatewayWebSocketClient* m_pClient;
+    gs2::gateway::Gs2GatewayWebSocketClient* m_pWebSocketClient;
+    gs2::gateway::Gs2GatewayRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

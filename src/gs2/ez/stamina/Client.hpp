@@ -29,6 +29,7 @@ namespace gs2 {
 namespace stamina {
 
 class Gs2StaminaWebSocketClient;
+class Gs2StaminaRestClient;
 
 }
 
@@ -43,7 +44,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::stamina::Gs2StaminaWebSocketClient* m_pClient;
+    gs2::stamina::Gs2StaminaWebSocketClient* m_pWebSocketClient;
+    gs2::stamina::Gs2StaminaRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

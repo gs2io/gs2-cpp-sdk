@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/enhance/Gs2EnhanceWebSocketClient.hpp>
+#include <gs2/enhance/Gs2EnhanceRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace enhance {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::enhance::Gs2EnhanceWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::enhance::Gs2EnhanceWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::enhance::Gs2EnhanceRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::listRateModels(
@@ -40,7 +43,7 @@ void Client::listRateModels(
 {
     gs2::enhance::DescribeRateModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->describeRateModels(
+    m_pRestClient->describeRateModels(
         request,
         [callback](gs2::enhance::AsyncDescribeRateModelsResult r)
         {
@@ -76,7 +79,7 @@ void Client::getRateModel(
     gs2::enhance::GetRateModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setRateName(rateName);
-    m_pClient->getRateModel(
+    m_pWebSocketClient->getRateModel(
         request,
         [callback](gs2::enhance::AsyncGetRateModelResult r)
         {
@@ -135,7 +138,7 @@ void Client::enhance(
         request.setConfig(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->directEnhance(
+    m_pRestClient->directEnhance(
         request,
         [callback](gs2::enhance::AsyncDirectEnhanceResult r)
         {
@@ -199,7 +202,7 @@ void Client::start(
         request.setConfig(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->start(
+    m_pRestClient->start(
         request,
         [callback](gs2::enhance::AsyncStartResult r)
         {
@@ -245,7 +248,7 @@ void Client::end(
         request.setConfig(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->end(
+    m_pRestClient->end(
         request,
         [callback](gs2::enhance::AsyncEndResult r)
         {
@@ -281,7 +284,7 @@ void Client::getProgress(
     gs2::enhance::GetProgressRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getProgress(
+    m_pWebSocketClient->getProgress(
         request,
         [callback](gs2::enhance::AsyncGetProgressResult r)
         {
@@ -317,7 +320,7 @@ void Client::deleteProgress(
     gs2::enhance::DeleteProgressRequest request;
     request.setNamespaceName(namespaceName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->deleteProgress(
+    m_pWebSocketClient->deleteProgress(
         request,
         [callback](gs2::enhance::AsyncDeleteProgressResult r)
         {

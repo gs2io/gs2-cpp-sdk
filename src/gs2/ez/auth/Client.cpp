@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/auth/Gs2AuthWebSocketClient.hpp>
+#include <gs2/auth/Gs2AuthRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace auth {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::auth::Gs2AuthWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::auth::Gs2AuthWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::auth::Gs2AuthRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::login(
@@ -46,7 +49,7 @@ void Client::login(
     request.setKeyId(keyId);
     request.setBody(body);
     request.setSignature(signature);
-    m_pClient->loginBySignature(
+    m_pWebSocketClient->loginBySignature(
         request,
         [callback](gs2::auth::AsyncLoginBySignatureResult r)
         {

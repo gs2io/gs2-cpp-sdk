@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/lottery/Gs2LotteryWebSocketClient.hpp>
+#include <gs2/lottery/Gs2LotteryRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace lottery {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::lottery::Gs2LotteryWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::lottery::Gs2LotteryWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::lottery::Gs2LotteryRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::describeBoxes(
@@ -52,7 +55,7 @@ void Client::describeBoxes(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeBoxes(
+    m_pRestClient->describeBoxes(
         request,
         [callback](gs2::lottery::AsyncDescribeBoxesResult r)
         {
@@ -90,7 +93,7 @@ void Client::getBox(
     request.setNamespaceName(namespaceName);
     request.setPrizeTableName(prizeTableName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getBox(
+    m_pWebSocketClient->getBox(
         request,
         [callback](gs2::lottery::AsyncGetBoxResult r)
         {
@@ -128,7 +131,7 @@ void Client::resetBox(
     request.setNamespaceName(namespaceName);
     request.setPrizeTableName(prizeTableName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->resetBox(
+    m_pWebSocketClient->resetBox(
         request,
         [callback](gs2::lottery::AsyncResetBoxResult r)
         {
@@ -158,7 +161,7 @@ void Client::listProbabilities(
     request.setNamespaceName(namespaceName);
     request.setLotteryName(lotteryName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeProbabilities(
+    m_pWebSocketClient->describeProbabilities(
         request,
         [callback](gs2::lottery::AsyncDescribeProbabilitiesResult r)
         {

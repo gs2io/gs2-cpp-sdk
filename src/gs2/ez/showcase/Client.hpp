@@ -27,6 +27,7 @@ namespace gs2 {
 namespace showcase {
 
 class Gs2ShowcaseWebSocketClient;
+class Gs2ShowcaseRestClient;
 
 }
 
@@ -41,7 +42,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::showcase::Gs2ShowcaseWebSocketClient* m_pClient;
+    gs2::showcase::Gs2ShowcaseWebSocketClient* m_pWebSocketClient;
+    gs2::showcase::Gs2ShowcaseRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

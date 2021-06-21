@@ -32,6 +32,7 @@ namespace gs2 {
 namespace account {
 
 class Gs2AccountWebSocketClient;
+class Gs2AccountRestClient;
 
 }
 
@@ -46,7 +47,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::account::Gs2AccountWebSocketClient* m_pClient;
+    gs2::account::Gs2AccountWebSocketClient* m_pWebSocketClient;
+    gs2::account::Gs2AccountRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

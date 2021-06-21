@@ -35,6 +35,7 @@ namespace gs2 {
 namespace quest {
 
 class Gs2QuestWebSocketClient;
+class Gs2QuestRestClient;
 
 }
 
@@ -49,7 +50,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::quest::Gs2QuestWebSocketClient* m_pClient;
+    gs2::quest::Gs2QuestWebSocketClient* m_pWebSocketClient;
+    gs2::quest::Gs2QuestRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

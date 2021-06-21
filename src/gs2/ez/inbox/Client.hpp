@@ -29,6 +29,7 @@ namespace gs2 {
 namespace inbox {
 
 class Gs2InboxWebSocketClient;
+class Gs2InboxRestClient;
 
 }
 
@@ -43,7 +44,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::inbox::Gs2InboxWebSocketClient* m_pClient;
+    gs2::inbox::Gs2InboxWebSocketClient* m_pWebSocketClient;
+    gs2::inbox::Gs2InboxRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

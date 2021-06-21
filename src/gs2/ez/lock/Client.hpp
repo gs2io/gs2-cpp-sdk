@@ -27,6 +27,7 @@ namespace gs2 {
 namespace lock {
 
 class Gs2LockWebSocketClient;
+class Gs2LockRestClient;
 
 }
 
@@ -41,7 +42,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::lock::Gs2LockWebSocketClient* m_pClient;
+    gs2::lock::Gs2LockWebSocketClient* m_pWebSocketClient;
+    gs2::lock::Gs2LockRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

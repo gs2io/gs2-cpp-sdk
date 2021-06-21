@@ -37,6 +37,7 @@ namespace gs2 {
 namespace matchmaking {
 
 class Gs2MatchmakingWebSocketClient;
+class Gs2MatchmakingRestClient;
 
 }
 
@@ -51,7 +52,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::matchmaking::Gs2MatchmakingWebSocketClient* m_pClient;
+    gs2::matchmaking::Gs2MatchmakingWebSocketClient* m_pWebSocketClient;
+    gs2::matchmaking::Gs2MatchmakingRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

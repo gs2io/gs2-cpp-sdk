@@ -26,6 +26,7 @@ namespace gs2 {
 namespace realtime {
 
 class Gs2RealtimeWebSocketClient;
+class Gs2RealtimeRestClient;
 
 }
 
@@ -40,7 +41,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::realtime::Gs2RealtimeWebSocketClient* m_pClient;
+    gs2::realtime::Gs2RealtimeWebSocketClient* m_pWebSocketClient;
+    gs2::realtime::Gs2RealtimeRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

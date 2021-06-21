@@ -36,6 +36,7 @@ namespace gs2 {
 namespace mission {
 
 class Gs2MissionWebSocketClient;
+class Gs2MissionRestClient;
 
 }
 
@@ -50,7 +51,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::mission::Gs2MissionWebSocketClient* m_pClient;
+    gs2::mission::Gs2MissionWebSocketClient* m_pWebSocketClient;
+    gs2::mission::Gs2MissionRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

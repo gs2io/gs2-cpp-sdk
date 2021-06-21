@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/money/Gs2MoneyWebSocketClient.hpp>
+#include <gs2/money/Gs2MoneyRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace money {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::money::Gs2MoneyWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::money::Gs2MoneyWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::money::Gs2MoneyRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::get(
@@ -44,7 +47,7 @@ void Client::get(
     request.setNamespaceName(namespaceName);
     request.setSlot(slot);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getWallet(
+    m_pWebSocketClient->getWallet(
         request,
         [callback](gs2::money::AsyncGetWalletResult r)
         {
@@ -86,7 +89,7 @@ void Client::withdraw(
     request.setCount(count);
     request.setPaidOnly(paidOnly);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->withdraw(
+    m_pWebSocketClient->withdraw(
         request,
         [callback](gs2::money::AsyncWithdrawResult r)
         {

@@ -27,6 +27,7 @@ namespace gs2 {
 namespace money {
 
 class Gs2MoneyWebSocketClient;
+class Gs2MoneyRestClient;
 
 }
 
@@ -41,7 +42,8 @@ class Client : public gs2::Gs2Object
 {
 private:
     gs2::ez::Profile& m_Profile;
-    gs2::money::Gs2MoneyWebSocketClient* m_pClient;
+    gs2::money::Gs2MoneyWebSocketClient* m_pWebSocketClient;
+    gs2::money::Gs2MoneyRestClient* m_pRestClient;
 
 public:
     Client(gs2::ez::Profile& profile);

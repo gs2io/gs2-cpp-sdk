@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/inventory/Gs2InventoryWebSocketClient.hpp>
+#include <gs2/inventory/Gs2InventoryRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace inventory {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::inventory::Gs2InventoryWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::inventory::Gs2InventoryWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::inventory::Gs2InventoryRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::listInventoryModels(
@@ -40,7 +43,7 @@ void Client::listInventoryModels(
 {
     gs2::inventory::DescribeInventoryModelsRequest request;
     request.setNamespaceName(namespaceName);
-    m_pClient->describeInventoryModels(
+    m_pRestClient->describeInventoryModels(
         request,
         [callback](gs2::inventory::AsyncDescribeInventoryModelsResult r)
         {
@@ -76,7 +79,7 @@ void Client::getInventoryModel(
     gs2::inventory::GetInventoryModelRequest request;
     request.setNamespaceName(namespaceName);
     request.setInventoryName(inventoryName);
-    m_pClient->getInventoryModel(
+    m_pWebSocketClient->getInventoryModel(
         request,
         [callback](gs2::inventory::AsyncGetInventoryModelResult r)
         {
@@ -112,7 +115,7 @@ void Client::listItemModels(
     gs2::inventory::DescribeItemModelsRequest request;
     request.setNamespaceName(namespaceName);
     request.setInventoryName(inventoryName);
-    m_pClient->describeItemModels(
+    m_pRestClient->describeItemModels(
         request,
         [callback](gs2::inventory::AsyncDescribeItemModelsResult r)
         {
@@ -150,7 +153,7 @@ void Client::getItemModel(
     request.setNamespaceName(namespaceName);
     request.setInventoryName(inventoryName);
     request.setItemName(itemName);
-    m_pClient->getItemModel(
+    m_pWebSocketClient->getItemModel(
         request,
         [callback](gs2::inventory::AsyncGetItemModelResult r)
         {
@@ -196,7 +199,7 @@ void Client::listInventories(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeInventories(
+    m_pRestClient->describeInventories(
         request,
         [callback](gs2::inventory::AsyncDescribeInventoriesResult r)
         {
@@ -234,7 +237,7 @@ void Client::getInventory(
     request.setNamespaceName(namespaceName);
     request.setInventoryName(inventoryName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getInventory(
+    m_pWebSocketClient->getInventory(
         request,
         [callback](gs2::inventory::AsyncGetInventoryResult r)
         {
@@ -282,7 +285,7 @@ void Client::listItems(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeItemSets(
+    m_pRestClient->describeItemSets(
         request,
         [callback](gs2::inventory::AsyncDescribeItemSetsResult r)
         {
@@ -322,7 +325,7 @@ void Client::getItem(
     request.setInventoryName(inventoryName);
     request.setItemName(itemName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getItemSet(
+    m_pWebSocketClient->getItemSet(
         request,
         [callback](gs2::inventory::AsyncGetItemSetResult r)
         {
@@ -369,7 +372,7 @@ void Client::getItemWithSignature(
         request.setItemSetName(std::move(*itemSetName));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->getItemWithSignature(
+    m_pWebSocketClient->getItemWithSignature(
         request,
         [callback](gs2::inventory::AsyncGetItemWithSignatureResult r)
         {
@@ -416,7 +419,7 @@ void Client::consume(
         request.setItemSetName(std::move(*itemSetName));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->consumeItemSet(
+    m_pWebSocketClient->consumeItemSet(
         request,
         [callback](gs2::inventory::AsyncConsumeItemSetResult r)
         {

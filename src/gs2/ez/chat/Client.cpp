@@ -18,19 +18,22 @@
 #include "../Profile.hpp"
 #include "../GameSession.hpp"
 #include <gs2/chat/Gs2ChatWebSocketClient.hpp>
+#include <gs2/chat/Gs2ChatRestClient.hpp>
 
 
 namespace gs2 { namespace ez { namespace chat {
 
 Client::Client(gs2::ez::Profile& profile) :
     m_Profile(profile),
-    m_pClient(new gs2::chat::Gs2ChatWebSocketClient(profile.getGs2Session()))
+    m_pWebSocketClient(new gs2::chat::Gs2ChatWebSocketClient(profile.getGs2WebSocketSession())),
+    m_pRestClient(new gs2::chat::Gs2ChatRestClient(profile.getGs2RestSession()))
 {
 }
 
 Client::~Client()
 {
-    delete m_pClient;
+    delete m_pWebSocketClient;
+    delete m_pRestClient;
 }
 
 void Client::createRoom(
@@ -62,7 +65,7 @@ void Client::createRoom(
         request.setWhiteListUserIds(std::move(*whiteListUserIds));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->createRoom(
+    m_pWebSocketClient->createRoom(
         request,
         [callback](gs2::chat::AsyncCreateRoomResult r)
         {
@@ -98,7 +101,7 @@ void Client::getRoom(
     gs2::chat::GetRoomRequest request;
     request.setNamespaceName(namespaceName);
     request.setRoomName(roomName);
-    m_pClient->getRoom(
+    m_pWebSocketClient->getRoom(
         request,
         [callback](gs2::chat::AsyncGetRoomResult r)
         {
@@ -136,7 +139,7 @@ void Client::deleteRoom(
     request.setNamespaceName(namespaceName);
     request.setRoomName(roomName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->deleteRoom(
+    m_pWebSocketClient->deleteRoom(
         request,
         [callback](gs2::chat::AsyncDeleteRoomResult r)
         {
@@ -183,7 +186,7 @@ void Client::post(
         request.setPassword(std::move(*password));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->post(
+    m_pWebSocketClient->post(
         request,
         [callback](gs2::chat::AsyncPostResult r)
         {
@@ -234,7 +237,7 @@ void Client::listMessages(
     {
         request.setPassword(std::move(*password));
     }
-    m_pClient->describeMessages(
+    m_pRestClient->describeMessages(
         request,
         [callback](gs2::chat::AsyncDescribeMessagesResult r)
         {
@@ -280,7 +283,7 @@ void Client::listSubscribeRooms(
         request.setLimit(std::move(*limit));
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->describeSubscribes(
+    m_pRestClient->describeSubscribes(
         request,
         [callback](gs2::chat::AsyncDescribeSubscribesResult r)
         {
@@ -328,7 +331,7 @@ void Client::subscribe(
         request.setNotificationTypes(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->subscribe(
+    m_pWebSocketClient->subscribe(
         request,
         [callback](gs2::chat::AsyncSubscribeResult r)
         {
@@ -376,7 +379,7 @@ void Client::updateSubscribeSetting(
         request.setNotificationTypes(list);
     }
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->updateNotificationType(
+    m_pWebSocketClient->updateNotificationType(
         request,
         [callback](gs2::chat::AsyncUpdateNotificationTypeResult r)
         {
@@ -414,7 +417,7 @@ void Client::unsubscribe(
     request.setNamespaceName(namespaceName);
     request.setRoomName(roomName);
     request.setAccessToken(*session.getAccessToken()->getToken());
-    m_pClient->unsubscribe(
+    m_pWebSocketClient->unsubscribe(
         request,
         [callback](gs2::chat::AsyncUnsubscribeResult r)
         {
