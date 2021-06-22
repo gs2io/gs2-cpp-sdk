@@ -122,7 +122,7 @@ void Client::runStampTask(
     {
         request.setContextStack(std::move(*contextStack));
     }
-    m_pWebSocketClient->runStampTask(
+    m_pRestClient->runStampTask(
         request,
         [callback](gs2::distributor::AsyncRunStampTaskResult r)
         {
@@ -165,7 +165,7 @@ void Client::runStampSheet(
     {
         request.setContextStack(std::move(*contextStack));
     }
-    m_pWebSocketClient->runStampSheet(
+    m_pRestClient->runStampSheet(
         request,
         [callback](gs2::distributor::AsyncRunStampSheetResult r)
         {
@@ -203,7 +203,7 @@ void Client::runStampSheetExpress(
     request.setNamespaceName(namespaceName);
     request.setStampSheet(stampSheet);
     request.setKeyId(keyId);
-    m_pWebSocketClient->runStampSheetExpress(
+    m_pRestClient->runStampSheetExpress(
         request,
         [callback](gs2::distributor::AsyncRunStampSheetExpressResult r)
         {
@@ -244,7 +244,7 @@ void Client::runStampTaskWithoutNamespace(
     {
         request.setContextStack(std::move(*contextStack));
     }
-    m_pWebSocketClient->runStampTaskWithoutNamespace(
+    m_pRestClient->runStampTaskWithoutNamespace(
         request,
         [callback](gs2::distributor::AsyncRunStampTaskWithoutNamespaceResult r)
         {
@@ -285,7 +285,7 @@ void Client::runStampSheetWithoutNamespace(
     {
         request.setContextStack(std::move(*contextStack));
     }
-    m_pWebSocketClient->runStampSheetWithoutNamespace(
+    m_pRestClient->runStampSheetWithoutNamespace(
         request,
         [callback](gs2::distributor::AsyncRunStampSheetWithoutNamespaceResult r)
         {
@@ -321,7 +321,7 @@ void Client::runStampSheetExpressWithoutNamespace(
     gs2::distributor::RunStampSheetExpressWithoutNamespaceRequest request;
     request.setStampSheet(stampSheet);
     request.setKeyId(keyId);
-    m_pWebSocketClient->runStampSheetExpressWithoutNamespace(
+    m_pRestClient->runStampSheetExpressWithoutNamespace(
         request,
         [callback](gs2::distributor::AsyncRunStampSheetExpressWithoutNamespaceResult r)
         {
