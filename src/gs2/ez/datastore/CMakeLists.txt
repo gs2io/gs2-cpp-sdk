@@ -20,12 +20,8 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
-        model/EzScriptSetting.hpp
         model/EzDataObject.hpp
         model/EzDataObjectHistory.hpp
-        model/EzResponseCache.hpp
-        model/EzLogSetting.hpp
         result/EzListMyDataObjectsResult.hpp
         result/EzUpdateDataObjectResult.hpp
         result/EzPrepareUploadResult.hpp
@@ -40,13 +36,9 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzScriptSetting.cpp
-        model/EzDataObject.cpp
-        model/EzDataObjectHistory.cpp
-        model/EzResponseCache.cpp
-        model/EzLogSetting.cpp
+        Gs2_Ez_Datastore_Client.cpp
+        model/Gs2_Ez_Datastore_EzDataObject.cpp
+        model/Gs2_Ez_Datastore_EzDataObjectHistory.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

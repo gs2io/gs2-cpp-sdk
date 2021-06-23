@@ -20,21 +20,12 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
         model/EzProfile.hpp
-        model/EzFollow.hpp
-        model/EzFriend.hpp
-        model/EzSendBox.hpp
-        model/EzInbox.hpp
         model/EzBlackList.hpp
-        model/EzResponseCache.hpp
         model/EzFollowUser.hpp
         model/EzFriendUser.hpp
         model/EzFriendRequest.hpp
         model/EzPublicProfile.hpp
-        model/EzScriptSetting.hpp
-        model/EzNotificationSetting.hpp
-        model/EzLogSetting.hpp
         result/EzGetProfileResult.hpp
         result/EzUpdateProfileResult.hpp
         result/EzGetPublicProfileResult.hpp
@@ -56,22 +47,13 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzProfile.cpp
-        model/EzFollow.cpp
-        model/EzFriend.cpp
-        model/EzSendBox.cpp
-        model/EzInbox.cpp
-        model/EzBlackList.cpp
-        model/EzResponseCache.cpp
-        model/EzFollowUser.cpp
-        model/EzFriendUser.cpp
-        model/EzFriendRequest.cpp
-        model/EzPublicProfile.cpp
-        model/EzScriptSetting.cpp
-        model/EzNotificationSetting.cpp
-        model/EzLogSetting.cpp
+        Gs2_Ez_Friend_Client.cpp
+        model/Gs2_Ez_Friend_EzProfile.cpp
+        model/Gs2_Ez_Friend_EzBlackList.cpp
+        model/Gs2_Ez_Friend_EzFollowUser.cpp
+        model/Gs2_Ez_Friend_EzFriendUser.cpp
+        model/Gs2_Ez_Friend_EzFriendRequest.cpp
+        model/Gs2_Ez_Friend_EzPublicProfile.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

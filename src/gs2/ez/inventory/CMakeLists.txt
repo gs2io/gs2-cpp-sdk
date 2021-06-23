@@ -20,19 +20,10 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
-        model/EzInventoryModelMaster.hpp
         model/EzInventoryModel.hpp
-        model/EzItemModelMaster.hpp
         model/EzItemModel.hpp
-        model/EzCurrentItemModelMaster.hpp
         model/EzInventory.hpp
         model/EzItemSet.hpp
-        model/EzItemSetGroup.hpp
-        model/EzResponseCache.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzScriptSetting.hpp
-        model/EzLogSetting.hpp
         result/EzListInventoryModelsResult.hpp
         result/EzGetInventoryModelResult.hpp
         result/EzListItemModelsResult.hpp
@@ -46,20 +37,11 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzInventoryModelMaster.cpp
-        model/EzInventoryModel.cpp
-        model/EzItemModelMaster.cpp
-        model/EzItemModel.cpp
-        model/EzCurrentItemModelMaster.cpp
-        model/EzInventory.cpp
-        model/EzItemSet.cpp
-        model/EzItemSetGroup.cpp
-        model/EzResponseCache.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzScriptSetting.cpp
-        model/EzLogSetting.cpp
+        Gs2_Ez_Inventory_Client.cpp
+        model/Gs2_Ez_Inventory_EzInventoryModel.cpp
+        model/Gs2_Ez_Inventory_EzItemModel.cpp
+        model/Gs2_Ez_Inventory_EzInventory.cpp
+        model/Gs2_Ez_Inventory_EzItemSet.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

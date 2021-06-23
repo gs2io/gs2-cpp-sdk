@@ -20,19 +20,11 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
-        model/EzVersionModelMaster.hpp
         model/EzVersion.hpp
         model/EzVersionModel.hpp
         model/EzAcceptVersion.hpp
         model/EzStatus.hpp
         model/EzTargetVersion.hpp
-        model/EzSignTargetVersion.hpp
-        model/EzResponseCache.hpp
-        model/EzCurrentVersionMaster.hpp
-        model/EzScriptSetting.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzLogSetting.hpp
         result/EzListVersionModelsResult.hpp
         result/EzGetVersionModelResult.hpp
         result/EzListResult.hpp
@@ -42,20 +34,12 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzVersionModelMaster.cpp
-        model/EzVersion.cpp
-        model/EzVersionModel.cpp
-        model/EzAcceptVersion.cpp
-        model/EzStatus.cpp
-        model/EzTargetVersion.cpp
-        model/EzSignTargetVersion.cpp
-        model/EzResponseCache.cpp
-        model/EzCurrentVersionMaster.cpp
-        model/EzScriptSetting.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzLogSetting.cpp
+        Gs2_Ez_Version_Client.cpp
+        model/Gs2_Ez_Version_EzVersion.cpp
+        model/Gs2_Ez_Version_EzVersionModel.cpp
+        model/Gs2_Ez_Version_EzAcceptVersion.cpp
+        model/Gs2_Ez_Version_EzStatus.cpp
+        model/Gs2_Ez_Version_EzTargetVersion.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

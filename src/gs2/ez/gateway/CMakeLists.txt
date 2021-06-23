@@ -20,23 +20,13 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
         model/EzWebSocketSession.hpp
-        model/EzFirebaseToken.hpp
-        model/EzSession.hpp
-        model/EzResponseCache.hpp
-        model/EzLogSetting.hpp
         result/EzSetUserIdResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzWebSocketSession.cpp
-        model/EzFirebaseToken.cpp
-        model/EzSession.cpp
-        model/EzResponseCache.cpp
-        model/EzLogSetting.cpp
+        Gs2_Ez_Gateway_Client.cpp
+        model/Gs2_Ez_Gateway_EzWebSocketSession.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

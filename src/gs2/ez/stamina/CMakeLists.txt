@@ -20,20 +20,11 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
-        model/EzStaminaModelMaster.hpp
-        model/EzMaxStaminaTableMaster.hpp
-        model/EzRecoverIntervalTableMaster.hpp
-        model/EzRecoverValueTableMaster.hpp
-        model/EzCurrentStaminaMaster.hpp
         model/EzStaminaModel.hpp
         model/EzMaxStaminaTable.hpp
         model/EzRecoverIntervalTable.hpp
         model/EzRecoverValueTable.hpp
         model/EzStamina.hpp
-        model/EzResponseCache.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzLogSetting.hpp
         result/EzListStaminaModelsResult.hpp
         result/EzGetStaminaModelResult.hpp
         result/EzGetStaminaResult.hpp
@@ -41,21 +32,12 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzStaminaModelMaster.cpp
-        model/EzMaxStaminaTableMaster.cpp
-        model/EzRecoverIntervalTableMaster.cpp
-        model/EzRecoverValueTableMaster.cpp
-        model/EzCurrentStaminaMaster.cpp
-        model/EzStaminaModel.cpp
-        model/EzMaxStaminaTable.cpp
-        model/EzRecoverIntervalTable.cpp
-        model/EzRecoverValueTable.cpp
-        model/EzStamina.cpp
-        model/EzResponseCache.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzLogSetting.cpp
+        Gs2_Ez_Stamina_Client.cpp
+        model/Gs2_Ez_Stamina_EzStaminaModel.cpp
+        model/Gs2_Ez_Stamina_EzMaxStaminaTable.cpp
+        model/Gs2_Ez_Stamina_EzRecoverIntervalTable.cpp
+        model/Gs2_Ez_Stamina_EzRecoverValueTable.cpp
+        model/Gs2_Ez_Stamina_EzStamina.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

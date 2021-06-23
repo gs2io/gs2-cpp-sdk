@@ -20,20 +20,14 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
         model/EzMutex.hpp
-        model/EzResponseCache.hpp
-        model/EzLogSetting.hpp
         result/EzLockResult.hpp
         result/EzUnlockResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzMutex.cpp
-        model/EzResponseCache.cpp
-        model/EzLogSetting.cpp
+        Gs2_Ez_Lock_Client.cpp
+        model/Gs2_Ez_Lock_EzMutex.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

@@ -20,24 +20,16 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
         model/EzNews.hpp
         model/EzSetCookieRequestEntry.hpp
-        model/EzResponseCache.hpp
-        model/EzLogSetting.hpp
-        model/EzGitHubCheckoutSetting.hpp
         result/EzListNewsesResult.hpp
         result/EzGetContentsUrlResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzNews.cpp
-        model/EzSetCookieRequestEntry.cpp
-        model/EzResponseCache.cpp
-        model/EzLogSetting.cpp
-        model/EzGitHubCheckoutSetting.cpp
+        Gs2_Ez_News_Client.cpp
+        model/Gs2_Ez_News_EzNews.cpp
+        model/Gs2_Ez_News_EzSetCookieRequestEntry.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

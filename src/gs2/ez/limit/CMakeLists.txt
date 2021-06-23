@@ -20,13 +20,7 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
         model/EzCounter.hpp
-        model/EzLimitModelMaster.hpp
-        model/EzCurrentLimitMaster.hpp
-        model/EzResponseCache.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzLogSetting.hpp
         model/EzLimitModel.hpp
         result/EzListCountersResult.hpp
         result/EzGetCounterResult.hpp
@@ -36,15 +30,9 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzCounter.cpp
-        model/EzLimitModelMaster.cpp
-        model/EzCurrentLimitMaster.cpp
-        model/EzResponseCache.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzLogSetting.cpp
-        model/EzLimitModel.cpp
+        Gs2_Ez_Limit_Client.cpp
+        model/Gs2_Ez_Limit_EzCounter.cpp
+        model/Gs2_Ez_Limit_EzLimitModel.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

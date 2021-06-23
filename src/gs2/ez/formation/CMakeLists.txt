@@ -20,23 +20,15 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
         model/EzFormModel.hpp
-        model/EzFormModelMaster.hpp
         model/EzMoldModel.hpp
-        model/EzMoldModelMaster.hpp
-        model/EzCurrentFormMaster.hpp
         model/EzMold.hpp
         model/EzForm.hpp
         model/EzSlot.hpp
-        model/EzResponseCache.hpp
         model/EzSlotModel.hpp
         model/EzSlotWithSignature.hpp
         model/EzAcquireActionConfig.hpp
         model/EzConfig.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzScriptSetting.hpp
-        model/EzLogSetting.hpp
         model/EzAcquireAction.hpp
         result/EzListMoldModelsResult.hpp
         result/EzGetMoldModelResult.hpp
@@ -49,25 +41,17 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzFormModel.cpp
-        model/EzFormModelMaster.cpp
-        model/EzMoldModel.cpp
-        model/EzMoldModelMaster.cpp
-        model/EzCurrentFormMaster.cpp
-        model/EzMold.cpp
-        model/EzForm.cpp
-        model/EzSlot.cpp
-        model/EzResponseCache.cpp
-        model/EzSlotModel.cpp
-        model/EzSlotWithSignature.cpp
-        model/EzAcquireActionConfig.cpp
-        model/EzConfig.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzScriptSetting.cpp
-        model/EzLogSetting.cpp
-        model/EzAcquireAction.cpp
+        Gs2_Ez_Formation_Client.cpp
+        model/Gs2_Ez_Formation_EzFormModel.cpp
+        model/Gs2_Ez_Formation_EzMoldModel.cpp
+        model/Gs2_Ez_Formation_EzMold.cpp
+        model/Gs2_Ez_Formation_EzForm.cpp
+        model/Gs2_Ez_Formation_EzSlot.cpp
+        model/Gs2_Ez_Formation_EzSlotModel.cpp
+        model/Gs2_Ez_Formation_EzSlotWithSignature.cpp
+        model/Gs2_Ez_Formation_EzAcquireActionConfig.cpp
+        model/Gs2_Ez_Formation_EzConfig.cpp
+        model/Gs2_Ez_Formation_EzAcquireAction.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

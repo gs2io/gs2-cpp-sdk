@@ -20,15 +20,10 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
         model/EzRoom.hpp
         model/EzMessage.hpp
         model/EzSubscribe.hpp
-        model/EzResponseCache.hpp
         model/EzNotificationType.hpp
-        model/EzScriptSetting.hpp
-        model/EzNotificationSetting.hpp
-        model/EzLogSetting.hpp
         result/EzCreateRoomResult.hpp
         result/EzGetRoomResult.hpp
         result/EzDeleteRoomResult.hpp
@@ -41,16 +36,11 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzRoom.cpp
-        model/EzMessage.cpp
-        model/EzSubscribe.cpp
-        model/EzResponseCache.cpp
-        model/EzNotificationType.cpp
-        model/EzScriptSetting.cpp
-        model/EzNotificationSetting.cpp
-        model/EzLogSetting.cpp
+        Gs2_Ez_Chat_Client.cpp
+        model/Gs2_Ez_Chat_EzRoom.cpp
+        model/Gs2_Ez_Chat_EzMessage.cpp
+        model/Gs2_Ez_Chat_EzSubscribe.cpp
+        model/Gs2_Ez_Chat_EzNotificationType.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

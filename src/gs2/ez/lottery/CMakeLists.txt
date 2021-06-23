@@ -20,18 +20,8 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
-        model/EzLotteryModelMaster.hpp
-        model/EzPrizeTableMaster.hpp
         model/EzBox.hpp
-        model/EzLotteryModel.hpp
-        model/EzPrizeTable.hpp
         model/EzProbability.hpp
-        model/EzCurrentLotteryMaster.hpp
-        model/EzResponseCache.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzLogSetting.hpp
-        model/EzPrize.hpp
         model/EzAcquireAction.hpp
         model/EzDrawnPrize.hpp
         model/EzBoxItem.hpp
@@ -44,24 +34,14 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzLotteryModelMaster.cpp
-        model/EzPrizeTableMaster.cpp
-        model/EzBox.cpp
-        model/EzLotteryModel.cpp
-        model/EzPrizeTable.cpp
-        model/EzProbability.cpp
-        model/EzCurrentLotteryMaster.cpp
-        model/EzResponseCache.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzLogSetting.cpp
-        model/EzPrize.cpp
-        model/EzAcquireAction.cpp
-        model/EzDrawnPrize.cpp
-        model/EzBoxItem.cpp
-        model/EzBoxItems.cpp
-        model/EzConfig.cpp
+        Gs2_Ez_Lottery_Client.cpp
+        model/Gs2_Ez_Lottery_EzBox.cpp
+        model/Gs2_Ez_Lottery_EzProbability.cpp
+        model/Gs2_Ez_Lottery_EzAcquireAction.cpp
+        model/Gs2_Ez_Lottery_EzDrawnPrize.cpp
+        model/Gs2_Ez_Lottery_EzBoxItem.cpp
+        model/Gs2_Ez_Lottery_EzBoxItems.cpp
+        model/Gs2_Ez_Lottery_EzConfig.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

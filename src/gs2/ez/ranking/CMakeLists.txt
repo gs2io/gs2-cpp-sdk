@@ -20,18 +20,10 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
         model/EzCategoryModel.hpp
-        model/EzCategoryModelMaster.hpp
-        model/EzSubscribe.hpp
         model/EzScore.hpp
         model/EzRanking.hpp
-        model/EzResponseCache.hpp
-        model/EzCurrentRankingMaster.hpp
-        model/EzCalculatedAt.hpp
         model/EzSubscribeUser.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzLogSetting.hpp
         result/EzListCategoriesResult.hpp
         result/EzGetCategoryResult.hpp
         result/EzListSubscribesResult.hpp
@@ -46,19 +38,11 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzCategoryModel.cpp
-        model/EzCategoryModelMaster.cpp
-        model/EzSubscribe.cpp
-        model/EzScore.cpp
-        model/EzRanking.cpp
-        model/EzResponseCache.cpp
-        model/EzCurrentRankingMaster.cpp
-        model/EzCalculatedAt.cpp
-        model/EzSubscribeUser.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzLogSetting.cpp
+        Gs2_Ez_Ranking_Client.cpp
+        model/Gs2_Ez_Ranking_EzCategoryModel.cpp
+        model/Gs2_Ez_Ranking_EzScore.cpp
+        model/Gs2_Ez_Ranking_EzRanking.cpp
+        model/Gs2_Ez_Ranking_EzSubscribeUser.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

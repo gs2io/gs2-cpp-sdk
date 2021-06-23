@@ -20,15 +20,8 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
         model/EzGathering.hpp
-        model/EzRatingModelMaster.hpp
         model/EzRatingModel.hpp
-        model/EzCurrentRatingModelMaster.hpp
-        model/EzResponseCache.hpp
-        model/EzNotificationSetting.hpp
-        model/EzLogSetting.hpp
-        model/EzGitHubCheckoutSetting.hpp
         model/EzAttributeRange.hpp
         model/EzCapacityOfRole.hpp
         model/EzAttribute.hpp
@@ -37,8 +30,6 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzGameResult.hpp
         model/EzBallot.hpp
         model/EzSignedBallot.hpp
-        model/EzWrittenBallot.hpp
-        model/EzVote.hpp
         result/EzCreateGatheringResult.hpp
         result/EzUpdateGatheringResult.hpp
         result/EzDoMatchmakingResult.hpp
@@ -54,26 +45,17 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzGathering.cpp
-        model/EzRatingModelMaster.cpp
-        model/EzRatingModel.cpp
-        model/EzCurrentRatingModelMaster.cpp
-        model/EzResponseCache.cpp
-        model/EzNotificationSetting.cpp
-        model/EzLogSetting.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzAttributeRange.cpp
-        model/EzCapacityOfRole.cpp
-        model/EzAttribute.cpp
-        model/EzPlayer.cpp
-        model/EzRating.cpp
-        model/EzGameResult.cpp
-        model/EzBallot.cpp
-        model/EzSignedBallot.cpp
-        model/EzWrittenBallot.cpp
-        model/EzVote.cpp
+        Gs2_Ez_Matchmaking_Client.cpp
+        model/Gs2_Ez_Matchmaking_EzGathering.cpp
+        model/Gs2_Ez_Matchmaking_EzRatingModel.cpp
+        model/Gs2_Ez_Matchmaking_EzAttributeRange.cpp
+        model/Gs2_Ez_Matchmaking_EzCapacityOfRole.cpp
+        model/Gs2_Ez_Matchmaking_EzAttribute.cpp
+        model/Gs2_Ez_Matchmaking_EzPlayer.cpp
+        model/Gs2_Ez_Matchmaking_EzRating.cpp
+        model/Gs2_Ez_Matchmaking_EzGameResult.cpp
+        model/Gs2_Ez_Matchmaking_EzBallot.cpp
+        model/Gs2_Ez_Matchmaking_EzSignedBallot.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

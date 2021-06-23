@@ -20,19 +20,8 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
         model/EzMessage.hpp
-        model/EzCurrentMessageMaster.hpp
-        model/EzGlobalMessageMaster.hpp
-        model/EzGlobalMessage.hpp
-        model/EzReceived.hpp
-        model/EzResponseCache.hpp
         model/EzConfig.hpp
-        model/EzScriptSetting.hpp
-        model/EzNotificationSetting.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzLogSetting.hpp
-        model/EzTimeSpan.hpp
         model/EzAcquireAction.hpp
         result/EzListResult.hpp
         result/EzReceiveGlobalMessageResult.hpp
@@ -41,21 +30,10 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzMessage.cpp
-        model/EzCurrentMessageMaster.cpp
-        model/EzGlobalMessageMaster.cpp
-        model/EzGlobalMessage.cpp
-        model/EzReceived.cpp
-        model/EzResponseCache.cpp
-        model/EzConfig.cpp
-        model/EzScriptSetting.cpp
-        model/EzNotificationSetting.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzLogSetting.cpp
-        model/EzTimeSpan.cpp
-        model/EzAcquireAction.cpp
+        Gs2_Ez_Inbox_Client.cpp
+        model/Gs2_Ez_Inbox_EzMessage.cpp
+        model/Gs2_Ez_Inbox_EzConfig.cpp
+        model/Gs2_Ez_Inbox_EzAcquireAction.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

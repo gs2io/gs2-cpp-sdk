@@ -20,19 +20,11 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
-        model/EzQuestGroupModelMaster.hpp
-        model/EzQuestModelMaster.hpp
-        model/EzCurrentQuestMaster.hpp
-        model/EzResponseCache.hpp
         model/EzContents.hpp
         model/EzConsumeAction.hpp
         model/EzAcquireAction.hpp
         model/EzReward.hpp
         model/EzConfig.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzScriptSetting.hpp
-        model/EzLogSetting.hpp
         model/EzProgress.hpp
         model/EzCompletedQuestList.hpp
         model/EzQuestGroupModel.hpp
@@ -50,24 +42,16 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzQuestGroupModelMaster.cpp
-        model/EzQuestModelMaster.cpp
-        model/EzCurrentQuestMaster.cpp
-        model/EzResponseCache.cpp
-        model/EzContents.cpp
-        model/EzConsumeAction.cpp
-        model/EzAcquireAction.cpp
-        model/EzReward.cpp
-        model/EzConfig.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzScriptSetting.cpp
-        model/EzLogSetting.cpp
-        model/EzProgress.cpp
-        model/EzCompletedQuestList.cpp
-        model/EzQuestGroupModel.cpp
-        model/EzQuestModel.cpp
+        Gs2_Ez_Quest_Client.cpp
+        model/Gs2_Ez_Quest_EzContents.cpp
+        model/Gs2_Ez_Quest_EzConsumeAction.cpp
+        model/Gs2_Ez_Quest_EzAcquireAction.cpp
+        model/Gs2_Ez_Quest_EzReward.cpp
+        model/Gs2_Ez_Quest_EzConfig.cpp
+        model/Gs2_Ez_Quest_EzProgress.cpp
+        model/Gs2_Ez_Quest_EzCompletedQuestList.cpp
+        model/Gs2_Ez_Quest_EzQuestGroupModel.cpp
+        model/Gs2_Ez_Quest_EzQuestModel.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

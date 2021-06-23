@@ -20,14 +20,8 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
-        model/EzEventMaster.hpp
         model/EzTrigger.hpp
         model/EzEvent.hpp
-        model/EzCurrentEventMaster.hpp
-        model/EzResponseCache.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzLogSetting.hpp
         result/EzListTriggersResult.hpp
         result/EzGetTriggerResult.hpp
         result/EzListEventsResult.hpp
@@ -35,15 +29,9 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzEventMaster.cpp
-        model/EzTrigger.cpp
-        model/EzEvent.cpp
-        model/EzCurrentEventMaster.cpp
-        model/EzResponseCache.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzLogSetting.cpp
+        Gs2_Ez_Schedule_Client.cpp
+        model/Gs2_Ez_Schedule_EzTrigger.cpp
+        model/Gs2_Ez_Schedule_EzEvent.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

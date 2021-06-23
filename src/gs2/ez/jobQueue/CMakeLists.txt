@@ -20,29 +20,17 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
         model/EzJob.hpp
-        model/EzJobResult.hpp
-        model/EzDeadLetterJob.hpp
-        model/EzResponseCache.hpp
-        model/EzNotificationSetting.hpp
-        model/EzLogSetting.hpp
         model/EzJobEntry.hpp
         model/EzJobResultBody.hpp
         result/EzRunResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzJob.cpp
-        model/EzJobResult.cpp
-        model/EzDeadLetterJob.cpp
-        model/EzResponseCache.cpp
-        model/EzNotificationSetting.cpp
-        model/EzLogSetting.cpp
-        model/EzJobEntry.cpp
-        model/EzJobResultBody.cpp
+        Gs2_Ez_JobQueue_Client.cpp
+        model/Gs2_Ez_JobQueue_EzJob.cpp
+        model/Gs2_Ez_JobQueue_EzJobEntry.cpp
+        model/Gs2_Ez_JobQueue_EzJobResultBody.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

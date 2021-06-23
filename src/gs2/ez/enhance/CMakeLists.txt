@@ -20,16 +20,9 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
         model/EzRateModel.hpp
-        model/EzRateModelMaster.hpp
         model/EzProgress.hpp
-        model/EzCurrentRateMaster.hpp
-        model/EzResponseCache.hpp
         model/EzConfig.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzLogSetting.hpp
-        model/EzBonusRate.hpp
         model/EzMaterial.hpp
         result/EzListRateModelsResult.hpp
         result/EzGetRateModelResult.hpp
@@ -41,18 +34,11 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzRateModel.cpp
-        model/EzRateModelMaster.cpp
-        model/EzProgress.cpp
-        model/EzCurrentRateMaster.cpp
-        model/EzResponseCache.cpp
-        model/EzConfig.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzLogSetting.cpp
-        model/EzBonusRate.cpp
-        model/EzMaterial.cpp
+        Gs2_Ez_Enhance_Client.cpp
+        model/Gs2_Ez_Enhance_EzRateModel.cpp
+        model/Gs2_Ez_Enhance_EzProgress.cpp
+        model/Gs2_Ez_Enhance_EzConfig.cpp
+        model/Gs2_Ez_Enhance_EzMaterial.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

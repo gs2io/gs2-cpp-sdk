@@ -20,14 +20,6 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
-        model/EzSalesItemMaster.hpp
-        model/EzSalesItemGroupMaster.hpp
-        model/EzShowcaseMaster.hpp
-        model/EzCurrentShowcaseMaster.hpp
-        model/EzResponseCache.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzLogSetting.hpp
         model/EzSalesItem.hpp
         model/EzSalesItemGroup.hpp
         model/EzShowcase.hpp
@@ -35,29 +27,19 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         model/EzConfig.hpp
         model/EzConsumeAction.hpp
         model/EzAcquireAction.hpp
-        model/EzDisplayItemMaster.hpp
         result/EzGetShowcaseResult.hpp
         result/EzBuyResult.hpp
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzSalesItemMaster.cpp
-        model/EzSalesItemGroupMaster.cpp
-        model/EzShowcaseMaster.cpp
-        model/EzCurrentShowcaseMaster.cpp
-        model/EzResponseCache.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzLogSetting.cpp
-        model/EzSalesItem.cpp
-        model/EzSalesItemGroup.cpp
-        model/EzShowcase.cpp
-        model/EzDisplayItem.cpp
-        model/EzConfig.cpp
-        model/EzConsumeAction.cpp
-        model/EzAcquireAction.cpp
-        model/EzDisplayItemMaster.cpp
+        Gs2_Ez_Showcase_Client.cpp
+        model/Gs2_Ez_Showcase_EzSalesItem.cpp
+        model/Gs2_Ez_Showcase_EzSalesItemGroup.cpp
+        model/Gs2_Ez_Showcase_EzShowcase.cpp
+        model/Gs2_Ez_Showcase_EzDisplayItem.cpp
+        model/Gs2_Ez_Showcase_EzConfig.cpp
+        model/Gs2_Ez_Showcase_EzConsumeAction.cpp
+        model/Gs2_Ez_Showcase_EzAcquireAction.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

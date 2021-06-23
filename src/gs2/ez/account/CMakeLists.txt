@@ -20,12 +20,8 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
         model/EzAccount.hpp
         model/EzTakeOver.hpp
-        model/EzResponseCache.hpp
-        model/EzScriptSetting.hpp
-        model/EzLogSetting.hpp
         result/EzCreateResult.hpp
         result/EzAuthenticationResult.hpp
         result/EzAddTakeOverSettingResult.hpp
@@ -36,13 +32,9 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzAccount.cpp
-        model/EzTakeOver.cpp
-        model/EzResponseCache.cpp
-        model/EzScriptSetting.cpp
-        model/EzLogSetting.cpp
+        Gs2_Ez_Account_Client.cpp
+        model/Gs2_Ez_Account_EzAccount.cpp
+        model/Gs2_Ez_Account_EzTakeOver.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC

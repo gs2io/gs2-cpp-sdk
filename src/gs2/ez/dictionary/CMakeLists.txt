@@ -20,17 +20,9 @@ include(../../Gs2Sdk.cmake)
 file(GLOB ${PROJECT_NAME}_HEADER_FILES
         Client.hpp
         model/model.hpp
-        model/EzNamespace.hpp
         model/EzEntryModel.hpp
-        model/EzEntryModelMaster.hpp
         model/EzEntry.hpp
-        model/EzToc.hpp
-        model/EzCurrentEntryMaster.hpp
-        model/EzResponseCache.hpp
         model/EzConfig.hpp
-        model/EzGitHubCheckoutSetting.hpp
-        model/EzScriptSetting.hpp
-        model/EzLogSetting.hpp
         result/EzListEntryModelsResult.hpp
         result/EzGetEntryModelResult.hpp
         result/EzListEntriesResult.hpp
@@ -39,18 +31,10 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        Client.cpp
-        model/EzNamespace.cpp
-        model/EzEntryModel.cpp
-        model/EzEntryModelMaster.cpp
-        model/EzEntry.cpp
-        model/EzToc.cpp
-        model/EzCurrentEntryMaster.cpp
-        model/EzResponseCache.cpp
-        model/EzConfig.cpp
-        model/EzGitHubCheckoutSetting.cpp
-        model/EzScriptSetting.cpp
-        model/EzLogSetting.cpp
+        Gs2_Ez_Dictionary_Client.cpp
+        model/Gs2_Ez_Dictionary_EzEntryModel.cpp
+        model/Gs2_Ez_Dictionary_EzEntry.cpp
+        model/Gs2_Ez_Dictionary_EzConfig.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC
