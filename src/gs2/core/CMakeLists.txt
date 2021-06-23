@@ -67,31 +67,31 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        AbstractGs2Client.cpp
-        Gs2Constant.cpp
-        Gs2Object.cpp
-        json/Allocator.cpp
-        json/JsonParser.cpp
-        json/JsonWriter.cpp
-        model/BasicGs2Credential.cpp
-        model/Region.cpp
-        network/Gs2Response.cpp
-        network/Gs2RestResponse.cpp
-        network/Gs2RestSession.cpp
-        network/Gs2RestSessionTask.cpp
-        network/Gs2Session.cpp
-        network/Gs2SessionTask.cpp
-        network/Gs2SessionTaskId.cpp
-        network/Gs2WebSocketResponse.cpp
-        network/Gs2WebSocketSession.cpp
-        network/Gs2WebSocketSessionTask.cpp
-        network/HttpTask.cpp
-        network/RootCaCertificates.cpp
-        network/WebSocket.cpp
-        util/Base64.cpp
-        util/DefaultAllocator.cpp
-        util/StringHolder.cpp
-        util/StringVariable.cpp
+        Gs2_Core_AbstractGs2Client.cpp
+        Gs2_Core_Gs2Constant.cpp
+        Gs2_Core_Gs2Object.cpp
+        json/Gs2_Core_Json_Allocator.cpp
+        json/Gs2_Core_Json_JsonParser.cpp
+        json/Gs2_Core_Json_JsonWriter.cpp
+        model/Gs2_Core_Model_BasicGs2Credential.cpp
+        model/Gs2_Core_Model_Region.cpp
+        network/Gs2_Core_Network_Gs2Response.cpp
+        network/Gs2_Core_Network_Gs2RestResponse.cpp
+        network/Gs2_Core_Network_Gs2RestSession.cpp
+        network/Gs2_Core_Network_Gs2RestSessionTask.cpp
+        network/Gs2_Core_Network_Gs2Session.cpp
+        network/Gs2_Core_Network_Gs2SessionTask.cpp
+        network/Gs2_Core_Network_Gs2SessionTaskId.cpp
+        network/Gs2_Core_Network_Gs2WebSocketResponse.cpp
+        network/Gs2_Core_Network_Gs2WebSocketSession.cpp
+        network/Gs2_Core_Network_Gs2WebSocketSessionTask.cpp
+        network/Gs2_Core_Network_HttpTask.cpp
+        network/Gs2_Core_Network_RootCaCertificates.cpp
+        network/Gs2_Core_Network_WebSocket.cpp
+        util/Gs2_Core_Util_Base64.cpp
+        util/Gs2_Core_Util_DefaultAllocator.cpp
+        util/Gs2_Core_Util_StringHolder.cpp
+        util/Gs2_Core_Util_StringVariable.cpp
         )
 
 file(GLOB ${PROJECT_NAME}_ETC_FILES

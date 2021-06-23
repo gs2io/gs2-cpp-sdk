@@ -32,12 +32,12 @@ file(GLOB ${PROJECT_NAME}_HEADER_FILES
         )
 
 file(GLOB ${PROJECT_NAME}_SOURCE_FILES
-        EzStampSheet.cpp
-        EzStampTask.cpp
-        Gs2AccountAuthenticator.cpp
-        Gs2BasicReopener.cpp
-        Profile.cpp
-        StampSheetStateMachine.cpp
+        Gs2_Ez_EzStampSheet.cpp
+        Gs2_Ez_EzStampTask.cpp
+        Gs2_Ez_Gs2AccountAuthenticator.cpp
+        Gs2_Ez_Gs2BasicReopener.cpp
+        Gs2_Ez_Profile.cpp
+        Gs2_Ez_StampSheetStateMachine.cpp
         )
 
 gs2_add_library(${PROJECT_NAME} STATIC
