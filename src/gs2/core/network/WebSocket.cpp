@@ -30,6 +30,13 @@ Gs2WebSocket::Gs2WebSocket()
 
 Gs2WebSocket::~Gs2WebSocket()
 {
+    if (m_pWebSocket)
+    {
+        m_pWebSocket->OnConnected().Clear();
+        m_pWebSocket->OnConnectionError().Clear();
+        m_pWebSocket->OnMessage().Clear();
+        m_pWebSocket->OnClosed().Clear();
+    }
 }
 
 bool Gs2WebSocket::open(const char url[])
