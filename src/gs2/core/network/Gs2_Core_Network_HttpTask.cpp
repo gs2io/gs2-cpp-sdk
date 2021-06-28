@@ -34,6 +34,7 @@ HttpTask::HttpTask() :
 
 HttpTask::~HttpTask()
 {
+    m_pHttpRequest->OnProcessRequestComplete().Unbind();
 }
 
 void HttpTask::setUrl(const char url[])
