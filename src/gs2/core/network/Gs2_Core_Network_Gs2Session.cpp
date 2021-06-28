@@ -36,6 +36,12 @@ void Gs2Session::Lock::unlock()
     }
 }
 
+Gs2Session::~Gs2Session()
+{
+    Gs2ClientException gs2ClientException;  // TODO
+    closeCallback(gs2ClientException, false);
+}
+
 void Gs2Session::completeOpenTasks(AsyncOpenResult asyncOpenResult)
 {
     while (auto* pOpenTask = m_OpenTaskList.dequeue())

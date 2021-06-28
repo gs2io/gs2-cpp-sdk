@@ -200,7 +200,7 @@ public:
         m_Region(region)
     {}
 
-    virtual ~Gs2Session() = default;
+    virtual ~Gs2Session();
 
     const BasicGs2Credential& getGs2Credential() const
     {
