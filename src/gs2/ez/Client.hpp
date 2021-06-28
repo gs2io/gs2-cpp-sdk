@@ -22,7 +22,9 @@
 #include "auth/Client.hpp"
 #include "chat/Client.hpp"
 #include "datastore/Client.hpp"
+#include "dictionary/Client.hpp"
 #include "distributor/Client.hpp"
+#include "enhance/Client.hpp"
 #include "exchange/Client.hpp"
 #include "experience/Client.hpp"
 #include "formation/Client.hpp"
@@ -55,7 +57,9 @@ public:
     auth::Client auth;
     chat::Client chat;
     datastore::Client datastore;
+    dictionary::Client dictionary;
     distributor::Client distributor;
+    enhance::Client enhance;
     exchange::Client exchange;
     experience::Client experience;
     formation::Client formation;
@@ -85,7 +89,9 @@ public:
         auth(profile),
         chat(profile),
         datastore(profile),
+        dictionary(profile),
         distributor(profile),
+        enhance(profile),
         exchange(profile),
         experience(profile),
         formation(profile),
