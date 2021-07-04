@@ -24,7 +24,10 @@
 #include "result/EzPrepareReUploadResult.hpp"
 #include "result/EzDoneUploadResult.hpp"
 #include "result/EzPrepareDownloadResult.hpp"
+#include "result/EzPrepareDownloadOwnDataResult.hpp"
+#include "result/EzPrepareDownloadByUserIdAndDataObjectNameResult.hpp"
 #include "result/EzDeleteDataObjectResult.hpp"
+#include "result/EzRestoreDataObjectResult.hpp"
 #include "result/EzListDataObhectHistoriesResult.hpp"
 
 
@@ -54,7 +57,7 @@ public:
     ~Client();
 
     /// <summary>
-    ///  データのアップロード準備<br />
+    ///  データオブジェクトの一覧を取得<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
@@ -74,7 +77,7 @@ public:
     );
 
     /// <summary>
-    ///  データのアップロード準備<br />
+    ///  データオブジェクトを更新<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
@@ -102,13 +105,15 @@ public:
     /// <param name="name">データの名前</param>
     /// <param name="scope">ファイルのアクセス権</param>
     /// <param name="allowUserIds">公開するユーザIDリスト</param>
+    /// <param name="updateIfExists">既にデータが存在する場合にエラーとするか、データを更新するか</param>
     void prepareUpload(
         std::function<void(AsyncEzPrepareUploadResult)> callback,
         GameSession& session,
         StringHolder namespaceName,
         StringHolder scope,
         List<StringHolder> allowUserIds,
-        gs2::optional<StringHolder> name=gs2::nullopt
+        gs2::optional<StringHolder> name=gs2::nullopt,
+        gs2::optional<Bool> updateIfExists=gs2::nullopt
     );
 
     /// <summary>
@@ -128,7 +133,7 @@ public:
     );
 
     /// <summary>
-    ///  データのアップロード準備<br />
+    ///  データのアップロード完了を報告<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
@@ -144,7 +149,7 @@ public:
     );
 
     /// <summary>
-    ///  データをダウンロード<br />
+    ///  データをダウンロード準備<br />
     /// </summary>
     ///
     /// <returns>IEnumerator</returns>
@@ -157,6 +162,37 @@ public:
         GameSession& session,
         StringHolder namespaceName,
         StringHolder dataObjectId
+    );
+
+    /// <summary>
+    ///  自分のデータをダウンロード準備<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="callback">コールバックハンドラ</param>
+    /// <param name="session">ゲームセッション</param>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="dataObjectName">データの名前</param>
+    void prepareDownloadOwnData(
+        std::function<void(AsyncEzPrepareDownloadOwnDataResult)> callback,
+        GameSession& session,
+        StringHolder namespaceName,
+        StringHolder dataObjectName
+    );
+
+    /// <summary>
+    ///  ユーザIDとデータ名を指定してデータをダウンロード準備<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="userId">ユーザーID</param>
+    /// <param name="dataObjectName">データの名前</param>
+    void prepareDownloadByUserIdAndDataObjectName(
+        std::function<void(AsyncEzPrepareDownloadByUserIdAndDataObjectNameResult)> callback,
+        StringHolder namespaceName,
+        StringHolder userId,
+        StringHolder dataObjectName
     );
 
     /// <summary>
@@ -173,6 +209,19 @@ public:
         GameSession& session,
         StringHolder namespaceName,
         StringHolder dataObjectName
+    );
+
+    /// <summary>
+    ///  データの管理情報を修復<br />
+    /// </summary>
+    ///
+    /// <returns>IEnumerator</returns>
+    /// <param name="namespaceName">ネームスペース名</param>
+    /// <param name="dataObjectId">データオブジェクト</param>
+    void restoreDataObject(
+        std::function<void(AsyncEzRestoreDataObjectResult)> callback,
+        StringHolder namespaceName,
+        StringHolder dataObjectId
     );
 
     /// <summary>
