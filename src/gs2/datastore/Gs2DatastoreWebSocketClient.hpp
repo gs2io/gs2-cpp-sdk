@@ -45,6 +45,9 @@
 #include "request/PrepareDownloadByUserIdRequest.hpp"
 #include "request/PrepareDownloadByGenerationRequest.hpp"
 #include "request/PrepareDownloadByGenerationAndUserIdRequest.hpp"
+#include "request/PrepareDownloadOwnDataRequest.hpp"
+#include "request/PrepareDownloadOwnDataByGenerationRequest.hpp"
+#include "request/PrepareDownloadOwnDataByGenerationAndUserIdRequest.hpp"
 #include "request/DescribeDataObjectHistoriesRequest.hpp"
 #include "request/DescribeDataObjectHistoriesByUserIdRequest.hpp"
 #include "request/GetDataObjectHistoryRequest.hpp"
@@ -71,6 +74,9 @@
 #include "result/PrepareDownloadByUserIdResult.hpp"
 #include "result/PrepareDownloadByGenerationResult.hpp"
 #include "result/PrepareDownloadByGenerationAndUserIdResult.hpp"
+#include "result/PrepareDownloadOwnDataResult.hpp"
+#include "result/PrepareDownloadOwnDataByGenerationResult.hpp"
+#include "result/PrepareDownloadOwnDataByGenerationAndUserIdResult.hpp"
 #include "result/DescribeDataObjectHistoriesResult.hpp"
 #include "result/DescribeDataObjectHistoriesByUserIdResult.hpp"
 #include "result/GetDataObjectHistoryResult.hpp"
@@ -1480,10 +1486,10 @@ private:
                 jsonWriter.writePropertyName("namespaceName");
                 jsonWriter.writeCharArray(*m_Request.getNamespaceName());
             }
-            if (m_Request.getDataObjectName())
+            if (m_Request.getDataObjectId())
             {
-                jsonWriter.writePropertyName("dataObjectName");
-                jsonWriter.writeCharArray(*m_Request.getDataObjectName());
+                jsonWriter.writePropertyName("dataObjectId");
+                jsonWriter.writeCharArray(*m_Request.getDataObjectId());
             }
             if (m_Request.getGeneration())
             {
@@ -1556,10 +1562,10 @@ private:
                 jsonWriter.writePropertyName("userId");
                 jsonWriter.writeCharArray(*m_Request.getUserId());
             }
-            if (m_Request.getDataObjectName())
+            if (m_Request.getDataObjectId())
             {
-                jsonWriter.writePropertyName("dataObjectName");
-                jsonWriter.writeCharArray(*m_Request.getDataObjectName());
+                jsonWriter.writePropertyName("dataObjectId");
+                jsonWriter.writeCharArray(*m_Request.getDataObjectId());
             }
             if (m_Request.getGeneration())
             {
@@ -1588,6 +1594,214 @@ private:
         {}
 
         ~PrepareDownloadByGenerationAndUserIdTask() GS2_OVERRIDE = default;
+    };
+
+    class PrepareDownloadOwnDataTask : public detail::Gs2WebSocketSessionTask<PrepareDownloadOwnDataResult>
+    {
+    private:
+        PrepareDownloadOwnDataRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "datastore";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "dataObject";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "prepareDownloadOwnData";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getDataObjectName())
+            {
+                jsonWriter.writePropertyName("dataObjectName");
+                jsonWriter.writeCharArray(*m_Request.getDataObjectName());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        PrepareDownloadOwnDataTask(
+            PrepareDownloadOwnDataRequest request,
+            Gs2WebSocketSessionTask<PrepareDownloadOwnDataResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<PrepareDownloadOwnDataResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~PrepareDownloadOwnDataTask() GS2_OVERRIDE = default;
+    };
+
+    class PrepareDownloadOwnDataByGenerationTask : public detail::Gs2WebSocketSessionTask<PrepareDownloadOwnDataByGenerationResult>
+    {
+    private:
+        PrepareDownloadOwnDataByGenerationRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "datastore";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "dataObject";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "prepareDownloadOwnDataByGeneration";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getDataObjectName())
+            {
+                jsonWriter.writePropertyName("dataObjectName");
+                jsonWriter.writeCharArray(*m_Request.getDataObjectName());
+            }
+            if (m_Request.getGeneration())
+            {
+                jsonWriter.writePropertyName("generation");
+                jsonWriter.writeCharArray(*m_Request.getGeneration());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getAccessToken())
+            {
+                jsonWriter.writePropertyName("xGs2AccessToken");
+                jsonWriter.writeCharArray(*m_Request.getAccessToken());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        PrepareDownloadOwnDataByGenerationTask(
+            PrepareDownloadOwnDataByGenerationRequest request,
+            Gs2WebSocketSessionTask<PrepareDownloadOwnDataByGenerationResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<PrepareDownloadOwnDataByGenerationResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~PrepareDownloadOwnDataByGenerationTask() GS2_OVERRIDE = default;
+    };
+
+    class PrepareDownloadOwnDataByGenerationAndUserIdTask : public detail::Gs2WebSocketSessionTask<PrepareDownloadOwnDataByGenerationAndUserIdResult>
+    {
+    private:
+        PrepareDownloadOwnDataByGenerationAndUserIdRequest m_Request;
+
+        const char* getServiceName() const GS2_OVERRIDE
+        {
+            return "datastore";
+        }
+
+        const char* getComponentName() const GS2_OVERRIDE
+        {
+            return "dataObject";
+        }
+
+        const char* getFunctionName() const GS2_OVERRIDE
+        {
+            return "prepareDownloadOwnDataByGenerationAndUserId";
+        }
+
+        void constructRequestImpl(detail::json::JsonWriter& jsonWriter) GS2_OVERRIDE
+        {
+            if (m_Request.getContextStack())
+            {
+                jsonWriter.writePropertyName("contextStack");
+                jsonWriter.writeCharArray(*m_Request.getContextStack());
+            }
+            if (m_Request.getNamespaceName())
+            {
+                jsonWriter.writePropertyName("namespaceName");
+                jsonWriter.writeCharArray(*m_Request.getNamespaceName());
+            }
+            if (m_Request.getUserId())
+            {
+                jsonWriter.writePropertyName("userId");
+                jsonWriter.writeCharArray(*m_Request.getUserId());
+            }
+            if (m_Request.getDataObjectName())
+            {
+                jsonWriter.writePropertyName("dataObjectName");
+                jsonWriter.writeCharArray(*m_Request.getDataObjectName());
+            }
+            if (m_Request.getGeneration())
+            {
+                jsonWriter.writePropertyName("generation");
+                jsonWriter.writeCharArray(*m_Request.getGeneration());
+            }
+            if (m_Request.getRequestId())
+            {
+                jsonWriter.writePropertyName("xGs2RequestId");
+                jsonWriter.writeCharArray(*m_Request.getRequestId());
+            }
+            if (m_Request.getDuplicationAvoider())
+            {
+                jsonWriter.writePropertyName("xGs2DuplicationAvoider");
+                jsonWriter.writeCharArray(*m_Request.getDuplicationAvoider());
+            }
+        }
+
+    public:
+        PrepareDownloadOwnDataByGenerationAndUserIdTask(
+            PrepareDownloadOwnDataByGenerationAndUserIdRequest request,
+            Gs2WebSocketSessionTask<PrepareDownloadOwnDataByGenerationAndUserIdResult>::CallbackType callback
+        ) :
+            Gs2WebSocketSessionTask<PrepareDownloadOwnDataByGenerationAndUserIdResult>(callback),
+            m_Request(std::move(request))
+        {}
+
+        ~PrepareDownloadOwnDataByGenerationAndUserIdTask() GS2_OVERRIDE = default;
     };
 
     class DescribeDataObjectHistoriesTask : public detail::Gs2WebSocketSessionTask<DescribeDataObjectHistoriesResult>
@@ -2339,6 +2553,42 @@ public:
     void prepareDownloadByGenerationAndUserId(PrepareDownloadByGenerationAndUserIdRequest request, std::function<void(AsyncPrepareDownloadByGenerationAndUserIdResult)> callback)
     {
         PrepareDownloadByGenerationAndUserIdTask& task = *new PrepareDownloadByGenerationAndUserIdTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * データオブジェクトをダウンロード準備する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void prepareDownloadOwnData(PrepareDownloadOwnDataRequest request, std::function<void(AsyncPrepareDownloadOwnDataResult)> callback)
+    {
+        PrepareDownloadOwnDataTask& task = *new PrepareDownloadOwnDataTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * データオブジェクトを世代を指定してダウンロード準備する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void prepareDownloadOwnDataByGeneration(PrepareDownloadOwnDataByGenerationRequest request, std::function<void(AsyncPrepareDownloadOwnDataByGenerationResult)> callback)
+    {
+        PrepareDownloadOwnDataByGenerationTask& task = *new PrepareDownloadOwnDataByGenerationTask(std::move(request), callback);
+        getGs2WebSocketSession().execute(task);
+    }
+
+	/**
+	 * ユーザIDを指定してデータオブジェクトを世代を指定してダウンロード準備する<br>
+	 *
+     * @param callback コールバック関数
+     * @param request リクエストパラメータ
+     */
+    void prepareDownloadOwnDataByGenerationAndUserId(PrepareDownloadOwnDataByGenerationAndUserIdRequest request, std::function<void(AsyncPrepareDownloadOwnDataByGenerationAndUserIdResult)> callback)
+    {
+        PrepareDownloadOwnDataByGenerationAndUserIdTask& task = *new PrepareDownloadOwnDataByGenerationAndUserIdTask(std::move(request), callback);
         getGs2WebSocketSession().execute(task);
     }
 
