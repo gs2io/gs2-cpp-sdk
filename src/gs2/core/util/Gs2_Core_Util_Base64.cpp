@@ -105,7 +105,7 @@ void encodeBase64(char dst[], const void* src, std::size_t size)
 std::size_t decodeBase64(void* dst, const char src[])
 {
     unsigned char* pDst = reinterpret_cast<unsigned char*>(dst);
-    const char* pSrc = src;
+    const unsigned char* pSrc = reinterpret_cast<const unsigned char*>(src);
     unsigned char in[4];
     std::size_t decodedSize = 0;
 
