@@ -19,6 +19,7 @@
 #include "../json/JsonParser.hpp"
 #include "../model/IGs2Credential.hpp"
 #include "../network/Gs2RestResponse.hpp"
+#include <Modules/ModuleManager.h>
 #include <HttpModule.h>
 #include <HttpManager.h>
 #include <vector>
@@ -28,7 +29,12 @@ GS2_START_OF_NAMESPACE
 namespace detail {
 
 HttpTask::HttpTask() :
-    m_pHttpRequest(FHttpModule::Get().CreateRequest()) 
+    m_pHttpRequest(
+        (FModuleManager::Get().IsModuleLoaded(TEXT("HTTP")) ?
+            FHttpModule::Get() :
+            FModuleManager::LoadModuleChecked<FHttpModule>(TEXT("HTTP"))
+        ).CreateRequest()
+    )
 {
 }
 

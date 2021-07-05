@@ -17,8 +17,9 @@
 #include "../exception/Gs2ClientException.hpp"
 #include "Gs2WebSocketResponse.hpp"
 #include "WebSocket.hpp"
-#include "Runtime/Online/WebSockets/Public/WebSocketsModule.h"
-#include "Runtime/Online/WebSockets/Public/IWebSocket.h"
+#include <Modules/ModuleManager.h>
+#include <WebSocketsModule.h>
+#include <IWebSocket.h>
 
 GS2_START_OF_NAMESPACE
 
@@ -41,7 +42,12 @@ Gs2WebSocket::~Gs2WebSocket()
 
 bool Gs2WebSocket::open(const char url[])
 {
-    m_pWebSocket = FWebSocketsModule::Get().CreateWebSocket(url);
+    auto websocketModule =
+        FModuleManager::Get().IsModuleLoaded(TEXT("WebSockets")) ?
+        FWebSocketsModule::Get() :
+        FModuleManager::LoadModuleChecked<FWebSocketsModule>(TEXT("WebSockets"));
+
+    m_pWebSocket = websocketModule.CreateWebSocket(url);
 
     m_pWebSocket->OnConnected().AddRaw(this, &Gs2WebSocket::onConnectComplete);
     m_pWebSocket->OnConnectionError().AddRaw(this, &Gs2WebSocket::onConnectError);
