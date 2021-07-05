@@ -20,7 +20,7 @@
 #define GS2_TARGET_UNKNOWN  0
 #define GS2_TARGET_WINDOWS  1
 
-#if _WIN32 == 1 || _WIN64 == 1
+#if (defined(_WIN32) && _WIN32 == 1) || (defined(_WIN64) && _WIN64 == 1)
 #define GS2_TARGET  GS2_TARGET_WINDOWS
 #else
 #define GS2_TARGET  GS2_TARGET_UNKNOWN
