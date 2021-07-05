@@ -18,6 +18,13 @@
 # include <string>
 # include <stdexcept>
 
+# if defined(GS2_ENABLE_THROW)
+# define GS2_OPTIONAL_VALUE_WITH_CHECK(expr, value, err) \
+    (expr) ? (value) : (throw (err), (value))
+# else
+# define GS2_OPTIONAL_VALUE_WITH_CHECK(expr, value, err)    (value)
+# endif
+
 # define GS2_TR2_OPTIONAL_REQUIRES(...) typename std::enable_if<__VA_ARGS__::value, bool>::type = false
 
 # if defined __GNUC__ // NOTE: GNUC is also defined for Clang
@@ -546,15 +553,17 @@ public:
   }
 
   constexpr T const& value() const& {
-    return initialized() ? contained_val() : (throw bad_optional_access("bad optional access"), contained_val());
+    return GS2_OPTIONAL_VALUE_WITH_CHECK(initialized(), contained_val(), bad_optional_access("bad optional access"));
   }
   
   GS2_OPTIONAL_MUTABLE_CONSTEXPR T& value() & {
-    return initialized() ? contained_val() : (throw bad_optional_access("bad optional access"), contained_val());
+    return GS2_OPTIONAL_VALUE_WITH_CHECK(initialized(), contained_val(), bad_optional_access("bad optional access"));
   }
   
   GS2_OPTIONAL_MUTABLE_CONSTEXPR T&& value() && {
+# if defined(GS2_ENABLE_THROW)
     if (!initialized()) throw bad_optional_access("bad optional access");
+# endif
 	return std::move(contained_val());
   }
   
@@ -575,11 +584,11 @@ public:
   }
   
   constexpr T const& value() const {
-    return initialized() ? contained_val() : (throw bad_optional_access("bad optional access"), contained_val());
+    return GS2_OPTIONAL_VALUE_WITH_CHECK(initialized(), contained_val(), bad_optional_access("bad optional access"));
   }
   
   T& value() {
-    return initialized() ? contained_val() : (throw bad_optional_access("bad optional access"), contained_val());
+    return GS2_OPTIONAL_VALUE_WITH_CHECK(initialized(), contained_val(), bad_optional_access("bad optional access"));
   }
   
 # endif
@@ -710,7 +719,7 @@ public:
   }
   
   constexpr T& value() const {
-    return ref ? *ref : (throw bad_optional_access("bad optional access"), *ref);
+    return GS2_OPTIONAL_VALUE_WITH_CHECK(ref, *ref, bad_optional_access("bad optional access"));
   }
   
   explicit constexpr operator bool() const noexcept {
