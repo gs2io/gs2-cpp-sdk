@@ -56,9 +56,80 @@ template<typename T>
 class List : public Gs2Object
 {
 private:
-    typedef std::vector<T, detail::StandardAllocator<T>> Vector;
+    using Vector = std::vector<T, detail::StandardAllocator<T>>;
 
     std::shared_ptr<Vector> m_pList;
+
+public:
+    class Iterator
+    {
+        friend List;
+
+    private:
+        typename Vector::iterator m_Iterator;
+
+        explicit Iterator(typename Vector::iterator iterator) :
+            m_Iterator(iterator)
+        {
+        }
+
+    public:
+        T& operator *()
+        {
+            return *m_Iterator;
+        }
+
+        Iterator& operator++()
+        {
+            ++m_Iterator;
+            return *this;
+        }
+
+        bool operator==(Iterator iterator) const
+        {
+            return m_Iterator == iterator.m_Iterator;
+        }
+
+        bool operator!=(Iterator iterator) const
+        {
+            return !(*this == iterator);
+        }
+    };
+
+    class ConstIterator
+    {
+        friend List;
+
+    private:
+        typename Vector::const_iterator m_ConstIterator;
+
+        ConstIterator(typename Vector::const_iterator constIterator) :
+            m_ConstIterator(constIterator)
+        {
+        }
+
+    public:
+        const T& operator *() const
+        {
+            return *m_ConstIterator;
+        }
+
+        ConstIterator& operator++()
+        {
+            ++m_ConstIterator;
+            return *this;
+        }
+
+        bool operator==(ConstIterator constIterator) const
+        {
+            return m_ConstIterator == constIterator.m_ConstIterator;
+        }
+
+        bool operator!=(ConstIterator constIterator) const
+        {
+            return !(*this == constIterator);
+        }
+    };
 
 public:
     List() :
@@ -136,6 +207,26 @@ public:
         return *this;
     }
 
+    Iterator begin()
+    {
+        return Iterator(m_pList->begin());
+    }
+
+    Iterator end()
+    {
+        return Iterator(m_pList->end());
+    }
+
+    ConstIterator begin() const
+    {
+        return ConstIterator(m_pList->begin());
+    }
+
+    ConstIterator end() const
+    {
+        return ConstIterator(m_pList->end());
+    }
+
     bool operator!=(const List& list) const
     {
         if (m_pList != list.m_pList)
@@ -177,7 +268,7 @@ namespace detail {
 template<typename T>
 inline Int32 getCountOfListElements(const List<T>& list)
 {
-	return list.getCount();
+    return list.getCount();
 }
 
 }
