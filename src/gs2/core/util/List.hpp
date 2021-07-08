@@ -97,6 +97,11 @@ public:
         return this;
     }
 
+    bool isValid() const
+    {
+        return m_pList != nullptr;
+    }
+
     const Int32 getCount() const
     {
         return m_pList->size();
