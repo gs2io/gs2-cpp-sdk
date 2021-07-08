@@ -102,7 +102,7 @@ public:
         return m_pList != nullptr;
     }
 
-    const Int32 getCount() const
+    Int32 getCount() const
     {
         return m_pList->size();
     }
