@@ -135,6 +135,11 @@ public:
     {
         if (m_pList != list.m_pList)
         {
+            if (m_pList == nullptr || list.m_pList == nullptr)
+            {
+                return true;
+            }
+
             auto count = getCount();
 
             if (count != list.getCount())
