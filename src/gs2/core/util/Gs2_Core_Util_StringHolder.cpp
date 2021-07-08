@@ -129,12 +129,12 @@ const Char* StringHolder::getCString() const
 
 bool operator==(const StringHolder& lhs, const StringHolder& lhr)
 {
-    return lhs.m_Buffer == lhr.m_Buffer || (lhs.m_Size == lhr.m_Size && std::strcmp(lhs.m_Buffer.get(), lhr.m_Buffer.get()) == 0);
+    return lhs.m_Buffer == lhr.m_Buffer || (lhs.m_Size == lhr.m_Size && std::strcmp(lhs.getCString(), lhr.getCString()) == 0);
 }
 
 bool operator==(const StringHolder& lhs, const Char lhr[])
 {
-    return std::strcmp(lhs.m_Buffer.get(), lhr) == 0;
+    return std::strcmp(lhs.getCString(), lhr) == 0;
 }
 
 bool operator==(const Char lhs[], const StringHolder& lhr)
